@@ -1,0 +1,22 @@
+LIBRARY Aurora-LogiLEDWrapper.dll
+
+EXPORTS
+	LogiLedInit
+	LogiLedSetTargetDevice
+	LogiLedSaveCurrentLighting
+	LogiLedSetLighting
+	LogiLedRestoreLighting
+	LogiLedFlashLighting
+	LogiLedPulseLighting
+	LogiLedStopEffects
+	LogiLedSetLightingFromBitmap
+	LogiLedSetLightingForKeyWithScanCode
+	LogiLedSetLightingForKeyWithHidCode
+	LogiLedSetLightingForKeyWithQuartzCode
+	LogiLedSetLightingForKeyWithKeyName
+	LogiLedSaveLightingForKey
+	LogiLedRestoreLightingForKey
+	LogiLedFlashSingleKey
+	LogiLedPulseSingleKey
+	LogiLedStopEffectsOnKey
+	LogiLedShutdown

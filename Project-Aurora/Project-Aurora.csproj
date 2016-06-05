@@ -1,0 +1,623 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{18D2D471-3F57-4ECE-9C62-836A801473D8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aurora</RootNamespace>
+    <AssemblyName>Aurora</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Aurora.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\aurora_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Corale.Colore, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Colore.4.0.0\lib\net35\Corale.Colore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CUE.NET, Version=1.0.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CUE.NET.1.0.2.2\lib\net45\CUE.NET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Gma.System.MouseKeyHook, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MouseKeyHook.5.4.0\lib\net40\Gma.System.MouseKeyHook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
+      <HintPath>..\packages\SignedBuild-Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net35\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.9.8\lib\net20\Ionic.Zip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Infragistics.Themes.MetroDark.Wpf.1.0.0\lib\net40\System.Windows.Controls.Input.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Infragistics.Themes.MetroDark.Wpf.1.0.0\lib\net40\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Infragistics.Themes.MetroDark.Wpf.1.0.0\lib\net40\WPFToolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.9.15603.14400, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xceed.Wpf.Toolkit.2.9.15603.14400\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConfigUI.xaml.cs">
+      <DependentUpon>ConfigUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ColorZones.xaml.cs">
+      <DependentUpon>ColorZones.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EditorResources\MoveThumb.cs" />
+    <Compile Include="Controls\EditorResources\ResizeThumb.cs" />
+    <Compile Include="Controls\EditorResources\RotateThumb.cs" />
+    <Compile Include="Controls\EffectSettingsWindow.xaml.cs">
+      <DependentUpon>EffectSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KeySequence.xaml.cs">
+      <DependentUpon>KeySequence.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LayerEditor.xaml.cs">
+      <DependentUpon>LayerEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Corsair\CorsairInstallInstructions.xaml.cs">
+      <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
+      <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Razer\RazerInstallInstructions.xaml.cs">
+      <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Razer\RazerDevice.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFilledRectangle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFrame.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationCircle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationLine.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationLinePoints.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationMix.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
+    <Compile Include="EffectsEngine\EffectSmoothColorSpectrum.cs" />
+    <Compile Include="Profiles\Generic_Application\Control_GenericApplication.xaml.cs">
+      <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Generic_Application\Event_GenericApplication.cs" />
+    <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
+    <Compile Include="Profiles\GTA5\Control_GTA5.xaml.cs">
+      <DependentUpon>Control_GTA5.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Profiles\Logitech_Wrapper\GameEvent_Logitech_Wrapper.cs" />
+    <Compile Include="Profiles\Overlays\Event_VolumeOverlay.cs" />
+    <Compile Include="Profiles\Overlays\VolumeOverlaySettings.cs" />
+    <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
+      <DependentUpon>Control_Overwatch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Overwatch\OverwatchSettings.cs" />
+    <Compile Include="Profiles\Payday 2\Control_PD2.xaml.cs">
+      <DependentUpon>Control_PD2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Payday 2\GameEvent_PD2.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\GameState_PD2.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\GameNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\ItemNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\ItemsNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\LevelNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\LobbyNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\PlayersNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponNode.cs" />
+    <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponsNode.cs" />
+    <Compile Include="Profiles\Payday 2\PD2Settings.cs" />
+    <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
+      <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeagueSettings.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\ColorZone.cs" />
+    <Compile Include="Settings\Configuration.cs" />
+    <Compile Include="Devices\DeviceManager.cs" />
+    <Compile Include="Devices\Corsair\CorsairDevice.cs" />
+    <Compile Include="Devices\Device.cs" />
+    <Compile Include="Devices\Logitech\LogitechDevice.cs" />
+    <Compile Include="EffectsEngine\EffectColor.cs" />
+    <Compile Include="EffectsEngine\EffectColorFunction.cs" />
+    <Compile Include="EffectsEngine\EffectColorSpectrum.cs" />
+    <Compile Include="EffectsEngine\EffectFrame.cs" />
+    <Compile Include="EffectsEngine\Functions\EffectCircle.cs" />
+    <Compile Include="EffectsEngine\Functions\EffectFunction.cs" />
+    <Compile Include="EffectsEngine\EffectLayer.cs" />
+    <Compile Include="EffectsEngine\Effects.cs" />
+    <Compile Include="EffectsEngine\Functions\EffectLine.cs" />
+    <Compile Include="EffectsEngine\Functions\EffectPoint.cs" />
+    <Compile Include="GameEventHandler.cs" />
+    <Compile Include="Profiles\CSGO\Control_CSGO.xaml.cs">
+      <DependentUpon>Control_CSGO.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CSGO\CSGOSettings.cs" />
+    <Compile Include="Profiles\CSGO\GameEvent_CSGO.cs" />
+    <Compile Include="Profiles\CSGO\GSI\GameState_CSGO.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\AllPlayersNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\AuthNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\MapNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\MapTeamNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\MatchStatsNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\PlayerStateNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\RoundNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\WeaponNode.cs" />
+    <Compile Include="Profiles\CSGO\GSI\Nodes\WeaponsNode.cs" />
+    <Compile Include="Profiles\Desktop\Control_Desktop.xaml.cs">
+      <DependentUpon>Control_Desktop.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Desktop\DesktopSettings.cs" />
+    <Compile Include="Profiles\Desktop\Event_Desktop.cs" />
+    <Compile Include="Profiles\Desktop\Event_Idle.cs" />
+    <Compile Include="Profiles\Dota 2\Control_Dota2.xaml.cs">
+      <DependentUpon>Control_Dota2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Dota 2\Dota2Settings.cs" />
+    <Compile Include="Profiles\Dota 2\GameEvent_Dota2.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\GameState_Dota2.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Abilities.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Ability.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Attributes.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Auth.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Hero.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Item.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Items.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Map.cs" />
+    <Compile Include="Profiles\GameEvent.cs" />
+    <Compile Include="Profiles\GameState_Wrapper.cs" />
+    <Compile Include="Profiles\GTA5\GameEvent_GTA5.cs" />
+    <Compile Include="Profiles\GTA5\GSI\GameState_GTA5.cs" />
+    <Compile Include="Profiles\GTA5\GTA5Settings.cs" />
+    <Compile Include="Profiles\Node.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\Dota 2\GSI\Nodes\Provider.cs" />
+    <Compile Include="Profiles\GameState.cs" />
+    <Compile Include="Settings\Control_Settings.xaml.cs">
+      <DependentUpon>Control_Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\FreeFormObject.cs" />
+    <Compile Include="Settings\KeyboardLayoutManager.cs" />
+    <Compile Include="Settings\KeyRecorder.cs" />
+    <Compile Include="Settings\KeySequence.cs" />
+    <Compile Include="Settings\LayerEffectConfig.cs" />
+    <Compile Include="Utils\Logger.cs" />
+    <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
+    <Compile Include="NetworkListener.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\ColorUtils.cs" />
+    <Compile Include="Utils\EnumUtils.cs" />
+    <Compile Include="Utils\KeyUtils.cs" />
+    <Compile Include="Utils\MemoryReader.cs" />
+    <Compile Include="Utils\MemoryUtils.cs" />
+    <Compile Include="Utils\SteamUtils.cs" />
+    <Compile Include="Utils\Time.cs" />
+    <Compile Include="Utils\TimedListObject.cs" />
+    <Compile Include="Utils\UIUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Devices\SteelSeries\AuroraPlugin.lsp" />
+    <None Include="kb_layouts\Razer\layout.de.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Razer\layout.fr.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Razer\layout.intl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Razer\layout.ru.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Razer\layout.uk.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Razer\layout.us.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Resource Include="Profiles\Payday 2\GSI\PD2_GSI.zip" />
+    <Resource Include="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
+    <Resource Include="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
+    <None Include="kb_layouts\Corsair\layout.de.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Corsair\layout.fr.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Corsair\layout.intl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Corsair\layout.ru.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Corsair\layout.uk.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Corsair\layout.us.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Logitech\layout.ru.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Logitech\layout.de.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Logitech\layout.fr.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Logitech\layout.intl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Logitech\layout.uk.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Logitech\layout.us.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Pointers\RocketLeague.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ConfigUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ColorZones.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EditorResources\DesignerItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EditorResources\MoveThumbDecorator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EditorResources\ResizeDecorator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EditorResources\RotateDecorator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EffectSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\KeySequence.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LayerEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Devices\Corsair\CorsairInstallInstructions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\Logitech\LogitechInstallInstructions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Devices\Razer\RazerInstallInstructions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\CSGO\Control_CSGO.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Desktop\Control_Desktop.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Dota 2\Control_Dota2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Generic_Application\Control_GenericApplication.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\GTA5\Control_GTA5.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Overwatch\Control_Overwatch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Payday 2\Control_PD2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\RocketLeague\Control_RocketLeague.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Control_Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MetroDark\MetroDark.MSControls.Core.Implicit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\MetroDark.MSControls.Toolkit.Implicit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\Styles.Shared.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\Styles.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\Theme.Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\dota2_64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\rocketleague_256x256.png" />
+    <Resource Include="Resources\settings_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\csgo_64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\aurora_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\aurora_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\gta5_64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\x64\Aurora-LogiLEDWrapper.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AddProfile_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\DataSources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\RemoveProfile_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\CorsairInstall\Step1.png" />
+    <Content Include="Resources\CorsairInstall\Step2.png" />
+    <None Include="ver_minor.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ver_major.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Resource Include="Resources\LastBullet_Logo.png" />
+    <Resource Include="Resources\overwatch_icon.png" />
+    <Resource Include="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
+    <Resource Include="Resources\pd2_64x64.png" />
+    <Resource Include="Resources\desktop_icon.png" />
+    <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
+    <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
+    <Resource Include="Resources\FreeForm_Circle.png" />
+    <Resource Include="Resources\FreeForm_CircleFilled.png" />
+    <Resource Include="Resources\FreeForm_Line.png" />
+    <Resource Include="Resources\FreeForm_Rectangle.png" />
+    <Resource Include="Resources\FreeForm_RectangleFilled.png" />
+    <Content Include="Resources\LogitechInstall\Step1.png" />
+    <Content Include="Resources\LogitechInstall\Step2.png" />
+    <Content Include="Resources\LogitechInstall\Step3.png" />
+    <Content Include="Resources\LogitechInstall\Step4.png" />
+    <Content Include="Resources\LogitechInstall\Step5.png" />
+    <Content Include="Resources\RazerInstall\Step1.png" />
+    <Content Include="Resources\RazerInstall\Step2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aurora-Updater\Aurora-Updater.csproj">
+      <Project>{6f81d40a-6aa0-4c8b-a395-779ef3003ca4}</Project>
+      <Name>Aurora-Updater</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\CUE.NET.1.0.2.2\build\net45\CUE.NET.targets" Condition="Exists('..\packages\CUE.NET.1.0.2.2\build\net45\CUE.NET.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\CUE.NET.1.0.2.2\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.0.2.2\build\net45\CUE.NET.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

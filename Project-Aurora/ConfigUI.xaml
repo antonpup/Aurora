@@ -1,0 +1,67 @@
+﻿<Window
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:Aurora"
+             xmlns:tb="http://www.hardcodet.net/taskbar"
+             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.ConfigUI"
+             mc:Ignorable="d" Height="575" Width="910" MinWidth="910" MinHeight="571" ResizeMode="CanMinimize" Title="Aurora" Loaded="Window_Loaded" Initialized="Window_Initialized" Closing="Window_Closing" Activated="Window_Activated" Deactivated="Window_Deactivated" MaxWidth="910" MaxHeight="571" HorizontalContentAlignment="Stretch">
+
+    <!--
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml" />
+                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    -->
+
+    <Grid x:Name="bg_grid" Background="#FF660000">
+        <Border Margin="66,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#A5000000" CornerRadius="8" MinWidth="828" MinHeight="216">
+            <Grid x:Name="keyboard_grid" Margin="10,10,10,10" Height="192" VerticalAlignment="Top" HorizontalAlignment="Left" Width="803"/>
+        </Border>
+        <Grid x:Name="content_grid" Margin="61,0,7,6" Height="300" VerticalAlignment="Bottom"/>
+
+        <tb:TaskbarIcon x:Name="trayicon"
+			Visibility="Visible"
+			ToolTipText="Aurora"
+			IconSource="Resources/aurora_icon.ico" Grid.ColumnSpan="2" TrayMouseDoubleClick="trayicon_TrayMouseDoubleClick">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu Background="#FF181818" HorizontalContentAlignment="Center">
+                    <ContextMenu.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Background="#FF181818" />
+                        </ItemsPanelTemplate>
+                    </ContextMenu.ItemsPanel>
+                    <ContextMenu.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="-20,0,-40,0">
+                                <!--this part is important-->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Ident}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Description}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ContextMenu.ItemTemplate>
+
+                    <MenuItem x:Name="trayicon_menu_settings" Header="Open Aurora" Click="trayicon_menu_settings_Click" Foreground="White" />
+                    <MenuItem x:Name="trayicon_menu_quit" Header="Quit" Click="trayicon_menu_quit_Click" Foreground="White" />
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+        <Label x:Name="keyboard_record_message" Content="Please select key(s) you want to assign" HorizontalAlignment="Right" Foreground="Red" Height="26" VerticalAlignment="Top" Margin="0,0,10,0" Grid.Column="1"/>
+        <Grid x:Name="profiles_background" HorizontalAlignment="Left" Width="56" Background="#3F000000">
+            <ScrollViewer HorizontalAlignment="Left" Width="56" UseLayoutRounding="False" CanContentScroll="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,40" Padding="0,0,6,0" ScrollChanged="ScrollViewer_ScrollChanged">
+                <StackPanel x:Name="profiles_stack" RenderTransformOrigin="0.5,0" MinHeight="542" MaxHeight="542" MinWidth="40" MaxWidth="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="6,0,0,0"/>
+            </ScrollViewer>
+            <Image Source="Resources/settings_icon.png" ToolTip="General Settings" Margin="6,0,10,0" MouseDown="DesktopControl_MouseDown" RenderTransformOrigin="0.5,0.5" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>

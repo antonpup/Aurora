@@ -1,0 +1,16 @@
+LIBRARY Aurora-RazerLEDWrapper.dll
+
+EXPORTS
+	Init
+	UnInit
+	CreateEffect
+	SetEffect
+	DeleteEffect
+	RegisterEventNotification
+	UnregisterEventNotification
+	CreateKeyboardEffect
+	CreateMouseEffect
+	CreateHeadsetEffect
+	CreateMousepadEffect
+	CreateKeypadEffect
+	QueryDevice

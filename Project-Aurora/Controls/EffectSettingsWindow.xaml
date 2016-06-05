@@ -1,0 +1,24 @@
+﻿<Window
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Controls"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:ncore="http://schemas.ncore.com/wpf/xaml/colorbox" x:Class="Aurora.Controls.EffectSettingsWindow"
+             mc:Ignorable="d" ShowInTaskbar="False" ResizeMode="NoResize" Title="Effect Settings" Height="188" Width="287" Topmost="True" WindowStartupLocation="CenterOwner" Activated="Window_Activated" Deactivated="Window_Deactivated" Background="Transparent">
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="10,13,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="primary_color" HorizontalAlignment="Left" Height="24" Margin="90,10,0,0" VerticalAlignment="Top" Width="169" SelectedColorChanged="primary_color_SelectedColorChanged" UsingAlphaChannel="True" ShowAdvancedButton="True" ColorMode="ColorCanvas"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,42,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="secondary_color" HorizontalAlignment="Left" Height="24" Margin="105,39,0,0" VerticalAlignment="Top" Width="154" SelectedColorChanged="secondary_color_SelectedColorChanged" ShowAdvancedButton="True" UsingAlphaChannel="True" ColorMode="ColorCanvas"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,68,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
+        <Slider x:Name="effect_speed_slider" HorizontalAlignment="Left" Margin="90,68,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="5" ValueChanged="effect_speed_slider_ValueChanged"/>
+        <TextBlock x:Name="effect_speed_label" HorizontalAlignment="Left" Margin="235,68,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
+        <Button x:Name="accept_button" Content="Save" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Click="accept_button_Click"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,92,0,0" TextWrapping="Wrap" Text="Effect Angle: " VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="149,92,0,0" TextWrapping="Wrap" Text="degrees" VerticalAlignment="Top"/>
+        <xctk:IntegerUpDown x:Name="effect_angle" HorizontalAlignment="Left" Height="20" Margin="84,92,0,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="-360" Maximum="360" Increment="1" ValueChanged="effect_angle_ValueChanged"/>
+
+    </Grid>
+</Window>
