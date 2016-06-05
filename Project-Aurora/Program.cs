@@ -81,14 +81,14 @@ namespace Aurora
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            
+            /*
             if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
             {
                 Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
                 Environment.Exit(0);
             }
-            
+            */
 
             if (isDelayed)
                 System.Threading.Thread.Sleep((int)delayTime);
