@@ -170,7 +170,7 @@ namespace Aurora
             {
                 using (NamedPipeServerStream pipeStream = new NamedPipeServerStream("Aurora\\server"))
                 {
-                    Global.logger.LogLine(String.Format( "[Server] Pipe created {0}", pipeStream.GetHashCode() ));
+                    //Global.logger.LogLine(String.Format( "[Server] Pipe created {0}", pipeStream.GetHashCode() ));
 
                     pipeStream.WaitForConnection();
                     Global.logger.LogLine("[Server] Pipe connection established");
@@ -180,7 +180,7 @@ namespace Aurora
                         string temp;
                         while ((temp = sr.ReadLine()) != null)
                         {
-                            //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
+                            Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
 
                             GameState_Wrapper new_state = new GameState_Wrapper(temp); //GameState_Wrapper
 

@@ -4,7 +4,7 @@
 [Link to Aurora's webpage, includes some demos and changelogs](http://aurora.lastbullet.net)
 
 
-Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, and PAYDAY 2.
+Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, and The Division.
 
 #Requirements
 Recommended:
@@ -14,12 +14,12 @@ Recommended:
 * Keyboard: Any RGB supported keyboard (Logitech, Razer, Corsair)
 * Mouse: Any RGB supported mouse (Logitech, Razer, Corsair)
 * Headset: Any RGB supported headset (Logitech, Razer, Corsair)
-* Sotware : Make sure to have installed [Visual C++ Redistributable Packages for Visual Studio 2013](https://www.microsoft.com/en-us/download/details.aspx?id=40784) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
+* Sotware : Make sure to have installed [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 * Internet Connection: Required for automatic updates
 * Additional Notes: Being able to run games with stable performance
 
 # How to Install
-1. First of all, make sure that your PC meets the requirements listed above. Also make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2013](https://www.microsoft.com/en-us/download/details.aspx?id=40784) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653) installed.
+1. First of all, make sure that your PC meets the requirements listed above. Also make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653) installed.
 2. Download the latest release from [here](https://github.com/antonpup/Aurora/releases/latest).
 3. Extract the archive anywhere on your computer. Preferably keep it in a location you can easily access.
 4. Run "Aurora.exe", from that point, Aurora should provide you with further instructions and options.
@@ -35,6 +35,7 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * Rocket League
 * Overwatch
 * Payday 2
+* The Division
 
 ## Planned Features/Support
 * SteelSeries devices
@@ -131,6 +132,10 @@ Payday 2 features
 * Suspicion background effect
 * Player health and ammo indicators
 * Custom Lighting Zones
+
+The Division features
+
+* The Division effects are controlled by the game itself
 
 # F.A.Q.
 * Q: Can this give me a ban in a video game?

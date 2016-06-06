@@ -34,7 +34,7 @@ namespace Aurora.Profiles.Overwatch
                     razer_wrapper_64.Write(Properties.Resources.Aurora_RazerLEDWrapper64);
                 }
 
-                MessageBox.Show("Aurora Wrapper Patch for Razer appied to\r\n" + dialog.SelectedPath);
+                MessageBox.Show("Aurora Wrapper Patch for Razer applied to\r\n" + dialog.SelectedPath);
             }
         }
 

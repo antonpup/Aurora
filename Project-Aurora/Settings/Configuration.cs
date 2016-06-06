@@ -7,6 +7,7 @@ using Aurora.Profiles.Overlays;
 using Aurora.Profiles.Overwatch;
 using Aurora.Profiles.Payday_2;
 using Aurora.Profiles.RocketLeague;
+using Aurora.Profiles.TheDivision;
 using LedCSharp;
 using Newtonsoft.Json;
 using System;
@@ -89,6 +90,7 @@ namespace Aurora.Settings
         public RocketLeagueSettings rocketleague_settings;
         public OverwatchSettings overwatch_settings;
         public PD2Settings pd2_settings;
+        public TheDivisionSettings division_settings;
 
         //Overlay Settings
         public VolumeOverlaySettings volume_overlay_settings;
@@ -122,6 +124,7 @@ namespace Aurora.Settings
             rocketleague_settings = new RocketLeagueSettings();
             overwatch_settings = new OverwatchSettings();
             pd2_settings = new PD2Settings();
+            division_settings = new TheDivisionSettings();
 
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();

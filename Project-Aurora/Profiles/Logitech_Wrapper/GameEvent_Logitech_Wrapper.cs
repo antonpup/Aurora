@@ -10,8 +10,11 @@ namespace Aurora.Profiles.Logitech_Wrapper
 {
     public class GameEvent_Logitech_Wrapper : GameEvent
     {
+        object lock_updater;
+
         byte[] bitmap = new byte[LedCSharp.LogitechGSDK.LOGI_LED_BITMAP_SIZE];
         int[] logo = new int[4];
+        Color last_fill_color = Color.Transparent;
         Dictionary<Devices.DeviceKeys, KeyEffect> key_effects = new Dictionary<Devices.DeviceKeys, KeyEffect>();
         EntireEffect current_effect = null;
 
@@ -24,7 +27,7 @@ namespace Aurora.Profiles.Logitech_Wrapper
             EffectLayer bitmap_layer = new EffectLayer("Logitech Wrapper - Bitmap");
 
             Devices.DeviceKeys[] allkeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
-            foreach(var key in allkeys)
+            foreach (var key in allkeys)
             {
                 if (key == Devices.DeviceKeys.LOGO && logo.Length == 4)
                 {
@@ -64,7 +67,7 @@ namespace Aurora.Profiles.Logitech_Wrapper
 
             foreach (var key in effect_keys)
             {
-                if(key_effects[key].duration != 0 && key_effects[key].timeStarted + key_effects[key].duration  <= currentTime)
+                if (key_effects[key].duration != 0 && key_effects[key].timeStarted + key_effects[key].duration <= currentTime)
                 {
                     key_effects.Remove(key);
                 }
@@ -95,21 +98,52 @@ namespace Aurora.Profiles.Logitech_Wrapper
             }
 
             layers.Enqueue(entire_effect_layer);
-            
+
 
             frame.SetLayers(layers.ToArray());
         }
 
         public void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
-            if(new_game_state is GameState_Wrapper)
+            if (new_game_state is GameState_Wrapper)
             {
                 GameState_Wrapper ngw_state = (new_game_state as GameState_Wrapper);
 
-                bitmap = ngw_state.Sent_Bitmap;
+                if(ngw_state.Sent_Bitmap.Length > 0)
+                    bitmap = ngw_state.Sent_Bitmap;
                 logo = ngw_state.Extra_Keys.logo;
 
-                if(ngw_state.Command.Equals("FlashSingleKey"))
+
+                if (ngw_state.Command.Equals("SetLighting"))
+                {
+                    Color newfill = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
+
+                    if (!last_fill_color.Equals(newfill))
+                    {
+                        last_fill_color = newfill;
+
+                        for (int i = 0; i < bitmap.Length; i += 4)
+                        {
+                            bitmap[i] = (byte)ngw_state.Command_Data.blue_start;
+                            bitmap[i + 1] = (byte)ngw_state.Command_Data.green_start;
+                            bitmap[i + 2] = (byte)ngw_state.Command_Data.red_start;
+                            bitmap[i + 3] = (byte)255;
+                        }
+                    }
+                }
+                else if (ngw_state.Command.Equals("SetLightingForKeyWithKeyName"))
+                {
+                    var bitmap_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap((LedCSharp.keyboardNames)(ngw_state.Command_Data.key));
+
+                    if(bitmap_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN)
+                    {
+                        bitmap[(int)bitmap_key] = (byte)ngw_state.Command_Data.blue_start;
+                        bitmap[(int)bitmap_key + 1] = (byte)ngw_state.Command_Data.green_start;
+                        bitmap[(int)bitmap_key + 2] = (byte)ngw_state.Command_Data.red_start;
+                        bitmap[(int)bitmap_key + 3] = (byte)255;
+                    }
+                }
+                else if (ngw_state.Command.Equals("FlashSingleKey"))
                 {
                     Devices.DeviceKeys dev_key = Devices.Logitech.LogitechDevice.ToDeviceKey((LedCSharp.keyboardNames)(ngw_state.Command_Data.key));
                     LogiFlashSingleKey neweffect = new LogiFlashSingleKey(dev_key, Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start),
@@ -154,20 +188,12 @@ namespace Aurora.Profiles.Logitech_Wrapper
                         ngw_state.Command_Data.interval
                         );
                 }
-
-                //PulseLighting
-                //FlashLighting
-
                 else if (ngw_state.Command.Equals("StopEffects"))
                 {
                     key_effects.Clear();
                     current_effect = null;
                 }
-                else if(ngw_state.Command.Equals("SetLighting"))
-                {
-
-                }
-                else if (ngw_state.Command.Equals("SetLightingForKeyWithKeyName"))
+                else if(ngw_state.Command.Equals("SetLightingFromBitmap"))
                 {
 
                 }

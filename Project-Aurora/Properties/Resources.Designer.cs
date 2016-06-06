@@ -173,6 +173,16 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap division_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("division_64x64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap dota2_icon {
             get {
                 object obj = ResourceManager.GetObject("dota2_icon", resourceCulture);

@@ -38,6 +38,7 @@ namespace Aurora
         Profiles.RocketLeague.Control_RocketLeague rocketleague_control = new Profiles.RocketLeague.Control_RocketLeague();
         Profiles.Overwatch.Control_Overwatch overwatch_control = new Profiles.Overwatch.Control_Overwatch();
         Profiles.Payday_2.Control_PD2 payday2_control = new Profiles.Payday_2.Control_PD2();
+        Profiles.TheDivision.Control_TheDivision division_control = new Profiles.TheDivision.Control_TheDivision();
 
         EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
         EffectColor dota2_color_scheme = new EffectColor(102, 0, 0);
@@ -431,7 +432,6 @@ namespace Aurora
             profile_overwatch.Margin = new Thickness(0, 5, 0, 0);
             profile_overwatch.MouseDown += ProfileImage_MouseDown;
             this.profiles_stack.Children.Add(profile_overwatch);
-
             
             Image profile_payday2 = new Image();
             profile_payday2.Tag = payday2_control;
@@ -440,6 +440,14 @@ namespace Aurora
             profile_payday2.Margin = new Thickness(0, 5, 0, 0);
             profile_payday2.MouseDown += ProfileImage_MouseDown;
             this.profiles_stack.Children.Add(profile_payday2);
+
+            Image profile_thedivision = new Image();
+            profile_thedivision.Tag = division_control;
+            profile_thedivision.Source = new BitmapImage(new Uri(@"Resources/division_64x64.png", UriKind.Relative));
+            profile_thedivision.ToolTip = "The Division Settings";
+            profile_thedivision.Margin = new Thickness(0, 5, 0, 0);
+            profile_thedivision.MouseDown += ProfileImage_MouseDown;
+            this.profiles_stack.Children.Add(profile_thedivision);
 
             //Populate with added profiles
             foreach (KeyValuePair<string, Profiles.Generic_Application.GenericApplicationSettings> kvp in Global.Configuration.additional_profiles)

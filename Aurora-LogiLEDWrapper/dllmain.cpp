@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <string>
 #include <iomanip>
-#include <sstream>
 #include <windows.h>
 
 #define PIPE_NAME L"\\\\.\\pipe\\Aurora\\server" 
@@ -14,13 +13,17 @@ HANDLE hPipe;
 static bool isInitialized = false;
 
 static unsigned char current_bitmap[LOGI_LED_BITMAP_SIZE];
+static unsigned char current_bg[3];
+
+static int current_device = LOGI_DEVICETYPE_ALL;
+
 
 static std::string program_name;
 
-BOOL WINAPI DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-					 )
+BOOL WINAPI DllMain(HMODULE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+	)
 {
 	switch (ul_reason_for_call)
 	{
@@ -282,29 +285,19 @@ LogiLed::Logitech_keyboardBitmapKeys ToLogitechBitmap(LogiLed::KeyName keyName)
 */
 
 
-bool WriteToPipe(unsigned char bitmap[], std::string command_cargo)
+bool WriteToPipe(const std::string command_cargo)
 {
 	if (!isInitialized)
 		return false;
-	
+
 	//Create JSON
-	std::stringstream ss;
+	std::string contents = "";
 
-	ss << '{';
-	ss << "\"provider\": {\"name\": \"" << program_name << "\", \"appid\": 0},";
-	ss << command_cargo << ',';
-	ss << "\"bitmap\": [";
-	for (int bitm_pos = 0; bitm_pos < LOGI_LED_BITMAP_SIZE; bitm_pos++)
-	{
-		ss << (short)bitmap[bitm_pos];
-
-		if (bitm_pos + 1 < LOGI_LED_BITMAP_SIZE)
-			ss << ',';
-	}
-	ss << "]";
-	ss << '}';
-
-	ss << "\r\n";
+	contents += '{';
+	contents += "\"provider\": {\"name\": \"" + program_name + "\", \"appid\": 0},";
+	contents += command_cargo;
+	contents += '}';
+	contents += "\r\n";
 
 	if (INVALID_HANDLE_VALUE == hPipe)
 	{
@@ -327,15 +320,18 @@ bool WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 	}
 
 	DWORD cbBytes;
-	
+
+	const char* c_contents = contents.c_str();
+	int c_cotents_len = strlen(c_contents);
+
 	BOOL bResult = WriteFile(
 		hPipe,                // handle to pipe 
-		ss.str().c_str(),             // buffer to write from 
-		strlen(ss.str().c_str()),   // number of bytes to write, include the NULL
+		c_contents,             // buffer to write from 
+		c_cotents_len,   // number of bytes to write, include the NULL
 		&cbBytes,             // number of bytes written 
 		NULL);                // not overlapped I/O 
 
-	if ((!bResult) || (strlen(ss.str().c_str()) != cbBytes))
+	if ((!bResult) || c_cotents_len != cbBytes)
 	{
 		CloseHandle(hPipe);
 		return false;
@@ -348,77 +344,26 @@ bool WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 	return false;
 }
 
-bool LogiLedInit()
-{
-	if (!isInitialized)
-	{
-		//Get Application name
-		CHAR pBuf[MAX_PATH];
-		int bytes = GetModuleFileNameA(NULL, pBuf, MAX_PATH);
-		std::string filepath = pBuf;
-
-		int fn_beginning = 0;
-		for (int chr_pos = strlen(pBuf) - 1; chr_pos > -1; chr_pos--)
-		{
-			if (pBuf[chr_pos] == '\\')
-			{
-				fn_beginning = chr_pos + 1;
-				break;
-			}
-		}
-
-		program_name = filepath.substr(fn_beginning);
-		
-		//Connect to the server pipe using CreateFile()
-		hPipe = CreateFile(
-			PIPE_NAME,   // pipe name 
-			GENERIC_READ |  // read and write access 
-			GENERIC_WRITE,
-			0,              // no sharing 
-			NULL,           // default security attributes
-			OPEN_EXISTING,  // opens existing pipe 
-			0,              // default attributes 
-			NULL);          // no template file 
-
-		if (INVALID_HANDLE_VALUE == hPipe)
-		{
-			isInitialized = false;
-			return false;
-		}
-	}
-
-	isInitialized = true;
-	return true;
-}
-
-bool LogiLedSetTargetDevice(int targetDevice)
-{
-	return isInitialized;
-}
-
-bool LogiLedSaveCurrentLighting()
-{
-	return isInitialized;
-}
-
-bool LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercentage, int custom_mode = 0)
+void _LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercentage, int custom_mode = 0)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
 	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
 
-	if (isInitialized)
+	if (isInitialized && (current_device == LOGI_DEVICETYPE_ALL || current_device == LOGI_DEVICETYPE_PERKEY_RGB))
 	{
-		for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
-		{
-			current_bitmap[colorset] = blueValue;
-			current_bitmap[colorset + 1] = greenValue;
-			current_bitmap[colorset + 2] = redValue;
-			current_bitmap[colorset + 3] = (char)255;
-		}
+		std::string contents = "";
 
 		if (program_name.compare("GTA5.exe") == 0)
 		{
+			for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
+			{
+				current_bitmap[colorset] = blueValue;
+				current_bitmap[colorset + 1] = greenValue;
+				current_bitmap[colorset + 2] = redValue;
+				current_bitmap[colorset + 3] = (char)255;
+			}
+			
 			switch (custom_mode)
 			{
 			case 0xFFFB00:
@@ -551,18 +496,413 @@ bool LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercenta
 				current_bitmap[(int)LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F12 + 2] = (char)255;
 				current_bitmap[(int)LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F12 + 3] = (char)255;
 			}
+
+
+			contents += "\"bitmap\": [";
+			for (int bitm_pos = 0; bitm_pos < LOGI_LED_BITMAP_SIZE; bitm_pos++)
+			{
+				contents += std::to_string((short)current_bitmap[bitm_pos]);
+
+				if (bitm_pos + 1 < LOGI_LED_BITMAP_SIZE)
+					contents += ',';
+			}
+			contents += "],";
+		}
+		else
+		{
+
+			if (current_bg[0] == blueValue &&
+				current_bg[1] == greenValue &&
+				current_bg[2] == redValue
+				)
+			{
+				//No need to write on pipe, color did not change
+				return;
+			}
+
+			current_bg[0] = blueValue;
+			current_bg[1] = greenValue;
+			current_bg[2] = redValue;
+
+			for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
+			{
+				current_bitmap[colorset] = blueValue;
+				current_bitmap[colorset + 1] = greenValue;
+				current_bitmap[colorset + 2] = redValue;
+				current_bitmap[colorset + 3] = (char)255;
+			}
 		}
 
-		std::stringstream ss;
-		ss << "\"command\": " << "\"SetLighting\"" << ',';
-		ss << "\"command_data\": {";
+		contents += "\"command\": \"SetLighting\",";
+		contents += "\"command_data\": {";
+		contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+		contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+		contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
 
-		ss << "\"custom_mode\": " << custom_mode;
+		contents += "\"custom_mode\": " + std::to_string(custom_mode);
 
-		ss << '}';
+		contents += '}';
 
-		return WriteToPipe(current_bitmap, ss.str());
+		WriteToPipe(contents);
 	}
+}
+
+void _LogiLedFlashLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
+{
+	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
+	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
+	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+
+	std::string contents = "";
+	contents += "\"command\": \"FlashLighting\",";
+	contents += "\"command_data\": {";
+
+	contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+	contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+	contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+	contents += "\"duration\": " + std::to_string(milliSecondsDuration) + ',';
+	contents += "\"interval\": " + std::to_string(milliSecondsInterval);
+
+	contents += '}';
+
+	WriteToPipe(contents);
+}
+
+void _LogiLedPulseLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
+{
+	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
+	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
+	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+
+	std::string contents = "";
+	contents += "\"command\": \"PulseLighting\",";
+	contents += "\"command_data\": {";
+
+	contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+	contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+	contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+	contents += "\"duration\": " + std::to_string(milliSecondsDuration) + ',';
+	contents += "\"interval\": " + std::to_string(milliSecondsInterval);
+
+	contents += '}';
+
+	WriteToPipe(contents);
+}
+
+void _LogiLedStopEffects()
+{
+	std::string contents = "";
+	contents += "\"command\": \"StopEffects\",";
+	contents += "\"command_data\": {";
+	contents += '}';
+
+	WriteToPipe(contents);
+}
+
+void _LogiLedSetLightingFromBitmap(unsigned char bitmap[])
+{
+	if (isInitialized && (current_device == LOGI_DEVICETYPE_ALL || current_device == LOGI_DEVICETYPE_PERKEY_RGB))
+	{
+		for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
+		{
+			current_bitmap[colorset] = bitmap[colorset];
+			current_bitmap[colorset + 1] = bitmap[colorset + 1];
+			current_bitmap[colorset + 2] = bitmap[colorset + 2];
+			current_bitmap[colorset + 3] = bitmap[colorset + 3];
+		}
+
+		std::string contents = "";
+		contents += "\"command\": \"SetLightingFromBitmap\",";
+		contents += "\"command_data\": {";
+		contents += "},";
+		contents += "\"bitmap\": [";
+		for (int bitm_pos = 0; bitm_pos < LOGI_LED_BITMAP_SIZE; bitm_pos++)
+		{
+			contents += std::to_string((short)current_bitmap[bitm_pos]);
+
+			if (bitm_pos + 1 < LOGI_LED_BITMAP_SIZE)
+				contents += ',';
+		}
+		contents += "]";
+
+		WriteToPipe(contents);
+	}
+}
+
+void _LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
+{
+	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
+	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
+	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+
+	std::string contents = "";
+	contents += "\"command\": \"SetLightingForKeyWithScanCode\",";
+	contents += "\"command_data\": {";
+
+	contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+	contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+	contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+	contents += "\"key\": " + std::to_string(keyCode);
+
+	contents += '}';
+
+	//NOT IMPLEMENTED
+	/*
+	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
+
+	if (bit_location != LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN)
+	{
+	current_bitmap[(int)bit_location] = blueValue;
+	current_bitmap[(int)bit_location + 1] = greenValue;
+	current_bitmap[(int)bit_location + 2] = redValue;
+	current_bitmap[(int)bit_location + 3] = (char)255;
+
+	return WriteToPipe(current_bitmap, ss.str());
+	}
+	*/
+	WriteToPipe(contents);
+}
+
+void _LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
+{
+	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
+	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
+	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+
+	std::string contents = "";
+	contents += "\"command\": \"SetLightingForKeyWithHidCode\",";
+	contents += "\"command_data\": {";
+
+	contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+	contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+	contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+	contents += "\"key\": " + std::to_string(keyCode);
+
+	contents += '}';
+
+	//NOT IMPLEMENTED
+	/*
+	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
+
+	if (bit_location != LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN)
+	{
+	current_bitmap[(int)bit_location] = blueValue;
+	current_bitmap[(int)bit_location + 1] = greenValue;
+	current_bitmap[(int)bit_location + 2] = redValue;
+	current_bitmap[(int)bit_location + 3] = (char)255;
+
+	return WriteToPipe(current_bitmap, ss.str());
+	}
+	*/
+	WriteToPipe(contents);
+}
+
+void _LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
+{
+	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
+	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
+	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+
+	std::string contents = "";
+	contents += "\"command\": \"SetLightingForKeyWithQuartzCode\",";
+	contents += "\"command_data\": {";
+
+	contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+	contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+	contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+	contents += "\"key\": " + std::to_string(keyCode);
+
+	contents += '}';
+
+	//NOT IMPLEMENTED
+	/*
+	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
+
+	if (bit_location != LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN)
+	{
+	current_bitmap[(int)bit_location] = blueValue;
+	current_bitmap[(int)bit_location + 1] = greenValue;
+	current_bitmap[(int)bit_location + 2] = redValue;
+	current_bitmap[(int)bit_location + 3] = (char)255;
+
+	return WriteToPipe(current_bitmap, ss.str());
+	}
+	*/
+	WriteToPipe(contents);
+}
+
+void _LogiLedSetLightingForKeyWithKeyName(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage)
+{
+	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
+	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
+	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+
+	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
+
+	if (isInitialized && (current_device == LOGI_DEVICETYPE_ALL || current_device == LOGI_DEVICETYPE_PERKEY_RGB))
+	{
+		if (bit_location == LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN ||
+			(
+				current_bitmap[(int)bit_location] == blueValue &&
+				current_bitmap[(int)bit_location + 1] == greenValue &&
+				current_bitmap[(int)bit_location + 2] == redValue
+				)
+			)
+		{
+			//No need to write on pipe, color did not change
+			return;
+		}
+
+		current_bitmap[(int)bit_location] = blueValue;
+		current_bitmap[(int)bit_location + 1] = greenValue;
+		current_bitmap[(int)bit_location + 2] = redValue;
+
+		std::string contents = "";
+		contents += "\"command\": \"SetLightingForKeyWithKeyName\",";
+		contents += "\"command_data\": {";
+
+		contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+		contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+		contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+		contents += "\"key\": " + std::to_string(keyName);
+
+		contents += "}";
+
+		WriteToPipe(contents);
+	}
+}
+
+void _LogiLedFlashSingleKey(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval)
+{
+	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
+	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
+	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+
+	std::string contents = "";
+	contents += "\"command\": \"FlashSingleKey\",";
+	contents += "\"command_data\": {";
+
+	contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+	contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+	contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+	contents += "\"duration\": " + std::to_string(msDuration) + ',';
+	contents += "\"interval\": " + std::to_string(msInterval) + ',';
+	contents += "\"key\": " + std::to_string(keyName);
+
+	contents += '}';
+
+	WriteToPipe(contents);
+}
+
+void _LogiLedPulseSingleKey(LogiLed::KeyName keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite)
+{
+	unsigned char redValue = (unsigned char)((startRedPercentage / 100.0f) * 255);
+	unsigned char greenValue = (unsigned char)((startGreenPercentage / 100.0f) * 255);
+	unsigned char blueValue = (unsigned char)((startBluePercentage / 100.0f) * 255);
+	unsigned char redValue_end = (unsigned char)((finishRedPercentage / 100.0f) * 255);
+	unsigned char greenValue_end = (unsigned char)((finishGreenPercentage / 100.0f) * 255);
+	unsigned char blueValue_end = (unsigned char)((finishBluePercentage / 100.0f) * 255);
+
+	std::string contents = "";
+	contents += "\"command\": \"PulseSingleKey\",";
+	contents += "\"command_data\": {";
+
+	contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+	contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+	contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+	contents += "\"red_end\": " + std::to_string((int)redValue_end) + ',';
+	contents += "\"green_end\": " + std::to_string((int)greenValue_end) + ',';
+	contents += "\"blue_end\": " + std::to_string((int)blueValue_end) + ',';
+	contents += "\"duration\": " + std::to_string(msDuration) + ',';
+	if (isInfinite)
+		contents += "\"interval\": 0,";
+	else
+		contents += "\"interval\": -1,";
+	contents += "\"key\": " + std::to_string(keyName);
+
+	contents += '}';
+
+	WriteToPipe(contents);
+}
+
+void _LogiLedStopEffectsOnKey(LogiLed::KeyName keyName)
+{
+	std::string contents = "";
+	contents += "\"command\": \"StopEffectsOnKey\",";
+	contents += "\"command_data\": {";
+	contents += "\"key\": " + std::to_string(keyName);
+	contents += '}';
+
+	WriteToPipe(contents);
+}
+
+bool LogiLedInit()
+{
+	if (!isInitialized)
+	{
+		//Get Application name
+		CHAR pBuf[MAX_PATH];
+		int bytes = GetModuleFileNameA(NULL, pBuf, MAX_PATH);
+		std::string filepath = pBuf;
+
+		int fn_beginning = 0;
+		for (int chr_pos = strlen(pBuf) - 1; chr_pos > -1; chr_pos--)
+		{
+			if (pBuf[chr_pos] == '\\')
+			{
+				fn_beginning = chr_pos + 1;
+				break;
+			}
+		}
+
+		program_name = filepath.substr(fn_beginning);
+
+		//Connect to the server pipe using CreateFile()
+		hPipe = CreateFile(
+			PIPE_NAME,   // pipe name 
+			GENERIC_READ |  // read and write access 
+			GENERIC_WRITE,
+			0,              // no sharing 
+			NULL,           // default security attributes
+			OPEN_EXISTING,  // opens existing pipe 
+			0,              // default attributes 
+			NULL);          // no template file 
+
+		if (INVALID_HANDLE_VALUE == hPipe)
+		{
+			isInitialized = false;
+			return false;
+		}
+	}
+
+	isInitialized = true;
+	return true;
+}
+
+bool LogiLedGetSdkVersion(int *majorNum, int *minorNum, int *buildNum)
+{
+	*majorNum = 8;
+	*minorNum = 75;
+	*buildNum = 30;
+
+	return true;
+}
+
+bool LogiLedSetTargetDevice(int targetDevice)
+{
+	current_device = targetDevice;
+	
+	return isInitialized;
+}
+
+bool LogiLedSaveCurrentLighting()
+{
+	return isInitialized;
+}
+
+bool LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercentage, int custom_mode = 0)
+{
+	_LogiLedSetLighting(redPercentage, greenPercentage, bluePercentage, custom_mode);
 
 	return isInitialized;
 }
@@ -574,304 +914,96 @@ bool LogiLedRestoreLighting()
 
 bool LogiLedFlashLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
 {
-	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
-	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
-	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
-	
-	std::stringstream ss;
-	ss << "\"command\": " << "\"FlashLighting\"" << ',';
-	ss << "\"command_data\": {";
-
-	ss << "\"red_start\": " << (int)redValue << ',';
-	ss << "\"green_start\": " << (int)greenValue << ',';
-	ss << "\"blue_start\": " << (int)blueValue << ',';
-	ss << "\"duration\": " << milliSecondsDuration << ',';
-	ss << "\"interval\": " << milliSecondsInterval;
-
-	ss << '}';
-	
-	return WriteToPipe(current_bitmap, ss.str());
+	_LogiLedFlashLighting(redPercentage, greenPercentage, bluePercentage, milliSecondsDuration, milliSecondsInterval);
 
 	return isInitialized;
 }
 
 bool LogiLedPulseLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
 {
-	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
-	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
-	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
-
-	std::stringstream ss;
-	ss << "\"command\": " << "\"PulseLighting\"" << ',';
-	ss << "\"command_data\": {";
-
-	ss << "\"red_start\": " << (int)redValue << ',';
-	ss << "\"green_start\": " << (int)greenValue << ',';
-	ss << "\"blue_start\": " << (int)blueValue << ',';
-	ss << "\"duration\": " << milliSecondsDuration << ',';
-	ss << "\"interval\": " << milliSecondsInterval;
-
-	ss << '}';
-
-	return WriteToPipe(current_bitmap, ss.str());
+	_LogiLedPulseLighting(redPercentage, greenPercentage, bluePercentage, milliSecondsDuration, milliSecondsInterval);
 
 	return isInitialized;
 }
 
 bool LogiLedStopEffects()
 {
-	std::stringstream ss;
-	ss << "\"command\": " << "\"StopEffects\"" << ',';
-	ss << "\"command_data\": {";
-	ss << '}';
-	
-	return WriteToPipe(current_bitmap, ss.str());
-	
+	_LogiLedStopEffects();
+
 	return isInitialized;
 }
 
 bool LogiLedSetLightingFromBitmap(unsigned char bitmap[])
 {
-	if (isInitialized)
-	{
-		for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
-		{
-			current_bitmap[colorset] = bitmap[colorset];
-			current_bitmap[colorset + 1] = bitmap[colorset + 1];
-			current_bitmap[colorset + 2] = bitmap[colorset + 2];
-			current_bitmap[colorset + 3] = bitmap[colorset + 3];
-		}
-		
-		std::stringstream ss;
-		ss << "\"command\": " << "\"SetLightingFromBitmap\"" << ',';
-		ss << "\"command_data\": {";
-		ss << '}';
+	_LogiLedSetLightingFromBitmap(bitmap);
 
-		if (!WriteToPipe(current_bitmap, ss.str()))
-			return false;
-	}
-	
 	return isInitialized;
 }
 
 bool LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
-	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
-	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
-	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
-
-	std::stringstream ss;
-	ss << "\"command\": " << "\"SetLightingForKeyWithScanCode\"" << ',';
-	ss << "\"command_data\": {";
-
-	ss << "\"red_start\": " << (int)redValue << ',';
-	ss << "\"green_start\": " << (int)greenValue << ',';
-	ss << "\"blue_start\": " << (int)blueValue << ',';
-	ss << "\"key\": " << keyCode;
-
-	ss << '}';
-	
-	//NOT IMPLEMENTED
-	/*
-	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
-
-	if (bit_location != LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN)
-	{
-		current_bitmap[(int)bit_location] = blueValue;
-		current_bitmap[(int)bit_location + 1] = greenValue;
-		current_bitmap[(int)bit_location + 2] = redValue;
-		current_bitmap[(int)bit_location + 3] = (char)255;
-
-		return WriteToPipe(current_bitmap, ss.str());
-	}
-	*/
+	_LogiLedSetLightingForKeyWithScanCode(keyCode, redPercentage, greenPercentage, bluePercentage);
 
 	return isInitialized;
 }
 
 bool LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
-	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
-	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
-	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+	_LogiLedSetLightingForKeyWithHidCode(keyCode, redPercentage, greenPercentage, bluePercentage);
 
-	std::stringstream ss;
-	ss << "\"command\": " << "\"SetLightingForKeyWithHidCode\"" << ',';
-	ss << "\"command_data\": {";
-
-	ss << "\"red_start\": " << (int)redValue << ',';
-	ss << "\"green_start\": " << (int)greenValue << ',';
-	ss << "\"blue_start\": " << (int)blueValue << ',';
-	ss << "\"key\": " << keyCode;
-
-	ss << '}';
-
-	//NOT IMPLEMENTED
-	/*
-	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
-
-	if (bit_location != LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN)
-	{
-	current_bitmap[(int)bit_location] = blueValue;
-	current_bitmap[(int)bit_location + 1] = greenValue;
-	current_bitmap[(int)bit_location + 2] = redValue;
-	current_bitmap[(int)bit_location + 3] = (char)255;
-
-	return WriteToPipe(current_bitmap, ss.str());
-	}
-	*/
-	
 	return isInitialized;
 }
 
 bool LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
-	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
-	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
-	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
-
-	std::stringstream ss;
-	ss << "\"command\": " << "\"SetLightingForKeyWithQuartzCode\"" << ',';
-	ss << "\"command_data\": {";
-
-	ss << "\"red_start\": " << (int)redValue << ',';
-	ss << "\"green_start\": " << (int)greenValue << ',';
-	ss << "\"blue_start\": " << (int)blueValue << ',';
-	ss << "\"key\": " << keyCode;
-
-	ss << '}';
-
-	//NOT IMPLEMENTED
-	/*
-	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
-
-	if (bit_location != LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN)
-	{
-	current_bitmap[(int)bit_location] = blueValue;
-	current_bitmap[(int)bit_location + 1] = greenValue;
-	current_bitmap[(int)bit_location + 2] = redValue;
-	current_bitmap[(int)bit_location + 3] = (char)255;
-
-	return WriteToPipe(current_bitmap, ss.str());
-	}
-	*/
+	_LogiLedSetLightingForKeyWithQuartzCode(keyCode, redPercentage, greenPercentage, bluePercentage);
 
 	return isInitialized;
 }
 
 bool LogiLedSetLightingForKeyWithKeyName(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage)
 {
-	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
-	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
-	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+	_LogiLedSetLightingForKeyWithKeyName(keyName, redPercentage, greenPercentage, bluePercentage);
 
-	std::stringstream ss;
-	ss << "\"command\": " << "\"SetLightingForKeyWithKeyName\"" << ',';
-	ss << "\"command_data\": {";
-
-	ss << "\"red_start\": " << (int)redValue << ',';
-	ss << "\"green_start\": " << (int)greenValue << ',';
-	ss << "\"blue_start\": " << (int)blueValue << ',';
-	ss << "\"key\": " << keyName;
-
-	ss << '}';
-
-	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
-
-	if (bit_location != LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN)
-	{
-		current_bitmap[(int)bit_location] = blueValue;
-		current_bitmap[(int)bit_location + 1] = greenValue;
-		current_bitmap[(int)bit_location + 2] = redValue;
-		current_bitmap[(int)bit_location + 3] = (char)255;
-
-		return WriteToPipe(current_bitmap, ss.str());
-	}
-
-	return false;
+	return isInitialized;
 }
 
 bool LogiLedSaveLightingForKey(LogiLed::KeyName keyName)
 {
-	
 	return isInitialized;
 }
 
 bool LogiLedRestoreLightingForKey(LogiLed::KeyName keyName)
 {
-	
 	return isInitialized;
 }
 
 bool LogiLedFlashSingleKey(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval)
 {
-	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
-	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
-	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
+	_LogiLedFlashSingleKey(keyName, redPercentage, greenPercentage, bluePercentage, msDuration, msInterval);
 
-	std::stringstream ss;
-	ss << "\"command\": " << "\"FlashSingleKey\"" << ',';
-	ss << "\"command_data\": {";
-
-	ss << "\"red_start\": " << (int)redValue << ',';
-	ss << "\"green_start\": " << (int)greenValue << ',';
-	ss << "\"blue_start\": " << (int)blueValue << ',';
-	ss << "\"duration\": " << msDuration << ',';
-	ss << "\"interval\": " << msInterval << ',';
-	ss << "\"key\": " << keyName;
-
-	ss << '}';
-
-	return WriteToPipe(current_bitmap, ss.str());
+	return isInitialized;
 }
 
 bool LogiLedPulseSingleKey(LogiLed::KeyName keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite)
 {
-	unsigned char redValue = (unsigned char)((startRedPercentage / 100.0f) * 255);
-	unsigned char greenValue = (unsigned char)((startGreenPercentage / 100.0f) * 255);
-	unsigned char blueValue = (unsigned char)((startBluePercentage / 100.0f) * 255);
-	unsigned char redValue_end = (unsigned char)((finishRedPercentage / 100.0f) * 255);
-	unsigned char greenValue_end = (unsigned char)((finishGreenPercentage / 100.0f) * 255);
-	unsigned char blueValue_end = (unsigned char)((finishBluePercentage / 100.0f) * 255);
+	_LogiLedPulseSingleKey(keyName, startRedPercentage, startGreenPercentage, startBluePercentage, finishRedPercentage, finishGreenPercentage, finishBluePercentage, msDuration, isInfinite);
 
-	std::stringstream ss;
-	ss << "\"command\": " << "\"PulseSingleKey\"" << ',';
-	ss << "\"command_data\": {";
-
-	ss << "\"red_start\": " << (int)redValue << ',';
-	ss << "\"green_start\": " << (int)greenValue << ',';
-	ss << "\"blue_start\": " << (int)blueValue << ',';
-	ss << "\"red_end\": " << (int)redValue_end << ',';
-	ss << "\"green_end\": " << (int)greenValue_end << ',';
-	ss << "\"blue_end\": " << (int)blueValue_end << ',';
-	ss << "\"duration\": " << msDuration << ',';
-	if (isInfinite)
-		ss << "\"interval\": " << 0 << ',';
-	else
-		ss << "\"interval\": " << -1 << ',';
-	ss << "\"key\": " << keyName;
-
-	ss << '}';
-	
-	return WriteToPipe(current_bitmap, ss.str());
+	return isInitialized;
 }
 
 bool LogiLedStopEffectsOnKey(LogiLed::KeyName keyName)
 {
-	std::stringstream ss;
-	ss << "\"command\": " << "\"StopEffectsOnKey\"" << ',';
-	ss << "\"command_data\": {";
-	ss << "\"key\": " << keyName;
-	ss << '}';
+	_LogiLedStopEffectsOnKey(keyName);
 
-	return WriteToPipe(current_bitmap, ss.str());
+	return isInitialized;
 }
 
 void LogiLedShutdown()
 {
 	if (isInitialized)
 	{
-		if(hPipe != INVALID_HANDLE_VALUE)
+		if (hPipe != INVALID_HANDLE_VALUE)
 			CloseHandle(hPipe);
 		isInitialized = false;
 	}

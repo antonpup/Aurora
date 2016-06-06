@@ -62,7 +62,7 @@ namespace Aurora
                     case ("-delay"):
                         isDelayed = true;
 
-                        if(arg_i + 1 < args.Length && int.TryParse(args[arg_i + 1], out delayTime))
+                        if (arg_i + 1 < args.Length && int.TryParse(args[arg_i + 1], out delayTime))
                             arg_i++;
                         else
                             delayTime = 5000;
@@ -73,7 +73,14 @@ namespace Aurora
                     case ("-install_logitech"):
                         Global.logger.LogLine("Program started with '-install_logitech' parameter", Logging_Level.Info);
 
-                        InstallLogitech();
+                        try
+                        {
+                            InstallLogitech();
+                        }
+                        catch (Exception exc)
+                        {
+                            System.Windows.MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
+                        }
                         break;
                 }
             }
@@ -253,7 +260,7 @@ namespace Aurora
             if (!File.Exists(logitech_path + ".aurora_backup"))
                 File.Move(logitech_path, logitech_path + ".aurora_backup");
 
-            using (BinaryWriter logitech_wrapper_86 = new BinaryWriter(new FileStream(logitech_path, FileMode.Create)))
+            using (BinaryWriter logitech_wrapper_86 = new BinaryWriter(new FileStream(logitech_path, FileMode.Create, FileAccess.Write)))
             {
                 logitech_wrapper_86.Write(Properties.Resources.Aurora_LogiLEDWrapper86);
             }
@@ -289,7 +296,7 @@ namespace Aurora
             if (!File.Exists(logitech_path_64 + ".aurora_backup"))
                 File.Move(logitech_path_64, logitech_path_64 + ".aurora_backup");
 
-            using (BinaryWriter logitech_wrapper_64 = new BinaryWriter(new FileStream(logitech_path_64, FileMode.Create)))
+            using (BinaryWriter logitech_wrapper_64 = new BinaryWriter(new FileStream(logitech_path_64, FileMode.Create, FileAccess.Write)))
             {
                 logitech_wrapper_64.Write(Properties.Resources.Aurora_LogiLEDWrapper64);
             }
@@ -310,7 +317,7 @@ namespace Aurora
         private static void InputHookKeyDown(object sender, KeyEventArgs e)
         {
             //Handle Assistant
-            if((e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey || e.KeyCode == Keys.RWin || e.KeyCode == Keys.LWin) && Global.held_modified == Keys.None)
+            if ((e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey || e.KeyCode == Keys.RWin || e.KeyCode == Keys.LWin) && Global.held_modified == Keys.None)
                 Global.held_modified = e.KeyCode;
 
             //Handle Volume Overlay
@@ -327,7 +334,7 @@ namespace Aurora
 
                 return;
             }
-            else if(e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
+            else if (e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
             {
                 Global.geh.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
             }
