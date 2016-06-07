@@ -17,7 +17,6 @@ static unsigned char current_bg[3];
 
 static int current_device = LOGI_DEVICETYPE_ALL;
 
-
 static std::string program_name;
 
 BOOL WINAPI DllMain(HMODULE hModule,

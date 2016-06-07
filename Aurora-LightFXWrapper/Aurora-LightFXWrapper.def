@@ -1,0 +1,22 @@
+LIBRARY Aurora-LightFXWrapper.dll
+
+EXPORTS
+	LFX_Initialize
+	LFX_Release
+	LFX_Reset
+	LFX_Update
+	LFX_UpdateDefault
+	LFX_GetNumDevices
+	LFX_GetDeviceDescription
+	LFX_GetNumLights
+	LFX_GetLightDescription
+	LFX_GetLightLocation
+	LFX_GetLightColor
+	LFX_SetLightColor
+	LFX_Light
+	LFX_SetLightActionColor
+	LFX_SetLightActionColorEx
+	LFX_ActionColor
+	LFX_ActionColorEx
+	LFX_SetTiming
+	LFX_GetVersion

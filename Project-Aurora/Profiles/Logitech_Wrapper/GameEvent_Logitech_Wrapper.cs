@@ -197,6 +197,24 @@ namespace Aurora.Profiles.Logitech_Wrapper
                 {
 
                 }
+                //LightFX
+                if (ngw_state.Command.Equals("LFX_Update"))
+                {
+                    Color newfill = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
+
+                    if (!last_fill_color.Equals(newfill))
+                    {
+                        last_fill_color = newfill;
+
+                        for (int i = 0; i < bitmap.Length; i += 4)
+                        {
+                            bitmap[i] = (byte)ngw_state.Command_Data.blue_start;
+                            bitmap[i + 1] = (byte)ngw_state.Command_Data.green_start;
+                            bitmap[i + 2] = (byte)ngw_state.Command_Data.red_start;
+                            bitmap[i + 3] = (byte)255;
+                        }
+                    }
+                }
                 else
                 {
                     Global.logger.LogLine("Unknown Wrapper Command: " + ngw_state.Command, Logging_Level.Info, false);
