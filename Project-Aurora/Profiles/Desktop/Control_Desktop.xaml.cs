@@ -1,23 +1,10 @@
 ﻿using Aurora.Settings;
 using Aurora.Controls;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Profiles.Desktop
 {
@@ -197,6 +184,24 @@ namespace Aurora.Profiles.Desktop
             if (IsLoaded)
             {
                 Global.Configuration.desktop_settings.ctrl_key_sequence = (sender as Controls.KeySequence).Sequence;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void sc_assistant_win_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (IsLoaded && this.sc_assistant_win_color.SelectedColor.HasValue)
+            {
+                Global.Configuration.desktop_settings.win_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_win_color.SelectedColor.Value);
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void sc_assistant_win_keys_SequenceUpdated(object sender, EventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.desktop_settings.win_key_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
