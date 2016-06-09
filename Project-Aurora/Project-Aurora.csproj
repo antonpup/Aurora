@@ -581,6 +581,7 @@
   <ItemGroup>
     <Content Include="Resources\CorsairInstall\Step1.png" />
     <Content Include="Resources\CorsairInstall\Step2.png" />
+    <Resource Include="Resources\x64\Aurora-LightFXWrapper.dll" />
     <None Include="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -593,6 +594,7 @@
     <Resource Include="Resources\pd2_64x64.png" />
     <Resource Include="Resources\desktop_icon.png" />
     <Resource Include="Resources\division_64x64.png" />
+    <Resource Include="Resources\Win32\Aurora-LightFXWrapper.dll" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\FreeForm_Circle.png" />

@@ -17,6 +17,7 @@ static std::string device_name = "Aurora";
 static int device_lights_num = 1; //DEVICE_LIGHTS_NUM;
 static std::string device_lights_name = "Northern Light";
 //static PLFX_COLOR device_lights[DEVICE_LIGHTS_NUM];
+static bool isUpdated;
 
 
 BOOL APIENTRY DllMain(HMODULE hModule,
@@ -101,6 +102,8 @@ extern "C" {
 
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_Initialize()
 	{
+		isUpdated = false;
+		
 		if (!isInitialized)
 		{
 			//Get Application name
@@ -152,6 +155,7 @@ extern "C" {
 		if (isInitialized)
 		{
 			current_bg = { (char)0, (char)0, (char)0, (char)0 };
+			isUpdated = true;
 			
 			std::string contents = "";
 
@@ -167,7 +171,7 @@ extern "C" {
 
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_Update()
 	{
-		if (isInitialized)
+		if (isInitialized && isUpdated)
 		{
 			unsigned char redValue = (unsigned char)((int)(current_bg.red) * ((int)(current_bg.brightness) / 255.0f));
 			unsigned char greenValue = (unsigned char)((int)(current_bg.green) * ((int)(current_bg.brightness) / 255.0f));
@@ -183,6 +187,8 @@ extern "C" {
 			contents += '}';
 
 			WriteToPipe(contents);
+
+			isUpdated = false;
 		}
 		
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
@@ -358,6 +364,8 @@ extern "C" {
 				return LFX_ERROR_NOLIGHTS;
 
 			current_bg = *lightCol;
+
+			isUpdated = true;
 		}
 
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
@@ -366,6 +374,39 @@ extern "C" {
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_Light(const unsigned int locationMask, const unsigned int lightCol)
 	{
 		//Not supported
+		if (isInitialized)
+		{
+			LFX_COLOR lfx_color;
+			lfx_color.brightness = (lightCol >> 24) & 0xFF;
+			lfx_color.red = (lightCol >> 16) & 0xFF;
+			lfx_color.green = (lightCol >> 8) & 0xFF;
+			lfx_color.blue = lightCol & 0xFF;
+			
+			unsigned char redValue = (unsigned char)((int)(lfx_color.red) * ((int)(lfx_color.brightness) / 255.0f));
+			unsigned char greenValue = (unsigned char)((int)(lfx_color.green) * ((int)(lfx_color.brightness) / 255.0f));
+			unsigned char blueValue = (unsigned char)((int)(lfx_color.blue) * ((int)(lfx_color.brightness) / 255.0f));
+
+			std::string contents = "";
+
+			contents += "\"command\": \"LFX_Light\",";
+			contents += "\"command_data\": {";
+
+			contents += "\"locationMask\": \"" + std::to_string(locationMask) + "\",";
+
+			contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+			contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+			contents += "\"blue_start\": " + std::to_string((int)blueValue);
+			contents += '}';
+
+			WriteToPipe(contents);
+
+			if (locationMask == LFX_ALL)
+			{
+				current_bg = lfx_color;
+				isUpdated = true;
+			}
+		}
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 

@@ -180,7 +180,7 @@ namespace Aurora
                         string temp;
                         while ((temp = sr.ReadLine()) != null)
                         {
-                            Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
+                            //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
 
                             GameState_Wrapper new_state = new GameState_Wrapper(temp); //GameState_Wrapper
 
