@@ -83,6 +83,26 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Aurora_LightFXWrapper64 {
+            get {
+                object obj = ResourceManager.GetObject("Aurora_LightFXWrapper64", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Aurora_LightFXWrapper86 {
+            get {
+                object obj = ResourceManager.GetObject("Aurora_LightFXWrapper86", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] Aurora_LogiLEDWrapper64 {
             get {
                 object obj = ResourceManager.GetObject("Aurora_LogiLEDWrapper64", resourceCulture);

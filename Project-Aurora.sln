@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurora-Updater", "Aurora-Up
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora-LeagueLogiLEDWrapper", "Aurora-LeagueLogiLEDWrapper\Aurora-LeagueLogiLEDWrapper.vcxproj", "{7A7C78E5-0307-4139-9625-401A5A56C51F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora-LightFXWrapper", "Aurora-LightFXWrapper\Aurora-LightFXWrapper.vcxproj", "{A759300D-9550-47BA-8616-C24B6BC05A02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -67,6 +69,14 @@ Global
 		{7A7C78E5-0307-4139-9625-401A5A56C51F}.Release|x64.Build.0 = Release|x64
 		{7A7C78E5-0307-4139-9625-401A5A56C51F}.Release|x86.ActiveCfg = Release|Win32
 		{7A7C78E5-0307-4139-9625-401A5A56C51F}.Release|x86.Build.0 = Release|Win32
+		{A759300D-9550-47BA-8616-C24B6BC05A02}.Debug|x64.ActiveCfg = Release|x64
+		{A759300D-9550-47BA-8616-C24B6BC05A02}.Debug|x64.Build.0 = Release|x64
+		{A759300D-9550-47BA-8616-C24B6BC05A02}.Debug|x86.ActiveCfg = Release|Win32
+		{A759300D-9550-47BA-8616-C24B6BC05A02}.Debug|x86.Build.0 = Release|Win32
+		{A759300D-9550-47BA-8616-C24B6BC05A02}.Release|x64.ActiveCfg = Release|x64
+		{A759300D-9550-47BA-8616-C24B6BC05A02}.Release|x64.Build.0 = Release|x64
+		{A759300D-9550-47BA-8616-C24B6BC05A02}.Release|x86.ActiveCfg = Release|Win32
+		{A759300D-9550-47BA-8616-C24B6BC05A02}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
