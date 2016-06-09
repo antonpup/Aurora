@@ -307,6 +307,8 @@ Logitech_keyboardBitmapKeys ToLogitechBitmap(int rzrow, int rzcolumn)
 		return Logitech_keyboardBitmapKeys::BITLOC_SEMICOLON;
 	else if (rzrow == 3 && rzcolumn == 12)
 		return Logitech_keyboardBitmapKeys::BITLOC_APOSTROPHE;
+	else if (rzrow == 3 && rzcolumn == 13)
+		return Logitech_keyboardBitmapKeys::BITLOC_HASHTAG;
 	else if (rzrow == 3 && rzcolumn == 14)
 		return Logitech_keyboardBitmapKeys::BITLOC_ENTER;
 	else if (rzrow == 3 && rzcolumn == 18)
@@ -319,6 +321,8 @@ Logitech_keyboardBitmapKeys ToLogitechBitmap(int rzrow, int rzcolumn)
 	//Row 5
 	else if (rzrow == 4 && rzcolumn == 1)
 		return Logitech_keyboardBitmapKeys::BITLOC_LEFT_SHIFT;
+	else if (rzrow == 4 && rzcolumn == 2)
+		return Logitech_keyboardBitmapKeys::BITLOC_BACKSLASH_UK;
 	else if (rzrow == 4 && rzcolumn == 3)
 		return Logitech_keyboardBitmapKeys::BITLOC_Z;
 	else if (rzrow == 4 && rzcolumn == 4)
