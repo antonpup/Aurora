@@ -1,11 +1,8 @@
-﻿using Aurora.EffectsEngine;
-using LedCSharp;
+﻿using LedCSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Devices.Logitech
 {
@@ -126,12 +123,12 @@ namespace Aurora.Devices.Logitech
         LEFT_WINDOWS = 424,
         LEFT_ALT = 428,
         //432
-        //436
+        JPN_MUHENKAN = 436,//436
         SPACE = 440,
         //444
         //448
-        //452
-        //456
+        JPN_HENKAN = 452,//452
+        JPN_HIRAGANA_KATAKANA = 456,//456
         //460
         RIGHT_ALT = 464,
         RIGHT_WINDOWS = 468,
@@ -596,9 +593,13 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.SCROLL_LOCK;
                 case(DeviceKeys.PAUSE_BREAK):
                     return Logitech_keyboardBitmapKeys.PAUSE_BREAK;
-                case(DeviceKeys.TILDE):
+                case(DeviceKeys.JPN_HALFFULLWIDTH):
                     return Logitech_keyboardBitmapKeys.TILDE;
-                case(DeviceKeys.ONE):
+                case (DeviceKeys.OEM5):
+                    return Logitech_keyboardBitmapKeys.TILDE;
+                case (DeviceKeys.TILDE):
+                    return Logitech_keyboardBitmapKeys.TILDE;
+                case (DeviceKeys.ONE):
                     return Logitech_keyboardBitmapKeys.ONE;
                 case(DeviceKeys.TWO):
                     return Logitech_keyboardBitmapKeys.TWO;
@@ -700,7 +701,9 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.K;
                 case(DeviceKeys.L):
                     return Logitech_keyboardBitmapKeys.L;
-                case(DeviceKeys.SEMICOLON):
+                case (DeviceKeys.DEU_O):
+                    return Logitech_keyboardBitmapKeys.SEMICOLON;
+                case (DeviceKeys.SEMICOLON):
                     return Logitech_keyboardBitmapKeys.SEMICOLON;
                 case(DeviceKeys.APOSTROPHE):
                     return Logitech_keyboardBitmapKeys.APOSTROPHE;
@@ -756,9 +759,15 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.LEFT_WINDOWS;
                 case(DeviceKeys.LEFT_ALT):
                     return Logitech_keyboardBitmapKeys.LEFT_ALT;
-                case(DeviceKeys.SPACE):
+                case (DeviceKeys.JPN_MUHENKAN):
+                    return Logitech_keyboardBitmapKeys.JPN_MUHENKAN;
+                case (DeviceKeys.SPACE):
                     return Logitech_keyboardBitmapKeys.SPACE;
-                case(DeviceKeys.RIGHT_ALT):
+                case (DeviceKeys.JPN_HENKAN):
+                    return Logitech_keyboardBitmapKeys.JPN_HENKAN;
+                case (DeviceKeys.JPN_HIRAGANA_KATAKANA):
+                    return Logitech_keyboardBitmapKeys.JPN_HIRAGANA_KATAKANA;
+                case (DeviceKeys.RIGHT_ALT):
                     return Logitech_keyboardBitmapKeys.RIGHT_ALT;
                 case(DeviceKeys.RIGHT_WINDOWS):
                     return Logitech_keyboardBitmapKeys.RIGHT_WINDOWS;

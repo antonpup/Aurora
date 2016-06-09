@@ -94,10 +94,17 @@ namespace Aurora.Settings
                         case PreferredKeyboardLocalization.de:
                             culture = "de-DE";
                             break;
+                        case PreferredKeyboardLocalization.jpn:
+                            culture = "ja-JP";
+                            break;
+                            
                     }
 
                     switch (culture)
                     {
+                        case ("ja-JP"):
+                            LoadCulture(brand, "jpn");
+                            break;
                         case ("de-DE"):
                         case ("hsb-DE"):
                         case ("dsb-DE"):

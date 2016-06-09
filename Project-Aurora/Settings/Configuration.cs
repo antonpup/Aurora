@@ -88,8 +88,11 @@ namespace Aurora.Settings
         ru = 4,
         [Description("French")]
         fr = 5,
-        [Description("Deutch")]
-        de = 6
+        [Description("Deutsch")]
+        de = 6,
+        [Description("Japan")]
+        jpn = 7
+
     }
 
     public class Configuration
@@ -188,6 +191,39 @@ namespace Aurora.Settings
             return JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
         }
 
+        public static T Load<T>(string path = "") where T : class
+        {
+            try
+            {
+                if (String.IsNullOrWhiteSpace(path))
+                {
+                    var dialog = new System.Windows.Forms.OpenFileDialog();
+                    dialog.Filter = "JSON File|*.json";
+                    dialog.Title = "Open a profile";
+                    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+                    if (result != System.Windows.Forms.DialogResult.OK)
+                        return null;
+
+                    path = dialog.FileName;
+                }
+
+                string content = File.ReadAllText(path, Encoding.UTF8);
+
+                if (String.IsNullOrWhiteSpace(content))
+                    return null;
+
+                return JsonConvert.DeserializeObject<T>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception during ConfigManager.Save<T>(). Error: " + exc, Logging_Level.Error);
+                System.Windows.MessageBox.Show("Exception during ConfigManager.Save<T>().Error: " + exc.Message, "Aurora - Error");
+
+                return null;
+            }
+        }
+
         public static void Save(Configuration configuration)
         {
             var configPath = ConfigPath + ConfigExtension;
@@ -195,6 +231,42 @@ namespace Aurora.Settings
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
+        }
+
+        public static bool Save<T>(T configuration, string path = "") where T : class
+        {
+            if (configuration == null)
+                return false;
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(path))
+                {
+                    var dialog = new System.Windows.Forms.SaveFileDialog();
+                    dialog.Filter = "JSON File|*.json";
+                    dialog.Title = "Save a profile";
+                    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+                    if (result != System.Windows.Forms.DialogResult.OK)
+                        return false;
+
+                    path = dialog.FileName;
+                }
+
+                string content = JsonConvert.SerializeObject(configuration, Formatting.Indented);
+
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+                File.WriteAllText(path, content, Encoding.UTF8);
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception during ConfigManager.Save<T>(). Error: " + exc, Logging_Level.Error);
+                System.Windows.MessageBox.Show("Exception during ConfigManager.Save<T>().Error: " + exc.Message, "Aurora - Error");
+
+                return false;
+            }
+
+            return true;
         }
 
         private static Configuration CreateDefaultConfigurationFile()

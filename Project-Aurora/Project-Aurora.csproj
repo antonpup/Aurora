@@ -348,6 +348,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Devices\SteelSeries\AuroraPlugin.lsp" />
+    <None Include="kb_layouts\Logitech\layout.jpn.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Razer\layout.de.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -579,6 +582,12 @@
     <Resource Include="Resources\RemoveProfile_Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="redist\vc_redist.x64.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="redist\vc_redist.x86.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\CorsairInstall\Step1.png" />
     <Content Include="Resources\CorsairInstall\Step2.png" />
     <None Include="ver_minor.txt">

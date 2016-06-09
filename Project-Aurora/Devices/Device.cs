@@ -15,323 +15,335 @@ namespace Aurora.Devices
     public enum DeviceKeys
     {
         [Description("Peripheral Device")]
-        Peripheral,
+        Peripheral = 0,
         [Description("Escape")]
-        ESC,
+        ESC = 1,
         [Description("F1")]
-        F1,
+        F1 = 2,
         [Description("F2")]
-        F2,
+        F2 = 3,
         [Description("F3")]
-        F3,
+        F3 = 4,
         [Description("F4")]
-        F4,
+        F4 = 5,
         [Description("F5")]
-        F5,
+        F5 = 6,
         [Description("F6")]
-        F6,
+        F6 = 7,
         [Description("F7")]
-        F7,
+        F7 = 8,
         [Description("F8")]
-        F8,
+        F8 = 9,
         [Description("F9")]
-        F9,
+        F9 = 10,
         [Description("F10")]
-        F10,
+        F10 = 11,
         [Description("F11")]
-        F11,
+        F11 = 12,
         [Description("F12")]
-        F12,
+        F12 = 13,
         [Description("Print Screen")]
-        PRINT_SCREEN,
+        PRINT_SCREEN = 14,
         [Description("Scroll Lock")]
-        SCROLL_LOCK,
+        SCROLL_LOCK = 15,
         [Description("Pause")]
-        PAUSE_BREAK,
+        PAUSE_BREAK = 16,
 
+        [Description("Half/Full width")]
+        JPN_HALFFULLWIDTH = 152,
+        [Description("OEM 5")]
+        OEM5 = 156,
         [Description("Tilde")]
-        TILDE,
+        TILDE = 17,
         [Description("1")]
-        ONE,
+        ONE = 18,
         [Description("2")]
-        TWO,
+        TWO = 19,
         [Description("3")]
-        THREE,
+        THREE = 20,
         [Description("4")]
-        FOUR,
+        FOUR = 21,
         [Description("5")]
-        FIVE,
+        FIVE = 22,
         [Description("6")]
-        SIX,
+        SIX = 23,
         [Description("7")]
-        SEVEN,
+        SEVEN = 24,
         [Description("8")]
-        EIGHT,
+        EIGHT = 25,
         [Description("9")]
-        NINE,
+        NINE = 26,
         [Description("0")]
-        ZERO,
+        ZERO = 27,
         [Description("-")]
-        MINUS,
+        MINUS = 28,
         [Description("=")]
-        EQUALS,
+        EQUALS = 29,
         [Description("Backspace")]
-        BACKSPACE,
+        BACKSPACE = 30,
         [Description("Insert")]
-        INSERT,
+        INSERT = 31,
         [Description("Home")]
-        HOME,
+        HOME = 32,
         [Description("Page Up")]
-        PAGE_UP,
+        PAGE_UP = 33,
         [Description("Numpad Lock")]
-        NUM_LOCK,
+        NUM_LOCK = 34,
         [Description("Numpad /")]
-        NUM_SLASH,
+        NUM_SLASH = 35,
         [Description("Numpad *")]
-        NUM_ASTERISK,
+        NUM_ASTERISK = 36,
         [Description("Numpad -")]
-        NUM_MINUS,
+        NUM_MINUS = 37,
 
         [Description("Tab")]
-        TAB,
+        TAB = 38,
         [Description("Q")]
-        Q,
+        Q = 39,
         [Description("W")]
-        W,
+        W = 40,
         [Description("E")]
-        E,
+        E = 41,
         [Description("R")]
-        R,
+        R = 42,
         [Description("T")]
-        T,
+        T = 43,
         [Description("Y")]
-        Y,
+        Y = 44,
         [Description("U")]
-        U,
+        U = 45,
         [Description("I")]
-        I,
+        I = 46,
         [Description("O")]
-        O,
+        O = 47,
         [Description("P")]
-        P,
+        P = 48,
         [Description("{")]
-        OPEN_BRACKET,
+        OPEN_BRACKET = 49,
         [Description("}")]
-        CLOSE_BRACKET,
+        CLOSE_BRACKET = 50,
         [Description("\\")]
-        BACKSLASH,
+        BACKSLASH = 51,
         [Description("Delete")]
-        DELETE,
+        DELETE = 52,
         [Description("End")]
-        END,
+        END = 53,
         [Description("Page Down")]
-        PAGE_DOWN,
+        PAGE_DOWN = 54,
         [Description("Numpad 7")]
-        NUM_SEVEN,
+        NUM_SEVEN = 55,
         [Description("Numpad 8")]
-        NUM_EIGHT,
+        NUM_EIGHT = 56,
         [Description("Numpad 9")]
-        NUM_NINE,
+        NUM_NINE = 57,
         [Description("Numpad +")]
-        NUM_PLUS,
+        NUM_PLUS = 58,
 
         [Description("Caps Lock")]
-        CAPS_LOCK,
+        CAPS_LOCK = 59,
         [Description("A")]
-        A,
+        A = 60,
         [Description("S")]
-        S,
+        S = 61,
         [Description("D")]
-        D,
+        D = 62,
         [Description("F")]
-        F,
+        F = 63,
         [Description("G")]
-        G,
+        G = 64,
         [Description("H")]
-        H,
+        H = 65,
         [Description("J")]
-        J,
+        J = 66,
         [Description("K")]
-        K,
+        K = 67,
         [Description("L")]
-        L,
+        L = 68,
+        [Description("Ö")]
+        DEU_O = 157,
         [Description("Semicolon")]
-        SEMICOLON,
+        SEMICOLON = 69,
         [Description("Apostrophe")]
-        APOSTROPHE,
+        APOSTROPHE = 70,
         [Description("#")]
-        HASHTAG,
+        HASHTAG = 71,
         [Description("Enter")]
-        ENTER,
+        ENTER = 72,
         [Description("Numpad 4")]
-        NUM_FOUR,
+        NUM_FOUR = 73,
         [Description("Numpad 5")]
-        NUM_FIVE,
+        NUM_FIVE = 74,
         [Description("Numpad 6")]
-        NUM_SIX,
+        NUM_SIX = 75,
 
         [Description("Left Shift")]
-        LEFT_SHIFT,
+        LEFT_SHIFT = 76,
         [Description("Non-US Backslash")]
-        BACKSLASH_UK,
+        BACKSLASH_UK = 77,
         [Description("Z")]
-        Z,
+        Z = 78,
         [Description("X")]
-        X,
+        X = 79,
         [Description("C")]
-        C,
+        C = 80,
         [Description("V")]
-        V,
+        V = 81,
         [Description("B")]
-        B,
+        B = 82,
         [Description("N")]
-        N,
+        N = 83,
         [Description("M")]
-        M,
+        M = 84,
         [Description("Comma")]
-        COMMA,
+        COMMA = 85,
         [Description("Period")]
-        PERIOD,
+        PERIOD = 86,
         [Description("Forward Slash")]
-        FORWARD_SLASH,
+        FORWARD_SLASH = 87,
         [Description("Right Shift")]
-        RIGHT_SHIFT,
+        RIGHT_SHIFT = 88,
         [Description("Arrow Up")]
-        ARROW_UP,
+        ARROW_UP = 89,
         [Description("Numpad 1")]
-        NUM_ONE,
+        NUM_ONE = 90,
         [Description("Numpad 2")]
-        NUM_TWO,
+        NUM_TWO = 91,
         [Description("Numpad 3")]
-        NUM_THREE,
+        NUM_THREE = 92,
         [Description("Numpad Enter")]
-        NUM_ENTER,
+        NUM_ENTER = 93,
 
         [Description("Left Control")]
-        LEFT_CONTROL,
+        LEFT_CONTROL = 94,
         [Description("Left Windows Key")]
-        LEFT_WINDOWS,
+        LEFT_WINDOWS = 95,
         [Description("Left Alt")]
-        LEFT_ALT,
+        LEFT_ALT = 96,
+        [Description("Non-conversion")]
+        JPN_MUHENKAN = 153,
         [Description("Spacebar")]
-        SPACE,
+        SPACE = 97,
+        [Description("Conversion")]
+        JPN_HENKAN = 154,
+        [Description("Hiragana/Katakana")]
+        JPN_HIRAGANA_KATAKANA = 155,
         [Description("Right Alt")]
-        RIGHT_ALT,
+        RIGHT_ALT = 98,
         [Description("Right Windows Key")]
-        RIGHT_WINDOWS,
+        RIGHT_WINDOWS = 99,
         [Description("Application Select Key")]
-        APPLICATION_SELECT,
+        APPLICATION_SELECT = 100,
         [Description("Right Control")]
-        RIGHT_CONTROL,
+        RIGHT_CONTROL = 101,
         [Description("Arrow Left")]
-        ARROW_LEFT,
+        ARROW_LEFT = 102,
         [Description("Arrow Down")]
-        ARROW_DOWN,
+        ARROW_DOWN = 103,
         [Description("Arrow Right")]
-        ARROW_RIGHT,
+        ARROW_RIGHT = 104,
         [Description("Numpad 0")]
-        NUM_ZERO,
+        NUM_ZERO = 105,
         [Description("Numpad Period")]
-        NUM_PERIOD,
+        NUM_PERIOD = 106,
 
         [Description("FN Key")]
-        FN_Key,
+        FN_Key = 107,
 
         [Description("G1")]
-        G1,
+        G1 = 108,
         [Description("G2")]
-        G2,
+        G2 = 109,
         [Description("G3")]
-        G3,
+        G3 = 110,
         [Description("G4")]
-        G4,
+        G4 = 111,
         [Description("G5")]
-        G5,
+        G5 = 112,
         [Description("G6")]
-        G6,
+        G6 = 113,
         [Description("G7")]
-        G7,
+        G7 = 114,
         [Description("G8")]
-        G8,
+        G8 = 115,
         [Description("G9")]
-        G9,
+        G9 = 116,
         [Description("G10")]
-        G10,
+        G10 = 117,
         [Description("G11")]
-        G11,
+        G11 = 118,
         [Description("G12")]
-        G12,
+        G12 = 119,
         [Description("G13")]
-        G13,
+        G13 = 120,
         [Description("G14")]
-        G14,
+        G14 = 121,
         [Description("G15")]
-        G15,
+        G15 = 122,
         [Description("G16")]
-        G16,
+        G16 = 123,
         [Description("G17")]
-        G17,
+        G17 = 124,
         [Description("G18")]
-        G18,
+        G18 = 125,
         [Description("G19")]
-        G19,
+        G19 = 126,
         [Description("G20")]
-        G20,
+        G20 = 127,
 
         [Description("Brand Logo")]
-        LOGO,
+        LOGO = 128,
         [Description("Brand Logo #2")]
-        LOGO2,
+        LOGO2 = 129,
         [Description("Brand Logo #3")]
-        LOGO3,
+        LOGO3 = 130,
         [Description("Brightness Switch")]
-        BRIGHTNESS_SWITCH,
+        BRIGHTNESS_SWITCH = 131,
         [Description("Lock Switch")]
-        LOCK_SWITCH,
+        LOCK_SWITCH = 132,
 
         [Description("Media Play/Pause")]
-        MEDIA_PLAY_PAUSE,
+        MEDIA_PLAY_PAUSE = 133,
         [Description("Media Play")]
-        MEDIA_PLAY,
+        MEDIA_PLAY = 134,
         [Description("Media Pause")]
-        MEDIA_PAUSE,
+        MEDIA_PAUSE = 135,
         [Description("Media Stop")]
-        MEDIA_STOP,
+        MEDIA_STOP = 136,
         [Description("Media Previous")]
-        MEDIA_PREVIOUS,
+        MEDIA_PREVIOUS = 137,
         [Description("Media Next")]
-        MEDIA_NEXT,
+        MEDIA_NEXT = 138,
 
         [Description("Volume Mute")]
-        VOLUME_MUTE,
+        VOLUME_MUTE = 139,
         [Description("Volume Down")]
-        VOLUME_DOWN,
+        VOLUME_DOWN = 140,
         [Description("Volume Up")]
-        VOLUME_UP,
+        VOLUME_UP = 141,
 
         [Description("Additional Light 1")]
-        ADDITIONALLIGHT1,
+        ADDITIONALLIGHT1 = 142,
         [Description("Additional Light 2")]
-        ADDITIONALLIGHT2,
+        ADDITIONALLIGHT2 = 143,
         [Description("Additional Light 3")]
-        ADDITIONALLIGHT3,
+        ADDITIONALLIGHT3 = 144,
         [Description("Additional Light 4")]
-        ADDITIONALLIGHT4,
+        ADDITIONALLIGHT4 = 145,
         [Description("Additional Light 5")]
-        ADDITIONALLIGHT5,
+        ADDITIONALLIGHT5 = 146,
         [Description("Additional Light 6")]
-        ADDITIONALLIGHT6,
+        ADDITIONALLIGHT6 = 147,
         [Description("Additional Light 7")]
-        ADDITIONALLIGHT7,
+        ADDITIONALLIGHT7 = 148,
         [Description("Additional Light 8")]
-        ADDITIONALLIGHT8,
+        ADDITIONALLIGHT8 = 149,
         [Description("Additional Light 9")]
-        ADDITIONALLIGHT9,
+        ADDITIONALLIGHT9 = 150,
         [Description("Additional Light 10")]
-        ADDITIONALLIGHT10,
+        ADDITIONALLIGHT10 = 151,
 
         [Description("None")]
-        NONE,
+        NONE = -1,
     };
 
     public interface Device
