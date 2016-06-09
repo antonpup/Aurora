@@ -115,6 +115,48 @@ namespace Aurora.Utils
         }
     }
 
+    public class KbLayoutToStringVC : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return PreferredKeyboardLocalization.None;
+            return (StringToEnum<PreferredKeyboardLocalization>(value.ToString())).GetDescription();
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return PreferredKeyboardLocalization.None;
+            return StringToEnum<PreferredKeyboardLocalization>(value.ToString());
+        }
+
+        public static T StringToEnum<T>(string name)
+        {
+            return (T)Enum.Parse(typeof(T), name);
+        }
+    }
+
+    public class KbBrandToStringVC : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return PreferredKeyboard.None;
+            return (StringToEnum<PreferredKeyboard>(value.ToString())).GetDescription();
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return PreferredKeyboard.None;
+            return StringToEnum<PreferredKeyboard>(value.ToString());
+        }
+
+        public static T StringToEnum<T>(string name)
+        {
+            return (T)Enum.Parse(typeof(T), name);
+        }
+    }
+
     public class GTA5_PoliceEffectsToStringVC : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

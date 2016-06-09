@@ -1,21 +1,12 @@
 ﻿using Aurora.Controls;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using Aurora.Profiles.Desktop;
 using Microsoft.Win32;
@@ -73,6 +64,8 @@ namespace Aurora.Settings
             this.idle_effects_amount.Value = Global.Configuration.desktop_settings.idle_amount;
             this.idle_effects_frequency.Value = (int)Global.Configuration.desktop_settings.idle_frequency;
 
+            this.devices_kb_brand.SelectedIndex = (int)Global.Configuration.keyboard_brand;
+            this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
             this.devices_enable_logitech_color_enhance.IsChecked = Global.Configuration.logitech_enhance_brightness;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
@@ -578,6 +571,24 @@ namespace Aurora.Settings
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
                 Global.Configuration.desktop_settings.nighttime_end_minute = (sender as IntegerUpDown).Value.Value;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void devices_kb_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.keyboard_localization = (PreferredKeyboardLocalization)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_layout.SelectedIndex.ToString());
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void devices_kb_brand_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_brand.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }

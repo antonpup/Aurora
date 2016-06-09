@@ -70,7 +70,33 @@ namespace Aurora.Settings
 
                 if (Directory.Exists(Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder)))
                 {
-                    switch (System.Threading.Thread.CurrentThread.CurrentCulture.Name)
+                    string culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+                    switch (Global.Configuration.keyboard_localization)
+                    {
+                        case PreferredKeyboardLocalization.None:
+                            break;
+                        case PreferredKeyboardLocalization.intl:
+                            culture = "intl";
+                            break;
+                        case PreferredKeyboardLocalization.us:
+                            culture = "en-US";
+                            break;
+                        case PreferredKeyboardLocalization.uk:
+                            culture = "en-GB";
+                            break;
+                        case PreferredKeyboardLocalization.ru:
+                            culture = "ru-RU";
+                            break;
+                        case PreferredKeyboardLocalization.fr:
+                            culture = "fr-FR";
+                            break;
+                        case PreferredKeyboardLocalization.de:
+                            culture = "de-DE";
+                            break;
+                    }
+
+                    switch (culture)
                     {
                         case ("de-DE"):
                         case ("hsb-DE"):

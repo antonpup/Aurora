@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Aurora.Settings
 {
@@ -61,9 +62,40 @@ namespace Aurora.Settings
         LeftHanded = 2
     }
 
+    public enum PreferredKeyboard
+    {
+        [Description("Automatic Detection")]
+        None = 0,
+        [Description("Logitech")]
+        Logitech = 1,
+        [Description("Corsair")]
+        Corsair = 2,
+        [Description("Razer")]
+        Razer = 3
+    }
+
+    public enum PreferredKeyboardLocalization
+    {
+        [Description("Automatic Detection")]
+        None = 0,
+        [Description("International")]
+        intl = 1,
+        [Description("United States")]
+        us = 2,
+        [Description("United Kingdom")]
+        uk = 3,
+        [Description("Russian")]
+        ru = 4,
+        [Description("French")]
+        fr = 5,
+        [Description("Deutch")]
+        de = 6
+    }
+
     public class Configuration
     {
         //First Time Installs
+        public bool redist_first_time;
         public bool logitech_first_time;
         public bool corsair_first_time;
         public bool razer_first_time;
@@ -79,6 +111,8 @@ namespace Aurora.Settings
         public bool updates_check_on_start_up;
         public bool updates_allow_silent_minor;
         public MouseOrientationType mouse_orientation;
+        public PreferredKeyboard keyboard_brand;
+        public PreferredKeyboardLocalization keyboard_localization;
         public HashSet<String> excluded_programs;
         public Dictionary<String, GenericApplicationSettings> additional_profiles;
 
@@ -98,6 +132,7 @@ namespace Aurora.Settings
         public Configuration()
         {
             //First Time Installs
+            redist_first_time = true;
             logitech_first_time = true;
             corsair_first_time = true;
             razer_first_time = true;
@@ -113,6 +148,8 @@ namespace Aurora.Settings
             updates_check_on_start_up = true;
             updates_allow_silent_minor = true;
             mouse_orientation = MouseOrientationType.RightHanded;
+            keyboard_brand = PreferredKeyboard.None;
+            keyboard_localization = PreferredKeyboardLocalization.None;
             excluded_programs = new HashSet<string>();
             additional_profiles = new Dictionary<string, GenericApplicationSettings>();
 

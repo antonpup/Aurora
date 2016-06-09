@@ -62,7 +62,6 @@ namespace Aurora
             profiles.Add("gta5.exe", new GameEvent_GTA5());
             profiles.Add("rocketleague.exe", new GameEvent_RocketLeague());
             profiles.Add("payday2_win32_release.exe", new GameEvent_PD2());
-
         }
 
         ~GameEventHandler()

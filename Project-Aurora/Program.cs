@@ -81,6 +81,8 @@ namespace Aurora
                         {
                             System.Windows.MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
                         }
+
+                        Environment.Exit(0);
                         break;
                 }
             }
@@ -109,12 +111,11 @@ namespace Aurora
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Exception during ConfigManager.Load(). Error: " + e.Message, Logging_Level.Error);
+                Global.logger.LogLine("Exception during ConfigManager.Load(). Error: " + e, Logging_Level.Error);
                 System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message, "Aurora - Error");
 
                 Global.Configuration = new Configuration();
             }
-
 
             if (Global.Configuration.updates_check_on_start_up && !ignore_update)
             {
@@ -129,9 +130,6 @@ namespace Aurora
                 }
             }
 
-
-            Global.kbLayout = new KeyboardLayoutManager();
-
             Global.dev_manager.Initialize();
             Devices.Device[] active_devices = Global.dev_manager.GetInitializedDevices();
 
@@ -142,18 +140,35 @@ namespace Aurora
                 Environment.Exit(0);
             }
 
-            foreach (var device in active_devices)
+            if (Global.Configuration.keyboard_brand == PreferredKeyboard.Logitech)
+                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Logitech);
+            else if (Global.Configuration.keyboard_brand == PreferredKeyboard.Corsair)
+                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Corsair);
+            else if (Global.Configuration.keyboard_brand == PreferredKeyboard.Razer)
+                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Razer);
+            else
             {
-                if (!device.IsKeyboardConnected())
-                    continue;
+                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Logitech);
 
-                switch (device.GetDeviceName())
+                foreach (var device in active_devices)
                 {
-                    case ("Corsair"):
-                        Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Corsair);
-                        break;
-                    default:
+                    if (!device.IsKeyboardConnected())
                         continue;
+
+                    switch (device.GetDeviceName())
+                    {
+                        case ("Corsair"):
+                            Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Corsair);
+                            break;
+
+                        /*
+                        case ("Razer"):
+                            Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Razer);
+                            break;
+                        */
+                        default:
+                            continue;
+                    }
                 }
             }
 
