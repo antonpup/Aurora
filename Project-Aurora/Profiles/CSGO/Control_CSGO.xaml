@@ -124,7 +124,7 @@
             </TabItem>
             <TabItem Header="Kills Indicator">
                 <Grid>
-                    <CheckBox x:Name="kills_enabled" Content="Enable kills indicator on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="bomb_enabled_Checked" Unchecked="kills_enabled_Checked"/>
+                    <CheckBox x:Name="kills_enabled" Content="Enable kills indicator on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="kills_enabled_Checked" Unchecked="kills_enabled_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Regular Kill Color:" VerticalAlignment="Top"/>
                     <xctk:ColorPicker x:Name="kills_regular_color_colorpicker" Margin="111,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="142" SelectedColorChanged="kills_regular_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Headshot Kill Color:" VerticalAlignment="Top"/>
