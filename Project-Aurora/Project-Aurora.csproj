@@ -217,6 +217,16 @@
       <DependentUpon>Control_GTA5.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
+      <DependentUpon>Control_HM.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\HotlineMiami\GameEvent_HM.cs" />
+    <Compile Include="Profiles\HotlineMiami\HMSettings.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\Control_LoL.xaml.cs">
+      <DependentUpon>Control_LoL.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\LoLSettings.cs" />
     <Compile Include="Profiles\Logitech_Wrapper\GameEvent_Logitech_Wrapper.cs" />
     <Compile Include="Profiles\Overlays\Event_VolumeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlaySettings.cs" />
@@ -250,6 +260,11 @@
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\TheDivision\TheDivisionSettings.cs" />
+    <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
+      <DependentUpon>Control_TalosPrinciple.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\TheTalosPrinciple\GameEvent_TalosPrinciple.cs" />
+    <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleSettings.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -486,6 +501,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\HotlineMiami\Control_HM.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\LeagueOfLegends\Control_LoL.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\Overwatch\Control_Overwatch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -499,6 +522,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\TheDivision\Control_TheDivision.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -604,6 +631,9 @@
     <Resource Include="Resources\desktop_icon.png" />
     <Resource Include="Resources\division_64x64.png" />
     <Resource Include="Resources\Win32\Aurora-LightFXWrapper.dll" />
+    <Resource Include="Resources\leagueoflegends_48x48.png" />
+    <Resource Include="Resources\hotline_32x32.png" />
+    <Resource Include="Resources\talosprinciple_64x64.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\FreeForm_Circle.png" />

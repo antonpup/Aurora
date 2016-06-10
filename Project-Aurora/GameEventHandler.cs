@@ -13,6 +13,9 @@ using Aurora.Profiles.Generic_Application;
 using Aurora.Utils;
 using Aurora.Profiles.RocketLeague;
 using Aurora.Profiles.Payday_2;
+using Aurora.Profiles.LeagueOfLegends;
+using Aurora.Profiles.HotlineMiami;
+using Aurora.Profiles.TheTalosPrinciple;
 
 namespace Aurora
 {
@@ -62,6 +65,10 @@ namespace Aurora
             profiles.Add("gta5.exe", new GameEvent_GTA5());
             profiles.Add("rocketleague.exe", new GameEvent_RocketLeague());
             profiles.Add("payday2_win32_release.exe", new GameEvent_PD2());
+            profiles.Add("league of legends.exe", new GameEvent_LoL());
+            profiles.Add("hotlinegl.exe", new GameEvent_HM());
+            profiles.Add("talos.exe", new GameEvent_TalosPrinciple());
+            profiles.Add("talos_unrestricted.exe", new GameEvent_TalosPrinciple());
         }
 
         ~GameEventHandler()

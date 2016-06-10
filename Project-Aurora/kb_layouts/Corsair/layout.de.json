@@ -375,7 +375,7 @@
     "enabled": "true"
   },
   {
-    "visualName": "^",
+    "visualName": "~",
     "tag": 17,
     "line_break": false,
     "margin_left": 14.0,
@@ -645,7 +645,7 @@
     "enabled": "true"
   },
   {
-    "visualName": "´",
+    "visualName": "/",
     "tag": 35,
     "line_break": false,
     "margin_left": 7.0,
@@ -826,7 +826,7 @@
   },
   {
     "visualName": "Z",
-    "tag": 78,
+    "tag": 44,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1411,7 +1411,7 @@
   },
   {
     "visualName": "Y",
-    "tag": 44,
+    "tag": 78,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1890,7 +1890,7 @@
     "enabled": "true"
   },
   {
-    "visualName": ",",
+    "visualName": ".",
     "tag": 106,
     "line_break": true,
     "margin_left": 7.0,

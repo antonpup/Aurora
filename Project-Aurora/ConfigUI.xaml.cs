@@ -39,6 +39,10 @@ namespace Aurora
         Profiles.Overwatch.Control_Overwatch overwatch_control = new Profiles.Overwatch.Control_Overwatch();
         Profiles.Payday_2.Control_PD2 payday2_control = new Profiles.Payday_2.Control_PD2();
         Profiles.TheDivision.Control_TheDivision division_control = new Profiles.TheDivision.Control_TheDivision();
+        Profiles.LeagueOfLegends.Control_LoL lol_control = new Profiles.LeagueOfLegends.Control_LoL();
+        Profiles.HotlineMiami.Control_HM hotline_control = new Profiles.HotlineMiami.Control_HM();
+        Profiles.TheTalosPrinciple.Control_TalosPrinciple talosprinciple_control = new Profiles.TheTalosPrinciple.Control_TalosPrinciple();
+
 
         EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
         EffectColor dota2_color_scheme = new EffectColor(102, 0, 0);
@@ -448,6 +452,30 @@ namespace Aurora
             profile_thedivision.Margin = new Thickness(0, 5, 0, 0);
             profile_thedivision.MouseDown += ProfileImage_MouseDown;
             this.profiles_stack.Children.Add(profile_thedivision);
+
+            Image profile_leagueoflegends = new Image();
+            profile_leagueoflegends.Tag = lol_control;
+            profile_leagueoflegends.Source = new BitmapImage(new Uri(@"Resources/leagueoflegends_48x48.png", UriKind.Relative));
+            profile_leagueoflegends.ToolTip = "League of Legends Settings";
+            profile_leagueoflegends.Margin = new Thickness(0, 5, 0, 0);
+            profile_leagueoflegends.MouseDown += ProfileImage_MouseDown;
+            this.profiles_stack.Children.Add(profile_leagueoflegends);
+
+            Image profile_hotline = new Image();
+            profile_hotline.Tag = hotline_control;
+            profile_hotline.Source = new BitmapImage(new Uri(@"Resources/hotline_32x32.png", UriKind.Relative));
+            profile_hotline.ToolTip = "Hotline Miami Settings";
+            profile_hotline.Margin = new Thickness(0, 5, 0, 0);
+            profile_hotline.MouseDown += ProfileImage_MouseDown;
+            this.profiles_stack.Children.Add(profile_hotline);
+
+            Image profile_talosprinciple = new Image();
+            profile_talosprinciple.Tag = talosprinciple_control;
+            profile_talosprinciple.Source = new BitmapImage(new Uri(@"Resources/talosprinciple_64x64.png", UriKind.Relative));
+            profile_talosprinciple.ToolTip = "Hotline Miami Settings";
+            profile_talosprinciple.Margin = new Thickness(0, 5, 0, 0);
+            profile_talosprinciple.MouseDown += ProfileImage_MouseDown;
+            this.profiles_stack.Children.Add(profile_talosprinciple);
 
             //Populate with added profiles
             foreach (KeyValuePair<string, Profiles.Generic_Application.GenericApplicationSettings> kvp in Global.Configuration.additional_profiles)

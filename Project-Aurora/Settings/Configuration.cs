@@ -3,11 +3,14 @@ using Aurora.Profiles.Desktop;
 using Aurora.Profiles.Dota_2;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.GTA5;
+using Aurora.Profiles.HotlineMiami;
+using Aurora.Profiles.LeagueOfLegends;
 using Aurora.Profiles.Overlays;
 using Aurora.Profiles.Overwatch;
 using Aurora.Profiles.Payday_2;
 using Aurora.Profiles.RocketLeague;
 using Aurora.Profiles.TheDivision;
+using Aurora.Profiles.TheTalosPrinciple;
 using LedCSharp;
 using Newtonsoft.Json;
 using System;
@@ -128,6 +131,10 @@ namespace Aurora.Settings
         public OverwatchSettings overwatch_settings;
         public PD2Settings pd2_settings;
         public TheDivisionSettings division_settings;
+        public LoLSettings lol_settings;
+        public HMSettings hotlinemiami_settings;
+        public TalosPrincipleSettings talosprinciple_settings;
+
 
         //Overlay Settings
         public VolumeOverlaySettings volume_overlay_settings;

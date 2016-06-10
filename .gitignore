@@ -215,3 +215,4 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 Project-Aurora.VC.opendb
+.vs/config/applicationhost.config

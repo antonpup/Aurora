@@ -4,7 +4,7 @@
 [Link to Aurora's webpage, includes some demos and changelogs](http://aurora.lastbullet.net)
 
 
-Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, and The Division.
+Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, The Division, League of Legends, Hotline Miami, and The Talos Principle.
 
 #Requirements
 Recommended:
@@ -36,6 +36,9 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * Overwatch
 * Payday 2
 * The Division
+* League of Legends
+* Hotline Miami
+* The Talos Principle
 
 ## Planned Features/Support
 * SteelSeries devices
@@ -88,6 +91,7 @@ General
 * Add other programs to define custom lighting zones for daytime and nighttime themes
 * Display shortcut keys with Shortcuts Assistant
 * Automatic updater
+* Ability to select your preferred keyboard layout and brand.
 
 Dota 2 features
 
@@ -136,6 +140,23 @@ Payday 2 features
 The Division features
 
 * The Division effects are controlled by the game itself
+
+League of Legends features
+
+* League of Legends reacts to player HP, when damaged, healed, or killed.
+* Custom Lighting Zones
+
+Hotline Miami features
+
+* Hotline Miami has a slowly alternating color effect.
+* Custom Lighting Zones
+
+The Talos Principle features
+
+* The Talos Principle changes color based on the puzzle color you are in.
+* Custom Lighting Zones
+
+
 
 # F.A.Q.
 * Q: Can this give me a ban in a video game?
@@ -193,6 +214,8 @@ The Division features
 * [Elysium](https://elysium.codeplex.com/) - Used parts of this theme
 * [LogiLed2Corsair](https://github.com/VRocker/LogiLed2Corsair) - Used as a resource for Wrappers
 * [GSI for Payday 2](https://github.com/Last-Bullet-Development/PD2GSI) - A GSI mod for Payday 2
+* [LightFX Extender](https://github.com/Archomeda/lightfx-extender) - A LightFX wrapped by a friend of mine, used as a resource for LightFX Wrapper.
+
 
 # Special thanks to the testing team:
 * Casper
