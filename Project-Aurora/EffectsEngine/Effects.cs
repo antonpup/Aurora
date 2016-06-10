@@ -130,7 +130,7 @@ namespace Aurora
             }
         }
 
-        public static readonly Devices.DeviceKeys[] allKeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
+        //public static readonly Devices.DeviceKeys[] allKeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
 
         private static Dictionary<Devices.DeviceKeys, Bitmaping> bitmap_map = new Dictionary<Devices.DeviceKeys, Bitmaping>();
 
@@ -138,6 +138,8 @@ namespace Aurora
 
         public Effects()
         {
+            Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
+
             foreach (Devices.DeviceKeys key in allKeys)
             {
                 keyColors.Add(key, Color.FromArgb(0, 0, 0));
@@ -239,6 +241,7 @@ namespace Aurora
                     background *= Global.Configuration.global_brightness;
 
                 Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>();
+                Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
 
                 foreach (Devices.DeviceKeys key in allKeys)
                 {

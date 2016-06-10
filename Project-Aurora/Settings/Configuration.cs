@@ -170,6 +170,9 @@ namespace Aurora.Settings
             overwatch_settings = new OverwatchSettings();
             pd2_settings = new PD2Settings();
             division_settings = new TheDivisionSettings();
+            lol_settings = new LoLSettings();
+            hotlinemiami_settings = new HMSettings();
+            talosprinciple_settings = new TalosPrincipleSettings();
 
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();
