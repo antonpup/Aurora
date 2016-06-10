@@ -73,6 +73,8 @@ namespace Aurora.Settings
             this.idle_effects_amount.Value = Global.Configuration.desktop_settings.idle_amount;
             this.idle_effects_frequency.Value = (int)Global.Configuration.desktop_settings.idle_frequency;
 
+            this.devices_kb_brand.SelectedIndex = (int)Global.Configuration.keyboard_brand;
+            this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
             this.devices_enable_logitech_color_enhance.IsChecked = Global.Configuration.logitech_enhance_brightness;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
@@ -453,7 +455,7 @@ namespace Aurora.Settings
 
         private void run_at_win_startup_Checked(object sender, RoutedEventArgs e)
         {
-            if(IsLoaded && sender is CheckBox)
+            if (IsLoaded && sender is CheckBox)
             {
                 if ((sender as CheckBox).IsChecked.Value)
                     runRegistryPath.SetValue("Aurora", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\" -silent -delay 5000");
@@ -505,7 +507,7 @@ namespace Aurora.Settings
             {
                 string updater_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Aurora-Updater.exe");
 
-                if(File.Exists(updater_path))
+                if (File.Exists(updater_path))
                 {
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.FileName = updater_path;
@@ -578,6 +580,24 @@ namespace Aurora.Settings
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
                 Global.Configuration.desktop_settings.nighttime_end_minute = (sender as IntegerUpDown).Value.Value;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void devices_kb_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.keyboard_localization = (PreferredKeyboardLocalization)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_layout.SelectedIndex.ToString());
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void devices_kb_brand_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_brand.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
