@@ -200,6 +200,10 @@ namespace Aurora.Devices
         PERIOD = 86,
         [Description("Forward Slash")]
         FORWARD_SLASH = 87,
+        [Description("OEM 8")]
+        OEM8 = 158,
+        [Description("OEM 102")]
+        OEM102 = 159,
         [Description("Right Shift")]
         RIGHT_SHIFT = 88,
         [Description("Arrow Up")]

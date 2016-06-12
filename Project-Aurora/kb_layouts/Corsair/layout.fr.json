@@ -751,7 +751,7 @@
   },
   {
     "visualName": "A",
-    "tag": 39,
+    "tag": 60,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -766,7 +766,7 @@
   },
   {
     "visualName": "Z",
-    "tag": 40,
+    "tag": 78,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1096,7 +1096,7 @@
   },
   {
     "visualName": "Q",
-    "tag": 60,
+    "tag": 39,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1411,7 +1411,7 @@
   },
   {
     "visualName": "W",
-    "tag": 78,
+    "tag": 40,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,

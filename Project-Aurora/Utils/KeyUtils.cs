@@ -28,6 +28,12 @@ namespace Aurora.Utils
                     return DeviceKeys.LEFT_CONTROL;
                 case (Keys.LMenu):
                     return DeviceKeys.LEFT_ALT;
+                case (Keys.IMENonconvert):
+                    return DeviceKeys.JPN_MUHENKAN;
+                case (Keys.IMEConvert):
+                    return DeviceKeys.JPN_HENKAN;
+                case (Keys.IMEModeChange):
+                    return DeviceKeys.JPN_HIRAGANA_KATAKANA;
                 case (Keys.RShiftKey):
                     return DeviceKeys.RIGHT_SHIFT;
                 case (Keys.RControlKey):
@@ -236,6 +242,8 @@ namespace Aurora.Utils
                     return DeviceKeys.APOSTROPHE;
                 case (Keys.OemBackslash):
                     return DeviceKeys.BACKSLASH_UK;
+                case (Keys.Oem8):
+                    return DeviceKeys.OEM8;
                 case (Keys.Play):
                     return DeviceKeys.MEDIA_PLAY;
                 default:

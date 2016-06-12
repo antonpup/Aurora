@@ -324,9 +324,21 @@ namespace Aurora
 
         static void OnProcessExit(object sender, EventArgs e)
         {
-            Global.net_listener.Stop();
-            Global.dev_manager.Shutdown();
-            ConfigManager.Save(Global.Configuration);
+            try
+            {
+                if (Global.net_listener != null)
+                    Global.net_listener.Stop();
+
+                if (Global.dev_manager != null)
+                    Global.dev_manager.Shutdown();
+
+                if (Global.Configuration != null)
+                    ConfigManager.Save(Global.Configuration);
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine("Exception during OnProcessExit(). Error: " + exc, Logging_Level.Error);
+            }
         }
 
         private static void InputHookKeyDown(object sender, KeyEventArgs e)

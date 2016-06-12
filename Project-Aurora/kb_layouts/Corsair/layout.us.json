@@ -1301,7 +1301,7 @@
     "width_bits": 3,
     "height_bits": 3,
     "margin_left_bits": 11,
-    "margin_top_bits": 3,
+    "margin_top_bits": 0,
     "enabled": "true"
   },
   {

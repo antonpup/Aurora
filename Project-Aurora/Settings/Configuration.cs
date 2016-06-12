@@ -92,7 +92,9 @@ namespace Aurora.Settings
         [Description("French")]
         fr = 5,
         [Description("Deutsch")]
-        de = 6
+        de = 6,
+        [Description("Japanese")]
+        jpn = 7
 
     }
 

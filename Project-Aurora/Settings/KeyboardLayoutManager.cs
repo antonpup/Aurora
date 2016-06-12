@@ -60,6 +60,16 @@ namespace Aurora.Settings
 
         private String cultures_folder = "kb_layouts";
 
+        private PreferredKeyboardLocalization _loaded_localization = PreferredKeyboardLocalization.None;
+
+        public PreferredKeyboardLocalization Loaded_Localization
+        {
+            get
+            {
+                return _loaded_localization;
+            }
+        }
+
         public KeyboardLayoutManager(KeyboardBrand brand = KeyboardBrand.Logitech)
         {
             try
@@ -94,20 +104,20 @@ namespace Aurora.Settings
                         case PreferredKeyboardLocalization.de:
                             culture = "de-DE";
                             break;
-                       // case PreferredKeyboardLocalization.jpn:
-                       //     culture = "ja-JP";
-                       //     break;
-                            
+                        case PreferredKeyboardLocalization.jpn:
+                            culture = "ja-JP";
+                            break;
                     }
 
                     switch (culture)
                     {
-                        //case ("ja-JP"):
-                        //    LoadCulture(brand, "jpn");
-                        //    break;
+                        case ("ja-JP"):
+                            LoadCulture(brand, "jpn");
+                            break;
                         case ("de-DE"):
                         case ("hsb-DE"):
                         case ("dsb-DE"):
+                            _loaded_localization = PreferredKeyboardLocalization.de;
                             LoadCulture(brand, "de");
                             break;
                         case ("fr-FR"):
@@ -115,23 +125,28 @@ namespace Aurora.Settings
                         case ("oc-FR"):
                         case ("co-FR"):
                         case ("gsw-FR"):
+                            _loaded_localization = PreferredKeyboardLocalization.fr;
                             LoadCulture(brand, "fr");
                             break;
                         case ("cy-GB"):
                         case ("gd-GB"):
                         case ("en-GB"):
+                            _loaded_localization = PreferredKeyboardLocalization.uk;
                             LoadCulture(brand, "uk");
                             break;
                         case ("ru-RU"):
                         case ("tt-RU"):
                         case ("ba-RU"):
                         case ("sah-RU"):
+                            _loaded_localization = PreferredKeyboardLocalization.ru;
                             LoadCulture(brand, "ru");
                             break;
                         case ("en-US"):
+                            _loaded_localization = PreferredKeyboardLocalization.us;
                             LoadCulture(brand, "us");
                             break;
                         default:
+                            _loaded_localization = PreferredKeyboardLocalization.intl;
                             LoadCulture(brand, "intl");
                             break;
                     }
@@ -359,6 +374,8 @@ namespace Aurora.Settings
             keyboard.Add(new KeyboardKey(".", Devices.DeviceKeys.NUM_PERIOD, true, true));
 
             CalculateBitmap();
+
+            _loaded_localization = PreferredKeyboardLocalization.None;
         }
 
         public List<KeyboardKey> GetLayout()

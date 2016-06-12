@@ -9,7 +9,7 @@ namespace Aurora.Utils
     {
         public Dictionary<string, object> Items { get { return _items; } }
 
-        private Dictionary<string, object> _items = new Dictionary<string,object>();
+        private Dictionary<string, object> _items = new Dictionary<string, object>();
         public ItemValues(Stream instream)
         {
             using (StreamReader sr = new StreamReader(instream))
@@ -19,7 +19,7 @@ namespace Aurora.Utils
                     //Attempt to read the item key
                     object keyValue = ReadValue(sr);
                     if (keyValue != null)
-                        _items.Add((string)keyValue, ReadValue(sr));
+                        _items.Add(((string)keyValue).ToLowerInvariant(), ReadValue(sr));
 
                     //Skip over any whitespace characters to get to next value
                     while (char.IsWhiteSpace((char)sr.Peek()))
@@ -31,16 +31,16 @@ namespace Aurora.Utils
         private object ReadValue(StreamReader instream)
         {
             object returnValue = null;
-            
+
             //Skip over any whitespace characters to get to next value
             while (char.IsWhiteSpace((char)instream.Peek()))
                 instream.Read();
 
             char peekchar = (char)instream.Peek();
 
-            if(peekchar.Equals('{'))
+            if (peekchar.Equals('{'))
                 returnValue = ReadSubValues(instream);
-            else if(peekchar.Equals('/'))
+            else if (peekchar.Equals('/'))
             {
                 //Comment, read until end of line
                 instream.ReadLine();
@@ -60,7 +60,7 @@ namespace Aurora.Utils
             if (isQuote)
                 instream.Read();
 
-            for (char chr = (char)instream.Read(); true; chr = (char)instream.Read())
+            for (char chr = (char)instream.Read(); !instream.EndOfStream; chr = (char)instream.Read())
             {
 
                 if (isQuote && chr.Equals('"') ||
@@ -114,7 +114,7 @@ namespace Aurora.Utils
             {
                 object keyValue = ReadValue(instream);
                 if (keyValue != null)
-                    subValues.Add((string)keyValue, ReadValue(instream));
+                    subValues.Add(((string)keyValue).ToLowerInvariant(), ReadValue(instream));
 
                 //Seek to next data
                 while (char.IsWhiteSpace((char)instream.Peek()))
@@ -132,56 +132,85 @@ namespace Aurora.Utils
     {
         public static string GetGamePath(int gameId)
         {
-            string steamPath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "InstallPath", null);
-            if (steamPath == null)
-                steamPath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Valve\Steam", "InstallPath", null);
+            Global.logger.LogLine("Trying to get game path for: " + gameId, Logging_Level.Info);
 
-            if (steamPath != null)
+            try
             {
-                string manifestFile = Path.Combine(steamPath, "SteamApps", String.Format("appmanifest_{0}.acf", gameId));
-                if (File.Exists(manifestFile))
-                {
-                    ItemValues manifestData;
-                    using (Stream manifestStream = new FileStream(manifestFile, FileMode.Open))
-                        manifestData = new ItemValues(manifestStream);
+                string steamPath = "";
 
-                    string installdir = (string)((Dictionary<string, object>)manifestData.Items["AppState"])["installdir"];
-                    string appidpath = Path.Combine(steamPath, "SteamApps", "common", installdir);
-                    if (Directory.Exists(appidpath))
-                        return appidpath;
+                try
+                {
+                    steamPath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "InstallPath", null);
                 }
-                else
+                catch (Exception exc)
                 {
-                    string librariesFile = Path.Combine(steamPath, "SteamApps", string.Format("libraryfolders.vdf"));
-                    if (File.Exists(librariesFile))
+                    steamPath = "";
+                }
+
+                if (String.IsNullOrWhiteSpace(steamPath))
+                {
+                    try
                     {
-                        ItemValues libData;
-                        using (Stream libStream = new FileStream(librariesFile, FileMode.Open))
-                            libData = new ItemValues(libStream);
+                        steamPath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Valve\Steam", "InstallPath", null);
+                    }
+                    catch (Exception exc)
+                    {
+                        steamPath = "";
+                    }
+                }
 
-                        Dictionary<string, object> libraryFolders = (Dictionary<string, object>)libData.Items["LibraryFolders"];
 
-                        for(int libraryId = 1; libraryFolders.ContainsKey(libraryId.ToString()) ; libraryId++)
+                if (!String.IsNullOrWhiteSpace(steamPath))
+                {
+                    string manifestFile = Path.Combine(steamPath, "SteamApps", String.Format("appmanifest_{0}.acf", gameId));
+                    if (File.Exists(manifestFile))
+                    {
+                        ItemValues manifestData;
+                        using (Stream manifestStream = new FileStream(manifestFile, FileMode.Open))
+                            manifestData = new ItemValues(manifestStream);
+
+                        string installdir = (string)((Dictionary<string, object>)manifestData.Items["appstate"])["installdir"];
+                        string appidpath = Path.Combine(steamPath, "SteamApps", "common", installdir);
+                        if (Directory.Exists(appidpath))
+                            return appidpath;
+                    }
+                    else
+                    {
+                        string librariesFile = Path.Combine(steamPath, "SteamApps", string.Format("libraryfolders.vdf"));
+                        if (File.Exists(librariesFile))
                         {
-                            string libraryPath = (string)libraryFolders[libraryId.ToString()];
+                            ItemValues libData;
+                            using (Stream libStream = new FileStream(librariesFile, FileMode.Open))
+                                libData = new ItemValues(libStream);
 
-                            manifestFile = Path.Combine(libraryPath, "steamapps", string.Format("appmanifest_{0}.acf", gameId));
-                            if (File.Exists(manifestFile))
+                            Dictionary<string, object> libraryFolders = (Dictionary<string, object>)libData.Items["libraryfolders"];
+
+                            for (int libraryId = 1; libraryFolders.ContainsKey(libraryId.ToString()); libraryId++)
                             {
-                                ItemValues manifestData;
-                                using (Stream s = File.OpenRead(manifestFile))
-                                {
-                                    manifestData = new ItemValues(s);
-                                }
+                                string libraryPath = (string)libraryFolders[libraryId.ToString()];
 
-                                string installdir = (string)((Dictionary<string, object>)manifestData.Items["AppState"])["installdir"];
-                                string appidpath = Path.Combine(libraryPath, "steamapps", "common", installdir);
-                                if (Directory.Exists(appidpath))
-                                    return appidpath;
+                                manifestFile = Path.Combine(libraryPath, "steamapps", string.Format("appmanifest_{0}.acf", gameId));
+                                if (File.Exists(manifestFile))
+                                {
+                                    ItemValues manifestData;
+                                    using (Stream s = File.OpenRead(manifestFile))
+                                    {
+                                        manifestData = new ItemValues(s);
+                                    }
+
+                                    string installdir = (string)((Dictionary<string, object>)manifestData.Items["appstate"])["installdir"];
+                                    string appidpath = Path.Combine(libraryPath, "steamapps", "common", installdir);
+                                    if (Directory.Exists(appidpath))
+                                        return appidpath;
+                                }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("SteamUtils: GetGamePath(" + gameId + ") exception: " + exc, Logging_Level.Error);
             }
 
             return null;

@@ -109,7 +109,7 @@ namespace Aurora.Devices.Logitech
         COMMA = 372,
         PERIOD = 376,
         FORWARD_SLASH = 380,
-        //384
+        OEM102 = 384,
         RIGHT_SHIFT = 388,
         //392
         ARROW_UP = 396,
@@ -141,7 +141,7 @@ namespace Aurora.Devices.Logitech
         NUM_PERIOD = 496,
         //500
     };
-    
+
     class LogitechDevice : Device
     {
         private String devicename = "Logitech";
@@ -172,7 +172,7 @@ namespace Aurora.Devices.Logitech
 
                 if (LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB | LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB | LogitechGSDK.LOGI_DEVICETYPE_MONOCHROME) && LogitechGSDK.LogiLedSaveCurrentLighting())
                 {
-                    if(Global.Configuration.logitech_first_time)
+                    if (Global.Configuration.logitech_first_time)
                     {
                         LogitechInstallInstructions instructions = new LogitechInstallInstructions();
                         instructions.ShowDialog();
@@ -192,7 +192,7 @@ namespace Aurora.Devices.Logitech
                     return false;
                 }
 
-                
+
             }
             catch (Exception exc)
             {
@@ -251,7 +251,7 @@ namespace Aurora.Devices.Logitech
 
         private void SetOneKey(Logitech_keyboardBitmapKeys key, Color color)
         {
-            if(Global.Configuration.logitech_enhance_brightness)
+            if (Global.Configuration.logitech_enhance_brightness)
                 color = Utils.ColorUtils.MultiplyColorByScalar(color, 1.5);
 
             bitmap[(int)key] = color.B;
@@ -320,7 +320,16 @@ namespace Aurora.Devices.Logitech
                     {
                         SendColorToPeripheral((Color)key.Value, forced);
                     }
-                    else if(localKey != Logitech_keyboardBitmapKeys.UNKNOWN)
+                    if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.OEM8)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(220, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey != Logitech_keyboardBitmapKeys.UNKNOWN)
                     {
                         SetOneKey(localKey, (Color)key.Value);
                     }
@@ -329,7 +338,7 @@ namespace Aurora.Devices.Logitech
                 SendColorsToKeyboard(forced);
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 return false;
@@ -561,203 +570,260 @@ namespace Aurora.Devices.Logitech
         {
             switch (key)
             {
-                case(DeviceKeys.ESC):
+                case (DeviceKeys.ESC):
                     return Logitech_keyboardBitmapKeys.ESC;
-                case(DeviceKeys.F1):
+                case (DeviceKeys.F1):
                     return Logitech_keyboardBitmapKeys.F1;
-                case(DeviceKeys.F2):
+                case (DeviceKeys.F2):
                     return Logitech_keyboardBitmapKeys.F2;
-                case(DeviceKeys.F3):
+                case (DeviceKeys.F3):
                     return Logitech_keyboardBitmapKeys.F3;
-                case(DeviceKeys.F4):
+                case (DeviceKeys.F4):
                     return Logitech_keyboardBitmapKeys.F4;
-                case(DeviceKeys.F5):
+                case (DeviceKeys.F5):
                     return Logitech_keyboardBitmapKeys.F5;
-                case(DeviceKeys.F6):
+                case (DeviceKeys.F6):
                     return Logitech_keyboardBitmapKeys.F6;
-                case(DeviceKeys.F7):
+                case (DeviceKeys.F7):
                     return Logitech_keyboardBitmapKeys.F7;
-                case(DeviceKeys.F8):
+                case (DeviceKeys.F8):
                     return Logitech_keyboardBitmapKeys.F8;
-                case(DeviceKeys.F9):
+                case (DeviceKeys.F9):
                     return Logitech_keyboardBitmapKeys.F9;
-                case(DeviceKeys.F10):
+                case (DeviceKeys.F10):
                     return Logitech_keyboardBitmapKeys.F10;
-                case(DeviceKeys.F11):
+                case (DeviceKeys.F11):
                     return Logitech_keyboardBitmapKeys.F11;
-                case(DeviceKeys.F12):
+                case (DeviceKeys.F12):
                     return Logitech_keyboardBitmapKeys.F12;
-                case(DeviceKeys.PRINT_SCREEN):
+                case (DeviceKeys.PRINT_SCREEN):
                     return Logitech_keyboardBitmapKeys.PRINT_SCREEN;
-                case(DeviceKeys.SCROLL_LOCK):
+                case (DeviceKeys.SCROLL_LOCK):
                     return Logitech_keyboardBitmapKeys.SCROLL_LOCK;
-                case(DeviceKeys.PAUSE_BREAK):
+                case (DeviceKeys.PAUSE_BREAK):
                     return Logitech_keyboardBitmapKeys.PAUSE_BREAK;
-                case(DeviceKeys.JPN_HALFFULLWIDTH):
+                case (DeviceKeys.JPN_HALFFULLWIDTH):
                     return Logitech_keyboardBitmapKeys.TILDE;
                 case (DeviceKeys.OEM5):
-                    return Logitech_keyboardBitmapKeys.TILDE;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                        return Logitech_keyboardBitmapKeys.UNKNOWN;
+                    else
+                        return Logitech_keyboardBitmapKeys.TILDE;
                 case (DeviceKeys.TILDE):
-                    return Logitech_keyboardBitmapKeys.TILDE;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.APOSTROPHE;
+                    else
+                        return Logitech_keyboardBitmapKeys.TILDE;
                 case (DeviceKeys.ONE):
                     return Logitech_keyboardBitmapKeys.ONE;
-                case(DeviceKeys.TWO):
+                case (DeviceKeys.TWO):
                     return Logitech_keyboardBitmapKeys.TWO;
-                case(DeviceKeys.THREE):
+                case (DeviceKeys.THREE):
                     return Logitech_keyboardBitmapKeys.THREE;
-                case(DeviceKeys.FOUR):
+                case (DeviceKeys.FOUR):
                     return Logitech_keyboardBitmapKeys.FOUR;
-                case(DeviceKeys.FIVE):
+                case (DeviceKeys.FIVE):
                     return Logitech_keyboardBitmapKeys.FIVE;
-                case(DeviceKeys.SIX):
+                case (DeviceKeys.SIX):
                     return Logitech_keyboardBitmapKeys.SIX;
-                case(DeviceKeys.SEVEN):
+                case (DeviceKeys.SEVEN):
                     return Logitech_keyboardBitmapKeys.SEVEN;
-                case(DeviceKeys.EIGHT):
+                case (DeviceKeys.EIGHT):
                     return Logitech_keyboardBitmapKeys.EIGHT;
-                case(DeviceKeys.NINE):
+                case (DeviceKeys.NINE):
                     return Logitech_keyboardBitmapKeys.NINE;
-                case(DeviceKeys.ZERO):
+                case (DeviceKeys.ZERO):
                     return Logitech_keyboardBitmapKeys.ZERO;
-                case(DeviceKeys.MINUS):
+                case (DeviceKeys.MINUS):
                     return Logitech_keyboardBitmapKeys.MINUS;
-                case(DeviceKeys.EQUALS):
+                case (DeviceKeys.EQUALS):
                     return Logitech_keyboardBitmapKeys.EQUALS;
-                case(DeviceKeys.BACKSPACE):
+                case (DeviceKeys.BACKSPACE):
                     return Logitech_keyboardBitmapKeys.BACKSPACE;
-                case(DeviceKeys.INSERT):
+                case (DeviceKeys.INSERT):
                     return Logitech_keyboardBitmapKeys.INSERT;
-                case(DeviceKeys.HOME):
+                case (DeviceKeys.HOME):
                     return Logitech_keyboardBitmapKeys.HOME;
-                case(DeviceKeys.PAGE_UP):
+                case (DeviceKeys.PAGE_UP):
                     return Logitech_keyboardBitmapKeys.PAGE_UP;
-                case(DeviceKeys.NUM_LOCK):
+                case (DeviceKeys.NUM_LOCK):
                     return Logitech_keyboardBitmapKeys.NUM_LOCK;
-                case(DeviceKeys.NUM_SLASH):
+                case (DeviceKeys.NUM_SLASH):
                     return Logitech_keyboardBitmapKeys.NUM_SLASH;
-                case(DeviceKeys.NUM_ASTERISK):
+                case (DeviceKeys.NUM_ASTERISK):
                     return Logitech_keyboardBitmapKeys.NUM_ASTERISK;
-                case(DeviceKeys.NUM_MINUS):
+                case (DeviceKeys.NUM_MINUS):
                     return Logitech_keyboardBitmapKeys.NUM_MINUS;
-                case(DeviceKeys.TAB):
+                case (DeviceKeys.TAB):
                     return Logitech_keyboardBitmapKeys.TAB;
-                case(DeviceKeys.Q):
-                    return Logitech_keyboardBitmapKeys.Q;
-                case(DeviceKeys.W):
-                    return Logitech_keyboardBitmapKeys.W;
-                case(DeviceKeys.E):
+                case (DeviceKeys.Q):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.A;
+                    else
+                        return Logitech_keyboardBitmapKeys.Q;
+                case (DeviceKeys.W):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.Z;
+                    else
+                        return Logitech_keyboardBitmapKeys.W;
+                case (DeviceKeys.E):
                     return Logitech_keyboardBitmapKeys.E;
-                case(DeviceKeys.R):
+                case (DeviceKeys.R):
                     return Logitech_keyboardBitmapKeys.R;
-                case(DeviceKeys.T):
+                case (DeviceKeys.T):
                     return Logitech_keyboardBitmapKeys.T;
-                case(DeviceKeys.Y):
-                    return Logitech_keyboardBitmapKeys.Y;
-                case(DeviceKeys.U):
+                case (DeviceKeys.Y):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Logitech_keyboardBitmapKeys.Z;
+                    else
+                        return Logitech_keyboardBitmapKeys.Y;
+                case (DeviceKeys.U):
                     return Logitech_keyboardBitmapKeys.U;
-                case(DeviceKeys.I):
+                case (DeviceKeys.I):
                     return Logitech_keyboardBitmapKeys.I;
-                case(DeviceKeys.O):
+                case (DeviceKeys.O):
                     return Logitech_keyboardBitmapKeys.O;
-                case(DeviceKeys.P):
+                case (DeviceKeys.P):
                     return Logitech_keyboardBitmapKeys.P;
-                case(DeviceKeys.OPEN_BRACKET):
-                    return Logitech_keyboardBitmapKeys.OPEN_BRACKET;
-                case(DeviceKeys.CLOSE_BRACKET):
-                    return Logitech_keyboardBitmapKeys.CLOSE_BRACKET;
-                case(DeviceKeys.BACKSLASH):
-                    return Logitech_keyboardBitmapKeys.BACKSLASH;
-                case(DeviceKeys.DELETE):
+                case (DeviceKeys.OPEN_BRACKET):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.MINUS;
+                    else
+                        return Logitech_keyboardBitmapKeys.OPEN_BRACKET;
+                case (DeviceKeys.CLOSE_BRACKET):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.OPEN_BRACKET;
+                    else
+                        return Logitech_keyboardBitmapKeys.CLOSE_BRACKET;
+                case (DeviceKeys.BACKSLASH):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.HASHTAG;
+                    else
+                        return Logitech_keyboardBitmapKeys.BACKSLASH;
+                case (DeviceKeys.DELETE):
                     return Logitech_keyboardBitmapKeys.KEYBOARD_DELETE;
-                case(DeviceKeys.END):
+                case (DeviceKeys.END):
                     return Logitech_keyboardBitmapKeys.END;
-                case(DeviceKeys.PAGE_DOWN):
+                case (DeviceKeys.PAGE_DOWN):
                     return Logitech_keyboardBitmapKeys.PAGE_DOWN;
-                case(DeviceKeys.NUM_SEVEN):
+                case (DeviceKeys.NUM_SEVEN):
                     return Logitech_keyboardBitmapKeys.NUM_SEVEN;
-                case(DeviceKeys.NUM_EIGHT):
+                case (DeviceKeys.NUM_EIGHT):
                     return Logitech_keyboardBitmapKeys.NUM_EIGHT;
-                case(DeviceKeys.NUM_NINE):
+                case (DeviceKeys.NUM_NINE):
                     return Logitech_keyboardBitmapKeys.NUM_NINE;
-                case(DeviceKeys.NUM_PLUS):
+                case (DeviceKeys.NUM_PLUS):
                     return Logitech_keyboardBitmapKeys.NUM_PLUS;
-                case(DeviceKeys.CAPS_LOCK):
+                case (DeviceKeys.CAPS_LOCK):
                     return Logitech_keyboardBitmapKeys.CAPS_LOCK;
-                case(DeviceKeys.A):
-                    return Logitech_keyboardBitmapKeys.A;
-                case(DeviceKeys.S):
+                case (DeviceKeys.A):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.Q;
+                    else
+                        return Logitech_keyboardBitmapKeys.A;
+                case (DeviceKeys.S):
                     return Logitech_keyboardBitmapKeys.S;
-                case(DeviceKeys.D):
+                case (DeviceKeys.D):
                     return Logitech_keyboardBitmapKeys.D;
-                case(DeviceKeys.F):
+                case (DeviceKeys.F):
                     return Logitech_keyboardBitmapKeys.F;
-                case(DeviceKeys.G):
+                case (DeviceKeys.G):
                     return Logitech_keyboardBitmapKeys.G;
-                case(DeviceKeys.H):
+                case (DeviceKeys.H):
                     return Logitech_keyboardBitmapKeys.H;
-                case(DeviceKeys.J):
+                case (DeviceKeys.J):
                     return Logitech_keyboardBitmapKeys.J;
-                case(DeviceKeys.K):
+                case (DeviceKeys.K):
                     return Logitech_keyboardBitmapKeys.K;
-                case(DeviceKeys.L):
+                case (DeviceKeys.L):
                     return Logitech_keyboardBitmapKeys.L;
                 case (DeviceKeys.DEU_O):
                     return Logitech_keyboardBitmapKeys.SEMICOLON;
                 case (DeviceKeys.SEMICOLON):
-                    return Logitech_keyboardBitmapKeys.SEMICOLON;
-                case(DeviceKeys.APOSTROPHE):
-                    return Logitech_keyboardBitmapKeys.APOSTROPHE;
-                case(DeviceKeys.HASHTAG):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.CLOSE_BRACKET;
+                    else
+                        return Logitech_keyboardBitmapKeys.SEMICOLON;
+                case (DeviceKeys.APOSTROPHE):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.TILDE;
+                    else
+                        return Logitech_keyboardBitmapKeys.APOSTROPHE;
+                case (DeviceKeys.HASHTAG):
                     return Logitech_keyboardBitmapKeys.HASHTAG;
-                case(DeviceKeys.ENTER):
+                case (DeviceKeys.ENTER):
                     return Logitech_keyboardBitmapKeys.ENTER;
-                case(DeviceKeys.NUM_FOUR):
+                case (DeviceKeys.NUM_FOUR):
                     return Logitech_keyboardBitmapKeys.NUM_FOUR;
-                case(DeviceKeys.NUM_FIVE):
+                case (DeviceKeys.NUM_FIVE):
                     return Logitech_keyboardBitmapKeys.NUM_FIVE;
-                case(DeviceKeys.NUM_SIX):
+                case (DeviceKeys.NUM_SIX):
                     return Logitech_keyboardBitmapKeys.NUM_SIX;
-                case(DeviceKeys.LEFT_SHIFT):
+                case (DeviceKeys.LEFT_SHIFT):
                     return Logitech_keyboardBitmapKeys.LEFT_SHIFT;
-                case(DeviceKeys.BACKSLASH_UK):
-                    return Logitech_keyboardBitmapKeys.BACKSLASH_UK;
-                case(DeviceKeys.Z):
-                    return Logitech_keyboardBitmapKeys.Z;
-                case(DeviceKeys.X):
+                case (DeviceKeys.BACKSLASH_UK):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                        return Logitech_keyboardBitmapKeys.OEM102;
+                    else
+                        return Logitech_keyboardBitmapKeys.BACKSLASH_UK;
+                case (DeviceKeys.Z):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.W;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Logitech_keyboardBitmapKeys.Y;
+                    else
+                        return Logitech_keyboardBitmapKeys.Z;
+                case (DeviceKeys.X):
                     return Logitech_keyboardBitmapKeys.X;
-                case(DeviceKeys.C):
+                case (DeviceKeys.C):
                     return Logitech_keyboardBitmapKeys.C;
-                case(DeviceKeys.V):
+                case (DeviceKeys.V):
                     return Logitech_keyboardBitmapKeys.V;
-                case(DeviceKeys.B):
+                case (DeviceKeys.B):
                     return Logitech_keyboardBitmapKeys.B;
-                case(DeviceKeys.N):
+                case (DeviceKeys.N):
                     return Logitech_keyboardBitmapKeys.N;
-                case(DeviceKeys.M):
-                    return Logitech_keyboardBitmapKeys.M;
-                case(DeviceKeys.COMMA):
-                    return Logitech_keyboardBitmapKeys.COMMA;
-                case(DeviceKeys.PERIOD):
-                    return Logitech_keyboardBitmapKeys.PERIOD;
-                case(DeviceKeys.FORWARD_SLASH):
+                case (DeviceKeys.M):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.SEMICOLON;
+                    else
+                        return Logitech_keyboardBitmapKeys.M;
+                case (DeviceKeys.COMMA):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.M;
+                    else
+                        return Logitech_keyboardBitmapKeys.COMMA;
+                case (DeviceKeys.PERIOD):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.COMMA;
+                    else
+                        return Logitech_keyboardBitmapKeys.PERIOD;
+                case (DeviceKeys.FORWARD_SLASH):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Logitech_keyboardBitmapKeys.PERIOD;
+                    else
+                        return Logitech_keyboardBitmapKeys.FORWARD_SLASH;
+                case (DeviceKeys.OEM8):
                     return Logitech_keyboardBitmapKeys.FORWARD_SLASH;
-                case(DeviceKeys.RIGHT_SHIFT):
+                case (DeviceKeys.OEM102):
+                    return Logitech_keyboardBitmapKeys.OEM102;
+                case (DeviceKeys.RIGHT_SHIFT):
                     return Logitech_keyboardBitmapKeys.RIGHT_SHIFT;
-                case(DeviceKeys.ARROW_UP):
+                case (DeviceKeys.ARROW_UP):
                     return Logitech_keyboardBitmapKeys.ARROW_UP;
-                case(DeviceKeys.NUM_ONE):
+                case (DeviceKeys.NUM_ONE):
                     return Logitech_keyboardBitmapKeys.NUM_ONE;
-                case(DeviceKeys.NUM_TWO):
+                case (DeviceKeys.NUM_TWO):
                     return Logitech_keyboardBitmapKeys.NUM_TWO;
-                case(DeviceKeys.NUM_THREE):
+                case (DeviceKeys.NUM_THREE):
                     return Logitech_keyboardBitmapKeys.NUM_THREE;
-                case(DeviceKeys.NUM_ENTER):
+                case (DeviceKeys.NUM_ENTER):
                     return Logitech_keyboardBitmapKeys.NUM_ENTER;
-                case(DeviceKeys.LEFT_CONTROL):
+                case (DeviceKeys.LEFT_CONTROL):
                     return Logitech_keyboardBitmapKeys.LEFT_CONTROL;
-                case(DeviceKeys.LEFT_WINDOWS):
+                case (DeviceKeys.LEFT_WINDOWS):
                     return Logitech_keyboardBitmapKeys.LEFT_WINDOWS;
-                case(DeviceKeys.LEFT_ALT):
+                case (DeviceKeys.LEFT_ALT):
                     return Logitech_keyboardBitmapKeys.LEFT_ALT;
                 case (DeviceKeys.JPN_MUHENKAN):
                     return Logitech_keyboardBitmapKeys.JPN_MUHENKAN;
@@ -769,21 +835,21 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.JPN_HIRAGANA_KATAKANA;
                 case (DeviceKeys.RIGHT_ALT):
                     return Logitech_keyboardBitmapKeys.RIGHT_ALT;
-                case(DeviceKeys.RIGHT_WINDOWS):
+                case (DeviceKeys.RIGHT_WINDOWS):
                     return Logitech_keyboardBitmapKeys.RIGHT_WINDOWS;
-                case(DeviceKeys.APPLICATION_SELECT):
+                case (DeviceKeys.APPLICATION_SELECT):
                     return Logitech_keyboardBitmapKeys.APPLICATION_SELECT;
-                case(DeviceKeys.RIGHT_CONTROL):
+                case (DeviceKeys.RIGHT_CONTROL):
                     return Logitech_keyboardBitmapKeys.RIGHT_CONTROL;
-                case(DeviceKeys.ARROW_LEFT):
+                case (DeviceKeys.ARROW_LEFT):
                     return Logitech_keyboardBitmapKeys.ARROW_LEFT;
-                case(DeviceKeys.ARROW_DOWN):
+                case (DeviceKeys.ARROW_DOWN):
                     return Logitech_keyboardBitmapKeys.ARROW_DOWN;
-                case(DeviceKeys.ARROW_RIGHT):
+                case (DeviceKeys.ARROW_RIGHT):
                     return Logitech_keyboardBitmapKeys.ARROW_RIGHT;
-                case(DeviceKeys.NUM_ZERO):
+                case (DeviceKeys.NUM_ZERO):
                     return Logitech_keyboardBitmapKeys.NUM_ZERO;
-                case(DeviceKeys.NUM_PERIOD):
+                case (DeviceKeys.NUM_PERIOD):
                     return Logitech_keyboardBitmapKeys.NUM_PERIOD;
                 default:
                     return Logitech_keyboardBitmapKeys.UNKNOWN;
