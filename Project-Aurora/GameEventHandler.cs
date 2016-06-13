@@ -16,6 +16,7 @@ using Aurora.Profiles.Payday_2;
 using Aurora.Profiles.LeagueOfLegends;
 using Aurora.Profiles.HotlineMiami;
 using Aurora.Profiles.TheTalosPrinciple;
+using Aurora.Profiles.Overlays.SkypeOverlay;
 
 namespace Aurora
 {
@@ -41,7 +42,7 @@ namespace Aurora
 
         private Event_Desktop desktop_e = new Event_Desktop();
         private Event_Idle idle_e = new Event_Idle();
-        //private GameEvent_Logitech_Wrapper logiwr_ge = new GameEvent_Logitech_Wrapper();
+        private Event_SkypeOverlay skype_overlay = new Event_SkypeOverlay();
         private Dictionary<string, GameEvent> profiles = new Dictionary<string, GameEvent>(); //Process name, GameEvent
 
         private List<TimedListObject> overlays = new List<TimedListObject>();
@@ -69,6 +70,8 @@ namespace Aurora
             profiles.Add("hotlinegl.exe", new GameEvent_HM());
             profiles.Add("talos.exe", new GameEvent_TalosPrinciple());
             profiles.Add("talos_unrestricted.exe", new GameEvent_TalosPrinciple());
+
+            overlays.Add(new TimedListObject(skype_overlay, 0, overlays));
         }
 
         ~GameEventHandler()
@@ -215,7 +218,8 @@ namespace Aurora
             TimedListObject[] overlay_events = overlays.ToArray();
             foreach (TimedListObject evnt in overlay_events)
             {
-                (evnt.item as GameEvent).UpdateLights(newframe);
+                if((evnt.item as GameEvent).IsEnabled())
+                    (evnt.item as GameEvent).UpdateLights(newframe);
             }
 
             Global.effengine.PushFrame(newframe);
@@ -246,7 +250,7 @@ namespace Aurora
 
             try
             {
-                bool resolved_game = false;
+                bool resolved_state = false;
 
                 switch (Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("appid").ToString())
                 {
@@ -254,28 +258,32 @@ namespace Aurora
                         if (process_name.EndsWith("dota2.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
                         {
                             profiles[process_name].UpdateLights(newframe, new Profiles.Dota_2.GSI.GameState_Dota2(gs));
-                            resolved_game = true;
+                            resolved_state = true;
                         }
                         break;
                     case "730":
                         if (process_name.EndsWith("csgo.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
                         {
                             profiles[process_name].UpdateLights(newframe, new Profiles.CSGO.GSI.GameState_CSGO(gs));
-                            resolved_game = true;
+                            resolved_state = true;
                         }
                         break;
                     case "218620":
                         if (process_name.EndsWith("payday2_win32_release.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
                         {
                             profiles[process_name].UpdateLights(newframe, new Profiles.Payday_2.GSI.GameState_PD2(gs));
-                            resolved_game = true;
+                            resolved_state = true;
                         }
                         break;
                     case "0":
                         if (process_name.EndsWith("gta5.exe") && Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant().Equals("gta5.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
                         {
                             profiles[process_name].UpdateLights(newframe, gs as Profiles.GTA5.GSI.GameState_GTA5);
-                            resolved_game = true;
+                            resolved_state = true;
+                        }
+                        else if (Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant().Equals("skype.exe") && skype_overlay.IsEnabled())
+                        {
+                            skype_overlay.UpdateLights(newframe, new Profiles.Overlays.SkypeOverlay.State_SkypeOverlay(gs));
                         }
                         else
                         {
@@ -289,7 +297,7 @@ namespace Aurora
                                 if(process_name.EndsWith(gs_process_name))
                                 {
                                     profiles[gs_process_name].UpdateLights(newframe, gs as GameState_Wrapper);
-                                    resolved_game = true;
+                                    resolved_state = true;
                                 }
                             }
                         }
@@ -302,7 +310,7 @@ namespace Aurora
                 LastInput.cbSize = (uint)Marshal.SizeOf(LastInput);
                 LastInput.dwTime = 0;
 
-                if (GetLastInputInfo(ref LastInput) && resolved_game)
+                if (GetLastInputInfo(ref LastInput) && resolved_state)
                 {
                     IdleTime = System.Environment.TickCount - LastInput.dwTime;
 
@@ -321,13 +329,14 @@ namespace Aurora
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.desktop_settings.time_based_dimming_start_hour, Global.Configuration.desktop_settings.time_based_dimming_start_minute, Global.Configuration.desktop_settings.time_based_dimming_end_hour, Global.Configuration.desktop_settings.time_based_dimming_end_minute))
                     )
                 {
-                    if (resolved_game)
+                    if (resolved_state)
                     {
                         //Add overlays
                         TimedListObject[] overlay_events = overlays.ToArray();
                         foreach (TimedListObject evnt in overlay_events)
                         {
-                            (evnt.item as GameEvent).UpdateLights(newframe);
+                            if ((evnt.item as GameEvent).IsEnabled())
+                                (evnt.item as GameEvent).UpdateLights(newframe);
                         }
 
                         Global.effengine.PushFrame(newframe);

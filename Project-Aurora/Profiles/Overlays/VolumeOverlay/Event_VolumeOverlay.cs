@@ -21,7 +21,6 @@ namespace Aurora.Profiles.Overlays
         {
             if (Global.Configuration.volume_overlay_settings.enabled)
             {
-
                 Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
                 EffectLayer volume_bar = new EffectLayer("Overlay - Volume Bar");
