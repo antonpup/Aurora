@@ -93,7 +93,7 @@ namespace Aurora.Settings
         fr = 5,
         [Description("Deutsch")]
         de = 6,
-        [Description("Japanese")]
+        [Description("Japanese (Logitech Only)")]
         jpn = 7
 
     }
