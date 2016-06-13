@@ -215,6 +215,11 @@ namespace Aurora.Profiles.Logitech_Wrapper
                         }
                     }
                 }
+                //Razer
+                else if (ngw_state.Command.Equals("CreateKeyboardEffect"))
+                {
+
+                }
                 else
                 {
                     Global.logger.LogLine("Unknown Wrapper Command: " + ngw_state.Command, Logging_Level.Info, false);

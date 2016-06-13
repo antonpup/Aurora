@@ -367,10 +367,8 @@ Logitech_keyboardBitmapKeys ToLogitechBitmap(int rzrow, int rzcolumn)
 		return Logitech_keyboardBitmapKeys::BITLOC_SPACE;
 	else if (rzrow == 5 && rzcolumn == 11)
 		return Logitech_keyboardBitmapKeys::BITLOC_RIGHT_ALT;
-	/* //Not included on Logitech
 	else if (rzrow == 5 && rzcolumn == 12)
-		return Logitech_keyboardBitmapKeys::BITLOC_FUNCTION_KEY;
-	*/
+		return Logitech_keyboardBitmapKeys::BITLOC_RIGHT_WINDOWS;
 	else if (rzrow == 5 && rzcolumn == 13)
 		return Logitech_keyboardBitmapKeys::BITLOC_APPLICATION_SELECT;
 	else if (rzrow == 5 && rzcolumn == 14)
@@ -392,6 +390,7 @@ Logitech_keyboardBitmapKeys ToLogitechBitmap(int rzrow, int rzcolumn)
 
 HANDLE hPipe;
 static bool isInitialized = false;
+static bool requiresUpdate = true;
 
 static unsigned char current_bitmap[LOGI_LED_BITMAP_SIZE];
 static unsigned char logo[4];
@@ -420,6 +419,11 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 	if (!isInitialized)
 		return false;
 	
+	if (!requiresUpdate)
+		return true;
+	else
+		requiresUpdate = false;
+
 	//Create JSON
 	std::stringstream ss;
 
@@ -610,11 +614,21 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 			{
 				struct ChromaSDK::Keyboard::STATIC_EFFECT_TYPE *static_effect = (struct ChromaSDK::Keyboard::STATIC_EFFECT_TYPE *)pParam;
 
+				unsigned char blue = GetBValue(static_effect->Color);
+				unsigned char green = GetGValue(static_effect->Color);
+				unsigned char red = GetRValue(static_effect->Color);
+
 				for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
 				{
-					current_bitmap[colorset] = GetBValue(static_effect->Color);
-					current_bitmap[colorset + 1] = GetGValue(static_effect->Color);
-					current_bitmap[colorset + 2] = GetRValue(static_effect->Color);
+					if (current_bitmap[colorset] != blue ||
+						current_bitmap[colorset + 1] != green ||
+						current_bitmap[colorset + 2] != red
+						)
+						requiresUpdate = true;
+					
+					current_bitmap[colorset] = blue;
+					current_bitmap[colorset + 1] = green;
+					current_bitmap[colorset + 2] = red;
 					current_bitmap[colorset + 3] = (char)255;
 				}
 
@@ -624,6 +638,12 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 			{
 				for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
 				{
+					if (current_bitmap[colorset] != 0 ||
+						current_bitmap[colorset + 1] != 0 ||
+						current_bitmap[colorset + 2] != 0
+						)
+						requiresUpdate = true;
+					
 					current_bitmap[colorset] = (char)0;
 					current_bitmap[colorset + 1] = (char)0;
 					current_bitmap[colorset + 2] = (char)0;
@@ -644,18 +664,36 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 
 						if (bitmap_pos != Logitech_keyboardBitmapKeys::UNKNOWN)
 						{
+							unsigned char blue = GetBValue(custom_effect->Color[row][col]);
+							unsigned char green = GetGValue(custom_effect->Color[row][col]);
+							unsigned char red = GetRValue(custom_effect->Color[row][col]);
+							
+							
 							if (bitmap_pos == Logitech_keyboardBitmapKeys::LOGO)
 							{
-								logo[0] = GetBValue(custom_effect->Color[row][col]);
-								logo[1] = GetGValue(custom_effect->Color[row][col]);
-								logo[2] = GetRValue(custom_effect->Color[row][col]);
+								if (logo[0] != blue ||
+									logo[1] != green ||
+									logo[2] != red
+									)
+									requiresUpdate = true;
+								
+								
+								logo[0] = blue;
+								logo[1] = green;
+								logo[2] = red;
 								logo[3] = (char)255;
 							}
 							else
 							{
-								current_bitmap[(int)bitmap_pos] = GetBValue(custom_effect->Color[row][col]);
-								current_bitmap[(int)bitmap_pos + 1] = GetGValue(custom_effect->Color[row][col]);
-								current_bitmap[(int)bitmap_pos + 2] = GetRValue(custom_effect->Color[row][col]);
+								if (current_bitmap[(int)bitmap_pos] != blue ||
+									current_bitmap[(int)bitmap_pos + 1] != green ||
+									current_bitmap[(int)bitmap_pos + 2] != red
+									)
+									requiresUpdate = true;
+								
+								current_bitmap[(int)bitmap_pos] = blue;
+								current_bitmap[(int)bitmap_pos + 1] = green;
+								current_bitmap[(int)bitmap_pos + 2] = red;
 								current_bitmap[(int)bitmap_pos + 3] = (char)255;
 							}
 						}
@@ -705,6 +743,12 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 			{
 				for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
 				{
+					if (current_bitmap[colorset] != 0 ||
+						current_bitmap[colorset + 1] != 0 ||
+						current_bitmap[colorset + 2] != 0
+						)
+						requiresUpdate = true;
+					
 					current_bitmap[colorset] = (char)0;
 					current_bitmap[colorset + 1] = (char)0;
 					current_bitmap[colorset + 2] = (char)0;
@@ -729,7 +773,6 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 		ss << '}';
 
 		WriteToPipe(current_bitmap, ss.str());
-		
 
 		return RZRESULT_SUCCESS;
 	}
