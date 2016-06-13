@@ -201,7 +201,16 @@ The Talos Principle features
 
    Secondary goal of Aurora is to integrate RGB lighting into popular games. RGB lighting is a nifty feature that is often underused, and as a result gamers with RGB gear are unable to utilize the lighting effects that they paid for.
    
-   
+# Donations
+If you want to help this project rapidly grow, you can donate via PayPal to help me further develop Aurora. While being a university student, Aurora does not take my monetary priority. Games and RGB hardware are not cheap, and as a result, support for not owned products will take more time to develop. The donations will be used to purchase hardware and videogames with intent to add support for them with Aurora. Alternatively you can gift games directly to me via Steam.
+
+I do not have any intent in charging money for Aurora, it will always be a free and open source project. 
+
+| PayPal | Steam |
+| ------ | ----- |
+| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=pupant%40gmail%2ecom&lc=US&item_name=Aurora%20Development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted) | [![](http://steamsignature.com/status/english/76561198025451421.png)](http://steamcommunity.com/id/pupant/) |
+
+
 # Credit
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) - Used for JSON parsing
 * [Colore](https://github.com/CoraleStudios/Colore) - Used for Razer suppport
