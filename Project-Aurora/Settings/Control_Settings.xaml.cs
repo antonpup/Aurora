@@ -64,6 +64,16 @@ namespace Aurora.Settings
             this.volume_ks.Sequence = Global.Configuration.volume_overlay_settings.sequence;
             this.volume_effects_delay.Value = Global.Configuration.volume_overlay_settings.delay;
 
+            this.skype_overlay_enabled.IsChecked = Global.Configuration.skype_overlay_settings.enabled;
+            this.skype_unread_messages_enabled.IsChecked = Global.Configuration.skype_overlay_settings.mm_enabled;
+            this.skype_unread_primary_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.skype_overlay_settings.mm_color_primary);
+            this.skype_unread_secondary_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.skype_overlay_settings.mm_color_secondary);
+            this.skype_unread_messages_ks.Sequence = Global.Configuration.skype_overlay_settings.mm_sequence;
+            this.skype_incoming_calls_enabled.IsChecked = Global.Configuration.skype_overlay_settings.call_enabled;
+            this.skype_incoming_calls_primary_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.skype_overlay_settings.call_color_primary);
+            this.skype_incoming_calls_secondary_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.skype_overlay_settings.call_color_secondary);
+            this.skype_incoming_calls_ks.Sequence = Global.Configuration.skype_overlay_settings.call_sequence;
+
             this.idle_effects_type.SelectedIndex = (int)Global.Configuration.desktop_settings.idle_type;
             this.idle_effects_delay.Value = Global.Configuration.desktop_settings.idle_delay;
             this.idle_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.desktop_settings.idle_effect_primary_color);
@@ -598,6 +608,94 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_brand.SelectedIndex.ToString());
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_overlay_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.skype_overlay_settings.enabled = (this.skype_overlay_enabled.IsChecked.HasValue) ? this.skype_overlay_enabled.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_run_integration_Click(object sender, RoutedEventArgs e)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = @"Aurora-SkypeIntegration.exe";
+            Process.Start(startInfo);
+        }
+
+        private void skype_unread_messages_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.skype_overlay_settings.mm_enabled = (this.skype_unread_messages_enabled.IsChecked.HasValue) ? this.skype_unread_messages_enabled.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_unread_primary_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (IsLoaded && this.skype_unread_primary_colorpicker.SelectedColor.HasValue)
+            {
+                Global.Configuration.skype_overlay_settings.mm_color_primary = Utils.ColorUtils.MediaColorToDrawingColor(this.skype_unread_primary_colorpicker.SelectedColor.Value);
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_unread_secondary_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (IsLoaded && this.skype_unread_secondary_colorpicker.SelectedColor.HasValue)
+            {
+                Global.Configuration.skype_overlay_settings.mm_color_secondary = Utils.ColorUtils.MediaColorToDrawingColor(this.skype_unread_secondary_colorpicker.SelectedColor.Value);
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_unread_messages_ks_SequenceUpdated(object sender, EventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.skype_overlay_settings.mm_sequence = (sender as Controls.KeySequence).Sequence;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_incoming_calls_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.skype_overlay_settings.call_enabled = (this.skype_incoming_calls_enabled.IsChecked.HasValue) ? this.skype_incoming_calls_enabled.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_incoming_calls_primary_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (IsLoaded && this.skype_incoming_calls_primary_colorpicker.SelectedColor.HasValue)
+            {
+                Global.Configuration.skype_overlay_settings.call_color_primary = Utils.ColorUtils.MediaColorToDrawingColor(this.skype_incoming_calls_primary_colorpicker.SelectedColor.Value);
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_incoming_calls_secondary_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (IsLoaded && this.skype_incoming_calls_secondary_colorpicker.SelectedColor.HasValue)
+            {
+                Global.Configuration.skype_overlay_settings.call_color_secondary = Utils.ColorUtils.MediaColorToDrawingColor(this.skype_incoming_calls_secondary_colorpicker.SelectedColor.Value);
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void skype_incoming_calls_messages_ks_SequenceUpdated(object sender, EventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.skype_overlay_settings.call_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }

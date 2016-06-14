@@ -228,8 +228,11 @@
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLSettings.cs" />
     <Compile Include="Profiles\Logitech_Wrapper\GameEvent_Logitech_Wrapper.cs" />
-    <Compile Include="Profiles\Overlays\Event_VolumeOverlay.cs" />
-    <Compile Include="Profiles\Overlays\VolumeOverlaySettings.cs" />
+    <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
+    <Compile Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
+    <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
+    <Compile Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
+    <Compile Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
     <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
       <DependentUpon>Control_Overwatch.xaml</DependentUpon>
     </Compile>
@@ -650,6 +653,10 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Aurora-SkypeIntegration\Aurora-SkypeIntegration.csproj">
+      <Project>{e9e9663c-153b-4977-9d0b-e87afb93280a}</Project>
+      <Name>Aurora-SkypeIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Aurora-Updater\Aurora-Updater.csproj">
       <Project>{6f81d40a-6aa0-4c8b-a395-779ef3003ca4}</Project>
       <Name>Aurora-Updater</Name>
