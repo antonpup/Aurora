@@ -229,6 +229,7 @@
     <Compile Include="Profiles\LeagueOfLegends\LoLSettings.cs" />
     <Compile Include="Profiles\Logitech_Wrapper\GameEvent_Logitech_Wrapper.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
+    <Compile Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />

@@ -26,21 +26,55 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
 
         public bool IsEnabled()
         {
-            return true;
+            return Global.Configuration.skype_overlay_settings.enabled;
         }
 
         public void UpdateLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            EffectLayer skype_missed_messages = new EffectLayer("Overlay - Skype Missed Messages");
+            long time = Utils.Time.GetMillisecondsSinceEpoch();
 
-            if(_missed_messages_count > 0)
+            if(Global.Configuration.skype_overlay_settings.mm_enabled)
             {
-                skype_missed_messages.Fill(Color.Orange);
+                if (_missed_messages_count > 0)
+                {
+                    EffectLayer skype_missed_messages = new EffectLayer("Overlay - Skype Missed Messages");
+
+                    ColorSpectrum mm_spec = new ColorSpectrum(Global.Configuration.skype_overlay_settings.mm_color_primary, Color.Black, Global.Configuration.skype_overlay_settings.mm_color_primary);
+                    Color color = Color.Orange;
+
+                    if (Global.Configuration.skype_overlay_settings.mm_blink)
+                        color = mm_spec.GetColorAt((time % 2000L) / 2000.0f);
+                    else
+                        color = mm_spec.GetColorAt(0);
+
+                    skype_missed_messages.Set(Global.Configuration.skype_overlay_settings.mm_sequence, color);
+
+                    layers.Enqueue(skype_missed_messages);
+                }
             }
 
-            layers.Enqueue(skype_missed_messages);
+            if (Global.Configuration.skype_overlay_settings.call_enabled)
+            {
+                if (_is_calling)
+                {
+                    EffectLayer skype_ringing_call = new EffectLayer("Overlay - Skype Ringing Call");
+
+                    ColorSpectrum mm_spec = new ColorSpectrum(Global.Configuration.skype_overlay_settings.call_color_primary, Global.Configuration.skype_overlay_settings.call_color_secondary, Global.Configuration.skype_overlay_settings.call_color_primary);
+                    Color color = Color.Green;
+
+                    if (Global.Configuration.skype_overlay_settings.call_blink)
+                        color = mm_spec.GetColorAt((time % 2000L) / 2000.0f);
+                    else
+                        color = mm_spec.GetColorAt(0);
+
+                    skype_ringing_call.Set(Global.Configuration.skype_overlay_settings.call_sequence, color);
+
+                    layers.Enqueue(skype_ringing_call);
+                }
+            }
+
 
             frame.SetOverlayLayers(layers.ToArray());
         }

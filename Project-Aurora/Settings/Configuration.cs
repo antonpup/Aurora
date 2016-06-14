@@ -6,6 +6,7 @@ using Aurora.Profiles.GTA5;
 using Aurora.Profiles.HotlineMiami;
 using Aurora.Profiles.LeagueOfLegends;
 using Aurora.Profiles.Overlays;
+using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Profiles.Overwatch;
 using Aurora.Profiles.Payday_2;
 using Aurora.Profiles.RocketLeague;
@@ -135,9 +136,9 @@ namespace Aurora.Settings
         public HMSettings hotlinemiami_settings;
         public TalosPrincipleSettings talosprinciple_settings;
 
-
         //Overlay Settings
         public VolumeOverlaySettings volume_overlay_settings;
+        public SkypeOverlaySettings skype_overlay_settings;
 
         public Configuration()
         {
@@ -178,6 +179,7 @@ namespace Aurora.Settings
 
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();
+            skype_overlay_settings = new SkypeOverlaySettings();
         }
     }
 

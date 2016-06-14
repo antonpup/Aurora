@@ -2,12 +2,9 @@
 using Newtonsoft.Json;
 using SKYPE4COMLib;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora_SkypeIntegration
 {
@@ -46,6 +43,12 @@ namespace Aurora_SkypeIntegration
         static int Main(string[] args)
         {
 
+            if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
+            {
+                //Skype Integration is already running, quitting.
+                Environment.Exit(0);
+            }
+
             try
             {
                 skype = new Skype();
@@ -69,7 +72,7 @@ namespace Aurora_SkypeIntegration
 
                         foreach(Call call in skype.ActiveCalls)
                         {
-                            if (call.Status == TCallStatus.clsRinging && !isCalled)
+                            if (call.Status == TCallStatus.clsRinging && (call.Type == TCallType.cltIncomingP2P || call.Type == TCallType.cltIncomingPSTN) && !isCalled)
                                 isCalled = true;
                         }
 
