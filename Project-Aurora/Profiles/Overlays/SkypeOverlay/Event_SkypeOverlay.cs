@@ -2,6 +2,7 @@
 using Aurora.EffectsEngine;
 using System.Drawing;
 using System;
+using System.Diagnostics;
 
 namespace Aurora.Profiles.Overlays.SkypeOverlay
 {
@@ -12,6 +13,12 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
 
         public Event_SkypeOverlay()
         {
+            if(Global.Configuration.skype_overlay_settings.enabled)
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = @"Aurora-SkypeIntegration.exe";
+                Process.Start(startInfo);
+            }
         }
 
         public static void SetMissedMessagesCount(int count)
@@ -41,7 +48,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
                 {
                     EffectLayer skype_missed_messages = new EffectLayer("Overlay - Skype Missed Messages");
 
-                    ColorSpectrum mm_spec = new ColorSpectrum(Global.Configuration.skype_overlay_settings.mm_color_primary, Color.Black, Global.Configuration.skype_overlay_settings.mm_color_primary);
+                    ColorSpectrum mm_spec = new ColorSpectrum(Global.Configuration.skype_overlay_settings.mm_color_primary, Global.Configuration.skype_overlay_settings.mm_color_secondary, Global.Configuration.skype_overlay_settings.mm_color_primary);
                     Color color = Color.Orange;
 
                     if (Global.Configuration.skype_overlay_settings.mm_blink)

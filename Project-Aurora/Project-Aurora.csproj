@@ -653,6 +653,10 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Aurora-SkypeIntegration\Aurora-SkypeIntegration.csproj">
+      <Project>{e9e9663c-153b-4977-9d0b-e87afb93280a}</Project>
+      <Name>Aurora-SkypeIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Aurora-Updater\Aurora-Updater.csproj">
       <Project>{6f81d40a-6aa0-4c8b-a395-779ef3003ca4}</Project>
       <Name>Aurora-Updater</Name>

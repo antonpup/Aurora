@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
 
 namespace Aurora_SkypeIntegration
 {
@@ -104,6 +105,8 @@ namespace Aurora_SkypeIntegration
 
                         wasUpdated = false;
                     }
+
+                    Thread.Sleep(500);
                 }
 
             }

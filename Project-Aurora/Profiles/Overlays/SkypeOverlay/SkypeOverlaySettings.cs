@@ -36,7 +36,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
                 Devices.DeviceKeys.PRINT_SCREEN, Devices.DeviceKeys.SCROLL_LOCK, Devices.DeviceKeys.PAUSE_BREAK
             });
             mm_color_primary = Color.Orange;
-            mm_color_secondary = Color.DarkOrange;
+            mm_color_secondary = Color.Black;
             mm_blink = true;
 
             //Incoming Call Indicator

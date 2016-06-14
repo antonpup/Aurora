@@ -272,7 +272,7 @@ namespace Aurora
                 key.SetValue("(Default)", logitech_path);
             }
 
-            if (!File.Exists(logitech_path + ".aurora_backup"))
+            if (File.Exists(logitech_path) && !File.Exists(logitech_path + ".aurora_backup"))
                 File.Move(logitech_path, logitech_path + ".aurora_backup");
 
             using (BinaryWriter logitech_wrapper_86 = new BinaryWriter(new FileStream(logitech_path, FileMode.Create, FileAccess.Write)))
@@ -308,7 +308,7 @@ namespace Aurora
                 key.SetValue("(Default)", logitech_path_64);
             }
 
-            if (!File.Exists(logitech_path_64 + ".aurora_backup"))
+            if (File.Exists(logitech_path_64) && !File.Exists(logitech_path_64 + ".aurora_backup"))
                 File.Move(logitech_path_64, logitech_path_64 + ".aurora_backup");
 
             using (BinaryWriter logitech_wrapper_64 = new BinaryWriter(new FileStream(logitech_path_64, FileMode.Create, FileAccess.Write)))
