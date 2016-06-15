@@ -230,6 +230,8 @@ namespace Aurora.Utils
                     return DeviceKeys.PERIOD;
                 case (Keys.OemQuestion):
                     return DeviceKeys.FORWARD_SLASH;
+                case (Keys.ProcessKey):
+                    return DeviceKeys.JPN_HALFFULLWIDTH;
                 case (Keys.Oemtilde):
                     return DeviceKeys.TILDE;
                 case (Keys.OemOpenBrackets):

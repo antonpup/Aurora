@@ -37,7 +37,7 @@
                     <Controls:KeySequence x:Name="sc_assistant_ctrl_keys" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Title="Shortcut Assistant Ctrl Keys" RecordingTag="Shortcut Assistant Ctrl Keys" MaxWidth="264" MaxHeight="203" Width="264" Height="203" SequenceUpdated="sc_assistant_ctrl_keys_SequenceUpdated" MinWidth="264" MinHeight="203"/>
                     <TextBlock HorizontalAlignment="Left" Margin="281,33,0,0" TextWrapping="Wrap" Text="Alt Keys Color:" VerticalAlignment="Top"/>
                     <xctk:ColorPicker x:Name="sc_assistant_alt_color" Margin="366,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="sc_assistant_alt_color_SelectedColorChanged" />
-                    <Controls:KeySequence x:Name="sc_assistant_alt_keys" HorizontalAlignment="Left" Margin="279,59,0,0" VerticalAlignment="Top" Title="Shortcut Assistant Ctrl Keys" RecordingTag="Shortcut Assistant Ctrl Keys" MaxWidth="264" MaxHeight="203" Width="264" Height="203" SequenceUpdated="sc_assistant_alt_keys_SequenceUpdated" MinWidth="264" MinHeight="203"/>
+                    <Controls:KeySequence x:Name="sc_assistant_alt_keys" HorizontalAlignment="Left" Margin="279,59,0,0" VerticalAlignment="Top" Title="Shortcut Assistant Alt Keys" RecordingTag="Shortcut Assistant Alt Keys" MaxWidth="264" MaxHeight="203" Width="264" Height="203" SequenceUpdated="sc_assistant_alt_keys_SequenceUpdated" MinWidth="264" MinHeight="203"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Color Zones (Daytime)">

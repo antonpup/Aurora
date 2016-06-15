@@ -472,7 +472,7 @@ namespace Aurora
             Image profile_talosprinciple = new Image();
             profile_talosprinciple.Tag = talosprinciple_control;
             profile_talosprinciple.Source = new BitmapImage(new Uri(@"Resources/talosprinciple_64x64.png", UriKind.Relative));
-            profile_talosprinciple.ToolTip = "Hotline Miami Settings";
+            profile_talosprinciple.ToolTip = "The Talos Principle Settings";
             profile_talosprinciple.Margin = new Thickness(0, 5, 0, 0);
             profile_talosprinciple.MouseDown += ProfileImage_MouseDown;
             this.profiles_stack.Children.Add(profile_talosprinciple);

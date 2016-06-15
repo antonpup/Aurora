@@ -510,7 +510,7 @@
     "enabled": "true"
   },
   {
-    "visualName": "=",
+    "visualName": "^",
     "tag": 29,
     "line_break": false,
     "margin_left": 7.0,
@@ -840,7 +840,7 @@
     "enabled": "true"
   },
   {
-    "visualName": "{",
+    "visualName": "@",
     "tag": 49,
     "line_break": false,
     "margin_left": 7.0,
@@ -855,7 +855,7 @@
     "enabled": "true"
   },
   {
-    "visualName": "}",
+    "visualName": "[",
     "tag": 50,
     "line_break": false,
     "margin_left": 7.0,
@@ -1140,7 +1140,7 @@
     "enabled": "true"
   },
   {
-    "visualName": ":",
+    "visualName": ";",
     "tag": 69,
     "line_break": false,
     "margin_left": 7.0,
@@ -1155,7 +1155,7 @@
     "enabled": "true"
   },
   {
-    "visualName": "\"",
+    "visualName": ":",
     "tag": 70,
     "line_break": false,
     "margin_left": 7.0,
@@ -1170,7 +1170,7 @@
     "enabled": "true"
   },
   {
-    "visualName": "#",
+    "visualName": "]",
     "tag": 71,
     "line_break": false,
     "margin_left": 7.0,
@@ -1265,27 +1265,12 @@
     "line_break": false,
     "margin_left": 14.0,
     "margin_top": 0.0,
-    "width": 48.0,
+    "width": 85.0,
     "height": 30.0,
     "font_size": 12.0,
-    "width_bits": 4,
+    "width_bits": 7,
     "height_bits": 3,
     "margin_left_bits": 1,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "\\",
-    "tag": 77,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
     "margin_top_bits": 0,
     "enabled": "true"
   },
@@ -1425,7 +1410,7 @@
     "enabled": "true"
   },
   {
-    "visualName": "?",
+    "visualName": "/",
     "tag": 87,
     "line_break": false,
     "margin_left": 7.0,
@@ -1625,10 +1610,10 @@
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
-    "width": 87.0,
+    "width": 133.0,
     "height": 30.0,
     "font_size": 12.0,
-    "width_bits": 8,
+    "width_bits": 11,
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
@@ -1657,7 +1642,7 @@
     "margin_top": 0.0,
     "width": 30.0,
     "height": 30.0,
-    "font_size": 12.0,
+    "font_size": 9.0,
     "width_bits": 3,
     "height_bits": 3,
     "margin_left_bits": 0,
@@ -1667,21 +1652,6 @@
   {
     "visualName": "ALT",
     "tag": 98,
-    "line_break": false,
-    "margin_left": 5.0,
-    "margin_top": 0.0,
-    "width": 41.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 4,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "WIN",
-    "tag": 99,
     "line_break": false,
     "margin_left": 5.0,
     "margin_top": 0.0,
