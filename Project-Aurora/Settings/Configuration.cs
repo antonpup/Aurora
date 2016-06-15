@@ -56,6 +56,16 @@ namespace Aurora.Settings
         RainbowShift_Custom_Angle = 7,
     }
 
+    public enum AppExitMode
+    {
+        [Description("Let user decide to minimize or exit")]
+        Ask = 0,
+        [Description("Always Minimize")]
+        Minimize = 1,
+        [Description("Always Exit")]
+        Exit = 2
+    }
+
     public enum MouseOrientationType
     {
         [Description("None")]
@@ -117,6 +127,7 @@ namespace Aurora.Settings
         public float peripheral_brightness_modifier;
         public bool updates_check_on_start_up;
         public bool updates_allow_silent_minor;
+        public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
@@ -158,6 +169,7 @@ namespace Aurora.Settings
             peripheral_brightness_modifier = 1.0f;
             updates_check_on_start_up = true;
             updates_allow_silent_minor = true;
+            close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;

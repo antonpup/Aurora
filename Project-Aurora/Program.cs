@@ -22,8 +22,9 @@ namespace Aurora
         public static KeyboardLayoutManager kbLayout;
         public static Effects effengine = new Effects();
         public static KeyRecorder key_recorder = new KeyRecorder();
-        public static IKeyboardMouseEvents input_hook = Hook.GlobalEvents();
+        public static IKeyboardMouseEvents input_hook;
         public static Keys held_modified = Keys.None;
+        public static bool isLoaded = false;
     }
 
     static class Program
@@ -172,6 +173,7 @@ namespace Aurora
                 }
             }
 
+            Global.input_hook = Hook.GlobalEvents();
             Global.input_hook.KeyDown += InputHookKeyDown;
             Global.input_hook.KeyUp += InputHookKeyUp;
 
@@ -219,6 +221,10 @@ namespace Aurora
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            Global.input_hook.Dispose();
+            Global.geh.Destroy();
+            Global.net_listener.Stop();
+
             Exception exc = (Exception)e.ExceptionObject;
             Global.logger.LogLine("Fatal Exception caught : " + exc, Logging_Level.Error);
             Global.logger.LogLine(String.Format("Runtime terminating: {0}", e.IsTerminating), Logging_Level.Error);
@@ -343,35 +349,41 @@ namespace Aurora
 
         private static void InputHookKeyDown(object sender, KeyEventArgs e)
         {
-            //Handle Assistant
-            if ((e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey || e.KeyCode == Keys.RWin || e.KeyCode == Keys.LWin) && Global.held_modified == Keys.None)
-                Global.held_modified = e.KeyCode;
-
-            //Handle Volume Overlay
-            if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt && Global.Configuration.use_volume_as_brightness)
+            if (Global.isLoaded)
             {
-                e.Handled = true;
+                //Handle Assistant
+                if ((e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey || e.KeyCode == Keys.RWin || e.KeyCode == Keys.LWin) && Global.held_modified == Keys.None)
+                    Global.held_modified = e.KeyCode;
 
-                if (e.KeyCode == Keys.VolumeUp)
-                    Global.Configuration.global_brightness = Global.Configuration.global_brightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.global_brightness + 0.05f;
-                else if (e.KeyCode == Keys.VolumeDown)
-                    Global.Configuration.global_brightness = Global.Configuration.global_brightness - 0.05f < 0.0f ? 0.0f : Global.Configuration.global_brightness - 0.05f;
+                //Handle Volume Overlay
+                if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt && Global.Configuration.use_volume_as_brightness)
+                {
+                    e.Handled = true;
 
-                ConfigManager.Save(Global.Configuration);
+                    if (e.KeyCode == Keys.VolumeUp)
+                        Global.Configuration.global_brightness = Global.Configuration.global_brightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.global_brightness + 0.05f;
+                    else if (e.KeyCode == Keys.VolumeDown)
+                        Global.Configuration.global_brightness = Global.Configuration.global_brightness - 0.05f < 0.0f ? 0.0f : Global.Configuration.global_brightness - 0.05f;
 
-                return;
-            }
-            else if (e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
-            {
-                Global.geh.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
+                    ConfigManager.Save(Global.Configuration);
+
+                    return;
+                }
+                else if (e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
+                {
+                    Global.geh.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
+                }
             }
         }
 
         private static void InputHookKeyUp(object sender, KeyEventArgs e)
         {
-            //Handle Assistant
-            if (Global.held_modified == e.KeyCode)
-                Global.held_modified = Keys.None;
+            if (Global.isLoaded)
+            {
+                //Handle Assistant
+                if (Global.held_modified == e.KeyCode)
+                    Global.held_modified = Keys.None;
+            }
         }
     }
 }

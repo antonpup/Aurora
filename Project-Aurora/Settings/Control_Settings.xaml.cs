@@ -36,6 +36,8 @@ namespace Aurora.Settings
 
             this.run_at_win_startup.IsChecked = !(runRegistryPath.GetValue("Aurora", null) == null);
 
+            this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
+
             this.volume_as_brightness_enabled.IsChecked = Global.Configuration.use_volume_as_brightness;
 
             this.brightness_kb_label.Text = Global.Configuration.keyboard_brightness_modifier + " %";
@@ -131,6 +133,15 @@ namespace Aurora.Settings
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             Global.effengine.NewLayerRender -= OnLayerRendered;
+        }
+
+        private void app_exit_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.close_mode = (AppExitMode)Enum.Parse(typeof(AppExitMode), this.app_exit_mode.SelectedIndex.ToString());
+                ConfigManager.Save(Global.Configuration);
+            }
         }
 
         private void volume_as_brightness_enabled_Checked(object sender, RoutedEventArgs e)

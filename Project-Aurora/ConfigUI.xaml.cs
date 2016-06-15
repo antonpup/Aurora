@@ -154,7 +154,7 @@ namespace Aurora
                 if (key.width + keyMargin_Left > 0)
                     current_width += key.width + keyMargin_Left;
 
-                if(keyMargin_Top > 0)
+                if (keyMargin_Top > 0)
                     current_height += keyMargin_Top;
 
 
@@ -193,6 +193,8 @@ namespace Aurora
             Effects.grid_width = (float)this.keyboard_grid.Width;
 
             this.UpdateLayout();
+
+            Global.isLoaded = true;
         }
 
         public static bool ApplicationIsActivated()
@@ -326,10 +328,7 @@ namespace Aurora
 
         private void trayicon_menu_quit_Click(object sender, RoutedEventArgs e)
         {
-            virtual_keyboard_timer.Stop();
-            trayicon.Visibility = System.Windows.Visibility.Hidden;
-
-            Application.Current.Shutdown();
+            exitApp();
         }
 
         private void trayicon_menu_settings_Click(object sender, RoutedEventArgs e)
@@ -352,6 +351,44 @@ namespace Aurora
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (Global.Configuration.close_mode == AppExitMode.Ask)
+            {
+                MessageBoxResult result = System.Windows.MessageBox.Show("Would you like to Exit Aurora?", "Aurora", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.No)
+                {
+                    minimizeApp();
+                    e.Cancel = true;
+                }
+                else
+                {
+                    exitApp();
+                }
+            }
+            else if (Global.Configuration.close_mode == AppExitMode.Minimize)
+            {
+                minimizeApp();
+                e.Cancel = true;
+            }
+            else
+            {
+                exitApp();
+            }
+        }
+
+        private void exitApp()
+        {
+            trayicon.Visibility = System.Windows.Visibility.Hidden;
+            virtual_keyboard_timer.Stop();
+            Global.input_hook.Dispose();
+            Global.geh.Destroy();
+            Global.net_listener.Stop();
+
+            Application.Current.Shutdown();
+        }
+
+        private void minimizeApp()
+        {
             if (!shownHiddenMessage)
             {
                 trayicon.ShowBalloonTip("Aurora", "This program is now hidden in the tray.", BalloonIcon.None);
@@ -367,8 +404,6 @@ namespace Aurora
                 Hide();
                 return null;
             }, null);
-            //Do not close application
-            e.Cancel = true;
         }
 
         private void Window_Activated(object sender, EventArgs e)
@@ -436,7 +471,7 @@ namespace Aurora
             profile_overwatch.Margin = new Thickness(0, 5, 0, 0);
             profile_overwatch.MouseDown += ProfileImage_MouseDown;
             this.profiles_stack.Children.Add(profile_overwatch);
-            
+
             Image profile_payday2 = new Image();
             profile_payday2.Tag = payday2_control;
             profile_payday2.Source = new BitmapImage(new Uri(@"Resources/pd2_64x64.png", UriKind.Relative));
@@ -483,7 +518,7 @@ namespace Aurora
                 Image profile = new Image();
                 profile.Tag = new Profiles.Generic_Application.Control_GenericApplication(kvp.Key);
 
-                if(System.IO.File.Exists(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "./Profiles/" + kvp.Key.GetHashCode().ToString("X") + ".png"))
+                if (System.IO.File.Exists(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "./Profiles/" + kvp.Key.GetHashCode().ToString("X") + ".png"))
                 {
                     var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"./Profiles/" + kvp.Key.GetHashCode().ToString("X") + ".png"));
                     BitmapImage b = new BitmapImage();
@@ -551,7 +586,7 @@ namespace Aurora
 
         private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is UserControl)
+            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is UserControl)
             {
                 UserControl tagged_control = (sender as Image).Tag as UserControl;
 
@@ -612,7 +647,7 @@ namespace Aurora
             {
                 string filename = System.IO.Path.GetFileName(exe_filedlg.FileName.ToLowerInvariant());
 
-                if(Global.Configuration.additional_profiles.ContainsKey(filename))
+                if (Global.Configuration.additional_profiles.ContainsKey(filename))
                 {
                     System.Windows.MessageBox.Show("Profile for this application already exists.\r\nSwitching to the profile.");
                 }
@@ -657,7 +692,7 @@ namespace Aurora
         {
             selected_item = item;
 
-            if(selected_item != null)
+            if (selected_item != null)
             {
                 DrawingBrush mask = new DrawingBrush();
                 GeometryDrawing visible_region =
@@ -679,7 +714,7 @@ namespace Aurora
 
                 Debug.WriteLine("x=" + x + " y=" + y + " widht=" + width + " height=" + height);
 
-                
+
                 if (item.Parent != null && item.Parent.Equals(profiles_stack))
                 {
                     Point relativePointWithinStack = profiles_stack.TransformToAncestor(profiles_background)

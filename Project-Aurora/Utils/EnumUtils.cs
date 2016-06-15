@@ -282,4 +282,25 @@ namespace Aurora.Utils
             return (T)Enum.Parse(typeof(T), name);
         }
     }
+
+    public class appexitmodeToStringVC : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return AppExitMode.Ask;
+            return (StringToEnum<AppExitMode>(value.ToString())).GetDescription();
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return AppExitMode.Ask;
+            return StringToEnum<AppExitMode>(value.ToString());
+        }
+
+        public static T StringToEnum<T>(string name)
+        {
+            return (T)Enum.Parse(typeof(T), name);
+        }
+    }
 }

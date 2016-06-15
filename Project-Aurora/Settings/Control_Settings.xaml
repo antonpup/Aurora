@@ -69,6 +69,16 @@
             <DataTemplate x:Key="KbBrandTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource KbBrandToStringVC}}" />
             </DataTemplate>
+
+            <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:AppExitMode" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:appexitmodeToStringVC x:Key="appexitmodeToStringVC"/>
+            <DataTemplate x:Key="appexitmodeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource appexitmodeToStringVC}}" />
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -76,38 +86,40 @@
         <TabControl>
             <TabItem Header="General Settings">
                 <Grid>
-                    <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
-                    <CheckBox x:Name="timed_dimming_checkbox" Content="Enable timed blackout of the keyboard" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" Checked="timed_dimming_checkbox_Checked" Unchecked="timed_dimming_checkbox_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="11,153,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="11,185,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
+                    <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
+                    <CheckBox x:Name="timed_dimming_checkbox" Content="Enable timed blackout of the keyboard" HorizontalAlignment="Left" Margin="10,129,0,0" VerticalAlignment="Top" Checked="timed_dimming_checkbox_Checked" Unchecked="timed_dimming_checkbox_Checked"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="11,171,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="11,203,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,149,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
                     <ListBox x:Name="excluded_listbox" HorizontalAlignment="Left" Height="196" Margin="579,64,0,0" VerticalAlignment="Top" Width="160"/>
                     <Label Content="Excluded Processes" HorizontalAlignment="Left" Margin="579,10,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="excluded_process_name" HorizontalAlignment="Left" Height="23" Margin="579,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160"/>
                     <Button x:Name="excluded_add" Content="Add Process" HorizontalAlignment="Left" Margin="744,36,0,0" VerticalAlignment="Top" Click="excluded_add_Click"/>
                     <Button x:Name="excluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="744,64,0,0" VerticalAlignment="Top" Click="excluded_remove_Click"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,57,0,0" TextWrapping="Wrap" Text="Keyboard brightness modifier: " VerticalAlignment="Top"/>
-                    <Slider x:Name="brightness_kb_slider" HorizontalAlignment="Left" Margin="178,56,0,0" VerticalAlignment="Top" Width="150" ValueChanged="brightness_kb_slider_ValueChanged" Maximum="1"/>
-                    <TextBlock x:Name="brightness_kb_label" HorizontalAlignment="Left" Margin="333,57,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,78,0,0" TextWrapping="Wrap" Text="Peripheral brightness modifier: " VerticalAlignment="Top"/>
-                    <Slider x:Name="brightness_peri_slider" HorizontalAlignment="Left" Margin="180,77,0,0" VerticalAlignment="Top" Width="148" ValueChanged="brightness_peri_slider_ValueChanged" Maximum="1"/>
-                    <TextBlock x:Name="brightness_peri_label" HorizontalAlignment="Left" Margin="333,78,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="timed_dimming_start_hour_updown" HorizontalAlignment="Left" Height="24" Margin="118,151,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_hour_updown_ValueChanged"/>
-                    <xctk:IntegerUpDown x:Name="timed_dimming_start_minute_updown" HorizontalAlignment="Left" Height="24" Margin="180,151,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_minute_updown_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="172,153,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="timed_dimming_end_hour_updown" HorizontalAlignment="Left" Height="24" Margin="118,181,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_end_hour_updown_ValueChanged"/>
-                    <xctk:IntegerUpDown x:Name="timed_dimming_end_minute_updown" HorizontalAlignment="Left" Height="24" Margin="180,181,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_end_minute_updown_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="172,183,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,75,0,0" TextWrapping="Wrap" Text="Keyboard brightness modifier: " VerticalAlignment="Top"/>
+                    <Slider x:Name="brightness_kb_slider" HorizontalAlignment="Left" Margin="178,74,0,0" VerticalAlignment="Top" Width="150" ValueChanged="brightness_kb_slider_ValueChanged" Maximum="1"/>
+                    <TextBlock x:Name="brightness_kb_label" HorizontalAlignment="Left" Margin="333,75,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,96,0,0" TextWrapping="Wrap" Text="Peripheral brightness modifier: " VerticalAlignment="Top"/>
+                    <Slider x:Name="brightness_peri_slider" HorizontalAlignment="Left" Margin="180,95,0,0" VerticalAlignment="Top" Width="148" ValueChanged="brightness_peri_slider_ValueChanged" Maximum="1"/>
+                    <TextBlock x:Name="brightness_peri_label" HorizontalAlignment="Left" Margin="333,96,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="timed_dimming_start_hour_updown" HorizontalAlignment="Left" Height="24" Margin="118,169,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_hour_updown_ValueChanged"/>
+                    <xctk:IntegerUpDown x:Name="timed_dimming_start_minute_updown" HorizontalAlignment="Left" Height="24" Margin="180,169,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_minute_updown_ValueChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="172,171,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="timed_dimming_end_hour_updown" HorizontalAlignment="Left" Height="24" Margin="118,199,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_end_hour_updown_ValueChanged"/>
+                    <xctk:IntegerUpDown x:Name="timed_dimming_end_minute_updown" HorizontalAlignment="Left" Height="24" Margin="180,199,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_end_minute_updown_ValueChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="172,201,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
                     <CheckBox x:Name="run_at_win_startup" Content="Start with Windows" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="run_at_win_startup_Checked" Unchecked="run_at_win_startup_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="332,153,0,0" TextWrapping="Wrap" Text="Nighttime start:" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="332,185,0,0" TextWrapping="Wrap" Text="Nighttime end:" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="nighttime_start_hour_updown" HorizontalAlignment="Left" Height="24" Margin="420,151,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_start_hour_updown_ValueChanged"/>
-                    <xctk:IntegerUpDown x:Name="nighttime_start_minute_updown" HorizontalAlignment="Left" Height="24" Margin="482,151,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_start_minute_updown_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="474,153,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="nighttime_end_hour_updown" HorizontalAlignment="Left" Height="24" Margin="420,181,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_hour_updown_ValueChanged"/>
-                    <xctk:IntegerUpDown x:Name="nighttime_end_minute_updown" HorizontalAlignment="Left" Height="24" Margin="482,181,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_minute_updown_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="474,183,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="nighttime_enabled_checkbox" Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" HorizontalAlignment="Left" Margin="333,114,0,0" VerticalAlignment="Top" Unchecked="nighttime_enabled_checkbox_Checked" Checked="nighttime_enabled_checkbox_Checked"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="332,171,0,0" TextWrapping="Wrap" Text="Nighttime start:" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="332,203,0,0" TextWrapping="Wrap" Text="Nighttime end:" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="nighttime_start_hour_updown" HorizontalAlignment="Left" Height="24" Margin="420,169,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_start_hour_updown_ValueChanged"/>
+                    <xctk:IntegerUpDown x:Name="nighttime_start_minute_updown" HorizontalAlignment="Left" Height="24" Margin="482,169,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_start_minute_updown_ValueChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="474,171,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="nighttime_end_hour_updown" HorizontalAlignment="Left" Height="24" Margin="420,199,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_hour_updown_ValueChanged"/>
+                    <xctk:IntegerUpDown x:Name="nighttime_end_minute_updown" HorizontalAlignment="Left" Height="24" Margin="482,199,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_minute_updown_ValueChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="474,201,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="nighttime_enabled_checkbox" Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" HorizontalAlignment="Left" Margin="333,132,0,0" VerticalAlignment="Top" Unchecked="nighttime_enabled_checkbox_Checked" Checked="nighttime_enabled_checkbox_Checked"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="What to do when Aurora window is closed:" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="app_exit_mode" HorizontalAlignment="Left" Margin="242,27,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource appexitmode}}" ItemTemplate="{Binding Source={StaticResource appexitmodeTemplate}}" SelectionChanged="app_exit_mode_SelectionChanged"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">

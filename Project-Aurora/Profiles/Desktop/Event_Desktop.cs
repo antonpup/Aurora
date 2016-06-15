@@ -160,36 +160,39 @@ namespace Aurora.Profiles.Desktop
 
         private void GlobalHookMouseClick(object sender, MouseEventArgs e)
         {
-            if (!Global.Configuration.desktop_settings.interactive_effects_mouse_clicking)
-                return;
-
-            Devices.DeviceKeys device_key = Devices.DeviceKeys.Peripheral;
-
-            if (device_key != Devices.DeviceKeys.NONE && Global.Configuration.desktop_settings.interactive_effects_enabled)
+            if (Global.isLoaded)
             {
-                EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
+                if (!Global.Configuration.desktop_settings.interactive_effects_mouse_clicking)
+                    return;
 
-                if (pt != new EffectPoint(0, 0))
+                Devices.DeviceKeys device_key = Devices.DeviceKeys.Peripheral;
+
+                if (device_key != Devices.DeviceKeys.NONE && Global.Configuration.desktop_settings.interactive_effects_enabled)
                 {
-                    //Debug.WriteLine("Created circle at {0}", pt);
+                    EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
 
-                    Color primary_c = Global.Configuration.desktop_settings.interactive_effect_primary_color;
-                    Color secondary_c = Global.Configuration.desktop_settings.interactive_effect_secondary_color;
-
-                    if (Global.Configuration.desktop_settings.interactive_effects_random_primary_color)
-                        primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
-
-                    if (Global.Configuration.desktop_settings.interactive_effects_random_secondary_color)
-                        secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
-
-                    ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
-                    if (Global.Configuration.desktop_settings.interactive_effect_type == InteractiveEffects.KeyPress)
+                    if (pt != new EffectPoint(0, 0))
                     {
-                        spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
-                        spec.SetColorAt(0.80f, secondary_c);
-                    }
+                        //Debug.WriteLine("Created circle at {0}", pt);
 
-                    input_list.Add(new input_item(device_key, 0.0f, spec));
+                        Color primary_c = Global.Configuration.desktop_settings.interactive_effect_primary_color;
+                        Color secondary_c = Global.Configuration.desktop_settings.interactive_effect_secondary_color;
+
+                        if (Global.Configuration.desktop_settings.interactive_effects_random_primary_color)
+                            primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
+
+                        if (Global.Configuration.desktop_settings.interactive_effects_random_secondary_color)
+                            secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
+
+                        ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
+                        if (Global.Configuration.desktop_settings.interactive_effect_type == InteractiveEffects.KeyPress)
+                        {
+                            spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
+                            spec.SetColorAt(0.80f, secondary_c);
+                        }
+
+                        input_list.Add(new input_item(device_key, 0.0f, spec));
+                    }
                 }
             }
         }
@@ -202,47 +205,53 @@ namespace Aurora.Profiles.Desktop
 
         private void GlobalHookKeyUp(object sender, KeyEventArgs e)
         {
-            if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
-                return; //This event wasn't used for at least 1 second
+            if (Global.isLoaded)
+            {
+                if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
+                    return; //This event wasn't used for at least 1 second
 
-            if (previous_key == e.KeyCode)
-                previous_key = Keys.None;
+                if (previous_key == e.KeyCode)
+                    previous_key = Keys.None;
+            }
         }
 
         private void GlobalHookKeyDown(object sender, KeyEventArgs e)
         {
-            if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
-                return; //This event wasn't used for at least 1 second
-
-            if (previous_key == e.KeyCode)
-                return;
-
-            Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
-
-            if (device_key != Devices.DeviceKeys.NONE && Global.Configuration.desktop_settings.interactive_effects_enabled)
+            if (Global.isLoaded)
             {
-                EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
+                if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
+                    return; //This event wasn't used for at least 1 second
 
-                if (pt != new EffectPoint(0, 0))
+                if (previous_key == e.KeyCode)
+                    return;
+
+                Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+
+                if (device_key != Devices.DeviceKeys.NONE && Global.Configuration.desktop_settings.interactive_effects_enabled)
                 {
-                    Color primary_c = Global.Configuration.desktop_settings.interactive_effect_primary_color;
-                    Color secondary_c = Global.Configuration.desktop_settings.interactive_effect_secondary_color;
+                    EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
 
-                    if (Global.Configuration.desktop_settings.interactive_effects_random_primary_color)
-                        primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
-
-                    if (Global.Configuration.desktop_settings.interactive_effects_random_secondary_color)
-                        secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
-
-                    ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
-                    if (Global.Configuration.desktop_settings.interactive_effect_type == InteractiveEffects.KeyPress)
+                    if (pt != new EffectPoint(0, 0))
                     {
-                        spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
-                        spec.SetColorAt(0.80f, secondary_c);
-                    }
+                        Color primary_c = Global.Configuration.desktop_settings.interactive_effect_primary_color;
+                        Color secondary_c = Global.Configuration.desktop_settings.interactive_effect_secondary_color;
 
-                    input_list.Add(new input_item(device_key, 0.0f, spec));
-                    previous_key = e.KeyCode;
+                        if (Global.Configuration.desktop_settings.interactive_effects_random_primary_color)
+                            primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
+
+                        if (Global.Configuration.desktop_settings.interactive_effects_random_secondary_color)
+                            secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
+
+                        ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
+                        if (Global.Configuration.desktop_settings.interactive_effect_type == InteractiveEffects.KeyPress)
+                        {
+                            spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
+                            spec.SetColorAt(0.80f, secondary_c);
+                        }
+
+                        input_list.Add(new input_item(device_key, 0.0f, spec));
+                        previous_key = e.KeyCode;
+                    }
                 }
             }
         }
