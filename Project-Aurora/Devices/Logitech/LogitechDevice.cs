@@ -252,7 +252,16 @@ namespace Aurora.Devices.Logitech
         private void SetOneKey(Logitech_keyboardBitmapKeys key, Color color)
         {
             if (Global.Configuration.logitech_enhance_brightness)
-                color = Utils.ColorUtils.MultiplyColorByScalar(color, 1.5);
+            {
+                float boost_amount = 0.0f;
+                boost_amount += 3.0f - (color.R / 30.0f);
+                boost_amount += 3.0f - (color.G / 30.0f);
+                boost_amount += 3.0f - (color.B / 30.0f);
+                boost_amount /= 3.0f;
+                boost_amount = boost_amount <= 1.0f ? 1.0f : boost_amount;
+
+                color = Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
+            }
 
             bitmap[(int)key] = color.B;
             bitmap[(int)key + 1] = color.G;
