@@ -240,7 +240,7 @@ namespace Aurora.Controls
             if (cz_list.SelectedItem != null)
             {
                 ((ColorZone)cz_list.SelectedItem).keysequence = ks.Sequence;
-                ConfigManager.Save(Global.Configuration);
+                //ConfigManager.Save(Global.Configuration);
             }
         }
 

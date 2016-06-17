@@ -1,15 +1,9 @@
 ﻿using Aurora.EffectsEngine;
-using Aurora.Profiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Aurora.Devices;
 using System.Drawing;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Collections.ObjectModel;
 using System.Timers;
 
 namespace Aurora
@@ -87,6 +81,8 @@ namespace Aurora
         public static int canvas_width = 1;
         public static int canvas_height = 1;
 
+        public static float grid_baseline_x = 0.0f;
+        public static float grid_baseline_y = 0.0f;
         public static float grid_width = 1.0f;
         public static float grid_height = 1.0f;
 

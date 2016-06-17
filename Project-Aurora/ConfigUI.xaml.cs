@@ -97,6 +97,8 @@ namespace Aurora
             double layout_height = 0;
             double layout_width = 0;
 
+            double baseline_x = 0.0;
+            double baseline_y = 0.0;
             double max_height = this.keyboard_grid.Height;
             double max_width = this.keyboard_grid.Width;
             double cornerRadius = 5;
@@ -148,6 +150,12 @@ namespace Aurora
 
                 keyBorder.Child = keyCap;
 
+                if(key.tag == DeviceKeys.ESC)
+                {
+                    baseline_x = keyBorder.Margin.Left;
+                    baseline_y = keyBorder.Margin.Top;
+                }
+
                 this.keyboard_grid.Children.Add(keyBorder);
                 isFirstInRow = false;
 
@@ -189,6 +197,10 @@ namespace Aurora
 
             keyboard_grid.Children.Add(layer_editor);
 
+            Global.logger.LogLine("Baseline X = " + (float)baseline_x, Logging_Level.Info, false);
+            Global.logger.LogLine("Baseline Y = " + (float)baseline_y, Logging_Level.Info, false);
+            Effects.grid_baseline_x = (float)baseline_x;
+            Effects.grid_baseline_y = (float)baseline_y;
             Effects.grid_height = (float)this.keyboard_grid.Height;
             Effects.grid_width = (float)this.keyboard_grid.Width;
 

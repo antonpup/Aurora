@@ -51,8 +51,8 @@ namespace Aurora.Controls
                 newcontrol.Width = element.Width;
                 newcontrol.Height = element.Height;
                 newcontrol.SetValue(Selector.IsSelectedProperty, true);
-                newcontrol.SetValue(Canvas.TopProperty, (double)element.Y);
-                newcontrol.SetValue(Canvas.LeftProperty, (double)element.X);
+                newcontrol.SetValue(Canvas.TopProperty, (double)(element.Y + Effects.grid_baseline_y));
+                newcontrol.SetValue(Canvas.LeftProperty, (double)(element.X + Effects.grid_baseline_x));
                 RotateTransform transform = new RotateTransform();
                 transform.Angle = element.Angle;
                 newcontrol.SetValue(RenderTransformProperty, transform);
@@ -138,7 +138,7 @@ namespace Aurora.Controls
 
             if ((sender as ContentControl).Tag != null && (sender as ContentControl).Tag is FreeFormObject)
             {
-                ((sender as ContentControl).Tag as FreeFormObject).Y = float.Parse(item.ToString());
+                ((sender as ContentControl).Tag as FreeFormObject).Y = float.Parse(item.ToString()) - Effects.grid_baseline_y;
             }
         }
 
@@ -148,7 +148,7 @@ namespace Aurora.Controls
 
             if ((sender as ContentControl).Tag != null && (sender as ContentControl).Tag is FreeFormObject)
             {
-                ((sender as ContentControl).Tag as FreeFormObject).X = float.Parse(item.ToString());
+                ((sender as ContentControl).Tag as FreeFormObject).X = float.Parse(item.ToString()) - Effects.grid_baseline_x;
             }
         }
 
