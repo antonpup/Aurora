@@ -13,10 +13,10 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
 
         public Event_SkypeOverlay()
         {
-            if(Global.Configuration.skype_overlay_settings.enabled)
+            if (Global.Configuration.skype_overlay_settings.enabled)
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = @"Aurora-SkypeIntegration.exe";
+                startInfo.FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Aurora-SkypeIntegration.exe");
                 Process.Start(startInfo);
             }
         }
