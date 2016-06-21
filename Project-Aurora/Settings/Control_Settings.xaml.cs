@@ -46,18 +46,18 @@ namespace Aurora.Settings
             this.brightness_peri_label.Text = Global.Configuration.peripheral_brightness_modifier + " %";
             this.brightness_peri_slider.Value = (float)Global.Configuration.peripheral_brightness_modifier;
 
-            this.timed_dimming_checkbox.IsChecked = Global.Configuration.desktop_settings.time_based_dimming_enabled;
-            this.timed_dimming_start_hour_updown.Value = Global.Configuration.desktop_settings.time_based_dimming_start_hour;
-            this.timed_dimming_start_minute_updown.Value = Global.Configuration.desktop_settings.time_based_dimming_start_minute;
-            this.timed_dimming_end_hour_updown.Value = Global.Configuration.desktop_settings.time_based_dimming_end_hour;
-            this.timed_dimming_end_minute_updown.Value = Global.Configuration.desktop_settings.time_based_dimming_end_minute;
-            this.timed_dimming_with_games_checkbox.IsChecked = Global.Configuration.desktop_settings.time_based_dimming_affect_games;
+            this.timed_dimming_checkbox.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_enabled;
+            this.timed_dimming_start_hour_updown.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_hour;
+            this.timed_dimming_start_minute_updown.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_minute;
+            this.timed_dimming_end_hour_updown.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_hour;
+            this.timed_dimming_end_minute_updown.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_minute;
+            this.timed_dimming_with_games_checkbox.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_affect_games;
 
-            this.nighttime_enabled_checkbox.IsChecked = Global.Configuration.desktop_settings.nighttime_enabled;
-            this.nighttime_start_hour_updown.Value = Global.Configuration.desktop_settings.nighttime_start_hour;
-            this.nighttime_start_minute_updown.Value = Global.Configuration.desktop_settings.nighttime_start_minute;
-            this.nighttime_end_hour_updown.Value = Global.Configuration.desktop_settings.nighttime_end_hour;
-            this.nighttime_end_minute_updown.Value = Global.Configuration.desktop_settings.nighttime_end_minute;
+            this.nighttime_enabled_checkbox.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_enabled;
+            this.nighttime_start_hour_updown.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_start_hour;
+            this.nighttime_start_minute_updown.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_start_minute;
+            this.nighttime_end_hour_updown.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_end_hour;
+            this.nighttime_end_minute_updown.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_end_minute;
 
             this.volume_overlay_enabled.IsChecked = Global.Configuration.volume_overlay_settings.enabled;
             this.volume_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.low_color);
@@ -76,14 +76,14 @@ namespace Aurora.Settings
             this.skype_incoming_calls_secondary_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.skype_overlay_settings.call_color_secondary);
             this.skype_incoming_calls_ks.Sequence = Global.Configuration.skype_overlay_settings.call_sequence;
 
-            this.idle_effects_type.SelectedIndex = (int)Global.Configuration.desktop_settings.idle_type;
-            this.idle_effects_delay.Value = Global.Configuration.desktop_settings.idle_delay;
-            this.idle_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.desktop_settings.idle_effect_primary_color);
-            this.idle_effects_secondary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.desktop_settings.idle_effect_secondary_color);
-            this.idle_effects_speed_label.Text = "x " + Global.Configuration.desktop_settings.idle_speed;
-            this.idle_effects_speed_slider.Value = (float)Global.Configuration.desktop_settings.idle_speed;
-            this.idle_effects_amount.Value = Global.Configuration.desktop_settings.idle_amount;
-            this.idle_effects_frequency.Value = (int)Global.Configuration.desktop_settings.idle_frequency;
+            this.idle_effects_type.SelectedIndex = (int)(Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_type;
+            this.idle_effects_delay.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_delay;
+            this.idle_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_primary_color);
+            this.idle_effects_secondary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_secondary_color);
+            this.idle_effects_speed_label.Text = "x " + (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_speed;
+            this.idle_effects_speed_slider.Value = (float)(Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_speed;
+            this.idle_effects_amount.Value = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_amount;
+            this.idle_effects_frequency.Value = (int)(Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_frequency;
 
             this.devices_kb_brand.SelectedIndex = (int)Global.Configuration.keyboard_brand;
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
@@ -157,7 +157,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.desktop_settings.time_based_dimming_enabled = (this.timed_dimming_checkbox.IsChecked.HasValue) ? this.timed_dimming_checkbox.IsChecked.Value : false;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_enabled = (this.timed_dimming_checkbox.IsChecked.HasValue) ? this.timed_dimming_checkbox.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -166,7 +166,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
-                Global.Configuration.desktop_settings.time_based_dimming_start_hour = (sender as IntegerUpDown).Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_hour = (sender as IntegerUpDown).Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -175,7 +175,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
-                Global.Configuration.desktop_settings.time_based_dimming_start_minute = (sender as IntegerUpDown).Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_minute = (sender as IntegerUpDown).Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -184,7 +184,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
-                Global.Configuration.desktop_settings.time_based_dimming_end_hour = (sender as IntegerUpDown).Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_hour = (sender as IntegerUpDown).Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -193,7 +193,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
-                Global.Configuration.desktop_settings.time_based_dimming_end_minute = (sender as IntegerUpDown).Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_minute = (sender as IntegerUpDown).Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -202,7 +202,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.desktop_settings.time_based_dimming_affect_games = (this.timed_dimming_with_games_checkbox.IsChecked.HasValue) ? this.timed_dimming_with_games_checkbox.IsChecked.Value : false;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_affect_games = (this.timed_dimming_with_games_checkbox.IsChecked.HasValue) ? this.timed_dimming_with_games_checkbox.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -211,7 +211,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.desktop_settings.idle_type = (IdleEffects)Enum.Parse(typeof(IdleEffects), this.idle_effects_type.SelectedIndex.ToString());
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_type = (IdleEffects)Enum.Parse(typeof(IdleEffects), this.idle_effects_type.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -220,7 +220,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && idle_effects_delay.Value.HasValue)
             {
-                Global.Configuration.desktop_settings.idle_delay = idle_effects_delay.Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_delay = idle_effects_delay.Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -229,7 +229,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && idle_effects_amount.Value.HasValue)
             {
-                Global.Configuration.desktop_settings.idle_amount = idle_effects_amount.Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_amount = idle_effects_amount.Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -238,7 +238,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && idle_effects_frequency.Value.HasValue)
             {
-                Global.Configuration.desktop_settings.idle_frequency = (float)idle_effects_frequency.Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_frequency = (float)idle_effects_frequency.Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -296,7 +296,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && this.idle_effects_primary_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.desktop_settings.idle_effect_primary_color = Utils.ColorUtils.MediaColorToDrawingColor(this.idle_effects_primary_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_primary_color = Utils.ColorUtils.MediaColorToDrawingColor(this.idle_effects_primary_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -305,7 +305,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && this.idle_effects_secondary_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.desktop_settings.idle_effect_secondary_color = Utils.ColorUtils.MediaColorToDrawingColor(this.idle_effects_secondary_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_secondary_color = Utils.ColorUtils.MediaColorToDrawingColor(this.idle_effects_secondary_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -316,7 +316,7 @@ namespace Aurora.Settings
             {
                 if (IsLoaded)
                 {
-                    Global.Configuration.desktop_settings.idle_speed = (float)this.idle_effects_speed_slider.Value;
+                    (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_speed = (float)this.idle_effects_speed_slider.Value;
                     ConfigManager.Save(Global.Configuration);
                 }
 
@@ -368,7 +368,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.desktop_settings.lighting_areas = (sender as ColorZones).ColorZonesList;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -377,7 +377,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.desktop_settings.cpu_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -386,7 +386,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.desktop_settings.ram_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -564,7 +564,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.desktop_settings.nighttime_enabled = (this.nighttime_enabled_checkbox.IsChecked.HasValue) ? this.nighttime_enabled_checkbox.IsChecked.Value : false;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_enabled = (this.nighttime_enabled_checkbox.IsChecked.HasValue) ? this.nighttime_enabled_checkbox.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -573,7 +573,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
-                Global.Configuration.desktop_settings.nighttime_start_hour = (sender as IntegerUpDown).Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_start_hour = (sender as IntegerUpDown).Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -582,7 +582,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
-                Global.Configuration.desktop_settings.nighttime_start_minute = (sender as IntegerUpDown).Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_start_minute = (sender as IntegerUpDown).Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -591,7 +591,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
-                Global.Configuration.desktop_settings.nighttime_end_hour = (sender as IntegerUpDown).Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_end_hour = (sender as IntegerUpDown).Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -600,7 +600,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
             {
-                Global.Configuration.desktop_settings.nighttime_end_minute = (sender as IntegerUpDown).Value.Value;
+                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_end_minute = (sender as IntegerUpDown).Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
         }

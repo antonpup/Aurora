@@ -21,9 +21,10 @@ namespace Aurora.EffectsEngine
             layers = new Queue<EffectLayer>(effectLayers);
         }
 
-        public void SetOverlayLayers(EffectLayer[] effectLayers)
+        public void AddOverlayLayers(EffectLayer[] effectLayers)
         {
-            over_layers = new Queue<EffectLayer>(effectLayers);
+            foreach(EffectLayer layer in effectLayers)
+                over_layers.Enqueue(layer);
         }
 
         public Queue<EffectLayer> GetLayers()

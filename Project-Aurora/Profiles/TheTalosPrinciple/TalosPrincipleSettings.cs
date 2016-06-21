@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace Aurora.Profiles.TheTalosPrinciple
 {
-    public class TalosPrincipleSettings
+    public class TalosPrincipleSettings : ProfileSettings
     {
         //General
-        public bool isEnabled;
         public bool first_time_installed;
 
         //Effects

@@ -10,7 +10,7 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         public bool IsEnabled()
         {
-            return Global.Configuration.lol_settings.isEnabled;
+            return (Global.Configuration.ApplicationProfiles["League of Legends"].Settings as LoLSettings).isEnabled;
         }
 
         public void UpdateLights(EffectFrame frame)
@@ -22,10 +22,10 @@ namespace Aurora.Profiles.LeagueOfLegends
             layers.Enqueue(bg_layer);
 
             //ColorZones
-            if (!(Global.Configuration.lol_settings.disable_cz_on_dark && bg_color.Equals(Color.Black)))
+            if (!((Global.Configuration.ApplicationProfiles["League of Legends"].Settings as LoLSettings).disable_cz_on_dark && bg_color.Equals(Color.Black)))
             {
                 EffectLayer cz_layer = new EffectLayer("League - Color Zones");
-                cz_layer.DrawColorZones(Global.Configuration.lol_settings.lighting_areas.ToArray());
+                cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["League of Legends"].Settings as LoLSettings).lighting_areas.ToArray());
                 layers.Enqueue(cz_layer);
             }
 

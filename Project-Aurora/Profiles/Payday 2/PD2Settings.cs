@@ -4,11 +4,8 @@ using System.Drawing;
 
 namespace Aurora.Profiles.Payday_2
 {
-    public class PD2Settings
+    public class PD2Settings : ProfileSettings
     {
-        //General
-        public bool isEnabled;
-
         //Effects
         //// Background
         public bool bg_enabled;

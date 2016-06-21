@@ -14,7 +14,9 @@ namespace Aurora.Profiles.Overwatch
         {
             InitializeComponent();
 
-            this.game_enabled.IsChecked = Global.Configuration.overwatch_settings.isEnabled;
+            OverwatchSettings settings = Global.Configuration.ApplicationProfiles["Overwatch"].Settings as OverwatchSettings;
+
+            this.game_enabled.IsChecked = settings.isEnabled;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -52,7 +54,7 @@ namespace Aurora.Profiles.Overwatch
         {
             if (IsLoaded)
             {
-                Global.Configuration.overwatch_settings.isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Overwatch"].Settings as OverwatchSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }

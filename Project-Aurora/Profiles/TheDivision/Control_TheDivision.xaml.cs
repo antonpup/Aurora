@@ -14,7 +14,9 @@ namespace Aurora.Profiles.TheDivision
         {
             InitializeComponent();
 
-            this.game_enabled.IsChecked = Global.Configuration.division_settings.isEnabled;
+            TheDivisionSettings settings = Global.Configuration.ApplicationProfiles["The Division"].Settings as TheDivisionSettings;
+
+            this.game_enabled.IsChecked = settings.isEnabled;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -40,7 +42,7 @@ namespace Aurora.Profiles.TheDivision
         {
             if (IsLoaded)
             {
-                Global.Configuration.division_settings.isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["The Division"].Settings as TheDivisionSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }

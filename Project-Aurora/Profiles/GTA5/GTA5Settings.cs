@@ -23,11 +23,8 @@ namespace Aurora.Profiles.GTA5
         Alt_Full_Blink = 4,
     }
 
-    public class GTA5Settings
+    public class GTA5Settings : ProfileSettings
     {
-        //General
-        public bool isEnabled;
-
         //Effects
         //// Background
         public bool bg_color_enabled;

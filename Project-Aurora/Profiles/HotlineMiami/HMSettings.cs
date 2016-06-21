@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.HotlineMiami
 {
-    public class HMSettings
+    public class HMSettings : ProfileSettings
     {
         //General
-        public bool isEnabled;
         public bool first_time_installed;
 
         //Effects

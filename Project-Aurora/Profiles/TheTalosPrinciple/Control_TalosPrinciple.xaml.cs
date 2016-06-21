@@ -16,15 +16,18 @@ namespace Aurora.Profiles.TheTalosPrinciple
         {
             InitializeComponent();
 
+            TalosPrincipleSettings settings = Global.Configuration.ApplicationProfiles["Talos"].Settings as TalosPrincipleSettings;
+
+
             //Apply LightFX Wrapper, if needed.
-            if (!Global.Configuration.talosprinciple_settings.first_time_installed)
+            if (!settings.first_time_installed)
             {
                 InstallWrapper();
-                Global.Configuration.talosprinciple_settings.first_time_installed = true;
+                settings.first_time_installed = true;
             }
 
-            this.game_enabled.IsChecked = Global.Configuration.talosprinciple_settings.isEnabled;
-            this.cz.ColorZonesList = Global.Configuration.talosprinciple_settings.lighting_areas;
+            this.game_enabled.IsChecked = settings.isEnabled;
+            this.cz.ColorZonesList = settings.lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -47,7 +50,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
         {
             if (IsLoaded)
             {
-                Global.Configuration.talosprinciple_settings.isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Talos"].Settings as TalosPrincipleSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -56,7 +59,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
         {
             if (IsLoaded)
             {
-                Global.Configuration.talosprinciple_settings.lighting_areas = (sender as ColorZones).ColorZonesList;
+                (Global.Configuration.ApplicationProfiles["Talos"].Settings as TalosPrincipleSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
                 ConfigManager.Save(Global.Configuration);
             }
         }

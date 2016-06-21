@@ -162,12 +162,12 @@ namespace Aurora.Profiles.Desktop
         {
             if (Global.isLoaded)
             {
-                if (!Global.Configuration.desktop_settings.interactive_effects_mouse_clicking)
+                if (!(Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_mouse_clicking)
                     return;
 
                 Devices.DeviceKeys device_key = Devices.DeviceKeys.Peripheral;
 
-                if (device_key != Devices.DeviceKeys.NONE && Global.Configuration.desktop_settings.interactive_effects_enabled)
+                if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_enabled)
                 {
                     EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
 
@@ -175,17 +175,17 @@ namespace Aurora.Profiles.Desktop
                     {
                         //Debug.WriteLine("Created circle at {0}", pt);
 
-                        Color primary_c = Global.Configuration.desktop_settings.interactive_effect_primary_color;
-                        Color secondary_c = Global.Configuration.desktop_settings.interactive_effect_secondary_color;
+                        Color primary_c = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_primary_color;
+                        Color secondary_c = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_secondary_color;
 
-                        if (Global.Configuration.desktop_settings.interactive_effects_random_primary_color)
+                        if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color)
                             primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
 
-                        if (Global.Configuration.desktop_settings.interactive_effects_random_secondary_color)
+                        if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color)
                             secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
 
                         ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
-                        if (Global.Configuration.desktop_settings.interactive_effect_type == InteractiveEffects.KeyPress)
+                        if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.KeyPress)
                         {
                             spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
                             spec.SetColorAt(0.80f, secondary_c);
@@ -227,23 +227,23 @@ namespace Aurora.Profiles.Desktop
 
                 Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
 
-                if (device_key != Devices.DeviceKeys.NONE && Global.Configuration.desktop_settings.interactive_effects_enabled)
+                if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_enabled)
                 {
                     EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
 
                     if (pt != new EffectPoint(0, 0))
                     {
-                        Color primary_c = Global.Configuration.desktop_settings.interactive_effect_primary_color;
-                        Color secondary_c = Global.Configuration.desktop_settings.interactive_effect_secondary_color;
+                        Color primary_c = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_primary_color;
+                        Color secondary_c = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_secondary_color;
 
-                        if (Global.Configuration.desktop_settings.interactive_effects_random_primary_color)
+                        if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color)
                             primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
 
-                        if (Global.Configuration.desktop_settings.interactive_effects_random_secondary_color)
+                        if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color)
                             secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
 
                         ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
-                        if (Global.Configuration.desktop_settings.interactive_effect_type == InteractiveEffects.KeyPress)
+                        if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.KeyPress)
                         {
                             spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
                             spec.SetColorAt(0.80f, secondary_c);
@@ -266,10 +266,10 @@ namespace Aurora.Profiles.Desktop
             float time = (float)Math.Pow(Math.Sin(1.0D * (internalcounter++ / 10.0f)), 2.0d);
 
             EffectLayer cz_layer = new EffectLayer("Color Zones");
-            cz_layer.DrawColorZones(Global.Configuration.desktop_settings.lighting_areas.ToArray());
+            cz_layer.DrawColorZones((Global.Configuration.dekstop_profile.Settings as DesktopSettings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
-            if (Global.Configuration.desktop_settings.cpu_usage_enabled)
+            if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_usage_enabled)
             {
                 EffectLayer cpu = new EffectLayer("CPU");
 
@@ -286,42 +286,42 @@ namespace Aurora.Profiles.Desktop
                     transitionalCPUValue = currentCPUValue;
                 }
 
-                Color cpu_used = Global.Configuration.desktop_settings.cpu_used_color;
-                Color cpu_free = Global.Configuration.desktop_settings.cpu_free_color;
+                Color cpu_used = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_used_color;
+                Color cpu_free = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_free_color;
 
-                if (Global.Configuration.desktop_settings.cpu_free_color_transparent)
+                if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_free_color_transparent)
                 {
                     cpu_free = Color.FromArgb(0, cpu_used);
                 }
 
-                cpu.PercentEffect(cpu_used, cpu_free, Global.Configuration.desktop_settings.cpu_sequence, transitionalCPUValue, 100.0f, Global.Configuration.desktop_settings.cpu_usage_effect_type);
+                cpu.PercentEffect(cpu_used, cpu_free, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_sequence, transitionalCPUValue, 100.0f, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_usage_effect_type);
 
                 layers.Enqueue(cpu);
             }
 
-            if (Global.Configuration.desktop_settings.ram_usage_enabled)
+            if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_usage_enabled)
             {
                 EffectLayer memory = new EffectLayer("Memory");
 
                 double percentFree = ((double)memory_Available / (double)memory_Total);
                 double percentOccupied = 1.0D - percentFree;
 
-                Color ram_used = Global.Configuration.desktop_settings.ram_used_color;
-                Color ram_free = Global.Configuration.desktop_settings.ram_free_color;
+                Color ram_used = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_used_color;
+                Color ram_free = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_free_color;
 
-                if (Global.Configuration.desktop_settings.ram_free_color_transparent)
+                if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_free_color_transparent)
                 {
                     ram_free = Color.FromArgb(0, ram_used);
                 }
 
-                memory.PercentEffect(ram_used, ram_free, Global.Configuration.desktop_settings.ram_sequence, percentOccupied, 1.0D, Global.Configuration.desktop_settings.ram_usage_effect_type);
+                memory.PercentEffect(ram_used, ram_free, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_sequence, percentOccupied, 1.0D, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_usage_effect_type);
 
                 layers.Enqueue(memory);
             }
 
             EffectLayer interactive_layer = new EffectLayer("Interactive Effects");
 
-            if (Global.Configuration.desktop_settings.interactive_effect_type == InteractiveEffects.Wave)
+            if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.Wave)
             {
                 using (Graphics g = interactive_layer.GetGraphics())
                 {
@@ -331,7 +331,7 @@ namespace Aurora.Profiles.Desktop
 
                         float transition_value = input.progress / Effects.canvas_width;
 
-                        g.DrawEllipse(new Pen(input.spectrum.GetColorAt(transition_value), Global.Configuration.desktop_settings.interactive_effect_width),
+                        g.DrawEllipse(new Pen(input.spectrum.GetColorAt(transition_value), (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_width),
                             pt.X - input.progress,
                             pt.Y - input.progress,
                             2 * input.progress,
@@ -339,7 +339,7 @@ namespace Aurora.Profiles.Desktop
                     }
                 }
             }
-            else if (Global.Configuration.desktop_settings.interactive_effect_type == InteractiveEffects.KeyPress)
+            else if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.KeyPress)
             {
                 foreach (var input in input_list.ToArray())
                 {
@@ -360,17 +360,17 @@ namespace Aurora.Profiles.Desktop
                     input_list.RemoveAt(x);
                 else
                 {
-                    float trans_added = (Global.Configuration.desktop_settings.interactive_effect_speed * (getDeltaTime() * 5.0f));
+                    float trans_added = ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_speed * (getDeltaTime() * 5.0f));
                     input_list[x].progress += trans_added;
                 }
             }
 
             layers.Enqueue(interactive_layer);
 
-            if (Global.Configuration.desktop_settings.time_based_dimming_enabled)
+            if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_enabled)
             {
                 if (
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.desktop_settings.time_based_dimming_start_hour, Global.Configuration.desktop_settings.time_based_dimming_end_hour)
+                    Utils.Time.IsCurrentTimeBetween((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_hour)
                     )
                 {
                     layers.Clear();
@@ -383,31 +383,31 @@ namespace Aurora.Profiles.Desktop
             }
 
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
-            if (Global.Configuration.desktop_settings.shortcuts_assistant_enabled)
+            if ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).shortcuts_assistant_enabled)
             {
                 if (Global.held_modified == Keys.LControlKey || Global.held_modified == Keys.RControlKey)
                 {
                     if (Global.held_modified == Keys.LControlKey)
-                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_CONTROL, Global.Configuration.desktop_settings.ctrl_key_color);
+                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_CONTROL, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ctrl_key_color);
                     else
-                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_CONTROL, Global.Configuration.desktop_settings.ctrl_key_color);
-                    sc_assistant_layer.Set(Global.Configuration.desktop_settings.ctrl_key_sequence, Global.Configuration.desktop_settings.ctrl_key_color);
+                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_CONTROL, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ctrl_key_color);
+                    sc_assistant_layer.Set((Global.Configuration.dekstop_profile.Settings as DesktopSettings).ctrl_key_sequence, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ctrl_key_color);
                 }
                 else if (Global.held_modified == Keys.LMenu || Global.held_modified == Keys.RMenu)
                 {
                     if (Global.held_modified == Keys.LMenu)
-                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_ALT, Global.Configuration.desktop_settings.alt_key_color);
+                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_ALT, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).alt_key_color);
                     else
-                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_ALT, Global.Configuration.desktop_settings.alt_key_color);
-                    sc_assistant_layer.Set(Global.Configuration.desktop_settings.alt_key_sequence, Global.Configuration.desktop_settings.alt_key_color);
+                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_ALT, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).alt_key_color);
+                    sc_assistant_layer.Set((Global.Configuration.dekstop_profile.Settings as DesktopSettings).alt_key_sequence, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).alt_key_color);
                 }
                 else if (Global.held_modified == Keys.LWin || Global.held_modified == Keys.RWin)
                 {
                     if (Global.held_modified == Keys.LWin)
-                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_WINDOWS, Global.Configuration.desktop_settings.win_key_color);
+                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_WINDOWS, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).win_key_color);
                     else
-                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_WINDOWS, Global.Configuration.desktop_settings.win_key_color);
-                    sc_assistant_layer.Set(Global.Configuration.desktop_settings.win_key_sequence, Global.Configuration.desktop_settings.win_key_color);
+                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_WINDOWS, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).win_key_color);
+                    sc_assistant_layer.Set((Global.Configuration.dekstop_profile.Settings as DesktopSettings).win_key_sequence, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).win_key_color);
                 }
 
             }

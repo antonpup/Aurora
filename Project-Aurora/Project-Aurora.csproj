@@ -208,6 +208,9 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectSmoothColorSpectrum.cs" />
+    <Compile Include="Profiles\CSGO\CSGOProfileManager.cs" />
+    <Compile Include="Profiles\Desktop\DesktopProfileManager.cs" />
+    <Compile Include="Profiles\Dota 2\Dota2ProfileManager.cs" />
     <Compile Include="Profiles\Generic_Application\Control_GenericApplication.xaml.cs">
       <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
     </Compile>
@@ -217,15 +220,18 @@
       <DependentUpon>Control_GTA5.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Profiles\GTA5\GTA5ProfileManager.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\HotlineMiami\GameEvent_HM.cs" />
+    <Compile Include="Profiles\HotlineMiami\HMProfileManager.cs" />
     <Compile Include="Profiles\HotlineMiami\HMSettings.cs" />
     <Compile Include="Profiles\LeagueOfLegends\Control_LoL.xaml.cs">
       <DependentUpon>Control_LoL.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\LoLProfileManager.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLSettings.cs" />
     <Compile Include="Profiles\Logitech_Wrapper\GameEvent_Logitech_Wrapper.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
@@ -236,6 +242,7 @@
     <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
       <DependentUpon>Control_Overwatch.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Overwatch\OverwatchProfileManager.cs" />
     <Compile Include="Profiles\Overwatch\OverwatchSettings.cs" />
     <Compile Include="Profiles\Payday 2\Control_PD2.xaml.cs">
       <DependentUpon>Control_PD2.xaml</DependentUpon>
@@ -252,21 +259,25 @@
     <Compile Include="Profiles\Payday 2\GSI\Nodes\ProviderNode.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponNode.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponsNode.cs" />
+    <Compile Include="Profiles\Payday 2\PD2ProfileManager.cs" />
     <Compile Include="Profiles\Payday 2\PD2Settings.cs" />
     <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
       <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeagueProfileManager.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueSettings.cs" />
     <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\TheDivision\TheDivisionProfileManager.cs" />
     <Compile Include="Profiles\TheDivision\TheDivisionSettings.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
       <DependentUpon>Control_TalosPrinciple.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\TheTalosPrinciple\GameEvent_TalosPrinciple.cs" />
+    <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleProfileManager.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleSettings.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -340,10 +351,12 @@
       <DependentUpon>Control_Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\FreeFormObject.cs" />
+    <Compile Include="Settings\ProfileManager.cs" />
     <Compile Include="Settings\KeyboardLayoutManager.cs" />
     <Compile Include="Settings\KeyRecorder.cs" />
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
+    <Compile Include="Settings\ProfileSettings.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />

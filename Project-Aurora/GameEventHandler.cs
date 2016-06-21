@@ -3,19 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Timers;
 using Aurora.Profiles;
-using Aurora.Profiles.Dota_2;
 using Aurora.Profiles.Desktop;
-using Aurora.Profiles.CSGO;
 using System.Runtime.InteropServices;
-using Aurora.Profiles.GTA5;
 using Aurora.Profiles.Logitech_Wrapper;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Utils;
-using Aurora.Profiles.RocketLeague;
-using Aurora.Profiles.Payday_2;
-using Aurora.Profiles.LeagueOfLegends;
-using Aurora.Profiles.HotlineMiami;
-using Aurora.Profiles.TheTalosPrinciple;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 
 namespace Aurora
@@ -61,15 +53,11 @@ namespace Aurora
         public GameEventHandler()
         {
             //Include all pre-made profiles
-            profiles.Add("dota2.exe", new GameEvent_Dota2());
-            profiles.Add("csgo.exe", new GameEvent_CSGO());
-            profiles.Add("gta5.exe", new GameEvent_GTA5());
-            profiles.Add("rocketleague.exe", new GameEvent_RocketLeague());
-            profiles.Add("payday2_win32_release.exe", new GameEvent_PD2());
-            profiles.Add("league of legends.exe", new GameEvent_LoL());
-            profiles.Add("hotlinegl.exe", new GameEvent_HM());
-            profiles.Add("talos.exe", new GameEvent_TalosPrinciple());
-            profiles.Add("talos_unrestricted.exe", new GameEvent_TalosPrinciple());
+            foreach(var kvp in Global.Configuration.ApplicationProfiles)
+            {
+                foreach(string process in kvp.Value.ProcessNames)
+                    profiles.Add(process, kvp.Value.Event);
+            }
 
             overlays.Add(new TimedListObject(skype_overlay, 0, overlays));
         }
@@ -151,10 +139,10 @@ namespace Aurora
             {
                 IdleTime = System.Environment.TickCount - LastInput.dwTime;
 
-                if (IdleTime >= Global.Configuration.desktop_settings.idle_delay * 60 * 1000)
+                if (IdleTime >= (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_delay * 60 * 1000)
                 {
-                    if (!(Global.Configuration.desktop_settings.time_based_dimming_enabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.desktop_settings.time_based_dimming_start_hour, Global.Configuration.desktop_settings.time_based_dimming_start_minute, Global.Configuration.desktop_settings.time_based_dimming_end_hour, Global.Configuration.desktop_settings.time_based_dimming_end_minute))
+                    if (!((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_enabled &&
+                    Utils.Time.IsCurrentTimeBetween((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_minute, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_minute))
                     )
                     {
                         idle_e.UpdateLights(newframe);
@@ -195,8 +183,8 @@ namespace Aurora
             {
                 update_timer.Interval = 10; // in miliseconds
 
-                if (!(Global.Configuration.desktop_settings.time_based_dimming_enabled && Global.Configuration.desktop_settings.time_based_dimming_affect_games &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.desktop_settings.time_based_dimming_start_hour, Global.Configuration.desktop_settings.time_based_dimming_start_minute, Global.Configuration.desktop_settings.time_based_dimming_end_hour, Global.Configuration.desktop_settings.time_based_dimming_end_minute))
+                if (!((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_enabled && (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_affect_games &&
+                    Utils.Time.IsCurrentTimeBetween((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_minute, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_minute))
                     )
                 {
                     profiles[process_name].UpdateLights(newframe);
@@ -205,8 +193,8 @@ namespace Aurora
             else
             {
                 update_timer.Interval = 1000.0D / 30; //50 in miliseconds
-                if (!(Global.Configuration.desktop_settings.time_based_dimming_enabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.desktop_settings.time_based_dimming_start_hour, Global.Configuration.desktop_settings.time_based_dimming_start_minute, Global.Configuration.desktop_settings.time_based_dimming_end_hour, Global.Configuration.desktop_settings.time_based_dimming_end_minute))
+                if (!((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_enabled &&
+                    Utils.Time.IsCurrentTimeBetween((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_minute, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_minute))
                     )
                 {
                     desktop_e.UpdateLights(newframe);
@@ -314,10 +302,10 @@ namespace Aurora
                 {
                     IdleTime = System.Environment.TickCount - LastInput.dwTime;
 
-                    if (IdleTime >= Global.Configuration.desktop_settings.idle_delay * 60 * 1000)
+                    if (IdleTime >= (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_delay * 60 * 1000)
                     {
-                        if (!(Global.Configuration.desktop_settings.time_based_dimming_enabled && Global.Configuration.desktop_settings.time_based_dimming_affect_games &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.desktop_settings.time_based_dimming_start_hour, Global.Configuration.desktop_settings.time_based_dimming_start_minute, Global.Configuration.desktop_settings.time_based_dimming_end_hour, Global.Configuration.desktop_settings.time_based_dimming_end_minute))
+                        if (!((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_enabled && (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_affect_games &&
+                    Utils.Time.IsCurrentTimeBetween((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_minute, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_minute))
                     )
                         {
                             idle_e.UpdateLights(newframe);
@@ -325,8 +313,8 @@ namespace Aurora
                     }
                 }
 
-                if (!(Global.Configuration.desktop_settings.time_based_dimming_enabled && Global.Configuration.desktop_settings.time_based_dimming_affect_games &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.desktop_settings.time_based_dimming_start_hour, Global.Configuration.desktop_settings.time_based_dimming_start_minute, Global.Configuration.desktop_settings.time_based_dimming_end_hour, Global.Configuration.desktop_settings.time_based_dimming_end_minute))
+                if (!((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_enabled && (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_affect_games &&
+                    Utils.Time.IsCurrentTimeBetween((Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_start_minute, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).time_based_dimming_end_minute))
                     )
                 {
                     if (resolved_state)

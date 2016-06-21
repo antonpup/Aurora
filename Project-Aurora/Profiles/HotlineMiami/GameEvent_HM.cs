@@ -10,7 +10,7 @@ namespace Aurora.Profiles.HotlineMiami
 
         public bool IsEnabled()
         {
-            return Global.Configuration.hotlinemiami_settings.isEnabled;
+            return (Global.Configuration.ApplicationProfiles["Hotline"].Settings as HMSettings).isEnabled;
         }
 
         public void UpdateLights(EffectFrame frame)
@@ -23,7 +23,7 @@ namespace Aurora.Profiles.HotlineMiami
 
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("Hotline - Color Zones");
-            cz_layer.DrawColorZones(Global.Configuration.hotlinemiami_settings.lighting_areas.ToArray());
+            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["Hotline"].Settings as HMSettings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
             frame.SetLayers(layers.ToArray());

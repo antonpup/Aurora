@@ -5,6 +5,7 @@ using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.GTA5;
 using Aurora.Profiles.HotlineMiami;
 using Aurora.Profiles.LeagueOfLegends;
+using Aurora.Profiles.Logitech_Wrapper;
 using Aurora.Profiles.Overlays;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Profiles.Overwatch;
@@ -23,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings
 {
@@ -135,17 +137,23 @@ namespace Aurora.Settings
         public Dictionary<String, GenericApplicationSettings> additional_profiles;
 
         //Game Settings
-        public DesktopSettings desktop_settings;
-        public Dota2Settings dota2_settings;
-        public CSGOSettings csgo_settings;
-        public GTA5Settings gta5_settings;
-        public RocketLeagueSettings rocketleague_settings;
-        public OverwatchSettings overwatch_settings;
-        public PD2Settings pd2_settings;
-        public TheDivisionSettings division_settings;
-        public LoLSettings lol_settings;
-        public HMSettings hotlinemiami_settings;
-        public TalosPrincipleSettings talosprinciple_settings;
+        [JsonIgnoreAttribute]
+        public ProfileManager dekstop_profile = new DesktopProfileManager();
+
+        [JsonIgnoreAttribute]
+        public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
+        {
+            { "Dota 2", new Dota2ProfileManager() },
+            { "CSGO", new CSGOProfileManager() },
+            { "GTA5", new GTA5ProfileManager() },
+            { "RocketLeague", new RocketLeagueProfileManager() },
+            { "Overwatch", new OverwatchProfileManager() },
+            { "Payday 2", new PD2ProfileManager() },
+            { "The Division", new TheDivisionProfileManager() },
+            { "League of Legends", new LoLProfileManager() },
+            { "Hotline", new HMProfileManager() },
+            { "Talos", new TalosPrincipleProfileManager() }
+        };
 
         //Overlay Settings
         public VolumeOverlaySettings volume_overlay_settings;
@@ -176,19 +184,6 @@ namespace Aurora.Settings
             excluded_programs = new HashSet<string>();
             additional_profiles = new Dictionary<string, GenericApplicationSettings>();
 
-            //Game Settings
-            desktop_settings = new DesktopSettings();
-            dota2_settings = new Dota2Settings();
-            csgo_settings = new CSGOSettings();
-            gta5_settings = new GTA5Settings();
-            rocketleague_settings = new RocketLeagueSettings();
-            overwatch_settings = new OverwatchSettings();
-            pd2_settings = new PD2Settings();
-            division_settings = new TheDivisionSettings();
-            lol_settings = new LoLSettings();
-            hotlinemiami_settings = new HMSettings();
-            talosprinciple_settings = new TalosPrincipleSettings();
-
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
@@ -212,7 +207,14 @@ namespace Aurora.Settings
             if (String.IsNullOrWhiteSpace(content))
                 return CreateDefaultConfigurationFile();
 
-            return JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+            config.dekstop_profile.LoadProfiles();
+
+            foreach (var kvp in config.ApplicationProfiles)
+                kvp.Value.LoadProfiles();
+
+            return config;
         }
 
         public static T Load<T>(string path = "") where T : class
@@ -255,6 +257,11 @@ namespace Aurora.Settings
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
+
+            configuration.dekstop_profile.SaveProfiles();
+
+            foreach (var kvp in configuration.ApplicationProfiles)
+                kvp.Value.SaveProfiles();
         }
 
         public static bool Save<T>(T configuration, string path = "") where T : class

@@ -15,14 +15,14 @@ namespace Aurora
     {
         public static bool isDebug = false;
         public static Logger logger = new Logger();
+        public static IKeyboardMouseEvents input_hook = Hook.GlobalEvents();
         public static GameEventHandler geh;
         public static NetworkListener net_listener;
-        public static Configuration Configuration { get; set; }
+        public static Configuration Configuration = new Configuration();
         public static DeviceManager dev_manager = new DeviceManager();
         public static KeyboardLayoutManager kbLayout;
         public static Effects effengine = new Effects();
         public static KeyRecorder key_recorder = new KeyRecorder();
-        public static IKeyboardMouseEvents input_hook;
         public static Keys held_modified = Keys.None;
         public static bool isLoaded = false;
     }
@@ -173,7 +173,6 @@ namespace Aurora
                 }
             }
 
-            Global.input_hook = Hook.GlobalEvents();
             Global.input_hook.KeyDown += InputHookKeyDown;
             Global.input_hook.KeyUp += InputHookKeyUp;
 

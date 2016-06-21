@@ -1135,7 +1135,7 @@ namespace Aurora.Profiles.Dota_2
         public static void Respawned()
         {
             isDimming = false;
-            dim_bg_at = mapTime + Global.Configuration.dota2_settings.bg_dim_after;
+            dim_bg_at = mapTime + (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_dim_after;
             dim_value = 1.0;
         }
 
@@ -1159,16 +1159,16 @@ namespace Aurora.Profiles.Dota_2
             }
 
             //update background
-            if (Global.Configuration.dota2_settings.bg_team_enabled)
+            if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_team_enabled)
             {
                 EffectLayer bg_layer = new EffectLayer("Dota 2 - Background");
 
-                Color bg_color = Global.Configuration.dota2_settings.ambient_color;
+                Color bg_color = (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ambient_color;
 
                 if (current_team == PlayerTeam.Dire)
-                    bg_color = Global.Configuration.dota2_settings.dire_color;
+                    bg_color = (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).dire_color;
                 else if (current_team == PlayerTeam.Radiant)
-                    bg_color = Global.Configuration.dota2_settings.radiant_color;
+                    bg_color = (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).radiant_color;
 
                 if (current_team == PlayerTeam.Dire || current_team == PlayerTeam.Radiant)
                 {
@@ -1183,19 +1183,19 @@ namespace Aurora.Profiles.Dota_2
                         dim_value = 1.0;
                     }
 
-                    if (Global.Configuration.dota2_settings.bg_respawn_glow && !isAlive)
+                    if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_respawn_glow && !isAlive)
                     {
-                        bg_color = Utils.ColorUtils.BlendColors(bg_color, Global.Configuration.dota2_settings.bg_respawn_glow_color, (respawnTime > 5 ? 0.0 : 1.0 - (respawnTime / 5.0)));
+                        bg_color = Utils.ColorUtils.BlendColors(bg_color, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_respawn_glow_color, (respawnTime > 5 ? 0.0 : 1.0 - (respawnTime / 5.0)));
                     }
                 }
 
-                if (Global.Configuration.dota2_settings.bg_display_killstreaks && player_killstreak >= 2)
+                if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_display_killstreaks && player_killstreak >= 2)
                 {
-                    Color[] killstreakcolors = Global.Configuration.dota2_settings.bg_killstreakcolors.ToArray();
+                    Color[] killstreakcolors = (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors.ToArray();
 
                     int curr_ks = (player_killstreak > 10 ? 10 : player_killstreak);
 
-                    if (Global.Configuration.dota2_settings.bg_killstreaks_lines)
+                    if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreaks_lines)
                     {
                         for (int str = 2; str <= curr_ks; str++)
                         {
@@ -1218,7 +1218,7 @@ namespace Aurora.Profiles.Dota_2
 
                 bg_layer.Fill(bg_color);
 
-                if (Global.Configuration.dota2_settings.bg_peripheral_use)
+                if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_peripheral_use)
                     bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
 
                 layers.Enqueue(bg_layer);
@@ -1520,26 +1520,26 @@ namespace Aurora.Profiles.Dota_2
             //Not initialized
             if (current_team != PlayerTeam.Undefined && current_team != PlayerTeam.None)
             {
-                if (Global.Configuration.dota2_settings.mimic_respawn_timer && !isAlive)
+                if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mimic_respawn_timer && !isAlive)
                 {
                     EffectLayer mimic_respawn_layer = new EffectLayer("Dota 2 - Mimic Respawn");
 
                     //Update Health
-                    if (Global.Configuration.dota2_settings.health_enabled)
+                    if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).health_enabled)
                     {
-                        mimic_respawn_layer.PercentEffect(Global.Configuration.dota2_settings.mimic_respawn_timer_color,
-                            Global.Configuration.dota2_settings.mimic_respawn_timer_respawning_color,
-                            Global.Configuration.dota2_settings.health_sequence,
+                        mimic_respawn_layer.PercentEffect((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mimic_respawn_timer_color,
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mimic_respawn_timer_respawning_color,
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).health_sequence,
                             (double)(respawnTime > 4 ? 5.0 : respawnTime),
                             4.0,
                             PercentEffectType.AllAtOnce);
                     }
                     //Update Mana
-                    if (Global.Configuration.dota2_settings.mana_enabled)
+                    if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_enabled)
                     {
-                        mimic_respawn_layer.PercentEffect(Global.Configuration.dota2_settings.mimic_respawn_timer_color,
-                            Global.Configuration.dota2_settings.mimic_respawn_timer_respawning_color,
-                            Global.Configuration.dota2_settings.mana_sequence,
+                        mimic_respawn_layer.PercentEffect((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mimic_respawn_timer_color,
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mimic_respawn_timer_respawning_color,
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_sequence,
                             (double)(respawnTime > 4 ? 5.0 : respawnTime),
                             4.0,
                             PercentEffectType.AllAtOnce);
@@ -1552,31 +1552,31 @@ namespace Aurora.Profiles.Dota_2
 
 
                     //Update Health
-                    if (Global.Configuration.dota2_settings.health_enabled)
+                    if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).health_enabled)
                     {
                         EffectLayer hpbar_layer = new EffectLayer("Dota 2 - HP Bar");
 
-                        hpbar_layer.PercentEffect(Global.Configuration.dota2_settings.healthy_color,
-                            Global.Configuration.dota2_settings.hurt_color,
-                            Global.Configuration.dota2_settings.health_sequence,
+                        hpbar_layer.PercentEffect((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).healthy_color,
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).hurt_color,
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).health_sequence,
                             (double)health,
                             (double)health_max,
-                            Global.Configuration.dota2_settings.health_effect_type);
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).health_effect_type);
 
                         layers.Enqueue(hpbar_layer);
                     }
 
                     //Update Mana
-                    if (Global.Configuration.dota2_settings.mana_enabled)
+                    if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_enabled)
                     {
                         EffectLayer manabar_layer = new EffectLayer("Dota 2 - ManaBar");
 
-                        manabar_layer.PercentEffect(Global.Configuration.dota2_settings.mana_color,
-                            Global.Configuration.dota2_settings.nomana_color,
-                            Global.Configuration.dota2_settings.mana_sequence,
+                        manabar_layer.PercentEffect((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_color,
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).nomana_color,
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_sequence,
                             (double)mana,
                             (double)mana_max,
-                            Global.Configuration.dota2_settings.mana_effect_type);
+                            (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_effect_type);
 
                         layers.Enqueue(manabar_layer);
                     }
@@ -1584,29 +1584,29 @@ namespace Aurora.Profiles.Dota_2
 
 
                 //Abilities
-                if (Global.Configuration.dota2_settings.abilitykeys_enabled && abilities != null && Global.Configuration.dota2_settings.ability_keys.Count >= 6)
+                if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).abilitykeys_enabled && abilities != null && (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys.Count >= 6)
                 {
                     EffectLayer abilities_layer = new EffectLayer("Dota 2 - Abilities");
 
                     for (int index = 0; index < abilities.Count; index++)
                     {
                         Ability ability = abilities[index];
-                        Devices.DeviceKeys key = Global.Configuration.dota2_settings.ability_keys[index];
+                        Devices.DeviceKeys key = (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys[index];
 
                         if (ability.IsUltimate)
-                            key = Global.Configuration.dota2_settings.ability_keys[5];
+                            key = (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys[5];
 
                         if (ability.CanCast && ability.Cooldown == 0 && ability.Level > 0)
                         {
-                            abilities_layer.Set(key, Global.Configuration.dota2_settings.ability_can_use_color);
+                            abilities_layer.Set(key, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_can_use_color);
                         }
                         else if (ability.Cooldown <= 5 && ability.Level > 0)
                         {
-                            abilities_layer.Set(key, Utils.ColorUtils.BlendColors(Global.Configuration.dota2_settings.ability_can_use_color, Global.Configuration.dota2_settings.ability_can_not_use_color, (double)ability.Cooldown / 5.0));
+                            abilities_layer.Set(key, Utils.ColorUtils.BlendColors((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_can_use_color, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_can_not_use_color, (double)ability.Cooldown / 5.0));
                         }
                         else
                         {
-                            abilities_layer.Set(key, Global.Configuration.dota2_settings.ability_can_not_use_color);
+                            abilities_layer.Set(key, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_can_not_use_color);
                         }
                     }
 
@@ -1614,22 +1614,22 @@ namespace Aurora.Profiles.Dota_2
                 }
 
                 //Items
-                if (Global.Configuration.dota2_settings.items_enabled && items != null && Global.Configuration.dota2_settings.items_keys.Count >= 6)
+                if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_enabled && items != null && (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys.Count >= 6)
                 {
                     EffectLayer items_layer = new EffectLayer("Dota 2 - Items");
 
                     for (int index = 0; index < items.CountInventory; index++)
                     {
                         Item item = items.GetInventoryAt(index);
-                        Devices.DeviceKeys key = Global.Configuration.dota2_settings.items_keys[index];
+                        Devices.DeviceKeys key = (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[index];
 
                         if (item.Name.Equals("empty"))
                         {
-                            items_layer.Set(key, Global.Configuration.dota2_settings.items_empty_color);
+                            items_layer.Set(key, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_empty_color);
                         }
                         else
                         {
-                            if (Global.Configuration.dota2_settings.items_use_item_color && item_colors.ContainsKey(item.Name))
+                            if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_use_item_color && item_colors.ContainsKey(item.Name))
                             {
                                 if (!String.IsNullOrWhiteSpace(item.ContainsRune))
                                 {
@@ -1642,23 +1642,23 @@ namespace Aurora.Profiles.Dota_2
                             }
                             else
                             {
-                                items_layer.Set(key, Global.Configuration.dota2_settings.items_color);
+                                items_layer.Set(key, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_color);
                             }
 
                             //Cooldown
                             if (item.Cooldown > 5)
                             {
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Global.Configuration.dota2_settings.items_on_cooldown_color, 1.0));
+                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_on_cooldown_color, 1.0));
                             }
                             else if (item.Cooldown > 0 && item.Cooldown <= 5)
                             {
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Global.Configuration.dota2_settings.items_on_cooldown_color, item.Cooldown / 5.0));
+                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_on_cooldown_color, item.Cooldown / 5.0));
                             }
 
                             //Charges
                             if (item.Charges == 0)
                             {
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Global.Configuration.dota2_settings.items_no_charges_color, 0.7));
+                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_no_charges_color, 0.7));
                             }
                         }
                     }
@@ -1666,15 +1666,15 @@ namespace Aurora.Profiles.Dota_2
                     for (int index = 0; index < items.CountStash; index++)
                     {
                         Item item = items.GetStashAt(index);
-                        Devices.DeviceKeys key = Global.Configuration.dota2_settings.items_keys[6 + index];
+                        Devices.DeviceKeys key = (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[6 + index];
 
                         if (item.Name.Equals("empty"))
                         {
-                            items_layer.Set(key, Global.Configuration.dota2_settings.items_empty_color);
+                            items_layer.Set(key, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_empty_color);
                         }
                         else
                         {
-                            if (Global.Configuration.dota2_settings.items_use_item_color && item_colors.ContainsKey(item.Name))
+                            if ((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_use_item_color && item_colors.ContainsKey(item.Name))
                             {
                                 if (!String.IsNullOrWhiteSpace(item.ContainsRune))
                                 {
@@ -1687,23 +1687,23 @@ namespace Aurora.Profiles.Dota_2
                             }
                             else
                             {
-                                items_layer.Set(key, Global.Configuration.dota2_settings.items_color);
+                                items_layer.Set(key, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_color);
                             }
 
                             //Cooldown
                             if (item.Cooldown > 5)
                             {
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Global.Configuration.dota2_settings.items_on_cooldown_color, 1.0));
+                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_on_cooldown_color, 1.0));
                             }
                             else if (item.Cooldown > 0 && item.Cooldown <= 5)
                             {
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Global.Configuration.dota2_settings.items_on_cooldown_color, item.Cooldown / 5.0));
+                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_on_cooldown_color, item.Cooldown / 5.0));
                             }
 
                             //Charges
                             if (item.Charges == 0)
                             {
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Global.Configuration.dota2_settings.items_no_charges_color, 0.7));
+                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_no_charges_color, 0.7));
                             }
                         }
                     }
@@ -1715,7 +1715,7 @@ namespace Aurora.Profiles.Dota_2
 
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("Dota 2 - Color Zones");
-            cz_layer.DrawColorZones(Global.Configuration.dota2_settings.lighting_areas.ToArray());
+            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
             if (Time.GetSecondsSinceEpoch() % this.updateRate == 0 && (Time.GetSecondsSinceEpoch() != this.lastUpdate))
@@ -1728,7 +1728,7 @@ namespace Aurora.Profiles.Dota_2
 
         private double getDimmingValue()
         {
-            if (isDimming && Global.Configuration.dota2_settings.bg_enable_dimming)
+            if (isDimming && (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_enable_dimming)
             {
                 dim_value -= 0.02;
                 return dim_value = (dim_value < 0.0 ? 0.0 : dim_value);
@@ -2200,7 +2200,7 @@ namespace Aurora.Profiles.Dota_2
 
         public bool IsEnabled()
         {
-            return Global.Configuration.dota2_settings.isEnabled;
+            return (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).isEnabled;
         }
     }
 }

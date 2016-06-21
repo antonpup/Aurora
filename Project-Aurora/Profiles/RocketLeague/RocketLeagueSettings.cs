@@ -5,11 +5,8 @@ using System.Drawing;
 
 namespace Aurora.Profiles.RocketLeague
 {
-    public class RocketLeagueSettings
+    public class RocketLeagueSettings : ProfileSettings
     {
-        //Genereal
-        public bool isEnabled;
-
         //Effects
         //// Background
         public bool bg_enabled;

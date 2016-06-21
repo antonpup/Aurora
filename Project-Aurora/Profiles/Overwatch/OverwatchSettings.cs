@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Overwatch
 {
-    public class OverwatchSettings
+    public class OverwatchSettings : ProfileSettings
     {
         //General
         public bool isEnabled;

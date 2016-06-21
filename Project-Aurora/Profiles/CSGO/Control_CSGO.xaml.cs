@@ -25,8 +25,6 @@ namespace Aurora.Profiles.CSGO
     /// </summary>
     public partial class Control_CSGO : UserControl
     {
-        private List<DeviceKeys> recordedKeys = new List<DeviceKeys>();
-
         private Timer preview_bomb_timer;
         private Timer preview_bomb_remove_effect_timer;
 
@@ -37,60 +35,62 @@ namespace Aurora.Profiles.CSGO
         {
             InitializeComponent();
 
-            this.game_enabled.IsChecked = Global.Configuration.csgo_settings.isEnabled;
+            CSGOSettings settings = Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings;
+
+            this.game_enabled.IsChecked = settings.isEnabled;
 
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.Undefined);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.CT);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.T);
 
-            this.background_enabled.IsChecked = Global.Configuration.csgo_settings.bg_team_enabled;
-            this.t_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.t_color);
-            this.ct_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.ct_color);
-            this.ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.ambient_color);
-            this.background_peripheral_use.IsChecked = Global.Configuration.csgo_settings.bg_peripheral_use;
-            this.background_dim_enabled.IsChecked = Global.Configuration.csgo_settings.bg_enable_dimming;
-            this.background_dim_value.Text = Global.Configuration.csgo_settings.bg_dim_after + "s";
-            this.background_dim_aftertime.Value = Global.Configuration.csgo_settings.bg_dim_after;
+            this.background_enabled.IsChecked = settings.bg_team_enabled;
+            this.t_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.t_color);
+            this.ct_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.ct_color);
+            this.ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.ambient_color);
+            this.background_peripheral_use.IsChecked = settings.bg_peripheral_use;
+            this.background_dim_enabled.IsChecked = settings.bg_enable_dimming;
+            this.background_dim_value.Text = settings.bg_dim_after + "s";
+            this.background_dim_aftertime.Value = settings.bg_dim_after;
 
-            this.health_enabled.IsChecked = Global.Configuration.csgo_settings.health_enabled;
-            this.health_healthy_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.healthy_color);
-            this.health_hurt_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.hurt_color);
-            this.health_effect_type.SelectedIndex = (int)Global.Configuration.csgo_settings.health_effect_type;
-            this.hp_keysequence.Sequence = Global.Configuration.csgo_settings.health_sequence;
+            this.health_enabled.IsChecked = settings.health_enabled;
+            this.health_healthy_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.healthy_color);
+            this.health_hurt_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.hurt_color);
+            this.health_effect_type.SelectedIndex = (int)settings.health_effect_type;
+            this.hp_keysequence.Sequence = settings.health_sequence;
 
-            this.ammo_enabled.IsChecked = Global.Configuration.csgo_settings.ammo_enabled;
-            this.ammo_hasammo_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.ammo_color);
-            this.ammo_noammo_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.noammo_color);
-            this.ammo_effect_type.SelectedIndex = (int)Global.Configuration.csgo_settings.ammo_effect_type;
-            this.ammo_keysequence.Sequence = Global.Configuration.csgo_settings.ammo_sequence;
+            this.ammo_enabled.IsChecked = settings.ammo_enabled;
+            this.ammo_hasammo_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.ammo_color);
+            this.ammo_noammo_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.noammo_color);
+            this.ammo_effect_type.SelectedIndex = (int)settings.ammo_effect_type;
+            this.ammo_keysequence.Sequence = settings.ammo_sequence;
 
-            this.bomb_enabled.IsChecked = Global.Configuration.csgo_settings.bomb_enabled;
-            this.bomb_flash_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.bomb_flash_color);
-            this.bomb_primed_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.bomb_primed_color);
-            this.bomb_display_winner.IsChecked = Global.Configuration.csgo_settings.bomb_display_winner_color;
-            this.bomb_gradual_effect.IsChecked = Global.Configuration.csgo_settings.bomb_gradual;
-            this.bomb_keysequence.Sequence = Global.Configuration.csgo_settings.bomb_sequence;
-            this.bomb_peripheral_use.IsChecked = Global.Configuration.csgo_settings.bomb_peripheral_use;
+            this.bomb_enabled.IsChecked = settings.bomb_enabled;
+            this.bomb_flash_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bomb_flash_color);
+            this.bomb_primed_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bomb_primed_color);
+            this.bomb_display_winner.IsChecked = settings.bomb_display_winner_color;
+            this.bomb_gradual_effect.IsChecked = settings.bomb_gradual;
+            this.bomb_keysequence.Sequence = settings.bomb_sequence;
+            this.bomb_peripheral_use.IsChecked = settings.bomb_peripheral_use;
 
-            this.kills_enabled.IsChecked = Global.Configuration.csgo_settings.kills_indicator;
-            this.kills_regular_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.kills_regular_color);
-            this.kills_headshot_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.kills_headshot_color);
-            this.kills_keysequence.Sequence = Global.Configuration.csgo_settings.kills_sequence;
+            this.kills_enabled.IsChecked = settings.kills_indicator;
+            this.kills_regular_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.kills_regular_color);
+            this.kills_headshot_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.kills_headshot_color);
+            this.kills_keysequence.Sequence = settings.kills_sequence;
 
-            this.cz.ColorZonesList = Global.Configuration.csgo_settings.lighting_areas;
+            this.cz.ColorZonesList = settings.lighting_areas;
 
-            this.flashbang_enabled.IsChecked = Global.Configuration.csgo_settings.flashbang_enabled;
-            this.flashbang_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.flash_color);
-            this.flashbang_peripheral_use.IsChecked = Global.Configuration.csgo_settings.flashbang_peripheral_use;
+            this.flashbang_enabled.IsChecked = settings.flashbang_enabled;
+            this.flashbang_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.flash_color);
+            this.flashbang_peripheral_use.IsChecked = settings.flashbang_peripheral_use;
 
-            this.typing_enabled.IsChecked = Global.Configuration.csgo_settings.typing_enabled;
-            this.typing_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.typing_color);
-            this.typing_keysequence.Sequence = Global.Configuration.csgo_settings.typing_sequence;
+            this.typing_enabled.IsChecked = settings.typing_enabled;
+            this.typing_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.typing_color);
+            this.typing_keysequence.Sequence = settings.typing_sequence;
 
-            this.burning_enabled.IsChecked = Global.Configuration.csgo_settings.burning_enabled;
-            this.burning_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.csgo_settings.burning_color);
-            this.burning_animation.IsChecked = Global.Configuration.csgo_settings.burning_animation;
-            this.burning_peripheral_use.IsChecked = Global.Configuration.csgo_settings.burning_peripheral_use;
+            this.burning_enabled.IsChecked = settings.burning_enabled;
+            this.burning_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.burning_color);
+            this.burning_animation.IsChecked = settings.burning_animation;
+            this.burning_peripheral_use.IsChecked = settings.burning_peripheral_use;
 
 
             preview_bomb_timer = new Timer(45000);
@@ -101,10 +101,10 @@ namespace Aurora.Profiles.CSGO
 
 
             //Copy cfg file if needed
-            if (!Global.Configuration.csgo_settings.first_time_installed)
+            if (!settings.first_time_installed)
             {
                 InstallGSI();
-                Global.Configuration.csgo_settings.first_time_installed = true;
+                settings.first_time_installed = true;
             }
         }
 
@@ -151,7 +151,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -273,7 +273,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.bg_team_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bg_team_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -282,7 +282,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -291,7 +291,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.t_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.t_color = Utils.ColorUtils.MediaColorToDrawingColor(this.t_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).t_color = Utils.ColorUtils.MediaColorToDrawingColor(this.t_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -300,7 +300,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.ct_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.ct_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ct_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ct_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ct_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -309,7 +309,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.ambient_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.ambient_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ambient_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ambient_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ambient_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -318,7 +318,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.bg_enable_dimming = (this.background_dim_enabled.IsChecked.HasValue) ? this.background_dim_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bg_enable_dimming = (this.background_dim_enabled.IsChecked.HasValue) ? this.background_dim_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -331,7 +331,7 @@ namespace Aurora.Profiles.CSGO
                 this.background_dim_value.Text = val + "s";
                 if (IsLoaded)
                 {
-                    Global.Configuration.csgo_settings.bg_dim_after = val;
+                    (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bg_dim_after = val;
                     ConfigManager.Save(Global.Configuration);
                 }
             }
@@ -343,7 +343,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.health_enabled = (this.health_enabled.IsChecked.HasValue) ? this.health_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).health_enabled = (this.health_enabled.IsChecked.HasValue) ? this.health_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -352,7 +352,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.health_healthy_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.healthy_color = Utils.ColorUtils.MediaColorToDrawingColor(this.health_healthy_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).healthy_color = Utils.ColorUtils.MediaColorToDrawingColor(this.health_healthy_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -361,7 +361,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.health_hurt_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.hurt_color = Utils.ColorUtils.MediaColorToDrawingColor(this.health_hurt_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).hurt_color = Utils.ColorUtils.MediaColorToDrawingColor(this.health_hurt_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -370,7 +370,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.health_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).health_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -379,7 +379,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.health_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.health_effect_type.SelectedIndex.ToString());
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).health_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.health_effect_type.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -390,7 +390,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.ammo_enabled = (this.ammo_enabled.IsChecked.HasValue) ? this.ammo_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ammo_enabled = (this.ammo_enabled.IsChecked.HasValue) ? this.ammo_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -399,7 +399,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.ammo_hasammo_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.ammo_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ammo_hasammo_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ammo_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ammo_hasammo_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -408,7 +408,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.ammo_noammo_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.noammo_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ammo_noammo_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).noammo_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ammo_noammo_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -417,7 +417,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.ammo_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.ammo_effect_type.SelectedIndex.ToString());
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ammo_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.ammo_effect_type.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -426,7 +426,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.ammo_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ammo_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -437,7 +437,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.bomb_enabled = (this.bomb_enabled.IsChecked.HasValue) ? this.bomb_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_enabled = (this.bomb_enabled.IsChecked.HasValue) ? this.bomb_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -446,7 +446,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.bomb_flash_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.bomb_flash_color = Utils.ColorUtils.MediaColorToDrawingColor(this.bomb_flash_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_flash_color = Utils.ColorUtils.MediaColorToDrawingColor(this.bomb_flash_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -455,7 +455,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.bomb_primed_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.bomb_primed_color = Utils.ColorUtils.MediaColorToDrawingColor(this.bomb_primed_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_primed_color = Utils.ColorUtils.MediaColorToDrawingColor(this.bomb_primed_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -464,7 +464,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.bomb_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -473,7 +473,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.bomb_display_winner_color = (this.bomb_display_winner.IsChecked.HasValue) ? this.bomb_display_winner.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_display_winner_color = (this.bomb_display_winner.IsChecked.HasValue) ? this.bomb_display_winner.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -482,7 +482,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.bomb_gradual = (this.bomb_gradual_effect.IsChecked.HasValue) ? this.bomb_gradual_effect.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_gradual = (this.bomb_gradual_effect.IsChecked.HasValue) ? this.bomb_gradual_effect.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -491,7 +491,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.bomb_peripheral_use = (this.bomb_peripheral_use.IsChecked.HasValue) ? this.bomb_peripheral_use.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_peripheral_use = (this.bomb_peripheral_use.IsChecked.HasValue) ? this.bomb_peripheral_use.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -502,7 +502,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.kills_indicator = (this.kills_enabled.IsChecked.HasValue) ? this.kills_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).kills_indicator = (this.kills_enabled.IsChecked.HasValue) ? this.kills_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -511,7 +511,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.kills_regular_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.kills_regular_color = Utils.ColorUtils.MediaColorToDrawingColor(this.kills_regular_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).kills_regular_color = Utils.ColorUtils.MediaColorToDrawingColor(this.kills_regular_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -520,7 +520,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.kills_headshot_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.kills_headshot_color = Utils.ColorUtils.MediaColorToDrawingColor(this.kills_headshot_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).kills_headshot_color = Utils.ColorUtils.MediaColorToDrawingColor(this.kills_headshot_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -529,7 +529,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.kills_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).kills_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -540,7 +540,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.lighting_areas = (sender as ColorZones).ColorZonesList;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -551,7 +551,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.flashbang_enabled = (this.flashbang_enabled.IsChecked.HasValue) ? this.flashbang_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).flashbang_enabled = (this.flashbang_enabled.IsChecked.HasValue) ? this.flashbang_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -560,7 +560,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.flashbang_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.flash_color = Utils.ColorUtils.MediaColorToDrawingColor(this.flashbang_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).flash_color = Utils.ColorUtils.MediaColorToDrawingColor(this.flashbang_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -569,7 +569,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.flashbang_peripheral_use = (this.flashbang_peripheral_use.IsChecked.HasValue) ? this.flashbang_peripheral_use.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).flashbang_peripheral_use = (this.flashbang_peripheral_use.IsChecked.HasValue) ? this.flashbang_peripheral_use.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -578,7 +578,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.burning_enabled = (this.burning_enabled.IsChecked.HasValue) ? this.burning_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_enabled = (this.burning_enabled.IsChecked.HasValue) ? this.burning_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -587,7 +587,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.burning_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.burning_color = Utils.ColorUtils.MediaColorToDrawingColor(this.burning_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_color = Utils.ColorUtils.MediaColorToDrawingColor(this.burning_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -596,7 +596,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.burning_peripheral_use = (this.burning_peripheral_use.IsChecked.HasValue) ? this.burning_peripheral_use.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_peripheral_use = (this.burning_peripheral_use.IsChecked.HasValue) ? this.burning_peripheral_use.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -605,7 +605,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.burning_animation = (this.burning_animation.IsChecked.HasValue) ? this.burning_animation.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_animation = (this.burning_animation.IsChecked.HasValue) ? this.burning_animation.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -616,7 +616,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.typing_enabled = (this.typing_enabled.IsChecked.HasValue) ? this.typing_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).typing_enabled = (this.typing_enabled.IsChecked.HasValue) ? this.typing_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -625,7 +625,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded && this.typing_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.csgo_settings.typing_color = Utils.ColorUtils.MediaColorToDrawingColor(this.typing_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).typing_color = Utils.ColorUtils.MediaColorToDrawingColor(this.typing_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -634,7 +634,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                Global.Configuration.csgo_settings.typing_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).typing_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }

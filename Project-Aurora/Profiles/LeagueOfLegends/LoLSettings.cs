@@ -3,11 +3,8 @@ using System.Collections.Generic;
 
 namespace Aurora.Profiles.LeagueOfLegends
 {
-    public class LoLSettings
+    public class LoLSettings : ProfileSettings
     {
-        //General
-        public bool isEnabled;
-
         //Effects
         //// Lighting Areas
         public List<ColorZone> lighting_areas { get; set; }

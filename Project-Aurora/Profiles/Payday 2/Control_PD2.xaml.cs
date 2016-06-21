@@ -28,50 +28,52 @@ namespace Aurora.Profiles.Payday_2
         {
             InitializeComponent();
 
-            this.game_enabled.IsChecked = Global.Configuration.pd2_settings.isEnabled;
+            PD2Settings settings = Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings;
 
-            this.background_enabled.IsChecked = Global.Configuration.pd2_settings.bg_enabled;
-            this.ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.ambient_color);
-            this.assault_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.assault_color);
-            this.winters_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.winters_color);
-            this.assault_fade_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.assault_fade_color);
-            this.bg_assaultspeed.Value = Global.Configuration.pd2_settings.assault_speed_mult;
-            this.bg_assaultspeed_label.Content = "x " + Global.Configuration.pd2_settings.assault_speed_mult.ToString("0.00");
-            this.assault_animation_enabled.IsChecked = Global.Configuration.pd2_settings.assault_animation_enabled;
-            this.low_suspicion_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.low_suspicion_color);
-            this.medium_suspicion_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.medium_suspicion_color);
-            this.high_suspicion_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.high_suspicion_color);
-            this.suspicion_effect_type.SelectedIndex = (int)Global.Configuration.pd2_settings.suspicion_effect_type;
-            this.background_show_suspicion.IsChecked = Global.Configuration.pd2_settings.bg_show_suspicion;
+            this.game_enabled.IsChecked = settings.isEnabled;
 
-            this.health_enabled.IsChecked = Global.Configuration.pd2_settings.health_enabled;
-            this.health_healthy_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.healthy_color);
-            this.health_hurt_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.hurt_color);
-            this.health_effect_type.SelectedIndex = (int)Global.Configuration.pd2_settings.health_effect_type;
-            this.hp_keysequence.Sequence = Global.Configuration.pd2_settings.health_sequence;
+            this.background_enabled.IsChecked = settings.bg_enabled;
+            this.ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.ambient_color);
+            this.assault_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.assault_color);
+            this.winters_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.winters_color);
+            this.assault_fade_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.assault_fade_color);
+            this.bg_assaultspeed.Value = settings.assault_speed_mult;
+            this.bg_assaultspeed_label.Content = "x " + settings.assault_speed_mult.ToString("0.00");
+            this.assault_animation_enabled.IsChecked = settings.assault_animation_enabled;
+            this.low_suspicion_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.low_suspicion_color);
+            this.medium_suspicion_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.medium_suspicion_color);
+            this.high_suspicion_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.high_suspicion_color);
+            this.suspicion_effect_type.SelectedIndex = (int)settings.suspicion_effect_type;
+            this.background_show_suspicion.IsChecked = settings.bg_show_suspicion;
 
-            this.ammo_enabled.IsChecked = Global.Configuration.pd2_settings.ammo_enabled;
-            this.ammo_hasammo_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.ammo_color);
-            this.ammo_noammo_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.noammo_color);
-            this.ammo_effect_type.SelectedIndex = (int)Global.Configuration.pd2_settings.ammo_effect_type;
-            this.ammo_keysequence.Sequence = Global.Configuration.pd2_settings.ammo_sequence;
+            this.health_enabled.IsChecked = settings.health_enabled;
+            this.health_healthy_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.healthy_color);
+            this.health_hurt_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.hurt_color);
+            this.health_effect_type.SelectedIndex = (int)settings.health_effect_type;
+            this.hp_keysequence.Sequence = settings.health_sequence;
 
-            this.downed_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.downed_color);
-            this.arrested_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.arrested_color);
+            this.ammo_enabled.IsChecked = settings.ammo_enabled;
+            this.ammo_hasammo_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.ammo_color);
+            this.ammo_noammo_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.noammo_color);
+            this.ammo_effect_type.SelectedIndex = (int)settings.ammo_effect_type;
+            this.ammo_keysequence.Sequence = settings.ammo_sequence;
 
-            this.swansong_enabled.IsChecked = Global.Configuration.pd2_settings.swansong_enabled;
-            this.swansong_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.pd2_settings.swansong_color);
-            this.swansong_speed.Value = Global.Configuration.pd2_settings.swansong_speed_mult;
-            this.swansong_speed_label.Content = "x " + Global.Configuration.pd2_settings.assault_speed_mult.ToString("0.00");
+            this.downed_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.downed_color);
+            this.arrested_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.arrested_color);
 
-            this.cz.ColorZonesList = Global.Configuration.pd2_settings.lighting_areas;
+            this.swansong_enabled.IsChecked = settings.swansong_enabled;
+            this.swansong_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.swansong_color);
+            this.swansong_speed.Value = settings.swansong_speed_mult;
+            this.swansong_speed_label.Content = "x " + settings.assault_speed_mult.ToString("0.00");
+
+            this.cz.ColorZonesList = settings.lighting_areas;
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -199,7 +201,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.bg_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).bg_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -208,7 +210,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.ambient_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.ambient_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ambient_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).ambient_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ambient_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -217,7 +219,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.assault_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.assault_color = Utils.ColorUtils.MediaColorToDrawingColor(this.assault_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).assault_color = Utils.ColorUtils.MediaColorToDrawingColor(this.assault_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -226,7 +228,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.winters_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.winters_color = Utils.ColorUtils.MediaColorToDrawingColor(this.winters_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).winters_color = Utils.ColorUtils.MediaColorToDrawingColor(this.winters_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -235,8 +237,8 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && sender is Slider)
             {
-                Global.Configuration.pd2_settings.assault_speed_mult = (float)((sender as Slider).Value);
-                this.bg_assaultspeed_label.Content = "x " + Global.Configuration.pd2_settings.assault_speed_mult.ToString("0.00");
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).assault_speed_mult = (float)((sender as Slider).Value);
+                this.bg_assaultspeed_label.Content = "x " + (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).assault_speed_mult.ToString("0.00");
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -245,7 +247,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.assault_fade_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.assault_fade_color = Utils.ColorUtils.MediaColorToDrawingColor(this.assault_fade_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).assault_fade_color = Utils.ColorUtils.MediaColorToDrawingColor(this.assault_fade_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -254,7 +256,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.assault_animation_enabled = (this.assault_animation_enabled.IsChecked.HasValue) ? this.assault_animation_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).assault_animation_enabled = (this.assault_animation_enabled.IsChecked.HasValue) ? this.assault_animation_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -263,7 +265,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -272,7 +274,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.bg_show_suspicion = (this.background_show_suspicion.IsChecked.HasValue) ? this.background_show_suspicion.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).bg_show_suspicion = (this.background_show_suspicion.IsChecked.HasValue) ? this.background_show_suspicion.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -281,7 +283,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.low_suspicion_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.low_suspicion_color = Utils.ColorUtils.MediaColorToDrawingColor(this.low_suspicion_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).low_suspicion_color = Utils.ColorUtils.MediaColorToDrawingColor(this.low_suspicion_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -290,7 +292,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.medium_suspicion_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.medium_suspicion_color = Utils.ColorUtils.MediaColorToDrawingColor(this.medium_suspicion_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).medium_suspicion_color = Utils.ColorUtils.MediaColorToDrawingColor(this.medium_suspicion_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -299,7 +301,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.high_suspicion_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.high_suspicion_color = Utils.ColorUtils.MediaColorToDrawingColor(this.high_suspicion_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).high_suspicion_color = Utils.ColorUtils.MediaColorToDrawingColor(this.high_suspicion_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -308,7 +310,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.suspicion_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.suspicion_effect_type.SelectedIndex.ToString());
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).suspicion_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.suspicion_effect_type.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -317,7 +319,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.health_enabled = (this.health_enabled.IsChecked.HasValue) ? this.health_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).health_enabled = (this.health_enabled.IsChecked.HasValue) ? this.health_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -326,7 +328,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.health_healthy_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.healthy_color = Utils.ColorUtils.MediaColorToDrawingColor(this.health_healthy_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).healthy_color = Utils.ColorUtils.MediaColorToDrawingColor(this.health_healthy_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -335,7 +337,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.health_hurt_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.hurt_color = Utils.ColorUtils.MediaColorToDrawingColor(this.health_hurt_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).hurt_color = Utils.ColorUtils.MediaColorToDrawingColor(this.health_hurt_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -344,7 +346,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.health_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.health_effect_type.SelectedIndex.ToString());
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).health_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.health_effect_type.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -353,7 +355,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.health_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).health_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -362,7 +364,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.ammo_enabled = (this.ammo_enabled.IsChecked.HasValue) ? this.ammo_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).ammo_enabled = (this.ammo_enabled.IsChecked.HasValue) ? this.ammo_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -371,7 +373,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.ammo_hasammo_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.ammo_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ammo_hasammo_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).ammo_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ammo_hasammo_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -380,7 +382,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.ammo_noammo_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.noammo_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ammo_noammo_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).noammo_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ammo_noammo_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -389,7 +391,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.ammo_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.ammo_effect_type.SelectedIndex.ToString());
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).ammo_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.ammo_effect_type.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -398,7 +400,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.ammo_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).ammo_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -407,7 +409,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.downed_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.downed_color = Utils.ColorUtils.MediaColorToDrawingColor(this.downed_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).downed_color = Utils.ColorUtils.MediaColorToDrawingColor(this.downed_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -416,7 +418,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.arrested_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.arrested_color = Utils.ColorUtils.MediaColorToDrawingColor(this.arrested_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).arrested_color = Utils.ColorUtils.MediaColorToDrawingColor(this.arrested_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -425,7 +427,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.swansong_enabled = (this.swansong_enabled.IsChecked.HasValue) ? this.swansong_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).swansong_enabled = (this.swansong_enabled.IsChecked.HasValue) ? this.swansong_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -434,7 +436,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && this.swansong_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.pd2_settings.swansong_color = Utils.ColorUtils.MediaColorToDrawingColor(this.swansong_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).swansong_color = Utils.ColorUtils.MediaColorToDrawingColor(this.swansong_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -443,8 +445,8 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && sender is Slider)
             {
-                Global.Configuration.pd2_settings.swansong_speed_mult = (float)((sender as Slider).Value);
-                this.swansong_speed_label.Content = "x " + Global.Configuration.pd2_settings.swansong_speed_mult.ToString("0.00");
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).swansong_speed_mult = (float)((sender as Slider).Value);
+                this.swansong_speed_label.Content = "x " + (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).swansong_speed_mult.ToString("0.00");
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -453,7 +455,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                Global.Configuration.pd2_settings.lighting_areas = (sender as ColorZones).ColorZonesList;
+                (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
                 ConfigManager.Save(Global.Configuration);
             }
         }

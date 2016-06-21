@@ -36,7 +36,7 @@ namespace Aurora.Profiles.Overlays
 
                 layers.Enqueue(volume_bar);
 
-                frame.SetOverlayLayers(layers.ToArray());
+                frame.AddOverlayLayers(layers.ToArray());
             }
         }
 

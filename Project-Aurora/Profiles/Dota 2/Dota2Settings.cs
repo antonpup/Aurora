@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Dota_2
 {
-    public class Dota2Settings
+    public class Dota2Settings : ProfileSettings
     {
         //General
         public bool first_time_installed;
-        public bool isEnabled;
 
         //Effects
         //// Background

@@ -4,23 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Xceed.Wpf.Toolkit;
 using Aurora.EffectsEngine;
-using Aurora.Utils;
 using Aurora.Settings;
-using System.IO;
 using Aurora.Controls;
 
 namespace Aurora
@@ -32,23 +24,8 @@ namespace Aurora
     {
         Settings.Control_Settings settings_control = new Settings.Control_Settings();
         Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
-        Profiles.Dota_2.Control_Dota2 dota2_control = new Profiles.Dota_2.Control_Dota2();
-        Profiles.CSGO.Control_CSGO csgo_control = new Profiles.CSGO.Control_CSGO();
-        Profiles.GTA5.Control_GTA5 gta5_control = new Profiles.GTA5.Control_GTA5();
-        Profiles.RocketLeague.Control_RocketLeague rocketleague_control = new Profiles.RocketLeague.Control_RocketLeague();
-        Profiles.Overwatch.Control_Overwatch overwatch_control = new Profiles.Overwatch.Control_Overwatch();
-        Profiles.Payday_2.Control_PD2 payday2_control = new Profiles.Payday_2.Control_PD2();
-        Profiles.TheDivision.Control_TheDivision division_control = new Profiles.TheDivision.Control_TheDivision();
-        Profiles.LeagueOfLegends.Control_LoL lol_control = new Profiles.LeagueOfLegends.Control_LoL();
-        Profiles.HotlineMiami.Control_HM hotline_control = new Profiles.HotlineMiami.Control_HM();
-        Profiles.TheTalosPrinciple.Control_TalosPrinciple talosprinciple_control = new Profiles.TheTalosPrinciple.Control_TalosPrinciple();
-
 
         EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
-        EffectColor dota2_color_scheme = new EffectColor(102, 0, 0);
-        EffectColor csgo_color_scheme = new EffectColor(151, 79, 37);
-        EffectColor gta5_color_scheme = new EffectColor(20, 100, 0);
-        EffectColor rocketleague_color_scheme = new EffectColor(0, 80, 170);
 
         EffectColor transition_color = new EffectColor();
         EffectColor current_color = new EffectColor();
@@ -444,85 +421,23 @@ namespace Aurora
             this.profiles_stack.Children.Add(profile_desktop);
 
             //Included Game Profiles
-            Image profile_dota2 = new Image();
-            profile_dota2.Tag = dota2_control;
-            profile_dota2.Source = new BitmapImage(new Uri(@"Resources/dota2_64x64.png", UriKind.Relative));
-            profile_dota2.ToolTip = "Dota 2 Settings";
-            profile_dota2.Margin = new Thickness(0, 5, 0, 0);
-            profile_dota2.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_dota2);
+            foreach(KeyValuePair<string, ProfileManager> kvp in Global.Configuration.ApplicationProfiles)
+            {
+                ProfileManager profile = kvp.Value;
+                ImageSource icon = profile.GetIcon();
+                UserControl control = profile.GetUserControl();
 
-            Image profile_csgo = new Image();
-            profile_csgo.Tag = csgo_control;
-            profile_csgo.Source = new BitmapImage(new Uri(@"Resources/csgo_64x64.png", UriKind.Relative));
-            profile_csgo.ToolTip = "CS:GO Settings";
-            profile_csgo.Margin = new Thickness(0, 5, 0, 0);
-            profile_csgo.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_csgo);
-
-            Image profile_gta5 = new Image();
-            profile_gta5.Tag = gta5_control;
-            profile_gta5.Source = new BitmapImage(new Uri(@"Resources/gta5_64x64.png", UriKind.Relative));
-            profile_gta5.ToolTip = "GTA 5 Settings";
-            profile_gta5.Margin = new Thickness(0, 5, 0, 0);
-            profile_gta5.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_gta5);
-
-            Image profile_rocketleague = new Image();
-            profile_rocketleague.Tag = rocketleague_control;
-            profile_rocketleague.Source = new BitmapImage(new Uri(@"Resources/rocketleague_256x256.png", UriKind.Relative));
-            profile_rocketleague.ToolTip = "Rocket League Settings";
-            profile_rocketleague.Margin = new Thickness(0, 5, 0, 0);
-            profile_rocketleague.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_rocketleague);
-
-            Image profile_overwatch = new Image();
-            profile_overwatch.Tag = overwatch_control;
-            profile_overwatch.Source = new BitmapImage(new Uri(@"Resources/overwatch_icon.png", UriKind.Relative));
-            profile_overwatch.ToolTip = "Overwatch Settings";
-            profile_overwatch.Margin = new Thickness(0, 5, 0, 0);
-            profile_overwatch.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_overwatch);
-
-            Image profile_payday2 = new Image();
-            profile_payday2.Tag = payday2_control;
-            profile_payday2.Source = new BitmapImage(new Uri(@"Resources/pd2_64x64.png", UriKind.Relative));
-            profile_payday2.ToolTip = "Payday 2 Settings";
-            profile_payday2.Margin = new Thickness(0, 5, 0, 0);
-            profile_payday2.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_payday2);
-
-            Image profile_thedivision = new Image();
-            profile_thedivision.Tag = division_control;
-            profile_thedivision.Source = new BitmapImage(new Uri(@"Resources/division_64x64.png", UriKind.Relative));
-            profile_thedivision.ToolTip = "The Division Settings";
-            profile_thedivision.Margin = new Thickness(0, 5, 0, 0);
-            profile_thedivision.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_thedivision);
-
-            Image profile_leagueoflegends = new Image();
-            profile_leagueoflegends.Tag = lol_control;
-            profile_leagueoflegends.Source = new BitmapImage(new Uri(@"Resources/leagueoflegends_48x48.png", UriKind.Relative));
-            profile_leagueoflegends.ToolTip = "League of Legends Settings";
-            profile_leagueoflegends.Margin = new Thickness(0, 5, 0, 0);
-            profile_leagueoflegends.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_leagueoflegends);
-
-            Image profile_hotline = new Image();
-            profile_hotline.Tag = hotline_control;
-            profile_hotline.Source = new BitmapImage(new Uri(@"Resources/hotline_32x32.png", UriKind.Relative));
-            profile_hotline.ToolTip = "Hotline Miami Settings";
-            profile_hotline.Margin = new Thickness(0, 5, 0, 0);
-            profile_hotline.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_hotline);
-
-            Image profile_talosprinciple = new Image();
-            profile_talosprinciple.Tag = talosprinciple_control;
-            profile_talosprinciple.Source = new BitmapImage(new Uri(@"Resources/talosprinciple_64x64.png", UriKind.Relative));
-            profile_talosprinciple.ToolTip = "The Talos Principle Settings";
-            profile_talosprinciple.Margin = new Thickness(0, 5, 0, 0);
-            profile_talosprinciple.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_talosprinciple);
+                if (icon != null && control != null)
+                {
+                    Image profile_image = new Image();
+                    profile_image.Tag = control;
+                    profile_image.Source = icon;
+                    profile_image.ToolTip = profile.Name + " Settings";
+                    profile_image.Margin = new Thickness(0, 5, 0, 0);
+                    profile_image.MouseDown += ProfileImage_MouseDown;
+                    this.profiles_stack.Children.Add(profile_image);
+                }
+            }
 
             //Populate with added profiles
             foreach (KeyValuePair<string, Profiles.Generic_Application.GenericApplicationSettings> kvp in Global.Configuration.additional_profiles)
@@ -604,17 +519,6 @@ namespace Aurora
 
                 this.content_grid.Children.Clear();
                 this.content_grid.Children.Add(tagged_control);
-
-                if (tagged_control is Profiles.Dota_2.Control_Dota2)
-                    current_color = dota2_color_scheme;
-                else if (tagged_control is Profiles.CSGO.Control_CSGO)
-                    current_color = csgo_color_scheme;
-                else if (tagged_control is Profiles.GTA5.Control_GTA5)
-                    current_color = gta5_color_scheme;
-                else if (tagged_control is Profiles.RocketLeague.Control_RocketLeague)
-                    current_color = rocketleague_color_scheme;
-                else
-                    current_color = desktop_color_scheme;
 
                 var bitmap = (BitmapSource)(sender as Image).Source;
                 var color = GetAverageColor(bitmap);

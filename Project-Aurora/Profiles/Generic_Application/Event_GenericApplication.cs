@@ -8,6 +8,7 @@ using Aurora.Profiles;
 using Aurora.Settings;
 using System.Drawing;
 using System.Windows.Forms;
+using Aurora.Profiles.Desktop;
 
 namespace Aurora.Profiles.Generic_Application
 {
@@ -38,8 +39,8 @@ namespace Aurora.Profiles.Generic_Application
 
             if (Global.Configuration.additional_profiles.ContainsKey(profile_key))
             {
-                if (!(Global.Configuration.desktop_settings.nighttime_enabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.desktop_settings.nighttime_start_hour, Global.Configuration.desktop_settings.nighttime_start_minute, Global.Configuration.desktop_settings.nighttime_end_hour, Global.Configuration.desktop_settings.nighttime_end_minute))
+                if (!((Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_enabled &&
+                    Utils.Time.IsCurrentTimeBetween((Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_start_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_start_minute, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_end_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_end_minute))
                     )
                 {
                     zones = Global.Configuration.additional_profiles[profile_key].lighting_areas_day.ToArray();

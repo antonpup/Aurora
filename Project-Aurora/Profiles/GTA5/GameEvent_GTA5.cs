@@ -39,73 +39,73 @@ namespace Aurora.Profiles.GTA5
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            if (Global.Configuration.gta5_settings.bg_color_enabled)
+            if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_color_enabled)
             {
 
                 EffectLayer bg_layer = new EffectLayer("GTA 5 - Background");
 
-                Color bg_color = Global.Configuration.gta5_settings.bg_ambient;
+                Color bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_ambient;
 
                 switch (curr_state)
                 {
                     case PlayerState.PlayingSP_Trevor:
-                        bg_color = Global.Configuration.gta5_settings.bg_trevor;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_trevor;
                         break;
                     case PlayerState.PlayingSP_Franklin:
-                        bg_color = Global.Configuration.gta5_settings.bg_franklin;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_franklin;
                         break;
                     case PlayerState.PlayingSP_Michael:
-                        bg_color = Global.Configuration.gta5_settings.bg_michael;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_michael;
                         break;
                     case PlayerState.PlayingSP_Chop:
-                        bg_color = Global.Configuration.gta5_settings.bg_chop;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_chop;
                         break;
                     case PlayerState.PlayingMP:
-                        bg_color = Global.Configuration.gta5_settings.bg_online;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_online;
                         break;
                     case PlayerState.PlayingMP_Mission:
-                        bg_color = Global.Configuration.gta5_settings.bg_online_mission;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_online_mission;
                         break;
                     case PlayerState.PlayingMP_HeistFinale:
-                        bg_color = Global.Configuration.gta5_settings.bg_online_heistfinale;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_online_heistfinale;
                         break;
                     case PlayerState.PlayingMP_Spectator:
-                        bg_color = Global.Configuration.gta5_settings.bg_online_spectator;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_online_spectator;
                         break;
                     case PlayerState.PlayingRace_Gold:
-                        bg_color = Global.Configuration.gta5_settings.bg_race_gold;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_race_gold;
                         break;
                     case PlayerState.PlayingRace_Silver:
-                        bg_color = Global.Configuration.gta5_settings.bg_race_silver;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_race_silver;
                         break;
                     case PlayerState.PlayingRace_Bronze:
-                        bg_color = Global.Configuration.gta5_settings.bg_race_bronze;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_race_bronze;
                         break;
                     default:
-                        bg_color = Global.Configuration.gta5_settings.bg_ambient;
+                        bg_color = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_ambient;
                         break;
                 }
 
                 bg_layer.Fill(bg_color);
 
-                if (Global.Configuration.gta5_settings.bg_peripheral_use)
+                if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_peripheral_use)
                     bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
 
                 layers.Enqueue(bg_layer);
             }
 
-            if (Global.Configuration.gta5_settings.siren_enabled && have_cops)
+            if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_enabled && have_cops)
             {
                 EffectLayer sirens_layer = new EffectLayer("GTA 5 - Police Sirens");
 
-                Color lefts = Global.Configuration.gta5_settings.left_siren_color;
-                Color rights = Global.Configuration.gta5_settings.right_siren_color;
+                Color lefts = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).left_siren_color;
+                Color rights = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).right_siren_color;
 
-                KeySequence left_siren_ks = Global.Configuration.gta5_settings.left_siren_sequence;
-                KeySequence right_siren_ks = Global.Configuration.gta5_settings.right_siren_sequence;
+                KeySequence left_siren_ks = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).left_siren_sequence;
+                KeySequence right_siren_ks = (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).right_siren_sequence;
 
                 //Switch sirens
-                switch (Global.Configuration.gta5_settings.siren_type)
+                switch ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_type)
                 {
                     case GTA5_PoliceEffects.Alt_Full:
                         switch (siren_keyframe % 2)
@@ -119,7 +119,7 @@ namespace Aurora.Profiles.GTA5
                         }
                         siren_keyframe = siren_keyframe % 2;
 
-                        if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                        if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                             sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
                         break;
                     case GTA5_PoliceEffects.Alt_Half:
@@ -129,14 +129,14 @@ namespace Aurora.Profiles.GTA5
                                 rights = lefts;
                                 lefts = Color.Black;
 
-                                if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                                     sirens_layer.Set(Devices.DeviceKeys.Peripheral, rights);
                                 break;
                             default:
                                 lefts = rights;
                                 rights = Color.Black;
 
-                                if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                                     sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
                                 break;
                         }
@@ -158,7 +158,7 @@ namespace Aurora.Profiles.GTA5
                         }
                         siren_keyframe = siren_keyframe % 4;
 
-                        if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                        if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                             sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
                         break;
                     case GTA5_PoliceEffects.Alt_Half_Blink:
@@ -168,35 +168,35 @@ namespace Aurora.Profiles.GTA5
                                 rights = lefts;
                                 lefts = Color.Black;
 
-                                if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                                     sirens_layer.Set(Devices.DeviceKeys.Peripheral, rights);
                                 break;
                             case 4:
                                 rights = lefts;
                                 lefts = Color.Black;
 
-                                if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                                     sirens_layer.Set(Devices.DeviceKeys.Peripheral, rights);
                                 break;
                             case 2:
                                 lefts = rights;
                                 rights = Color.Black;
 
-                                if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                                     sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
                                 break;
                             case 0:
                                 lefts = rights;
                                 rights = Color.Black;
 
-                                if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                                     sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
                                 break;
                             default:
                                 rights = Color.Black;
                                 lefts = Color.Black;
 
-                                if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                                     sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
                                 break;
                         }
@@ -215,7 +215,7 @@ namespace Aurora.Profiles.GTA5
                         }
                         siren_keyframe = siren_keyframe % 2;
 
-                        if (Global.Configuration.gta5_settings.siren_peripheral_use)
+                        if ((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_peripheral_use)
                             sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
                         break;
                 }
@@ -228,7 +228,7 @@ namespace Aurora.Profiles.GTA5
 
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("GTA 5 - Color Zones");
-            cz_layer.DrawColorZones(Global.Configuration.gta5_settings.lighting_areas.ToArray());
+            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
             EffectLayer debug_layer = new EffectLayer("GTA 5 - Debug");
@@ -284,7 +284,7 @@ namespace Aurora.Profiles.GTA5
 
         public bool IsEnabled()
         {
-            return Global.Configuration.gta5_settings.isEnabled;
+            return (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).isEnabled;
         }
     }
 }

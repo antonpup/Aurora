@@ -11,7 +11,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
 
         public bool IsEnabled()
         {
-            return Global.Configuration.talosprinciple_settings.isEnabled;
+            return (Global.Configuration.ApplicationProfiles["Talos"].Settings as TalosPrincipleSettings).isEnabled;
         }
 
         public void UpdateLights(EffectFrame frame)
@@ -24,7 +24,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
 
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("Talos - Color Zones");
-            cz_layer.DrawColorZones(Global.Configuration.talosprinciple_settings.lighting_areas.ToArray());
+            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["Talos"].Settings as TalosPrincipleSettings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
             frame.SetLayers(layers.ToArray());

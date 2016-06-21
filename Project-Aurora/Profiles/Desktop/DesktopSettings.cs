@@ -37,10 +37,8 @@ namespace Aurora.Profiles.Desktop
         RainFall = 6,
     }
 
-    public class DesktopSettings
+    public class DesktopSettings : ProfileSettings
     {
-        public bool enabled;
-
         public bool time_based_dimming_enabled;
         public bool time_based_dimming_affect_games;
         public int time_based_dimming_start_hour;
@@ -106,7 +104,7 @@ namespace Aurora.Profiles.Desktop
 
         public DesktopSettings()
         {
-            enabled = true;
+            isEnabled = true;
 
             time_based_dimming_enabled = false;
             time_based_dimming_affect_games = false;

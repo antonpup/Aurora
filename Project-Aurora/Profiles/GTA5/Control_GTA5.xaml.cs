@@ -31,32 +31,34 @@ namespace Aurora.Profiles.GTA5
         {
             InitializeComponent();
 
-            this.game_enabled.IsChecked = Global.Configuration.gta5_settings.isEnabled;
+            GTA5Settings settings = Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings;
 
-            this.background_enabled.IsChecked = Global.Configuration.gta5_settings.bg_color_enabled;
-            this.background_peripheral_use.IsChecked = Global.Configuration.gta5_settings.bg_peripheral_use;
-            this.bg_ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_ambient);
-            this.bg_franklin_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_franklin);
-            this.bg_michael_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_michael);
-            this.bg_trevor_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_trevor);
-            this.bg_chop_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_chop);
-            this.bg_online_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_online);
-            this.bg_online_mission_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_online_mission);
-            this.bg_online_heistfinale_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_online_heistfinale);
-            this.bg_online_spectator_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_online_spectator);
-            this.bg_race_gold_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_race_gold);
-            this.bg_race_silver_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_race_silver);
-            this.bg_race_bronze_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.bg_race_bronze);
+            this.game_enabled.IsChecked = settings.isEnabled;
 
-            this.siren_enabled.IsChecked = Global.Configuration.gta5_settings.siren_enabled;
-            this.left_siren_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.left_siren_color);
-            this.right_siren_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.gta5_settings.right_siren_color);
-            this.siren_effect_type.SelectedIndex = (int)Global.Configuration.gta5_settings.siren_type;
+            this.background_enabled.IsChecked = settings.bg_color_enabled;
+            this.background_peripheral_use.IsChecked = settings.bg_peripheral_use;
+            this.bg_ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_ambient);
+            this.bg_franklin_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_franklin);
+            this.bg_michael_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_michael);
+            this.bg_trevor_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_trevor);
+            this.bg_chop_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_chop);
+            this.bg_online_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_online);
+            this.bg_online_mission_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_online_mission);
+            this.bg_online_heistfinale_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_online_heistfinale);
+            this.bg_online_spectator_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_online_spectator);
+            this.bg_race_gold_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_race_gold);
+            this.bg_race_silver_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_race_silver);
+            this.bg_race_bronze_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_race_bronze);
 
-            this.siren_left_keysequence.Sequence = Global.Configuration.gta5_settings.left_siren_sequence;
-            this.siren_right_keysequence.Sequence = Global.Configuration.gta5_settings.right_siren_sequence;
+            this.siren_enabled.IsChecked = settings.siren_enabled;
+            this.left_siren_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.left_siren_color);
+            this.right_siren_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.right_siren_color);
+            this.siren_effect_type.SelectedIndex = (int)settings.siren_type;
 
-            this.cz.ColorZonesList = Global.Configuration.gta5_settings.lighting_areas;
+            this.siren_left_keysequence.Sequence = settings.left_siren_sequence;
+            this.siren_right_keysequence.Sequence = settings.right_siren_sequence;
+
+            this.cz.ColorZonesList = settings.lighting_areas;
 
 
             preview_wantedlevel_timer = new Timer(1000);
@@ -91,7 +93,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                Global.Configuration.gta5_settings.bg_color_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_color_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -100,7 +102,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                Global.Configuration.gta5_settings.bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -109,7 +111,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_ambient_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_ambient = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_ambient_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_ambient = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_ambient_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -118,7 +120,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_franklin_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_franklin = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_franklin_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_franklin = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_franklin_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -127,7 +129,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_michael_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_michael = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_michael_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_michael = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_michael_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -136,7 +138,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_trevor_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_trevor = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_trevor_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_trevor = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_trevor_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -145,7 +147,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_chop_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_chop = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_chop_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_chop = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_chop_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -154,7 +156,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_online_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_online = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_online = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -163,7 +165,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_online_mission_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_online_mission = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_mission_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_online_mission = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_mission_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -172,7 +174,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_online_heistfinale_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_online_heistfinale = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_heistfinale_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_online_heistfinale = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_heistfinale_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -181,7 +183,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_online_spectator_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_online_spectator = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_spectator_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_online_spectator = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_spectator_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -190,7 +192,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_race_gold_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_race_gold = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_gold_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_race_gold = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_gold_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -199,7 +201,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_race_silver_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_race_silver = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_silver_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_race_silver = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_silver_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -208,7 +210,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.bg_race_bronze_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.bg_race_bronze = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_bronze_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).bg_race_bronze = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_bronze_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -217,7 +219,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                Global.Configuration.gta5_settings.siren_enabled = (this.siren_enabled.IsChecked.HasValue) ? this.siren_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_enabled = (this.siren_enabled.IsChecked.HasValue) ? this.siren_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -226,7 +228,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.left_siren_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.left_siren_color = Utils.ColorUtils.MediaColorToDrawingColor(this.left_siren_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).left_siren_color = Utils.ColorUtils.MediaColorToDrawingColor(this.left_siren_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -235,7 +237,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded && this.right_siren_color_colorpicker.SelectedColor.HasValue)
             {
-                Global.Configuration.gta5_settings.right_siren_color = Utils.ColorUtils.MediaColorToDrawingColor(this.right_siren_color_colorpicker.SelectedColor.Value);
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).right_siren_color = Utils.ColorUtils.MediaColorToDrawingColor(this.right_siren_color_colorpicker.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -244,7 +246,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                Global.Configuration.gta5_settings.siren_type = (GTA5_PoliceEffects)Enum.Parse(typeof(GTA5_PoliceEffects), this.siren_effect_type.SelectedIndex.ToString());
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).siren_type = (GTA5_PoliceEffects)Enum.Parse(typeof(GTA5_PoliceEffects), this.siren_effect_type.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -253,7 +255,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                Global.Configuration.gta5_settings.left_siren_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).left_siren_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -262,7 +264,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                Global.Configuration.gta5_settings.right_siren_sequence = (sender as Controls.KeySequence).Sequence;
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).right_siren_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -271,7 +273,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                Global.Configuration.gta5_settings.lighting_areas = (sender as ColorZones).ColorZonesList;
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -307,7 +309,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                Global.Configuration.gta5_settings.isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }

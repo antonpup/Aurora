@@ -98,7 +98,7 @@ namespace Aurora.Profiles.RocketLeague
 
         public bool IsEnabled()
         {
-            return Global.Configuration.rocketleague_settings.isEnabled && isInitialized;
+            return (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).isEnabled && isInitialized;
         }
 
         public void UpdateLights(EffectFrame frame)
@@ -121,24 +121,24 @@ namespace Aurora.Profiles.RocketLeague
             }
 
 
-            if (Global.Configuration.rocketleague_settings.bg_enabled)
+            if ((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_enabled)
             {
                 EffectLayer bg_layer = new EffectLayer("Rocket League - Background");
 
-                if (GameEvent_RocketLeague.team == 1 && Global.Configuration.rocketleague_settings.bg_use_team_color)
+                if (GameEvent_RocketLeague.team == 1 && (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_use_team_color)
                 {
-                    bg_layer.Fill(Global.Configuration.rocketleague_settings.bg_team_1);
+                    bg_layer.Fill((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_team_1);
                 }
-                else if (GameEvent_RocketLeague.team == 0 && Global.Configuration.rocketleague_settings.bg_use_team_color)
+                else if (GameEvent_RocketLeague.team == 0 && (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_use_team_color)
                 {
-                    bg_layer.Fill(Global.Configuration.rocketleague_settings.bg_team_2);
+                    bg_layer.Fill((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_team_2);
                 }
                 else
                 {
-                    bg_layer.Fill(Global.Configuration.rocketleague_settings.bg_ambient_color);
+                    bg_layer.Fill((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_ambient_color);
                 }
 
-                if (Global.Configuration.rocketleague_settings.bg_show_team_score_split)
+                if ((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_show_team_score_split)
                 {
 
                     if (team1_score != 0 || team2_score != 0)
@@ -153,10 +153,10 @@ namespace Aurora.Profiles.RocketLeague
                         Color.Red, Color.Red);
                         Color[] colors = new Color[]
                         {
-                                Global.Configuration.rocketleague_settings.bg_team_1, //Orange
-                                Global.Configuration.rocketleague_settings.bg_team_1, //Orange "Line"
-                                Global.Configuration.rocketleague_settings.bg_team_2, //Blue "Line"
-                                Global.Configuration.rocketleague_settings.bg_team_2  //Blue
+                                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_team_1, //Orange
+                                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_team_1, //Orange "Line"
+                                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_team_2, //Blue "Line"
+                                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_team_2  //Blue
                         };
                         int num_colors = colors.Length;
                         float[] blend_positions = new float[num_colors];
@@ -196,18 +196,18 @@ namespace Aurora.Profiles.RocketLeague
                 layers.Enqueue(bg_layer);
             }
 
-            if (Global.Configuration.rocketleague_settings.boost_enabled)
+            if ((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_enabled)
             {
                 EffectLayer boost_layer = new EffectLayer("Rocket League - Boost Indicator");
 
                 double percentOccupied = ((double)boost_amout / (double)3.0);
 
-                ColorSpectrum boost_spec = new ColorSpectrum(Global.Configuration.rocketleague_settings.boost_low, Global.Configuration.rocketleague_settings.boost_high);
-                boost_spec.SetColorAt(0.75f, Global.Configuration.rocketleague_settings.boost_mid);
+                ColorSpectrum boost_spec = new ColorSpectrum((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_low, (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_high);
+                boost_spec.SetColorAt(0.75f, (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_mid);
 
-                boost_layer.PercentEffect(boost_spec, Global.Configuration.rocketleague_settings.boost_sequence, percentOccupied, 1.0D, Global.Configuration.desktop_settings.ram_usage_effect_type);
+                boost_layer.PercentEffect(boost_spec, (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_sequence, percentOccupied, 1.0D, PercentEffectType.Progressive_Gradual);
 
-                if (Global.Configuration.rocketleague_settings.boost_peripheral_use)
+                if ((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_peripheral_use)
                     boost_layer.Set(Devices.DeviceKeys.Peripheral, boost_spec.GetColorAt((float)Math.Round(percentOccupied, 1)));
 
                 layers.Enqueue(boost_layer);
@@ -215,7 +215,7 @@ namespace Aurora.Profiles.RocketLeague
 
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("Rocket League - Color Zones");
-            cz_layer.DrawColorZones(Global.Configuration.rocketleague_settings.lighting_areas.ToArray());
+            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
             frame.SetLayers(layers.ToArray());

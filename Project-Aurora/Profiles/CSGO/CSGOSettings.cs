@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.CSGO
 {
-    public class CSGOSettings
+    public class CSGOSettings : ProfileSettings
     {
         //General
         public bool first_time_installed;
-        public bool isEnabled;
 
         //Effects
         //// Background

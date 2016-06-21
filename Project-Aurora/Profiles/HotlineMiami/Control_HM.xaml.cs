@@ -16,15 +16,17 @@ namespace Aurora.Profiles.HotlineMiami
         {
             InitializeComponent();
 
+            HMSettings settings = Global.Configuration.ApplicationProfiles["Hotline"].Settings as HMSettings;
+
             //Apply LightFX Wrapper, if needed.
-            if (!Global.Configuration.hotlinemiami_settings.first_time_installed)
+            if (!settings.first_time_installed)
             {
                 InstallWrapper();
-                Global.Configuration.hotlinemiami_settings.first_time_installed = true;
+                settings.first_time_installed = true;
             }
 
-            this.game_enabled.IsChecked = Global.Configuration.hotlinemiami_settings.isEnabled;
-            this.cz.ColorZonesList = Global.Configuration.hotlinemiami_settings.lighting_areas;
+            this.game_enabled.IsChecked = settings.isEnabled;
+            this.cz.ColorZonesList = settings.lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -61,7 +63,7 @@ namespace Aurora.Profiles.HotlineMiami
         {
             if (IsLoaded)
             {
-                Global.Configuration.hotlinemiami_settings.isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (Global.Configuration.ApplicationProfiles["Hotline"].Settings as HMSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -70,7 +72,7 @@ namespace Aurora.Profiles.HotlineMiami
         {
             if (IsLoaded)
             {
-                Global.Configuration.hotlinemiami_settings.lighting_areas = (sender as ColorZones).ColorZonesList;
+                (Global.Configuration.ApplicationProfiles["Hotline"].Settings as HMSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
                 ConfigManager.Save(Global.Configuration);
             }
         }
