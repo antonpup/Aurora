@@ -39,8 +39,8 @@ namespace Aurora.Profiles.Generic_Application
 
             if (Global.Configuration.additional_profiles.ContainsKey(profile_key))
             {
-                if (!((Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_enabled &&
-                    Utils.Time.IsCurrentTimeBetween((Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_start_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_start_minute, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_end_hour, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).nighttime_end_minute))
+                if (!(Global.Configuration.nighttime_enabled &&
+                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute))
                     )
                 {
                     zones = Global.Configuration.additional_profiles[profile_key].lighting_areas_day.ToArray();

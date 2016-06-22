@@ -57,7 +57,7 @@
             <DataTemplate x:Key="PD2_GameStateTypeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource PD2_GameStateTypeToStringVC}}" />
             </DataTemplate>
-            
+
             <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
             <DataTemplate x:Key="DeviceKeys">
                 <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
@@ -73,6 +73,7 @@
                     <Button x:Name="get_hook_button" Content="Get BLT Hook" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" Click="get_hook_button_Click"/>
                     <Button x:Name="install_mod_button" Content="Install GSI for Payday 2" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Click="install_mod_button_Click"/>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Payday 2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                    <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Preview">

@@ -5,7 +5,6 @@ using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.GTA5;
 using Aurora.Profiles.HotlineMiami;
 using Aurora.Profiles.LeagueOfLegends;
-using Aurora.Profiles.Logitech_Wrapper;
 using Aurora.Profiles.Overlays;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Profiles.Overwatch;
@@ -13,18 +12,13 @@ using Aurora.Profiles.Payday_2;
 using Aurora.Profiles.RocketLeague;
 using Aurora.Profiles.TheDivision;
 using Aurora.Profiles.TheTalosPrinciple;
-using LedCSharp;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings
 {
@@ -36,6 +30,24 @@ namespace Aurora.Settings
         Progressive = 1,
         [Description("Progressive (Gradual)")]
         Progressive_Gradual = 2
+    }
+
+    public enum IdleEffects
+    {
+        [Description("None")]
+        None = 0,
+        [Description("Dim")]
+        Dim = 1,
+        [Description("Color Breathing")]
+        ColorBreathing = 2,
+        [Description("Rainbow Shift (Horizontal)")]
+        RainbowShift_Horizontal = 3,
+        [Description("Rainbow Shift (Vertical)")]
+        RainbowShift_Vertical = 4,
+        [Description("Star Fall")]
+        StarFall = 5,
+        [Description("Rain Fall")]
+        RainFall = 6,
     }
 
     public enum LayerEffects
@@ -136,9 +148,32 @@ namespace Aurora.Settings
         public HashSet<String> excluded_programs;
         public Dictionary<String, GenericApplicationSettings> additional_profiles;
 
+        //Blackout and Night theme
+        public bool time_based_dimming_enabled;
+        public bool time_based_dimming_affect_games;
+        public int time_based_dimming_start_hour;
+        public int time_based_dimming_start_minute;
+        public int time_based_dimming_end_hour;
+        public int time_based_dimming_end_minute;
+
+        public bool nighttime_enabled;
+        public int nighttime_start_hour;
+        public int nighttime_start_minute;
+        public int nighttime_end_hour;
+        public int nighttime_end_minute;
+
+        // Idle Effects
+        public IdleEffects idle_type;
+        public int idle_delay;
+        public float idle_speed;
+        public Color idle_effect_primary_color;
+        public Color idle_effect_secondary_color;
+        public int idle_amount;
+        public float idle_frequency;
+
         //Game Settings
         [JsonIgnoreAttribute]
-        public ProfileManager dekstop_profile = new DesktopProfileManager();
+        public ProfileManager desktop_profile = new DesktopProfileManager();
 
         [JsonIgnoreAttribute]
         public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
@@ -184,6 +219,29 @@ namespace Aurora.Settings
             excluded_programs = new HashSet<string>();
             additional_profiles = new Dictionary<string, GenericApplicationSettings>();
 
+            //Blackout and Night theme
+            time_based_dimming_enabled = false;
+            time_based_dimming_affect_games = false;
+            time_based_dimming_start_hour = 21;
+            time_based_dimming_start_minute = 0;
+            time_based_dimming_end_hour = 8;
+            time_based_dimming_end_minute = 0;
+
+            nighttime_enabled = true;
+            nighttime_start_hour = 20;
+            nighttime_start_minute = 0;
+            nighttime_end_hour = 7;
+            nighttime_end_minute = 0;
+
+            //// Idle Effects
+            idle_type = IdleEffects.None;
+            idle_delay = 5;
+            idle_speed = 1.0f;
+            idle_effect_primary_color = Color.FromArgb(0, 255, 0);
+            idle_effect_secondary_color = Color.FromArgb(0, 0, 0);
+            idle_amount = 5;
+            idle_frequency = 2.5f;
+
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
@@ -209,7 +267,7 @@ namespace Aurora.Settings
 
             Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-            config.dekstop_profile.LoadProfiles();
+            config.desktop_profile.LoadProfiles();
 
             foreach (var kvp in config.ApplicationProfiles)
                 kvp.Value.LoadProfiles();
@@ -258,7 +316,7 @@ namespace Aurora.Settings
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
 
-            configuration.dekstop_profile.SaveProfiles();
+            configuration.desktop_profile.SaveProfiles();
 
             foreach (var kvp in configuration.ApplicationProfiles)
                 kvp.Value.SaveProfiles();

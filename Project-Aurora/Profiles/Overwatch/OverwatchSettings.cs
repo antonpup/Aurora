@@ -11,9 +11,6 @@ namespace Aurora.Profiles.Overwatch
 {
     public class OverwatchSettings : ProfileSettings
     {
-        //General
-        public bool isEnabled;
-
         public OverwatchSettings()
         {
             //General

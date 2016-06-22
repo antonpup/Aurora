@@ -347,6 +347,9 @@
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Provider.cs" />
     <Compile Include="Profiles\GameState.cs" />
+    <Compile Include="Settings\Control_ProfileManager.xaml.cs">
+      <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Control_Settings.xaml.cs">
       <DependentUpon>Control_Settings.xaml</DependentUpon>
     </Compile>
@@ -542,6 +545,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Control_ProfileManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

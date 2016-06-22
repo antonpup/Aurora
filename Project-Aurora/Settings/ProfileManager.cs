@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -19,6 +20,8 @@ namespace Aurora.Settings
         public ProfileSettings Settings { get; set; }
         public GameEvent Event { get; set; }
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
+
+        public event EventHandler ProfileChanged;
 
         public ProfileManager(string name, string internal_name, string process_name, ProfileSettings settings, GameEvent game_event)
         {
@@ -56,6 +59,38 @@ namespace Aurora.Settings
             return null;
         }
 
+        public void SwitchToProfile(string profile_name)
+        {
+            if(Profiles.ContainsKey(profile_name))
+            {
+                Settings = Profiles[profile_name];
+
+                if (ProfileChanged != null)
+                    ProfileChanged(this, new EventArgs());
+            }
+        }
+
+        public void SaveDefaultProfile(string profile_name)
+        {
+            profile_name = GetValidFilename(profile_name);
+
+            if (Profiles.ContainsKey(profile_name))
+            {
+                MessageBoxResult result = MessageBox.Show("Profile already exists. Would you like to replace it?", "Aurora", MessageBoxButton.YesNo);
+
+                if(result != MessageBoxResult.Yes)
+                    return;
+
+                Profiles[profile_name] = Settings;
+            }
+            else
+            {
+                Profiles.Add(profile_name, Settings);
+            }
+
+            SaveProfiles();
+        }
+
         private string GetValidFilename(string filename)
         {
             foreach (char c in System.IO.Path.GetInvalidFileNameChars())
@@ -64,6 +99,11 @@ namespace Aurora.Settings
             }
 
             return filename;
+        }
+
+        public string GetProfileFolderPath()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", InternalName);
         }
 
         internal virtual ProfileSettings LoadProfile(string path)
@@ -88,7 +128,7 @@ namespace Aurora.Settings
 
         public void LoadProfiles()
         {
-            string profiles_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", InternalName);
+            string profiles_path = GetProfileFolderPath();
 
             if (Directory.Exists(profiles_path))
             {
@@ -102,7 +142,10 @@ namespace Aurora.Settings
                         if (profile_name.Equals("default"))
                             Settings = profile_settings;
                         else
-                            Profiles.Add(profile_name, profile_settings);
+                        {
+                            if(!Profiles.ContainsKey(profile_name))
+                                Profiles.Add(profile_name, profile_settings);
+                        }
                     }
                 }
             }
@@ -132,7 +175,7 @@ namespace Aurora.Settings
         {
             try
             {
-                string profiles_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", InternalName);
+                string profiles_path = GetProfileFolderPath();
 
                 if (!Directory.Exists(profiles_path))
                     Directory.CreateDirectory(profiles_path);

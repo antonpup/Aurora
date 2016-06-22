@@ -10,13 +10,20 @@ namespace Aurora.Profiles.Overwatch
     /// </summary>
     public partial class Control_Overwatch : UserControl
     {
+        private ProfileManager profile_manager;
+
         public Control_Overwatch()
         {
             InitializeComponent();
 
-            OverwatchSettings settings = Global.Configuration.ApplicationProfiles["Overwatch"].Settings as OverwatchSettings;
+            profile_manager = Global.Configuration.ApplicationProfiles["Overwatch"];
 
-            this.game_enabled.IsChecked = settings.isEnabled;
+            SetSettings();
+        }
+
+        private void SetSettings()
+        {
+            this.game_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).isEnabled;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -54,8 +61,8 @@ namespace Aurora.Profiles.Overwatch
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Overwatch"].Settings as OverwatchSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as OverwatchSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
     }

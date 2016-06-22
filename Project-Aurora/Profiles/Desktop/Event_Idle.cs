@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Desktop
 {
@@ -45,9 +43,9 @@ namespace Aurora.Profiles.Desktop
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
             EffectLayer layer;
 
-            effect_cfg.speed = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_speed;
+            effect_cfg.speed = Global.Configuration.idle_speed;
 
-            switch ((Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_type)
+            switch (Global.Configuration.idle_type)
             {
                 case IdleEffects.Dim:
                     layer = new EffectLayer("Idle - Dim");
@@ -60,12 +58,12 @@ namespace Aurora.Profiles.Desktop
                 case IdleEffects.ColorBreathing:
                     layer = new EffectLayer("Idle - Color Breathing");
 
-                    Color breathe_bg_color = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_secondary_color;
+                    Color breathe_bg_color = Global.Configuration.idle_effect_secondary_color;
                     layer.Fill(breathe_bg_color);
 
-                    float sine = (float)Math.Pow(Math.Sin((double)((currenttime % 10000L) / 10000.0f) * 2 * Math.PI * (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_speed), 2);
+                    float sine = (float)Math.Pow(Math.Sin((double)((currenttime % 10000L) / 10000.0f) * 2 * Math.PI * Global.Configuration.idle_speed), 2);
 
-                    layer.Fill(Color.FromArgb((byte)(sine * 255), (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_primary_color));
+                    layer.Fill(Color.FromArgb((byte)(sine * 255), Global.Configuration.idle_effect_primary_color));
 
                     layers.Enqueue(layer);
                     break;
@@ -84,7 +82,7 @@ namespace Aurora.Profiles.Desktop
 
                     if (nextstarset < currenttime)
                     {
-                        for (int x = 0; x < (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_amount; x++)
+                        for (int x = 0; x < Global.Configuration.idle_amount; x++)
                         {
                             Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
                             if (stars.ContainsKey(star))
@@ -93,17 +91,17 @@ namespace Aurora.Profiles.Desktop
                                 stars.Add(star, 1.0f);
                         }
 
-                        nextstarset = currenttime + (long)(1000L * (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_frequency);
+                        nextstarset = currenttime + (long)(1000L * Global.Configuration.idle_frequency);
                     }
 
-                    layer.Fill((Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_secondary_color);
+                    layer.Fill(Global.Configuration.idle_effect_secondary_color);
 
                     Devices.DeviceKeys[] stars_keys = stars.Keys.ToArray();
 
                     foreach (Devices.DeviceKeys star in stars_keys)
                     {
-                        layer.Set(star, Utils.ColorUtils.MultiplyColorByScalar((Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_primary_color, stars[star]));
-                        stars[star] -= getDeltaTime() * 0.05f * (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_speed;
+                        layer.Set(star, Utils.ColorUtils.MultiplyColorByScalar(Global.Configuration.idle_effect_primary_color, stars[star]));
+                        stars[star] -= getDeltaTime() * 0.05f * Global.Configuration.idle_speed;
                     }
 
                     layers.Enqueue(layer);
@@ -113,7 +111,7 @@ namespace Aurora.Profiles.Desktop
 
                     if (nextstarset < currenttime)
                     {
-                        for (int x = 0; x < (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_amount; x++)
+                        for (int x = 0; x < Global.Configuration.idle_amount; x++)
                         {
                             Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
                             if (raindrops.ContainsKey(star))
@@ -122,14 +120,14 @@ namespace Aurora.Profiles.Desktop
                                 raindrops.Add(star, 1.0f);
                         }
 
-                        nextstarset = currenttime + (long)(1000L * (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_frequency);
+                        nextstarset = currenttime + (long)(1000L * Global.Configuration.idle_frequency);
                     }
 
-                    layer.Fill((Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_secondary_color);
+                    layer.Fill(Global.Configuration.idle_effect_secondary_color);
 
                     Devices.DeviceKeys[] raindrops_keys = raindrops.Keys.ToArray();
 
-                    ColorSpectrum drop_spec = new ColorSpectrum((Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_primary_color, Color.FromArgb(0, (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_effect_primary_color));
+                    ColorSpectrum drop_spec = new ColorSpectrum(Global.Configuration.idle_effect_primary_color, Color.FromArgb(0, Global.Configuration.idle_effect_primary_color));
 
                     foreach (Devices.DeviceKeys raindrop in raindrops_keys)
                     {
@@ -144,7 +142,7 @@ namespace Aurora.Profiles.Desktop
                             2 * radius,
                             2 * radius);
 
-                        raindrops[raindrop] -= getDeltaTime() * 0.05f * (Global.Configuration.dekstop_profile.Settings as DesktopSettings).idle_speed;
+                        raindrops[raindrop] -= getDeltaTime() * 0.05f * Global.Configuration.idle_speed;
                     }
 
                     layers.Enqueue(layer);

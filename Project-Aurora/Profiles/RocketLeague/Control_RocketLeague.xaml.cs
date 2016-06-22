@@ -1,19 +1,9 @@
 ﻿using Aurora.Controls;
 using Aurora.Settings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Profiles.RocketLeague
@@ -23,43 +13,59 @@ namespace Aurora.Profiles.RocketLeague
     /// </summary>
     public partial class Control_RocketLeague : UserControl
     {
+        private ProfileManager profile_manager;
+
         public Control_RocketLeague()
         {
             InitializeComponent();
 
-            RocketLeagueSettings settings = Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings;
+            profile_manager = Global.Configuration.ApplicationProfiles["RocketLeague"];
 
-            this.game_enabled.IsChecked = settings.isEnabled;
+            SetSettings();
 
-            this.bg_enabled.IsChecked = settings.bg_enabled;
-            this.bg_ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor( settings.bg_ambient_color );
-            this.bg_use_team_colors.IsChecked = settings.bg_use_team_color;
-            this.bg_team1_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_team_1);
-            this.bg_team2_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.bg_team_2);
-            this.bg_show_team_score_split.IsChecked = settings.bg_show_team_score_split;
+            profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
+        }
 
-            this.boost_enabled.IsChecked = settings.boost_enabled;
-            this.boost_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.boost_low);
-            this.boost_med_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.boost_mid);
-            this.boost_high_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.boost_high);
-            this.boost_ks.Sequence = settings.boost_sequence;
-            this.boost_peripheral_use_enabled.IsChecked = settings.boost_peripheral_use;
+        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        {
+            SetSettings();
+        }
 
-            this.speed_enabled.IsChecked = settings.speed_enabled;
-            this.speed_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.speed_low);
-            this.speed_med_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.speed_mid);
-            this.speed_high_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(settings.speed_high);
-            this.speed_ks.Sequence = settings.speed_sequence;
+        private void SetSettings()
+        {
+            this.profilemanager.ProfileManager = profile_manager;
 
-            this.colorzones.ColorZonesList = settings.lighting_areas;
+            this.game_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).isEnabled;
+
+            this.bg_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).bg_enabled;
+            this.bg_ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).bg_ambient_color);
+            this.bg_use_team_colors.IsChecked = (profile_manager.Settings as RocketLeagueSettings).bg_use_team_color;
+            this.bg_team1_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).bg_team_1);
+            this.bg_team2_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).bg_team_2);
+            this.bg_show_team_score_split.IsChecked = (profile_manager.Settings as RocketLeagueSettings).bg_show_team_score_split;
+
+            this.boost_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).boost_enabled;
+            this.boost_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).boost_low);
+            this.boost_med_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).boost_mid);
+            this.boost_high_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).boost_high);
+            this.boost_ks.Sequence = (profile_manager.Settings as RocketLeagueSettings).boost_sequence;
+            this.boost_peripheral_use_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).boost_peripheral_use;
+
+            this.speed_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).speed_enabled;
+            this.speed_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).speed_low);
+            this.speed_med_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).speed_mid);
+            this.speed_high_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as RocketLeagueSettings).speed_high);
+            this.speed_ks.Sequence = (profile_manager.Settings as RocketLeagueSettings).speed_sequence;
+
+            this.colorzones.ColorZonesList = (profile_manager.Settings as RocketLeagueSettings).lighting_areas;
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -67,8 +73,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if(IsLoaded && sender is CheckBox)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_enabled = (sender as CheckBox).IsChecked.Value;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).bg_enabled = (sender as CheckBox).IsChecked.Value;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -76,8 +82,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if(IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_ambient_color = Utils.ColorUtils.MediaColorToDrawingColor( (sender as ColorPicker).SelectedColor.Value );
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).bg_ambient_color = Utils.ColorUtils.MediaColorToDrawingColor( (sender as ColorPicker).SelectedColor.Value );
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -85,8 +91,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is CheckBox)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_use_team_color = (sender as CheckBox).IsChecked.Value;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).bg_use_team_color = (sender as CheckBox).IsChecked.Value;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -94,8 +100,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_team_1 = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).bg_team_1 = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -103,8 +109,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_team_2 = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).bg_team_2 = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -112,8 +118,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is CheckBox)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_enabled = (sender as CheckBox).IsChecked.Value;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).boost_enabled = (sender as CheckBox).IsChecked.Value;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -121,8 +127,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_low = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).boost_low = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -130,8 +136,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_mid = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).boost_mid = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -139,8 +145,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_mid = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).boost_mid = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -148,8 +154,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is Controls.KeySequence)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).boost_sequence = (sender as Controls.KeySequence).Sequence;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -157,8 +163,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is CheckBox)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_peripheral_use = (sender as CheckBox).IsChecked.Value;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).boost_peripheral_use = (sender as CheckBox).IsChecked.Value;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -166,8 +172,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is CheckBox)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).speed_enabled = (sender as CheckBox).IsChecked.Value;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).speed_enabled = (sender as CheckBox).IsChecked.Value;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -175,8 +181,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).speed_low = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).speed_low = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -184,8 +190,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).speed_mid = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).speed_mid = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -193,8 +199,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).speed_high = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).speed_high = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -202,8 +208,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is Controls.KeySequence)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).speed_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).speed_sequence = (sender as Controls.KeySequence).Sequence;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -211,8 +217,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is ColorZones)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -220,8 +226,8 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is CheckBox)
             {
-                (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).bg_show_team_score_split = (sender as CheckBox).IsChecked.Value;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as RocketLeagueSettings).bg_show_team_score_split = (sender as CheckBox).IsChecked.Value;
+                profile_manager.SaveProfiles();
             }
         }
 

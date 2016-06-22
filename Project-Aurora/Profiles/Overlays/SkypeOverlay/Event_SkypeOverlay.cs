@@ -42,7 +42,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
 
             long time = Utils.Time.GetMillisecondsSinceEpoch();
 
-            if(Global.Configuration.skype_overlay_settings.mm_enabled)
+            if (Global.Configuration.skype_overlay_settings.mm_enabled)
             {
                 if (_missed_messages_count > 0)
                 {

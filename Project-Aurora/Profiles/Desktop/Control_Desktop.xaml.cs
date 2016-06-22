@@ -17,44 +17,58 @@ namespace Aurora.Profiles.Desktop
         {
             InitializeComponent();
 
-            this.cpu_usage_enabled.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_usage_enabled;
-            this.cpu_usage_used_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_used_color);
-            this.cpu_usage_free_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_free_color);
-            this.cpu_usage_free_transparent.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_free_color_transparent;
-            this.cpu_usage_effect_type.SelectedIndex = (int)(Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_usage_effect_type;
-            this.ks_cpu.Sequence = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_sequence;
+            SetSettings();
 
-            this.ram_usage_enabled.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_usage_enabled;
-            this.ram_usage_used_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_used_color);
-            this.ram_usage_free_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_free_color);
-            this.ram_usage_free_transparent.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_free_color_transparent;
-            this.ram_usage_effect_type.SelectedIndex = (int)(Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_usage_effect_type;
-            this.ks_ram.Sequence = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_sequence;
+            Global.Configuration.desktop_profile.ProfileChanged += Desktop_profile_ProfileChanged;
+        }
 
-            this.sc_assistant_enabled.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).shortcuts_assistant_enabled;
-            this.sc_assistant_ctrl_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).ctrl_key_color);
-            this.sc_assistant_ctrl_keys.Sequence = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ctrl_key_sequence;
-            this.sc_assistant_win_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).win_key_color);
-            this.sc_assistant_win_keys.Sequence = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).win_key_sequence;
-            this.sc_assistant_alt_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).alt_key_color);
-            this.sc_assistant_alt_keys.Sequence = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).alt_key_sequence;
+        private void Desktop_profile_ProfileChanged(object sender, EventArgs e)
+        {
+            SetSettings();
+        }
 
-            this.interactive_effects_usage_enabled.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_enabled;
-            this.interactive_effects_type.SelectedIndex = (int)(Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_type;
-            this.interactive_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_primary_color);
-            this.interactive_effects_random_primary_color_enabled.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color;
-            this.interactive_effects_random_secondary_color_enabled.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color;
+        private void SetSettings()
+        {
+            this.profilemanager.ProfileManager = Global.Configuration.desktop_profile;
 
-            this.interactive_effects_secondary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_secondary_color);
+            this.cpu_usage_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_usage_enabled;
+            this.cpu_usage_used_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_used_color);
+            this.cpu_usage_free_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_free_color);
+            this.cpu_usage_free_transparent.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_free_color_transparent;
+            this.cpu_usage_effect_type.SelectedIndex = (int)(Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_usage_effect_type;
+            this.ks_cpu.Sequence = (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_sequence;
 
-            this.interactive_effects_speed_label.Text = "x " + (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_speed;
-            this.interactive_effects_speed_slider.Value = (float)(Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_speed;
-            this.interactive_effects_width_label.Text = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_width + " px";
-            this.interactive_effects_width_slider.Value = (float)(Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_width;
+            this.ram_usage_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_usage_enabled;
+            this.ram_usage_used_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_used_color);
+            this.ram_usage_free_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_free_color);
+            this.ram_usage_free_transparent.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_free_color_transparent;
+            this.ram_usage_effect_type.SelectedIndex = (int)(Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_usage_effect_type;
+            this.ks_ram.Sequence = (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_sequence;
 
-            this.interactive_effects_mouse_interaction_enable.IsChecked = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_mouse_clicking;
+            this.sc_assistant_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_enabled;
+            this.sc_assistant_ctrl_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).ctrl_key_color);
+            this.sc_assistant_ctrl_keys.Sequence = (Global.Configuration.desktop_profile.Settings as DesktopSettings).ctrl_key_sequence;
+            this.sc_assistant_win_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).win_key_color);
+            this.sc_assistant_win_keys.Sequence = (Global.Configuration.desktop_profile.Settings as DesktopSettings).win_key_sequence;
+            this.sc_assistant_alt_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).alt_key_color);
+            this.sc_assistant_alt_keys.Sequence = (Global.Configuration.desktop_profile.Settings as DesktopSettings).alt_key_sequence;
 
-            this.desktop_cz.ColorZonesList = (Global.Configuration.dekstop_profile.Settings as DesktopSettings).lighting_areas;
+            this.interactive_effects_usage_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled;
+            this.interactive_effects_type.SelectedIndex = (int)(Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type;
+            this.interactive_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_primary_color);
+            this.interactive_effects_random_primary_color_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color;
+            this.interactive_effects_random_secondary_color_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color;
+
+            this.interactive_effects_secondary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_secondary_color);
+
+            this.interactive_effects_speed_label.Text = "x " + (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_speed;
+            this.interactive_effects_speed_slider.Value = (float)(Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_speed;
+            this.interactive_effects_width_label.Text = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width + " px";
+            this.interactive_effects_width_slider.Value = (float)(Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width;
+
+            this.interactive_effects_mouse_interaction_enable.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_mouse_clicking;
+
+            this.desktop_cz.ColorZonesList = (Global.Configuration.desktop_profile.Settings as DesktopSettings).lighting_areas;
 
         }
 
@@ -71,8 +85,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_usage_enabled = (this.cpu_usage_enabled.IsChecked.HasValue) ? this.cpu_usage_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_usage_enabled = (this.cpu_usage_enabled.IsChecked.HasValue) ? this.cpu_usage_enabled.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -80,8 +94,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.cpu_usage_used_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_used_color = Utils.ColorUtils.MediaColorToDrawingColor(this.cpu_usage_used_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_used_color = Utils.ColorUtils.MediaColorToDrawingColor(this.cpu_usage_used_colorpicker.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -89,8 +103,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.cpu_usage_free_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_free_color = Utils.ColorUtils.MediaColorToDrawingColor(this.cpu_usage_free_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_free_color = Utils.ColorUtils.MediaColorToDrawingColor(this.cpu_usage_free_colorpicker.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -98,19 +112,19 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_free_color_transparent = (this.cpu_usage_free_transparent.IsChecked.HasValue) ? this.cpu_usage_free_transparent.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_free_color_transparent = (this.cpu_usage_free_transparent.IsChecked.HasValue) ? this.cpu_usage_free_transparent.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
 
-            this.cpu_usage_free_colorpicker.IsEnabled = !(Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_free_color_transparent;
+            this.cpu_usage_free_colorpicker.IsEnabled = !(Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_free_color_transparent;
         }
 
         private void cpu_usage_effect_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_usage_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.cpu_usage_effect_type.SelectedIndex.ToString());
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_usage_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.cpu_usage_effect_type.SelectedIndex.ToString());
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -118,8 +132,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_usage_enabled = (this.ram_usage_enabled.IsChecked.HasValue) ? this.ram_usage_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_usage_enabled = (this.ram_usage_enabled.IsChecked.HasValue) ? this.ram_usage_enabled.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -127,8 +141,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.ram_usage_used_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_used_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ram_usage_used_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_used_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ram_usage_used_colorpicker.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -136,8 +150,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.ram_usage_free_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_free_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ram_usage_free_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_free_color = Utils.ColorUtils.MediaColorToDrawingColor(this.ram_usage_free_colorpicker.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -145,19 +159,19 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_free_color_transparent = (this.ram_usage_free_transparent.IsChecked.HasValue) ? this.ram_usage_free_transparent.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_free_color_transparent = (this.ram_usage_free_transparent.IsChecked.HasValue) ? this.ram_usage_free_transparent.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
 
-            this.ram_usage_free_colorpicker.IsEnabled = !(Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_free_color_transparent;
+            this.ram_usage_free_colorpicker.IsEnabled = !(Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_free_color_transparent;
         }
 
         private void ram_usage_effect_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_usage_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.ram_usage_effect_type.SelectedIndex.ToString());
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_usage_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.ram_usage_effect_type.SelectedIndex.ToString());
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -165,8 +179,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).shortcuts_assistant_enabled = (this.sc_assistant_enabled.IsChecked.HasValue) ? this.sc_assistant_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_enabled = (this.sc_assistant_enabled.IsChecked.HasValue) ? this.sc_assistant_enabled.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -174,8 +188,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.sc_assistant_ctrl_color.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ctrl_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_ctrl_color.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).ctrl_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_ctrl_color.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -183,8 +197,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ctrl_key_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).ctrl_key_sequence = (sender as Controls.KeySequence).Sequence;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -192,8 +206,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.sc_assistant_win_color.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).win_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_win_color.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).win_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_win_color.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -201,8 +215,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).win_key_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).win_key_sequence = (sender as Controls.KeySequence).Sequence;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -210,8 +224,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.sc_assistant_alt_color.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).alt_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_alt_color.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).alt_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_alt_color.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -219,8 +233,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).alt_key_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).alt_key_sequence = (sender as Controls.KeySequence).Sequence;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -228,8 +242,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_enabled = (this.interactive_effects_usage_enabled.IsChecked.HasValue) ? this.interactive_effects_usage_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled = (this.interactive_effects_usage_enabled.IsChecked.HasValue) ? this.interactive_effects_usage_enabled.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -237,8 +251,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_type = (InteractiveEffects)Enum.Parse(typeof(InteractiveEffects), this.interactive_effects_type.SelectedIndex.ToString());
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type = (InteractiveEffects)Enum.Parse(typeof(InteractiveEffects), this.interactive_effects_type.SelectedIndex.ToString());
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -246,8 +260,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.interactive_effects_primary_color_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_primary_color = Utils.ColorUtils.MediaColorToDrawingColor(this.interactive_effects_primary_color_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_primary_color = Utils.ColorUtils.MediaColorToDrawingColor(this.interactive_effects_primary_color_colorpicker.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -255,8 +269,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color = (this.interactive_effects_random_primary_color_enabled.IsChecked.HasValue) ? this.interactive_effects_random_primary_color_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color = (this.interactive_effects_random_primary_color_enabled.IsChecked.HasValue) ? this.interactive_effects_random_primary_color_enabled.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -264,8 +278,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded && this.interactive_effects_secondary_color_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_secondary_color = Utils.ColorUtils.MediaColorToDrawingColor(this.interactive_effects_secondary_color_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_secondary_color = Utils.ColorUtils.MediaColorToDrawingColor(this.interactive_effects_secondary_color_colorpicker.SelectedColor.Value);
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -273,8 +287,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color = (this.interactive_effects_random_secondary_color_enabled.IsChecked.HasValue) ? this.interactive_effects_random_secondary_color_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color = (this.interactive_effects_random_secondary_color_enabled.IsChecked.HasValue) ? this.interactive_effects_random_secondary_color_enabled.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -284,8 +298,8 @@ namespace Aurora.Profiles.Desktop
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_speed = (float)this.interactive_effects_speed_slider.Value;
-                    ConfigManager.Save(Global.Configuration);
+                    (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_speed = (float)this.interactive_effects_speed_slider.Value;
+                    Global.Configuration.desktop_profile.SaveProfiles();
                 }
 
                 if (this.interactive_effects_speed_label is TextBlock)
@@ -301,8 +315,8 @@ namespace Aurora.Profiles.Desktop
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effect_width = (int)this.interactive_effects_width_slider.Value;
-                    ConfigManager.Save(Global.Configuration);
+                    (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width = (int)this.interactive_effects_width_slider.Value;
+                    Global.Configuration.desktop_profile.SaveProfiles();
                 }
 
                 if (this.interactive_effects_width_label is TextBlock)
@@ -324,8 +338,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -333,8 +347,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).cpu_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_sequence = (sender as Controls.KeySequence).Sequence;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -342,8 +356,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).ram_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_sequence = (sender as Controls.KeySequence).Sequence;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
 
@@ -361,8 +375,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.dekstop_profile.Settings as DesktopSettings).interactive_effects_mouse_clicking = (this.interactive_effects_mouse_interaction_enable.IsChecked.HasValue) ? this.interactive_effects_mouse_interaction_enable.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_mouse_clicking = (this.interactive_effects_mouse_interaction_enable.IsChecked.HasValue) ? this.interactive_effects_mouse_interaction_enable.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
             }
         }
     }

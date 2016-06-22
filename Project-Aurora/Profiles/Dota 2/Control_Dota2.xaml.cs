@@ -1,21 +1,12 @@
 ﻿using Aurora.Controls;
 using Aurora.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Aurora.Devices;
 using Aurora.Settings;
 
@@ -26,6 +17,8 @@ namespace Aurora.Profiles.Dota_2
     /// </summary>
     public partial class Control_Dota2 : UserControl
     {
+        private ProfileManager profile_manager;
+
         private int respawn_time = 15;
         private Timer preview_respawn_timer;
         private int killstreak = 0;
@@ -34,94 +27,108 @@ namespace Aurora.Profiles.Dota_2
         {
             InitializeComponent();
 
-            Dota2Settings settings = Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings;
+            profile_manager = Global.Configuration.ApplicationProfiles["Dota 2"];
 
-            this.game_enabled.IsChecked = settings.isEnabled;
-
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.None);
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
-
-            this.background_enabled.IsChecked = settings.bg_team_enabled;
-            this.t_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.dire_color);
-            this.ct_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.radiant_color);
-            this.ambient_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.ambient_color);
-            this.background_peripheral_use.IsChecked = settings.bg_peripheral_use;
-            this.background_dim_enabled.IsChecked = settings.bg_enable_dimming;
-            this.background_dim_value.Text = settings.bg_dim_after + "s";
-            this.background_dim_aftertime.Value = settings.bg_dim_after;
-            this.background_enable_respawn_glow.IsChecked = settings.bg_respawn_glow;
-            this.respawn_glow_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_respawn_glow_color);
-            this.background_killstreaks_enabled.IsChecked = settings.bg_display_killstreaks;
-            this.background_killstreaks_lines_enabled.IsChecked = settings.bg_killstreaks_lines;
-            this.bg_killstreak_doublekill_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[2]);
-            this.bg_killstreak_killingspree_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[3]);
-            this.bg_killstreak_dominating_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[4]);
-            this.bg_killstreak_megakill_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[5]);
-            this.bg_killstreak_unstoppable_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[6]);
-            this.bg_killstreak_wickedsick_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[7]);
-            this.bg_killstreak_monsterkill_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[8]);
-            this.bg_killstreak_godlike_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[9]);
-            this.bg_killstreak_godlikeandon_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.bg_killstreakcolors[10]);
-
-            this.health_enabled.IsChecked = settings.health_enabled;
-            this.health_healthy_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.healthy_color);
-            this.health_hurt_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.hurt_color);
-            this.health_effect_type.SelectedIndex = (int)settings.health_effect_type;
-            this.hp_ks.Sequence = settings.health_sequence;
-
-            this.mana_enabled.IsChecked = settings.mana_enabled;
-            this.mana_hasmana_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.mana_color);
-            this.mana_nomana_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.nomana_color);
-            this.mana_effect_type.SelectedIndex = (int)settings.mana_effect_type;
-            this.mana_ks.Sequence = settings.mana_sequence;
-
-            this.mimic_respawn_timer_checkbox.IsChecked = settings.mimic_respawn_timer;
-            this.mimic_respawn_color_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.mimic_respawn_timer_color);
-            this.mimic_respawn_respawning_color_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.mimic_respawn_timer_respawning_color);
-
-
-            this.abilities_enabled.IsChecked = settings.abilitykeys_enabled;
-            this.abilities_canuse_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.ability_can_use_color);
-            this.abilities_cannotuse_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.ability_can_not_use_color);
-            UIUtils.SetSingleKey(this.ability_key1_textblock, settings.ability_keys, 0);
-            UIUtils.SetSingleKey(this.ability_key2_textblock, settings.ability_keys, 1);
-            UIUtils.SetSingleKey(this.ability_key3_textblock, settings.ability_keys, 2);
-            UIUtils.SetSingleKey(this.ability_key4_textblock, settings.ability_keys, 3);
-            UIUtils.SetSingleKey(this.ability_key5_textblock, settings.ability_keys, 4);
-            UIUtils.SetSingleKey(this.ability_key6_textblock, settings.ability_keys, 5);
-
-            this.items_enabled.IsChecked = settings.items_enabled;
-            this.items_use_item_color.IsChecked = settings.items_use_item_color;
-            this.item_color_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.items_color);
-            this.item_empty_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.items_empty_color);
-            this.item_no_charges_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.items_no_charges_color);
-            this.item_on_cooldown_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(settings.items_on_cooldown_color);
-            UIUtils.SetSingleKey(this.item_slot1_textblock, settings.items_keys, 0);
-            UIUtils.SetSingleKey(this.item_slot2_textblock, settings.items_keys, 1);
-            UIUtils.SetSingleKey(this.item_slot3_textblock, settings.items_keys, 2);
-            UIUtils.SetSingleKey(this.item_slot4_textblock, settings.items_keys, 3);
-            UIUtils.SetSingleKey(this.item_slot5_textblock, settings.items_keys, 4);
-            UIUtils.SetSingleKey(this.item_slot6_textblock, settings.items_keys, 5);
-            UIUtils.SetSingleKey(this.stash_slot1_textblock, settings.items_keys, 6);
-            UIUtils.SetSingleKey(this.stash_slot2_textblock, settings.items_keys, 7);
-            UIUtils.SetSingleKey(this.stash_slot3_textblock, settings.items_keys, 8);
-            UIUtils.SetSingleKey(this.stash_slot4_textblock, settings.items_keys, 9);
-            UIUtils.SetSingleKey(this.stash_slot5_textblock, settings.items_keys, 10);
-            UIUtils.SetSingleKey(this.stash_slot6_textblock, settings.items_keys, 11);
-
-            this.cz.ColorZonesList = settings.lighting_areas;
+            SetSettings();
 
             preview_respawn_timer = new Timer(1000);
             preview_respawn_timer.Elapsed += new ElapsedEventHandler(preview_respawn_timer_Tick);
 
             //Copy cfg file if needed
-            if (!settings.first_time_installed)
+            if (!(profile_manager.Settings as Dota2Settings).first_time_installed)
             {
                 InstallGSI();
-                settings.first_time_installed = true;
+                (profile_manager.Settings as Dota2Settings).first_time_installed = true;
             }
 
+            profile_manager.ProfileChanged += Control_Dota2_ProfileChanged;
+
+        }
+
+        private void Control_Dota2_ProfileChanged(object sender, EventArgs e)
+        {
+            SetSettings();
+        }
+
+        private void SetSettings()
+        {
+            this.profilemanager.ProfileManager = profile_manager;
+
+            this.game_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).isEnabled;
+
+            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.None);
+            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
+            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
+
+            this.background_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).bg_team_enabled;
+            this.t_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).dire_color);
+            this.ct_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).radiant_color);
+            this.ambient_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).ambient_color);
+            this.background_peripheral_use.IsChecked = (profile_manager.Settings as Dota2Settings).bg_peripheral_use;
+            this.background_dim_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).bg_enable_dimming;
+            this.background_dim_value.Text = (profile_manager.Settings as Dota2Settings).bg_dim_after + "s";
+            this.background_dim_aftertime.Value = (profile_manager.Settings as Dota2Settings).bg_dim_after;
+            this.background_enable_respawn_glow.IsChecked = (profile_manager.Settings as Dota2Settings).bg_respawn_glow;
+            this.respawn_glow_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_respawn_glow_color);
+            this.background_killstreaks_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).bg_display_killstreaks;
+            this.background_killstreaks_lines_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).bg_killstreaks_lines;
+            this.bg_killstreak_doublekill_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[2]);
+            this.bg_killstreak_killingspree_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[3]);
+            this.bg_killstreak_dominating_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[4]);
+            this.bg_killstreak_megakill_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[5]);
+            this.bg_killstreak_unstoppable_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[6]);
+            this.bg_killstreak_wickedsick_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[7]);
+            this.bg_killstreak_monsterkill_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[8]);
+            this.bg_killstreak_godlike_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[9]);
+            this.bg_killstreak_godlikeandon_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).bg_killstreakcolors[10]);
+
+            this.health_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).health_enabled;
+            this.health_healthy_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).healthy_color);
+            this.health_hurt_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).hurt_color);
+            this.health_effect_type.SelectedIndex = (int)(profile_manager.Settings as Dota2Settings).health_effect_type;
+            this.hp_ks.Sequence = (profile_manager.Settings as Dota2Settings).health_sequence;
+
+            this.mana_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).mana_enabled;
+            this.mana_hasmana_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).mana_color);
+            this.mana_nomana_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).nomana_color);
+            this.mana_effect_type.SelectedIndex = (int)(profile_manager.Settings as Dota2Settings).mana_effect_type;
+            this.mana_ks.Sequence = (profile_manager.Settings as Dota2Settings).mana_sequence;
+
+            this.mimic_respawn_timer_checkbox.IsChecked = (profile_manager.Settings as Dota2Settings).mimic_respawn_timer;
+            this.mimic_respawn_color_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).mimic_respawn_timer_color);
+            this.mimic_respawn_respawning_color_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).mimic_respawn_timer_respawning_color);
+
+
+            this.abilities_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).abilitykeys_enabled;
+            this.abilities_canuse_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).ability_can_use_color);
+            this.abilities_cannotuse_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).ability_can_not_use_color);
+            UIUtils.SetSingleKey(this.ability_key1_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 0);
+            UIUtils.SetSingleKey(this.ability_key2_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 1);
+            UIUtils.SetSingleKey(this.ability_key3_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 2);
+            UIUtils.SetSingleKey(this.ability_key4_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 3);
+            UIUtils.SetSingleKey(this.ability_key5_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 4);
+            UIUtils.SetSingleKey(this.ability_key6_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 5);
+
+            this.items_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).items_enabled;
+            this.items_use_item_color.IsChecked = (profile_manager.Settings as Dota2Settings).items_use_item_color;
+            this.item_color_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).items_color);
+            this.item_empty_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).items_empty_color);
+            this.item_no_charges_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).items_no_charges_color);
+            this.item_on_cooldown_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).items_on_cooldown_color);
+            UIUtils.SetSingleKey(this.item_slot1_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 0);
+            UIUtils.SetSingleKey(this.item_slot2_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 1);
+            UIUtils.SetSingleKey(this.item_slot3_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 2);
+            UIUtils.SetSingleKey(this.item_slot4_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 3);
+            UIUtils.SetSingleKey(this.item_slot5_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 4);
+            UIUtils.SetSingleKey(this.item_slot6_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 5);
+            UIUtils.SetSingleKey(this.stash_slot1_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 6);
+            UIUtils.SetSingleKey(this.stash_slot2_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 7);
+            UIUtils.SetSingleKey(this.stash_slot3_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 8);
+            UIUtils.SetSingleKey(this.stash_slot4_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 9);
+            UIUtils.SetSingleKey(this.stash_slot5_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 10);
+            UIUtils.SetSingleKey(this.stash_slot6_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 11);
+
+            this.cz.ColorZonesList = (profile_manager.Settings as Dota2Settings).lighting_areas;
         }
 
         private void preview_respawn_timer_Tick(object sender, EventArgs e)
@@ -168,8 +175,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -238,8 +245,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_team_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_team_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -247,23 +254,23 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
         private void t_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (this.t_colorpicker.SelectedColor.HasValue)
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).dire_color = ColorUtils.MediaColorToDrawingColor(this.t_colorpicker.SelectedColor.Value);
+                (profile_manager.Settings as Dota2Settings).dire_color = ColorUtils.MediaColorToDrawingColor(this.t_colorpicker.SelectedColor.Value);
         }
 
         private void ct_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && this.ct_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).radiant_color = ColorUtils.MediaColorToDrawingColor(this.ct_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).radiant_color = ColorUtils.MediaColorToDrawingColor(this.ct_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -271,8 +278,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.ambient_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ambient_color = ColorUtils.MediaColorToDrawingColor(this.ambient_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).ambient_color = ColorUtils.MediaColorToDrawingColor(this.ambient_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -280,8 +287,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_enable_dimming = (this.background_dim_enabled.IsChecked.HasValue) ? this.background_dim_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_enable_dimming = (this.background_dim_enabled.IsChecked.HasValue) ? this.background_dim_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -293,8 +300,8 @@ namespace Aurora.Profiles.Dota_2
                 this.background_dim_value.Text = val + "s";
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_dim_after = val;
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).bg_dim_after = val;
+                    profile_manager.SaveProfiles();
                 }
             }
         }
@@ -303,8 +310,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_display_killstreaks = (this.background_killstreaks_enabled.IsChecked.HasValue) ? this.background_killstreaks_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_display_killstreaks = (this.background_killstreaks_enabled.IsChecked.HasValue) ? this.background_killstreaks_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -312,8 +319,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_doublekill_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[2] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_doublekill_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[2] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_doublekill_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -321,8 +328,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_killingspree_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[3] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_killingspree_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[3] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_killingspree_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -330,8 +337,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_dominating_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[4] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_dominating_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[4] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_dominating_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -339,8 +346,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_megakill_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[5] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_megakill_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[5] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_megakill_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -348,8 +355,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_unstoppable_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[6] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_unstoppable_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[6] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_unstoppable_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -357,8 +364,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_wickedsick_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[7] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_wickedsick_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[7] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_wickedsick_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -366,8 +373,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_monsterkill_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[8] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_monsterkill_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[8] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_monsterkill_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -375,8 +382,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_godlike_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[9] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_godlike_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[9] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_godlike_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -384,8 +391,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.bg_killstreak_godlikeandon_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreakcolors[10] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_godlikeandon_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreakcolors[10] = ColorUtils.MediaColorToDrawingColor(this.bg_killstreak_godlikeandon_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -395,8 +402,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).health_enabled = (this.health_enabled.IsChecked.HasValue) ? this.health_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).health_enabled = (this.health_enabled.IsChecked.HasValue) ? this.health_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -404,8 +411,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.health_healthy_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).healthy_color = ColorUtils.MediaColorToDrawingColor(this.health_healthy_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).healthy_color = ColorUtils.MediaColorToDrawingColor(this.health_healthy_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -413,8 +420,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.health_hurt_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).hurt_color = ColorUtils.MediaColorToDrawingColor(this.health_hurt_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).hurt_color = ColorUtils.MediaColorToDrawingColor(this.health_hurt_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -422,8 +429,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).health_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).health_sequence = (sender as Controls.KeySequence).Sequence;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -431,8 +438,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).health_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.health_effect_type.SelectedIndex.ToString());
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).health_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.health_effect_type.SelectedIndex.ToString());
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -442,8 +449,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_enabled = (this.mana_enabled.IsChecked.HasValue) ? this.mana_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).mana_enabled = (this.mana_enabled.IsChecked.HasValue) ? this.mana_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -451,8 +458,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.mana_hasmana_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_color = ColorUtils.MediaColorToDrawingColor(this.mana_hasmana_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).mana_color = ColorUtils.MediaColorToDrawingColor(this.mana_hasmana_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -460,8 +467,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.mana_nomana_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).nomana_color = ColorUtils.MediaColorToDrawingColor(this.mana_nomana_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).nomana_color = ColorUtils.MediaColorToDrawingColor(this.mana_nomana_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -469,8 +476,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.mana_effect_type.SelectedIndex.ToString());
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).mana_effect_type = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), this.mana_effect_type.SelectedIndex.ToString());
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -478,8 +485,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mana_sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).mana_sequence = (sender as Controls.KeySequence).Sequence;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -488,8 +495,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -497,8 +504,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mimic_respawn_timer = (this.mimic_respawn_timer_checkbox.IsChecked.HasValue) ? this.mimic_respawn_timer_checkbox.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).mimic_respawn_timer = (this.mimic_respawn_timer_checkbox.IsChecked.HasValue) ? this.mimic_respawn_timer_checkbox.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -506,8 +513,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.mimic_respawn_color_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mimic_respawn_timer_color = ColorUtils.MediaColorToDrawingColor(this.mimic_respawn_color_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).mimic_respawn_timer_color = ColorUtils.MediaColorToDrawingColor(this.mimic_respawn_color_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -515,8 +522,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.mimic_respawn_respawning_color_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).mimic_respawn_timer_respawning_color = ColorUtils.MediaColorToDrawingColor(this.mimic_respawn_respawning_color_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).mimic_respawn_timer_respawning_color = ColorUtils.MediaColorToDrawingColor(this.mimic_respawn_respawning_color_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -524,8 +531,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_respawn_glow = (this.background_enable_respawn_glow.IsChecked.HasValue) ? this.background_enable_respawn_glow.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_respawn_glow = (this.background_enable_respawn_glow.IsChecked.HasValue) ? this.background_enable_respawn_glow.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -533,8 +540,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.respawn_glow_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_respawn_glow_color = ColorUtils.MediaColorToDrawingColor(this.respawn_glow_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_respawn_glow_color = ColorUtils.MediaColorToDrawingColor(this.respawn_glow_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -542,8 +549,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).abilitykeys_enabled = (this.abilities_enabled.IsChecked.HasValue) ? this.abilities_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).abilitykeys_enabled = (this.abilities_enabled.IsChecked.HasValue) ? this.abilities_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -551,8 +558,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.abilities_canuse_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_can_use_color = ColorUtils.MediaColorToDrawingColor(this.abilities_canuse_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).ability_can_use_color = ColorUtils.MediaColorToDrawingColor(this.abilities_canuse_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -560,8 +567,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.abilities_cannotuse_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_can_not_use_color = ColorUtils.MediaColorToDrawingColor(this.abilities_cannotuse_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).ability_can_not_use_color = ColorUtils.MediaColorToDrawingColor(this.abilities_cannotuse_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -579,11 +586,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys[0] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).ability_keys[0] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.ability_key1_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys, 0);
+                UIUtils.SetSingleKey(this.ability_key1_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 0);
             }
             Global.key_recorder.Reset();
         }
@@ -602,11 +609,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys[1] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).ability_keys[1] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.ability_key1_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys, 1);
+                UIUtils.SetSingleKey(this.ability_key1_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 1);
             }
             Global.key_recorder.Reset();
         }
@@ -625,11 +632,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys[2] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).ability_keys[2] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.ability_key3_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys, 2);
+                UIUtils.SetSingleKey(this.ability_key3_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 2);
             }
             Global.key_recorder.Reset();
         }
@@ -648,11 +655,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys[3] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).ability_keys[3] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.ability_key4_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys, 3);
+                UIUtils.SetSingleKey(this.ability_key4_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 3);
             }
             Global.key_recorder.Reset();
         }
@@ -671,11 +678,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys[4] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).ability_keys[4] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.ability_key5_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys, 4);
+                UIUtils.SetSingleKey(this.ability_key5_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 4);
             }
             Global.key_recorder.Reset();
         }
@@ -694,11 +701,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys[5] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).ability_keys[5] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.ability_key6_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).ability_keys, 5);
+                UIUtils.SetSingleKey(this.ability_key6_textblock, (profile_manager.Settings as Dota2Settings).ability_keys, 5);
             }
             Global.key_recorder.Reset();
         }
@@ -717,11 +724,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[0] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[0] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.item_slot1_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 0);
+                UIUtils.SetSingleKey(this.item_slot1_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 0);
             }
             Global.key_recorder.Reset();
         }
@@ -740,11 +747,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[1] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[1] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.item_slot2_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 1);
+                UIUtils.SetSingleKey(this.item_slot2_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 1);
             }
             Global.key_recorder.Reset();
         }
@@ -763,11 +770,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[2] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[2] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.item_slot3_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 2);
+                UIUtils.SetSingleKey(this.item_slot3_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 2);
             }
             Global.key_recorder.Reset();
         }
@@ -786,11 +793,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[3] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[3] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.item_slot4_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 3);
+                UIUtils.SetSingleKey(this.item_slot4_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 3);
             }
             Global.key_recorder.Reset();
         }
@@ -809,11 +816,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[4] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[4] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.item_slot5_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 4);
+                UIUtils.SetSingleKey(this.item_slot5_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 4);
             }
             Global.key_recorder.Reset();
         }
@@ -832,11 +839,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[5] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[5] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.item_slot6_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 5);
+                UIUtils.SetSingleKey(this.item_slot6_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 5);
             }
             Global.key_recorder.Reset();
         }
@@ -855,11 +862,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[6] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[6] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.stash_slot1_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 6);
+                UIUtils.SetSingleKey(this.stash_slot1_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 6);
             }
             Global.key_recorder.Reset();
         }
@@ -878,11 +885,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[7] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[7] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.stash_slot2_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 7);
+                UIUtils.SetSingleKey(this.stash_slot2_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 7);
             }
             Global.key_recorder.Reset();
         }
@@ -901,11 +908,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[8] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[8] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.stash_slot3_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 8);
+                UIUtils.SetSingleKey(this.stash_slot3_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 8);
             }
             Global.key_recorder.Reset();
         }
@@ -924,11 +931,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[9] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[9] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.stash_slot4_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 9);
+                UIUtils.SetSingleKey(this.stash_slot4_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 9);
             }
             Global.key_recorder.Reset();
         }
@@ -947,11 +954,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[10] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[10] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.stash_slot5_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 10);
+                UIUtils.SetSingleKey(this.stash_slot5_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 10);
             }
             Global.key_recorder.Reset();
         }
@@ -970,11 +977,11 @@ namespace Aurora.Profiles.Dota_2
             {
                 if (IsLoaded)
                 {
-                    (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys[11] = resulting_keys[0];
-                    ConfigManager.Save(Global.Configuration);
+                    (profile_manager.Settings as Dota2Settings).items_keys[11] = resulting_keys[0];
+                    profile_manager.SaveProfiles();
                 }
 
-                UIUtils.SetSingleKey(this.stash_slot6_textblock, (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_keys, 11);
+                UIUtils.SetSingleKey(this.stash_slot6_textblock, (profile_manager.Settings as Dota2Settings).items_keys, 11);
             }
             Global.key_recorder.Reset();
         }
@@ -983,8 +990,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.item_empty_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_empty_color = ColorUtils.MediaColorToDrawingColor(this.item_empty_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).items_empty_color = ColorUtils.MediaColorToDrawingColor(this.item_empty_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -992,8 +999,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_enabled = (this.items_enabled.IsChecked.HasValue) ? this.items_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).items_enabled = (this.items_enabled.IsChecked.HasValue) ? this.items_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -1001,8 +1008,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.item_on_cooldown_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_on_cooldown_color = ColorUtils.MediaColorToDrawingColor(this.item_on_cooldown_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).items_on_cooldown_color = ColorUtils.MediaColorToDrawingColor(this.item_on_cooldown_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -1010,8 +1017,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.item_no_charges_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_no_charges_color = ColorUtils.MediaColorToDrawingColor(this.item_no_charges_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).items_no_charges_color = ColorUtils.MediaColorToDrawingColor(this.item_no_charges_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -1019,8 +1026,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded && this.item_color_colorpicker.SelectedColor.HasValue)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_color = ColorUtils.MediaColorToDrawingColor(this.item_color_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).items_color = ColorUtils.MediaColorToDrawingColor(this.item_color_colorpicker.SelectedColor.Value);
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -1028,8 +1035,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).items_use_item_color = (this.items_use_item_color.IsChecked.HasValue) ? this.items_use_item_color.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).items_use_item_color = (this.items_use_item_color.IsChecked.HasValue) ? this.items_use_item_color.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -1037,8 +1044,8 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).bg_killstreaks_lines = (this.background_killstreaks_lines_enabled.IsChecked.HasValue) ? this.background_killstreaks_lines_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as Dota2Settings).bg_killstreaks_lines = (this.background_killstreaks_lines_enabled.IsChecked.HasValue) ? this.background_killstreaks_lines_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 

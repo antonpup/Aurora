@@ -39,6 +39,7 @@
                     <Button x:Name="patch_button" Content="Patch Aurora GSI" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
                     <Button x:Name="unpatch_button" Content="Unpatch Aurora GSI" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Dota 2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                    <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Preview">

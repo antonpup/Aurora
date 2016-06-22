@@ -141,6 +141,7 @@ namespace Aurora
                 Environment.Exit(0);
             }
 
+            Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
             if (Global.Configuration.keyboard_brand == PreferredKeyboard.Logitech)
                 Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Logitech);
             else if (Global.Configuration.keyboard_brand == PreferredKeyboard.Corsair)
@@ -173,9 +174,11 @@ namespace Aurora
                 }
             }
 
+            Global.logger.LogLine("Input Hooking", Logging_Level.Info);
             Global.input_hook.KeyDown += InputHookKeyDown;
             Global.input_hook.KeyUp += InputHookKeyUp;
 
+            Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
             Global.geh = new GameEventHandler();
             if (!Global.geh.Init())
             {
@@ -183,8 +186,18 @@ namespace Aurora
                 return;
             }
 
-            Global.net_listener = new NetworkListener(9088);
-            Global.net_listener.NewGameState += new NewGameStateHandler(Global.geh.GameStateUpdate);
+            Global.logger.LogLine("Starting GameStateListener", Logging_Level.Info);
+            try
+            {
+                Global.net_listener = new NetworkListener(9088);
+                Global.net_listener.NewGameState += new NewGameStateHandler(Global.geh.GameStateUpdate);
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine("GameStateListener Exception, " + exc, Logging_Level.Error);
+                System.Windows.MessageBox.Show("GameStateListener Exception.\r\n" + exc);
+                Environment.Exit(0);
+            }
 
             if (!Global.net_listener.Start())
             {

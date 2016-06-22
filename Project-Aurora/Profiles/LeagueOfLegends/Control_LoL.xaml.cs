@@ -1,20 +1,9 @@
 ﻿using Aurora.Controls;
 using Aurora.Settings;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Aurora.Profiles.LeagueOfLegends
 {
@@ -23,15 +12,31 @@ namespace Aurora.Profiles.LeagueOfLegends
     /// </summary>
     public partial class Control_LoL : UserControl
     {
+        private ProfileManager profile_manager;
+
         public Control_LoL()
         {
             InitializeComponent();
 
-            LoLSettings settings = Global.Configuration.ApplicationProfiles["League of Legends"].Settings as LoLSettings;
+            profile_manager = Global.Configuration.ApplicationProfiles["League of Legends"];
 
-            this.game_enabled.IsChecked = settings.isEnabled;
-            this.cz.ColorZonesList = settings.lighting_areas;
-            this.cz_disable_on_dark.IsChecked = settings.disable_cz_on_dark;
+            SetSettings();
+
+            profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
+        }
+
+        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        {
+            SetSettings();
+        }
+
+        private void SetSettings()
+        {
+            this.profilemanager.ProfileManager = profile_manager;
+
+            this.game_enabled.IsChecked = (profile_manager.Settings as LoLSettings).isEnabled;
+            this.cz.ColorZonesList = (profile_manager.Settings as LoLSettings).lighting_areas;
+            this.cz_disable_on_dark.IsChecked = (profile_manager.Settings as LoLSettings).disable_cz_on_dark;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -54,8 +59,8 @@ namespace Aurora.Profiles.LeagueOfLegends
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["League of Legends"].Settings as LoLSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as LoLSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -63,8 +68,8 @@ namespace Aurora.Profiles.LeagueOfLegends
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["League of Legends"].Settings as LoLSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as LoLSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -72,8 +77,8 @@ namespace Aurora.Profiles.LeagueOfLegends
         {
             if (IsLoaded)
             {
-                (Global.Configuration.ApplicationProfiles["League of Legends"].Settings as LoLSettings).disable_cz_on_dark = (this.cz_disable_on_dark.IsChecked.HasValue) ? this.cz_disable_on_dark.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
+                (profile_manager.Settings as LoLSettings).disable_cz_on_dark = (this.cz_disable_on_dark.IsChecked.HasValue) ? this.cz_disable_on_dark.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 

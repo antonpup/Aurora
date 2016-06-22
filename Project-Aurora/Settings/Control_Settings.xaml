@@ -30,19 +30,9 @@
                 <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
             </DataTemplate>
 
-            <ObjectDataProvider x:Key="InteractiveEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumInteractiveEffects:InteractiveEffects" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:InteractiveEffectsToStringVC x:Key="InteractiveEffectsToStringVC"/>
-            <DataTemplate x:Key="InteractiveEffectsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource InteractiveEffectsToStringVC}}" />
-            </DataTemplate>
-
             <ObjectDataProvider x:Key="IdleEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumInteractiveEffects:IdleEffects" />
+                    <x:Type TypeName="EnumPercentEffectType:IdleEffects" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:IdleEffectsToStringVC x:Key="IdleEffectsToStringVC"/>

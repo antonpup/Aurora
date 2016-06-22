@@ -42,7 +42,7 @@
 
             <ObjectDataProvider x:Key="IdleEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumInteractiveEffects:IdleEffects" />
+                    <x:Type TypeName="EnumPercentEffectType:IdleEffects" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:IdleEffectsToStringVC x:Key="IdleEffectsToStringVC"/>
@@ -54,6 +54,12 @@
 
     <Grid>
         <TabControl>
+            <TabItem Header="Overview for Desktop">
+                <Grid>
+                    <TextBlock Margin="10,10,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="This is a profile for Desktop effects. This profile will be active during non-gaming profiles."/><LineBreak/><Run/><LineBreak/><Run Text="This profile includes CPU and RAM usage indicators, a shortcuts assistant, color zones, and interactive effects."/></TextBlock>
+                    <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
+                </Grid>
+            </TabItem>
             <TabItem Header="CPU/RAM usage">
                 <Grid>
                     <CheckBox x:Name="cpu_usage_enabled" Content="Display CPU usage on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Checked="cpu_usage_enabled_Checked" Unchecked="cpu_usage_enabled_Checked"/>

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Profiles.RocketLeague"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.RocketLeague.Control_RocketLeague"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.Profiles.RocketLeague.Control_RocketLeague"
              mc:Ignorable="d" 
              d:DesignHeight="261.972" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Unloaded="UserControl_Unloaded" Loaded="UserControl_Loaded">
     <Grid>
@@ -13,6 +13,7 @@
                 <Grid>
                     <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="Rocket League support works via memory reading. As a result, you do not have to apply any patches for the game to work with Aurora. However, this does mean that whenever a game update is released, Aurora's Rocket League support"/><Run Text=" would stop working. Aurora's memory reading pointers have to be updated manually, and thus Aurora will regularly check for new memory reading pointers via automatic updates. So, I apologize for any delays in Rocket League support, please inform me on Aurora's github page about a Rocket League update, and I will look into releasing a patch."/><LineBreak/><Run/><LineBreak/><Run Text="(Github link can be found under Settings -&gt; About)"/></TextBlock>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Rocket League" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                    <Settings:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Preview">
