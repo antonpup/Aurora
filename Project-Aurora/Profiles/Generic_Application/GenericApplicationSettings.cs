@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Generic_Application
 {
-    public class GenericApplicationSettings
+    public class GenericApplicationSettings : ProfileSettings
     {
         //Generic
         public string ApplicationName;
-        public bool isEnabled;
 
         //Effects
         //// Lighting Areas

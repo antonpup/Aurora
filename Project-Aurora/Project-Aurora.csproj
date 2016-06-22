@@ -215,6 +215,7 @@
       <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Generic_Application\Event_GenericApplication.cs" />
+    <Compile Include="Profiles\Generic_Application\GenericApplicationProfileManager.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
     <Compile Include="Profiles\GTA5\Control_GTA5.xaml.cs">
       <DependentUpon>Control_GTA5.xaml</DependentUpon>
@@ -657,6 +658,7 @@
     <Resource Include="Resources\leagueoflegends_48x48.png" />
     <Resource Include="Resources\hotline_32x32.png" />
     <Resource Include="Resources\talosprinciple_64x64.png" />
+    <Resource Include="Resources\unknown_app_icon.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\FreeForm_Circle.png" />

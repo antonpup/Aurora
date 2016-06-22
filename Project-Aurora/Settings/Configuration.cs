@@ -146,7 +146,9 @@ namespace Aurora.Settings
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
         public HashSet<String> excluded_programs;
-        public Dictionary<String, GenericApplicationSettings> additional_profiles;
+
+        [JsonIgnoreAttribute]
+        public Dictionary<string, GenericApplicationProfileManager> additional_profiles;
 
         //Blackout and Night theme
         public bool time_based_dimming_enabled;
@@ -217,7 +219,7 @@ namespace Aurora.Settings
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
             excluded_programs = new HashSet<string>();
-            additional_profiles = new Dictionary<string, GenericApplicationSettings>();
+            additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
 
             //Blackout and Night theme
             time_based_dimming_enabled = false;
@@ -251,6 +253,7 @@ namespace Aurora.Settings
     public class ConfigManager
     {
         private static string ConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Config");
+        private static string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
         private const string ConfigExtension = ".json";
 
         public static Configuration Load()
@@ -272,40 +275,22 @@ namespace Aurora.Settings
             foreach (var kvp in config.ApplicationProfiles)
                 kvp.Value.LoadProfiles();
 
-            return config;
-        }
 
-        public static T Load<T>(string path = "") where T : class
-        {
-            try
+            if(Directory.Exists(AdditionalProfilesPath))
             {
-                if (String.IsNullOrWhiteSpace(path))
+                List<string> additionals = new List<string>(Directory.EnumerateDirectories(AdditionalProfilesPath));
+                foreach (var dir in additionals)
                 {
-                    var dialog = new System.Windows.Forms.OpenFileDialog();
-                    dialog.Filter = "JSON File|*.json";
-                    dialog.Title = "Open a profile";
-                    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-
-                    if (result != System.Windows.Forms.DialogResult.OK)
-                        return null;
-
-                    path = dialog.FileName;
+                    if(File.Exists(Path.Combine(dir, "default.json")))
+                    {
+                        string proccess_name = Path.GetFileName(dir);
+                        Global.logger.LogLine("Process_name = " + proccess_name, Logging_Level.Info);
+                        config.additional_profiles.Add(proccess_name, new GenericApplicationProfileManager(proccess_name));
+                    }
                 }
-
-                string content = File.ReadAllText(path, Encoding.UTF8);
-
-                if (String.IsNullOrWhiteSpace(content))
-                    return null;
-
-                return JsonConvert.DeserializeObject<T>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
             }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine("Exception during ConfigManager.Save<T>(). Error: " + exc, Logging_Level.Error);
-                System.Windows.MessageBox.Show("Exception during ConfigManager.Save<T>().Error: " + exc.Message, "Aurora - Error");
 
-                return null;
-            }
+            return config;
         }
 
         public static void Save(Configuration configuration)
@@ -320,42 +305,9 @@ namespace Aurora.Settings
 
             foreach (var kvp in configuration.ApplicationProfiles)
                 kvp.Value.SaveProfiles();
-        }
 
-        public static bool Save<T>(T configuration, string path = "") where T : class
-        {
-            if (configuration == null)
-                return false;
-
-            try
-            {
-                if (String.IsNullOrWhiteSpace(path))
-                {
-                    var dialog = new System.Windows.Forms.SaveFileDialog();
-                    dialog.Filter = "JSON File|*.json";
-                    dialog.Title = "Save a profile";
-                    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-
-                    if (result != System.Windows.Forms.DialogResult.OK)
-                        return false;
-
-                    path = dialog.FileName;
-                }
-
-                string content = JsonConvert.SerializeObject(configuration, Formatting.Indented);
-
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
-                File.WriteAllText(path, content, Encoding.UTF8);
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine("Exception during ConfigManager.Save<T>(). Error: " + exc, Logging_Level.Error);
-                System.Windows.MessageBox.Show("Exception during ConfigManager.Save<T>().Error: " + exc.Message, "Aurora - Error");
-
-                return false;
-            }
-
-            return true;
+            foreach (var kvp in configuration.additional_profiles)
+                kvp.Value.SaveProfiles();
         }
 
         private static Configuration CreateDefaultConfigurationFile()

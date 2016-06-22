@@ -149,7 +149,7 @@ namespace Aurora
                 }
             }
 
-            if (Global.Configuration.additional_profiles.ContainsKey(process_name) && Global.Configuration.additional_profiles[process_name].isEnabled)
+            if (Global.Configuration.additional_profiles.ContainsKey(process_name) && (Global.Configuration.additional_profiles[process_name].Settings as GenericApplicationSettings).isEnabled)
             {
                 if (profiles.ContainsKey(process_name))
                 {
@@ -163,7 +163,7 @@ namespace Aurora
                 }
 
             }
-            else if (preview_mode == PreviewType.GenericApplication && Global.Configuration.additional_profiles.ContainsKey(preview_mode_profile_key) && Global.Configuration.additional_profiles[preview_mode_profile_key].isEnabled)
+            else if (preview_mode == PreviewType.GenericApplication && Global.Configuration.additional_profiles.ContainsKey(preview_mode_profile_key) && (Global.Configuration.additional_profiles[preview_mode_profile_key].Settings as GenericApplicationSettings).isEnabled)
             {
                 if (profiles.ContainsKey(preview_mode_profile_key))
                     profiles[preview_mode_profile_key].UpdateLights(newframe);

@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using Aurora.EffectsEngine;
 using Aurora.Settings;
 using Aurora.Controls;
+using Aurora.Profiles.Generic_Application;
+using System.IO;
 
 namespace Aurora
 {
@@ -440,50 +442,43 @@ namespace Aurora
             }
 
             //Populate with added profiles
-            foreach (KeyValuePair<string, Profiles.Generic_Application.GenericApplicationSettings> kvp in Global.Configuration.additional_profiles)
+            foreach (var kvp in Global.Configuration.additional_profiles)
             {
-                Image profile = new Image();
-                profile.Tag = new Profiles.Generic_Application.Control_GenericApplication(kvp.Key);
+                ProfileManager profile = kvp.Value;
+                ImageSource icon = profile.GetIcon();
+                UserControl control = profile.GetUserControl();
 
-                if (System.IO.File.Exists(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "./Profiles/" + kvp.Key.GetHashCode().ToString("X") + ".png"))
+                if (icon != null && control != null)
                 {
-                    var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"./Profiles/" + kvp.Key.GetHashCode().ToString("X") + ".png"));
-                    BitmapImage b = new BitmapImage();
-                    b.BeginInit();
-                    b.StreamSource = memStream;
-                    b.EndInit();
+                    Image profile_image = new Image();
+                    profile_image.Tag = control;
+                    profile_image.Source = icon;
+                    profile_image.ToolTip = (profile.Settings as GenericApplicationSettings).ApplicationName + " Settings";
+                    profile_image.Margin = new Thickness(0, 5, 0, 0);
+                    profile_image.MouseDown += ProfileImage_MouseDown;
 
-                    profile.Source = b;
+                    Image profile_remove = new Image();
+                    profile_remove.Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative));
+                    profile_remove.ToolTip = "Remove " + (profile.Settings as GenericApplicationSettings).ApplicationName + " Profile";
+                    profile_remove.HorizontalAlignment = HorizontalAlignment.Right;
+                    profile_remove.VerticalAlignment = VerticalAlignment.Bottom;
+                    profile_remove.Height = 16;
+                    profile_remove.Width = 16;
+                    profile_remove.Visibility = Visibility.Hidden;
+                    profile_remove.MouseDown += RemoveProfile_MouseDown;
+                    profile_remove.Tag = kvp.Key;
 
+                    Grid profile_grid = new Grid();
+                    profile_grid.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                    profile_grid.Margin = new Thickness(0, 5, 0, 0);
+                    profile_grid.Tag = profile_remove;
+                    profile_grid.MouseEnter += Profile_grid_MouseEnter;
+                    profile_grid.MouseLeave += Profile_grid_MouseLeave;
+                    profile_grid.Children.Add(profile_image);
+                    profile_grid.Children.Add(profile_remove);
+
+                    this.profiles_stack.Children.Add(profile_grid);
                 }
-                else
-                    profile.Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative));
-
-                profile.ToolTip = kvp.Value.ApplicationName + " Settings";
-                profile.MouseDown += ProfileImage_MouseDown;
-
-                Image profile_remove = new Image();
-                profile_remove.Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative));
-                profile_remove.ToolTip = "Remove " + kvp.Value.ApplicationName + " Profile";
-                profile_remove.HorizontalAlignment = HorizontalAlignment.Right;
-                profile_remove.VerticalAlignment = VerticalAlignment.Bottom;
-                profile_remove.Height = 16;
-                profile_remove.Width = 16;
-                profile_remove.Visibility = Visibility.Hidden;
-                profile_remove.MouseDown += RemoveProfile_MouseDown;
-                profile_remove.Tag = kvp.Key;
-
-                Grid profile_grid = new Grid();
-                profile_grid.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-                profile_grid.Margin = new Thickness(0, 5, 0, 0);
-                profile_grid.Tag = profile_remove;
-                profile_grid.MouseEnter += Profile_grid_MouseEnter;
-                profile_grid.MouseLeave += Profile_grid_MouseLeave;
-                profile_grid.Children.Add(profile);
-                profile_grid.Children.Add(profile_remove);
-
-
-                this.profiles_stack.Children.Add(profile_grid);
             }
 
             //Add new profiles button
@@ -540,8 +535,12 @@ namespace Aurora
 
                 if (Global.Configuration.additional_profiles.ContainsKey(name))
                 {
-                    if (System.Windows.MessageBox.Show("Are you sure you want to delete profile for " + Global.Configuration.additional_profiles[name].ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if (System.Windows.MessageBox.Show("Are you sure you want to delete profile for " + (Global.Configuration.additional_profiles[name].Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
+                        string path = Global.Configuration.additional_profiles[name].GetProfileFolderPath();
+                        if (Directory.Exists(path))
+                            Directory.Delete(path, true);
+
                         Global.Configuration.additional_profiles.Remove(name);
                         ConfigManager.Save(Global.Configuration);
                         GenerateProfileStack();
@@ -565,22 +564,24 @@ namespace Aurora
 
                 if (Global.Configuration.additional_profiles.ContainsKey(filename))
                 {
-                    System.Windows.MessageBox.Show("Profile for this application already exists.\r\nSwitching to the profile.");
+                    System.Windows.MessageBox.Show("Profile for this application already exists.");
                 }
                 else
                 {
+                    GenericApplicationProfileManager gen_app_pm = new GenericApplicationProfileManager(filename);
+
                     System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(exe_filedlg.FileName.ToLowerInvariant());
 
-                    if (!System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "./Profiles/"))
-                        System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "./Profiles/");
+                    if (!System.IO.Directory.Exists(gen_app_pm.GetProfileFolderPath()))
+                        System.IO.Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
 
                     using (var icon_asbitmap = ico.ToBitmap())
                     {
-                        icon_asbitmap.Save(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"./Profiles/" + filename.GetHashCode().ToString("X") + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        icon_asbitmap.Save(Path.Combine(gen_app_pm.GetProfileFolderPath(), "icon.png"), System.Drawing.Imaging.ImageFormat.Png);
                     }
                     ico.Dispose();
 
-                    Global.Configuration.additional_profiles.Add(filename, new Profiles.Generic_Application.GenericApplicationSettings(filename));
+                    Global.Configuration.additional_profiles.Add(filename, gen_app_pm);
                     ConfigManager.Save(Global.Configuration);
                     GenerateProfileStack();
                 }

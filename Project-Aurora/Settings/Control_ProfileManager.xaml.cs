@@ -63,6 +63,8 @@ namespace Aurora.Settings
                     this.profiles_combobox.Items.Clear();
                     foreach (var kvp in ProfileManager.Profiles)
                         this.profiles_combobox.Items.Add(kvp.Key);
+
+                    this.load_profile_button.IsEnabled = ProfileManager.Profiles.Count > 0;
                 }
                 else
                 {

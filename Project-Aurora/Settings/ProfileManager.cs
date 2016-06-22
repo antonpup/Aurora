@@ -94,14 +94,12 @@ namespace Aurora.Settings
         private string GetValidFilename(string filename)
         {
             foreach (char c in System.IO.Path.GetInvalidFileNameChars())
-            {
                 filename = filename.Replace(c, '_');
-            }
 
             return filename;
         }
 
-        public string GetProfileFolderPath()
+        public virtual string GetProfileFolderPath()
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", InternalName);
         }
@@ -126,7 +124,7 @@ namespace Aurora.Settings
             return null;
         }
 
-        public void LoadProfiles()
+        public virtual void LoadProfiles()
         {
             string profiles_path = GetProfileFolderPath();
 
@@ -155,7 +153,7 @@ namespace Aurora.Settings
             }
         }
 
-        internal void SaveProfile(string path, ProfileSettings profile)
+        internal virtual void SaveProfile(string path, ProfileSettings profile)
         {
             try
             {
@@ -171,7 +169,7 @@ namespace Aurora.Settings
             }
         }
 
-        public void SaveProfiles()
+        public virtual void SaveProfiles()
         {
             try
             {
