@@ -9,10 +9,14 @@ namespace Aurora.Profiles.Desktop
     {
         [Description("None")]
         None = 0,
-        [Description("Key Wave Effect")]
+        [Description("Key Wave")]
         Wave = 1,
+        [Description("Key Wave (Filled)")]
+        Wave_Filled = 3,
         [Description("Key Fade")]
-        KeyPress = 2
+        KeyPress = 2,
+        [Description("Arrow Flow")]
+        ArrowFlow = 4,
     }
 
     public class DesktopSettings : ProfileSettings

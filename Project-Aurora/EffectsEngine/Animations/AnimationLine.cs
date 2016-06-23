@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -73,13 +69,13 @@ namespace Aurora.EffectsEngine.Animations
             if (_start_point.Equals(_end_point))
                 return;
 
-            Pen pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
-            pen.Width = _width;
-            pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+            _pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
+            _pen.Width = _width;
+            _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
 
-            g.DrawLine(pen, _start_point, _end_point);
+            g.DrawLine(_pen, _start_point, _end_point);
 
-            pen.Dispose();
+            _pen.Dispose();
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

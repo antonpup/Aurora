@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -12,6 +7,8 @@ namespace Aurora.EffectsEngine.Animations
         internal Color _color;
         internal RectangleF _dimension;
         internal int _width;
+        internal Pen _pen;
+        internal Brush _brush;
 
         public AnimationFrame()
         {

@@ -29,6 +29,11 @@ namespace Aurora.EffectsEngine.Functions
             Y = otherPoint.Y;
         }
 
+        public System.Drawing.PointF ToPointF()
+        {
+            return new System.Drawing.PointF(X, Y);
+        }
+
         public override bool Equals(System.Object obj)
         {
             if (obj == null)

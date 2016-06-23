@@ -1,17 +1,12 @@
 ﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine.Animations;
 using Aurora.EffectsEngine.Functions;
-using Aurora.Settings;
-using Gma.System.MouseKeyHook;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 
@@ -73,22 +68,44 @@ namespace Aurora.Profiles.Desktop
 
     public class input_item
     {
+        public enum input_type
+        {
+            AnimationMix,
+            Spectrum
+        };
+
         public Devices.DeviceKeys key;
         public float progress;
+        public AnimationMix animation;
         public ColorSpectrum spectrum;
+        public readonly input_type type;
+
+        public input_item(Devices.DeviceKeys key, float progress, AnimationMix animation)
+        {
+            this.key = key;
+            this.progress = progress;
+            this.animation = animation;
+
+            type = input_type.AnimationMix;
+        }
 
         public input_item(Devices.DeviceKeys key, float progress, ColorSpectrum spectrum)
         {
             this.key = key;
             this.progress = progress;
             this.spectrum = spectrum;
+
+            type = input_type.Spectrum;
         }
+
     }
 
     public class Event_Desktop : GameEvent
     {
         private List<input_item> input_list = new List<input_item>();
         private Keys previous_key = Keys.None;
+
+        private Random randomizer = new Random();
 
         private long internalcounter;
 
@@ -158,6 +175,101 @@ namespace Aurora.Profiles.Desktop
             Global.input_hook.KeyUp += GlobalHookKeyUp;
         }
 
+        private input_item CreateInputItem(Devices.DeviceKeys key, EffectPoint origin)
+        {
+            Color primary_c = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_primary_color;
+            Color secondary_c = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_secondary_color;
+
+            if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color)
+                primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
+
+            if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color)
+                secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
+
+            AnimationMix anim_mix = new AnimationMix();
+
+            if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.Wave)
+            {
+                AnimationTrack wave = new AnimationTrack("Wave effect", 1.0f);
+                wave.SetFrame(0.0f,
+                    new AnimationCircle(origin.ToPointF(), 0, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    );
+                wave.SetFrame(0.80f,
+                    new AnimationCircle(origin.ToPointF(), Effects.canvas_width * 0.80f, secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    );
+                wave.SetFrame(1.00f,
+                    new AnimationCircle(origin.ToPointF(), Effects.canvas_width, Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    );
+                anim_mix.AddTrack(wave);
+            }
+            else if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.Wave_Filled)
+            {
+                AnimationTrack wave = new AnimationTrack("Filled Wave effect", 1.0f);
+                wave.SetFrame(0.0f,
+                    new AnimationFilledCircle(origin.ToPointF(), 0, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    );
+                wave.SetFrame(0.80f,
+                    new AnimationFilledCircle(origin.ToPointF(), Effects.canvas_width * 0.80f, secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    );
+                wave.SetFrame(1.00f,
+                    new AnimationFilledCircle(origin.ToPointF(), Effects.canvas_width, Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    );
+                anim_mix.AddTrack(wave);
+            }
+            else if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.KeyPress)
+            {
+                ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
+                if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.KeyPress)
+                {
+                    spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
+                    spec.SetColorAt(0.80f, secondary_c);
+                }
+
+                return new input_item(key, 0.0f, spec);
+            }
+            else if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.ArrowFlow)
+            {
+                PointF starting_pt = origin.ToPointF();
+
+                AnimationTrack arrow = new AnimationTrack("Arrow Flow effect", 1.0f);
+                arrow.SetFrame(0.0f,
+                    new AnimationLines(
+                        new AnimationLine[] {
+                            new AnimationLine(starting_pt, starting_pt, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
+                            new AnimationLine(starting_pt, starting_pt, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                        }
+                        )
+                    );
+                arrow.SetFrame(0.33f,
+                    new AnimationLines(
+                        new AnimationLine[] {
+                            new AnimationLine(starting_pt, new PointF(starting_pt.X + Effects.canvas_width * 0.33f, starting_pt.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
+                            new AnimationLine(starting_pt, new PointF(starting_pt.X - Effects.canvas_width * 0.33f, starting_pt.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                        }
+                        )
+                    );
+                arrow.SetFrame(0.66f,
+                    new AnimationLines(
+                        new AnimationLine[] {
+                            new AnimationLine(new PointF(starting_pt.X + Effects.canvas_width * 0.33f, starting_pt.Y), new PointF(starting_pt.X + Effects.canvas_width * 0.66f, starting_pt.Y), secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
+                            new AnimationLine(new PointF(starting_pt.X - Effects.canvas_width * 0.33f, starting_pt.Y), new PointF(starting_pt.X - Effects.canvas_width * 0.66f, starting_pt.Y), secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                        }
+                        )
+                    );
+                arrow.SetFrame(1.0f,
+                    new AnimationLines(
+                        new AnimationLine[] {
+                            new AnimationLine(new PointF(starting_pt.X + Effects.canvas_width * 0.66f, starting_pt.Y), new PointF(starting_pt.X + Effects.canvas_width, starting_pt.Y), Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
+                            new AnimationLine(new PointF(starting_pt.X - Effects.canvas_width * 0.66f, starting_pt.Y), new PointF(starting_pt.X - Effects.canvas_width, starting_pt.Y), Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                        }
+                        )
+                    );
+                anim_mix.AddTrack(arrow);
+            }
+
+            return new input_item(key, 0.0f, anim_mix);
+        }
+
         private void GlobalHookMouseClick(object sender, MouseEventArgs e)
         {
             if (Global.isLoaded)
@@ -170,28 +282,9 @@ namespace Aurora.Profiles.Desktop
                 if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled)
                 {
                     EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
-
                     if (pt != new EffectPoint(0, 0))
                     {
-                        //Debug.WriteLine("Created circle at {0}", pt);
-
-                        Color primary_c = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_primary_color;
-                        Color secondary_c = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_secondary_color;
-
-                        if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color)
-                            primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
-
-                        if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color)
-                            secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
-
-                        ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
-                        if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.KeyPress)
-                        {
-                            spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
-                            spec.SetColorAt(0.80f, secondary_c);
-                        }
-
-                        input_list.Add(new input_item(device_key, 0.0f, spec));
+                        input_list.Add(CreateInputItem(device_key, pt));
                     }
                 }
             }
@@ -230,26 +323,9 @@ namespace Aurora.Profiles.Desktop
                 if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled)
                 {
                     EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
-
                     if (pt != new EffectPoint(0, 0))
                     {
-                        Color primary_c = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_primary_color;
-                        Color secondary_c = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_secondary_color;
-
-                        if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_primary_color)
-                            primary_c = Utils.ColorUtils.GenerateRandomColor(primary_c);
-
-                        if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_random_secondary_color)
-                            secondary_c = Utils.ColorUtils.GenerateRandomColor(secondary_c);
-
-                        ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
-                        if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.KeyPress)
-                        {
-                            spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
-                            spec.SetColorAt(0.80f, secondary_c);
-                        }
-
-                        input_list.Add(new input_item(device_key, 0.0f, spec));
+                        input_list.Add(CreateInputItem(device_key, pt));
                         previous_key = e.KeyCode;
                     }
                 }
@@ -321,27 +397,9 @@ namespace Aurora.Profiles.Desktop
 
             EffectLayer interactive_layer = new EffectLayer("Interactive Effects");
 
-            if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.Wave)
+            foreach (var input in input_list.ToArray())
             {
-                using (Graphics g = interactive_layer.GetGraphics())
-                {
-                    foreach (var input in input_list.ToArray())
-                    {
-                        EffectPoint pt = Effects.GetBitmappingFromDeviceKey(input.key).GetCenter();
-
-                        float transition_value = input.progress / Effects.canvas_width;
-
-                        g.DrawEllipse(new Pen(input.spectrum.GetColorAt(transition_value), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
-                            pt.X - input.progress,
-                            pt.Y - input.progress,
-                            2 * input.progress,
-                            2 * input.progress);
-                    }
-                }
-            }
-            else if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.KeyPress)
-            {
-                foreach (var input in input_list.ToArray())
+                if(input.type == input_item.input_type.Spectrum)
                 {
                     float transition_value = input.progress / Effects.canvas_width;
 
@@ -351,6 +409,15 @@ namespace Aurora.Profiles.Desktop
                     Color color = input.spectrum.GetColorAt(transition_value);
 
                     interactive_layer.Set(input.key, color);
+                }
+                else if(input.type == input_item.input_type.AnimationMix)
+                {
+                    float time_value = input.progress / Effects.canvas_width;
+
+                    if (time_value > 1.0f)
+                        continue;
+
+                    input.animation.Draw(interactive_layer.GetGraphics(), time_value);
                 }
             }
 
