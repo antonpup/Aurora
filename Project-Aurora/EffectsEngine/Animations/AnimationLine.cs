@@ -93,7 +93,7 @@ namespace Aurora.EffectsEngine.Animations
                 (float)(_end_point.Y * (1.0 - amount) + (otherAnim as AnimationLine)._end_point.Y * (amount))
                 );
 
-            int newwidth = (int)((_width * (1.0 - amount)) + (otherAnim._width * (amount)));
+            int newwidth = (int)Math.Round((_width * (1.0 - amount)) + (otherAnim._width * (amount)));
 
             return new AnimationLine(newstart, newend, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), Utils.ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth);
         }

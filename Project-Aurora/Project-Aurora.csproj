@@ -203,7 +203,7 @@
     <Compile Include="EffectsEngine\Animations\AnimationFrame.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationCircle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationLine.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationLinePoints.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationLines.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationMix.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
