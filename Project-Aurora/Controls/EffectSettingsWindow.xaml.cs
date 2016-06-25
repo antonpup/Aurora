@@ -1,18 +1,8 @@
 ﻿using Aurora.Settings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Controls
@@ -38,6 +28,9 @@ namespace Aurora.Controls
             this.effect_speed_slider.Value = EffectConfig.speed;
             this.effect_speed_label.Text = "x " + EffectConfig.speed;
             this.effect_angle.Text = EffectConfig.angle.ToString();
+            this.gradient_editor.Brush = EffectConfig.brush.GetMediaBrush();
+
+            this.gradient_editor.ColorChanged += Gradient_editor_ColorChanged;
         }
 
         public EffectSettingsWindow(LayerEffectConfig EffectConfig)
@@ -50,6 +43,30 @@ namespace Aurora.Controls
             this.effect_speed_slider.Value = EffectConfig.speed;
             this.effect_speed_label.Text = "x " + EffectConfig.speed;
             this.effect_angle.Text = EffectConfig.angle.ToString();
+            Brush brush = EffectConfig.brush.GetMediaBrush();
+            brush.Changed += Brush_Changed;
+            try
+            {
+                this.gradient_editor.Brush = brush;
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
+
+                //this.gradient_editor.Brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
+            }
+
+            this.gradient_editor.ColorChanged += Gradient_editor_ColorChanged;
+        }
+
+        private void Brush_Changed(object sender, EventArgs e)
+        {
+            EffectConfig.brush = new EffectsEngine.EffectBrush(this.gradient_editor.Brush);
+        }
+
+        private void Gradient_editor_ColorChanged(object sender, ColorBox.ColorChangedEventArgs e)
+        {
+            EffectConfig.brush = new EffectsEngine.EffectBrush(this.gradient_editor.Brush);
         }
 
         private void FireEffectConfigUpdated()
@@ -93,6 +110,7 @@ namespace Aurora.Controls
 
         private void accept_button_Click(object sender, RoutedEventArgs e)
         {
+            EffectConfig.brush = new EffectsEngine.EffectBrush(this.gradient_editor.Brush);
             FireEffectConfigUpdated();
             Close();
         }

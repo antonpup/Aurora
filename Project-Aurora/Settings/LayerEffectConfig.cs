@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using Aurora.EffectsEngine;
+using Newtonsoft.Json;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Settings
 {
@@ -14,6 +10,7 @@ namespace Aurora.Settings
         public Color secondary;
         public float speed;
         public float angle;
+        public EffectBrush brush;
 
         [JsonIgnoreAttribute]
         public float shift_amount = 0.0f;
@@ -26,6 +23,14 @@ namespace Aurora.Settings
             secondary = Color.Blue;
             speed = 1.0f;
             angle = 0.0f;
+            brush = new EffectBrush(
+                new System.Drawing.Drawing2D.LinearGradientBrush(
+                    new PointF(0, 0),
+                    new PointF(1, 0),
+                    primary,
+                    secondary
+                    )
+                );
         }
 
         public LayerEffectConfig(LayerEffectConfig otherConfig)
@@ -34,6 +39,7 @@ namespace Aurora.Settings
             secondary = otherConfig.secondary;
             speed = otherConfig.speed;
             angle = otherConfig.angle;
+            brush = otherConfig.brush;
         }
     }
 }

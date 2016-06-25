@@ -62,7 +62,7 @@ namespace Aurora.EffectsEngine
             Fill(color);
         }
 
-        public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effect_config)
+        public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effect_config, float scale_x = 0.0f, float scale_y = 0.0f)
         {
             this.name = name;
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
@@ -139,6 +139,34 @@ namespace Aurora.EffectsEngine
 
                     effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
                     break;
+                case LayerEffects.GradientShift_Custom_Angle:
+                    effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 0.25f * effect_config.speed;
+                    effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
+
+                    brush = effect_config.brush.GetDrawingBrush();
+                    if (effect_config.brush.type == EffectBrush.BrushType.Linear)
+                    {
+                        (brush as LinearGradientBrush).ScaleTransform(
+                            scale_x != 0.0f ? scale_x : Effects.canvas_height,
+                            scale_y != 0.0f ? scale_y : Effects.canvas_height
+                            );
+                        (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
+                        (brush as LinearGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                    }
+                    else if (effect_config.brush.type == EffectBrush.BrushType.Radial)
+                    {
+                        (brush as PathGradientBrush).ScaleTransform(
+                            scale_x != 0.0f ? scale_x : Effects.canvas_height,
+                            scale_y != 0.0f ? scale_y : Effects.canvas_height
+                            );
+                        (brush as PathGradientBrush).RotateTransform(effect_config.angle);
+                        //(brush as PathGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                    }
+
+                    Fill(brush);
+
+                    effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+                    break;
                 default:
                     break;
             }
@@ -187,6 +215,19 @@ namespace Aurora.EffectsEngine
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
+                /*if(brush is PathGradientBrush)
+                {
+                    GraphicsPath gp = new GraphicsPath();
+                    gp.AddEllipse((brush as PathGradientBrush).Rectangle);
+
+                    g.FillPath(brush, gp);
+                }
+                else
+                {
+                    Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
+                    g.FillRectangle(brush, rect);
+                }
+                */
                 Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
                 g.FillRectangle(brush, rect);
                 needsRender = true;
@@ -707,20 +748,21 @@ namespace Aurora.EffectsEngine
                     }
                     else if (cz.effect != LayerEffects.None)
                     {
-                        EffectLayer temp_layer = new EffectLayer("Color Zone Effect", cz.effect, cz.effect_config);
+                        float x_pos = (float)Math.Round((cz.keysequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
+                        float y_pos = (float)Math.Round((cz.keysequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
+                        float width = (float)Math.Round((double)(cz.keysequence.freeform.Width * Effects.editor_to_canvas_width));
+                        float height = (float)Math.Round((double)(cz.keysequence.freeform.Height * Effects.editor_to_canvas_height));
+
+                        if (width < 3) width = 3;
+                        if (height < 3) height = 3;
+
+                        Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
+
+
+                        EffectLayer temp_layer = new EffectLayer("Color Zone Effect", cz.effect, cz.effect_config, );
 
                         using (Graphics g = Graphics.FromImage(colormap))
                         {
-                            float x_pos = (float)Math.Round((cz.keysequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                            float y_pos = (float)Math.Round((cz.keysequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                            float width = (float)Math.Round((double)(cz.keysequence.freeform.Width * Effects.editor_to_canvas_width));
-                            float height = (float)Math.Round((double)(cz.keysequence.freeform.Height * Effects.editor_to_canvas_height));
-
-                            if (width < 3) width = 3;
-                            if (height < 3) height = 3;
-
-                            Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
-
                             PointF rotatePoint = new PointF(x_pos + (width / 2.0f), y_pos + (height / 2.0f));
 
                             Matrix myMatrix = new Matrix();

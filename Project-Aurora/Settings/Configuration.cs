@@ -68,6 +68,8 @@ namespace Aurora.Settings
         RainbowShift_Diagonal_Other = 6,
         [Description("Rainbow Shift (Custom Angle)")]
         RainbowShift_Custom_Angle = 7,
+        [Description("Gradient Shift (Custom Angle)")]
+        GradientShift_Custom_Angle = 8,
     }
 
     public enum AppExitMode

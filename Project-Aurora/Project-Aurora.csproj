@@ -105,6 +105,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ColorBox">
+      <HintPath>References\ColorBox.dll</HintPath>
+    </Reference>
     <Reference Include="Corale.Colore, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Colore.4.0.0\lib\net35\Corale.Colore.dll</HintPath>
       <Private>True</Private>
@@ -207,6 +210,7 @@
     <Compile Include="EffectsEngine\Animations\AnimationMix.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
+    <Compile Include="EffectsEngine\EffectBrush.cs" />
     <Compile Include="EffectsEngine\EffectSmoothColorSpectrum.cs" />
     <Compile Include="Profiles\CSGO\CSGOProfileManager.cs" />
     <Compile Include="Profiles\Desktop\DesktopProfileManager.cs" />
@@ -361,6 +365,7 @@
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
     <Compile Include="Settings\ProfileSettings.cs" />
+    <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />
