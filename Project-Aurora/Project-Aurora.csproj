@@ -105,9 +105,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ColorBox">
-      <HintPath>References\ColorBox.dll</HintPath>
-    </Reference>
     <Reference Include="Corale.Colore, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Colore.4.0.0\lib\net35\Corale.Colore.dll</HintPath>
       <Private>True</Private>
@@ -687,6 +684,10 @@
     <ProjectReference Include="..\Aurora-Updater\Aurora-Updater.csproj">
       <Project>{6f81d40a-6aa0-4c8b-a395-779ef3003ca4}</Project>
       <Name>Aurora-Updater</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ColorBox\ColorBox.csproj">
+      <Project>{40085232-aced-4cbe-945b-90ba8153c151}</Project>
+      <Name>ColorBox</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -248,7 +248,7 @@ namespace Aurora.Profiles.RocketLeague
                 this.preview_boost_amount_label.Text = (int)((sender as Slider).Value)+"%";
 
                 if(IsLoaded)
-                    GameEvent_RocketLeague.SetBoost((float)((sender as Slider).Value)/33.0f);
+                    GameEvent_RocketLeague.SetBoost((int)((sender as Slider).Value));
             }
         }
 

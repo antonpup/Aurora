@@ -1,6 +1,5 @@
 ﻿using Aurora.Profiles.Desktop;
 using Aurora.Profiles.GTA5;
-using Aurora.Profiles.GTA5.GSI;
 using Aurora.Profiles.Payday_2.GSI.Nodes;
 using Aurora.Settings;
 using System;
@@ -296,6 +295,27 @@ namespace Aurora.Utils
             if (value == null || string.IsNullOrEmpty(value.ToString()))
                 return AppExitMode.Ask;
             return StringToEnum<AppExitMode>(value.ToString());
+        }
+
+        public static T StringToEnum<T>(string name)
+        {
+            return (T)Enum.Parse(typeof(T), name);
+        }
+    }
+
+    public class AnimationTypeToStringVC : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return AnimationType.None;
+            return (StringToEnum<AnimationType>(value.ToString())).GetDescription();
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return AnimationType.None;
+            return StringToEnum<AnimationType>(value.ToString());
         }
 
         public static T StringToEnum<T>(string name)

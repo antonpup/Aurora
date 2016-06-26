@@ -68,6 +68,8 @@ namespace Aurora.EffectsEngine
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
             peripheral = new Color();
             Brush brush;
+            float x_shift = 0.0f;
+            float y_shift = 0.0f;
 
             switch (effect)
             {
@@ -83,9 +85,29 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
+                    if (effect_config.animation_type == AnimationType.Translate_X)
+                    {
+                        x_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_Y)
+                    {
+                        y_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_XY)
+                    {
+                        x_shift = effect_config.shift_amount;
+                        y_shift = effect_config.shift_amount;
+                    }
+
+                    if (effect_config.animation_reverse)
+                    {
+                        x_shift *= -1.0f;
+                        y_shift *= -1.0f;
+                    }
+
                     brush = CreateRainbowBrush();
                     (brush as LinearGradientBrush).RotateTransform(0.0f);
-                    (brush as LinearGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                    (brush as LinearGradientBrush).TranslateTransform(x_shift, y_shift);
 
                     Fill(brush);
 
@@ -95,9 +117,29 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
+                    if (effect_config.animation_type == AnimationType.Translate_X)
+                    {
+                        x_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_Y)
+                    {
+                        y_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_XY)
+                    {
+                        x_shift = effect_config.shift_amount;
+                        y_shift = effect_config.shift_amount;
+                    }
+
+                    if (effect_config.animation_reverse)
+                    {
+                        x_shift *= -1.0f;
+                        y_shift *= -1.0f;
+                    }
+
                     brush = CreateRainbowBrush();
                     (brush as LinearGradientBrush).RotateTransform(90.0f);
-                    (brush as LinearGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                    (brush as LinearGradientBrush).TranslateTransform(x_shift, y_shift);
 
                     Fill(brush);
 
@@ -107,9 +149,29 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
+                    if (effect_config.animation_type == AnimationType.Translate_X)
+                    {
+                        x_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_Y)
+                    {
+                        y_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_XY)
+                    {
+                        x_shift = effect_config.shift_amount;
+                        y_shift = effect_config.shift_amount;
+                    }
+
+                    if (effect_config.animation_reverse)
+                    {
+                        x_shift *= -1.0f;
+                        y_shift *= -1.0f;
+                    }
+
                     brush = CreateRainbowBrush();
                     (brush as LinearGradientBrush).RotateTransform(45.0f);
-                    (brush as LinearGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                    (brush as LinearGradientBrush).TranslateTransform(x_shift, y_shift);
 
                     Fill(brush);
 
@@ -119,9 +181,29 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
+                    if (effect_config.animation_type == AnimationType.Translate_X)
+                    {
+                        x_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_Y)
+                    {
+                        y_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_XY)
+                    {
+                        x_shift = effect_config.shift_amount;
+                        y_shift = effect_config.shift_amount;
+                    }
+
+                    if (effect_config.animation_reverse)
+                    {
+                        x_shift *= -1.0f;
+                        y_shift *= -1.0f;
+                    }
+
                     brush = CreateRainbowBrush();
                     (brush as LinearGradientBrush).RotateTransform(-45.0f);
-                    (brush as LinearGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                    (brush as LinearGradientBrush).TranslateTransform(x_shift, y_shift);
 
                     Fill(brush);
 
@@ -131,9 +213,30 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
+
+                    if (effect_config.animation_type == AnimationType.Translate_X)
+                    {
+                        x_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_Y)
+                    {
+                        y_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_XY)
+                    {
+                        x_shift = effect_config.shift_amount;
+                        y_shift = effect_config.shift_amount;
+                    }
+
+                    if(effect_config.animation_reverse)
+                    {
+                        x_shift *= -1.0f;
+                        y_shift *= -1.0f;
+                    }
+
                     brush = CreateRainbowBrush();
                     (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
-                    (brush as LinearGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                    (brush as LinearGradientBrush).TranslateTransform(x_shift, y_shift);
 
                     Fill(brush);
 
@@ -143,6 +246,26 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 0.25f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
+                    if (effect_config.animation_type == AnimationType.Translate_X)
+                    {
+                        x_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_Y)
+                    {
+                        y_shift = effect_config.shift_amount;
+                    }
+                    else if (effect_config.animation_type == AnimationType.Translate_XY)
+                    {
+                        x_shift = effect_config.shift_amount;
+                        y_shift = effect_config.shift_amount;
+                    }
+
+                    if (effect_config.animation_reverse)
+                    {
+                        x_shift *= -1.0f;
+                        y_shift *= -1.0f;
+                    }
+
                     brush = effect_config.brush.GetDrawingBrush();
                     if (effect_config.brush.type == EffectBrush.BrushType.Linear)
                     {
@@ -151,7 +274,7 @@ namespace Aurora.EffectsEngine
                             scale_y != 0.0f ? scale_y : Effects.canvas_height
                             );
                         (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
-                        (brush as LinearGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                        (brush as LinearGradientBrush).TranslateTransform(x_shift, y_shift);
                     }
                     else if (effect_config.brush.type == EffectBrush.BrushType.Radial)
                     {
@@ -160,7 +283,7 @@ namespace Aurora.EffectsEngine
                             scale_y != 0.0f ? scale_y : Effects.canvas_height
                             );
                         (brush as PathGradientBrush).RotateTransform(effect_config.angle);
-                        //(brush as PathGradientBrush).TranslateTransform(effect_config.shift_amount, effect_config.shift_amount);
+                        //(brush as PathGradientBrush).TranslateTransform(x_shift, y_shift);
                     }
 
                     Fill(brush);
@@ -641,7 +764,7 @@ namespace Aurora.EffectsEngine
 
                     Rectangle rect_rest = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
                     g.FillRectangle(new SolidBrush(backgroundColor), rect_rest);
-                    
+
                     g.FillRectangle(new SolidBrush(foregroundColor), rect);
                 }
             }
@@ -693,7 +816,7 @@ namespace Aurora.EffectsEngine
                     g.FillRectangle(brush, rect);
                 }
 
-                
+
             }
         }
 
@@ -759,7 +882,7 @@ namespace Aurora.EffectsEngine
                         Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
 
 
-                        EffectLayer temp_layer = new EffectLayer("Color Zone Effect", cz.effect, cz.effect_config, );
+                        EffectLayer temp_layer = new EffectLayer("Color Zone Effect", cz.effect, cz.effect_config);
 
                         using (Graphics g = Graphics.FromImage(colormap))
                         {

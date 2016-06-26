@@ -167,10 +167,39 @@ namespace Aurora.EffectsEngine
 
             }
 
-            if (!color_gradients.ContainsKey(0.0f))
-                color_gradients.Add(0.0f, System.Drawing.Color.Transparent);
-            if (!color_gradients.ContainsKey(1.0f))
-                color_gradients.Add(1.0f, System.Drawing.Color.Transparent);
+            if(color_gradients.Count > 0)
+            {
+                bool firstFound = false;
+                System.Drawing.Color first_color = new System.Drawing.Color();
+                System.Drawing.Color last_color = new System.Drawing.Color();
+
+                foreach(var kvp in color_gradients)
+                {
+                    if(!firstFound)
+                    {
+                        first_color = kvp.Value;
+                        firstFound = true;
+                    }
+
+                    last_color = kvp.Value;
+                }
+
+                if (!color_gradients.ContainsKey(0.0f))
+                    color_gradients.Add(0.0f, first_color);
+
+                if (!color_gradients.ContainsKey(1.0f))
+                    color_gradients.Add(1.0f, last_color);
+            }
+            else
+            {
+                if (!color_gradients.ContainsKey(0.0f))
+                    color_gradients.Add(0.0f, System.Drawing.Color.Transparent);
+
+                if (!color_gradients.ContainsKey(1.0f))
+                    color_gradients.Add(1.0f, System.Drawing.Color.Transparent);
+            }
+
+            
         }
 
         public EffectBrush(System.Windows.Media.Brush brush)
@@ -256,10 +285,37 @@ namespace Aurora.EffectsEngine
 
             }
 
-            if (!color_gradients.ContainsKey(0.0f))
-                color_gradients.Add(0.0f, System.Drawing.Color.Transparent);
-            if (!color_gradients.ContainsKey(1.0f))
-                color_gradients.Add(1.0f, System.Drawing.Color.Transparent);
+            if (color_gradients.Count > 0)
+            {
+                bool firstFound = false;
+                System.Drawing.Color first_color = new System.Drawing.Color();
+                System.Drawing.Color last_color = new System.Drawing.Color();
+
+                foreach (var kvp in color_gradients)
+                {
+                    if (!firstFound)
+                    {
+                        first_color = kvp.Value;
+                        firstFound = true;
+                    }
+
+                    last_color = kvp.Value;
+                }
+
+                if (!color_gradients.ContainsKey(0.0f))
+                    color_gradients.Add(0.0f, first_color);
+
+                if (!color_gradients.ContainsKey(1.0f))
+                    color_gradients.Add(1.0f, last_color);
+            }
+            else
+            {
+                if (!color_gradients.ContainsKey(0.0f))
+                    color_gradients.Add(0.0f, System.Drawing.Color.Transparent);
+
+                if (!color_gradients.ContainsKey(1.0f))
+                    color_gradients.Add(1.0f, System.Drawing.Color.Transparent);
+            }
         }
 
         public System.Drawing.Brush GetDrawingBrush()

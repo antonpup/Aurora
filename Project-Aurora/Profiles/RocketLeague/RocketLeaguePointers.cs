@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aurora.Profiles.RocketLeague
+﻿namespace Aurora.Profiles.RocketLeague
 {
     public class PointerData
     {
@@ -17,6 +11,6 @@ namespace Aurora.Profiles.RocketLeague
         public PointerData Team;
         public PointerData Orange_score;
         public PointerData Blue_score;
-        public PointerData Boost_amout;
+        public PointerData Boost_amount;
     }
 }

@@ -2,7 +2,6 @@
 using Aurora.EffectsEngine;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Aurora.Utils;
 using System.Drawing.Drawing2D;
@@ -19,7 +18,7 @@ namespace Aurora.Profiles.RocketLeague
         //Pointers
         private RocketLeaguePointers pointers;
 
-        private static float boost_amout = 0.0f;
+        private static float boost_amount = 0.0f;
         private static int team = 0;
         private static int team1_score = 0;
         private static int team2_score = 0;
@@ -78,7 +77,7 @@ namespace Aurora.Profiles.RocketLeague
 
         public static void SetBoost(float boost_amt)
         {
-            boost_amout = boost_amt;
+            boost_amount = boost_amt;
         }
 
         public static void SetTeam(int team)
@@ -116,7 +115,7 @@ namespace Aurora.Profiles.RocketLeague
                     team1_score = memread.ReadInt(pointers.Orange_score.baseAddress, pointers.Orange_score.pointers); //Orange Team
                     team2_score = memread.ReadInt(pointers.Blue_score.baseAddress, pointers.Blue_score.pointers); //Blue Team
 
-                    boost_amout = memread.ReadFloat(pointers.Boost_amout.baseAddress, pointers.Boost_amout.pointers);
+                    boost_amount = memread.ReadFloat(pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers);
                 }
             }
 
@@ -200,7 +199,7 @@ namespace Aurora.Profiles.RocketLeague
             {
                 EffectLayer boost_layer = new EffectLayer("Rocket League - Boost Indicator");
 
-                double percentOccupied = ((double)boost_amout / (double)3.0);
+                double percentOccupied = ((double)boost_amount / (double)3.0);
 
                 ColorSpectrum boost_spec = new ColorSpectrum((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_low, (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_high);
                 boost_spec.SetColorAt(0.75f, (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_mid);

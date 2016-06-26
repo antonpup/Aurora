@@ -28,9 +28,19 @@ namespace Aurora.Controls
             this.effect_speed_slider.Value = EffectConfig.speed;
             this.effect_speed_label.Text = "x " + EffectConfig.speed;
             this.effect_angle.Text = EffectConfig.angle.ToString();
-            this.gradient_editor.Brush = EffectConfig.brush.GetMediaBrush();
+            Brush brush = EffectConfig.brush.GetMediaBrush();
+            try
+            {
+                this.gradient_editor.Brush = brush;
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
 
-            this.gradient_editor.ColorChanged += Gradient_editor_ColorChanged;
+                //this.gradient_editor.Brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
+            }
+
+            this.gradient_editor.BrushChanged += Gradient_editor_BrushChanged;
         }
 
         public EffectSettingsWindow(LayerEffectConfig EffectConfig)
@@ -43,8 +53,9 @@ namespace Aurora.Controls
             this.effect_speed_slider.Value = EffectConfig.speed;
             this.effect_speed_label.Text = "x " + EffectConfig.speed;
             this.effect_angle.Text = EffectConfig.angle.ToString();
+            this.effect_animation_type.SelectedIndex = (int)EffectConfig.animation_type;
+            this.effect_animation_reversed.IsChecked = EffectConfig.animation_reverse;
             Brush brush = EffectConfig.brush.GetMediaBrush();
-            brush.Changed += Brush_Changed;
             try
             {
                 this.gradient_editor.Brush = brush;
@@ -56,15 +67,10 @@ namespace Aurora.Controls
                 //this.gradient_editor.Brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
             }
 
-            this.gradient_editor.ColorChanged += Gradient_editor_ColorChanged;
+            this.gradient_editor.BrushChanged += Gradient_editor_BrushChanged;
         }
 
-        private void Brush_Changed(object sender, EventArgs e)
-        {
-            EffectConfig.brush = new EffectsEngine.EffectBrush(this.gradient_editor.Brush);
-        }
-
-        private void Gradient_editor_ColorChanged(object sender, ColorBox.ColorChangedEventArgs e)
+        private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
         {
             EffectConfig.brush = new EffectsEngine.EffectBrush(this.gradient_editor.Brush);
         }
@@ -142,6 +148,22 @@ namespace Aurora.Controls
                     (sender as IntegerUpDown).Background = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
                     (sender as IntegerUpDown).ToolTip = "Entered value is not a number";
                 }
+            }
+        }
+
+        private void effect_animation_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                EffectConfig.animation_type = (AnimationType)Enum.Parse(typeof(AnimationType),effect_animation_type.SelectedIndex.ToString());
+            }
+        }
+
+        private void effect_animation_reversed_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                EffectConfig.animation_reverse = (effect_animation_reversed.IsChecked.HasValue ? effect_animation_reversed.IsChecked.Value : false);
             }
         }
     }

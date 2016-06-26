@@ -9,7 +9,7 @@
              xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
              xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
-            xmlns:EnumPD2="clr-namespace:Aurora.Profiles.Payday_2"
+             xmlns:EnumPD2="clr-namespace:Aurora.Profiles.Payday_2"
              xmlns:EnumPD2_GSI="clr-namespace:Aurora.Profiles.Payday_2.GSI.Nodes"
              xmlns:devices="clr-namespace:Aurora.Devices"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
