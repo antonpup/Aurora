@@ -46,7 +46,6 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * LightPack
 * Hearthstone
 * Installer
-* Import/Export for profile settings
 
 ## Video demonstrations
 Dota 2 Demo
@@ -92,6 +91,8 @@ General
 * Display shortcut keys with Shortcuts Assistant
 * Automatic updater
 * Ability to select your preferred keyboard layout and brand.
+* Import/Export for profile settings
+* Customizable gradient selections for color zones
 
 Dota 2 features
 
@@ -224,6 +225,7 @@ I do not have any intent in charging money for Aurora, it will always be a free 
 * [LogiLed2Corsair](https://github.com/VRocker/LogiLed2Corsair) - Used as a resource for Wrappers
 * [GSI for Payday 2](https://github.com/Last-Bullet-Development/PD2GSI) - A GSI mod for Payday 2
 * [LightFX Extender](https://github.com/Archomeda/lightfx-extender) - A LightFX wrapped by a friend of mine, used as a resource for LightFX Wrapper.
+* [ColorBox](http://colorbox.codeplex.com/) - Used for gradient editor/picker. This repo contains a modified version of ColorBox, to suit Aurora's needs a bit more.
 
 
 # Special thanks to the testing team:
