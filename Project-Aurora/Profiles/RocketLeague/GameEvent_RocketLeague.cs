@@ -199,7 +199,7 @@ namespace Aurora.Profiles.RocketLeague
             {
                 EffectLayer boost_layer = new EffectLayer("Rocket League - Boost Indicator");
 
-                double percentOccupied = ((double)boost_amount / (double)3.0);
+                double percentOccupied = boost_amount;
 
                 ColorSpectrum boost_spec = new ColorSpectrum((Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_low, (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_high);
                 boost_spec.SetColorAt(0.75f, (Global.Configuration.ApplicationProfiles["RocketLeague"].Settings as RocketLeagueSettings).boost_mid);
