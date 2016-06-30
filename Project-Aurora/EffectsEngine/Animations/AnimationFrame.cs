@@ -7,8 +7,8 @@ namespace Aurora.EffectsEngine.Animations
         internal Color _color;
         internal RectangleF _dimension;
         internal int _width;
-        internal Pen _pen;
-        internal Brush _brush;
+        internal Pen _pen = null;
+        internal Brush _brush = null;
 
         public AnimationFrame()
         {

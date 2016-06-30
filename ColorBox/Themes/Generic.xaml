@@ -281,7 +281,7 @@
                                                                             </Setter.Value>
                                                                         </Setter>
                                                                     </DataTrigger>
-                                                                    <!--
+                                                                    
                                                                     <DataTrigger Binding="{Binding}" Value="Radial">
                                                                         <Setter Property="ToolTip" Value="Radial Gradient Brush"/>
                                                                         <Setter Property="Fill" TargetName="Icon">
@@ -293,7 +293,7 @@
                                                                             </Setter.Value>
                                                                         </Setter>
                                                                     </DataTrigger>
-                                                                    -->
+                                                                    
                                                                 </ControlTemplate.Triggers>
                                                             </ControlTemplate>
                                                         </Setter.Value>

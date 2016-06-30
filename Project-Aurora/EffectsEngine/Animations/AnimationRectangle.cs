@@ -28,13 +28,14 @@ namespace Aurora.EffectsEngine.Animations
 
         public override void Draw(Graphics g)
         {
-            _pen = new Pen(_color);
-            _pen.Width = _width;
-            _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+            if (_pen == null)
+            {
+                _pen = new Pen(_color);
+                _pen.Width = _width;
+                _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+            }
 
             g.DrawRectangle(_pen, _dimension_int);
-
-            _pen.Dispose();
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

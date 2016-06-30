@@ -69,13 +69,15 @@ namespace Aurora.EffectsEngine.Animations
             if (_start_point.Equals(_end_point))
                 return;
 
-            _pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
-            _pen.Width = _width;
-            _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+            if (_pen == null)
+            {
+                _pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
+                _pen.Width = _width;
+                _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+            }
 
             g.DrawLine(_pen, _start_point, _end_point);
 
-            _pen.Dispose();
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

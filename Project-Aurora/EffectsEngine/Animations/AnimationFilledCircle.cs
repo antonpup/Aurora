@@ -30,11 +30,12 @@ namespace Aurora.EffectsEngine.Animations
 
         public override void Draw(Graphics g)
         {
-            _brush = new SolidBrush(_color);
+            if (_brush == null)
+            {
+                _brush = new SolidBrush(_color);
+            }
 
             g.FillEllipse(_brush, _dimension);
-
-            _brush.Dispose();
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

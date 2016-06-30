@@ -44,6 +44,6 @@ namespace ColorBox
         //None,
         Solid,
         Linear,
-        //Radial
+        Radial
     }
 }

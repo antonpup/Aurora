@@ -398,19 +398,22 @@ namespace Aurora.EffectsEngine
 
                     foreach (var kvp in color_gradients)
                     {
-                        brush_positions.Add(kvp.Key);
+                        brush_positions.Add(1.0f - kvp.Key);
                         brush_colors.Add(kvp.Value);
                     }
 
                     brush.CenterPoint = center;
-                    brush.CenterColor = brush_colors[0];
+                    //brush.CenterColor = brush_colors[0];
 
-                    brush.SurroundColors = brush_colors.ToArray();
+                    //brush.SurroundColors = brush_colors.ToArray();
 
-                    //System.Drawing.Drawing2D.ColorBlend color_blend = new System.Drawing.Drawing2D.ColorBlend();
-                    //color_blend.Colors = brush_colors.ToArray();
-                    //color_blend.Positions = brush_positions.ToArray();
-                    //brush.InterpolationColors = color_blend;
+                    brush_colors.Reverse();
+                    brush_positions.Reverse();
+
+                    System.Drawing.Drawing2D.ColorBlend color_blend = new System.Drawing.Drawing2D.ColorBlend();
+                    color_blend.Colors = brush_colors.ToArray();
+                    color_blend.Positions = brush_positions.ToArray();
+                    brush.InterpolationColors = color_blend;
 
                     _drawingbrush = brush;
                 }

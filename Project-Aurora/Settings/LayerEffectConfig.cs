@@ -9,12 +9,12 @@ namespace Aurora.Settings
     {
         [Description("No Animation")]
         None,
-        [Description("Translate on X")]
-        Translate_X,
-        [Description("Translate on Y")]
-        Translate_Y,
-        [Description("Translate Both")]
-        Translate_XY
+        [Description("Translate X and Y")]
+        Translate_XY,
+        [Description("(Radial only) Zoom in")]
+        Zoom_in,
+        [Description("(Radial only) Zoom out")]
+        Zoom_out,
     };
 
     public class LayerEffectConfig
@@ -25,6 +25,9 @@ namespace Aurora.Settings
         public float angle;
         public AnimationType animation_type;
         public bool animation_reverse;
+        public bool animation_fade;
+        public bool respect_cz_dimensions;
+        public bool retain_square_ratio;
         public EffectBrush brush;
 
         [JsonIgnoreAttribute]
@@ -40,6 +43,7 @@ namespace Aurora.Settings
             angle = 0.0f;
             animation_type = AnimationType.Translate_XY;
             animation_reverse = false;
+            respect_cz_dimensions = true;
             brush = new EffectBrush(
                 new System.Drawing.Drawing2D.LinearGradientBrush(
                     new PointF(0, 0),

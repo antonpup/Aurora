@@ -423,7 +423,7 @@ namespace ColorBox
         {
             get
             {
-                BrushTypes temp = /*BrushTypes.None |*/ BrushTypes.Solid | BrushTypes.Linear /*| BrushTypes.Radial*/;
+                BrushTypes temp = /*BrushTypes.None |*/ BrushTypes.Solid | BrushTypes.Linear | BrushTypes.Radial;
                 foreach (Enum value in Enum.GetValues(temp.GetType()))
                     if (temp.HasFlag(value))
                         yield return value;
@@ -474,10 +474,10 @@ namespace ColorBox
                 }
                 else
                 {
+                    /*
                     c.BrushType = BrushTypes.Solid;
                     c.Color = Color.FromArgb(255, 255, 0, 0);
-
-                    /*
+                    */
 
                     RadialGradientBrush rgb = brush as RadialGradientBrush;
                     c.GradientOriginX = rgb.GradientOrigin.X;
@@ -492,7 +492,7 @@ namespace ColorBox
                     c.BrushType = BrushTypes.Radial;
                     //c.Color = rgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
                     //c.SelectedGradient = rgb.GradientStops.OrderBy(x => x.Offset).Last();
-                    */
+                    
                 }
 
                 c._BrushTypeSetInternally = false;
@@ -804,7 +804,7 @@ namespace ColorBox
                     
                     break;
 
-                /*
+                
                 case BrushTypes.Radial:
 
                     var brush1 = new RadialGradientBrush();                   
@@ -820,7 +820,7 @@ namespace ColorBox
                     brush1.SpreadMethod = this.SpreadMethod;
                     Brush = brush1;
 
-                    break;*/
+                    break;
             }
             
             /*
