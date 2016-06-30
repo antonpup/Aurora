@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -17,6 +18,7 @@ namespace Aurora
         private bool retrieved_unique_logfile = false;
         private string logfile = "log.txt";
         private string logdir = "logs/";
+        private Queue<string> message_queue = new Queue<string>();
 
         public Logger()
         {
@@ -66,12 +68,21 @@ namespace Aurora
 
         public void LogLine(string message, Logging_Level level = Logging_Level.None, bool timestamp = true)
         {
+            string logLine = PrepareMessage(message, level, timestamp);
+
             try
             {
                 System.IO.StreamWriter sw = System.IO.File.AppendText(GetPath());
                 try
                 {
-                    string logLine = (level != Logging_Level.None ? "[" + LevelToString(level) + "] " : "") + (timestamp ? System.String.Format("{0:G}: ", System.DateTime.Now) : "" ) + System.String.Format("{0}", message);
+                    while(message_queue.Count > 0)
+                    {
+                        string queue_msg = message_queue.Dequeue();
+
+                        System.Diagnostics.Debug.WriteLine(queue_msg);
+                        sw.WriteLine(queue_msg);
+                    }
+
                     System.Diagnostics.Debug.WriteLine(logLine);
                     sw.WriteLine(logLine);
                 }
@@ -83,7 +94,14 @@ namespace Aurora
             catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("There was an exception during logging, " + e.Message);
+
+                message_queue.Enqueue(logLine);
             }
+        }
+
+        private string PrepareMessage(string message, Logging_Level level, bool timestamp)
+        {
+            return (level != Logging_Level.None ? "[" + LevelToString(level) + "] " : "") + (timestamp ? System.String.Format("{0:G}: ", System.DateTime.Now) : "") + System.String.Format("{0}", message);
         }
 
         private string LevelToString(Logging_Level level)
