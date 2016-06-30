@@ -1,12 +1,7 @@
-﻿using Aurora.Devices;
-using Aurora.EffectsEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace Aurora.Devices
 {
@@ -15,6 +10,7 @@ namespace Aurora.Devices
         private List<Device> devices = new List<Device>();
 
         private bool anyInitialized = false;
+        private bool retryActivated = false;
 
         public DeviceManager()
         {
@@ -31,6 +27,30 @@ namespace Aurora.Devices
                     anyInitialized = true;
 
                 Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
+            }
+
+            if(!retryActivated)
+            {
+                Thread retryThread = new Thread(RetryInitialize);
+                retryThread.Start();
+            }
+        }
+
+        private void RetryInitialize()
+        {
+            for(int try_count = 0; try_count < 5; try_count++)
+            {
+                Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);
+
+                foreach (Device device in devices)
+                {
+                    if (device.Initialize())
+                        anyInitialized = true;
+
+                    Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
+                }
+
+                Thread.Sleep(5000);
             }
         }
 

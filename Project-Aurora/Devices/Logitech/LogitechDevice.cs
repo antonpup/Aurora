@@ -160,46 +160,51 @@ namespace Aurora.Devices.Logitech
 
         public bool Initialize()
         {
-            try
+            if(!isInitialized)
             {
-                if (!LogitechGSDK.LogiLedInit())
+                try
                 {
-                    Global.logger.LogLine("Logitech LED SDK could not be initialized.", Logging_Level.Error);
-
-                    isInitialized = false;
-                    return false;
-                }
-
-                if (LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB | LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB | LogitechGSDK.LOGI_DEVICETYPE_MONOCHROME) && LogitechGSDK.LogiLedSaveCurrentLighting())
-                {
-                    if (Global.Configuration.logitech_first_time)
+                    if (!LogitechGSDK.LogiLedInit())
                     {
-                        LogitechInstallInstructions instructions = new LogitechInstallInstructions();
-                        instructions.ShowDialog();
+                        Global.logger.LogLine("Logitech LED SDK could not be initialized.", Logging_Level.Error);
 
-                        Global.Configuration.logitech_first_time = false;
-                        Settings.ConfigManager.Save(Global.Configuration);
+                        isInitialized = false;
+                        return false;
                     }
 
-                    isInitialized = true;
-                    return true;
-                }
-                else
-                {
-                    Global.logger.LogLine("Logitech LED SDK could not be initialized. (LogiLedSetTargetDevice or LogiLedSaveCurrentLighting failed)", Logging_Level.Error);
+                    if (LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB | LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB | LogitechGSDK.LOGI_DEVICETYPE_MONOCHROME) && LogitechGSDK.LogiLedSaveCurrentLighting())
+                    {
+                        if (Global.Configuration.logitech_first_time)
+                        {
+                            LogitechInstallInstructions instructions = new LogitechInstallInstructions();
+                            instructions.ShowDialog();
 
-                    isInitialized = false;
+                            Global.Configuration.logitech_first_time = false;
+                            Settings.ConfigManager.Save(Global.Configuration);
+                        }
+
+                        isInitialized = true;
+                        return true;
+                    }
+                    else
+                    {
+                        Global.logger.LogLine("Logitech LED SDK could not be initialized. (LogiLedSetTargetDevice or LogiLedSaveCurrentLighting failed)", Logging_Level.Error);
+
+                        isInitialized = false;
+                        return false;
+                    }
+
+
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine("There was an error initializing Logitech LED SDK.\r\n" + exc.Message, Logging_Level.Error);
+
                     return false;
                 }
-
-
             }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine("There was an error initializing Logitech LED SDK.\r\n" + exc.Message, Logging_Level.Error);
 
-                return false;
-            }
+            return isInitialized;
         }
 
         public void Shutdown()

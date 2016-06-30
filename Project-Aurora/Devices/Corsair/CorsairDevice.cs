@@ -58,48 +58,53 @@ namespace Aurora.Devices.Corsair
 
         public bool Initialize()
         {
-            try
+            if(!isInitialized)
             {
-                CueSDK.Initialize(true);
-                Global.logger.LogLine("Corsair device, Initialized with " + CueSDK.LoadedArchitecture + "-SDK", Logging_Level.Info);
-
-                keyboard = CueSDK.KeyboardSDK;
-                mouse = CueSDK.MouseSDK;
-                headset = CueSDK.HeadsetSDK;
-
-                if (keyboard == null && mouse == null && headset == null)
-                    throw new WrapperException("No devices found");
-                else
+                try
                 {
-                    if (Global.Configuration.corsair_first_time)
+                    CueSDK.Initialize(true);
+                    Global.logger.LogLine("Corsair device, Initialized with " + CueSDK.LoadedArchitecture + "-SDK", Logging_Level.Info);
+
+                    keyboard = CueSDK.KeyboardSDK;
+                    mouse = CueSDK.MouseSDK;
+                    headset = CueSDK.HeadsetSDK;
+
+                    if (keyboard == null && mouse == null && headset == null)
+                        throw new WrapperException("No devices found");
+                    else
                     {
-                        CorsairInstallInstructions instructions = new CorsairInstallInstructions();
-                        instructions.ShowDialog();
+                        if (Global.Configuration.corsair_first_time)
+                        {
+                            CorsairInstallInstructions instructions = new CorsairInstallInstructions();
+                            instructions.ShowDialog();
 
-                        Global.Configuration.corsair_first_time = false;
-                        Settings.ConfigManager.Save(Global.Configuration);
+                            Global.Configuration.corsair_first_time = false;
+                            Settings.ConfigManager.Save(Global.Configuration);
+                        }
+
+                        SaveLeds();
+                        isInitialized = true;
+                        return true;
                     }
-
-                    SaveLeds();
-                    isInitialized = true;
-                    return true;
                 }
-            }
-            catch (CUEException ex)
-            {
-                Global.logger.LogLine("Corsair device, CUE Exception! ErrorCode: " + Enum.GetName(typeof(CorsairError), ex.Error), Logging_Level.Error);
-            }
-            catch (WrapperException ex)
-            {
-                Global.logger.LogLine("Corsair device, Wrapper Exception! Message:" + ex.Message, Logging_Level.Error);
-            }
-            catch (Exception ex)
-            {
-                Global.logger.LogLine("Corsair device, Exception! Message:" + ex, Logging_Level.Error);
+                catch (CUEException ex)
+                {
+                    Global.logger.LogLine("Corsair device, CUE Exception! ErrorCode: " + Enum.GetName(typeof(CorsairError), ex.Error), Logging_Level.Error);
+                }
+                catch (WrapperException ex)
+                {
+                    Global.logger.LogLine("Corsair device, Wrapper Exception! Message:" + ex.Message, Logging_Level.Error);
+                }
+                catch (Exception ex)
+                {
+                    Global.logger.LogLine("Corsair device, Exception! Message:" + ex, Logging_Level.Error);
+                }
+
+                isInitialized = false;
+                return false;
             }
 
-            isInitialized = false;
-            return false;
+            return isInitialized;
         }
 
         private void SaveLeds()
