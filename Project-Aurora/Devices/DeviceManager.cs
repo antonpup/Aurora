@@ -11,6 +11,10 @@ namespace Aurora.Devices
 
         private bool anyInitialized = false;
         private bool retryActivated = false;
+        private const int retryInterval = 5000;
+        private const int retryAttemps = 10;
+        private int retryAttemptsLeft = retryAttemps;
+        public event EventHandler NewDevicesInitialized;
 
         public DeviceManager()
         {
@@ -29,7 +33,10 @@ namespace Aurora.Devices
                 Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
             }
 
-            if(!retryActivated)
+            if (NewDevicesInitialized != null)
+                NewDevicesInitialized(this, new EventArgs());
+
+            if (!retryActivated)
             {
                 Thread retryThread = new Thread(RetryInitialize);
                 retryThread.Start();
@@ -38,19 +45,27 @@ namespace Aurora.Devices
 
         private void RetryInitialize()
         {
-            for(int try_count = 0; try_count < 5; try_count++)
+            for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
                 Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);
 
                 foreach (Device device in devices)
                 {
+                    if (device.IsInitialized())
+                        continue;
+
                     if (device.Initialize())
                         anyInitialized = true;
 
                     Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
                 }
 
-                Thread.Sleep(5000);
+                retryAttemptsLeft--;
+
+                if (NewDevicesInitialized != null)
+                    NewDevicesInitialized(this, new EventArgs());
+
+                Thread.Sleep(retryInterval);
             }
         }
 
@@ -65,7 +80,7 @@ namespace Aurora.Devices
 
             foreach (Device device in devices)
             {
-                if(device.IsInitialized())
+                if (device.IsInitialized())
                 {
                     ret.Add(device);
                 }
@@ -78,7 +93,7 @@ namespace Aurora.Devices
         {
             foreach (Device device in devices)
             {
-                if(device.IsInitialized())
+                if (device.IsInitialized())
                 {
                     device.Shutdown();
                     Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was shutdown", Logging_Level.Info);
@@ -120,6 +135,9 @@ namespace Aurora.Devices
 
             foreach (Device device in devices)
                 devices_info += device.GetDeviceDetails() + "\r\n";
+
+            if(retryAttemptsLeft > 0)
+                devices_info += "Retries: " + retryAttemptsLeft + "\r\n";
 
             return devices_info;
         }

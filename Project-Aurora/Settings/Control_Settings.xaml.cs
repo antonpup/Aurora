@@ -82,7 +82,26 @@ namespace Aurora.Settings
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
 
-            Global.effengine.NewLayerRender += OnLayerRendered;
+            Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
+
+            //Global.effengine.NewLayerRender += OnLayerRendered;
+        }
+
+        private void Dev_manager_NewDevicesInitialized(object sender, EventArgs e)
+        {
+            try
+            {
+                Dispatcher.Invoke(
+                            () =>
+                            {
+                                this.about_connected_devices.Text = "Connected Devices\r\n" + Global.dev_manager.GetDevices();
+                                this.about_connected_devices.UpdateLayout();
+                            });
+            }
+            catch (Exception ex)
+            {
+                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+            }
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
