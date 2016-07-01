@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace Aurora.Settings
 {
@@ -73,12 +74,32 @@ namespace Aurora.Settings
             }
         }
 
+        private void reset_profile_button_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button)
+            {
+                ProfileManager.ResetProfile();
+
+                this.profiles_combobox.Items.Clear();
+                foreach (var kvp in ProfileManager.Profiles)
+                    this.profiles_combobox.Items.Add(kvp.Key);
+
+                this.load_profile_button.IsEnabled = ProfileManager.Profiles.Count > 0;
+            }
+        }
+
         private void view_folder_button_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
             {
                 System.Diagnostics.Process.Start(ProfileManager.GetProfileFolderPath());
             }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

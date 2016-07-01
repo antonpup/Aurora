@@ -236,7 +236,7 @@ namespace Aurora.Settings
             if (keyboard.Count > 0)
                 keyboard.Last().line_break = false;
 
-            keyboard.Add(new KeyboardKey("Mouse", Devices.DeviceKeys.Peripheral, true, true, 12, 45, -60, 90, 90, 6, 6, 4, -3));
+            keyboard.Add(new KeyboardKey("Mouse/\r\nHeadset", Devices.DeviceKeys.Peripheral, true, true, 12, 45, -60, 90, 90, 6, 6, 4, -3));
 
             if (keyboard.Count > 0)
                 keyboard.Last().line_break = true;

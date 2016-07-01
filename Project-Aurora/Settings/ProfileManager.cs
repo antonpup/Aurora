@@ -63,7 +63,13 @@ namespace Aurora.Settings
         {
             if(Profiles.ContainsKey(profile_name))
             {
-                Settings = Profiles[profile_name];
+                Type setting_type = Profiles[profile_name].GetType();
+
+                Settings = (ProfileSettings)JsonConvert.DeserializeObject(
+                    JsonConvert.SerializeObject(Profiles[profile_name], setting_type, new JsonSerializerSettings { }),
+                    setting_type,
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }
+                    ); //I know this is bad. You can laugh at me for this one. :(
 
                 if (ProfileChanged != null)
                     ProfileChanged(this, new EventArgs());
@@ -81,7 +87,13 @@ namespace Aurora.Settings
                 if(result != MessageBoxResult.Yes)
                     return;
 
-                Profiles[profile_name] = Settings;
+                Type setting_type = Settings.GetType();
+
+                Profiles[profile_name] = (ProfileSettings)JsonConvert.DeserializeObject(
+                    JsonConvert.SerializeObject(Settings, setting_type, new JsonSerializerSettings { }),
+                    setting_type,
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }
+                    ); //I know this is bad. You can laugh at me for this one. :(
             }
             else
             {
@@ -102,6 +114,22 @@ namespace Aurora.Settings
         public virtual string GetProfileFolderPath()
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", InternalName);
+        }
+
+        public void ResetProfile()
+        {
+            try
+            {
+                Type setting_type = Settings.GetType();
+                Settings = (ProfileSettings)Activator.CreateInstance(setting_type);
+
+                if (ProfileChanged != null)
+                    ProfileChanged(this, new EventArgs());
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine(string.Format("Exception Resetting Profile, Exception: {0}", exc), Logging_Level.Error);
+            }
         }
 
         internal virtual ProfileSettings LoadProfile(string path)
