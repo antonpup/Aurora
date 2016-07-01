@@ -2,18 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Aurora.Controls
 {
@@ -199,7 +190,7 @@ namespace Aurora.Controls
 
         private void cz_list_up_Click(object sender, RoutedEventArgs e)
         {
-            if (cz_list.SelectedIndex != -1)
+            if (cz_list.SelectedIndex > 0)
             {
                 int selected_index = cz_list.SelectedIndex;
                 var saved = cz_list.Items[selected_index];
@@ -218,7 +209,7 @@ namespace Aurora.Controls
 
         private void cz_list_down_Click(object sender, RoutedEventArgs e)
         {
-            if (cz_list.SelectedIndex != -1)
+            if (cz_list.SelectedIndex != -1 && cz_list.SelectedIndex < cz_list.Items.Count - 1)
             {
                 int selected_index = cz_list.SelectedIndex;
                 var saved = cz_list.Items[selected_index];
@@ -254,8 +245,8 @@ namespace Aurora.Controls
             this.effect_settings_button.IsEnabled = isEnabled;
             this.ks.IsEnabled = isEnabled;
             this.cz_list_remove.IsEnabled = isEnabled;
-            this.cz_list_down.IsEnabled = isEnabled;
-            this.cz_list_up.IsEnabled = isEnabled;
+            this.cz_list_down.IsEnabled = (cz_list.Items.Count > 1);
+            this.cz_list_up.IsEnabled = (cz_list.Items.Count > 1);
         }
     }
 }

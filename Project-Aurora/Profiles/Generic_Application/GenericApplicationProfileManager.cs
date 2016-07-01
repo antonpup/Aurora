@@ -20,7 +20,6 @@ namespace Aurora.Profiles.Generic_Application
         public override string GetProfileFolderPath()
         {
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles", InternalName);
-            Global.logger.LogLine("Path = " + path, Logging_Level.Info);
             return path;
         }
 
