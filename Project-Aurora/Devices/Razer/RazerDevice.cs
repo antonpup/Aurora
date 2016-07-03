@@ -1,12 +1,7 @@
-﻿using Aurora.EffectsEngine;
-using Corale.Colore;
-using Corale.Colore.Core;
+﻿using Corale.Colore.Core;
 using Corale.Colore.Razer.Keyboard;
-using Corale.Colore.Razer.Mouse;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 
 namespace Aurora.Devices.Razer
 {
@@ -44,7 +39,7 @@ namespace Aurora.Devices.Razer
 
         public bool Initialize()
         {
-            if(!isInitialized)
+            if (!isInitialized)
             {
                 try
                 {
@@ -98,7 +93,7 @@ namespace Aurora.Devices.Razer
             }
 
             return isInitialized;
-            
+
         }
 
         public void Shutdown()
@@ -178,11 +173,18 @@ namespace Aurora.Devices.Razer
 
         private void SendColorToPeripheral(System.Drawing.Color color, bool forced = false)
         {
-            if ((!previous_peripheral_Color.Equals(color) || forced) && mouse != null)
+            if ((!previous_peripheral_Color.Equals(color) || forced))
             {
                 if (Global.Configuration.allow_peripheral_devices)
                 {
-                    mouse.SetAll(color);
+                    if (mouse != null)
+                        mouse.SetAll(color);
+
+                    if (mousepad != null)
+                        mousepad.SetAll(color);
+
+                    if (headset != null)
+                        headset.SetAll(color);
 
                     previous_peripheral_Color = color;
                     peripheral_updated = true;

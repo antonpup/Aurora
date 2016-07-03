@@ -286,7 +286,6 @@ namespace Aurora.Settings
                     if(File.Exists(Path.Combine(dir, "default.json")))
                     {
                         string proccess_name = Path.GetFileName(dir);
-                        Global.logger.LogLine("Process_name = " + proccess_name, Logging_Level.Info);
                         config.additional_profiles.Add(proccess_name, new GenericApplicationProfileManager(proccess_name));
                     }
                 }
