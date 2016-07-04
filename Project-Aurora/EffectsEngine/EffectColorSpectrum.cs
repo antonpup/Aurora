@@ -95,21 +95,10 @@ namespace Aurora.EffectsEngine
         {
             float ret_pos = position;
 
-            while(true)
-            {
-                if (ret_pos > 1.0f)
-                {
-                    ret_pos -= 1.0f;
-                }
-                else if(ret_pos < 0.0f)
-                {
-                    ret_pos += 1.0f;
-                }
-                else
-                {
-                    break;
-                }
-            }
+            if (ret_pos > 1.0f)
+                ret_pos -= (int)ret_pos;
+            else if (ret_pos < 0.0f)
+                ret_pos -= (int)(ret_pos - 1.0f);
 
             return ret_pos;
         }
