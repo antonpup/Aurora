@@ -58,7 +58,7 @@ namespace Aurora.Devices.Corsair
 
         public bool Initialize()
         {
-            if(!isInitialized)
+            if (!isInitialized)
             {
                 try
                 {
@@ -240,7 +240,7 @@ namespace Aurora.Devices.Corsair
         {
             if (keyboard != null)
             {
-                keyboard.Update( true );
+                keyboard.Update(true);
                 keyboard_updated = true;
             }
         }

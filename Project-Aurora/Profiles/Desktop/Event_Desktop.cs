@@ -152,6 +152,7 @@ namespace Aurora.Profiles.Desktop
                 catch (Exception exc)
                 {
                     Global.logger.LogLine("PerformanceCounter exception: " + exc, Logging_Level.Error);
+                    Thread.Sleep(1000);
                 }
             }
         }

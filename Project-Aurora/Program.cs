@@ -123,10 +123,11 @@ namespace Aurora
 
                 if (File.Exists(updater_path))
                 {
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = updater_path;
-                    startInfo.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
-                    Process.Start(startInfo);
+                    ProcessStartInfo updaterProc = new ProcessStartInfo();
+                    updaterProc.FileName = updater_path;
+                    updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
+                    updaterProc.Verb = "runas";
+                    Process.Start(updaterProc);
                 }
             }
 
@@ -227,6 +228,18 @@ namespace Aurora
             Global.geh.Destroy();
             Global.net_listener.Stop();
 
+            try
+            {
+                foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
+                {
+                    proc.Kill();
+                }
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
+            }
+
             Environment.Exit(0);
         }
 
@@ -235,6 +248,18 @@ namespace Aurora
             Global.input_subscriptions.Dispose();
             Global.geh.Destroy();
             Global.net_listener.Stop();
+
+            try
+            {
+                foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
+                {
+                    proc.Kill();
+                }
+            }
+            catch (Exception exception)
+            {
+                Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exception);
+            }
 
             Exception exc = (Exception)e.ExceptionObject;
             Global.logger.LogLine("Fatal Exception caught : " + exc, Logging_Level.Error);
@@ -343,14 +368,19 @@ namespace Aurora
         {
             try
             {
-                if (Global.net_listener != null)
-                    Global.net_listener.Stop();
+                Global.net_listener?.Stop();
 
-                if (Global.dev_manager != null)
-                    Global.dev_manager.Shutdown();
+                Global.dev_manager?.Shutdown();
 
                 if (Global.Configuration != null)
                     ConfigManager.Save(Global.Configuration);
+
+                //Kill all Skype Integrations on Exit
+                foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
+                {
+                    proc.Kill();
+                }
+
             }
             catch (Exception exc)
             {

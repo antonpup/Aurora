@@ -375,6 +375,19 @@ namespace Aurora
             Global.geh.Destroy();
             Global.net_listener.Stop();
 
+            try
+            {
+                foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
+                {
+                    proc.Kill();
+                }
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
+            }
+            
+
             Application.Current.Shutdown();
         }
 

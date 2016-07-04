@@ -10,7 +10,8 @@ namespace Aurora
         None,
         Info,
         Warning,
-        Error
+        Error,
+        External
     }
 
     public class Logger
@@ -114,6 +115,8 @@ namespace Aurora
                     return "WARNING";
                 case (Logging_Level.Error):
                     return "ERROR";
+                case (Logging_Level.External):
+                    return "EXTERNAL";
                 default:
                     return "";
             }
