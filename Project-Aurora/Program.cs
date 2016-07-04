@@ -15,7 +15,7 @@ namespace Aurora
     {
         public static bool isDebug = false;
         public static Logger logger = new Logger();
-        public static IKeyboardMouseEvents input_hook = Hook.GlobalEvents();
+        public static InputEventsSubscriptions input_subscriptions = new InputEventsSubscriptions();
         public static GameEventHandler geh;
         public static NetworkListener net_listener;
         public static Configuration Configuration = new Configuration();
@@ -24,7 +24,6 @@ namespace Aurora
         public static Effects effengine = new Effects();
         public static KeyRecorder key_recorder = new KeyRecorder();
         public static Keys held_modified = Keys.None;
-        public static bool isLoaded = false;
     }
 
     static class Program
@@ -175,8 +174,8 @@ namespace Aurora
             }
 
             Global.logger.LogLine("Input Hooking", Logging_Level.Info);
-            Global.input_hook.KeyDown += InputHookKeyDown;
-            Global.input_hook.KeyUp += InputHookKeyUp;
+            Global.input_subscriptions.KeyDown += InputHookKeyDown;
+            Global.input_subscriptions.KeyUp += InputHookKeyUp;
 
             Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
             Global.geh = new GameEventHandler();
@@ -192,7 +191,7 @@ namespace Aurora
                 Global.net_listener = new NetworkListener(9088);
                 Global.net_listener.NewGameState += new NewGameStateHandler(Global.geh.GameStateUpdate);
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.LogLine("GameStateListener Exception, " + exc, Logging_Level.Error);
                 System.Windows.MessageBox.Show("GameStateListener Exception.\r\n" + exc);
@@ -233,7 +232,7 @@ namespace Aurora
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Global.input_hook.Dispose();
+            Global.input_subscriptions.Dispose();
             Global.geh.Destroy();
             Global.net_listener.Stop();
 
@@ -353,7 +352,7 @@ namespace Aurora
                 if (Global.Configuration != null)
                     ConfigManager.Save(Global.Configuration);
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.LogLine("Exception during OnProcessExit(). Error: " + exc, Logging_Level.Error);
             }
@@ -361,41 +360,35 @@ namespace Aurora
 
         private static void InputHookKeyDown(object sender, KeyEventArgs e)
         {
-            if (Global.isLoaded)
+            //Handle Assistant
+            if ((e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey || e.KeyCode == Keys.RWin || e.KeyCode == Keys.LWin) && Global.held_modified == Keys.None)
+                Global.held_modified = e.KeyCode;
+
+            //Handle Volume Overlay
+            if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt && Global.Configuration.use_volume_as_brightness)
             {
-                //Handle Assistant
-                if ((e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey || e.KeyCode == Keys.RWin || e.KeyCode == Keys.LWin) && Global.held_modified == Keys.None)
-                    Global.held_modified = e.KeyCode;
+                e.Handled = true;
 
-                //Handle Volume Overlay
-                if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt && Global.Configuration.use_volume_as_brightness)
-                {
-                    e.Handled = true;
+                if (e.KeyCode == Keys.VolumeUp)
+                    Global.Configuration.global_brightness = Global.Configuration.global_brightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.global_brightness + 0.05f;
+                else if (e.KeyCode == Keys.VolumeDown)
+                    Global.Configuration.global_brightness = Global.Configuration.global_brightness - 0.05f < 0.0f ? 0.0f : Global.Configuration.global_brightness - 0.05f;
 
-                    if (e.KeyCode == Keys.VolumeUp)
-                        Global.Configuration.global_brightness = Global.Configuration.global_brightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.global_brightness + 0.05f;
-                    else if (e.KeyCode == Keys.VolumeDown)
-                        Global.Configuration.global_brightness = Global.Configuration.global_brightness - 0.05f < 0.0f ? 0.0f : Global.Configuration.global_brightness - 0.05f;
+                ConfigManager.Save(Global.Configuration);
 
-                    ConfigManager.Save(Global.Configuration);
-
-                    return;
-                }
-                else if (e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
-                {
-                    Global.geh.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
-                }
+                return;
+            }
+            else if (e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
+            {
+                Global.geh.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
             }
         }
 
         private static void InputHookKeyUp(object sender, KeyEventArgs e)
         {
-            if (Global.isLoaded)
-            {
-                //Handle Assistant
-                if (Global.held_modified == e.KeyCode)
-                    Global.held_modified = Keys.None;
-            }
+            //Handle Assistant
+            if (Global.held_modified == e.KeyCode)
+                Global.held_modified = Keys.None;
         }
     }
 }

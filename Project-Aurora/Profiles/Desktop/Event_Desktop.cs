@@ -170,9 +170,9 @@ namespace Aurora.Profiles.Desktop
             gatherInfo.Elapsed += GatherInfo_Elapsed;
             gatherInfo.Start();
 
-            Global.input_hook.MouseClick += GlobalHookMouseClick;
-            Global.input_hook.KeyDown += GlobalHookKeyDown;
-            Global.input_hook.KeyUp += GlobalHookKeyUp;
+            Global.input_subscriptions.MouseClick += GlobalHookMouseClick;
+            Global.input_subscriptions.KeyDown += GlobalHookKeyDown;
+            Global.input_subscriptions.KeyUp += GlobalHookKeyUp;
         }
 
         private input_item CreateInputItem(Devices.DeviceKeys key, EffectPoint origin)
@@ -272,20 +272,17 @@ namespace Aurora.Profiles.Desktop
 
         private void GlobalHookMouseClick(object sender, MouseEventArgs e)
         {
-            if (Global.isLoaded)
+            if (!(Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_mouse_clicking)
+                return;
+
+            Devices.DeviceKeys device_key = Devices.DeviceKeys.Peripheral;
+
+            if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled)
             {
-                if (!(Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_mouse_clicking)
-                    return;
-
-                Devices.DeviceKeys device_key = Devices.DeviceKeys.Peripheral;
-
-                if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled)
+                EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
+                if (pt != new EffectPoint(0, 0))
                 {
-                    EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
-                    if (pt != new EffectPoint(0, 0))
-                    {
-                        input_list.Add(CreateInputItem(device_key, pt));
-                    }
+                    input_list.Add(CreateInputItem(device_key, pt));
                 }
             }
         }
@@ -298,36 +295,30 @@ namespace Aurora.Profiles.Desktop
 
         private void GlobalHookKeyUp(object sender, KeyEventArgs e)
         {
-            if (Global.isLoaded)
-            {
-                if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
-                    return; //This event wasn't used for at least 1 second
+            if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
+                return; //This event wasn't used for at least 1 second
 
-                if (previous_key == e.KeyCode)
-                    previous_key = Keys.None;
-            }
+            if (previous_key == e.KeyCode)
+                previous_key = Keys.None;
         }
 
         private void GlobalHookKeyDown(object sender, KeyEventArgs e)
         {
-            if (Global.isLoaded)
+            if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
+                return; //This event wasn't used for at least 1 second
+
+            if (previous_key == e.KeyCode)
+                return;
+
+            Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+
+            if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled)
             {
-                if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
-                    return; //This event wasn't used for at least 1 second
-
-                if (previous_key == e.KeyCode)
-                    return;
-
-                Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
-
-                if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled)
+                EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
+                if (pt != new EffectPoint(0, 0))
                 {
-                    EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
-                    if (pt != new EffectPoint(0, 0))
-                    {
-                        input_list.Add(CreateInputItem(device_key, pt));
-                        previous_key = e.KeyCode;
-                    }
+                    input_list.Add(CreateInputItem(device_key, pt));
+                    previous_key = e.KeyCode;
                 }
             }
         }

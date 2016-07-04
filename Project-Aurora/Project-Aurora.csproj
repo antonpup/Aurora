@@ -209,6 +209,7 @@
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
     <Compile Include="EffectsEngine\EffectSmoothColorSpectrum.cs" />
+    <Compile Include="InputEventsSubscriptions.cs" />
     <Compile Include="Profiles\CSGO\CSGOProfileManager.cs" />
     <Compile Include="Profiles\Desktop\DesktopProfileManager.cs" />
     <Compile Include="Profiles\Dota 2\Dota2ProfileManager.cs" />

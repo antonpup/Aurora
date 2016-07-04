@@ -185,7 +185,7 @@ namespace Aurora
 
             this.UpdateLayout();
 
-            Global.isLoaded = true;
+            Global.input_subscriptions.Initialize();
         }
 
         public static bool ApplicationIsActivated()
@@ -371,7 +371,7 @@ namespace Aurora
         {
             trayicon.Visibility = System.Windows.Visibility.Hidden;
             virtual_keyboard_timer.Stop();
-            Global.input_hook.Dispose();
+            Global.input_subscriptions.Dispose();
             Global.geh.Destroy();
             Global.net_listener.Stop();
 
