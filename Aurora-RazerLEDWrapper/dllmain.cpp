@@ -388,7 +388,7 @@ Logitech_keyboardBitmapKeys ToLogitechBitmap(int rzrow, int rzcolumn)
 }
 
 
-HANDLE hPipe;
+HANDLE hPipe = INVALID_HANDLE_VALUE;
 static bool isInitialized = false;
 static bool requiresUpdate = true;
 
@@ -457,7 +457,7 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 
 	ss << "\r\n";
 
-	if (INVALID_HANDLE_VALUE == hPipe)
+	if (hPipe == NULL || hPipe == INVALID_HANDLE_VALUE)
 	{
 		//Try to gestore handle
 		//Connect to the server pipe using CreateFile()
@@ -471,7 +471,7 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 			0,              // default attributes 
 			NULL);          // no template file 
 
-		if (INVALID_HANDLE_VALUE == hPipe)
+		if (hPipe == NULL || hPipe == INVALID_HANDLE_VALUE)
 		{
 			return false;
 		}
@@ -520,6 +520,9 @@ RZRESULT Init()
 
 		program_name = filepath.substr(fn_beginning);
 
+		//This means that Init can NEVER fail, and Aurora will always be able to pick up the lighting, even after being started late.
+		/*
+
 		//Connect to the server pipe using CreateFile()
 		hPipe = CreateFile(
 			PIPE_NAME,   // pipe name 
@@ -531,11 +534,12 @@ RZRESULT Init()
 			0,              // default attributes 
 			NULL);          // no template file 
 
-		if (INVALID_HANDLE_VALUE == hPipe)
+		if (hPipe == NULL || hPipe == INVALID_HANDLE_VALUE)
 		{
 			isInitialized = false;
 			return RZRESULT_INVALID;
 		}
+		*/
 	}
 	else
 	{
@@ -548,6 +552,9 @@ RZRESULT Init()
 
 RZRESULT UnInit()
 {
+	if(isInitialized && (hPipe != NULL && hPipe != INVALID_HANDLE_VALUE))
+		CloseHandle(hPipe);
+
 	isInitialized = false;
 	return RZRESULT_SUCCESS;
 }
