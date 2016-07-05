@@ -168,35 +168,37 @@ namespace Aurora
         {
             while (true)
             {
-                using (NamedPipeServerStream pipeStream = new NamedPipeServerStream("Aurora\\server"))
-                {
-                    //Global.logger.LogLine(String.Format( "[Server] Pipe created {0}", pipeStream.GetHashCode() ));
-
-                    pipeStream.WaitForConnection();
-                    Global.logger.LogLine("[Server] Pipe connection established");
-
-                    using (StreamReader sr = new StreamReader(pipeStream))
+                try {
+                    using (NamedPipeServerStream pipeStream = new NamedPipeServerStream("Aurora\\server"))
                     {
-                        string temp;
-                        while ((temp = sr.ReadLine()) != null)
+                        //Global.logger.LogLine(String.Format( "[IPCServer] Pipe created {0}", pipeStream.GetHashCode() ));
+
+                        pipeStream.WaitForConnection();
+                        Global.logger.LogLine("[IPCServer] Pipe connection established");
+
+                        using (StreamReader sr = new StreamReader(pipeStream))
                         {
-                            //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
-
-                            GameState_Wrapper new_state = new GameState_Wrapper(temp); //GameState_Wrapper
-
-                            if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
+                            string temp;
+                            while ((temp = sr.ReadLine()) != null)
                             {
-                                CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(temp);
-                            }
-                            else
-                            {
-                                CurrentGameState = new_state;
+                                //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
+
+                                GameState_Wrapper new_state = new GameState_Wrapper(temp); //GameState_Wrapper
+
+                                if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
+                                    CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(temp);
+                                else
+                                    CurrentGameState = new_state;
                             }
                         }
                     }
-                }
 
-                Global.logger.LogLine("Connection lost");
+                    Global.logger.LogLine("[IPCServer] Pipe connection lost");
+                }
+                catch(Exception exc)
+                {
+                    Global.logger.LogLine("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);
+                }
             }
         }
     }
