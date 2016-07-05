@@ -56,6 +56,10 @@ namespace Aurora_Updater
 
             StaticStorage.manager = new UpdateManager();
 
+            //Check if update retrieval was successful.
+            if(StaticStorage.manager.updatestate == UpdateStatus.Error)
+                return;
+
             if (File.Exists(Path.Combine(exe_path, "ver_major.txt")))
                 version_major = File.ReadAllText(Path.Combine(exe_path, "ver_major.txt"));
 

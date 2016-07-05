@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Runtime.Serialization.Formatters;
 using System.ComponentModel;
 using System.IO;
 using Ionic.Zip;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Globalization;
 
 namespace Aurora_Updater
 {
@@ -110,6 +105,7 @@ namespace Aurora_Updater
             }
             catch (Exception exc)
             {
+                updatestate = UpdateStatus.Error;
                 return false;
             }
 
