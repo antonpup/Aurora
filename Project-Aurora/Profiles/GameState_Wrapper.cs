@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Profiles
 {
@@ -133,10 +129,9 @@ namespace Aurora.Profiles
         public readonly int blue_end;
         public readonly int duration;
         public readonly int interval;
+        public readonly string effect_type;
         public readonly int key;
         public readonly int custom_mode;
-        
-
 
         internal Command_Wrapper(string JSON)
             : base(JSON)
@@ -149,6 +144,7 @@ namespace Aurora.Profiles
             blue_end = GetInt("blue_end");
             duration = GetInt("duration");
             interval = GetInt("interval");
+            effect_type = GetString("effect_type");
             key = GetInt("key");
             custom_mode = GetInt("custom_mode");
         }

@@ -11,6 +11,7 @@ HANDLE hPipe;
 static bool isInitialized = false;
 
 static LFX_COLOR current_bg = { (char)0, (char)0, (char)0, (char)0 };
+static int action_timing = 200;
 
 static std::string program_name;
 static std::string device_name = "Aurora";
@@ -23,7 +24,7 @@ static bool isUpdated;
 BOOL APIENTRY DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
 	LPVOID lpReserved
-	)
+)
 {
 	switch (ul_reason_for_call)
 	{
@@ -103,7 +104,7 @@ extern "C" {
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_Initialize()
 	{
 		isUpdated = false;
-		
+
 		if (!isInitialized)
 		{
 			//Get Application name
@@ -156,7 +157,7 @@ extern "C" {
 		{
 			current_bg = { (char)0, (char)0, (char)0, (char)0 };
 			isUpdated = true;
-			
+
 			std::string contents = "";
 
 			contents += "\"command\": \"LFX_Reset\",";
@@ -165,7 +166,7 @@ extern "C" {
 
 			WriteToPipe(contents);
 		}
-		
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
@@ -176,7 +177,7 @@ extern "C" {
 			unsigned char redValue = (unsigned char)((int)(current_bg.red) * ((int)(current_bg.brightness) / 255.0f));
 			unsigned char greenValue = (unsigned char)((int)(current_bg.green) * ((int)(current_bg.brightness) / 255.0f));
 			unsigned char blueValue = (unsigned char)((int)(current_bg.blue) * ((int)(current_bg.brightness) / 255.0f));
-			
+
 			std::string contents = "";
 
 			contents += "\"command\": \"LFX_Update\",";
@@ -190,7 +191,7 @@ extern "C" {
 
 			isUpdated = false;
 		}
-		
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
@@ -216,7 +217,7 @@ extern "C" {
 		}
 		else
 			*numDevices = 0;
-		
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
@@ -231,7 +232,7 @@ extern "C" {
 			contents += '}';
 
 			WriteToPipe(contents);
-			
+
 			if (devIndex >= 1)
 				return LFX_ERROR_NODEVS;
 
@@ -242,7 +243,7 @@ extern "C" {
 
 			*devType = 6; //Keyboard
 		}
-		
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
@@ -257,7 +258,7 @@ extern "C" {
 			contents += '}';
 
 			WriteToPipe(contents);
-			
+
 			if (devIndex >= 1)
 				return LFX_ERROR_NODEVS;
 
@@ -279,7 +280,7 @@ extern "C" {
 			contents += '}';
 
 			WriteToPipe(contents);
-			
+
 			if (devIndex >= 1)
 				return LFX_ERROR_NODEVS;
 
@@ -306,18 +307,18 @@ extern "C" {
 			contents += '}';
 
 			WriteToPipe(contents);
-			
+
 			if (devIndex >= 1)
 				return LFX_ERROR_NODEVS;
 
 			if (lightIndex >= 1)
 				return LFX_ERROR_NOLIGHTS;
 
-			_LFX_POSITION newpos = {0, (char)lightIndex , 0};
+			_LFX_POSITION newpos = { 0, (char)lightIndex , 0 };
 
 			*lightLoc = newpos;
 		}
-		
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
@@ -332,7 +333,7 @@ extern "C" {
 			contents += '}';
 
 			WriteToPipe(contents);
-			
+
 			if (devIndex >= 1)
 				return LFX_ERROR_NODEVS;
 
@@ -341,7 +342,7 @@ extern "C" {
 
 			*lightCol = current_bg;
 		}
-		
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
@@ -356,7 +357,7 @@ extern "C" {
 			contents += '}';
 
 			WriteToPipe(contents);
-			
+
 			if (devIndex >= 1)
 				return LFX_ERROR_NODEVS;
 
@@ -381,7 +382,7 @@ extern "C" {
 			lfx_color.red = (lightCol >> 16) & 0xFF;
 			lfx_color.green = (lightCol >> 8) & 0xFF;
 			lfx_color.blue = lightCol & 0xFF;
-			
+
 			unsigned char redValue = (unsigned char)((int)(lfx_color.red) * ((int)(lfx_color.brightness) / 255.0f));
 			unsigned char greenValue = (unsigned char)((int)(lfx_color.green) * ((int)(lfx_color.brightness) / 255.0f));
 			unsigned char blueValue = (unsigned char)((int)(lfx_color.blue) * ((int)(lfx_color.brightness) / 255.0f));
@@ -400,11 +401,8 @@ extern "C" {
 
 			WriteToPipe(contents);
 
-			if (locationMask == LFX_ALL)
-			{
-				current_bg = lfx_color;
-				isUpdated = true;
-			}
+			current_bg = lfx_color;
+			isUpdated = true;
 		}
 
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
@@ -412,31 +410,264 @@ extern "C" {
 
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_SetLightActionColor(const unsigned int devIndex, const unsigned int lightIndex, const unsigned int actionType, const PLFX_COLOR primaryCol)
 	{
-		//Not supported yet
+		if (!isInitialized)
+			return LFX_ERROR_NOINIT;
+
+		if (devIndex >= 1)
+			return LFX_ERROR_NODEVS;
+
+		if (lightIndex >= device_lights_num)
+			return LFX_ERROR_NOLIGHTS;
+
+		if (isInitialized)
+		{
+			//Primary Color
+			LFX_COLOR lfx_color_primary;
+			lfx_color_primary.brightness = (*primaryCol).brightness;
+			lfx_color_primary.red = (*primaryCol).red;
+			lfx_color_primary.green = (*primaryCol).green;
+			lfx_color_primary.blue = (*primaryCol).blue;
+
+			unsigned char redValue = (unsigned char)((int)(lfx_color_primary.red) * ((int)(lfx_color_primary.brightness) / 255.0f));
+			unsigned char greenValue = (unsigned char)((int)(lfx_color_primary.green) * ((int)(lfx_color_primary.brightness) / 255.0f));
+			unsigned char blueValue = (unsigned char)((int)(lfx_color_primary.blue) * ((int)(lfx_color_primary.brightness) / 255.0f));
+
+			std::string contents = "";
+
+			contents += "\"command\": \"LFX_SetLightActionColor\",";
+			contents += "\"command_data\": {";
+
+			contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+			contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+			contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+			contents += "\"duration\": " + std::to_string((int)action_timing) + ',';
+
+			switch (actionType) {
+			case LFX_ACTION_MORPH:
+				contents += "\"effect_type\": \"LFX_ACTION_MORPH\"";
+				break;
+			case LFX_ACTION_PULSE:
+				contents += "\"effect_type\": \"LFX_ACTION_PULSE\"";
+				break;
+			case LFX_ACTION_COLOR:
+				contents += "\"effect_type\": \"LFX_ACTION_COLOR\"";
+				break;
+			default:
+				contents += "\"effect_type\": \"None\"";
+				break;
+			}
+
+			contents += '}';
+
+			WriteToPipe(contents);
+		}
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_SetLightActionColorEx(const unsigned int devIndex, const unsigned int lightIndex, const unsigned int actionType, const PLFX_COLOR primaryCol, const PLFX_COLOR secondaryCol)
 	{
-		//Not supported
+		if (!isInitialized)
+			return LFX_ERROR_NOINIT;
+
+		if (devIndex >= 1)
+			return LFX_ERROR_NODEVS;
+
+		if (lightIndex >= device_lights_num)
+			return LFX_ERROR_NOLIGHTS;
+
+		if (isInitialized)
+		{
+			//Primary Color
+			LFX_COLOR lfx_color_primary;
+			lfx_color_primary.brightness = (*primaryCol).brightness;
+			lfx_color_primary.red = (*primaryCol).red;
+			lfx_color_primary.green = (*primaryCol).green;
+			lfx_color_primary.blue = (*primaryCol).blue;
+
+			unsigned char redValue = (unsigned char)((int)(lfx_color_primary.red) * ((int)(lfx_color_primary.brightness) / 255.0f));
+			unsigned char greenValue = (unsigned char)((int)(lfx_color_primary.green) * ((int)(lfx_color_primary.brightness) / 255.0f));
+			unsigned char blueValue = (unsigned char)((int)(lfx_color_primary.blue) * ((int)(lfx_color_primary.brightness) / 255.0f));
+
+			//Secondary Color
+			LFX_COLOR lfx_color_secondary;
+			lfx_color_secondary.brightness = (*secondaryCol).brightness;
+			lfx_color_secondary.red = (*secondaryCol).red;
+			lfx_color_secondary.green = (*secondaryCol).green;
+			lfx_color_secondary.blue = (*secondaryCol).blue;
+
+			unsigned char redValue_end = (unsigned char)((int)(lfx_color_secondary.red) * ((int)(lfx_color_secondary.brightness) / 255.0f));
+			unsigned char greenValue_end = (unsigned char)((int)(lfx_color_secondary.green) * ((int)(lfx_color_secondary.brightness) / 255.0f));
+			unsigned char blueValue_end = (unsigned char)((int)(lfx_color_secondary.blue) * ((int)(lfx_color_secondary.brightness) / 255.0f));
+
+			std::string contents = "";
+
+			contents += "\"command\": \"LFX_SetLightActionColorEx\",";
+			contents += "\"command_data\": {";
+
+			contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+			contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+			contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+			contents += "\"red_end\": " + std::to_string((int)redValue_end) + ',';
+			contents += "\"green_end\": " + std::to_string((int)greenValue_end) + ',';
+			contents += "\"blue_end\": " + std::to_string((int)blueValue_end) + ',';
+			contents += "\"duration\": " + std::to_string((int)action_timing) + ',';
+
+			switch (actionType) {
+			case LFX_ACTION_MORPH:
+				contents += "\"effect_type\": \"LFX_ACTION_MORPH\"";
+				break;
+			case LFX_ACTION_PULSE:
+				contents += "\"effect_type\": \"LFX_ACTION_PULSE\"";
+				break;
+			case LFX_ACTION_COLOR:
+				contents += "\"effect_type\": \"LFX_ACTION_COLOR\"";
+				break;
+			default:
+				contents += "\"effect_type\": \"None\"";
+				break;
+			}
+
+			contents += '}';
+
+			WriteToPipe(contents);
+		}
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_ActionColor(const unsigned int locationMask, const unsigned int actionType, const unsigned int primaryCol)
 	{
-		//Not supported
+		if (!isInitialized)
+			return LFX_ERROR_NOINIT;
+
+		if (isInitialized)
+		{
+			//Primary Color
+			LFX_COLOR lfx_color_primary;
+			lfx_color_primary.brightness = (primaryCol >> 24) & 0xFF;
+			lfx_color_primary.red = (primaryCol >> 16) & 0xFF;
+			lfx_color_primary.green = (primaryCol >> 8) & 0xFF;
+			lfx_color_primary.blue = primaryCol & 0xFF;
+
+			unsigned char redValue = (unsigned char)((int)(lfx_color_primary.red) * ((int)(lfx_color_primary.brightness) / 255.0f));
+			unsigned char greenValue = (unsigned char)((int)(lfx_color_primary.green) * ((int)(lfx_color_primary.brightness) / 255.0f));
+			unsigned char blueValue = (unsigned char)((int)(lfx_color_primary.blue) * ((int)(lfx_color_primary.brightness) / 255.0f));
+
+			std::string contents = "";
+
+			contents += "\"command\": \"LFX_ActionColor\",";
+			contents += "\"command_data\": {";
+
+			contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+			contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+			contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+			contents += "\"duration\": " + std::to_string((int)action_timing) + ',';
+
+			switch (actionType) {
+			case LFX_ACTION_MORPH:
+				contents += "\"effect_type\": \"LFX_ACTION_MORPH\"";
+				break;
+			case LFX_ACTION_PULSE:
+				contents += "\"effect_type\": \"LFX_ACTION_PULSE\"";
+				break;
+			case LFX_ACTION_COLOR:
+				contents += "\"effect_type\": \"LFX_ACTION_COLOR\"";
+				break;
+			default:
+				contents += "\"effect_type\": \"None\"";
+				break;
+			}
+
+			contents += '}';
+
+			WriteToPipe(contents);
+		}
+
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_ActionColorEx(const unsigned int locationMask, const unsigned int actionType, const unsigned int primaryCol, const unsigned int secondaryCol)
 	{
+		if (!isInitialized)
+			return LFX_ERROR_NOINIT;
+
+		if (isInitialized)
+		{
+			//Primary Color
+			LFX_COLOR lfx_color_primary;
+			lfx_color_primary.brightness = (primaryCol >> 24) & 0xFF;
+			lfx_color_primary.red = (primaryCol >> 16) & 0xFF;
+			lfx_color_primary.green = (primaryCol >> 8) & 0xFF;
+			lfx_color_primary.blue = primaryCol & 0xFF;
+
+			unsigned char redValue = (unsigned char)((int)(lfx_color_primary.red) * ((int)(lfx_color_primary.brightness) / 255.0f));
+			unsigned char greenValue = (unsigned char)((int)(lfx_color_primary.green) * ((int)(lfx_color_primary.brightness) / 255.0f));
+			unsigned char blueValue = (unsigned char)((int)(lfx_color_primary.blue) * ((int)(lfx_color_primary.brightness) / 255.0f));
+
+			//Secondary Color
+			LFX_COLOR lfx_color_secondary;
+			lfx_color_secondary.brightness = (secondaryCol >> 24) & 0xFF;
+			lfx_color_secondary.red = (secondaryCol >> 16) & 0xFF;
+			lfx_color_secondary.green = (secondaryCol >> 8) & 0xFF;
+			lfx_color_secondary.blue = secondaryCol & 0xFF;
+
+			unsigned char redValue_end = (unsigned char)((int)(lfx_color_secondary.red) * ((int)(lfx_color_secondary.brightness) / 255.0f));
+			unsigned char greenValue_end = (unsigned char)((int)(lfx_color_secondary.green) * ((int)(lfx_color_secondary.brightness) / 255.0f));
+			unsigned char blueValue_end = (unsigned char)((int)(lfx_color_secondary.blue) * ((int)(lfx_color_secondary.brightness) / 255.0f));
+
+			std::string contents = "";
+
+			contents += "\"command\": \"LFX_ActionColorEx\",";
+			contents += "\"command_data\": {";
+
+			contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+			contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+			contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+			contents += "\"red_end\": " + std::to_string((int)redValue_end) + ',';
+			contents += "\"green_end\": " + std::to_string((int)greenValue_end) + ',';
+			contents += "\"blue_end\": " + std::to_string((int)blueValue_end) + ',';
+			contents += "\"duration\": " + std::to_string((int)action_timing) + ',';
+
+			switch (actionType) {
+			case LFX_ACTION_MORPH:
+				contents += "\"effect_type\": \"LFX_ACTION_MORPH\"";
+				break;
+			case LFX_ACTION_PULSE:
+				contents += "\"effect_type\": \"LFX_ACTION_PULSE\"";
+				break;
+			case LFX_ACTION_COLOR:
+				contents += "\"effect_type\": \"LFX_ACTION_COLOR\"";
+				break;
+			default:
+				contents += "\"effect_type\": \"None\"";
+				break;
+			}
+
+			contents += '}';
+
+			WriteToPipe(contents);
+		}
+
+		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
+		
 		//Not supported
+		if (isInitialized)
+		{
+			std::string contents = "";
+
+			contents += "\"command\": \"LFX_ActionColorEx\",";
+			contents += "\"command_data\": {";
+			contents += '}';
+
+			WriteToPipe(contents);
+		}
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_SetTiming(const int newTiming)
 	{
-		//Not supported
+		action_timing = newTiming;
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 

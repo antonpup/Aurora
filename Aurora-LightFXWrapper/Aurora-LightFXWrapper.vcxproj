@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Aurora-LightFXWrapper.h" />
     <ClInclude Include="LFX2.h" />
+    <ClInclude Include="LFXConfigurator.h" />
     <ClInclude Include="LFXDecl.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
