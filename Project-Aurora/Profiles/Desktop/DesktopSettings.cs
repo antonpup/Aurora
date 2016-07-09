@@ -40,6 +40,7 @@ namespace Aurora.Profiles.Desktop
 
         //// Shortcut Assistant
         public bool shortcuts_assistant_enabled;
+        public bool shortcuts_assistant_bim_bg;
         public Color ctrl_key_color;
         public KeySequence ctrl_key_sequence;
         public Color win_key_color;
@@ -92,6 +93,7 @@ namespace Aurora.Profiles.Desktop
 
             //// Shortcuts Assistant
             shortcuts_assistant_enabled = true;
+            shortcuts_assistant_bim_bg = false;
             ctrl_key_color = Color.Red;
             ctrl_key_sequence = new KeySequence(new Devices.DeviceKeys[] {
                 Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.X, Devices.DeviceKeys.Y,

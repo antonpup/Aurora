@@ -46,6 +46,7 @@ namespace Aurora.Profiles.Desktop
             this.ks_ram.Sequence = (Global.Configuration.desktop_profile.Settings as DesktopSettings).ram_sequence;
 
             this.sc_assistant_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_enabled;
+            this.sc_assistant_dim_background.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_bim_bg;
             this.sc_assistant_ctrl_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).ctrl_key_color);
             this.sc_assistant_ctrl_keys.Sequence = (Global.Configuration.desktop_profile.Settings as DesktopSettings).ctrl_key_sequence;
             this.sc_assistant_win_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).win_key_color);
@@ -180,6 +181,15 @@ namespace Aurora.Profiles.Desktop
             if (IsLoaded)
             {
                 (Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_enabled = (this.sc_assistant_enabled.IsChecked.HasValue) ? this.sc_assistant_enabled.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
+            }
+        }
+
+        private void sc_assistant_dim_background_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_bim_bg = (this.sc_assistant_dim_background.IsChecked.HasValue) ? this.sc_assistant_dim_background.IsChecked.Value : false;
                 Global.Configuration.desktop_profile.SaveProfiles();
             }
         }

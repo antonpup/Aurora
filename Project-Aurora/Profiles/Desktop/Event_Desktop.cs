@@ -391,7 +391,7 @@ namespace Aurora.Profiles.Desktop
 
             foreach (var input in input_list.ToArray())
             {
-                if(input.type == input_item.input_type.Spectrum)
+                if (input.type == input_item.input_type.Spectrum)
                 {
                     float transition_value = input.progress / Effects.canvas_width;
 
@@ -402,7 +402,7 @@ namespace Aurora.Profiles.Desktop
 
                     interactive_layer.Set(input.key, color);
                 }
-                else if(input.type == input_item.input_type.AnimationMix)
+                else if (input.type == input_item.input_type.AnimationMix)
                 {
                     float time_value = input.progress / Effects.canvas_width;
 
@@ -446,6 +446,9 @@ namespace Aurora.Profiles.Desktop
             {
                 if (Global.held_modified == Keys.LControlKey || Global.held_modified == Keys.RControlKey)
                 {
+                    if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_bim_bg)
+                        sc_assistant_layer.Fill(Color.FromArgb(169, 0, 0, 0));
+
                     if (Global.held_modified == Keys.LControlKey)
                         sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_CONTROL, (Global.Configuration.desktop_profile.Settings as DesktopSettings).ctrl_key_color);
                     else
@@ -454,6 +457,9 @@ namespace Aurora.Profiles.Desktop
                 }
                 else if (Global.held_modified == Keys.LMenu || Global.held_modified == Keys.RMenu)
                 {
+                    if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_bim_bg)
+                        sc_assistant_layer.Fill(Color.FromArgb(169, 0, 0, 0));
+
                     if (Global.held_modified == Keys.LMenu)
                         sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_ALT, (Global.Configuration.desktop_profile.Settings as DesktopSettings).alt_key_color);
                     else
@@ -462,6 +468,9 @@ namespace Aurora.Profiles.Desktop
                 }
                 else if (Global.held_modified == Keys.LWin || Global.held_modified == Keys.RWin)
                 {
+                    if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).shortcuts_assistant_bim_bg)
+                        sc_assistant_layer.Fill(Color.FromArgb(169, 0, 0, 0));
+
                     if (Global.held_modified == Keys.LWin)
                         sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_WINDOWS, (Global.Configuration.desktop_profile.Settings as DesktopSettings).win_key_color);
                     else
