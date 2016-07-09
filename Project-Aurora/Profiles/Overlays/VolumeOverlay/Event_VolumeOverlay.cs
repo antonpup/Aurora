@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Aurora.EffectsEngine;
-using System.Drawing;
 using NAudio.CoreAudioApi;
-using System.Drawing.Drawing2D;
 
 namespace Aurora.Profiles.Overlays
 {

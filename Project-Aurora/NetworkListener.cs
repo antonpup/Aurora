@@ -171,7 +171,7 @@ namespace Aurora
                 try {
                     using (NamedPipeServerStream pipeStream = new NamedPipeServerStream("Aurora\\server"))
                     {
-                        //Global.logger.LogLine(String.Format( "[IPCServer] Pipe created {0}", pipeStream.GetHashCode() ));
+                        Global.logger.LogLine(String.Format( "[IPCServer] Pipe created {0}", pipeStream.GetHashCode() ));
 
                         pipeStream.WaitForConnection();
                         Global.logger.LogLine("[IPCServer] Pipe connection established");

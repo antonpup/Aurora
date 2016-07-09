@@ -12,8 +12,16 @@ namespace Aurora.Devices
         private bool anyInitialized = false;
         private bool retryActivated = false;
         private const int retryInterval = 5000;
-        private const int retryAttemps = 10;
+        private const int retryAttemps = 15;
         private int retryAttemptsLeft = retryAttemps;
+
+        public int RetryAttempts
+        {
+            get
+            {
+                return retryAttemptsLeft;
+            }
+        }
         public event EventHandler NewDevicesInitialized;
 
         public DeviceManager()
@@ -33,8 +41,7 @@ namespace Aurora.Devices
                 Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
             }
 
-            if (NewDevicesInitialized != null)
-                NewDevicesInitialized(this, new EventArgs());
+            NewDevicesInitialized?.Invoke(this, new EventArgs());
 
             if (!retryActivated)
             {
@@ -62,8 +69,7 @@ namespace Aurora.Devices
 
                 retryAttemptsLeft--;
 
-                if (NewDevicesInitialized != null)
-                    NewDevicesInitialized(this, new EventArgs());
+                NewDevicesInitialized?.Invoke(this, new EventArgs());
 
                 Thread.Sleep(retryInterval);
             }
