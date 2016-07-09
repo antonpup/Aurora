@@ -207,6 +207,10 @@ namespace Aurora.Profiles.Logitech_Wrapper
 
                 }
                 //LightFX
+                else if (ngw_state.Command.Equals("LFX_Light"))
+                {
+
+                }
                 else if (ngw_state.Command.Equals("LFX_Update"))
                 {
                     Color newfill = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
@@ -284,6 +288,10 @@ namespace Aurora.Profiles.Logitech_Wrapper
                             current_effect = null;
                             break;
                     }
+                }
+                else if (ngw_state.Command.Equals("LFX_Reset"))
+                {
+                    current_effect = null;
                 }
                 //Razer
                 else if (ngw_state.Command.Equals("CreateKeyboardEffect"))

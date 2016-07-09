@@ -148,6 +148,11 @@ extern "C" {
 
 	FN_DECLSPEC LFX_RESULT STDCALL LFX_Release()
 	{
+		if (isInitialized && hPipe != INVALID_HANDLE_VALUE)
+		{
+			CloseHandle(hPipe);
+		}
+		
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
@@ -649,19 +654,6 @@ extern "C" {
 			WriteToPipe(contents);
 		}
 
-		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
-		
-		//Not supported
-		if (isInitialized)
-		{
-			std::string contents = "";
-
-			contents += "\"command\": \"LFX_ActionColorEx\",";
-			contents += "\"command_data\": {";
-			contents += '}';
-
-			WriteToPipe(contents);
-		}
 		return isInitialized ? LFX_SUCCESS : LFX_FAILURE;
 	}
 
