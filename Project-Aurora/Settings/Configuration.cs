@@ -258,6 +258,9 @@ namespace Aurora.Settings
         private static string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
         private const string ConfigExtension = ".json";
 
+        private static long _last_save_time = 0L;
+        private readonly static long _save_interval = 1000L;
+
         public static Configuration Load()
         {
             var configPath = ConfigPath + ConfigExtension;
@@ -278,12 +281,12 @@ namespace Aurora.Settings
                 kvp.Value.LoadProfiles();
 
 
-            if(Directory.Exists(AdditionalProfilesPath))
+            if (Directory.Exists(AdditionalProfilesPath))
             {
                 List<string> additionals = new List<string>(Directory.EnumerateDirectories(AdditionalProfilesPath));
                 foreach (var dir in additionals)
                 {
-                    if(File.Exists(Path.Combine(dir, "default.json")))
+                    if (File.Exists(Path.Combine(dir, "default.json")))
                     {
                         string proccess_name = Path.GetFileName(dir);
                         config.additional_profiles.Add(proccess_name, new GenericApplicationProfileManager(proccess_name));
@@ -296,6 +299,13 @@ namespace Aurora.Settings
 
         public static void Save(Configuration configuration)
         {
+            long current_time = Utils.Time.GetMillisecondsSinceEpoch();
+
+            if (_last_save_time + _save_interval > current_time)
+                return;
+            else
+                _last_save_time = current_time;
+
             var configPath = ConfigPath + ConfigExtension;
             string content = JsonConvert.SerializeObject(configuration, Formatting.Indented);
 
