@@ -395,8 +395,8 @@ namespace Aurora.EffectsEngine
             {
                 using (Graphics g = Graphics.FromImage(colormap))
                 {
-                    float x_pos = (float)Math.Round(sequence.freeform.X * Effects.editor_to_canvas_width);
-                    float y_pos = (float)Math.Round(sequence.freeform.Y * Effects.editor_to_canvas_height);
+                    float x_pos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
+                    float y_pos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
                     float width = (float)(sequence.freeform.Width * Effects.editor_to_canvas_width);
                     float height = (float)(sequence.freeform.Height * Effects.editor_to_canvas_height);
 

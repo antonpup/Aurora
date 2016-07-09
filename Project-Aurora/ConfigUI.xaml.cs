@@ -1,5 +1,4 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
-using Aurora.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,8 +42,14 @@ namespace Aurora
         private string saved_preview_key = "";
 
         private Timer virtual_keyboard_timer;
-        private TextBlock last_selected_key;
         private Stopwatch recording_stopwatch = new Stopwatch();
+        private Grid virtial_kb = new Grid();
+
+        private readonly double virtual_keyboard_width;
+        private readonly double virtual_keyboard_height;
+
+        private readonly double max_width;
+        private readonly double max_height;
 
         LayerEditor layer_editor = new LayerEditor();
 
@@ -52,7 +57,35 @@ namespace Aurora
         {
             InitializeComponent();
 
+            virtual_keyboard_height = this.keyboard_grid.Height;
+            virtual_keyboard_width = this.keyboard_grid.Width;
+
+            max_width = MaxWidth;
+            max_height = MaxHeight;
+
+            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
+
             GenerateProfileStack();
+        }
+
+        private void KbLayout_KeyboardLayoutUpdated(object sender)
+        {
+            virtial_kb = Global.kbLayout.Virtual_keyboard;
+
+            keyboard_grid.Children.Clear();
+            keyboard_grid.Children.Add(virtial_kb);
+            keyboard_grid.Children.Add(new LayerEditor());
+
+            keyboard_grid.Width = virtial_kb.Width;
+            this.MaxWidth = max_width + (virtial_kb.Width - virtual_keyboard_width);
+            this.Width = this.MaxWidth;
+
+            keyboard_grid.Height = virtial_kb.Height;
+            this.MaxHeight = max_height + (virtial_kb.Height - virtual_keyboard_height);
+            this.Height = this.MaxHeight;
+
+            keyboard_grid.UpdateLayout();
+            this.UpdateLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -72,117 +105,21 @@ namespace Aurora
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
-            List<KeyboardKey> layout = Global.kbLayout.GetLayout();
-            double layout_height = 0;
-            double layout_width = 0;
+            virtial_kb = Global.kbLayout.Virtual_keyboard;
 
-            double baseline_x = 0.0;
-            double baseline_y = 0.0;
-            double max_height = this.keyboard_grid.Height;
-            double max_width = this.keyboard_grid.Width;
-            double cornerRadius = 5;
-            double current_height = 0;
-            double current_width = 0;
-            bool isFirstInRow = true;
+            keyboard_grid.Children.Clear();
+            keyboard_grid.Children.Add(virtial_kb);
+            keyboard_grid.Children.Add(new LayerEditor());
 
-            foreach (KeyboardKey key in layout)
-            {
-                double keyMargin_Left = key.margin_left;
-                double keyMargin_Top = (isFirstInRow ? 0 : key.margin_top);
+            keyboard_grid.Width = virtial_kb.Width;
+            this.MaxWidth = max_width + (virtial_kb.Width - virtual_keyboard_width);
+            this.Width = this.MaxWidth;
 
-                Border keyBorder = new Border();
-                keyBorder.CornerRadius = new CornerRadius(cornerRadius);
-                keyBorder.Width = key.width;
-                keyBorder.Height = key.height;
-                keyBorder.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                keyBorder.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                keyBorder.Margin = new Thickness(current_width + keyMargin_Left, current_height + keyMargin_Top, 0, 0);
-                keyBorder.Visibility = System.Windows.Visibility.Visible;
-                keyBorder.BorderThickness = new Thickness(1.5);
-                keyBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
-                keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 25, 25, 25));
-                keyBorder.IsEnabled = key.enabled;
-                keyBorder.MouseDown += keyboard_grid_pressed;
-                keyBorder.MouseMove += keyboard_grid_moved;
-                keyBorder.IsHitTestVisible = true;
+            keyboard_grid.Height = virtial_kb.Height;
+            this.MaxHeight = max_height + (virtial_kb.Height - virtual_keyboard_height);
+            this.Height = this.MaxHeight;
 
-                if (!key.enabled)
-                {
-                    ToolTipService.SetShowOnDisabled(keyBorder, true);
-                    keyBorder.ToolTip = new ToolTip { Content = "Changes to this key are not supported" };
-                }
-
-                TextBlock keyCap = new TextBlock();
-                keyCap.Text = key.visualName;
-                keyCap.Tag = key.tag;
-                keyCap.FontSize = key.font_size;
-                keyCap.FontWeight = FontWeights.Bold;
-                keyCap.FontFamily = new FontFamily("Calibri");
-                keyCap.TextAlignment = TextAlignment.Center;
-                keyCap.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-                keyCap.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-                keyCap.Margin = new Thickness(0);
-                keyCap.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-                keyCap.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-                keyCap.Visibility = System.Windows.Visibility.Visible;
-                keyCap.IsHitTestVisible = true;
-
-                keyBorder.Child = keyCap;
-
-                if(key.tag == DeviceKeys.ESC)
-                {
-                    baseline_x = keyBorder.Margin.Left;
-                    baseline_y = keyBorder.Margin.Top;
-                }
-
-                this.keyboard_grid.Children.Add(keyBorder);
-                isFirstInRow = false;
-
-                if (key.width + keyMargin_Left > 0)
-                    current_width += key.width + keyMargin_Left;
-
-                if (keyMargin_Top > 0)
-                    current_height += keyMargin_Top;
-
-
-                if (layout_width < current_width)
-                    layout_width = current_width;
-
-                if (key.line_break)
-                {
-                    current_height += 37;
-                    current_width = 0;
-                    //isFirstInRow = true;
-                }
-
-                if (layout_height < current_height)
-                    layout_height = current_height;
-            }
-
-            //Update size
-            if (max_width < layout_width)
-            {
-                this.keyboard_grid.Width = layout_width;
-                this.MaxWidth += layout_width - max_width;
-                this.Width = this.MaxWidth;
-            }
-
-            if (max_height < layout_height)
-            {
-                this.keyboard_grid.Height = layout_height;
-                this.MaxHeight += layout_height - max_height;
-                this.Height = this.MaxHeight;
-            }
-
-            keyboard_grid.Children.Add(layer_editor);
-
-            Global.logger.LogLine("Baseline X = " + (float)baseline_x, Logging_Level.Info, false);
-            Global.logger.LogLine("Baseline Y = " + (float)baseline_y, Logging_Level.Info, false);
-            Effects.grid_baseline_x = (float)baseline_x;
-            Effects.grid_baseline_y = (float)baseline_y;
-            Effects.grid_height = (float)this.keyboard_grid.Height;
-            Effects.grid_width = (float)this.keyboard_grid.Width;
-
+            keyboard_grid.UpdateLayout();
             this.UpdateLayout();
 
             Global.input_subscriptions.Initialize();
@@ -231,7 +168,7 @@ namespace Aurora
                             if (Global.geh.GetPreview() != PreviewType.None)
                                 keylights = Global.effengine.GetKeyboardLights();
 
-                            Border[] keys = this.keyboard_grid.Children.OfType<Border>().ToArray();
+                            Border[] keys = virtial_kb.Children.OfType<Border>().ToArray();
 
 
                             foreach (var child in keys)
@@ -273,44 +210,6 @@ namespace Aurora
         }
 
         ////Misc
-
-        private void virtualkeyboard_key_selected(TextBlock key)
-        {
-            if (key.Tag is Devices.DeviceKeys)
-            {
-                //Multi key
-                if (Global.key_recorder.IsSingleKey())
-                {
-                    Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
-                    Global.key_recorder.StopRecording();
-                }
-                else
-                {
-                    if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)(key.Tag)))
-                        Global.key_recorder.RemoveKey((Devices.DeviceKeys)(key.Tag));
-                    else
-                        Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
-                    last_selected_key = key;
-                }
-            }
-        }
-
-        private void keyboard_grid_pressed(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock)
-            {
-                virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
-            }
-        }
-
-        private void keyboard_grid_moved(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock && last_selected_key != ((sender as Border).Child as TextBlock))
-            {
-                virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
-            }
-        }
-
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));

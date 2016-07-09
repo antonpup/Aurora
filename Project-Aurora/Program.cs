@@ -134,45 +134,42 @@ namespace Aurora
             Global.dev_manager.Initialize();
             Devices.Device[] active_devices = Global.dev_manager.GetInitializedDevices();
 
+            //No devices intialized, wait for initialization retry to finish
             if (active_devices.Length == 0)
             {
-                Global.logger.LogLine("No devices were initialized", Logging_Level.Error);
-                System.Windows.MessageBox.Show("No compatible devices detected.\r\nExiting.", "Aurora - Error");
-                Environment.Exit(0);
+                while (Global.dev_manager.RetryAttempts > 0)
+                {
+                    active_devices = Global.dev_manager.GetInitializedDevices();
+
+                    bool kb_initialized = false;
+
+                    foreach (var device in active_devices)
+                    {
+                        if (device.IsKeyboardConnected())
+                        {
+                            kb_initialized = true;
+                            break;
+                        }
+                    }
+
+                    if (kb_initialized)
+                        break;
+
+                    System.Threading.Thread.Sleep(5000);
+                }
+
+                if (active_devices.Length == 0)
+                {
+                    Global.logger.LogLine("No devices were initialized", Logging_Level.Error);
+                    System.Windows.MessageBox.Show("No compatible devices detected.\r\nExiting.", "Aurora - Error");
+                    Environment.Exit(0);
+                }
             }
 
             Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
-            if (Global.Configuration.keyboard_brand == PreferredKeyboard.Logitech)
-                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Logitech);
-            else if (Global.Configuration.keyboard_brand == PreferredKeyboard.Corsair)
-                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Corsair);
-            else if (Global.Configuration.keyboard_brand == PreferredKeyboard.Razer)
-                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Razer);
-            else
-            {
-                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Logitech);
+            Global.kbLayout = new KeyboardLayoutManager();
 
-                foreach (var device in active_devices)
-                {
-                    if (!device.IsKeyboardConnected())
-                        continue;
-
-                    switch (device.GetDeviceName())
-                    {
-                        case ("Corsair"):
-                            Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Corsair);
-                            break;
-
-                        /*
-                        case ("Razer"):
-                            Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Razer);
-                            break;
-                        */
-                        default:
-                            continue;
-                    }
-                }
-            }
+            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand);
 
             Global.logger.LogLine("Input Hooking", Logging_Level.Info);
             Global.input_subscriptions.KeyDown += InputHookKeyDown;

@@ -593,6 +593,8 @@ namespace Aurora.Settings
             {
                 Global.Configuration.keyboard_localization = (PreferredKeyboardLocalization)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_layout.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
+
+                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand);
             }
         }
 
@@ -602,6 +604,8 @@ namespace Aurora.Settings
             {
                 Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_brand.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
+
+                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand);
             }
         }
 

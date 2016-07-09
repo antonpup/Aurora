@@ -1,11 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Input;
+using Aurora.Devices;
 
 namespace Aurora.Settings
 {
@@ -43,20 +46,31 @@ namespace Aurora.Settings
         }
     }
 
-    public enum KeyboardBrand
-    {
-        Logitech,
-        Corsair,
-        Razer
-    };
-
     public class KeyboardLayoutManager
     {
         private List<KeyboardKey> keyboard = new List<KeyboardKey>();
 
+        //private LayerEditor layer_editor = new LayerEditor();
+
+        private Grid _virtual_keyboard = new Grid();
+
+        public Grid Virtual_keyboard
+        {
+            get
+            {
+                return _virtual_keyboard;
+            }
+        }
+
+        private TextBlock last_selected_key;
+
         private double bitmap_one_pixel = 12.0; // 12 pixels = 1 byte
 
         private Dictionary<Devices.DeviceKeys, Bitmaping> bitmap_map = new Dictionary<Devices.DeviceKeys, Bitmaping>();
+
+        public delegate void LayoutUpdatedEventHandler(object sender);
+
+        public event LayoutUpdatedEventHandler KeyboardLayoutUpdated;
 
         private String cultures_folder = "kb_layouts";
 
@@ -70,13 +84,44 @@ namespace Aurora.Settings
             }
         }
 
-        public KeyboardLayoutManager(KeyboardBrand brand = KeyboardBrand.Logitech)
+        public KeyboardLayoutManager()
+        {
+            LoadBrand();
+        }
+
+        public void LoadBrand(PreferredKeyboard brand = PreferredKeyboard.Logitech)
         {
             try
             {
                 //System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
 
                 //Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
+
+                if(brand == PreferredKeyboard.None)
+                {
+                    Global.kbLayout.LoadBrand(PreferredKeyboard.Logitech);
+
+                    foreach (var device in Global.dev_manager.GetInitializedDevices())
+                    {
+                        if (!device.IsKeyboardConnected())
+                            continue;
+
+                        switch (device.GetDeviceName())
+                        {
+                            case ("Corsair"):
+                                Global.kbLayout.LoadBrand(PreferredKeyboard.Corsair);
+                                break;
+
+                            /*
+                            case ("Razer"):
+                                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Razer);
+                                break;
+                            */
+                            default:
+                                continue;
+                        }
+                    }
+                }
 
                 if (Directory.Exists(Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder)))
                 {
@@ -206,7 +251,148 @@ namespace Aurora.Settings
             Global.effengine.SetBitmapping(this.bitmap_map);
         }
 
-        public void LoadCulture(KeyboardBrand brand, String culture)
+        private void virtualkeyboard_key_selected(TextBlock key)
+        {
+            if (key.Tag is Devices.DeviceKeys)
+            {
+                //Multi key
+                if (Global.key_recorder.IsSingleKey())
+                {
+                    Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
+                    Global.key_recorder.StopRecording();
+                }
+                else
+                {
+                    if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)(key.Tag)))
+                        Global.key_recorder.RemoveKey((Devices.DeviceKeys)(key.Tag));
+                    else
+                        Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
+                    last_selected_key = key;
+                }
+            }
+        }
+
+        private void keyboard_grid_pressed(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock)
+            {
+                virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
+            }
+        }
+
+        private void keyboard_grid_moved(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock && last_selected_key != ((sender as Border).Child as TextBlock))
+            {
+                virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
+            }
+        }
+
+        private void CreateUserControl()
+        {
+            Grid new_virtual_keyboard = new Grid();
+
+            double layout_height = 0;
+            double layout_width = 0;
+
+            double baseline_x = 0.0;
+            double baseline_y = 0.0;
+            double cornerRadius = 5;
+            double current_height = 0;
+            double current_width = 0;
+            bool isFirstInRow = true;
+
+            foreach (KeyboardKey key in keyboard)
+            {
+                double keyMargin_Left = key.margin_left;
+                double keyMargin_Top = (isFirstInRow ? 0 : key.margin_top);
+
+                Border keyBorder = new Border();
+                keyBorder.CornerRadius = new CornerRadius(cornerRadius);
+                keyBorder.Width = key.width;
+                keyBorder.Height = key.height;
+                keyBorder.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                keyBorder.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                keyBorder.Margin = new Thickness(current_width + keyMargin_Left, current_height + keyMargin_Top, 0, 0);
+                keyBorder.Visibility = System.Windows.Visibility.Visible;
+                keyBorder.BorderThickness = new Thickness(1.5);
+                keyBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+                keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 25, 25, 25));
+                keyBorder.IsEnabled = key.enabled;
+                keyBorder.MouseDown += keyboard_grid_pressed;
+                keyBorder.MouseMove += keyboard_grid_moved;
+                keyBorder.IsHitTestVisible = true;
+
+                if (!key.enabled)
+                {
+                    ToolTipService.SetShowOnDisabled(keyBorder, true);
+                    keyBorder.ToolTip = new ToolTip { Content = "Changes to this key are not supported" };
+                }
+
+                TextBlock keyCap = new TextBlock();
+                keyCap.Text = key.visualName;
+                keyCap.Tag = key.tag;
+                keyCap.FontSize = key.font_size;
+                keyCap.FontWeight = FontWeights.Bold;
+                keyCap.FontFamily = new FontFamily("Calibri");
+                keyCap.TextAlignment = TextAlignment.Center;
+                keyCap.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                keyCap.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+                keyCap.Margin = new Thickness(0);
+                keyCap.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                keyCap.Visibility = System.Windows.Visibility.Visible;
+                keyCap.IsHitTestVisible = true;
+
+                keyBorder.Child = keyCap;
+
+                if (key.tag == DeviceKeys.ESC)
+                {
+                    baseline_x = keyBorder.Margin.Left;
+                    baseline_y = keyBorder.Margin.Top;
+                }
+
+                new_virtual_keyboard.Children.Add(keyBorder);
+                isFirstInRow = false;
+
+                if (key.width + keyMargin_Left > 0)
+                    current_width += key.width + keyMargin_Left;
+
+                if (keyMargin_Top > 0)
+                    current_height += keyMargin_Top;
+
+
+                if (layout_width < current_width)
+                    layout_width = current_width;
+
+                if (key.line_break)
+                {
+                    current_height += 37;
+                    current_width = 0;
+                    //isFirstInRow = true;
+                }
+
+                if (layout_height < current_height)
+                    layout_height = current_height;
+            }
+
+            //Update size
+            new_virtual_keyboard.Width = layout_width;
+
+            new_virtual_keyboard.Height = layout_height;
+
+            _virtual_keyboard.Children.Clear();
+            //new_virtual_keyboard.Children.Add(new LayerEditor());
+            _virtual_keyboard = new_virtual_keyboard;
+            
+            Global.logger.LogLine("Baseline X = " + (float)baseline_x, Logging_Level.Info, false);
+            Global.logger.LogLine("Baseline Y = " + (float)baseline_y, Logging_Level.Info, false);
+            Effects.grid_baseline_x = (float)baseline_x;
+            Effects.grid_baseline_y = (float)baseline_y;
+            Effects.grid_height = (float)new_virtual_keyboard.Height;
+            Effects.grid_width = (float)new_virtual_keyboard.Width;
+        }
+
+        public void LoadCulture(PreferredKeyboard brand, String culture)
         {
             keyboard.Clear();
 
@@ -214,10 +400,10 @@ namespace Aurora.Settings
 
             switch (brand)
             {
-                case (KeyboardBrand.Corsair):
+                case (PreferredKeyboard.Corsair):
                     fileName = "Corsair\\" + fileName;
                     break;
-                case (KeyboardBrand.Razer):
+                case (PreferredKeyboard.Razer):
                     fileName = "Razer\\" + fileName;
                     break;
                 default:
@@ -242,6 +428,9 @@ namespace Aurora.Settings
                 keyboard.Last().line_break = true;
 
             CalculateBitmap();
+            CreateUserControl();
+
+            KeyboardLayoutUpdated?.Invoke(this);
         }
 
         public void LoadDefault()
@@ -374,6 +563,9 @@ namespace Aurora.Settings
             keyboard.Add(new KeyboardKey(".", Devices.DeviceKeys.NUM_PERIOD, true, true));
 
             CalculateBitmap();
+            CreateUserControl();
+
+            KeyboardLayoutUpdated?.Invoke(this);
 
             _loaded_localization = PreferredKeyboardLocalization.None;
         }
