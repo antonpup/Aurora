@@ -65,6 +65,9 @@ namespace Aurora_SkypeIntegration
 
                 while (isRunning)
                 {
+                    if (Process.GetProcessesByName("Aurora").Length == 0)
+                        break;
+
                     missedmessages = skype.MissedMessages.Count;
 
                     if (skype.ActiveCalls.Count > 0)
