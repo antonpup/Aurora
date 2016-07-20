@@ -481,6 +481,8 @@ namespace Aurora.Profiles.Desktop
             }
             layers.Enqueue(sc_assistant_layer);
 
+            Global.Configuration.desktop_profile.UpdateEffectScripts(layers);
+
             frame.SetLayers(layers.ToArray());
         }
 

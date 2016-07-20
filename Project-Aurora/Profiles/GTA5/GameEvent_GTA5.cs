@@ -19,6 +19,7 @@ namespace Aurora.Profiles.GTA5
         private Color right_siren_color;
         private static int siren_keyframe = 0;
         private int special_mode = 0;
+        private GameState _game_state;
 
         public static void SetCurrentState(PlayerState newstate)
         {
@@ -242,15 +243,20 @@ namespace Aurora.Profiles.GTA5
                 debug_layer.Set(Devices.DeviceKeys.SPACE, Color.Blue);
             }
 
+            Global.Configuration.ApplicationProfiles["GTA5"].UpdateEffectScripts(layers, _game_state);
+
             layers.Enqueue(debug_layer);
 
             frame.SetLayers(layers.ToArray());
+
+            //_game_state = null;
         }
 
         public void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             if (new_game_state is GameState_GTA5)
             {
+                _game_state = new_game_state;
                 GameState_GTA5 newgs = (new_game_state as GameState_GTA5);
 
                 try
@@ -268,7 +274,6 @@ namespace Aurora.Profiles.GTA5
                     }
 
                     special_mode = newgs.Command_Data.custom_mode;
-
 
 
                 }

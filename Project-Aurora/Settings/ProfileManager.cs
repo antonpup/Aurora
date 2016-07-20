@@ -1,4 +1,6 @@
-﻿using Aurora.Profiles;
+﻿using Aurora.EffectsEngine;
+using Aurora.Profiles;
+using CSScriptLibrary;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ namespace Aurora.Settings
         public ProfileSettings Settings { get; set; }
         public GameEvent Event { get; set; }
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
+        internal Dictionary<string, dynamic> EffectScripts { get; set; }
 
         public event EventHandler ProfileChanged;
 
@@ -33,6 +36,7 @@ namespace Aurora.Settings
             Settings = settings;
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
+            EffectScripts = new Dictionary<string, dynamic>();
             LoadProfiles();
         }
 
@@ -46,6 +50,7 @@ namespace Aurora.Settings
             Settings = settings;
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
+            EffectScripts = new Dictionary<string, dynamic>();
             LoadProfiles();
         }
 
@@ -152,19 +157,120 @@ namespace Aurora.Settings
             return null;
         }
 
+        public void RegisterEffect(string key, dynamic obj)
+        {
+            if (this.EffectScripts.ContainsKey(key))
+            {
+                Global.logger.LogLine(string.Format("Effect script with key {0} already exists!", key), Logging_Level.External);
+                return;
+            }
+            
+            if (obj.GetType().GetMethod("update") != null || obj.update != null) 
+            {
+                this.EffectScripts.Add(key, obj);
+            }
+            else
+            {
+                Global.logger.LogLine(string.Format("Effect script with key {0} is missing a method definition for 'update'", key), Logging_Level.External);
+            }
+        }
+
+        public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, GameState state = null)
+        {
+            foreach(string id in this.Settings.EnabledScripts)
+            {
+                try
+                {
+                    dynamic script = this.EffectScripts[id];
+                    EffectLayer frame = new EffectLayer(id);
+                    script.update(frame, state);
+                    layers.Enqueue(frame);
+                }
+                catch(Exception exc)
+                {
+                    Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error.\n{1}\n{2}", id, exc.Message, exc.StackTrace), Logging_Level.External);
+                }
+            }
+        }
+
         public virtual void LoadProfiles()
         {
             string profiles_path = GetProfileFolderPath();
 
             if (Directory.Exists(profiles_path))
             {
+                string scripts_path;
+                if (Directory.Exists(scripts_path = Path.Combine(profiles_path, Global.ScriptDirectory)))
+                {
+                    foreach (string script in Directory.EnumerateFiles(scripts_path, "*.*"))
+                    {
+                        try
+                        {
+                            string ext = Path.GetExtension(script);
+                            switch (ext)
+                            {
+                                case ".py":
+                                    var scope = Global.PythonEngine.ExecuteFile(script);
+                                    dynamic main_type;
+                                    if (scope.TryGetVariable("main", out main_type))
+                                    {
+                                        dynamic obj = Global.PythonEngine.Operations.CreateInstance(main_type);
+                                        if (obj.ID != null)
+                                        {
+                                            this.RegisterEffect(obj.ID, obj);
+                                        }
+                                        else
+                                            Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable", script), Logging_Level.External);
+                                    }
+                                    else
+                                        Global.logger.LogLine(string.Format("Script \"{0}\" does not contain a public 'main' class", script), Logging_Level.External);
+
+                                    break;
+                                case ".cs":
+                                    System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(script);
+                                    foreach (Type typ in script_assembly.ExportedTypes)
+                                    {
+                                        dynamic obj = Activator.CreateInstance(typ);
+                                        if (obj.ID != null)
+                                        {
+                                            this.RegisterEffect(obj.ID, obj);
+                                        }
+                                        else
+                                            Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable for the effect {1}", script, typ.FullName), Logging_Level.External);
+                                    }
+
+                                    break;
+                                default:
+                                    Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext), Logging_Level.External);
+                                    break;
+                            }
+                        }
+                        catch (Exception exc)
+                        {
+                             Global.logger.LogLine(string.Format("An error occured while trying to load script {0}.\n{1}\n{2}", script, exc.Message, exc.StackTrace, Logging_Level.External));
+                            //Maybe MessageBox info dialog could be included.
+                        }
+                    }
+                }
+
+
                 foreach (string profile in Directory.EnumerateFiles(profiles_path, "*.json", SearchOption.TopDirectoryOnly))
                 {
                     string profile_name = Path.GetFileNameWithoutExtension(profile);
-                    ProfileSettings profile_settings = LoadProfile(profile);
+                    ProfileSettings profile_settings = LoadProfile(profile);                   
 
                     if(profile_settings != null)
                     {
+                        HashSet<string> old_ids = new HashSet<string>();
+                        foreach (string script_id in profile_settings.EnabledScripts)
+                        {
+                            if (!this.EffectScripts.ContainsKey(script_id))
+                                old_ids.Add(script_id);
+                        }
+
+                        foreach (string old_id in old_ids)
+                            profile_settings.EnabledScripts.Remove(old_id);
+
                         if (profile_name.Equals("default"))
                             Settings = profile_settings;
                         else
@@ -174,6 +280,8 @@ namespace Aurora.Settings
                         }
                     }
                 }
+
+                
             }
             else
             {

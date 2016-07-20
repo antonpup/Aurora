@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Aurora.Settings.Control_ScriptManager"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" Width="608">
+    <Grid>
+        <Label HorizontalAlignment="Left" VerticalAlignment="Top">Scripts:</Label>
+        <ListBox x:Name="lstScripts" Margin="53,0,0,0">
+            <!--<ListBox.ItemTemplate>
+                <HierarchicalDataTemplate>
+                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}"/>
+                </HierarchicalDataTemplate>
+            </ListBox.ItemTemplate>-->
+        </ListBox>
+    </Grid>
+</UserControl>
