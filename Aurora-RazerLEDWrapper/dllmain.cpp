@@ -3,6 +3,7 @@
 #include "RzChromaSDKTypes.h"
 #include "RzErrors.h"
 #include "stdafx.h"
+#include <fstream>
 #include <stdio.h>
 #include <string>
 #include <iomanip>
@@ -398,17 +399,28 @@ static unsigned char logo[4];
 
 static std::string program_name;
 
+void write_text_to_log_file(const std::string &text)
+{
+	std::ofstream out("output.txt", std::ios_base::app);
+	out << text;
+	out.close();
+}
+
 BOOL WINAPI DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
 	LPVOID lpReserved
-	)
+)
 {
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
+		write_text_to_log_file("\r\nDLL_PROCESS_ATTACH");
 	case DLL_THREAD_ATTACH:
+		write_text_to_log_file("\r\nDLL_THREAD_ATTACH");
 	case DLL_THREAD_DETACH:
+		write_text_to_log_file("\r\nDLL_THREAD_DETACH");
 	case DLL_PROCESS_DETACH:
+		write_text_to_log_file("\r\nDLL_PROCESS_DETACH");
 		break;
 	}
 	return TRUE;
@@ -418,7 +430,7 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 {
 	if (!isInitialized)
 		return false;
-	
+
 	if (!requiresUpdate)
 		return true;
 	else
@@ -463,8 +475,7 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 		//Connect to the server pipe using CreateFile()
 		hPipe = CreateFile(
 			PIPE_NAME,   // pipe name 
-			GENERIC_READ |  // read and write access 
-			GENERIC_WRITE,
+			GENERIC_WRITE,  // write access 
 			0,              // no sharing 
 			NULL,           // default security attributes
 			OPEN_EXISTING,  // opens existing pipe 
@@ -473,6 +484,30 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 
 		if (hPipe == NULL || hPipe == INVALID_HANDLE_VALUE)
 		{
+			DWORD last_error = GetLastError();
+
+			switch (last_error)
+			{
+			case ERROR_PIPE_BUSY:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_BUSY");
+				break;
+			case ERROR_PIPE_CONNECTED:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_CONNECTED");
+				break;
+			case ERROR_PIPE_LISTENING:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_LISTENING");
+				break;
+			case ERROR_PIPE_LOCAL:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_LOCAL");
+				break;
+			case ERROR_PIPE_NOT_CONNECTED:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_NOT_CONNECTED");
+				break;
+			default:
+				write_text_to_log_file("Non-pipe related error");
+				break;
+			}
+			
 			return false;
 		}
 	}
@@ -501,6 +536,8 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 
 RZRESULT Init()
 {
+	write_text_to_log_file("Call, Init()");
+
 	if (!isInitialized)
 	{
 		//Get Application name
@@ -520,14 +557,10 @@ RZRESULT Init()
 
 		program_name = filepath.substr(fn_beginning);
 
-		//This means that Init can NEVER fail, and Aurora will always be able to pick up the lighting, even after being started late.
-		/*
-
 		//Connect to the server pipe using CreateFile()
 		hPipe = CreateFile(
 			PIPE_NAME,   // pipe name 
-			GENERIC_READ |  // read and write access 
-			GENERIC_WRITE,
+			GENERIC_WRITE,  // write access 
 			0,              // no sharing 
 			NULL,           // default security attributes
 			OPEN_EXISTING,  // opens existing pipe 
@@ -536,15 +569,40 @@ RZRESULT Init()
 
 		if (hPipe == NULL || hPipe == INVALID_HANDLE_VALUE)
 		{
+			DWORD last_error = GetLastError();
+
+			switch (last_error)
+			{
+			case ERROR_PIPE_BUSY:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_BUSY");
+				break;
+			case ERROR_PIPE_CONNECTED:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_CONNECTED");
+				break;
+			case ERROR_PIPE_LISTENING:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_LISTENING");
+				break;
+			case ERROR_PIPE_LOCAL:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_LOCAL");
+				break;
+			case ERROR_PIPE_NOT_CONNECTED:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_NOT_CONNECTED");
+				break;
+			default:
+				write_text_to_log_file("Non-pipe related error");
+				break;
+			}
+
 			isInitialized = false;
 			return RZRESULT_INVALID;
 		}
-		*/
 	}
 	else
 	{
 		return RZRESULT_ALREADY_INITIALIZED;
 	}
+
+	write_text_to_log_file("Initialized Successfully");
 
 	isInitialized = true;
 	return RZRESULT_SUCCESS;
@@ -552,7 +610,7 @@ RZRESULT Init()
 
 RZRESULT UnInit()
 {
-	if(isInitialized && (hPipe != NULL && hPipe != INVALID_HANDLE_VALUE))
+	if (isInitialized && (hPipe != NULL && hPipe != INVALID_HANDLE_VALUE))
 		CloseHandle(hPipe);
 
 	isInitialized = false;
@@ -609,12 +667,14 @@ RZRESULT CreateEffect(RZDEVICEID DeviceId, ChromaSDK::EFFECT_TYPE Effect, PRZPAR
 
 RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM pParam, RZEFFECTID *pEffectId)
 {
+	write_text_to_log_file("Call, CreateKeyboardEffect()");
+
 	if (isInitialized)
 	{
 		std::string effect_id = "";
 		std::stringstream additional_effect_data;
 
-		
+
 		if (pEffectId == NULL)
 		{
 			if (Effect == ChromaSDK::Keyboard::CHROMA_STATIC)
@@ -632,7 +692,7 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 						current_bitmap[colorset + 2] != red
 						)
 						requiresUpdate = true;
-					
+
 					current_bitmap[colorset] = blue;
 					current_bitmap[colorset + 1] = green;
 					current_bitmap[colorset + 2] = red;
@@ -650,7 +710,7 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 						current_bitmap[colorset + 2] != 0
 						)
 						requiresUpdate = true;
-					
+
 					current_bitmap[colorset] = (char)0;
 					current_bitmap[colorset + 1] = (char)0;
 					current_bitmap[colorset + 2] = (char)0;
@@ -662,7 +722,7 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 			else if (Effect == ChromaSDK::Keyboard::CHROMA_CUSTOM)
 			{
 				struct ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE *)pParam;
-				
+
 				for (int row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++)
 				{
 					for (int col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++)
@@ -674,8 +734,8 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 							unsigned char blue = GetBValue(custom_effect->Color[row][col]);
 							unsigned char green = GetGValue(custom_effect->Color[row][col]);
 							unsigned char red = GetRValue(custom_effect->Color[row][col]);
-							
-							
+
+
 							if (bitmap_pos == Logitech_keyboardBitmapKeys::LOGO)
 							{
 								if (logo[0] != blue ||
@@ -683,8 +743,8 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 									logo[2] != red
 									)
 									requiresUpdate = true;
-								
-								
+
+
 								logo[0] = blue;
 								logo[1] = green;
 								logo[2] = red;
@@ -697,7 +757,7 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 									current_bitmap[(int)bitmap_pos + 2] != red
 									)
 									requiresUpdate = true;
-								
+
 								current_bitmap[(int)bitmap_pos] = blue;
 								current_bitmap[(int)bitmap_pos + 1] = green;
 								current_bitmap[(int)bitmap_pos + 2] = red;
@@ -712,7 +772,7 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 			else if (Effect == ChromaSDK::Keyboard::CHROMA_BREATHING)
 			{
 				struct ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE *breathing_effect = (struct ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE *)pParam;
-				
+
 				additional_effect_data << "\"red_start\": " << "\"" << GetRValue(breathing_effect->Color1) << "\"" << ',';
 				additional_effect_data << "\"green_start\": " << "\"" << GetGValue(breathing_effect->Color1) << "\"" << ',';
 				additional_effect_data << "\blue_start\": " << "\"" << GetBValue(breathing_effect->Color1) << "\"" << ',';
@@ -755,7 +815,7 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 						current_bitmap[colorset + 2] != 0
 						)
 						requiresUpdate = true;
-					
+
 					current_bitmap[colorset] = (char)0;
 					current_bitmap[colorset + 1] = (char)0;
 					current_bitmap[colorset + 2] = (char)0;
@@ -772,10 +832,10 @@ RZRESULT CreateKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM 
 
 		ss << "\"custom_mode\": " << 0;
 		ss << ", \"RzEffect\": \"" << effect_id << "\"";
-		if(pParam != NULL)
-		ss << ", \"RzpParam\": \"" << pParam << "\"";
+		if (pParam != NULL)
+			ss << ", \"RzpParam\": \"" << pParam << "\"";
 		if (pEffectId != NULL)
-		ss << ", \"RzpEffectId\": \"" << pEffectId << "\"";
+			ss << ", \"RzpEffectId\": \"" << pEffectId << "\"";
 		ss << additional_effect_data.str();
 		ss << '}';
 
@@ -946,7 +1006,7 @@ RZRESULT SetEffect(RZEFFECTID EffectId)
 		ss << '}';
 
 		WriteToPipe(current_bitmap, ss.str());
-		
+
 		return RZRESULT_SUCCESS;
 	}
 	else
@@ -968,7 +1028,7 @@ RZRESULT DeleteEffect(RZEFFECTID EffectId)
 		ss << '}';
 
 		WriteToPipe(current_bitmap, ss.str());
-		
+
 		return RZRESULT_SUCCESS;
 	}
 	else
@@ -990,7 +1050,7 @@ RZRESULT RegisterEventNotification(HWND hWnd)
 		ss << '}';
 
 		WriteToPipe(current_bitmap, ss.str());
-		
+
 		return RZRESULT_SUCCESS;
 	}
 	else
@@ -1012,7 +1072,7 @@ RZRESULT UnregisterEventNotification(HWND hWnd)
 		ss << '}';
 
 		WriteToPipe(current_bitmap, ss.str());
-		
+
 		return RZRESULT_SUCCESS;
 	}
 	else
@@ -1025,7 +1085,7 @@ RZRESULT QueryDevice(RZDEVICEID DeviceId, ChromaSDK::DEVICE_INFO_TYPE &DeviceInf
 {
 	DeviceInfo.DeviceType = ChromaSDK::DEVICE_INFO_TYPE::DeviceType::DEVICE_KEYBOARD;
 	DeviceInfo.Connected = 1;
-	
+
 	if (isInitialized)
 	{
 		std::stringstream ss;
@@ -1037,7 +1097,7 @@ RZRESULT QueryDevice(RZDEVICEID DeviceId, ChromaSDK::DEVICE_INFO_TYPE &DeviceInf
 		ss << '}';
 
 		WriteToPipe(current_bitmap, ss.str());
-		
+
 		return RZRESULT_SUCCESS;
 	}
 	else

@@ -19,7 +19,7 @@ namespace Aurora.Profiles.CSGO
         Headshot
     };
 
-    public class GameEvent_CSGO : GameEvent
+    public class GameEvent_CSGO : LightEvent
     {
         private int lastUpdate = 0;
         private int updateRate = 1; //1 second
@@ -137,7 +137,7 @@ namespace Aurora.Profiles.CSGO
                 return dim_value = 1.0;
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
@@ -426,10 +426,10 @@ namespace Aurora.Profiles.CSGO
                 this.lastUpdate = general_timer.Elapsed.Seconds;
             }
 
-            frame.SetLayers(layers.ToArray());
+            frame.AddLayers(layers.ToArray());
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             if (new_game_state is GameState_CSGO)
             {
@@ -484,7 +484,7 @@ namespace Aurora.Profiles.CSGO
             }
         }
 
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             return (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).isEnabled;
         }

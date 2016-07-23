@@ -1,6 +1,5 @@
 ﻿using Aurora.Devices;
 using Aurora.Settings;
-using Gma.System.MouseKeyHook;
 using Microsoft.Win32;
 using System;
 using System.Diagnostics;
@@ -394,8 +393,6 @@ namespace Aurora
             //Handle Volume Overlay
             if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt && Global.Configuration.use_volume_as_brightness)
             {
-                e.Handled = true;
-
                 if (e.KeyCode == Keys.VolumeUp)
                     Global.Configuration.global_brightness = Global.Configuration.global_brightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.global_brightness + 0.05f;
                 else if (e.KeyCode == Keys.VolumeDown)

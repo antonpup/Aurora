@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Aurora.Profiles.Generic_Application
 {
-    public class Event_GenericApplication : GameEvent
+    public class Event_GenericApplication : LightEvent
     {
         private string profile_key = "";
 
@@ -16,7 +16,7 @@ namespace Aurora.Profiles.Generic_Application
             this.profile_key = profile_key;
         }
 
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             if (Global.Configuration.additional_profiles.ContainsKey(profile_key))
                 return (Global.Configuration.additional_profiles[profile_key].Settings as GenericApplicationSettings).isEnabled;
@@ -24,7 +24,7 @@ namespace Aurora.Profiles.Generic_Application
                 return false;
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
@@ -72,7 +72,7 @@ namespace Aurora.Profiles.Generic_Application
             }
             layers.Enqueue(sc_assistant_layer);
 
-            frame.SetLayers(layers.ToArray());
+            frame.AddLayers(layers.ToArray());
         }
 
         public void UpdateLights(EffectFrame frame, string profile_key)
@@ -82,7 +82,7 @@ namespace Aurora.Profiles.Generic_Application
             UpdateLights(frame);
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             throw new NotImplementedException();
         }

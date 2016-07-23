@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.EffectsEngine
 {
@@ -16,9 +13,10 @@ namespace Aurora.EffectsEngine
 
         }
 
-        public void SetLayers(EffectLayer[] effectLayers)
+        public void AddLayers(EffectLayer[] effectLayers)
         {
-            layers = new Queue<EffectLayer>(effectLayers);
+            foreach (EffectLayer layer in effectLayers)
+                layers.Enqueue(layer);
         }
 
         public void AddOverlayLayers(EffectLayer[] effectLayers)

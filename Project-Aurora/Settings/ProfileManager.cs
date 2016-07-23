@@ -18,12 +18,12 @@ namespace Aurora.Settings
         internal ImageSource Icon { get; set; }
         internal UserControl Control { get; set; }
         public ProfileSettings Settings { get; set; }
-        public GameEvent Event { get; set; }
+        public LightEvent Event { get; set; }
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
 
         public event EventHandler ProfileChanged;
 
-        public ProfileManager(string name, string internal_name, string process_name, ProfileSettings settings, GameEvent game_event)
+        public ProfileManager(string name, string internal_name, string process_name, ProfileSettings settings, LightEvent game_event)
         {
             Name = name;
             InternalName = internal_name;
@@ -36,7 +36,7 @@ namespace Aurora.Settings
             LoadProfiles();
         }
 
-        public ProfileManager(string name, string internal_name, string[] process_names, ProfileSettings settings, GameEvent game_event)
+        public ProfileManager(string name, string internal_name, string[] process_names, ProfileSettings settings, LightEvent game_event)
         {
             Name = name;
             InternalName = internal_name;

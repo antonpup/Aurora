@@ -60,7 +60,7 @@ namespace Aurora.Profiles.Dota_2
 
     }
 
-    public class GameEvent_Dota2 : GameEvent
+    public class GameEvent_Dota2 : LightEvent
     {
         private long lastUpdate = 0;
         private int updateRate = 1; //1 second
@@ -1146,7 +1146,7 @@ namespace Aurora.Profiles.Dota_2
             ks_end_time = Time.GetMillisecondsSinceEpoch() + ks_duration;
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
@@ -1723,7 +1723,7 @@ namespace Aurora.Profiles.Dota_2
                 this.lastUpdate = Time.GetSecondsSinceEpoch();
             }
 
-            frame.SetLayers(layers.ToArray());
+            frame.AddLayers(layers.ToArray());
         }
 
         private double getDimmingValue()
@@ -1752,7 +1752,7 @@ namespace Aurora.Profiles.Dota_2
 
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             if (new_game_state is GameState_Dota2)
             {
@@ -2198,7 +2198,7 @@ namespace Aurora.Profiles.Dota_2
             }
         }
 
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             return (Global.Configuration.ApplicationProfiles["Dota 2"].Settings as Dota2Settings).isEnabled;
         }

@@ -220,6 +220,7 @@ namespace Aurora.Settings
             int height_bit = 0;
             int width_bit_max = 0;
             int height_bit_max = 0;
+            bitmap_map.Clear();
 
             foreach (KeyboardKey key in keyboard)
             {

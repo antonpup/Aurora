@@ -24,6 +24,9 @@ namespace Aurora.Profiles.Overwatch
         private void SetSettings()
         {
             this.game_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).isEnabled;
+            this.ow_ce_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).colorEnhance_Enabled;
+            this.ow_ce_color_factor.Value = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_factor;
+            this.ow_ce_color_factor_label.Text = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_factor.ToString();
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -62,6 +65,25 @@ namespace Aurora.Profiles.Overwatch
             if (IsLoaded)
             {
                 (profile_manager.Settings as OverwatchSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
+            }
+        }
+
+        private void ow_ce_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Settings as OverwatchSettings).colorEnhance_Enabled = (this.ow_ce_enabled.IsChecked.HasValue) ? this.ow_ce_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
+            }
+        }
+
+        private void ow_ce_color_factor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Settings as OverwatchSettings).colorEnhance_color_factor = (int)this.ow_ce_color_factor.Value;
+                this.ow_ce_color_factor_label.Text = ((int)this.ow_ce_color_factor.Value).ToString();
                 profile_manager.SaveProfiles();
             }
         }

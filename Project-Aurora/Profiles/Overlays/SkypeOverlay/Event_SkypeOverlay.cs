@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Aurora.Profiles.Overlays.SkypeOverlay
 {
-    public class Event_SkypeOverlay : GameEvent
+    public class Event_SkypeOverlay : LightEvent
     {
         private static int _missed_messages_count = 0;
         private static bool _is_calling = false;
@@ -31,12 +31,12 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
             _is_calling = state;
         }
 
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             return Global.Configuration.skype_overlay_settings.enabled;
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
@@ -86,7 +86,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
             frame.AddOverlayLayers(layers.ToArray());
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_state)
         {
             if (new_state is State_SkypeOverlay)
             {

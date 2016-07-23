@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
 
@@ -35,22 +36,34 @@ namespace Aurora
 
         private void Input_hook_MouseClick(object sender, MouseEventArgs e)
         {
-            MouseClick?.Invoke(sender, e);
+            Task.Factory.StartNew(
+                () => { MouseClick?.Invoke(sender, e); }
+            );
         }
 
         private void Input_hook_KeyUp(object sender, KeyEventArgs e)
         {
-            KeyUp?.Invoke(sender, e);
+            Task.Factory.StartNew(
+                () => { KeyUp?.Invoke(sender, e); }
+            );
         }
 
         private void Input_hook_KeyPress(object sender, KeyPressEventArgs e)
         {
-            KeyPress?.Invoke(sender, e);
+            Task.Factory.StartNew(
+                () => { KeyPress?.Invoke(sender, e); }
+            );
         }
 
         private void Input_hook_KeyDown(object sender, KeyEventArgs e)
         {
-            KeyDown?.Invoke(sender, e);
+            Task.Factory.StartNew(
+                () => { KeyDown?.Invoke(sender, e); }
+            );
+
+            //Handle special cases
+            if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt)
+                e.Handled = true;
         }
 
         #region IDisposable Support

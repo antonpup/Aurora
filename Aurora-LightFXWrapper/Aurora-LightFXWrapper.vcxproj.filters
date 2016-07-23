@@ -48,9 +48,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Aurora-LightFXWrapper.def">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>

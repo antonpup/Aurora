@@ -1,4 +1,4 @@
-﻿using Aurora.Profiles.Logitech_Wrapper;
+﻿using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Settings;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +13,7 @@ namespace Aurora.Profiles.TheDivision
     public class TheDivisionProfileManager : ProfileManager
     {
         public TheDivisionProfileManager()
-            : base("The Division", "the_division", "thedivision.exe", new TheDivisionSettings(), new GameEvent_Logitech_Wrapper())
+            : base("The Division", "the_division", "thedivision.exe", new TheDivisionSettings(), new GameEvent_Aurora_Wrapper())
         {
         }
 

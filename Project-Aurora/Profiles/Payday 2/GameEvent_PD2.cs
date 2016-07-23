@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.Payday_2.GSI;
 using System.Drawing;
@@ -11,7 +8,7 @@ using Aurora.EffectsEngine.Functions;
 
 namespace Aurora.Profiles.Payday_2
 {
-    public class GameEvent_PD2 : GameEvent
+    public class GameEvent_PD2 : LightEvent
     {
         private static PlayerState player_state = PlayerState.Undefined;
         private static GameStates game_state = GameStates.Undefined;
@@ -109,7 +106,7 @@ namespace Aurora.Profiles.Payday_2
             GameEvent_PD2.flashbang_amount = flashamount;
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
 
@@ -324,12 +321,12 @@ namespace Aurora.Profiles.Payday_2
             cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
-            frame.SetLayers(layers.ToArray());
+            frame.AddLayers(layers.ToArray());
 
             lasttime = currenttime;
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             if (new_game_state is GameState_PD2)
             {
@@ -362,7 +359,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             return (Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).isEnabled;
         }

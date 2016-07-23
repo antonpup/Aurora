@@ -8,18 +8,6 @@
              xmlns:tb="http://www.hardcodet.net/taskbar"
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.ConfigUI"
              mc:Ignorable="d" Height="575" Width="910" MinWidth="910" MinHeight="571" ResizeMode="CanMinimize" Title="Aurora" Loaded="Window_Loaded" Initialized="Window_Initialized" Closing="Window_Closing" Activated="Window_Activated" Deactivated="Window_Deactivated" MaxWidth="910" MaxHeight="571" HorizontalContentAlignment="Stretch">
-
-    <!--
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml" />
-                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
-    -->
-
     <Grid x:Name="bg_grid" Background="#FF660000">
         <Border Margin="66,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#A5000000" CornerRadius="8" MinWidth="828" MinHeight="216">
             <Grid x:Name="keyboard_grid" Margin="10,10,10,10" Height="192" VerticalAlignment="Top" HorizontalAlignment="Left" Width="803"/>
