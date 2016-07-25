@@ -50,8 +50,6 @@ namespace Aurora.Settings
     {
         private List<KeyboardKey> keyboard = new List<KeyboardKey>();
 
-        //private LayerEditor layer_editor = new LayerEditor();
-
         private Grid _virtual_keyboard = new Grid();
 
         public Grid Virtual_keyboard
@@ -89,7 +87,7 @@ namespace Aurora.Settings
             LoadBrand();
         }
 
-        public void LoadBrand(PreferredKeyboard brand = PreferredKeyboard.Logitech)
+        public void LoadBrand(PreferredKeyboard brand = PreferredKeyboard.None)
         {
             try
             {
@@ -97,9 +95,10 @@ namespace Aurora.Settings
 
                 //Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
 
-                if(brand == PreferredKeyboard.None)
+                if (brand == PreferredKeyboard.None)
                 {
-                    Global.kbLayout.LoadBrand(PreferredKeyboard.Logitech);
+                    Global.kbLayout.LoadNone();
+                    _loaded_localization = PreferredKeyboardLocalization.None;
 
                     foreach (var device in Global.dev_manager.GetInitializedDevices())
                     {
@@ -108,10 +107,12 @@ namespace Aurora.Settings
 
                         switch (device.GetDeviceName())
                         {
+                            case ("Logitech"):
+                                Global.kbLayout.LoadBrand(PreferredKeyboard.Logitech);
+                                break;
                             case ("Corsair"):
                                 Global.kbLayout.LoadBrand(PreferredKeyboard.Corsair);
                                 break;
-
                             /*
                             case ("Razer"):
                                 Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Razer);
@@ -122,78 +123,80 @@ namespace Aurora.Settings
                         }
                     }
                 }
-
-                if (Directory.Exists(Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder)))
+                else
                 {
-                    string culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-
-                    switch (Global.Configuration.keyboard_localization)
+                    if (Directory.Exists(Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder)))
                     {
-                        case PreferredKeyboardLocalization.None:
-                            break;
-                        case PreferredKeyboardLocalization.intl:
-                            culture = "intl";
-                            break;
-                        case PreferredKeyboardLocalization.us:
-                            culture = "en-US";
-                            break;
-                        case PreferredKeyboardLocalization.uk:
-                            culture = "en-GB";
-                            break;
-                        case PreferredKeyboardLocalization.ru:
-                            culture = "ru-RU";
-                            break;
-                        case PreferredKeyboardLocalization.fr:
-                            culture = "fr-FR";
-                            break;
-                        case PreferredKeyboardLocalization.de:
-                            culture = "de-DE";
-                            break;
-                        case PreferredKeyboardLocalization.jpn:
-                            culture = "ja-JP";
-                            break;
-                    }
+                        string culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
 
-                    switch (culture)
-                    {
-                        case ("ja-JP"):
-                            LoadCulture(brand, "jpn");
-                            break;
-                        case ("de-DE"):
-                        case ("hsb-DE"):
-                        case ("dsb-DE"):
-                            _loaded_localization = PreferredKeyboardLocalization.de;
-                            LoadCulture(brand, "de");
-                            break;
-                        case ("fr-FR"):
-                        case ("br-FR"):
-                        case ("oc-FR"):
-                        case ("co-FR"):
-                        case ("gsw-FR"):
-                            _loaded_localization = PreferredKeyboardLocalization.fr;
-                            LoadCulture(brand, "fr");
-                            break;
-                        case ("cy-GB"):
-                        case ("gd-GB"):
-                        case ("en-GB"):
-                            _loaded_localization = PreferredKeyboardLocalization.uk;
-                            LoadCulture(brand, "uk");
-                            break;
-                        case ("ru-RU"):
-                        case ("tt-RU"):
-                        case ("ba-RU"):
-                        case ("sah-RU"):
-                            _loaded_localization = PreferredKeyboardLocalization.ru;
-                            LoadCulture(brand, "ru");
-                            break;
-                        case ("en-US"):
-                            _loaded_localization = PreferredKeyboardLocalization.us;
-                            LoadCulture(brand, "us");
-                            break;
-                        default:
-                            _loaded_localization = PreferredKeyboardLocalization.intl;
-                            LoadCulture(brand, "intl");
-                            break;
+                        switch (Global.Configuration.keyboard_localization)
+                        {
+                            case PreferredKeyboardLocalization.None:
+                                break;
+                            case PreferredKeyboardLocalization.intl:
+                                culture = "intl";
+                                break;
+                            case PreferredKeyboardLocalization.us:
+                                culture = "en-US";
+                                break;
+                            case PreferredKeyboardLocalization.uk:
+                                culture = "en-GB";
+                                break;
+                            case PreferredKeyboardLocalization.ru:
+                                culture = "ru-RU";
+                                break;
+                            case PreferredKeyboardLocalization.fr:
+                                culture = "fr-FR";
+                                break;
+                            case PreferredKeyboardLocalization.de:
+                                culture = "de-DE";
+                                break;
+                            case PreferredKeyboardLocalization.jpn:
+                                culture = "ja-JP";
+                                break;
+                        }
+
+                        switch (culture)
+                        {
+                            case ("ja-JP"):
+                                LoadCulture(brand, "jpn");
+                                break;
+                            case ("de-DE"):
+                            case ("hsb-DE"):
+                            case ("dsb-DE"):
+                                _loaded_localization = PreferredKeyboardLocalization.de;
+                                LoadCulture(brand, "de");
+                                break;
+                            case ("fr-FR"):
+                            case ("br-FR"):
+                            case ("oc-FR"):
+                            case ("co-FR"):
+                            case ("gsw-FR"):
+                                _loaded_localization = PreferredKeyboardLocalization.fr;
+                                LoadCulture(brand, "fr");
+                                break;
+                            case ("cy-GB"):
+                            case ("gd-GB"):
+                            case ("en-GB"):
+                                _loaded_localization = PreferredKeyboardLocalization.uk;
+                                LoadCulture(brand, "uk");
+                                break;
+                            case ("ru-RU"):
+                            case ("tt-RU"):
+                            case ("ba-RU"):
+                            case ("sah-RU"):
+                                _loaded_localization = PreferredKeyboardLocalization.ru;
+                                LoadCulture(brand, "ru");
+                                break;
+                            case ("en-US"):
+                                _loaded_localization = PreferredKeyboardLocalization.us;
+                                LoadCulture(brand, "us");
+                                break;
+                            default:
+                                _loaded_localization = PreferredKeyboardLocalization.intl;
+                                LoadCulture(brand, "intl");
+                                break;
+                        }
                     }
                 }
             }
@@ -218,8 +221,8 @@ namespace Aurora.Settings
         {
             int width_bit = 0;
             int height_bit = 0;
-            int width_bit_max = 0;
-            int height_bit_max = 0;
+            int width_bit_max = 1;
+            int height_bit_max = 1;
             bitmap_map.Clear();
 
             foreach (KeyboardKey key in keyboard)
@@ -376,15 +379,37 @@ namespace Aurora.Settings
                     layout_height = current_height;
             }
 
-            //Update size
-            new_virtual_keyboard.Width = layout_width;
+            if (keyboard.Count == 0)
+            {
+                //No items, display error
+                Label error_message = new Label();
+                error_message.Content = new TextBlock()
+                {
+                    Text = "No keyboard detected\r\nPlease ensure that you have SDK enabled for your keyboard",
+                    TextAlignment = TextAlignment.Center,
+                    Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0))
+                };
+                error_message.FontSize = 16.0;
+                error_message.FontWeight = FontWeights.Bold;
+                error_message.HorizontalContentAlignment = HorizontalAlignment.Center;
+                error_message.VerticalContentAlignment = VerticalAlignment.Center;
 
-            new_virtual_keyboard.Height = layout_height;
+                new_virtual_keyboard.Children.Add(error_message);
+
+                //Update size
+                new_virtual_keyboard.Width = 850;
+                new_virtual_keyboard.Height = 200;
+            }
+            else
+            {
+                //Update size
+                new_virtual_keyboard.Width = layout_width;
+                new_virtual_keyboard.Height = layout_height;
+            }
 
             _virtual_keyboard.Children.Clear();
-            //new_virtual_keyboard.Children.Add(new LayerEditor());
             _virtual_keyboard = new_virtual_keyboard;
-            
+
             Global.logger.LogLine("Baseline X = " + (float)baseline_x, Logging_Level.Info, false);
             Global.logger.LogLine("Baseline Y = " + (float)baseline_y, Logging_Level.Info, false);
             Effects.grid_baseline_x = (float)baseline_x;
@@ -427,6 +452,16 @@ namespace Aurora.Settings
 
             if (keyboard.Count > 0)
                 keyboard.Last().line_break = true;
+
+            CalculateBitmap();
+            CreateUserControl();
+
+            KeyboardLayoutUpdated?.Invoke(this);
+        }
+
+        public void LoadNone()
+        {
+            keyboard.Clear();
 
             CalculateBitmap();
             CreateUserControl();

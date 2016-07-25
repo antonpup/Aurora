@@ -96,6 +96,10 @@ namespace Aurora.Settings
                             {
                                 this.about_connected_devices.Text = "Connected Devices\r\n" + Global.dev_manager.GetDevices();
                                 this.about_connected_devices.UpdateLayout();
+
+                                if(Global.Configuration.keyboard_brand == PreferredKeyboard.None && Global.kbLayout.Loaded_Localization == PreferredKeyboardLocalization.None)
+                                    Global.kbLayout.LoadBrand();
+
                             });
             }
             catch (Exception ex)
@@ -475,6 +479,11 @@ namespace Aurora.Settings
                 Global.Configuration.volume_overlay_settings.delay = volume_effects_delay.Value.Value;
                 ConfigManager.Save(Global.Configuration);
             }
+        }
+
+        private void devices_retry_Click(object sender, RoutedEventArgs e)
+        {
+            Global.dev_manager.Initialize();
         }
 
         private void devices_view_first_time_logitech_Click(object sender, RoutedEventArgs e)
