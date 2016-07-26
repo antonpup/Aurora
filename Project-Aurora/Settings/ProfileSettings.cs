@@ -2,16 +2,29 @@
 
 namespace Aurora.Settings
 {
+    public class ScriptSettings
+    {
+        public KeySequence Keys { get; set; }
+
+        public bool Enabled { get; set; }
+
+        public ScriptSettings(dynamic script)
+        {
+            if (script?.DefaultKeys != null && script?.DefaultKeys is KeySequence)
+                Keys = script.DefaultKeys;
+        }
+    }
+
     public class ProfileSettings
     {
         public bool isEnabled { get; set; }
 
-        public HashSet<string> EnabledScripts { get; set; }
+        public Dictionary<string, ScriptSettings> ScriptSettings { get; set; }
 
         public ProfileSettings()
         {
             isEnabled = true;
-            EnabledScripts = new HashSet<string>();
+            ScriptSettings = new Dictionary<string, ScriptSettings>();
         }
     }
 }

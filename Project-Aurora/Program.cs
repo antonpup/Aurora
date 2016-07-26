@@ -1,6 +1,5 @@
 ﻿using Aurora.Devices;
 using Aurora.Settings;
-using Gma.System.MouseKeyHook;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using Microsoft.Win32;

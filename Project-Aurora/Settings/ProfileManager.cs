@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Linq;
 
 namespace Aurora.Settings
 {
@@ -177,18 +178,18 @@ namespace Aurora.Settings
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, GameState state = null)
         {
-            foreach(string id in this.Settings.EnabledScripts)
+            foreach(KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
             {
                 try
                 {
-                    dynamic script = this.EffectScripts[id];
-                    EffectLayer frame = new EffectLayer(id);
-                    script.update(frame, state);
-                    layers.Enqueue(frame);
+                    dynamic script = this.EffectScripts[scr.Key];
+                    EffectLayer layer = script.update(scr.Value, state);
+                    if (layer != null)
+                        layers.Enqueue(layer);
                 }
                 catch(Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error.\n{1}\n{2}", id, exc.Message, exc.StackTrace), Logging_Level.External);
+                    Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error.\n{1}\n{2}", scr.Key, exc.Message, exc.StackTrace), Logging_Level.External);
                 }
             }
         }
@@ -262,14 +263,16 @@ namespace Aurora.Settings
                     if(profile_settings != null)
                     {
                         HashSet<string> old_ids = new HashSet<string>();
-                        foreach (string script_id in profile_settings.EnabledScripts)
+                        foreach(string id in this.EffectScripts.Keys)
                         {
-                            if (!this.EffectScripts.ContainsKey(script_id))
-                                old_ids.Add(script_id);
+                            if (!profile_settings.ScriptSettings.ContainsKey(id))
+                                profile_settings.ScriptSettings.Add(id, new ScriptSettings(this.EffectScripts[id]));
                         }
 
-                        foreach (string old_id in old_ids)
-                            profile_settings.EnabledScripts.Remove(old_id);
+                        foreach(string key in profile_settings.ScriptSettings.Keys.Where(s => !this.EffectScripts.ContainsKey(s)))
+                        {
+                            profile_settings.ScriptSettings.Remove(key);
+                        }
 
                         if (profile_name.Equals("default"))
                             Settings = profile_settings;
