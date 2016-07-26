@@ -325,7 +325,7 @@ namespace Aurora.Profiles.Payday_2
 
             Global.Configuration.ApplicationProfiles["Payday 2"].UpdateEffectScripts(layers, _game_state);
 
-            frame.SetLayers(layers.ToArray());
+            frame.AddLayers(layers.ToArray());
 
             lasttime = currenttime;
             //_game_state = null;

@@ -493,7 +493,7 @@ namespace Aurora.Profiles.Desktop
 
             Global.Configuration.desktop_profile.UpdateEffectScripts(layers);
 
-            frame.SetLayers(layers.ToArray());
+            frame.AddLayers(layers.ToArray());
         }
 
         public override void UpdateLights(EffectFrame frame, GameState new_game_state)
