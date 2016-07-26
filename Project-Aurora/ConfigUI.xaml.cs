@@ -281,11 +281,11 @@ namespace Aurora
                     proc.Kill();
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
             }
-            
+
 
             Application.Current.Shutdown();
         }
@@ -335,7 +335,7 @@ namespace Aurora
             this.profiles_stack.Children.Add(profile_desktop);
 
             //Included Game Profiles
-            foreach(KeyValuePair<string, ProfileManager> kvp in Global.Configuration.ApplicationProfiles)
+            foreach (KeyValuePair<string, ProfileManager> kvp in Global.Configuration.ApplicationProfiles)
             {
                 ProfileManager profile = kvp.Value;
                 ImageSource icon = profile.GetIcon();
@@ -541,9 +541,6 @@ namespace Aurora
                 double width = profiles_background.ActualWidth;
                 double height = selected_item.ActualHeight + 4.0D;
 
-                Debug.WriteLine("x=" + x + " y=" + y + " widht=" + width + " height=" + height);
-
-
                 if (item.Parent != null && item.Parent.Equals(profiles_stack))
                 {
                     Point relativePointWithinStack = profiles_stack.TransformToAncestor(profiles_background)
@@ -554,6 +551,8 @@ namespace Aurora
                         height -= relativePointWithinStack.Y - y;
                         y = 0;
                     }
+                    else if (y + height > profiles_background.ActualHeight - 40)
+                        height -= (y + height) - (profiles_background.ActualHeight - 40);
 
                 }
                 else
@@ -562,13 +561,13 @@ namespace Aurora
                     y = relativePoint.Y - 2.0D;
                     width = profiles_background.ActualWidth;
                     height = selected_item.ActualHeight + 4.0D;
-                }
 
-                Debug.WriteLine("x=" + x + " y=" + y + " widht=" + width + " height=" + height);
+                    if (y + height > profiles_background.ActualHeight - 40)
+                        height -= (y + height) - (profiles_background.ActualHeight - 40);
+                }
 
                 if (height > 0 && width > 0)
                 {
-
                     GeometryDrawing transparent_region =
                         new GeometryDrawing(
                             new SolidColorBrush((Color)current_color),

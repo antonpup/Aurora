@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Aurora.Profiles.Desktop
 {
-    public class Event_Idle : GameEvent
+    public class Event_Idle : LightEvent
     {
         private long previoustime = 0;
         private long currenttime = 0;
@@ -35,7 +35,7 @@ namespace Aurora.Profiles.Desktop
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
@@ -154,13 +154,13 @@ namespace Aurora.Profiles.Desktop
             frame.AddOverlayLayers(layers.ToArray());
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             //This event does not take a game state
             UpdateLights(frame);
         }
 
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             return true;
         }

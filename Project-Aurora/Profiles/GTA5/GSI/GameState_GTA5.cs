@@ -1,12 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Profiles.GTA5.GSI
 {
@@ -118,7 +111,7 @@ namespace Aurora.Profiles.GTA5.GSI
                 _CurrentState = PlayerState.PlayingSP_Michael;
             else if (state_color == Color.FromArgb(255, 48, 255, 0))
                 _CurrentState = PlayerState.PlayingSP_Franklin;
-            else if (state_color == Color.FromArgb(255, 48, 255, 0))
+            else if (state_color == Color.FromArgb(255, 127, 0, 0))
                 _CurrentState = PlayerState.PlayingSP_Chop;
             else if (state_color == Color.FromArgb(255, 0, 68, 226))
                 _CurrentState = PlayerState.PlayingMP;

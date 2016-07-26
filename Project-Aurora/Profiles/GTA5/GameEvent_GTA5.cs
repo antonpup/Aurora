@@ -10,7 +10,7 @@ using Aurora.Settings;
 
 namespace Aurora.Profiles.GTA5
 {
-    public class GameEvent_GTA5 : GameEvent
+    public class GameEvent_GTA5 : LightEvent
     {
         private static PlayerState curr_state = PlayerState.Undefined;
         private static bool have_cops = false;
@@ -36,7 +36,7 @@ namespace Aurora.Profiles.GTA5
             siren_keyframe += count;
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
@@ -247,12 +247,10 @@ namespace Aurora.Profiles.GTA5
 
             layers.Enqueue(debug_layer);
 
-            frame.SetLayers(layers.ToArray());
-
-            //_game_state = null;
+            frame.AddLayers(layers.ToArray());
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             if (new_game_state is GameState_GTA5)
             {
@@ -287,7 +285,7 @@ namespace Aurora.Profiles.GTA5
             }
         }
 
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             return (Global.Configuration.ApplicationProfiles["GTA5"].Settings as GTA5Settings).isEnabled;
         }

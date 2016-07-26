@@ -4,14 +4,14 @@ using NAudio.CoreAudioApi;
 
 namespace Aurora.Profiles.Overlays
 {
-    public class Event_VolumeOverlay : GameEvent
+    public class Event_VolumeOverlay : LightEvent
     {
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             return true;
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             if (Global.Configuration.volume_overlay_settings.enabled)
             {
@@ -34,7 +34,7 @@ namespace Aurora.Profiles.Overlays
             }
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             //No need to do anything... This doesn't have any gamestates.
             UpdateLights(frame);

@@ -1,4 +1,4 @@
-﻿using Aurora.Profiles.Logitech_Wrapper;
+﻿using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Settings;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +13,7 @@ namespace Aurora.Profiles.Overwatch
     public class OverwatchProfileManager : ProfileManager
     {
         public OverwatchProfileManager()
-            : base("Overwatch", "overwatch", "overwatch.exe", new OverwatchSettings(), new GameEvent_Logitech_Wrapper())
+            : base("Overwatch", "overwatch", "overwatch.exe", new OverwatchSettings(), new GameEvent_Overwatch())
         {
         }
 

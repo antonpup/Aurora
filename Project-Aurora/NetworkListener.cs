@@ -166,12 +166,26 @@ namespace Aurora
 
         private void IPCServerThread()
         {
+            PipeSecurity pipeSa = new PipeSecurity();
+            pipeSa.SetAccessRule(new PipeAccessRule("Everyone",
+                            PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow));
             while (true)
             {
-                try {
-                    using (NamedPipeServerStream pipeStream = new NamedPipeServerStream("Aurora\\server"))
+                try
+                {
+                    using (NamedPipeServerStream pipeStream = new NamedPipeServerStream(
+                    "Aurora\\server",
+                    PipeDirection.In,
+                    NamedPipeServerStream.MaxAllowedServerInstances,
+                    PipeTransmissionMode.Message,
+                    PipeOptions.None,
+                    5 * 1024,
+                    5 * 1024,
+                    pipeSa,
+                    HandleInheritability.None
+                    ))
                     {
-                        Global.logger.LogLine(String.Format( "[IPCServer] Pipe created {0}", pipeStream.GetHashCode() ));
+                        Global.logger.LogLine(String.Format("[IPCServer] Pipe created {0}", pipeStream.GetHashCode()));
 
                         pipeStream.WaitForConnection();
                         Global.logger.LogLine("[IPCServer] Pipe connection established");
@@ -195,7 +209,7 @@ namespace Aurora
 
                     Global.logger.LogLine("[IPCServer] Pipe connection lost");
                 }
-                catch(Exception exc)
+                catch (Exception exc)
                 {
                     Global.logger.LogLine("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);
                 }

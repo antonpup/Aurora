@@ -53,12 +53,11 @@ bool WriteToPipe(const std::string command_cargo)
 
 	if (INVALID_HANDLE_VALUE == hPipe)
 	{
-		//Try to gestore handle
+		//Try to restore handle
 		//Connect to the server pipe using CreateFile()
 		hPipe = CreateFile(
 			PIPE_NAME,   // pipe name 
-			GENERIC_READ |  // read and write access 
-			GENERIC_WRITE,
+			GENERIC_WRITE,  // write access 
 			0,              // no sharing 
 			NULL,           // default security attributes
 			OPEN_EXISTING,  // opens existing pipe 
@@ -127,8 +126,7 @@ extern "C" {
 			//Connect to the server pipe using CreateFile()
 			hPipe = CreateFile(
 				PIPE_NAME,   // pipe name 
-				GENERIC_READ |  // read and write access 
-				GENERIC_WRITE,
+				GENERIC_WRITE,  // write access 
 				0,              // no sharing 
 				NULL,           // default security attributes
 				OPEN_EXISTING,  // opens existing pipe 

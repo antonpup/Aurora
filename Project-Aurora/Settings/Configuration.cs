@@ -1,24 +1,13 @@
-﻿using Aurora.Profiles.CSGO;
-using Aurora.Profiles.Desktop;
-using Aurora.Profiles.Dota_2;
-using Aurora.Profiles.Generic_Application;
-using Aurora.Profiles.GTA5;
-using Aurora.Profiles.HotlineMiami;
-using Aurora.Profiles.LeagueOfLegends;
-using Aurora.Profiles.Overlays;
-using Aurora.Profiles.Overlays.SkypeOverlay;
-using Aurora.Profiles.Overwatch;
-using Aurora.Profiles.Payday_2;
-using Aurora.Profiles.RocketLeague;
-using Aurora.Profiles.TheDivision;
-using Aurora.Profiles.TheTalosPrinciple;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using Aurora.Profiles.Generic_Application;
+using Aurora.Profiles.Overlays;
+using Aurora.Profiles.Overlays.SkypeOverlay;
 
 namespace Aurora.Settings
 {
@@ -177,21 +166,24 @@ namespace Aurora.Settings
 
         //Game Settings
         [JsonIgnoreAttribute]
-        public ProfileManager desktop_profile = new DesktopProfileManager();
+        public ProfileManager desktop_profile = new Profiles.Desktop.DesktopProfileManager();
 
         [JsonIgnoreAttribute]
         public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
         {
-            { "Dota 2", new Dota2ProfileManager() },
-            { "CSGO", new CSGOProfileManager() },
-            { "GTA5", new GTA5ProfileManager() },
-            { "RocketLeague", new RocketLeagueProfileManager() },
-            { "Overwatch", new OverwatchProfileManager() },
-            { "Payday 2", new PD2ProfileManager() },
-            { "The Division", new TheDivisionProfileManager() },
-            { "League of Legends", new LoLProfileManager() },
-            { "Hotline", new HMProfileManager() },
-            { "Talos", new TalosPrincipleProfileManager() }
+            { "Dota 2", new Profiles.Dota_2.Dota2ProfileManager() },
+            { "CSGO", new Profiles.CSGO.CSGOProfileManager() },
+            { "GTA5", new Profiles.GTA5.GTA5ProfileManager() },
+            { "RocketLeague", new Profiles.RocketLeague.RocketLeagueProfileManager() },
+            { "Overwatch", new Profiles.Overwatch.OverwatchProfileManager() },
+            { "Payday 2", new Profiles.Payday_2.PD2ProfileManager() },
+            { "The Division", new Profiles.TheDivision.TheDivisionProfileManager() },
+            { "League of Legends", new Profiles.LeagueOfLegends.LoLProfileManager() },
+            { "Hotline", new Profiles.HotlineMiami.HMProfileManager() },
+            { "Talos", new Profiles.TheTalosPrinciple.TalosPrincipleProfileManager() },
+            { "BF3", new Profiles.BF3.BF3ProfileManager() },
+            { "BLight", new Profiles.Blacklight.BLightProfileManager() },
+            { "MagicDuels2012", new Profiles.Magic_Duels_2012.MagicDuels2012ProfileManager() }
         };
 
         //Overlay Settings

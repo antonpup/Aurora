@@ -100,7 +100,7 @@ namespace Aurora.Profiles.Desktop
 
     }
 
-    public class Event_Desktop : GameEvent
+    public class Event_Desktop : LightEvent
     {
         private List<input_item> input_list = new List<input_item>();
         private Keys previous_key = Keys.None;
@@ -324,7 +324,7 @@ namespace Aurora.Profiles.Desktop
             }
         }
 
-        public void UpdateLights(EffectFrame frame)
+        public override void UpdateLights(EffectFrame frame)
         {
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
@@ -391,25 +391,35 @@ namespace Aurora.Profiles.Desktop
 
             foreach (var input in input_list.ToArray())
             {
-                if (input.type == input_item.input_type.Spectrum)
+                if (input == null)
+                    continue;
+
+                try
                 {
-                    float transition_value = input.progress / Effects.canvas_width;
+                    if (input.type == input_item.input_type.Spectrum)
+                    {
+                        float transition_value = input.progress / Effects.canvas_width;
 
-                    if (transition_value > 1.0f)
-                        continue;
+                        if (transition_value > 1.0f)
+                            continue;
 
-                    Color color = input.spectrum.GetColorAt(transition_value);
+                        Color color = input.spectrum.GetColorAt(transition_value);
 
-                    interactive_layer.Set(input.key, color);
+                        interactive_layer.Set(input.key, color);
+                    }
+                    else if (input.type == input_item.input_type.AnimationMix)
+                    {
+                        float time_value = input.progress / Effects.canvas_width;
+
+                        if (time_value > 1.0f)
+                            continue;
+
+                        input.animation.Draw(interactive_layer.GetGraphics(), time_value);
+                    }
                 }
-                else if (input.type == input_item.input_type.AnimationMix)
+                catch (Exception exc)
                 {
-                    float time_value = input.progress / Effects.canvas_width;
-
-                    if (time_value > 1.0f)
-                        continue;
-
-                    input.animation.Draw(interactive_layer.GetGraphics(), time_value);
+                    Global.logger.LogLine("Interative layer exception, " + exc, Logging_Level.Error);
                 }
             }
 
@@ -486,13 +496,13 @@ namespace Aurora.Profiles.Desktop
             frame.SetLayers(layers.ToArray());
         }
 
-        public void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             //No need to do anything... This doesn't have any gamestates.
             UpdateLights(frame);
         }
 
-        public bool IsEnabled()
+        public override bool IsEnabled()
         {
             return true;
         }

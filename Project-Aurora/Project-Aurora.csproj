@@ -104,6 +104,9 @@
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Corale.Colore, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Colore.4.0.0\lib\net35\Corale.Colore.dll</HintPath>
@@ -250,6 +253,18 @@
     <Compile Include="EffectsEngine\EffectBrush.cs" />
     <Compile Include="EffectsEngine\EffectSmoothColorSpectrum.cs" />
     <Compile Include="InputEventsSubscriptions.cs" />
+    <Compile Include="Profiles\BF3\BF3ProfileManager.cs" />
+    <Compile Include="Profiles\BF3\BF3Settings.cs" />
+    <Compile Include="Profiles\BF3\Control_BF3.xaml.cs">
+      <DependentUpon>Control_BF3.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\BF3\GameEvent_BF3.cs" />
+    <Compile Include="Profiles\Blacklight\BLightProfileManager.cs" />
+    <Compile Include="Profiles\Blacklight\BLightSettings.cs" />
+    <Compile Include="Profiles\Blacklight\Control_BLight.xaml.cs">
+      <DependentUpon>Control_BLight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
     <Compile Include="Profiles\CSGO\CSGOProfileManager.cs" />
     <Compile Include="Profiles\Desktop\DesktopProfileManager.cs" />
     <Compile Include="Profiles\Dota 2\Dota2ProfileManager.cs" />
@@ -276,7 +291,13 @@
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLProfileManager.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLSettings.cs" />
-    <Compile Include="Profiles\Logitech_Wrapper\GameEvent_Logitech_Wrapper.cs" />
+    <Compile Include="Profiles\Aurora Wrapper\GameEvent_Aurora_Wrapper.cs" />
+    <Compile Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml.cs">
+      <DependentUpon>Control_MagicDuels2012.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Magic_Duels_2012\GameEvent_MagicDuels2012.cs" />
+    <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012ProfileManager.cs" />
+    <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Settings.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
@@ -285,6 +306,7 @@
     <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
       <DependentUpon>Control_Overwatch.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Overwatch\GameEvent_Overwatch.cs" />
     <Compile Include="Profiles\Overwatch\OverwatchProfileManager.cs" />
     <Compile Include="Profiles\Overwatch\OverwatchSettings.cs" />
     <Compile Include="Profiles\Payday 2\Control_PD2.xaml.cs">
@@ -381,7 +403,7 @@
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Item.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Items.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Map.cs" />
-    <Compile Include="Profiles\GameEvent.cs" />
+    <Compile Include="Profiles\LightEvent.cs" />
     <Compile Include="Profiles\GameState_Wrapper.cs" />
     <Compile Include="Profiles\GTA5\GameEvent_GTA5.cs" />
     <Compile Include="Profiles\GTA5\GSI\GameState_GTA5.cs" />
@@ -429,6 +451,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Devices\SteelSeries\AuroraPlugin.lsp" />
+    <None Include="app.manifest" />
     <None Include="kb_layouts\Logitech\layout.jpn.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -547,6 +570,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\BF3\Control_BF3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Blacklight\Control_BLight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\CSGO\Control_CSGO.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -572,6 +603,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\LeagueOfLegends\Control_LoL.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -689,6 +724,8 @@
     <Content Include="redist\vc_redist.x86.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\bf3_64x64.png" />
+    <Resource Include="Resources\blacklight_64x64.png" />
     <Content Include="Resources\CorsairInstall\Step1.png" />
     <Content Include="Resources\CorsairInstall\Step2.png" />
     <Resource Include="Resources\x64\Aurora-LightFXWrapper.dll" />
@@ -709,6 +746,7 @@
     <Resource Include="Resources\hotline_32x32.png" />
     <Resource Include="Resources\talosprinciple_64x64.png" />
     <Resource Include="Resources\unknown_app_icon.png" />
+    <Resource Include="Resources\magic_duels_64x64.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\FreeForm_Circle.png" />

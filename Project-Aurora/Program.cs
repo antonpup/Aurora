@@ -136,39 +136,6 @@ namespace Aurora
             }
 
             Global.dev_manager.Initialize();
-            Devices.Device[] active_devices = Global.dev_manager.GetInitializedDevices();
-
-            //No devices intialized, wait for initialization retry to finish
-            if (active_devices.Length == 0)
-            {
-                while (Global.dev_manager.RetryAttempts > 0)
-                {
-                    active_devices = Global.dev_manager.GetInitializedDevices();
-
-                    bool kb_initialized = false;
-
-                    foreach (var device in active_devices)
-                    {
-                        if (device.IsKeyboardConnected())
-                        {
-                            kb_initialized = true;
-                            break;
-                        }
-                    }
-
-                    if (kb_initialized)
-                        break;
-
-                    System.Threading.Thread.Sleep(5000);
-                }
-
-                if (active_devices.Length == 0)
-                {
-                    Global.logger.LogLine("No devices were initialized", Logging_Level.Error);
-                    System.Windows.MessageBox.Show("No compatible devices detected.\r\nExiting.", "Aurora - Error");
-                    Environment.Exit(0);
-                }
-            }
 
             Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
             Global.kbLayout = new KeyboardLayoutManager();
@@ -398,8 +365,6 @@ namespace Aurora
             //Handle Volume Overlay
             if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt && Global.Configuration.use_volume_as_brightness)
             {
-                e.Handled = true;
-
                 if (e.KeyCode == Keys.VolumeUp)
                     Global.Configuration.global_brightness = Global.Configuration.global_brightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.global_brightness + 0.05f;
                 else if (e.KeyCode == Keys.VolumeDown)

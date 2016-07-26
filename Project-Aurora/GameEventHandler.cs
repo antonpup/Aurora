@@ -5,7 +5,7 @@ using System.Timers;
 using Aurora.Profiles;
 using Aurora.Profiles.Desktop;
 using System.Runtime.InteropServices;
-using Aurora.Profiles.Logitech_Wrapper;
+using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Utils;
 using Aurora.Profiles.Overlays.SkypeOverlay;
@@ -34,7 +34,7 @@ namespace Aurora
         private Event_Desktop desktop_e = new Event_Desktop();
         private Event_Idle idle_e = new Event_Idle();
         private Event_SkypeOverlay skype_overlay = new Event_SkypeOverlay();
-        private Dictionary<string, GameEvent> profiles = new Dictionary<string, GameEvent>(); //Process name, GameEvent
+        private Dictionary<string, LightEvent> profiles = new Dictionary<string, LightEvent>(); //Process name, GameEvent
 
         private List<TimedListObject> overlays = new List<TimedListObject>();
 
@@ -205,8 +205,8 @@ namespace Aurora
             TimedListObject[] overlay_events = overlays.ToArray();
             foreach (TimedListObject evnt in overlay_events)
             {
-                if((evnt.item as GameEvent).IsEnabled())
-                    (evnt.item as GameEvent).UpdateLights(newframe);
+                if((evnt.item as LightEvent).IsEnabled())
+                    (evnt.item as LightEvent).UpdateLights(newframe);
             }
 
             Global.effengine.PushFrame(newframe);
@@ -279,7 +279,7 @@ namespace Aurora
                                 string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
 
                                 if(!profiles.ContainsKey(gs_process_name))
-                                    profiles.Add(gs_process_name, new GameEvent_Logitech_Wrapper());
+                                    profiles.Add(gs_process_name, new GameEvent_Aurora_Wrapper());
 
                                 if(process_name.EndsWith(gs_process_name))
                                 {
@@ -322,8 +322,8 @@ namespace Aurora
                         TimedListObject[] overlay_events = overlays.ToArray();
                         foreach (TimedListObject evnt in overlay_events)
                         {
-                            if ((evnt.item as GameEvent).IsEnabled())
-                                (evnt.item as GameEvent).UpdateLights(newframe);
+                            if ((evnt.item as LightEvent).IsEnabled())
+                                (evnt.item as LightEvent).UpdateLights(newframe);
                         }
 
                         Global.effengine.PushFrame(newframe);
@@ -358,7 +358,7 @@ namespace Aurora
             return this.preview_mode_profile_key;
         }
 
-        public void AddOverlayForDuration(GameEvent overlay_event, int duration, bool isUnique = true)
+        public void AddOverlayForDuration(LightEvent overlay_event, int duration, bool isUnique = true)
         {
             if (isUnique)
             {

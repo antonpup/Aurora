@@ -256,34 +256,6 @@ LogiLed::Logitech_keyboardBitmapKeys ToLogitechBitmap(LogiLed::KeyName keyName)
 	}
 }
 
-/*
-
-{
-"provider": {
-"name": "GTA5.exe",
-"appid": 0
-},
-"command": "FlashLighting",
-"command_data": {
-"red_start": 255,
-"green_start": 255,
-"blue_start": 255,
-"red_end": 255,
-"green_end": 255,
-"blue_end": 255,
-"duration": 10,
-"interval": 10,
-"key": 13
-},
-"bitmap": [
-39,
-10
-]
-}
-
-*/
-
-
 bool WriteToPipe(const std::string command_cargo)
 {
 	if (!isInitialized)
@@ -300,12 +272,11 @@ bool WriteToPipe(const std::string command_cargo)
 
 	if (INVALID_HANDLE_VALUE == hPipe)
 	{
-		//Try to gestore handle
+		//Try to restore handle
 		//Connect to the server pipe using CreateFile()
 		hPipe = CreateFile(
 			PIPE_NAME,   // pipe name 
-			GENERIC_READ |  // read and write access 
-			GENERIC_WRITE,
+			GENERIC_WRITE,  // write access 
 			0,              // no sharing 
 			NULL,           // default security attributes
 			OPEN_EXISTING,  // opens existing pipe 
@@ -859,8 +830,7 @@ bool LogiLedInit()
 		//Connect to the server pipe using CreateFile()
 		hPipe = CreateFile(
 			PIPE_NAME,   // pipe name 
-			GENERIC_READ |  // read and write access 
-			GENERIC_WRITE,
+			GENERIC_WRITE,  // write access 
 			0,              // no sharing 
 			NULL,           // default security attributes
 			OPEN_EXISTING,  // opens existing pipe 

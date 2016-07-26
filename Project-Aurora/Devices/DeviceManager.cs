@@ -47,6 +47,8 @@ namespace Aurora.Devices
             {
                 Thread retryThread = new Thread(RetryInitialize);
                 retryThread.Start();
+
+                retryActivated = true;
             }
         }
 
