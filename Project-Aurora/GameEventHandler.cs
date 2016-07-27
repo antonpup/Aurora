@@ -286,6 +286,10 @@ namespace Aurora
                                     profiles[gs_process_name].UpdateLights(newframe, gs as GameState_Wrapper);
                                     resolved_state = true;
                                 }
+                                else
+                                {
+                                    (profiles[gs_process_name] as GameEvent_Aurora_Wrapper).UpdateWrapperLights(gs as GameState_Wrapper);
+                                }
                             }
                         }
                         break;

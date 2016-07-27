@@ -152,6 +152,7 @@ namespace Aurora.Profiles
 
     public class Extra_Keys_Wrapper : Node
     {
+        public readonly int[] peripheral;
         public readonly int[] logo;
         public readonly int[] badge;
         public readonly int[] G1;
@@ -178,6 +179,7 @@ namespace Aurora.Profiles
         internal Extra_Keys_Wrapper(string JSON)
             : base(JSON)
         {
+            peripheral = GetArray<int>("peripheral");
             logo = GetArray<int>("logo");
             badge = GetArray<int>("badge");
             G1 = GetArray<int>("G1");

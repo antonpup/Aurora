@@ -11,6 +11,11 @@ namespace Aurora.Profiles.Aurora_Wrapper
         internal byte[] bitmap = new byte[LedCSharp.LogitechGSDK.LOGI_LED_BITMAP_SIZE];
         internal int[] logo = new int[4];
         internal int[] peripheral = new int[4];
+        internal int[] g1 = new int[4];
+        internal int[] g2 = new int[4];
+        internal int[] g3 = new int[4];
+        internal int[] g4 = new int[4];
+        internal int[] g5 = new int[4];
         internal Color last_fill_color = Color.Black;
         internal Dictionary<Devices.DeviceKeys, KeyEffect> key_effects = new Dictionary<Devices.DeviceKeys, KeyEffect>();
         internal EntireEffect current_effect = null;
@@ -32,27 +37,19 @@ namespace Aurora.Profiles.Aurora_Wrapper
             foreach (var key in allkeys)
             {
                 if (key == Devices.DeviceKeys.LOGO && logo.Length == 4)
-                {
-                    int a, r, g, b;
-
-                    b = logo[0];
-                    g = logo[1];
-                    r = logo[2];
-                    a = logo[3];
-
-                    bitmap_layer.Set(key, Color.FromArgb(a, r, g, b));
-                }
+                    bitmap_layer.Set(key, Color.FromArgb(logo[3], logo[2], logo[1], logo[0]));
                 else if (key == Devices.DeviceKeys.Peripheral && peripheral.Length == 4)
-                {
-                    int a, r, g, b;
-
-                    b = peripheral[0];
-                    g = peripheral[1];
-                    r = peripheral[2];
-                    a = peripheral[3];
-
-                    bitmap_layer.Set(key, Color.FromArgb(a, r, g, b));
-                }
+                    bitmap_layer.Set(key, Color.FromArgb(peripheral[3], peripheral[2], peripheral[1], peripheral[0]));
+                else if (key == Devices.DeviceKeys.G1 && g1.Length == 4)
+                    bitmap_layer.Set(key, Color.FromArgb(g1[3], g1[2], g1[1], g1[0]));
+                else if (key == Devices.DeviceKeys.G2 && g2.Length == 4)
+                    bitmap_layer.Set(key, Color.FromArgb(g2[3], g2[2], g2[1], g2[0]));
+                else if (key == Devices.DeviceKeys.G3 && g3.Length == 4)
+                    bitmap_layer.Set(key, Color.FromArgb(g3[3], g3[2], g3[1], g3[0]));
+                else if (key == Devices.DeviceKeys.G4 && g4.Length == 4)
+                    bitmap_layer.Set(key, Color.FromArgb(g4[3], g4[2], g4[1], g4[0]));
+                else if (key == Devices.DeviceKeys.G5 && g5.Length == 4)
+                    bitmap_layer.Set(key, Color.FromArgb(g5[3], g5[2], g5[1], g5[0]));
                 else
                 {
                     Devices.Logitech.Logitech_keyboardBitmapKeys logi_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap(key);
@@ -117,11 +114,11 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
         public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
-            UpdateWrapperLights(frame, new_game_state);
+            UpdateWrapperLights(new_game_state);
             UpdateLights(frame);
         }
 
-        internal virtual void UpdateWrapperLights(EffectFrame frame, GameState new_game_state)
+        internal virtual void UpdateWrapperLights(GameState new_game_state)
         {
             if (new_game_state is GameState_Wrapper)
             {
@@ -130,7 +127,12 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 if (ngw_state.Sent_Bitmap.Length > 0)
                     bitmap = ngw_state.Sent_Bitmap;
                 logo = ngw_state.Extra_Keys.logo;
-
+                g1 = ngw_state.Extra_Keys.G1;
+                g2 = ngw_state.Extra_Keys.G2;
+                g3 = ngw_state.Extra_Keys.G3;
+                g4 = ngw_state.Extra_Keys.G4;
+                g5 = ngw_state.Extra_Keys.G5;
+                peripheral = ngw_state.Extra_Keys.peripheral;
 
                 if (ngw_state.Command.Equals("SetLighting"))
                 {
