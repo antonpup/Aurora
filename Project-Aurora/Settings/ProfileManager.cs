@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
+using System.Windows.Data;
 
 namespace Aurora.Settings
 {
@@ -129,8 +130,13 @@ namespace Aurora.Settings
                 Type setting_type = Settings.GetType();
                 Settings = (ProfileSettings)Activator.CreateInstance(setting_type);
 
-                if (ProfileChanged != null)
-                    ProfileChanged(this, new EventArgs());
+                foreach (string id in this.EffectScripts.Keys)
+                {
+                    if (!Settings.ScriptSettings.ContainsKey(id))
+                        Settings.ScriptSettings.Add(id, new ScriptSettings(this.EffectScripts[id]));
+                }
+
+                ProfileChanged?.Invoke(this, new EventArgs());
             }
             catch (Exception exc)
             {
@@ -262,14 +268,13 @@ namespace Aurora.Settings
 
                     if(profile_settings != null)
                     {
-                        HashSet<string> old_ids = new HashSet<string>();
                         foreach(string id in this.EffectScripts.Keys)
                         {
                             if (!profile_settings.ScriptSettings.ContainsKey(id))
                                 profile_settings.ScriptSettings.Add(id, new ScriptSettings(this.EffectScripts[id]));
                         }
 
-                        foreach(string key in profile_settings.ScriptSettings.Keys.Where(s => !this.EffectScripts.ContainsKey(s)))
+                        foreach(string key in profile_settings.ScriptSettings.Keys.Where(s => !this.EffectScripts.ContainsKey(s)).ToList())
                         {
                             profile_settings.ScriptSettings.Remove(key);
                         }

@@ -8,12 +8,12 @@
              d:DesignHeight="50" Width="608">
     <Grid>
         <Label HorizontalAlignment="Left" VerticalAlignment="Top">Scripts:</Label>
-        <ListBox x:Name="lstScripts" Margin="53,0,0,0">
-            <!--<ListBox.ItemTemplate>
+        <ListBox x:Name="lstScripts" Margin="53,0,0,0" SelectionMode="Single" ItemsSource="{Binding Path=Scripts, UpdateSourceTrigger=PropertyChanged}">
+            <ListBox.ItemTemplate>
                 <HierarchicalDataTemplate>
-                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}"/>
+                    <CheckBox Content="{Binding Path=Key}" IsChecked="{Binding Path=Value.Enabled, Mode=TwoWay}" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"/>
                 </HierarchicalDataTemplate>
-            </ListBox.ItemTemplate>-->
+            </ListBox.ItemTemplate>
         </ListBox>
     </Grid>
 </UserControl>

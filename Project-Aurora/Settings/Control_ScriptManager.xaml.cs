@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Linq;
 
 namespace Aurora.Settings
 {
@@ -23,19 +25,27 @@ namespace Aurora.Settings
             {
                 SetValue(ProfileManagerProperty, value);
 
-                this.lstScripts.Items.Clear();
-                foreach (var kvp in value.EffectScripts)
-                {
-                    CheckBox chk = new CheckBox() { Name = kvp.Key, IsChecked = value.Settings.EnabledScripts.Contains(kvp.Key), Content = kvp.Value.Name ?? kvp.Key };
-                    chk.Checked += ScriptCheckedChanged;
-                    chk.Unchecked += ScriptCheckedChanged;
-                    this.lstScripts.Items.Add(chk);
-                }
-                this.lstScripts.IsEnabled = this.lstScripts.Items.Count > 0;
+                value.ProfileChanged += (sender, e) => {
+                    this.Scripts = (sender as ProfileManager)?.Settings.ScriptSettings;
+                };
+                this.Scripts = value.Settings.ScriptSettings;
             }
         }
 
-       
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public static readonly DependencyProperty ScriptsProperty = DependencyProperty.Register("Scripts", typeof(Dictionary<string, ScriptSettings>), typeof(Control_ScriptManager));
+
+        public Dictionary<string, ScriptSettings> Scripts
+        {
+            get
+            {
+                return (Dictionary<string, ScriptSettings>)GetValue(ScriptsProperty);
+            }
+            set
+            {
+                SetValue(ScriptsProperty, value);
+            }
+        }
 
         public Control_ScriptManager()
         {
@@ -43,18 +53,9 @@ namespace Aurora.Settings
             this.DataContext = this;
         }
 
-        private void ScriptCheckedChanged(object sender, RoutedEventArgs e)
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            if (sender is CheckBox)
-            {
-                CheckBox chk = sender as CheckBox;
-                if (chk.IsChecked ?? false)
-                    ProfileManager.Settings.EnabledScripts.Add(chk.Name);
-                else
-                    ProfileManager.Settings.EnabledScripts.Remove(chk.Name);
-
-                ProfileManager.SaveProfiles();
-            }
+            ProfileManager.SaveProfiles();
         }
     }
 }
