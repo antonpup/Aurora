@@ -4,9 +4,11 @@
 #include "RzErrors.h"
 #include "stdafx.h"
 #include <fstream>
+#include <objbase.h>
 #include <stdio.h>
 #include <string>
 #include <iomanip>
+#include <map>
 #include <sstream>
 #include <windows.h>
 
@@ -17,6 +19,8 @@
 #define LOGI_LED_BITMAP_BYTES_PER_KEY 4
 
 #define LOGI_LED_BITMAP_SIZE (LOGI_LED_BITMAP_WIDTH*LOGI_LED_BITMAP_HEIGHT*LOGI_LED_BITMAP_BYTES_PER_KEY)
+
+const GUID GUID_NULL = { 0, 0, 0,{ 0, 0, 0, 0, 0, 0, 0, 0 } };
 
 typedef enum
 {
@@ -402,20 +406,42 @@ Logitech_keyboardBitmapKeys ToLogitechBitmap(int rzrow, int rzcolumn)
 		return Logitech_keyboardBitmapKeys::UNKNOWN;
 }
 
+typedef struct WRAPPER_EFFECT
+{
+	unsigned char bitmap[LOGI_LED_BITMAP_SIZE] = { NULL };
+	unsigned char logo[4] = { NULL };
+	unsigned char g1[4] = { NULL };
+	unsigned char g2[4] = { NULL };
+	unsigned char g3[4] = { NULL };
+	unsigned char g4[4] = { NULL };
+	unsigned char g5[4] = { NULL };
+	unsigned char peripheral[4] = { NULL };
+	std::string command_cargo = "";
+} WRAPPER_EFFECT;
+
 
 HANDLE hPipe = INVALID_HANDLE_VALUE;
 static bool isInitialized = false;
 static bool requiresUpdate = true;
 
 static unsigned char current_bitmap[LOGI_LED_BITMAP_SIZE];
-static unsigned char logo[4];
-static unsigned char g1[4];
-static unsigned char g2[4];
-static unsigned char g3[4];
-static unsigned char g4[4];
-static unsigned char g5[4];
-static unsigned char peripheral[4];
+static unsigned char current_logo[4];
+static unsigned char current_g1[4];
+static unsigned char current_g2[4];
+static unsigned char current_g3[4];
+static unsigned char current_g4[4];
+static unsigned char current_g5[4];
+static unsigned char current_peripheral[4];
 
+struct GUIDComparer {
+	bool operator()(const GUID & Left, const GUID & Right) const
+	{
+		// comparison logic goes here
+		return memcmp(&Left, &Right, sizeof(Right)) < 0;
+	}
+};
+
+static std::map<GUID, WRAPPER_EFFECT, GUIDComparer> effects;
 
 static std::string program_name;
 
@@ -448,7 +474,7 @@ BOOL WINAPI DllMain(HMODULE hModule,
 	return TRUE;
 }
 
-bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
+bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 {
 	if (!isInitialized)
 		return false;
@@ -463,80 +489,132 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 
 	ss << '{';
 	ss << "\"provider\": {\"name\": \"" << program_name << "\", \"appid\": 0},";
-	ss << command_cargo << ',';
+	ss << effect.command_cargo << ',';
 	ss << "\"bitmap\": [";
-	for (int bitm_pos = 0; bitm_pos < LOGI_LED_BITMAP_SIZE; bitm_pos++)
+	for (int bitm_pos = 0; bitm_pos < LOGI_LED_BITMAP_SIZE; bitm_pos += 4)
 	{
-		ss << (short)bitmap[bitm_pos];
+		if (effect.bitmap[bitm_pos + 3] != NULL)
+		{
+			current_bitmap[bitm_pos] = effect.bitmap[bitm_pos];
+			current_bitmap[bitm_pos + 1] = effect.bitmap[bitm_pos + 1];
+			current_bitmap[bitm_pos + 2] = effect.bitmap[bitm_pos + 2];
+			current_bitmap[bitm_pos + 3] = effect.bitmap[bitm_pos + 3];
+		}
 
-		if (bitm_pos + 1 < LOGI_LED_BITMAP_SIZE)
+		ss << (short)current_bitmap[bitm_pos] << ',';
+		ss << (short)current_bitmap[bitm_pos + 1] << ',';
+		ss << (short)current_bitmap[bitm_pos + 2] << ',';
+		ss << (short)current_bitmap[bitm_pos + 3];
+
+		if (bitm_pos + 4 < LOGI_LED_BITMAP_SIZE)
 			ss << ',';
 	}
 	ss << "],";
 
 	ss << "\"extra_keys\": {";
 	ss << "\"logo\": [";
-	for (int c_pos = 0; c_pos < 4; c_pos++)
+	if (effect.logo[3] != NULL)
 	{
-		ss << (short)logo[c_pos];
-
-		if (c_pos + 1 < 4)
-			ss << ',';
+		current_logo[0] = effect.logo[0];
+		current_logo[1] = effect.logo[1];
+		current_logo[2] = effect.logo[2];
+		current_logo[3] = effect.logo[3];
 	}
+
+	ss << (short)current_logo[0] << ',';
+	ss << (short)current_logo[1] << ',';
+	ss << (short)current_logo[2] << ',';
+	ss << (short)current_logo[3];
+
 	ss << "],";
 	ss << "\"G1\": [";
-	for (int c_pos = 0; c_pos < 4; c_pos++)
+	if (effect.g1[3] != NULL)
 	{
-		ss << (short)g1[c_pos];
-
-		if (c_pos + 1 < 4)
-			ss << ',';
+		current_g1[0] = effect.g1[0];
+		current_g1[1] = effect.g1[1];
+		current_g1[2] = effect.g1[2];
+		current_g1[3] = effect.g1[3];
 	}
+
+	ss << (short)current_g1[0] << ',';
+	ss << (short)current_g1[1] << ',';
+	ss << (short)current_g1[2] << ',';
+	ss << (short)current_g1[3];
+
 	ss << "],";
 	ss << "\"G2\": [";
-	for (int c_pos = 0; c_pos < 4; c_pos++)
+	if (effect.g2[3] != NULL)
 	{
-		ss << (short)g2[c_pos];
-
-		if (c_pos + 1 < 4)
-			ss << ',';
+		current_g2[0] = effect.g2[0];
+		current_g2[1] = effect.g2[1];
+		current_g2[2] = effect.g2[2];
+		current_g2[3] = effect.g2[3];
 	}
+
+	ss << (short)current_g2[0] << ',';
+	ss << (short)current_g2[1] << ',';
+	ss << (short)current_g2[2] << ',';
+	ss << (short)current_g2[3];
+
 	ss << "],";
 	ss << "\"G3\": [";
-	for (int c_pos = 0; c_pos < 4; c_pos++)
+	if (effect.g3[3] != NULL)
 	{
-		ss << (short)g3[c_pos];
-
-		if (c_pos + 1 < 4)
-			ss << ',';
+		current_g3[0] = effect.g3[0];
+		current_g3[1] = effect.g3[1];
+		current_g3[2] = effect.g3[2];
+		current_g3[3] = effect.g3[3];
 	}
+
+	ss << (short)current_g3[0] << ',';
+	ss << (short)current_g3[1] << ',';
+	ss << (short)current_g3[2] << ',';
+	ss << (short)current_g3[3];
+
 	ss << "],";
 	ss << "\"G4\": [";
-	for (int c_pos = 0; c_pos < 4; c_pos++)
+	if (effect.g4[3] != NULL)
 	{
-		ss << (short)g4[c_pos];
-
-		if (c_pos + 1 < 4)
-			ss << ',';
+		current_g4[0] = effect.g4[0];
+		current_g4[1] = effect.g4[1];
+		current_g4[2] = effect.g4[2];
+		current_g4[3] = effect.g4[3];
 	}
+
+	ss << (short)current_g4[0] << ',';
+	ss << (short)current_g4[1] << ',';
+	ss << (short)current_g4[2] << ',';
+	ss << (short)current_g4[3];
+
 	ss << "],";
 	ss << "\"G5\": [";
-	for (int c_pos = 0; c_pos < 4; c_pos++)
+	if (effect.g5[3] != NULL)
 	{
-		ss << (short)g5[c_pos];
-
-		if (c_pos + 1 < 4)
-			ss << ',';
+		current_g5[0] = effect.g5[0];
+		current_g5[1] = effect.g5[1];
+		current_g5[2] = effect.g5[2];
+		current_g5[3] = effect.g5[3];
 	}
+
+	ss << (short)current_g5[0] << ',';
+	ss << (short)current_g5[1] << ',';
+	ss << (short)current_g5[2] << ',';
+	ss << (short)current_g5[3];
+
 	ss << "],";
 	ss << "\"peripheral\": [";
-	for (int c_pos = 0; c_pos < 4; c_pos++)
+	if (effect.peripheral[3] != NULL)
 	{
-		ss << (short)peripheral[c_pos];
-
-		if (c_pos + 1 < 4)
-			ss << ',';
+		current_peripheral[0] = effect.peripheral[0];
+		current_peripheral[1] = effect.peripheral[1];
+		current_peripheral[2] = effect.peripheral[2];
+		current_peripheral[3] = effect.peripheral[3];
 	}
+
+	ss << (short)current_peripheral[0] << ',';
+	ss << (short)current_peripheral[1] << ',';
+	ss << (short)current_peripheral[2] << ',';
+	ss << (short)current_peripheral[3];
 	ss << "]";
 	ss << '}';
 
@@ -608,6 +686,654 @@ bool __fastcall WriteToPipe(unsigned char bitmap[], std::string command_cargo)
 	}
 
 	return false;
+}
+
+WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZPARAM pParam)
+{
+	WRAPPER_EFFECT return_effect;
+	std::stringstream additional_effect_data;
+
+	additional_effect_data << ',';
+
+	if (Effect == ChromaSDK::Keyboard::CHROMA_STATIC)
+	{
+		struct ChromaSDK::Keyboard::STATIC_EFFECT_TYPE *static_effect = (struct ChromaSDK::Keyboard::STATIC_EFFECT_TYPE *)pParam;
+
+		unsigned char blue = GetBValue(static_effect->Color);
+		unsigned char green = GetGValue(static_effect->Color);
+		unsigned char red = GetRValue(static_effect->Color);
+
+		for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
+		{
+			if (return_effect.bitmap[colorset] != blue ||
+				return_effect.bitmap[colorset + 1] != green ||
+				return_effect.bitmap[colorset + 2] != red
+				)
+				requiresUpdate = true;
+
+			return_effect.bitmap[colorset] = blue;
+			return_effect.bitmap[colorset + 1] = green;
+			return_effect.bitmap[colorset + 2] = red;
+			return_effect.bitmap[colorset + 3] = (char)255;
+		}
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_STATIC" << "\"";
+	}
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_NONE)
+	{
+		for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
+		{
+			if (return_effect.bitmap[colorset] != 0 ||
+				return_effect.bitmap[colorset + 1] != 0 ||
+				return_effect.bitmap[colorset + 2] != 0
+				)
+				requiresUpdate = true;
+
+			return_effect.bitmap[colorset] = (char)0;
+			return_effect.bitmap[colorset + 1] = (char)0;
+			return_effect.bitmap[colorset + 2] = (char)0;
+			return_effect.bitmap[colorset + 3] = (char)255;
+		}
+
+		//Logo
+		if (current_logo[0] != 0 ||
+			current_logo[1] != 0 ||
+			current_logo[2] != 0
+			)
+			requiresUpdate = true;
+
+		return_effect.logo[0] = 0;
+		return_effect.logo[1] = 0;
+		return_effect.logo[2] = 0;
+		return_effect.logo[3] = (char)255;
+
+		//G Keys
+		if (current_g1[0] != 0 ||
+			current_g1[1] != 0 ||
+			current_g1[2] != 0
+			)
+			requiresUpdate = true;
+
+		return_effect.g1[0] = 0;
+		return_effect.g1[1] = 0;
+		return_effect.g1[2] = 0;
+		return_effect.g1[3] = (char)255;
+
+		if (current_g2[0] != 0 ||
+			current_g2[1] != 0 ||
+			current_g2[2] != 0
+			)
+			requiresUpdate = true;
+
+		return_effect.g2[0] = 0;
+		return_effect.g2[1] = 0;
+		return_effect.g2[2] = 0;
+		return_effect.g2[3] = (char)255;
+
+		if (current_g3[0] != 0 ||
+			current_g3[1] != 0 ||
+			current_g3[2] != 0
+			)
+			requiresUpdate = true;
+
+		return_effect.g3[0] = 0;
+		return_effect.g3[1] = 0;
+		return_effect.g3[2] = 0;
+		return_effect.g3[3] = (char)255;
+
+		if (current_g4[0] != 0 ||
+			current_g4[1] != 0 ||
+			current_g4[2] != 0
+			)
+			requiresUpdate = true;
+
+		return_effect.g4[0] = 0;
+		return_effect.g4[1] = 0;
+		return_effect.g4[2] = 0;
+		return_effect.g4[3] = (char)255;
+
+		if (current_g5[0] != 0 ||
+			current_g5[1] != 0 ||
+			current_g5[2] != 0
+			)
+			requiresUpdate = true;
+
+		return_effect.g5[0] = 0;
+		return_effect.g5[1] = 0;
+		return_effect.g5[2] = 0;
+		return_effect.g5[3] = (char)255;
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_NONE" << "\"";
+	}
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_CUSTOM)
+	{
+		struct ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE *)pParam;
+
+		for (int row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++)
+		{
+			for (int col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++)
+			{
+				Logitech_keyboardBitmapKeys bitmap_pos = ToLogitechBitmap(row, col);
+
+				if (bitmap_pos != Logitech_keyboardBitmapKeys::UNKNOWN)
+				{
+					unsigned char blue = GetBValue(custom_effect->Color[row][col]);
+					unsigned char green = GetGValue(custom_effect->Color[row][col]);
+					unsigned char red = GetRValue(custom_effect->Color[row][col]);
+
+
+					if (bitmap_pos == Logitech_keyboardBitmapKeys::LOGO)
+					{
+						if (current_logo[0] != blue ||
+							current_logo[1] != green ||
+							current_logo[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.logo[0] = blue;
+						return_effect.logo[1] = green;
+						return_effect.logo[2] = red;
+						return_effect.logo[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G1)
+					{
+						if (current_g1[0] != blue ||
+							current_g1[1] != green ||
+							current_g1[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g1[0] = blue;
+						return_effect.g1[1] = green;
+						return_effect.g1[2] = red;
+						return_effect.g1[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G2)
+					{
+						if (current_g2[0] != blue ||
+							current_g2[1] != green ||
+							current_g2[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g2[0] = blue;
+						return_effect.g2[1] = green;
+						return_effect.g2[2] = red;
+						return_effect.g2[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G3)
+					{
+						if (current_g3[0] != blue ||
+							current_g3[1] != green ||
+							current_g3[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g3[0] = blue;
+						return_effect.g3[1] = green;
+						return_effect.g3[2] = red;
+						return_effect.g3[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G4)
+					{
+						if (current_g4[0] != blue ||
+							current_g4[1] != green ||
+							current_g4[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g4[0] = blue;
+						return_effect.g4[1] = green;
+						return_effect.g4[2] = red;
+						return_effect.g4[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G5)
+					{
+						if (current_g5[0] != blue ||
+							current_g5[1] != green ||
+							current_g5[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g5[0] = blue;
+						return_effect.g5[1] = green;
+						return_effect.g5[2] = red;
+						return_effect.g5[3] = (char)255;
+					}
+					else
+					{
+						if (current_bitmap[(int)bitmap_pos] != blue ||
+							current_bitmap[(int)bitmap_pos + 1] != green ||
+							current_bitmap[(int)bitmap_pos + 2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.bitmap[(int)bitmap_pos] = blue;
+						return_effect.bitmap[(int)bitmap_pos + 1] = green;
+						return_effect.bitmap[(int)bitmap_pos + 2] = red;
+						return_effect.bitmap[(int)bitmap_pos + 3] = (char)255;
+					}
+				}
+			}
+		}
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM" << "\"";
+	}
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_CUSTOM_KEY)
+	{
+		struct ChromaSDK::Keyboard::CUSTOM_KEY_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Keyboard::CUSTOM_KEY_EFFECT_TYPE *)pParam;
+
+		for (int row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++)
+		{
+			for (int col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++)
+			{
+				Logitech_keyboardBitmapKeys bitmap_pos = ToLogitechBitmap(row, col);
+
+				if (bitmap_pos != Logitech_keyboardBitmapKeys::UNKNOWN)
+				{
+					unsigned char blue = GetBValue(custom_effect->Key[row][col]);
+					unsigned char green = GetGValue(custom_effect->Key[row][col]);
+					unsigned char red = GetRValue(custom_effect->Key[row][col]);
+
+
+					if (bitmap_pos == Logitech_keyboardBitmapKeys::LOGO)
+					{
+						if (current_logo[0] != blue ||
+							current_logo[1] != green ||
+							current_logo[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.logo[0] = blue;
+						return_effect.logo[1] = green;
+						return_effect.logo[2] = red;
+						return_effect.logo[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G1)
+					{
+						if (current_g1[0] != blue ||
+							current_g1[1] != green ||
+							current_g1[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g1[0] = blue;
+						return_effect.g1[1] = green;
+						return_effect.g1[2] = red;
+						return_effect.g1[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G2)
+					{
+						if (current_g2[0] != blue ||
+							current_g2[1] != green ||
+							current_g2[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g2[0] = blue;
+						return_effect.g2[1] = green;
+						return_effect.g2[2] = red;
+						return_effect.g2[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G3)
+					{
+						if (current_g3[0] != blue ||
+							current_g3[1] != green ||
+							current_g3[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g3[0] = blue;
+						return_effect.g3[1] = green;
+						return_effect.g3[2] = red;
+						return_effect.g3[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G4)
+					{
+						if (current_g4[0] != blue ||
+							current_g4[1] != green ||
+							current_g4[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g4[0] = blue;
+						return_effect.g4[1] = green;
+						return_effect.g4[2] = red;
+						return_effect.g4[3] = (char)255;
+					}
+					else if (bitmap_pos == Logitech_keyboardBitmapKeys::G5)
+					{
+						if (current_g5[0] != blue ||
+							current_g5[1] != green ||
+							current_g5[2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.g5[0] = blue;
+						return_effect.g5[1] = green;
+						return_effect.g5[2] = red;
+						return_effect.g5[3] = (char)255;
+					}
+					else
+					{
+						if (current_bitmap[(int)bitmap_pos] != blue ||
+							current_bitmap[(int)bitmap_pos + 1] != green ||
+							current_bitmap[(int)bitmap_pos + 2] != red
+							)
+							requiresUpdate = true;
+
+						return_effect.bitmap[(int)bitmap_pos] = blue;
+						return_effect.bitmap[(int)bitmap_pos + 1] = green;
+						return_effect.bitmap[(int)bitmap_pos + 2] = red;
+						return_effect.bitmap[(int)bitmap_pos + 3] = (char)255;
+					}
+				}
+			}
+		}
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM" << "\"";
+	}
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_BREATHING)
+	{
+		struct ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE *breathing_effect = (struct ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE *)pParam;
+
+		additional_effect_data << "\"red_start\": " << "\"" << GetRValue(breathing_effect->Color1) << "\"" << ',';
+		additional_effect_data << "\"green_start\": " << "\"" << GetGValue(breathing_effect->Color1) << "\"" << ',';
+		additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(breathing_effect->Color1) << "\"" << ',';
+		additional_effect_data << "\"red_end\": " << "\"" << GetRValue(breathing_effect->Color2) << "\"" << ',';
+		additional_effect_data << "\"green_end\": " << "\"" << GetGValue(breathing_effect->Color2) << "\"" << ',';
+		additional_effect_data << "\blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
+
+		switch (breathing_effect->Type)
+		{
+		case ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE::Type::TWO_COLORS:
+			additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			break;
+		case ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS:
+			additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
+			break;
+		default:
+			additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			break;
+		}
+	}
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_REACTIVE)
+	{
+		struct ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE *reactive_effect = (struct ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE *)pParam;
+
+		additional_effect_data << "\"red_start\": " << "\"" << GetRValue(reactive_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"green_start\": " << "\"" << GetGValue(reactive_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(reactive_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_REACTIVE" << "\"" << ',';
+
+		switch (reactive_effect->Duration)
+		{
+		case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_NONE:
+			additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
+			break;
+		case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT:
+			additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
+			break;
+		case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM:
+			additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
+			break;
+		case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG:
+			additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
+			break;
+		default:
+			additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			break;
+		}
+	}
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_SPECTRUMCYCLING)
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_SPECTRUMCYCLING" << "\"";
+	}
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_WAVE)
+	{
+		struct ChromaSDK::Keyboard::WAVE_EFFECT_TYPE *wave_effect = (struct ChromaSDK::Keyboard::WAVE_EFFECT_TYPE *)pParam;
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_WAVE" << "\"" << ',';
+
+		switch (wave_effect->Direction)
+		{
+		case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_NONE:
+			additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
+			break;
+		case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_LEFT_TO_RIGHT:
+			additional_effect_data << "\"effect_config\": " << "\"" << "LEFT_TO_RIGHT" << "\"";
+			break;
+		case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_RIGHT_TO_LEFT:
+			additional_effect_data << "\"effect_config\": " << "\"" << "RIGHT_TO_LEFT" << "\"";
+			break;
+		default:
+			additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			break;
+		}
+	}
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_STARLIGHT)
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_STARLIGHT" << "\"";
+	}
+	else
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_INVALID" << "\"";
+	}
+
+	std::stringstream ss;
+	ss << "\"command\": " << "\"CreateKeyboardEffect\"" << ',';
+	ss << "\"command_data\": {";
+
+	ss << "\"custom_mode\": " << 0;
+	ss << additional_effect_data.str();
+	ss << '}';
+
+	return_effect.command_cargo = ss.str();
+
+	return return_effect;
+}
+
+WRAPPER_EFFECT HandleMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE Effect, PRZPARAM pParam)
+{
+	WRAPPER_EFFECT return_effect;
+	std::stringstream additional_effect_data;
+
+	additional_effect_data << ',';
+
+	switch (Effect)
+	{
+		//case ChromaSDK::Mouse::CHROMA_NONE:
+		//	break;
+	//case ChromaSDK::Mouse::CHROMA_BLINKING:
+	//	break;
+	//case ChromaSDK::Mouse::CHROMA_BREATHING:
+	//	break;
+		//case ChromaSDK::Mouse::CHROMA_CUSTOM:
+		//	break;
+	//case ChromaSDK::Mouse::CHROMA_REACTIVE:
+	//	break;
+	//case ChromaSDK::Mouse::CHROMA_SPECTRUMCYCLING:
+	//	break;
+		//case ChromaSDK::Mouse::CHROMA_STATIC:
+		//	break;
+	case ChromaSDK::Mouse::CHROMA_WAVE:
+		break;
+	case ChromaSDK::Mouse::CHROMA_CUSTOM2:
+		break;
+	case ChromaSDK::Mouse::CHROMA_INVALID:
+		break;
+	default:
+		break;
+	}
+
+	if (Effect == ChromaSDK::Mouse::CHROMA_STATIC)
+	{
+		struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *static_effect = (struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *)pParam;
+
+		unsigned char blue = GetBValue(static_effect->Color);
+		unsigned char green = GetGValue(static_effect->Color);
+		unsigned char red = GetRValue(static_effect->Color);
+
+		if (static_effect->LEDId == ChromaSDK::Mouse::RZLED::RZLED_LOGO || static_effect->LEDId == ChromaSDK::Mouse::RZLED::RZLED_ALL)
+		{
+			if (current_peripheral[0] != blue ||
+				current_peripheral[1] != green ||
+				current_peripheral[2] != red
+				)
+				requiresUpdate = true;
+
+			return_effect.peripheral[0] = blue;
+			return_effect.peripheral[1] = green;
+			return_effect.peripheral[2] = red;
+			return_effect.peripheral[3] = (char)255;
+		}
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_STATIC" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_BLINKING)
+	{
+		struct ChromaSDK::Mouse::BLINKING_EFFECT_TYPE *blinking_effect = (struct ChromaSDK::Mouse::BLINKING_EFFECT_TYPE *)pParam;
+
+		additional_effect_data << "\"red_start\": " << "\"" << GetRValue(blinking_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"green_start\": " << "\"" << GetGValue(blinking_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(blinking_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BLINKING" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_NONE)
+	{
+		if (current_peripheral[0] != 0 ||
+			current_peripheral[1] != 0 ||
+			current_peripheral[2] != 0
+			)
+			requiresUpdate = true;
+
+		return_effect.peripheral[0] = (char)0;
+		return_effect.peripheral[1] = (char)0;
+		return_effect.peripheral[2] = (char)0;
+		return_effect.peripheral[3] = (char)255;
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_NONE" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_CUSTOM)
+	{
+		struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE *)pParam;
+
+		unsigned char blue = GetBValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
+		unsigned char green = GetGValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
+		unsigned char red = GetRValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
+
+		if (current_peripheral[0] != blue ||
+			current_peripheral[1] != green ||
+			current_peripheral[2] != red
+			)
+			requiresUpdate = true;
+
+		return_effect.peripheral[0] = blue;
+		return_effect.peripheral[1] = green;
+		return_effect.peripheral[2] = red;
+		return_effect.peripheral[3] = (char)255;
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_BREATHING)
+	{
+		struct ChromaSDK::Mouse::BREATHING_EFFECT_TYPE *breathing_effect = (struct ChromaSDK::Mouse::BREATHING_EFFECT_TYPE *)pParam;
+
+		additional_effect_data << "\"red_start\": " << "\"" << GetRValue(breathing_effect->Color1) << "\"" << ',';
+		additional_effect_data << "\"green_start\": " << "\"" << GetGValue(breathing_effect->Color1) << "\"" << ',';
+		additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(breathing_effect->Color1) << "\"" << ',';
+		additional_effect_data << "\"red_end\": " << "\"" << GetRValue(breathing_effect->Color2) << "\"" << ',';
+		additional_effect_data << "\"green_end\": " << "\"" << GetGValue(breathing_effect->Color2) << "\"" << ',';
+		additional_effect_data << "\blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
+
+		switch (breathing_effect->Type)
+		{
+		case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::ONE_COLOR:
+			additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			break;
+		case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::TWO_COLORS:
+			additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			break;
+		case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS:
+			additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
+			break;
+		default:
+			additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			break;
+		}
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_REACTIVE)
+	{
+		struct ChromaSDK::Mouse::REACTIVE_EFFECT_TYPE *reactive_effect = (struct ChromaSDK::Mouse::REACTIVE_EFFECT_TYPE *)pParam;
+
+		additional_effect_data << "\"red_start\": " << "\"" << GetRValue(reactive_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"green_start\": " << "\"" << GetGValue(reactive_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(reactive_effect->Color) << "\"" << ',';
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_REACTIVE" << "\"" << ',';
+
+		switch (reactive_effect->Duration)
+		{
+		case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT:
+			additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
+			break;
+		case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM:
+			additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
+			break;
+		case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG:
+			additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
+			break;
+		default:
+			additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
+			break;
+		}
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_SPECTRUMCYCLING)
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_SPECTRUMCYCLING" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_WAVE)
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_WAVE" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_CUSTOM2)
+	{
+		struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE2 *custom_effect = (struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE2 *)pParam;
+
+		unsigned char blue = GetBValue(custom_effect->Color[HIBYTE(ChromaSDK::Mouse::RZLED2_LOGO)][LOBYTE(ChromaSDK::Mouse::RZLED2_LOGO)]);
+		unsigned char green = GetGValue(custom_effect->Color[HIBYTE(ChromaSDK::Mouse::RZLED2_LOGO)][LOBYTE(ChromaSDK::Mouse::RZLED2_LOGO)]);
+		unsigned char red = GetRValue(custom_effect->Color[HIBYTE(ChromaSDK::Mouse::RZLED2_LOGO)][LOBYTE(ChromaSDK::Mouse::RZLED2_LOGO)]);
+
+		if (current_peripheral[0] != blue ||
+			current_peripheral[1] != green ||
+			current_peripheral[2] != red
+			)
+			requiresUpdate = true;
+
+		return_effect.peripheral[0] = blue;
+		return_effect.peripheral[1] = green;
+		return_effect.peripheral[2] = red;
+		return_effect.peripheral[3] = (char)255;
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM2" << "\"";
+	}
+	else
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_INVALID" << "\"";
+	}
+
+	std::stringstream ss;
+	ss << "\"command\": " << "\"CreateMouseEffect\"" << ',';
+	ss << "\"command_data\": {";
+
+	ss << "\"custom_mode\": " << 0;
+	ss << additional_effect_data.str();
+	ss << '}';
+
+	return_effect.command_cargo = ss.str();
+
+	return return_effect;
 }
 
 #ifdef __cplusplus
@@ -701,6 +1427,9 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
+			// Not Implemented
+
+			/*
 			switch (Effect)
 			{
 			case ChromaSDK::CHROMA_NONE:
@@ -736,7 +1465,7 @@ extern "C" {
 			ss << '}';
 
 			WriteToPipe(current_bitmap, ss.str());
-
+			*/
 			return RZRESULT_SUCCESS;
 		}
 		else
@@ -751,238 +1480,19 @@ extern "C" {
 
 		if (isInitialized)
 		{
-			std::string effect_id = "";
-			std::stringstream additional_effect_data;
+			WRAPPER_EFFECT kbEffect = HandleKeyboardEffect(Effect, pParam);
 
 			if (pEffectId == NULL)
 			{
-				if (Effect == ChromaSDK::Keyboard::CHROMA_STATIC)
-				{
-					struct ChromaSDK::Keyboard::STATIC_EFFECT_TYPE *static_effect = (struct ChromaSDK::Keyboard::STATIC_EFFECT_TYPE *)pParam;
-
-					unsigned char blue = GetBValue(static_effect->Color);
-					unsigned char green = GetGValue(static_effect->Color);
-					unsigned char red = GetRValue(static_effect->Color);
-
-					for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
-					{
-						if (current_bitmap[colorset] != blue ||
-							current_bitmap[colorset + 1] != green ||
-							current_bitmap[colorset + 2] != red
-							)
-							requiresUpdate = true;
-
-						current_bitmap[colorset] = blue;
-						current_bitmap[colorset + 1] = green;
-						current_bitmap[colorset + 2] = red;
-						current_bitmap[colorset + 3] = (char)255;
-					}
-
-					effect_id = "CHROMA_STATIC";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_NONE)
-				{
-					for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
-					{
-						if (current_bitmap[colorset] != 0 ||
-							current_bitmap[colorset + 1] != 0 ||
-							current_bitmap[colorset + 2] != 0
-							)
-							requiresUpdate = true;
-
-						current_bitmap[colorset] = (char)0;
-						current_bitmap[colorset + 1] = (char)0;
-						current_bitmap[colorset + 2] = (char)0;
-						current_bitmap[colorset + 3] = (char)255;
-					}
-
-					effect_id = "CHROMA_NONE";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_CUSTOM)
-				{
-					struct ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE *)pParam;
-
-					for (int row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++)
-					{
-						for (int col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++)
-						{
-							Logitech_keyboardBitmapKeys bitmap_pos = ToLogitechBitmap(row, col);
-
-							if (bitmap_pos != Logitech_keyboardBitmapKeys::UNKNOWN)
-							{
-								unsigned char blue = GetBValue(custom_effect->Color[row][col]);
-								unsigned char green = GetGValue(custom_effect->Color[row][col]);
-								unsigned char red = GetRValue(custom_effect->Color[row][col]);
-
-
-								if (bitmap_pos == Logitech_keyboardBitmapKeys::LOGO)
-								{
-									if (logo[0] != blue ||
-										logo[1] != green ||
-										logo[2] != red
-										)
-										requiresUpdate = true;
-
-									logo[0] = blue;
-									logo[1] = green;
-									logo[2] = red;
-									logo[3] = (char)255;
-								}
-								else if (bitmap_pos == Logitech_keyboardBitmapKeys::G1)
-								{
-									if (g1[0] != blue ||
-										g1[1] != green ||
-										g1[2] != red
-										)
-										requiresUpdate = true;
-
-									g1[0] = blue;
-									g1[1] = green;
-									g1[2] = red;
-									g1[3] = (char)255;
-								}
-								else if (bitmap_pos == Logitech_keyboardBitmapKeys::G2)
-								{
-									if (g2[0] != blue ||
-										g2[1] != green ||
-										g2[2] != red
-										)
-										requiresUpdate = true;
-
-									g2[0] = blue;
-									g2[1] = green;
-									g2[2] = red;
-									g2[3] = (char)255;
-								}
-								else if (bitmap_pos == Logitech_keyboardBitmapKeys::G3)
-								{
-									if (g3[0] != blue ||
-										g3[1] != green ||
-										g3[2] != red
-										)
-										requiresUpdate = true;
-
-									g3[0] = blue;
-									g3[1] = green;
-									g3[2] = red;
-									g3[3] = (char)255;
-								}
-								else if (bitmap_pos == Logitech_keyboardBitmapKeys::G4)
-								{
-									if (g4[0] != blue ||
-										g4[1] != green ||
-										g4[2] != red
-										)
-										requiresUpdate = true;
-
-									g4[0] = blue;
-									g4[1] = green;
-									g4[2] = red;
-									g4[3] = (char)255;
-								}
-								else if (bitmap_pos == Logitech_keyboardBitmapKeys::G5)
-								{
-									if (g5[0] != blue ||
-										g5[1] != green ||
-										g5[2] != red
-										)
-										requiresUpdate = true;
-
-									g5[0] = blue;
-									g5[1] = green;
-									g5[2] = red;
-									g5[3] = (char)255;
-								}
-								else
-								{
-									if (current_bitmap[(int)bitmap_pos] != blue ||
-										current_bitmap[(int)bitmap_pos + 1] != green ||
-										current_bitmap[(int)bitmap_pos + 2] != red
-										)
-										requiresUpdate = true;
-
-									current_bitmap[(int)bitmap_pos] = blue;
-									current_bitmap[(int)bitmap_pos + 1] = green;
-									current_bitmap[(int)bitmap_pos + 2] = red;
-									current_bitmap[(int)bitmap_pos + 3] = (char)255;
-								}
-							}
-						}
-					}
-
-					effect_id = "CHROMA_CUSTOM";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_BREATHING)
-				{
-					struct ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE *breathing_effect = (struct ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE *)pParam;
-
-					additional_effect_data << "\"red_start\": " << "\"" << GetRValue(breathing_effect->Color1) << "\"" << ',';
-					additional_effect_data << "\"green_start\": " << "\"" << GetGValue(breathing_effect->Color1) << "\"" << ',';
-					additional_effect_data << "\blue_start\": " << "\"" << GetBValue(breathing_effect->Color1) << "\"" << ',';
-					additional_effect_data << "\"red_end\": " << "\"" << GetRValue(breathing_effect->Color2) << "\"" << ',';
-					additional_effect_data << "\"green_end\": " << "\"" << GetGValue(breathing_effect->Color2) << "\"" << ',';
-					additional_effect_data << "\blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
-					additional_effect_data << "\RZRandom\": " << "\"" << breathing_effect->Type << "\"" << ',';
-
-					effect_id = "CHROMA_BREATHING";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_REACTIVE)
-				{
-					effect_id = "CHROMA_REACTIVE";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_SPECTRUMCYCLING)
-				{
-					effect_id = "CHROMA_SPECTRUMCYCLING";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_WAVE)
-				{
-					effect_id = "CHROMA_WAVE";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_STARLIGHT)
-				{
-					effect_id = "CHROMA_STARLIGHT";
-				}
-				else
-				{
-					effect_id = "CHROMA_INVALID";
-				}
+				WriteToPipe(kbEffect);
 			}
 			else
 			{
-				if (Effect == ChromaSDK::Keyboard::CHROMA_NONE)
-				{
-					for (int colorset = 0; colorset < LOGI_LED_BITMAP_SIZE; colorset += 4)
-					{
-						if (current_bitmap[colorset] != 0 ||
-							current_bitmap[colorset + 1] != 0 ||
-							current_bitmap[colorset + 2] != 0
-							)
-							requiresUpdate = true;
+				if (*pEffectId == GUID_NULL)
+					CoCreateGuid(pEffectId);
 
-						current_bitmap[colorset] = (char)0;
-						current_bitmap[colorset + 1] = (char)0;
-						current_bitmap[colorset + 2] = (char)0;
-						current_bitmap[colorset + 3] = (char)255;
-					}
-
-					effect_id = "CHROMA_NONE";
-				}
+				effects[*pEffectId] = kbEffect;
 			}
-
-			std::stringstream ss;
-			ss << "\"command\": " << "\"CreateKeyboardEffect\"" << ',';
-			ss << "\"command_data\": {";
-
-			ss << "\"custom_mode\": " << 0;
-			ss << ", \"RzEffect\": \"" << effect_id << "\"";
-			if (pParam != NULL)
-				ss << ", \"RzpParam\": \"" << pParam << "\"";
-			if (pEffectId != NULL)
-				ss << ", \"RzpEffectId\": \"" << pEffectId << "\"";
-			ss << additional_effect_data.str();
-			ss << '}';
-
-			WriteToPipe(current_bitmap, ss.str());
 
 			return RZRESULT_SUCCESS;
 		}
@@ -996,6 +1506,9 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
+			// Not Implemented
+
+			/*
 			switch (Effect)
 			{
 			case ChromaSDK::Headset::CHROMA_NONE:
@@ -1023,7 +1536,7 @@ extern "C" {
 			ss << '}';
 
 			WriteToPipe(current_bitmap, ss.str());
-
+			*/
 			return RZRESULT_SUCCESS;
 		}
 		else
@@ -1036,6 +1549,9 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
+			// Not Implemented
+
+			/*
 			switch (Effect)
 			{
 			case ChromaSDK::Mousepad::CHROMA_NONE:
@@ -1055,6 +1571,7 @@ extern "C" {
 			default:
 				break;
 			}
+			*/
 
 			return RZRESULT_SUCCESS;
 		}
@@ -1068,166 +1585,19 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
-			switch (Effect)
-			{
-				//case ChromaSDK::Mouse::CHROMA_NONE:
-				//	break;
-			case ChromaSDK::Mouse::CHROMA_BLINKING:
-				break;
-			case ChromaSDK::Mouse::CHROMA_BREATHING:
-				break;
-				//case ChromaSDK::Mouse::CHROMA_CUSTOM:
-				//	break;
-			case ChromaSDK::Mouse::CHROMA_REACTIVE:
-				break;
-			case ChromaSDK::Mouse::CHROMA_SPECTRUMCYCLING:
-				break;
-				//case ChromaSDK::Mouse::CHROMA_STATIC:
-				//	break;
-			case ChromaSDK::Mouse::CHROMA_WAVE:
-				break;
-			case ChromaSDK::Mouse::CHROMA_CUSTOM2:
-				break;
-			case ChromaSDK::Mouse::CHROMA_INVALID:
-				break;
-			default:
-				break;
-			}
-
-
-			std::string effect_id = "";
-			std::stringstream additional_effect_data;
+			WRAPPER_EFFECT mouseEffect = HandleMouseEffect(Effect, pParam);
 
 			if (pEffectId == NULL)
 			{
-				if (Effect == ChromaSDK::Mouse::CHROMA_STATIC)
-				{
-					struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *static_effect = (struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *)pParam;
-
-					unsigned char blue = GetBValue(static_effect->Color);
-					unsigned char green = GetGValue(static_effect->Color);
-					unsigned char red = GetRValue(static_effect->Color);
-
-					if (static_effect->LEDId == ChromaSDK::Mouse::RZLED::RZLED_ALL || static_effect->LEDId == ChromaSDK::Mouse::RZLED::RZLED_LOGO)
-					{
-						if (peripheral[0] != blue ||
-							peripheral[1] != green ||
-							peripheral[2] != red
-							)
-							requiresUpdate = true;
-
-						peripheral[0] = blue;
-						peripheral[1] = green;
-						peripheral[2] = red;
-						peripheral[3] = (char)255;
-					}
-
-					effect_id = "CHROMA_STATIC";
-				}
-				else if (Effect == ChromaSDK::Mouse::CHROMA_NONE)
-				{
-					if (peripheral[0] != 0 ||
-						peripheral[1] != 0 ||
-						peripheral[2] != 0
-						)
-						requiresUpdate = true;
-
-					peripheral[0] = (char)0;
-					peripheral[1] = (char)0;
-					peripheral[2] = (char)0;
-					peripheral[3] = (char)255;
-
-					effect_id = "CHROMA_NONE";
-				}
-				else if (Effect == ChromaSDK::Mouse::CHROMA_CUSTOM)
-				{
-					struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE *)pParam;
-
-					unsigned char blue = GetBValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
-					unsigned char green = GetGValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
-					unsigned char red = GetRValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
-
-					if (peripheral[0] != blue ||
-						peripheral[1] != green ||
-						peripheral[2] != red
-						)
-						requiresUpdate = true;
-
-					peripheral[0] = blue;
-					peripheral[1] = green;
-					peripheral[2] = red;
-					peripheral[3] = (char)255;
-
-					effect_id = "CHROMA_CUSTOM";
-				}
-				else if (Effect == ChromaSDK::Mouse::CHROMA_BREATHING)
-				{
-					struct ChromaSDK::Mouse::BREATHING_EFFECT_TYPE *breathing_effect = (struct ChromaSDK::Mouse::BREATHING_EFFECT_TYPE *)pParam;
-
-					additional_effect_data << "\"red_start\": " << "\"" << GetRValue(breathing_effect->Color1) << "\"" << ',';
-					additional_effect_data << "\"green_start\": " << "\"" << GetGValue(breathing_effect->Color1) << "\"" << ',';
-					additional_effect_data << "\blue_start\": " << "\"" << GetBValue(breathing_effect->Color1) << "\"" << ',';
-					additional_effect_data << "\"red_end\": " << "\"" << GetRValue(breathing_effect->Color2) << "\"" << ',';
-					additional_effect_data << "\"green_end\": " << "\"" << GetGValue(breathing_effect->Color2) << "\"" << ',';
-					additional_effect_data << "\blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
-					additional_effect_data << "\RZRandom\": " << "\"" << breathing_effect->Type << "\"" << ',';
-
-					effect_id = "CHROMA_BREATHING";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_REACTIVE)
-				{
-					effect_id = "CHROMA_REACTIVE";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_SPECTRUMCYCLING)
-				{
-					effect_id = "CHROMA_SPECTRUMCYCLING";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_WAVE)
-				{
-					effect_id = "CHROMA_WAVE";
-				}
-				else if (Effect == ChromaSDK::Keyboard::CHROMA_STARLIGHT)
-				{
-					effect_id = "CHROMA_STARLIGHT";
-				}
-				else
-				{
-					effect_id = "CHROMA_INVALID";
-				}
+				WriteToPipe(mouseEffect);
 			}
 			else
 			{
-				if (Effect == ChromaSDK::Mouse::CHROMA_NONE)
-				{
-					if (peripheral[0] != 0 ||
-						peripheral[1] != 0 ||
-						peripheral[2] != 0
-						)
-						requiresUpdate = true;
+				if (*pEffectId == GUID_NULL)
+					CoCreateGuid(pEffectId);
 
-					peripheral[0] = (char)0;
-					peripheral[1] = (char)0;
-					peripheral[2] = (char)0;
-					peripheral[3] = (char)255;
-
-					effect_id = "CHROMA_NONE";
-				}
+				effects[*pEffectId] = mouseEffect;
 			}
-
-			std::stringstream ss;
-			ss << "\"command\": " << "\"CreateMouseEffect\"" << ',';
-			ss << "\"command_data\": {";
-
-			ss << "\"custom_mode\": " << 0;
-			ss << ", \"RzEffect\": \"" << effect_id << "\"";
-			if (pParam != NULL)
-				ss << ", \"RzpParam\": \"" << pParam << "\"";
-			if (pEffectId != NULL)
-				ss << ", \"RzpEffectId\": \"" << pEffectId << "\"";
-			ss << additional_effect_data.str();
-			ss << '}';
-
-			WriteToPipe(current_bitmap, ss.str());
 
 			return RZRESULT_SUCCESS;
 		}
@@ -1241,6 +1611,9 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
+			// Not Implemented
+
+			/*
 			switch (Effect)
 			{
 			case ChromaSDK::Keypad::CHROMA_NONE:
@@ -1262,7 +1635,7 @@ extern "C" {
 			default:
 				break;
 			}
-
+			*/
 			return RZRESULT_SUCCESS;
 		}
 		else
@@ -1275,15 +1648,11 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
-			std::stringstream ss;
-			ss << "\"command\": " << "\"SetEffect\"" << ',';
-			ss << "\"command_data\": {";
-
-			ss << "\"custom_mode\": " << 0;
-
-			ss << '}';
-
-			WriteToPipe(current_bitmap, ss.str());
+			if (EffectId != GUID_NULL && effects.count(EffectId) != 0)
+			{
+				requiresUpdate = true;
+				WriteToPipe(effects[EffectId]);
+			}
 
 			return RZRESULT_SUCCESS;
 		}
@@ -1297,15 +1666,8 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
-			std::stringstream ss;
-			ss << "\"command\": " << "\"DeleteEffect\"" << ',';
-			ss << "\"command_data\": {";
-
-			ss << "\"custom_mode\": " << 0;
-
-			ss << '}';
-
-			WriteToPipe(current_bitmap, ss.str());
+			if (EffectId != GUID_NULL && effects.count(EffectId) != 0)
+				effects.erase(EffectId);
 
 			return RZRESULT_SUCCESS;
 		}
@@ -1319,15 +1681,7 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
-			std::stringstream ss;
-			ss << "\"command\": " << "\"RegisterEventNotification\"" << ',';
-			ss << "\"command_data\": {";
-
-			ss << "\"custom_mode\": " << 0;
-
-			ss << '}';
-
-			WriteToPipe(current_bitmap, ss.str());
+			// Not Implemented
 
 			return RZRESULT_SUCCESS;
 		}
@@ -1341,15 +1695,7 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
-			std::stringstream ss;
-			ss << "\"command\": " << "\"UnregisterEventNotification\"" << ',';
-			ss << "\"command_data\": {";
-
-			ss << "\"custom_mode\": " << 0;
-
-			ss << '}';
-
-			WriteToPipe(current_bitmap, ss.str());
+			// Not Implemented
 
 			return RZRESULT_SUCCESS;
 		}
@@ -1366,16 +1712,6 @@ extern "C" {
 
 		if (isInitialized)
 		{
-			std::stringstream ss;
-			ss << "\"command\": " << "\"QueryDevice\"" << ',';
-			ss << "\"command_data\": {";
-
-			ss << "\"custom_mode\": " << 0;
-
-			ss << '}';
-
-			WriteToPipe(current_bitmap, ss.str());
-
 			return RZRESULT_SUCCESS;
 		}
 		else

@@ -311,7 +311,30 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 //Razer
                 else if (ngw_state.Command.Equals("CreateKeyboardEffect"))
                 {
+                    Color primary = Color.Red;
+                    Color secondary = Color.Blue;
 
+                    if (ngw_state.Command_Data.red_start >= 0 &&
+                        ngw_state.Command_Data.green_start >= 0 &&
+                        ngw_state.Command_Data.blue_start >= 0
+                        )
+                        primary = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
+
+                    if (ngw_state.Command_Data.red_end >= 0 &&
+                        ngw_state.Command_Data.green_end >= 0 &&
+                        ngw_state.Command_Data.blue_end >= 0
+                        )
+                        secondary = Color.FromArgb(ngw_state.Command_Data.red_end, ngw_state.Command_Data.green_end, ngw_state.Command_Data.blue_end);
+
+                    switch (ngw_state.Command_Data.effect_type)
+                    {
+                        case "CHROMA_BREATHING":
+                            current_effect = new CHROMA_BREATHING(primary, secondary, ngw_state.Command_Data.effect_config);
+                            break;
+                        default:
+                            current_effect = null;
+                            break;
+                    }
                 }
                 else
                 {
@@ -481,6 +504,54 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 return secondary;
             else
                 return Utils.ColorUtils.BlendColors(color, secondary, (time - timeStarted) % duration);
+        }
+    }
+
+    class CHROMA_BREATHING : EntireEffect
+    {
+        private Color secondary;
+        private enum BreathingType
+        {
+            TWO_COLORS,
+            RANDOM_COLORS,
+            INVALID
+        }
+        private BreathingType type;
+
+        public CHROMA_BREATHING(Color primary, Color secondary, string config) : base(primary, 0, 0)
+        {
+            this.secondary = secondary;
+
+            switch (config)
+            {
+                case "TWO_COLORS":
+                    type = BreathingType.TWO_COLORS;
+                    break;
+                case "RANDOM_COLORS":
+                    type = BreathingType.RANDOM_COLORS;
+                    color = Utils.ColorUtils.GenerateRandomColor();
+                    secondary = Utils.ColorUtils.GenerateRandomColor();
+                    break;
+                default:
+                    type = BreathingType.INVALID;
+                    break;
+            }
+
+        }
+
+        public override Color GetCurrentColor(long time)
+        {
+            double blend_val = Math.Pow(Math.Sin((time / 1000.0D) * Math.PI), 2.0);
+
+            if (type == BreathingType.RANDOM_COLORS)
+            {
+                if (blend_val >= 0.95 && blend_val >= 1.0)
+                    color = Utils.ColorUtils.GenerateRandomColor();
+                else if (blend_val >= 0.5 && blend_val >= 0.0)
+                    secondary = Utils.ColorUtils.GenerateRandomColor();
+            }
+
+            return Utils.ColorUtils.BlendColors(color, secondary, blend_val);
         }
     }
 }
