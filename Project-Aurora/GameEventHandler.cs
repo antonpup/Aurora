@@ -189,6 +189,17 @@ namespace Aurora
                     profiles[process_name].UpdateLights(newframe);
                 }
             }
+            else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && profiles.ContainsKey(Global.net_listener.WrappedProcess) && profiles[Global.net_listener.WrappedProcess].IsEnabled())
+            {
+                update_timer.Interval = 10; // in miliseconds
+
+                if (!(Global.Configuration.time_based_dimming_enabled && Global.Configuration.time_based_dimming_affect_games &&
+                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
+                    )
+                {
+                    profiles[Global.net_listener.WrappedProcess].UpdateLights(newframe);
+                }
+            }
             else
             {
                 update_timer.Interval = 1000.0D / 30; //50 in miliseconds

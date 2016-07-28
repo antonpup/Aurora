@@ -110,6 +110,7 @@
                     <CheckBox x:Name="nighttime_enabled_checkbox" Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" HorizontalAlignment="Left" Margin="333,132,0,0" VerticalAlignment="Top" Unchecked="nighttime_enabled_checkbox_Checked" Checked="nighttime_enabled_checkbox_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="What to do when Aurora window is closed:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="app_exit_mode" HorizontalAlignment="Left" Margin="242,27,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource appexitmode}}" ItemTemplate="{Binding Source={StaticResource appexitmodeTemplate}}" SelectionChanged="app_exit_mode_SelectionChanged"/>
+                    <CheckBox x:Name="start_silently_enabled" Content="Start Aurora in a minimized state" HorizontalAlignment="Left" Margin="156,10,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">
@@ -170,7 +171,7 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Header="Devices">
+            <TabItem Header="Devices &amp; Wrappers">
                 <Grid>
                     <TextBlock x:Name="about_connected_devices" Margin="0,10,10,134" TextWrapping="Wrap" HorizontalAlignment="Right" Width="200"><Run Text="Connected Devices"/><LineBreak/><Run Text="Logitech:"/><LineBreak/><Run Text="Corsair:"/><LineBreak/><Run Text="Razer:"/></TextBlock>
                     <Button x:Name="devices_view_first_time_logitech" Content="View First-time instructions for Logitech" Margin="0,45,215,0" VerticalAlignment="Top" Click="devices_view_first_time_logitech_Click" HorizontalAlignment="Right" Width="214"/>
@@ -182,6 +183,7 @@
                     <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Preferred Keyboard Brand:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="154,8,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
                     <Button x:Name="devices_retry" Content="Retry for connected devices" HorizontalAlignment="Right" Margin="0,10,215,0" VerticalAlignment="Top" Click="devices_retry_Click"/>
+                    <CheckBox x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" ToolTip="" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Updates">

@@ -17,6 +17,8 @@ namespace Aurora
     public class NetworkListener
     {
         private bool isRunning = false;
+        private bool wrapper_connected = false;
+        private string wrapped_process = "";
         private int connection_port;
         private HttpListener net_Listener;
         private AutoResetEvent waitForConnection = new AutoResetEvent(false);
@@ -49,6 +51,16 @@ namespace Aurora
         ///  Event for handing a newly received game state
         /// </summary>
         public event NewGameStateHandler NewGameState = delegate { };
+
+        /// <summary>
+        /// Returns whether or not the wrapper is connected through IPC
+        /// </summary>
+        public bool IsWrapperConnected { get { return wrapper_connected; } }
+
+        /// <summary>
+        /// Returns the process of the wrapped connection
+        /// </summary>
+        public string WrappedProcess { get { return wrapped_process; } }
 
         /// <summary>
         /// A GameStateListener that listens for connections on http://localhost:port/
@@ -185,6 +197,8 @@ namespace Aurora
                     HandleInheritability.None
                     ))
                     {
+                        wrapper_connected = false;
+                        wrapped_process = "";
                         Global.logger.LogLine(String.Format("[IPCServer] Pipe created {0}", pipeStream.GetHashCode()));
 
                         pipeStream.WaitForConnection();
@@ -199,6 +213,9 @@ namespace Aurora
 
                                 GameState_Wrapper new_state = new GameState_Wrapper(temp); //GameState_Wrapper
 
+                                wrapper_connected = true;
+                                wrapped_process = new_state.Provider.Name.ToLowerInvariant();
+
                                 if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
                                     CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(temp);
                                 else
@@ -207,10 +224,14 @@ namespace Aurora
                         }
                     }
 
+                    wrapper_connected = false;
+                    wrapped_process = "";
                     Global.logger.LogLine("[IPCServer] Pipe connection lost");
                 }
                 catch (Exception exc)
                 {
+                    wrapper_connected = false;
+                    wrapped_process = "";
                     Global.logger.LogLine("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);
                 }
             }

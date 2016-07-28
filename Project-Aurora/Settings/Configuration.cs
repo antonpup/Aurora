@@ -125,6 +125,7 @@ namespace Aurora.Settings
         //General Program Settings
         public bool allow_peripheral_devices;
         public bool use_volume_as_brightness;
+        public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
         public bool logitech_enhance_brightness;
         public float global_brightness;
@@ -132,6 +133,7 @@ namespace Aurora.Settings
         public float peripheral_brightness_modifier;
         public bool updates_check_on_start_up;
         public bool updates_allow_silent_minor;
+        public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
         public PreferredKeyboard keyboard_brand;
@@ -201,6 +203,7 @@ namespace Aurora.Settings
             //General Program Settings
             allow_peripheral_devices = true;
             use_volume_as_brightness = false;
+            allow_wrappers_in_background = true;
             allow_all_logitech_bitmaps = true;
             logitech_enhance_brightness = true;
             global_brightness = 1.0f;
@@ -208,6 +211,7 @@ namespace Aurora.Settings
             peripheral_brightness_modifier = 1.0f;
             updates_check_on_start_up = true;
             updates_allow_silent_minor = true;
+            start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
             keyboard_brand = PreferredKeyboard.None;

@@ -230,7 +230,7 @@ namespace Aurora
 
         private void Window_Initialized(object sender, EventArgs e)
         {
-            if (Program.isSilent)
+            if (Program.isSilent || Global.Configuration.start_silently)
             {
                 this.Visibility = System.Windows.Visibility.Hidden;
                 this.WindowStyle = WindowStyle.None;

@@ -26,6 +26,8 @@ namespace Aurora.Settings
 
             this.run_at_win_startup.IsChecked = !(runRegistryPath.GetValue("Aurora", null) == null);
 
+            this.start_silently_enabled.IsChecked = Global.Configuration.start_silently;
+
             this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
 
             this.volume_as_brightness_enabled.IsChecked = Global.Configuration.use_volume_as_brightness;
@@ -78,6 +80,7 @@ namespace Aurora.Settings
             this.devices_kb_brand.SelectedIndex = (int)Global.Configuration.keyboard_brand;
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
             this.devices_enable_logitech_color_enhance.IsChecked = Global.Configuration.logitech_enhance_brightness;
+            this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
@@ -513,6 +516,15 @@ namespace Aurora.Settings
             }
         }
 
+        private void wrapper_allow_in_background_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.allow_wrappers_in_background = (this.wrapper_allow_in_background_enabled.IsChecked.HasValue) ? this.wrapper_allow_in_background_enabled.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
         private void updates_check_Click(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
@@ -702,6 +714,15 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.skype_overlay_settings.call_sequence = (sender as Controls.KeySequence).Sequence;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void start_silently_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.start_silently = (this.start_silently_enabled.IsChecked.HasValue) ? this.start_silently_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }

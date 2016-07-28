@@ -1427,45 +1427,99 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
-			// Not Implemented
+			WRAPPER_EFFECT createdEffect;
 
-			/*
-			switch (Effect)
+			if (DeviceId == ChromaSDK::BLACKWIDOW_CHROMA)
 			{
-			case ChromaSDK::CHROMA_NONE:
-				break;
-			case ChromaSDK::CHROMA_WAVE:
-				break;
-			case ChromaSDK::CHROMA_SPECTRUMCYCLING:
-				break;
-			case ChromaSDK::CHROMA_BREATHING:
-				break;
-			case ChromaSDK::CHROMA_BLINKING:
-				break;
-			case ChromaSDK::CHROMA_REACTIVE:
-				break;
-			case ChromaSDK::CHROMA_STATIC:
-				break;
-			case ChromaSDK::CHROMA_CUSTOM:
-				break;
-			case ChromaSDK::CHROMA_STARLIGHT:
-				break;
-			case ChromaSDK::CHROMA_INVALID:
-				break;
-			default:
-				break;
+				ChromaSDK::Keyboard::EFFECT_TYPE kbType;
+				
+				switch (Effect)
+				{
+				case ChromaSDK::CHROMA_NONE:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_NONE;
+					break;
+				case ChromaSDK::CHROMA_WAVE:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_WAVE;
+					break;
+				case ChromaSDK::CHROMA_SPECTRUMCYCLING:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_SPECTRUMCYCLING;
+					break;
+				case ChromaSDK::CHROMA_BREATHING:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_BREATHING;
+					break;
+				case ChromaSDK::CHROMA_REACTIVE:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_REACTIVE;
+					break;
+				case ChromaSDK::CHROMA_STATIC:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_STATIC;
+					break;
+				case ChromaSDK::CHROMA_CUSTOM:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_CUSTOM;
+					break;
+				case ChromaSDK::CHROMA_STARLIGHT:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_STARLIGHT;
+					break;
+				default:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_INVALID;
+					break;
+				}
+				
+				createdEffect = HandleKeyboardEffect(kbType, pParam);
+			}
+			else if (DeviceId == ChromaSDK::DEATHADDER_CHROMA)
+			{
+				ChromaSDK::Mouse::EFFECT_TYPE mouseType;
+
+				switch (Effect)
+				{
+				case ChromaSDK::CHROMA_NONE:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_NONE;
+					break;
+				case ChromaSDK::CHROMA_WAVE:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_WAVE;
+					break;
+				case ChromaSDK::CHROMA_SPECTRUMCYCLING:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_SPECTRUMCYCLING;
+					break;
+				case ChromaSDK::CHROMA_BREATHING:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_BREATHING;
+					break;
+				case ChromaSDK::CHROMA_BLINKING:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_BLINKING;
+					break;
+				case ChromaSDK::CHROMA_REACTIVE:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_REACTIVE;
+					break;
+				case ChromaSDK::CHROMA_STATIC:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_STATIC;
+					break;
+				case ChromaSDK::CHROMA_CUSTOM:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_CUSTOM2;
+					break;
+				default:
+					mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_INVALID;
+					break;
+				}
+				
+				createdEffect = HandleMouseEffect(mouseType, pParam);
+			}
+			else
+			{
+				return RZRESULT_SUCCESS;
 			}
 
-			std::stringstream ss;
-			ss << "\"command\": " << "\"CreateEffect\"" << ',';
-			ss << "\"command_data\": {";
+			if (pEffectId == NULL)
+			{
+				WriteToPipe(createdEffect);
+			}
+			else
+			{
+				if (*pEffectId == GUID_NULL)
+					CoCreateGuid(pEffectId);
 
-			ss << "\"custom_mode\": " << 0;
+				effects[*pEffectId] = createdEffect;
+			}
 
-			ss << '}';
-
-			WriteToPipe(current_bitmap, ss.str());
-			*/
 			return RZRESULT_SUCCESS;
 		}
 		else
@@ -1707,11 +1761,21 @@ extern "C" {
 
 	__declspec(dllexport) RZRESULT QueryDevice(RZDEVICEID DeviceId, ChromaSDK::DEVICE_INFO_TYPE &DeviceInfo)
 	{
-		DeviceInfo.DeviceType = ChromaSDK::DEVICE_INFO_TYPE::DeviceType::DEVICE_KEYBOARD;
-		DeviceInfo.Connected = 1;
-
 		if (isInitialized)
 		{
+			if (DeviceId == ChromaSDK::BLACKWIDOW_CHROMA)
+				DeviceInfo.DeviceType = ChromaSDK::DEVICE_INFO_TYPE::DeviceType::DEVICE_KEYBOARD;
+			else if (DeviceId == ChromaSDK::DEATHADDER_CHROMA)
+				DeviceInfo.DeviceType = ChromaSDK::DEVICE_INFO_TYPE::DeviceType::DEVICE_MOUSE;
+			else
+			{
+				DeviceInfo.Connected = 0;
+				return RZRESULT_SUCCESS;
+				//return RZRESULT_DEVICE_NOT_CONNECTED;
+			}
+
+			DeviceInfo.Connected = 1;
+
 			return RZRESULT_SUCCESS;
 		}
 		else
