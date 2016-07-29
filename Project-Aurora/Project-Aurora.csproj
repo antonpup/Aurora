@@ -104,9 +104,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="Corale.Colore, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Colore.4.0.0\lib\net35\Corale.Colore.dll</HintPath>
@@ -408,7 +406,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Devices\SteelSeries\AuroraPlugin.lsp" />
-    <None Include="app.manifest" />
     <None Include="kb_layouts\Logitech\layout.jpn.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

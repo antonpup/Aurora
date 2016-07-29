@@ -122,11 +122,18 @@ namespace Aurora
 
                 if (File.Exists(updater_path))
                 {
-                    ProcessStartInfo updaterProc = new ProcessStartInfo();
-                    updaterProc.FileName = updater_path;
-                    updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
-                    updaterProc.Verb = "runas";
-                    Process.Start(updaterProc);
+                    try
+                    {
+                        ProcessStartInfo updaterProc = new ProcessStartInfo();
+                        updaterProc.FileName = updater_path;
+                        updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
+                        updaterProc.Verb = "runas";
+                        Process.Start(updaterProc);
+                    }
+                    catch(Exception exc)
+                    {
+                        Global.logger.LogLine("Could not start Aurora Updater. Error: " + exc, Logging_Level.Error);
+                    }
                 }
             }
 

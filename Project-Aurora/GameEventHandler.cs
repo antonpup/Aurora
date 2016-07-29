@@ -68,20 +68,20 @@ namespace Aurora
 
         public bool Init()
         {
-            bool devices_inited = Global.dev_manager.AnyInitialized();
-
-            if (devices_inited)
+            try
             {
                 update_timer = new Timer(10);
                 update_timer.Elapsed += new ElapsedEventHandler(update_timer_Tick);
                 update_timer.Interval = 10; // in miliseconds
                 update_timer.Start();
             }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine("GameEventHandler.Init() Exception, " + exc, Logging_Level.Error);
+                return false;
+            }
 
-            if (!devices_inited)
-                Global.logger.LogLine("No devices initialized.", Logging_Level.Warning);
-
-            return devices_inited;
+            return true;
         }
 
         public void Destroy()

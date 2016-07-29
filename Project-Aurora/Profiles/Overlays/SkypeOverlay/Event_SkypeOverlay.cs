@@ -15,9 +15,16 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
         {
             if (Global.Configuration.skype_overlay_settings.enabled)
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Aurora-SkypeIntegration.exe");
-                Process.Start(startInfo);
+                try
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Aurora-SkypeIntegration.exe");
+                    Process.Start(startInfo);
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine("Could not start Skype Integration. Error: " + exc, Logging_Level.Error);
+                }
             }
         }
 
