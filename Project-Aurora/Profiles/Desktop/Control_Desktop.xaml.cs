@@ -30,6 +30,7 @@ namespace Aurora.Profiles.Desktop
         private void SetSettings()
         {
             this.profilemanager.ProfileManager = Global.Configuration.desktop_profile;
+            this.scriptmanager.ProfileManager = Global.Configuration.desktop_profile;
 
             this.cpu_usage_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_usage_enabled;
             this.cpu_usage_used_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_used_color);

@@ -31,6 +31,8 @@ namespace Aurora.Profiles.Payday_2
 
         private float assault_yoffset = 0.0f;
 
+        private GameState _game_state;
+
         public static void SetHealth(float health)
         {
             GameEvent_PD2.health = health;
@@ -321,15 +323,20 @@ namespace Aurora.Profiles.Payday_2
             cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["Payday 2"].Settings as PD2Settings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
+            Global.Configuration.ApplicationProfiles["Payday 2"].UpdateEffectScripts(layers, _game_state);
+
             frame.AddLayers(layers.ToArray());
 
             lasttime = currenttime;
+            //_game_state = null;
         }
 
         public override void UpdateLights(EffectFrame frame, GameState new_game_state)
         {
             if (new_game_state is GameState_PD2)
             {
+                _game_state = new_game_state;
+
                 GameState_PD2 gs = (new_game_state as GameState_PD2);
 
                 try

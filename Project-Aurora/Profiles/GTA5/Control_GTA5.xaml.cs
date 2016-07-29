@@ -34,6 +34,7 @@ namespace Aurora.Profiles.GTA5
         private void SetSettings()
         {
             this.profilemanager.ProfileManager = profile_manager;
+            this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as GTA5Settings).isEnabled;
 

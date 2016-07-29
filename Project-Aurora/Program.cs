@@ -1,5 +1,7 @@
 ﻿using Aurora.Devices;
 using Aurora.Settings;
+using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
 using Microsoft.Win32;
 using System;
 using System.Diagnostics;
@@ -12,6 +14,8 @@ namespace Aurora
 {
     public static class Global
     {
+        public static string ScriptDirectory = "Scripts";
+        public static ScriptEngine PythonEngine = Python.CreateEngine();
         public static bool isDebug = false;
         public static Logger logger = new Logger();
         public static InputEventsSubscriptions input_subscriptions = new InputEventsSubscriptions();
