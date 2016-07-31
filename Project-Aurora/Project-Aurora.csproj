@@ -238,6 +238,7 @@
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Razer\RazerDevice.cs" />
+    <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledRectangle.cs" />

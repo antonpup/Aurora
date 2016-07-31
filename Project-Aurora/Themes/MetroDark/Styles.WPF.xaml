@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:xtk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:chrome="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:colorbox="http://schemas.ncore.com/wpf/xaml/colorbox"  mc:Ignorable="d">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:xtk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:chrome="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:colorbox="http://schemas.ncore.com/wpf/xaml/colorbox" xmlns:vsm ="clr-namespace:System.Windows;assembly=PresentationFramework" mc:Ignorable="d">
 
     <!-- *********************************  RESOURCES  ********************************* -->
     <ResourceDictionary.MergedDictionaries>
@@ -274,11 +274,11 @@
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="xform" X="-25" />
             </Grid.RenderTransform>
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="OpenStates">
-                    <VisualStateGroup.Transitions>
-                        <VisualTransition GeneratedDuration="0" />
-                        <VisualTransition GeneratedDuration="0:0:0.2" To="Open">
+            <vsm:VisualStateManager.VisualStateGroups>
+                <vsm:VisualStateGroup x:Name="OpenStates">
+                    <vsm:VisualStateGroup.Transitions>
+                        <vsm:VisualTransition GeneratedDuration="0" />
+                        <vsm:VisualTransition GeneratedDuration="0:0:0.2" To="Open">
                             <Storyboard>
                                 <DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="X" Storyboard.TargetName="xform">
                                     <DoubleAnimation.EasingFunction>
@@ -287,21 +287,21 @@
                                 </DoubleAnimation>
                                 <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Root" />
                             </Storyboard>
-                        </VisualTransition>
-                    </VisualStateGroup.Transitions>
-                    <VisualState x:Name="Closed">
+                        </vsm:VisualTransition>
+                    </vsm:VisualStateGroup.Transitions>
+                    <vsm:VisualState x:Name="Closed">
                         <Storyboard>
                             <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Root" />
                         </Storyboard>
-                    </VisualState>
-                    <VisualState x:Name="Open">
+                    </vsm:VisualState>
+                    <vsm:VisualState x:Name="Open">
                         <Storyboard>
                             <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="X" Storyboard.TargetName="xform" />
                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Root" />
                         </Storyboard>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
+                    </vsm:VisualState>
+                </vsm:VisualStateGroup>
+            </vsm:VisualStateManager.VisualStateGroups>
             <Border Background="{StaticResource ValidationToolTipTemplateShadowBrush}" Margin="4,4,-4,-4" Opacity="0.02" />
             <Border Background="{StaticResource ValidationToolTipTemplateShadowBrush}" Margin="3,3,-3,-3" Opacity="0.08" />
             <Border Background="{StaticResource ValidationToolTipTemplateShadowBrush}" Margin="2,2,-2,-2" Opacity="0.15" />
@@ -325,20 +325,20 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <ScrollViewer Style="{StaticResource ScrollViewerStyle}" x:Name="PART_ContentHost" Background="Transparent" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="Disabled">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal" />
+                                <vsm:VisualState x:Name="Disabled">
                                     <Storyboard>
                                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PART_ContentHost">
                                             <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="ReadOnly" />
-                                <VisualState x:Name="MouseOver" />
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="ReadOnly" />
+                                <vsm:VisualState x:Name="MouseOver" />
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
                     </ScrollViewer>
                 </ControlTemplate>
             </Setter.Value>
@@ -352,10 +352,10 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal" />
-                    <VisualState x:Name="MouseOver">
+            <vsm:VisualStateManager.VisualStateGroups>
+                <vsm:VisualStateGroup x:Name="CommonStates">
+                    <vsm:VisualState x:Name="Normal" />
+                    <vsm:VisualState x:Name="MouseOver">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="hover">
                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -365,8 +365,8 @@
                                 </DiscreteObjectKeyFrame>
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
-                    </VisualState>
-                    <VisualState x:Name="Disabled">
+                    </vsm:VisualState>
+                    <vsm:VisualState x:Name="Disabled">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="disabled">
                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -376,11 +376,11 @@
                                 </DiscreteObjectKeyFrame>
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
-                    </VisualState>
-                </VisualStateGroup>
-                <VisualStateGroup x:Name="FocusStates">
-                    <VisualState x:Name="Unfocused" />
-                    <VisualState x:Name="Focused">
+                    </vsm:VisualState>
+                </vsm:VisualStateGroup>
+                <vsm:VisualStateGroup x:Name="FocusStates">
+                    <vsm:VisualState x:Name="Unfocused" />
+                    <vsm:VisualState x:Name="Focused">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="focused">
                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -390,8 +390,8 @@
                                 </DiscreteObjectKeyFrame>
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
-                    </VisualState>
-                    <VisualState x:Name="FocusedDropDown">
+                    </vsm:VisualState>
+                    <vsm:VisualState x:Name="FocusedDropDown">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="focused">
                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -401,9 +401,9 @@
                                 </DiscreteObjectKeyFrame>
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
+                    </vsm:VisualState>
+                </vsm:VisualStateGroup>
+            </vsm:VisualStateManager.VisualStateGroups>
             <Rectangle x:Name="normal" Fill="{StaticResource ComboBoxBackgroundBrush}" Stroke="{StaticResource ComboBoxBorderBrush}" StrokeThickness="1" Grid.ColumnSpan="2" />
             <Rectangle x:Name="hover" Fill="{StaticResource ComboBoxHoverBackgroundBrush}" Stroke="{StaticResource ComboBoxHoverBorderBrush}" StrokeThickness="1" Visibility="Collapsed" Grid.ColumnSpan="2" />
             <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
@@ -450,10 +450,10 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition MinWidth="30" Width="0" />
                         </Grid.ColumnDefinitions>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="MouseOver">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal" />
+                                <vsm:VisualState x:Name="MouseOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="hover">
                                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -466,8 +466,8 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource LightForegroundBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Disabled">
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Disabled">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="disabled">
                                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -477,11 +477,11 @@
                                             </DiscreteObjectKeyFrame>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="FocusStates">
-                                <VisualState x:Name="Unfocused" />
-                                <VisualState x:Name="Focused">
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="FocusStates">
+                                <vsm:VisualState x:Name="Unfocused" />
+                                <vsm:VisualState x:Name="Focused">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="focused">
                                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -491,8 +491,8 @@
                                             </DiscreteObjectKeyFrame>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="FocusedDropDown">
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="FocusedDropDown">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="focused">
                                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -502,9 +502,9 @@
                                             </DiscreteObjectKeyFrame>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
                         <Rectangle x:Name="normal" Fill="{StaticResource ComboBoxBackgroundBrush}" Stroke="{StaticResource ComboBoxBorderBrush}" StrokeThickness="1" Grid.ColumnSpan="2" />
                         <Rectangle x:Name="hover" Fill="{StaticResource ComboBoxHoverBackgroundBrush}" Stroke="{StaticResource ComboBoxHoverBorderBrush}" StrokeThickness="1" Visibility="Collapsed" Grid.ColumnSpan="2" />
                         <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
@@ -566,10 +566,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Grid x:Name="RootElement" SnapsToDevicePixels="True">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="MouseOver">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal" />
+                                <vsm:VisualState x:Name="MouseOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Border">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TextBoxHoverBorderBrush}" />
@@ -578,33 +578,33 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TextBoxHoverBackgroundBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Disabled">
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Disabled">
                                     <Storyboard>
                                         <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="DisabledVisualElement" />
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="ReadOnly">
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="ReadOnly">
                                     <Storyboard>
                                         <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ReadOnlyVisualElement" />
                                     </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="FocusStates">
-                                <VisualState x:Name="Focused">
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="FocusStates">
+                                <vsm:VisualState x:Name="Focused">
                                     <Storyboard>
                                         <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualElement" />
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Unfocused">
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="Unfocused">
                                     <Storyboard>
                                         <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualElement" />
                                     </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="ValidationStates">
-                                <VisualState x:Name="Valid" />
-                                <VisualState x:Name="InvalidUnfocused">
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                            <vsm:VisualStateGroup x:Name="ValidationStates">
+                                <vsm:VisualState x:Name="Valid" />
+                                <vsm:VisualState x:Name="InvalidUnfocused">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="ValidationErrorElement">
                                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -614,8 +614,8 @@
                                             </DiscreteObjectKeyFrame>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="InvalidFocused">
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="InvalidFocused">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="ValidationErrorElement">
                                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -632,9 +632,9 @@
                                             </DiscreteObjectKeyFrame>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
                         <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Opacity="1">
                             <Grid>
                                 <Border x:Name="ReadOnlyVisualElement" Background="{StaticResource TextBoxReadOnlyBackgroundBrush}" Opacity="0" />
@@ -675,10 +675,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ListBox">
                     <Grid>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="ValidationStates">
-                                <VisualState x:Name="Valid" />
-                                <VisualState x:Name="InvalidUnfocused">
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="ValidationStates">
+                                <vsm:VisualState x:Name="Valid" />
+                                <vsm:VisualState x:Name="InvalidUnfocused">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="ValidationErrorElement">
                                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -688,8 +688,8 @@
                                             </DiscreteObjectKeyFrame>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="InvalidFocused">
+                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="InvalidFocused">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="ValidationErrorElement">
                                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -706,9 +706,9 @@
                                             </DiscreteObjectKeyFrame>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
                         <Border BorderThickness="0" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
                             <ScrollViewer x:Name="ScrollViewer" BorderThickness="0" Padding="{TemplateBinding Padding}" Style="{StaticResource ScrollViewerStyle}">
                                 <ItemsPresenter />

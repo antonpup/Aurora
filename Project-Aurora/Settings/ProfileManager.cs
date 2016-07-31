@@ -195,7 +195,7 @@ namespace Aurora.Settings
                 }
                 catch(Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error.\n{1}\n{2}", scr.Key, exc.Message, exc.StackTrace), Logging_Level.External);
+                    Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
                 }
             }
         }
@@ -254,7 +254,7 @@ namespace Aurora.Settings
                         }
                         catch (Exception exc)
                         {
-                             Global.logger.LogLine(string.Format("An error occured while trying to load script {0}.\n{1}\n{2}", script, exc.Message, exc.StackTrace, Logging_Level.External));
+                             Global.logger.LogLine(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc, Logging_Level.External));
                             //Maybe MessageBox info dialog could be included.
                         }
                     }

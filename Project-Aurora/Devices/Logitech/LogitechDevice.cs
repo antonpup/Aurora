@@ -354,7 +354,7 @@ namespace Aurora.Devices.Logitech
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Global.logger.LogLine(e.ToString(), Logging_Level.Error);
                 return false;
             }
         }

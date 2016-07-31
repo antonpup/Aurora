@@ -1,6 +1,8 @@
-﻿using System;
+﻿using CSScriptLibrary;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 
 namespace Aurora.Devices
@@ -29,6 +31,56 @@ namespace Aurora.Devices
             devices.Add(new Devices.Logitech.LogitechDevice());
             devices.Add(new Devices.Corsair.CorsairDevice());
             devices.Add(new Devices.Razer.RazerDevice());
+
+            string devices_scripts_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Scripted Devices");
+
+            if (Directory.Exists(devices_scripts_path))
+            {
+                foreach (string device_script in Directory.EnumerateFiles(devices_scripts_path, "*.*"))
+                {
+                    try
+                    {
+                        string ext = Path.GetExtension(device_script);
+                        switch (ext)
+                        {
+                            case ".py":
+                                var scope = Global.PythonEngine.ExecuteFile(device_script);
+                                dynamic main_type;
+                                if (scope.TryGetVariable("main", out main_type))
+                                {
+                                    dynamic script = Global.PythonEngine.Operations.CreateInstance(main_type);
+
+                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+
+                                    devices.Add(scripted_device);
+                                }
+                                else
+                                    Global.logger.LogLine(string.Format("Script \"{0}\" does not contain a public 'main' class", device_script), Logging_Level.External);
+
+                                break;
+                            case ".cs":
+                                System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(device_script);
+                                foreach (Type typ in script_assembly.ExportedTypes)
+                                {
+                                    dynamic script = Activator.CreateInstance(typ);
+
+                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+
+                                    devices.Add(scripted_device);
+                                }
+
+                                break;
+                            default:
+                                Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext), Logging_Level.External);
+                                break;
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.LogLine(string.Format("An error occured while trying to load script {0}. Exception: {1}", device_script, exc, Logging_Level.External));
+                    }
+                }
+            }
         }
 
         public void Initialize()
