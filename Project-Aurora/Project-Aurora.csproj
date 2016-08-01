@@ -348,6 +348,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="Scripted Devices\example_script.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Compile Include="Settings\ColorZone.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Devices\DeviceManager.cs" />
@@ -722,6 +725,9 @@
     <Content Include="redist\vc_redist.x86.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Scripted Devices\example_py_script.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Resource Include="Resources\bf3_64x64.png" />
     <Resource Include="Resources\blacklight_64x64.png" />
     <Content Include="Resources\CorsairInstall\Step1.png" />

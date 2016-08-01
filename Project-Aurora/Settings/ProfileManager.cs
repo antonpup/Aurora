@@ -10,7 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
-using System.Windows.Data;
 
 namespace Aurora.Settings
 {
@@ -68,7 +67,7 @@ namespace Aurora.Settings
 
         public void SwitchToProfile(string profile_name)
         {
-            if(Profiles.ContainsKey(profile_name))
+            if (Profiles.ContainsKey(profile_name))
             {
                 Type setting_type = Profiles[profile_name].GetType();
 
@@ -91,7 +90,7 @@ namespace Aurora.Settings
             {
                 MessageBoxResult result = MessageBox.Show("Profile already exists. Would you like to replace it?", "Aurora", MessageBoxButton.YesNo);
 
-                if(result != MessageBoxResult.Yes)
+                if (result != MessageBoxResult.Yes)
                     return;
 
                 Type setting_type = Settings.GetType();
@@ -156,7 +155,7 @@ namespace Aurora.Settings
                         return JsonConvert.DeserializeObject<ProfileSettings>(profile_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
             }
@@ -171,8 +170,8 @@ namespace Aurora.Settings
                 Global.logger.LogLine(string.Format("Effect script with key {0} already exists!", key), Logging_Level.External);
                 return;
             }
-            
-            if (obj.GetType().GetMethod("update") != null || obj.update != null) 
+
+            if (obj.GetType().GetMethod("update") != null || obj.update != null)
             {
                 this.EffectScripts.Add(key, obj);
             }
@@ -184,7 +183,7 @@ namespace Aurora.Settings
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, GameState state = null)
         {
-            foreach(KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
+            foreach (KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
             {
                 try
                 {
@@ -193,7 +192,7 @@ namespace Aurora.Settings
                     if (layer != null)
                         layers.Enqueue(layer);
                 }
-                catch(Exception exc)
+                catch (Exception exc)
                 {
                     Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
                 }
@@ -206,57 +205,57 @@ namespace Aurora.Settings
 
             if (Directory.Exists(profiles_path))
             {
-                string scripts_path;
-                if (Directory.Exists(scripts_path = Path.Combine(profiles_path, Global.ScriptDirectory)))
+                string scripts_path = Path.Combine(profiles_path, Global.ScriptDirectory);
+                if (!Directory.Exists(scripts_path))
+                    Directory.CreateDirectory(scripts_path);
+
+                foreach (string script in Directory.EnumerateFiles(scripts_path, "*.*"))
                 {
-                    foreach (string script in Directory.EnumerateFiles(scripts_path, "*.*"))
+                    try
                     {
-                        try
+                        string ext = Path.GetExtension(script);
+                        switch (ext)
                         {
-                            string ext = Path.GetExtension(script);
-                            switch (ext)
-                            {
-                                case ".py":
-                                    var scope = Global.PythonEngine.ExecuteFile(script);
-                                    dynamic main_type;
-                                    if (scope.TryGetVariable("main", out main_type))
+                            case ".py":
+                                var scope = Global.PythonEngine.ExecuteFile(script);
+                                dynamic main_type;
+                                if (scope.TryGetVariable("main", out main_type))
+                                {
+                                    dynamic obj = Global.PythonEngine.Operations.CreateInstance(main_type);
+                                    if (obj.ID != null)
                                     {
-                                        dynamic obj = Global.PythonEngine.Operations.CreateInstance(main_type);
-                                        if (obj.ID != null)
-                                        {
-                                            this.RegisterEffect(obj.ID, obj);
-                                        }
-                                        else
-                                            Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable", script), Logging_Level.External);
+                                        this.RegisterEffect(obj.ID, obj);
                                     }
                                     else
-                                        Global.logger.LogLine(string.Format("Script \"{0}\" does not contain a public 'main' class", script), Logging_Level.External);
+                                        Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable", script), Logging_Level.External);
+                                }
+                                else
+                                    Global.logger.LogLine(string.Format("Script \"{0}\" does not contain a public 'main' class", script), Logging_Level.External);
 
-                                    break;
-                                case ".cs":
-                                    System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(script);
-                                    foreach (Type typ in script_assembly.ExportedTypes)
+                                break;
+                            case ".cs":
+                                System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(script);
+                                foreach (Type typ in script_assembly.ExportedTypes)
+                                {
+                                    dynamic obj = Activator.CreateInstance(typ);
+                                    if (obj.ID != null)
                                     {
-                                        dynamic obj = Activator.CreateInstance(typ);
-                                        if (obj.ID != null)
-                                        {
-                                            this.RegisterEffect(obj.ID, obj);
-                                        }
-                                        else
-                                            Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable for the effect {1}", script, typ.FullName), Logging_Level.External);
+                                        this.RegisterEffect(obj.ID, obj);
                                     }
+                                    else
+                                        Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable for the effect {1}", script, typ.FullName), Logging_Level.External);
+                                }
 
-                                    break;
-                                default:
-                                    Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext), Logging_Level.External);
-                                    break;
-                            }
+                                break;
+                            default:
+                                Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext), Logging_Level.External);
+                                break;
                         }
-                        catch (Exception exc)
-                        {
-                             Global.logger.LogLine(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc, Logging_Level.External));
-                            //Maybe MessageBox info dialog could be included.
-                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.LogLine(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc, Logging_Level.External));
+                        //Maybe MessageBox info dialog could be included.
                     }
                 }
 
@@ -264,17 +263,17 @@ namespace Aurora.Settings
                 foreach (string profile in Directory.EnumerateFiles(profiles_path, "*.json", SearchOption.TopDirectoryOnly))
                 {
                     string profile_name = Path.GetFileNameWithoutExtension(profile);
-                    ProfileSettings profile_settings = LoadProfile(profile);                   
+                    ProfileSettings profile_settings = LoadProfile(profile);
 
-                    if(profile_settings != null)
+                    if (profile_settings != null)
                     {
-                        foreach(string id in this.EffectScripts.Keys)
+                        foreach (string id in this.EffectScripts.Keys)
                         {
                             if (!profile_settings.ScriptSettings.ContainsKey(id))
                                 profile_settings.ScriptSettings.Add(id, new ScriptSettings(this.EffectScripts[id]));
                         }
 
-                        foreach(string key in profile_settings.ScriptSettings.Keys.Where(s => !this.EffectScripts.ContainsKey(s)).ToList())
+                        foreach (string key in profile_settings.ScriptSettings.Keys.Where(s => !this.EffectScripts.ContainsKey(s)).ToList())
                         {
                             profile_settings.ScriptSettings.Remove(key);
                         }
@@ -283,13 +282,13 @@ namespace Aurora.Settings
                             Settings = profile_settings;
                         else
                         {
-                            if(!Profiles.ContainsKey(profile_name))
+                            if (!Profiles.ContainsKey(profile_name))
                                 Profiles.Add(profile_name, profile_settings);
                         }
                     }
                 }
 
-                
+
             }
             else
             {
@@ -329,7 +328,7 @@ namespace Aurora.Settings
                     SaveProfile(Path.Combine(profiles_path, kvp.Key + ".json"), kvp.Value);
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.LogLine("Exception during SaveProfiles, " + exc, Logging_Level.Error);
             }

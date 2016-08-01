@@ -184,6 +184,10 @@
                     <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="154,8,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
                     <Button x:Name="devices_retry" Content="Retry for connected devices" HorizontalAlignment="Right" Margin="0,10,215,0" VerticalAlignment="Top" Click="devices_retry_Click"/>
                     <CheckBox x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" ToolTip="" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
+                    <Button x:Name="wrapper_install_logitech" Content="Install Aurora Wrapper Patch for Logitech" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Click="wrapper_install_logitech_Click"/>
+                    <Button x:Name="wrapper_install_razer" Content="Install Aurora Wrapper Patch for Razer" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Click="wrapper_install_razer_Click"/>
+                    <Button x:Name="wrapper_install_lightfx_32" Content="Install Aurora Wrapper Patch for LightFX (32 bit)" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_32_Click"/>
+                    <Button x:Name="wrapper_install_lightfx_64" Content="Install Aurora Wrapper Patch for LightFX (64 bit)" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_64_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Updates">

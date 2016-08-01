@@ -387,6 +387,9 @@ namespace Aurora.Profiles.Desktop
                 layers.Enqueue(memory);
             }
 
+            //Scripts before interactive and shortcut assistant layers
+            Global.Configuration.desktop_profile.UpdateEffectScripts(layers);
+
             EffectLayer interactive_layer = new EffectLayer("Interactive Effects");
 
             foreach (var input in input_list.ToArray())
@@ -490,8 +493,6 @@ namespace Aurora.Profiles.Desktop
 
             }
             layers.Enqueue(sc_assistant_layer);
-
-            Global.Configuration.desktop_profile.UpdateEffectScripts(layers);
 
             frame.AddLayers(layers.ToArray());
         }

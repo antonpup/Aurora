@@ -100,7 +100,7 @@ namespace Aurora.Settings
                                 this.about_connected_devices.Text = "Connected Devices\r\n" + Global.dev_manager.GetDevices();
                                 this.about_connected_devices.UpdateLayout();
 
-                                if(Global.Configuration.keyboard_brand == PreferredKeyboard.None && Global.kbLayout.Loaded_Localization == PreferredKeyboardLocalization.None)
+                                if (Global.Configuration.keyboard_brand == PreferredKeyboard.None && Global.kbLayout.Loaded_Localization == PreferredKeyboardLocalization.None)
                                     Global.kbLayout.LoadBrand();
 
                             });
@@ -724,6 +724,100 @@ namespace Aurora.Settings
             {
                 Global.Configuration.start_silently = (this.start_silently_enabled.IsChecked.HasValue) ? this.start_silently_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void wrapper_install_logitech_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = @"Aurora.exe";
+                startInfo.Arguments = @"-install_logitech";
+                startInfo.Verb = "runas";
+                Process.Start(startInfo);
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception during Logitech Wrapper install. Exception: " + exc, Logging_Level.Error);
+                System.Windows.MessageBox.Show("Aurora Wrapper Patch for Logitech could not be applied.\r\nException: " + exc.Message);
+            }
+        }
+
+        private void wrapper_install_razer_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    using (BinaryWriter razer_wrapper_86 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "RzChromaSDK.dll"), FileMode.Create)))
+                    {
+                        razer_wrapper_86.Write(Properties.Resources.Aurora_RazerLEDWrapper86);
+                    }
+
+                    using (BinaryWriter razer_wrapper_64 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "RzChromaSDK64.dll"), FileMode.Create)))
+                    {
+                        razer_wrapper_64.Write(Properties.Resources.Aurora_RazerLEDWrapper64);
+                    }
+
+                    System.Windows.MessageBox.Show("Aurora Wrapper Patch for Razer applied to\r\n" + dialog.SelectedPath);
+                }
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception during Razer Wrapper install. Exception: " + exc, Logging_Level.Error);
+                System.Windows.MessageBox.Show("Aurora Wrapper Patch for Razer could not be applied.\r\nException: " + exc.Message);
+            }
+        }
+
+        private void wrapper_install_lightfx_32_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    using (BinaryWriter lightfx_wrapper_86 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "LightFX.dll"), FileMode.Create)))
+                    {
+                        lightfx_wrapper_86.Write(Properties.Resources.Aurora_LightFXWrapper86);
+                    }
+
+                    System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) applied to\r\n" + dialog.SelectedPath);
+                }
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
+                System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) could not be applied.\r\nException: " + exc.Message);
+            }
+        }
+
+        private void wrapper_install_lightfx_64_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    using (BinaryWriter lightfx_wrapper_64 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "LightFX.dll"), FileMode.Create)))
+                    {
+                        lightfx_wrapper_64.Write(Properties.Resources.Aurora_LightFXWrapper64);
+                    }
+
+                    System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) applied to\r\n" + dialog.SelectedPath);
+                }
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
+                System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
     }

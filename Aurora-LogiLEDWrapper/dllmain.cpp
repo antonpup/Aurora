@@ -848,15 +848,6 @@ bool LogiLedInit()
 	return true;
 }
 
-bool LogiLedGetSdkVersion(int *majorNum, int *minorNum, int *buildNum)
-{
-	*majorNum = 8;
-	*minorNum = 75;
-	*buildNum = 30;
-
-	return true;
-}
-
 bool LogiLedSetTargetDevice(int targetDevice)
 {
 	current_device = targetDevice;

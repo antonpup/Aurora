@@ -2,7 +2,6 @@ LIBRARY Aurora-LogiLEDWrapper.dll
 
 EXPORTS
 	LogiLedInit
-	LogiLedGetSdkVersion
 	LogiLedSetTargetDevice
 	LogiLedSaveCurrentLighting
 	LogiLedSetLighting
