@@ -28,6 +28,7 @@
                     <TextBox x:Name="app_name_textbox" HorizontalAlignment="Left" Height="23" Margin="113,29,0,0" VerticalAlignment="Top" Width="172" TextChanged="app_name_textbox_TextChanged"/>
                     <CheckBox x:Name="profile_enabled" Content="Enable Aurora to provide lighting effects with this profile" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="profile_enabled_Checked" Unchecked="profile_enabled_Checked"/>
                     <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
+                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Shortcuts Assistant">

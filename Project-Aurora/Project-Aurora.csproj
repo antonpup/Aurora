@@ -335,6 +335,7 @@
     <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\TheDivision\GameEvent_TheDivision.cs" />
     <Compile Include="Profiles\TheDivision\TheDivisionProfileManager.cs" />
     <Compile Include="Profiles\TheDivision\TheDivisionSettings.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
@@ -348,7 +349,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Scripted Devices\example_script.cs">
+    <None Include="Scripts\Devices\example_script.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="Settings\ColorZone.cs" />
@@ -725,7 +726,7 @@
     <Content Include="redist\vc_redist.x86.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Scripted Devices\example_py_script.py">
+    <None Include="Scripts\Devices\example_py_script.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Resource Include="Resources\bf3_64x64.png" />

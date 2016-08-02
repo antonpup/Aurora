@@ -51,7 +51,7 @@
                     <Button x:Name="patch_button" Content="Patch Logitech LED SDK" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with GTA 5" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
                     <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
-                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="215"/>
+                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Preview">

@@ -23,6 +23,8 @@ namespace Aurora.Profiles.Overwatch
 
         private void SetSettings()
         {
+            this.scriptmanager.ProfileManager = profile_manager;
+
             this.game_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).isEnabled;
             this.ow_ce_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).colorEnhance_Enabled;
             this.ow_ce_color_factor.Value = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_factor;

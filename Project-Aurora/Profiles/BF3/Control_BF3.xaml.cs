@@ -33,6 +33,7 @@ namespace Aurora.Profiles.BF3
         private void SetSettings()
         {
             this.profilemanager.ProfileManager = profile_manager;
+            this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as BF3Settings).isEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as BF3Settings).lighting_areas;

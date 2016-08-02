@@ -33,6 +33,7 @@ namespace Aurora.Profiles.LeagueOfLegends
         private void SetSettings()
         {
             this.profilemanager.ProfileManager = profile_manager;
+            this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as LoLSettings).isEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as LoLSettings).lighting_areas;

@@ -17,7 +17,7 @@ class main():
     ForegroundColour = Color.Red
     BackgroundColour = Color.Black
     DefaultKeys = KeySequence(array_device_keys((DeviceKeys.TAB, DeviceKeys.Q,  DeviceKeys.W, DeviceKeys.E, DeviceKeys.R, DeviceKeys.T, DeviceKeys.Y, DeviceKeys.U, DeviceKeys.I, DeviceKeys.O, DeviceKeys.P)))
-    def update(self, settings, state):
+    def UpdateLights(self, settings, state):
         layer = EffectLayer(self.ID)
         layer.PercentEffect(self.ForegroundColour, self.BackgroundColour, settings.Keys, System.DateTime.Now.Second, 60);
         return layer

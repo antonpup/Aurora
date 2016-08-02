@@ -428,12 +428,19 @@ namespace Aurora.Profiles.Desktop
 
             for (int x = input_list.Count - 1; x >= 0; x--)
             {
-                if (input_list[x].progress > Effects.canvas_width)
-                    input_list.RemoveAt(x);
-                else
+                try
                 {
-                    float trans_added = ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_speed * (getDeltaTime() * 5.0f));
-                    input_list[x].progress += trans_added;
+                    if (input_list[x].progress > Effects.canvas_width)
+                        input_list.RemoveAt(x);
+                    else
+                    {
+                        float trans_added = ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_speed * (getDeltaTime() * 5.0f));
+                        input_list[x].progress += trans_added;
+                    }
+                }
+                catch(Exception exc)
+                {
+                    Global.logger.LogLine("Interative layer exception, " + exc, Logging_Level.Error);
                 }
             }
 

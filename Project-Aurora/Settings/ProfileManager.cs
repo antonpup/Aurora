@@ -171,7 +171,7 @@ namespace Aurora.Settings
                 return;
             }
 
-            if (obj.GetType().GetMethod("update") != null || obj.update != null)
+            if (obj.GetType().GetMethod("UpdateLights") != null || obj.UpdateLights != null)
             {
                 this.EffectScripts.Add(key, obj);
             }
@@ -188,13 +188,23 @@ namespace Aurora.Settings
                 try
                 {
                     dynamic script = this.EffectScripts[scr.Key];
-                    EffectLayer layer = script.update(scr.Value, state);
-                    if (layer != null)
-                        layers.Enqueue(layer);
+                    dynamic script_layers = script.UpdateLights(scr.Value, state);
+                    if (layers != null)
+                    {
+                        if(script_layers is EffectLayer)
+                            layers.Enqueue(script_layers as EffectLayer);
+                        else if(script_layers is EffectLayer[])
+                        {
+                            foreach (var layer in (script_layers as EffectLayer[]))
+                                layers.Enqueue(layer);
+                        }
+                    }
+                        
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
+                    Global.logger.LogLine(string.Format("Script disabled! Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
+                    scr.Value.Enabled = false;
                 }
             }
         }

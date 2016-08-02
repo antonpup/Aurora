@@ -56,7 +56,7 @@ namespace Aurora.Profiles.CSGO
 
         public GameEvent_CSGO()
         {
-
+            profilename = "CSGO";
         }
 
         public static void SetTeam(PlayerTeam team)
@@ -128,7 +128,7 @@ namespace Aurora.Profiles.CSGO
 
         private double getDimmingValue()
         {
-            if (isDimming && (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bg_enable_dimming)
+            if (isDimming && (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bg_enable_dimming)
             {
                 dim_value -= 0.02;
                 return dim_value = (dim_value < 0.0 ? 0.0 : dim_value);
@@ -142,16 +142,16 @@ namespace Aurora.Profiles.CSGO
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
             //update background
-            if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bg_team_enabled)
+            if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bg_team_enabled)
             {
                 EffectLayer bg_layer = new EffectLayer("CSGO - Background");
 
-                Color bg_color = (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ambient_color;
+                Color bg_color = (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).ambient_color;
 
                 if (current_team == PlayerTeam.T)
-                    bg_color = (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).t_color;
+                    bg_color = (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).t_color;
                 else if (current_team == PlayerTeam.CT)
-                    bg_color = (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ct_color;
+                    bg_color = (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).ct_color;
 
                 if (current_team != PlayerTeam.Undefined)
                 {
@@ -169,7 +169,7 @@ namespace Aurora.Profiles.CSGO
 
                 bg_layer.Fill(bg_color);
 
-                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bg_peripheral_use)
+                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bg_peripheral_use)
                     bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
                 layers.Enqueue(bg_layer);
             }
@@ -179,35 +179,35 @@ namespace Aurora.Profiles.CSGO
             {
                 //Update Health
                 EffectLayer hpbar_layer = new EffectLayer("CSGO - HP Bar");
-                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).health_enabled)
-                hpbar_layer.PercentEffect((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).healthy_color,
-                        (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).hurt_color, 
-                        (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).health_sequence, 
-                        (double)health, 
-                        (double)health_max, 
-                        (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).health_effect_type);
+                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).health_enabled)
+                    hpbar_layer.PercentEffect((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).healthy_color,
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).hurt_color,
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).health_sequence,
+                            (double)health,
+                            (double)health_max,
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).health_effect_type);
 
                 layers.Enqueue(hpbar_layer);
 
                 //Update Ammo
                 EffectLayer ammobar_layer = new EffectLayer("CSGO - Ammo Bar");
-                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ammo_enabled)
-                    ammobar_layer.PercentEffect((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ammo_color,
-                        (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).noammo_color, 
-                        (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ammo_sequence, 
-                        (double)clip, 
-                        (double)clip_max, 
-                        (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ammo_effect_type);
+                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).ammo_enabled)
+                    ammobar_layer.PercentEffect((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).ammo_color,
+                        (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).noammo_color,
+                        (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).ammo_sequence,
+                        (double)clip,
+                        (double)clip_max,
+                        (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).ammo_effect_type);
 
                 layers.Enqueue(ammobar_layer);
 
 
                 //Update Bomb
-                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_enabled)
+                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_enabled)
                 {
                     EffectLayer bomb_effect_layer = new EffectLayer("CSGO - Bomb Effect");
 
-                    Devices.DeviceKeys[] _bombkeys = (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_sequence.keys.ToArray();
+                    Devices.DeviceKeys[] _bombkeys = (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_sequence.keys.ToArray();
 
                     if (bombstate == BombState.Planted)
                     {
@@ -256,28 +256,28 @@ namespace Aurora.Profiles.CSGO
                                 bombflashamount = 0.0;
                         }
 
-                        if (!(Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_gradual)
+                        if (!(Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_gradual)
                             bombflashamount = Math.Round(bombflashamount);
 
                         foreach (Devices.DeviceKeys key in _bombkeys)
                         {
                             if (isCritical)
                             {
-                                Color bombcolor_critical = Utils.ColorUtils.MultiplyColorByScalar((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_primed_color, Math.Min(bombflashamount, 1.0));
+                                Color bombcolor_critical = Utils.ColorUtils.MultiplyColorByScalar((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_primed_color, Math.Min(bombflashamount, 1.0));
 
                                 bomb_effect_layer.Set(key, bombcolor_critical);
 
-                                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_peripheral_use)
                                 {
                                     bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, bombcolor_critical);
                                 }
                             }
                             else
                             {
-                                Color bombcolor = Utils.ColorUtils.MultiplyColorByScalar((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_flash_color, Math.Min(bombflashamount, 1.0));
+                                Color bombcolor = Utils.ColorUtils.MultiplyColorByScalar((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_flash_color, Math.Min(bombflashamount, 1.0));
 
                                 bomb_effect_layer.Set(key, bombcolor);
-                                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_peripheral_use)
+                                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_peripheral_use)
                                 {
                                     bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, bombcolor);
                                 }
@@ -287,24 +287,24 @@ namespace Aurora.Profiles.CSGO
                     else if (bombstate == BombState.Defused)
                     {
                         bombtimer.Stop();
-                        if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_display_winner_color)
+                        if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_display_winner_color)
                         {
                             foreach (Devices.DeviceKeys key in _bombkeys)
-                                bomb_effect_layer.Set(key, (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ct_color);
+                                bomb_effect_layer.Set(key, (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).ct_color);
 
-                            if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_peripheral_use)
-                                bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).ct_color);
+                            if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_peripheral_use)
+                                bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).ct_color);
                         }
                     }
                     else if (bombstate == BombState.Exploded)
                     {
                         bombtimer.Stop();
-                        if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_display_winner_color)
+                        if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_display_winner_color)
                         {
                             foreach (Devices.DeviceKeys key in _bombkeys)
-                                bomb_effect_layer.Set(key, (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).t_color);
-                            if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).bomb_peripheral_use)
-                                bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).t_color);
+                                bomb_effect_layer.Set(key, (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).t_color);
+                            if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).bomb_peripheral_use)
+                                bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).t_color);
                         }
                     }
                     else
@@ -317,10 +317,10 @@ namespace Aurora.Profiles.CSGO
             }
 
             //Kills Indicator
-            if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).kills_indicator && isLocal)
+            if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).kills_indicator && isLocal)
             {
                 EffectLayer kills_indicator_layer = new EffectLayer("CSGO - Kills Indicator");
-                Devices.DeviceKeys[] _killsKeys = (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).kills_sequence.keys.ToArray();
+                Devices.DeviceKeys[] _killsKeys = (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).kills_sequence.keys.ToArray();
                 for (int pos = 0; pos < _killsKeys.Length; pos++)
                 {
                     if (pos < roundKills.Count)
@@ -328,10 +328,10 @@ namespace Aurora.Profiles.CSGO
                         switch (roundKills[pos])
                         {
                             case (RoundKillType.Regular):
-                                kills_indicator_layer.Set(_killsKeys[pos], (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).kills_regular_color);
+                                kills_indicator_layer.Set(_killsKeys[pos], (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).kills_regular_color);
                                 break;
                             case (RoundKillType.Headshot):
-                                kills_indicator_layer.Set(_killsKeys[pos], (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).kills_headshot_color);
+                                kills_indicator_layer.Set(_killsKeys[pos], (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).kills_headshot_color);
                                 break;
                         }
                     }
@@ -341,20 +341,20 @@ namespace Aurora.Profiles.CSGO
 
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("CSGO - Color Zones");
-            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).lighting_areas.ToArray());
+            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
             //Update Burning
-            
-            if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_enabled && burnamount > 0)
+
+            if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).burning_enabled && burnamount > 0)
             {
                 EffectLayer burning_layer = new EffectLayer("CSGO - Burning");
                 double burning_percent = (double)burnamount / 255.0;
-                Color burncolor = (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_color;
+                Color burncolor = (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).burning_color;
 
-                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_animation)
+                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).burning_animation)
                 {
-                    int red_adjusted = (int)((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_color.R + (Math.Cos((general_timer.ElapsedMilliseconds + randomizer.Next(75)) / 75.0) * 0.15 * 255));
+                    int red_adjusted = (int)((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).burning_color.R + (Math.Cos((general_timer.ElapsedMilliseconds + randomizer.Next(75)) / 75.0) * 0.15 * 255));
                     byte red = 0;
 
                     if (red_adjusted > 255)
@@ -364,7 +364,7 @@ namespace Aurora.Profiles.CSGO
                     else
                         red = (byte)red_adjusted;
 
-                    int green_adjusted = (int)((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_color.G + (Math.Sin((general_timer.ElapsedMilliseconds + randomizer.Next(150)) / 75.0) * 0.15 * 255));
+                    int green_adjusted = (int)((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).burning_color.G + (Math.Sin((general_timer.ElapsedMilliseconds + randomizer.Next(150)) / 75.0) * 0.15 * 255));
                     byte green = 0;
 
                     if (green_adjusted > 255)
@@ -374,7 +374,7 @@ namespace Aurora.Profiles.CSGO
                     else
                         green = (byte)green_adjusted;
 
-                    int blue_adjusted = (int)((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_color.B + (Math.Cos((general_timer.ElapsedMilliseconds + randomizer.Next(225)) / 75.0) * 0.15 * 255));
+                    int blue_adjusted = (int)((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).burning_color.B + (Math.Cos((general_timer.ElapsedMilliseconds + randomizer.Next(225)) / 75.0) * 0.15 * 255));
                     byte blue = 0;
 
                     if (blue_adjusted > 255)
@@ -389,33 +389,33 @@ namespace Aurora.Profiles.CSGO
 
                 burning_layer.Fill(burncolor);
 
-                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).burning_peripheral_use)
+                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).burning_peripheral_use)
                     burning_layer.Set(Devices.DeviceKeys.Peripheral, burncolor);
                 layers.Enqueue(burning_layer);
             }
 
             //Update Flashed
-            if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).flashbang_enabled && flashamount > 0)
+            if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).flashbang_enabled && flashamount > 0)
             {
                 EffectLayer flashed_layer = new EffectLayer("CSGO - Flashed");
                 double flash_percent = (double)flashamount / 255.0;
 
-                Color flash_color = Color.FromArgb(flashamount, (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).flash_color);
+                Color flash_color = Color.FromArgb(flashamount, (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).flash_color);
 
                 flashed_layer.Fill(flash_color);
 
-                if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).flashbang_peripheral_use)
+                if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).flashbang_peripheral_use)
                     flashed_layer.Set(Devices.DeviceKeys.Peripheral, flash_color);
                 layers.Enqueue(flashed_layer);
             }
 
             //Update Typing Keys
-            if ((Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).typing_enabled && current_activity == PlayerActivity.TextInput)
+            if ((Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).typing_enabled && current_activity == PlayerActivity.TextInput)
             {
                 EffectLayer typing_keys_layer = new EffectLayer("CSGO - Typing Keys");
-                Devices.DeviceKeys[] _typingkeys = (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).typing_sequence.keys.ToArray();
+                Devices.DeviceKeys[] _typingkeys = (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).typing_sequence.keys.ToArray();
                 foreach (Devices.DeviceKeys key in _typingkeys)
-                    typing_keys_layer.Set(key, (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).typing_color);
+                    typing_keys_layer.Set(key, (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).typing_color);
 
                 layers.Enqueue(typing_keys_layer);
             }
@@ -426,6 +426,9 @@ namespace Aurora.Profiles.CSGO
                 this.lastUpdate = general_timer.Elapsed.Seconds;
             }
 
+            //Scripts
+            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
+
             frame.AddLayers(layers.ToArray());
         }
 
@@ -433,6 +436,8 @@ namespace Aurora.Profiles.CSGO
         {
             if (new_game_state is GameState_CSGO)
             {
+                _game_state = new_game_state;
+
                 GameState_CSGO gs = (new_game_state as GameState_CSGO);
 
                 try
@@ -486,7 +491,7 @@ namespace Aurora.Profiles.CSGO
 
         public override bool IsEnabled()
         {
-            return (Global.Configuration.ApplicationProfiles["CSGO"].Settings as CSGOSettings).isEnabled;
+            return (Global.Configuration.ApplicationProfiles[profilename].Settings as CSGOSettings).isEnabled;
         }
     }
 }

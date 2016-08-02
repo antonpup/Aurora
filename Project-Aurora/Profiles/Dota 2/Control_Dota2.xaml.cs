@@ -53,6 +53,7 @@ namespace Aurora.Profiles.Dota_2
         private void SetSettings()
         {
             this.profilemanager.ProfileManager = profile_manager;
+            this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).isEnabled;
 

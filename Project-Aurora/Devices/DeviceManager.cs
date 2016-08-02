@@ -32,7 +32,7 @@ namespace Aurora.Devices
             devices.Add(new Devices.Corsair.CorsairDevice());
             devices.Add(new Devices.Razer.RazerDevice());
 
-            string devices_scripts_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Scripted Devices");
+            string devices_scripts_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
             {

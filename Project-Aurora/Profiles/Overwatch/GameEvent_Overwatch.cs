@@ -9,9 +9,14 @@ namespace Aurora.Profiles.Overwatch
 {
     public class GameEvent_Overwatch : GameEvent_Aurora_Wrapper
     {
+        public GameEvent_Overwatch()
+        {
+            profilename = "Overwatch";
+        }
+
         public override bool IsEnabled()
         {
-            return (Global.Configuration.ApplicationProfiles["Overwatch"].Settings as OverwatchSettings).isEnabled;
+            return (Global.Configuration.ApplicationProfiles[profilename].Settings as OverwatchSettings).isEnabled;
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -65,17 +70,20 @@ namespace Aurora.Profiles.Overwatch
 
             layers.Enqueue(bitmap_layer);
 
+            //Scripts
+            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
+
             frame.AddLayers(layers.ToArray());
         }
 
         private Color GetBoostedColor(Color color)
         {
-            if (!(Global.Configuration.ApplicationProfiles["Overwatch"].Settings as OverwatchSettings).colorEnhance_Enabled)
+            if (!(Global.Configuration.ApplicationProfiles[profilename].Settings as OverwatchSettings).colorEnhance_Enabled)
                 return color;
 
             // initial_factor * (1 - (x / color_factor))
-            float initial_factor = (Global.Configuration.ApplicationProfiles["Overwatch"].Settings as OverwatchSettings).colorEnhance_initial_factor;
-            float color_factor = (Global.Configuration.ApplicationProfiles["Overwatch"].Settings as OverwatchSettings).colorEnhance_color_factor;
+            float initial_factor = (Global.Configuration.ApplicationProfiles[profilename].Settings as OverwatchSettings).colorEnhance_initial_factor;
+            float color_factor = (Global.Configuration.ApplicationProfiles[profilename].Settings as OverwatchSettings).colorEnhance_color_factor;
 
             float boost_amount = 0.0f;
             boost_amount += initial_factor * (1.0f - (color.R / color_factor));

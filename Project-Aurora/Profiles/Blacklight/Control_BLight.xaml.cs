@@ -40,6 +40,7 @@ namespace Aurora.Profiles.Blacklight
         private void SetSettings()
         {
             this.profilemanager.ProfileManager = profile_manager;
+            this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as BLightSettings).isEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as BLightSettings).lighting_areas;

@@ -37,6 +37,7 @@ namespace Aurora.Profiles.Generic_Application
         private void SetSettings()
         {
             this.profilemanager.ProfileManager = profile_manager;
+            this.scriptmanager.ProfileManager = profile_manager;
 
             this.profile_enabled.IsChecked = (profile_manager.Settings as GenericApplicationSettings).isEnabled;
             this.app_name_textbox.Text = (profile_manager.Settings as GenericApplicationSettings).ApplicationName;

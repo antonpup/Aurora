@@ -25,11 +25,22 @@ namespace Aurora.Profiles.Aurora_Wrapper
         public override void UpdateLights(EffectFrame frame)
         {
             UpdateWrapperLights(frame);
+
+            Queue<EffectLayer> layers = new Queue<EffectLayer>();
+
+            //Scripts
+            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
+
+            frame.AddLayers(layers.ToArray());
         }
 
         internal virtual void UpdateWrapperLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
+
+            EffectLayer colorfill_layer = new EffectLayer("Aurora Wrapper - Color Fill", last_fill_color);
+
+            layers.Enqueue(colorfill_layer);
 
             EffectLayer bitmap_layer = new EffectLayer("Aurora Wrapper - Bitmap");
 
@@ -122,17 +133,26 @@ namespace Aurora.Profiles.Aurora_Wrapper
         {
             if (new_game_state is GameState_Wrapper)
             {
+                _game_state = new_game_state;
+
                 GameState_Wrapper ngw_state = (new_game_state as GameState_Wrapper);
 
                 if (ngw_state.Sent_Bitmap.Length > 0)
                     bitmap = ngw_state.Sent_Bitmap;
-                logo = ngw_state.Extra_Keys.logo;
-                g1 = ngw_state.Extra_Keys.G1;
-                g2 = ngw_state.Extra_Keys.G2;
-                g3 = ngw_state.Extra_Keys.G3;
-                g4 = ngw_state.Extra_Keys.G4;
-                g5 = ngw_state.Extra_Keys.G5;
-                peripheral = ngw_state.Extra_Keys.peripheral;
+                if (ngw_state.Extra_Keys.logo.Length > 0)
+                    logo = ngw_state.Extra_Keys.logo;
+                if (ngw_state.Extra_Keys.G1.Length > 0)
+                    g1 = ngw_state.Extra_Keys.G1;
+                if (ngw_state.Extra_Keys.G2.Length > 0)
+                    g2 = ngw_state.Extra_Keys.G2;
+                if (ngw_state.Extra_Keys.G3.Length > 0)
+                    g3 = ngw_state.Extra_Keys.G3;
+                if (ngw_state.Extra_Keys.G4.Length > 0)
+                    g4 = ngw_state.Extra_Keys.G4;
+                if (ngw_state.Extra_Keys.G5.Length > 0)
+                    g5 = ngw_state.Extra_Keys.G5;
+                if (ngw_state.Extra_Keys.peripheral.Length > 0)
+                    peripheral = ngw_state.Extra_Keys.peripheral;
 
                 if (ngw_state.Command.Equals("SetLighting"))
                 {

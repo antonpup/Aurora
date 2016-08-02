@@ -6,9 +6,14 @@ namespace Aurora.Profiles.Magic_Duels_2012
 {
     public class GameEvent_MagicDuels2012 : GameEvent_Aurora_Wrapper
     {
+        public GameEvent_MagicDuels2012()
+        {
+            profilename = "MagicDuels2012";
+        }
+
         public override bool IsEnabled()
         {
-            return (Global.Configuration.ApplicationProfiles["MagicDuels2012"].Settings as MagicDuels2012Settings).isEnabled;
+            return (Global.Configuration.ApplicationProfiles[profilename].Settings as MagicDuels2012Settings).isEnabled;
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -20,8 +25,11 @@ namespace Aurora.Profiles.Magic_Duels_2012
 
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("Magic Duels 2012 - Color Zones");
-            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles["MagicDuels2012"].Settings as MagicDuels2012Settings).lighting_areas.ToArray());
+            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles[profilename].Settings as MagicDuels2012Settings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
+
+            //Scripts
+            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
 
             frame.AddLayers(layers.ToArray());
         }
