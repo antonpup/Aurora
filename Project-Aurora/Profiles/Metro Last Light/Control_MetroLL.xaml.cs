@@ -5,28 +5,28 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Aurora.Profiles.HotlineMiami
+namespace Aurora.Profiles.Metro_Last_Light
 {
     /// <summary>
-    /// Interaction logic for Control_HM.xaml
+    /// Interaction logic for Control_MetroLL.xaml
     /// </summary>
-    public partial class Control_HM : UserControl
+    public partial class Control_MetroLL : UserControl
     {
         private ProfileManager profile_manager;
 
-        public Control_HM()
+        public Control_MetroLL()
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Hotline"];
+            profile_manager = Global.Configuration.ApplicationProfiles["MetroLL"];
 
             SetSettings();
 
             //Apply LightFX Wrapper, if needed.
-            if (!(profile_manager.Settings as HMSettings).first_time_installed)
+            if (!(profile_manager.Settings as MetroLLSettings).first_time_installed)
             {
                 InstallWrapper();
-                (profile_manager.Settings as HMSettings).first_time_installed = true;
+                (profile_manager.Settings as MetroLLSettings).first_time_installed = true;
             }
 
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
@@ -42,8 +42,8 @@ namespace Aurora.Profiles.HotlineMiami
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as HMSettings).isEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as HMSettings).lighting_areas;
+            this.game_enabled.IsChecked = (profile_manager.Settings as MetroLLSettings).isEnabled;
+            this.cz.ColorZonesList = (profile_manager.Settings as MetroLLSettings).lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -62,25 +62,11 @@ namespace Aurora.Profiles.HotlineMiami
                 MessageBox.Show("Aurora LightFX Wrapper could not be uninstalled.\r\nGame is not installed.");
         }
 
-        private void patch_drm_button_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-
-            if (result == System.Windows.Forms.DialogResult.OK)
-            {
-                if (InstallWrapper(dialog.SelectedPath))
-                    MessageBox.Show("Aurora Wrapper Patch for LightFX applied to\r\n" + dialog.SelectedPath);
-                else
-                    MessageBox.Show("Aurora LightFX Wrapper could not be installed.\r\nGame is not installed.");
-            }
-        }
-
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as HMSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as MetroLLSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -89,7 +75,7 @@ namespace Aurora.Profiles.HotlineMiami
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as HMSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Settings as MetroLLSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }
@@ -107,7 +93,7 @@ namespace Aurora.Profiles.HotlineMiami
         private bool InstallWrapper(string installpath = "")
         {
             if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(219150);
+                installpath = Utils.SteamUtils.GetGamePath(43160);
 
 
             if (!String.IsNullOrWhiteSpace(installpath))
@@ -132,7 +118,7 @@ namespace Aurora.Profiles.HotlineMiami
 
         private bool UninstallWrapper()
         {
-            String installpath = Utils.SteamUtils.GetGamePath(219150);
+            String installpath = Utils.SteamUtils.GetGamePath(43160);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "LightFX.dll");

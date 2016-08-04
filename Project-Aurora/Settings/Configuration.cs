@@ -185,7 +185,14 @@ namespace Aurora.Settings
             { "Talos", new Profiles.TheTalosPrinciple.TalosPrincipleProfileManager() },
             { "BF3", new Profiles.BF3.BF3ProfileManager() },
             { "BLight", new Profiles.Blacklight.BLightProfileManager() },
-            { "MagicDuels2012", new Profiles.Magic_Duels_2012.MagicDuels2012ProfileManager() }
+            { "MagicDuels2012", new Profiles.Magic_Duels_2012.MagicDuels2012ProfileManager() },
+            { "ShadowOfMordor", new Profiles.ShadowOfMordor.ShadowOfMordorProfileManager() },
+            { "SSam3", new Profiles.Serious_Sam_3.SSam3ProfileManager() },
+            { "DiscoDodgeball", new Profiles.DiscoDodgeball.DiscoDodgeballProfileManager() },
+            { "XCOM", new Profiles.XCOM.XCOMProfileManager() },
+            { "Evolve", new Profiles.Evolve.EvolveProfileManager() },
+            { "MetroLL", new Profiles.Metro_Last_Light.MetroLLProfileManager() },
+            { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() }
         };
 
         //Overlay Settings

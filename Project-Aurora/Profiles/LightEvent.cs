@@ -2,7 +2,7 @@
 {
     public class LightEvent
     {
-        internal string profilename;
+        internal string profilename = "";
         internal GameState _game_state;
 
         public virtual void UpdateLights(EffectsEngine.EffectFrame frame)

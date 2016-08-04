@@ -266,7 +266,19 @@
     <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
     <Compile Include="Profiles\CSGO\CSGOProfileManager.cs" />
     <Compile Include="Profiles\Desktop\DesktopProfileManager.cs" />
+    <Compile Include="Profiles\DiscoDodgeball\Control_DiscoDodgeball.xaml.cs">
+      <DependentUpon>Control_DiscoDodgeball.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballSettings.cs" />
+    <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballProfileManager.cs" />
+    <Compile Include="Profiles\DiscoDodgeball\GameEvent_DiscoDodgeball.cs" />
     <Compile Include="Profiles\Dota 2\Dota2ProfileManager.cs" />
+    <Compile Include="Profiles\Evolve\Control_Evolve.xaml.cs">
+      <DependentUpon>Control_Evolve.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Evolve\EvolveProfileManager.cs" />
+    <Compile Include="Profiles\Evolve\EvolveSettings.cs" />
+    <Compile Include="Profiles\Evolve\GameEvent_Evolve.cs" />
     <Compile Include="Profiles\Generic_Application\Control_GenericApplication.xaml.cs">
       <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
     </Compile>
@@ -278,6 +290,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Profiles\GTA5\GTA5ProfileManager.cs" />
+    <Compile Include="Profiles\Guild Wars 2\Control_GW2.xaml.cs">
+      <DependentUpon>Control_GW2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Guild Wars 2\GameEvent_GW2.cs" />
+    <Compile Include="Profiles\Guild Wars 2\GW2ProfileManager.cs" />
+    <Compile Include="Profiles\Guild Wars 2\GW2Settings.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
@@ -297,6 +315,12 @@
     <Compile Include="Profiles\Magic_Duels_2012\GameEvent_MagicDuels2012.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012ProfileManager.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Settings.cs" />
+    <Compile Include="Profiles\Metro Last Light\Control_MetroLL.xaml.cs">
+      <DependentUpon>Control_MetroLL.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Metro Last Light\GameEvent_MetroLL.cs" />
+    <Compile Include="Profiles\Metro Last Light\MetroLLProfileManager.cs" />
+    <Compile Include="Profiles\Metro Last Light\MetroLLSettings.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
@@ -332,6 +356,18 @@
     <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueProfileManager.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueSettings.cs" />
+    <Compile Include="Profiles\Serious Sam 3\Control_SSam3.xaml.cs">
+      <DependentUpon>Control_SSam3.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Serious Sam 3\GameEvent_SSam3.cs" />
+    <Compile Include="Profiles\Serious Sam 3\SSam3ProfileManager.cs" />
+    <Compile Include="Profiles\Serious Sam 3\SSam3Settings.cs" />
+    <Compile Include="Profiles\ShadowOfMordor\Control_ShadowOfMordor.xaml.cs">
+      <DependentUpon>Control_ShadowOfMordor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\ShadowOfMordor\GameEvent_ShadowOfMordor.cs" />
+    <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorProfileManager.cs" />
+    <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorSettings.cs" />
     <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
@@ -344,6 +380,12 @@
     <Compile Include="Profiles\TheTalosPrinciple\GameEvent_TalosPrinciple.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleProfileManager.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleSettings.cs" />
+    <Compile Include="Profiles\XCOM\Control_XCOM.xaml.cs">
+      <DependentUpon>Control_XCOM.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\XCOM\GameEvent_XCOM.cs" />
+    <Compile Include="Profiles\XCOM\XCOMProfileManager.cs" />
+    <Compile Include="Profiles\XCOM\XCOMSettings.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -588,7 +630,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\DiscoDodgeball\Control_DiscoDodgeball.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\Dota 2\Control_Dota2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Evolve\Control_Evolve.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -597,6 +647,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\GTA5\Control_GTA5.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Guild Wars 2\Control_GW2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -612,6 +666,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\Metro Last Light\Control_MetroLL.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\Overwatch\Control_Overwatch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -624,11 +682,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\Serious Sam 3\Control_SSam3.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\ShadowOfMordor\Control_ShadowOfMordor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\TheDivision\Control_TheDivision.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\XCOM\Control_XCOM.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -726,6 +796,7 @@
     <Content Include="redist\vc_redist.x86.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\xcom_64x64.png" />
     <None Include="Scripts\Devices\example_py_script.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -752,6 +823,12 @@
     <Resource Include="Resources\talosprinciple_64x64.png" />
     <Resource Include="Resources\unknown_app_icon.png" />
     <Resource Include="Resources\magic_duels_64x64.png" />
+    <Resource Include="Resources\shadow_of_mordor_64x64.png" />
+    <Resource Include="Resources\ssam3_48x48.png" />
+    <Resource Include="Resources\disco_dodgeball_32x32.png" />
+    <Resource Include="Resources\evolve_48x48.png" />
+    <Resource Include="Resources\metro_ll_48x48.png" />
+    <Resource Include="Resources\gw2_48x48.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\FreeForm_Circle.png" />

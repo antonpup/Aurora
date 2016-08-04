@@ -29,7 +29,8 @@ namespace Aurora.Profiles.Aurora_Wrapper
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
             //Scripts
-            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
+            if(!String.IsNullOrWhiteSpace(profilename))
+                Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
 
             frame.AddLayers(layers.ToArray());
         }
@@ -238,6 +239,10 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
                 }
                 //LightFX
+                else if (ngw_state.Command.Equals("LFX_GetNumDevices"))
+                {
+
+                }
                 else if (ngw_state.Command.Equals("LFX_Light"))
                 {
 

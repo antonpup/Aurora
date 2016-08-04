@@ -2,18 +2,18 @@
 using Aurora.EffectsEngine;
 using Aurora.Profiles.Aurora_Wrapper;
 
-namespace Aurora.Profiles.HotlineMiami
+namespace Aurora.Profiles.Evolve
 {
-    public class GameEvent_HM : GameEvent_Aurora_Wrapper
+    public class GameEvent_Evolve : GameEvent_Aurora_Wrapper
     {
-        public GameEvent_HM()
+        public GameEvent_Evolve()
         {
-            profilename = "Hotline";
+            profilename = "Evolve";
         }
 
         public override bool IsEnabled()
         {
-            return (Global.Configuration.ApplicationProfiles[profilename].Settings as HMSettings).isEnabled;
+            return (Global.Configuration.ApplicationProfiles[profilename].Settings as EvolveSettings).isEnabled;
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -24,8 +24,8 @@ namespace Aurora.Profiles.HotlineMiami
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
             //ColorZones
-            EffectLayer cz_layer = new EffectLayer("Hotline - Color Zones");
-            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles[profilename].Settings as HMSettings).lighting_areas.ToArray());
+            EffectLayer cz_layer = new EffectLayer("Evolve - Color Zones");
+            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles[profilename].Settings as EvolveSettings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
             //Scripts
