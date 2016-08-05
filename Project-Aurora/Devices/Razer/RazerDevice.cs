@@ -17,6 +17,7 @@ namespace Aurora.Devices.Razer
         IMouse mouse = null;
         IHeadset headset = null;
         IMousepad mousepad = null;
+        IKeypad keypad = null;
 
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
 
@@ -58,11 +59,13 @@ namespace Aurora.Devices.Razer
                     mouse = Chroma.Instance.Mouse;
                     headset = Chroma.Instance.Headset;
                     mousepad = Chroma.Instance.Mousepad;
+                    keypad = Chroma.Instance.Keypad;
 
                     if (keyboard == null &&
                         mouse == null &&
                         headset == null &&
-                        mousepad == null
+                        mousepad == null &&
+                        keypad == null
                         )
                     {
                         throw new Exception("No devices connected");
@@ -185,6 +188,9 @@ namespace Aurora.Devices.Razer
 
                     if (headset != null)
                         headset.SetAll(color);
+
+                    if (keypad != null)
+                        keypad.SetAll(color);
 
                     previous_peripheral_Color = color;
                     peripheral_updated = true;
