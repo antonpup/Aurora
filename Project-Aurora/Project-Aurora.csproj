@@ -165,6 +165,7 @@
       <HintPath>..\packages\IronPython.2.7.5\lib\Net45\Microsoft.Scripting.Metadata.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Mono.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\CS-Script.bin.3.13.2.0\lib\net45\Mono.CSharp.dll</HintPath>
       <Private>True</Private>

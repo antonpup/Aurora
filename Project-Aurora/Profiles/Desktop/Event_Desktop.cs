@@ -1,6 +1,7 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.EffectsEngine.Functions;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,29 +40,14 @@ namespace Aurora.Profiles.Desktop
 
         public static Int64 GetPhysicalAvailableMemoryInMiB()
         {
-            PerformanceInformation pi = new PerformanceInformation();
-            if (GetPerformanceInfo(out pi, Marshal.SizeOf(pi)))
-            {
-                return Convert.ToInt64((pi.PhysicalAvailable.ToInt64() * pi.PageSize.ToInt64() / 1048576));
-            }
-            else
-            {
-                return -1;
-            }
-
+            ulong availableMemory = new ComputerInfo().AvailablePhysicalMemory;
+            return Convert.ToInt64(availableMemory / 1048576);
         }
 
         public static Int64 GetTotalMemoryInMiB()
         {
-            PerformanceInformation pi = new PerformanceInformation();
-            if (GetPerformanceInfo(out pi, Marshal.SizeOf(pi)))
-            {
-                return Convert.ToInt64((pi.PhysicalTotal.ToInt64() * pi.PageSize.ToInt64() / 1048576));
-            }
-            else
-            {
-                return -1;
-            }
+            ulong availableMemory = new ComputerInfo().TotalPhysicalMemory;
+            return Convert.ToInt64(availableMemory / 1048576);
 
         }
     }
@@ -167,7 +153,7 @@ namespace Aurora.Profiles.Desktop
             currentCPUValue = 0.0f;
             transitionalCPUValue = 0.0f;
 
-            gatherInfo = new System.Timers.Timer(500);
+            gatherInfo = new System.Timers.Timer(1000);
             gatherInfo.Elapsed += GatherInfo_Elapsed;
             gatherInfo.Start();
 

@@ -49,6 +49,13 @@ namespace Aurora
         private PreviewType preview_mode = PreviewType.Desktop;
         private string preview_mode_profile_key = "";
 
+        WinEventDelegate dele = null;
+
+        public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            GetActiveWindowsProcessname();
+        }
+
         public GameEventHandler()
         {
             //Include all pre-made profiles
@@ -68,12 +75,15 @@ namespace Aurora
 
         public bool Init()
         {
+            dele = new WinEventDelegate(WinEventProc);
+            SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
             try
             {
-                update_timer = new Timer(10);
+                update_timer = new Timer(33);
                 update_timer.Elapsed += new ElapsedEventHandler(update_timer_Tick);
-                update_timer.Interval = 10; // in miliseconds
+                update_timer.Interval = 33; // in miliseconds
                 update_timer.Start();
+                GC.KeepAlive(update_timer);
             }
             catch(Exception exc)
             {
@@ -92,6 +102,14 @@ namespace Aurora
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
 
+        delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
+
+        private const uint WINEVENT_OUTOFCONTEXT = 0;
+        private const uint EVENT_SYSTEM_FOREGROUND = 3;
+
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
@@ -99,11 +117,18 @@ namespace Aurora
         {
             try
             {
-                IntPtr hWnd = GetForegroundWindow();
-                uint procId = 0;
-                GetWindowThreadProcessId(hWnd, out procId);
-                var proc = Process.GetProcessById((int)procId);
-                return proc.MainModule.FileName;
+                IntPtr handle = IntPtr.Zero;
+                handle = GetForegroundWindow();
+
+                uint processId;
+                if (GetWindowThreadProcessId(handle, out processId) > 0)
+                {
+                    return Process.GetProcessById((int)processId).MainModule.FileName;
+                }
+                else
+                {
+                    return "";
+                }
             }
             catch (Exception exc)
             {
@@ -114,11 +139,6 @@ namespace Aurora
 
         private void update_timer_Tick(object sender, EventArgs e)
         {
-            if(currentTick >= nextProcessNameUpdate)
-            {
-                process_path = GetActiveWindowsProcessname().ToLowerInvariant();
-                nextProcessNameUpdate = currentTick + 1000L;
-            }
 
             string process_name = System.IO.Path.GetFileName(process_path);
 
@@ -180,7 +200,16 @@ namespace Aurora
             }
             else if(profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
             {
-                update_timer.Interval = 10; // in miliseconds
+                if (process_name == "csgo.exe")
+                {
+                    //Update timer set to 100 ticks a second for CSGO for Smooth Bomb Effect
+                    update_timer.Interval = 10; // in miliseconds
+                }
+                else
+                {
+                    //UPDATE at 30 ticks per second for rest.
+                    update_timer.Interval = 33;
+                }
 
                 if (!(Global.Configuration.time_based_dimming_enabled && Global.Configuration.time_based_dimming_affect_games &&
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
@@ -191,7 +220,7 @@ namespace Aurora
             }
             else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && profiles.ContainsKey(Global.net_listener.WrappedProcess) && profiles[Global.net_listener.WrappedProcess].IsEnabled())
             {
-                update_timer.Interval = 10; // in miliseconds
+                update_timer.Interval = 33; // in miliseconds
 
                 if (!(Global.Configuration.time_based_dimming_enabled && Global.Configuration.time_based_dimming_affect_games &&
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
@@ -230,12 +259,6 @@ namespace Aurora
             //Debug.WriteLine("Received gs!");
 
             //Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
-
-            if (currentTick >= nextProcessNameUpdate)
-            {
-                process_path = GetActiveWindowsProcessname().ToLowerInvariant();
-                nextProcessNameUpdate = currentTick + 1000L;
-            }
 
             string process_name = System.IO.Path.GetFileName(process_path);
 
