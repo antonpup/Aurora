@@ -1,13 +1,9 @@
-﻿using Aurora.EffectsEngine;
-using CUE.NET;
-using CUE.NET.Brushes;
-using CUE.NET.Devices.Generic;
+﻿using CUE.NET;
 using CUE.NET.Devices.Generic.Enums;
 using CUE.NET.Devices.Headset;
 using CUE.NET.Devices.Headset.Enums;
 using CUE.NET.Devices.Keyboard;
 using CUE.NET.Devices.Keyboard.Enums;
-using CUE.NET.Devices.Keyboard.Keys;
 using CUE.NET.Devices.Mouse;
 using CUE.NET.Devices.Mouse.Enums;
 using CUE.NET.Exceptions;
@@ -15,8 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Devices.Corsair
 {

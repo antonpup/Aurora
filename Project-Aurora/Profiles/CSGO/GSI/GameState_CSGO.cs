@@ -10,6 +10,9 @@ using Aurora.Profiles.CSGO.GSI.Nodes;
 
 namespace Aurora.Profiles.CSGO.GSI
 {
+    /// <summary>
+    /// A class representing various information retaining to Game State Integration of Counter-Strike: Global Offensive
+    /// </summary>
     public class GameState_CSGO : GameState
     {
         private ProviderNode _Provider;
@@ -21,6 +24,9 @@ namespace Aurora.Profiles.CSGO.GSI
         private GameState_CSGO _Added;
         private AuthNode _Auth;
 
+        /// <summary>
+        /// Information about the provider of this GameState
+        /// </summary>
         public ProviderNode Provider
         {
             get
@@ -33,6 +39,10 @@ namespace Aurora.Profiles.CSGO.GSI
                 return _Provider;
             }
         }
+
+        /// <summary>
+        /// Information about the current map
+        /// </summary>
         public MapNode Map
         {
             get
@@ -45,6 +55,10 @@ namespace Aurora.Profiles.CSGO.GSI
                 return _Map;
             }
         }
+
+        /// <summary>
+        /// Information about the current round
+        /// </summary>
         public RoundNode Round
         {
             get
@@ -57,6 +71,10 @@ namespace Aurora.Profiles.CSGO.GSI
                 return _Round;
             }
         }
+
+        /// <summary>
+        /// Information about the current player
+        /// </summary>
         public PlayerNode Player
         {
             get
@@ -69,6 +87,10 @@ namespace Aurora.Profiles.CSGO.GSI
                 return _Player;
             }
         }
+
+        /// <summary>
+        /// Information about all players in the lobby
+        /// </summary>
         public AllPlayersNode AllPlayers
         {
             get
@@ -81,6 +103,10 @@ namespace Aurora.Profiles.CSGO.GSI
                 return _AllPlayers;
             }
         }
+
+        /// <summary>
+        /// A previous GameState
+        /// </summary>
         public GameState_CSGO Previously
         {
             get
@@ -93,6 +119,10 @@ namespace Aurora.Profiles.CSGO.GSI
                 return _Previously;
             }
         }
+
+        /// <summary>
+        /// A GameState with only added information
+        /// </summary>
         public GameState_CSGO Added
         {
             get
@@ -104,6 +134,10 @@ namespace Aurora.Profiles.CSGO.GSI
                 return _Added;
             }
         }
+
+        /// <summary>
+        /// Information about GSI authentication
+        /// </summary>
         public AuthNode Auth
         {
             get
@@ -117,12 +151,19 @@ namespace Aurora.Profiles.CSGO.GSI
             }
         }
 
+        /// <summary>
+        /// Creates a default GameState_CSGO instance.
+        /// </summary>
         public GameState_CSGO()
         {
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
 
+        /// <summary>
+        /// Creates a GameState_CSGO instance based on the passed json data.
+        /// </summary>
+        /// <param name="JSONstring">The passed json data</param>
         public GameState_CSGO(string JSONstring)
         {
             if (String.IsNullOrWhiteSpace(JSONstring))
@@ -132,6 +173,10 @@ namespace Aurora.Profiles.CSGO.GSI
             _ParsedData = JObject.Parse(JSONstring);
         }
 
+        /// <summary>
+        /// A copy constructor, creates a GameState_CSGO instance based on the data from the passed GameState instance.
+        /// </summary>
+        /// <param name="other_state">The passed GameState</param>
         public GameState_CSGO(GameState other_state) : base(other_state)
         {
         }

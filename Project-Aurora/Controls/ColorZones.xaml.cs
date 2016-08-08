@@ -6,11 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora.Controls
 {
-    /// <summary>
-    /// Interaction logic for ColorZones.xaml
-    /// </summary>
     public partial class ColorZones : UserControl
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -36,8 +34,7 @@ namespace Aurora.Controls
                         cz_list.SelectedIndex = 0;
                 }
 
-                if (ColorZonesListUpdated != null)
-                    ColorZonesListUpdated(this, new EventArgs());
+                ColorZonesListUpdated?.Invoke(this, new EventArgs());
 
                 verifyColorZones();
             }
@@ -250,3 +247,5 @@ namespace Aurora.Controls
         }
     }
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

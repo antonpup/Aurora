@@ -1,13 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aurora.Settings
+﻿namespace Aurora.Settings
 {
+    /// <summary>
+    /// The type of the FreeForm region.
+    /// </summary>
     public enum FreeFormType
     {
         Line,
@@ -17,78 +12,109 @@ namespace Aurora.Settings
         CircleFilled
     }
 
+    /// <summary>
+    /// A delegate for a changed value
+    /// </summary>
+    /// <param name="newobject">The current instance of FreeFormObject</param>
     public delegate void ValuesChangedEventHandler(FreeFormObject newobject);
 
+    /// <summary>
+    /// A class representing a region within a bitmap.
+    /// </summary>
     public class FreeFormObject
     {
         FreeFormType _type;
+        /// <summary>
+        /// Get/Set the type of this region.
+        /// </summary>
         public FreeFormType Type
         {
             get { return _type; }
             set
             {
                 _type = value;
-                if (ValuesChanged != null) ValuesChanged(this);
+                ValuesChanged?.Invoke(this);
             }
         }
 
         float _x;
+        /// <summary>
+        /// Get/Set the X coordinate for this region.
+        /// </summary>
         public float X
         {
             get { return _x; }
             set
             {
                 _x = value;
-                if (ValuesChanged != null) ValuesChanged(this);
+                ValuesChanged?.Invoke(this);
             }
         }
 
         float _y;
+        /// <summary>
+        /// Get/Set the Y coordinate for this region.
+        /// </summary>
         public float Y
         {
             get { return _y; }
             set
             {
                 _y = value;
-                if (ValuesChanged != null) ValuesChanged(this);
+                ValuesChanged?.Invoke(this);
             }
         }
 
         float _width;
+        /// <summary>
+        /// Get/Set the Width of this region.
+        /// </summary>
         public float Width
         {
             get { return _width; }
             set
             {
                 _width = value;
-                if (ValuesChanged != null) ValuesChanged(this);
+                ValuesChanged?.Invoke(this);
             }
         }
 
         float _height;
+        /// <summary>
+        /// Get/Set the Height of this region.
+        /// </summary>
         public float Height
         {
             get { return _height; }
             set
             {
                 _height = value;
-                if (ValuesChanged != null) ValuesChanged(this);
+                ValuesChanged?.Invoke(this);
             }
         }
 
         float _angle;
+        /// <summary>
+        /// Get/Set the rotation angle of this region.
+        /// </summary>
         public float Angle
         {
             get { return _angle; }
             set
             {
                 _angle = value;
-                if (ValuesChanged != null) ValuesChanged(this);
+                ValuesChanged?.Invoke(this);
             }
         }
 
+        /// <summary>
+        /// Event for when any value of this FreeFormObject changes.
+        /// </summary>
         public event ValuesChangedEventHandler ValuesChanged;
 
+        /// <summary>
+        /// Creates a default instance of the FreeFormObject
+        /// </summary>
         public FreeFormObject()
         {
             _type = FreeFormType.Rectangle;
@@ -99,6 +125,14 @@ namespace Aurora.Settings
             _angle = 0.0f;
         }
 
+        /// <summary>
+        /// Creates an instance of the FreeFormObject with specified parameters.
+        /// </summary>
+        /// <param name="x">The X coordinate</param>
+        /// <param name="y">The Y coordinate</param>
+        /// <param name="width">The Width</param>
+        /// <param name="height">The Height</param>
+        /// <param name="angle">The rotation angle</param>
         public FreeFormObject(float x, float y, float width = 30.0f, float height = 30.0f, float angle = 0.0f)
         {
             _type = FreeFormType.Rectangle;
@@ -109,6 +143,11 @@ namespace Aurora.Settings
             _angle = angle;
         }
 
+        /// <summary>
+        /// An equals function, compares this instance of FreeFormObject to another object and returns whether or not they are equal.
+        /// </summary>
+        /// <param name="obj">An object to be compared</param>
+        /// <returns>A boolean value representing equality</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -117,6 +156,11 @@ namespace Aurora.Settings
             return Equals((FreeFormObject)obj);
         }
 
+        /// <summary>
+        /// An equals function, compares this instance of FreeFormObject to another instance of FreeFormObject and returns whether or not they are equal.
+        /// </summary>
+        /// <param name="p">An instance of FreeFormObject to be compared</param>
+        /// <returns>A boolean value representing equality</returns>
         public bool Equals(FreeFormObject p)
         {
             return _type == p._type &&
@@ -127,6 +171,10 @@ namespace Aurora.Settings
                 _angle == p._angle;
         }
 
+        /// <summary>
+        /// Generates a hash code representing this FreeFormObject
+        /// </summary>
+        /// <returns>A hashcode unique to this FreeFormObject</returns>
         public override int GetHashCode()
         {
             unchecked

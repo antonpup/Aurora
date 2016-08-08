@@ -3,33 +3,55 @@ using System.Collections.Generic;
 
 namespace Aurora.EffectsEngine
 {
+    /// <summary>
+    /// A class representative of one frame. Contains a list of EffectLayers as layers and overlay layers.
+    /// </summary>
     public class EffectFrame : IDisposable
     {
         Queue<EffectLayer> over_layers = new Queue<EffectLayer>();
         Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
+        /// <summary>
+        /// A default constructor for EffectFrame class
+        /// </summary>
         public EffectFrame()
         {
 
         }
 
+        /// <summary>
+        /// Adds layers into the frame
+        /// </summary>
+        /// <param name="effectLayers">Array of layers to be added</param>
         public void AddLayers(EffectLayer[] effectLayers)
         {
             foreach (EffectLayer layer in effectLayers)
                 layers.Enqueue(layer);
         }
 
+        /// <summary>
+        /// Add overlay layers into the frame
+        /// </summary>
+        /// <param name="effectLayers">Array of layers to be added</param>
         public void AddOverlayLayers(EffectLayer[] effectLayers)
         {
             foreach(EffectLayer layer in effectLayers)
                 over_layers.Enqueue(layer);
         }
 
+        /// <summary>
+        /// Gets the queue of layers
+        /// </summary>
+        /// <returns>Queue of layers</returns>
         public Queue<EffectLayer> GetLayers()
         {
             return new Queue<EffectLayer>(layers);
         }
 
+        /// <summary>
+        /// Gets the queue of overlay layers
+        /// </summary>
+        /// <returns>Queue of overlay layers</returns>
         public Queue<EffectLayer> GetOverlayLayers()
         {
             return new Queue<EffectLayer>(over_layers);

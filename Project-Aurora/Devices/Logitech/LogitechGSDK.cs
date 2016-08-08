@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace LedCSharp
 {
-    
     public enum keyboardNames
     {
         ESC = 0x01,
@@ -193,3 +191,5 @@ namespace LedCSharp
     }
 
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

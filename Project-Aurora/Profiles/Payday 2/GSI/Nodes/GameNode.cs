@@ -2,8 +2,14 @@
 
 namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
+    /// <summary>
+    /// Information about the game
+    /// </summary>
     public class GameNode : Node
     {
+        /// <summary>
+        /// The game state
+        /// </summary>
         public readonly GameStates State;
 
         internal GameNode(string JSON) : base(JSON)
@@ -12,22 +18,56 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
         }
     }
 
+    /// <summary>
+    /// Enum for each game state
+    /// </summary>
     public enum GameStates
     {
+        /// <summary>
+        /// Undefined
+        /// </summary>
         [Description("Undefined")]
         Undefined,
+
+        /// <summary>
+        /// None
+        /// </summary>
         [Description("None")]
         None,
+
+        /// <summary>
+        /// In pause menu
+        /// </summary>
         [Description("Pause Menu")]
         Menu_Pause,
+
+        /// <summary>
+        /// In the in-game lobby
+        /// </summary>
         [Description("Ingame lobby")]
         Kit_menu,
+
+        /// <summary>
+        /// In-game
+        /// </summary>
         [Description("In-game")]
         Ingame,
+
+        /// <summary>
+        /// In the card drop screen
+        /// </summary>
         [Description("Card Drop")]
         Loot_menu,
+
+        /// <summary>
+        /// In the mission failed screen
+        /// </summary>
         [Description("Mission failed")]
         Mission_end_success,
+
+        /// <summary>
+        /// In the mission success screen
+        /// </summary>
         [Description("Mission success")]
         Mission_end_failure
     }

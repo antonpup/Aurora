@@ -7,16 +7,39 @@ using System.Threading.Tasks;
 
 namespace Aurora.Settings
 {
+    /// <summary>
+    /// The type of the KeySequence
+    /// </summary>
     public enum KeySequenceType
     {
+        /// <summary>
+        /// Sequence uses an array of DeviceKeys keys
+        /// </summary>
         Sequence,
+        /// <summary>
+        /// Sequence uses a freeform region
+        /// </summary>
         FreeForm
     }
 
+    /// <summary>
+    /// A class representing a series of DeviceKeys keys or a freeform region
+    /// </summary>
     public class KeySequence
     {
+        /// <summary>
+        /// An array of DeviceKeys keys to be used with KeySequenceType.Sequence type.
+        /// </summary>
         public List<Devices.DeviceKeys> keys;
+
+        /// <summary>
+        /// The type of this KeySequence instance.
+        /// </summary>
         public KeySequenceType type;
+
+        /// <summary>
+        /// The Freeform object to be used with KeySequenceType.FreeForm type
+        /// </summary>
         public FreeFormObject freeform;
 
         public KeySequence()

@@ -126,8 +126,6 @@ namespace Aurora
             }
         }
 
-        //public static readonly Devices.DeviceKeys[] allKeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
-
         private static Dictionary<Devices.DeviceKeys, Bitmaping> bitmap_map = new Dictionary<Devices.DeviceKeys, Bitmaping>();
 
         private static Dictionary<Devices.DeviceKeys, Color> keyColors = new Dictionary<Devices.DeviceKeys, Color>();

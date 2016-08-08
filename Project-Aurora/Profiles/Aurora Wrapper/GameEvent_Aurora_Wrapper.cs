@@ -334,6 +334,10 @@ namespace Aurora.Profiles.Aurora_Wrapper
                     current_effect = null;
                 }
                 //Razer
+                else if(ngw_state.Command.Equals("CreateMouseEffect"))
+                {
+
+                }
                 else if (ngw_state.Command.Equals("CreateKeyboardEffect"))
                 {
                     Color primary = Color.Red;

@@ -16,12 +16,10 @@ using Aurora.Controls;
 using Aurora.Profiles.Generic_Application;
 using System.IO;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
 {
-    /// <summary>
-    /// Interaction logic for ConfigUI.xaml
-    /// </summary>
-    public partial class ConfigUI : Window
+    partial class ConfigUI : Window
     {
         Settings.Control_Settings settings_control = new Settings.Control_Settings();
         Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
@@ -630,3 +628,5 @@ namespace Aurora
         }
     }
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

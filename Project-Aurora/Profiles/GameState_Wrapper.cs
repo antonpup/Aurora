@@ -3,6 +3,9 @@ using System;
 
 namespace Aurora.Profiles
 {
+    /// <summary>
+    /// A class representing various lighting information retaining to the wrapper.
+    /// </summary>
     public class GameState_Wrapper : GameState
     {
         private Provider_Wrapper _Provider;
@@ -11,6 +14,9 @@ namespace Aurora.Profiles
         private byte[] _Bitmap;
         private Extra_Keys_Wrapper _Extra_Keys;
 
+        /// <summary>
+        /// Information about the provider of this GameState
+        /// </summary>
         public Provider_Wrapper Provider
         {
             get
@@ -24,6 +30,9 @@ namespace Aurora.Profiles
             }
         }
 
+        /// <summary>
+        /// The sent wrapper command
+        /// </summary>
         public string Command
         {
             get
@@ -42,6 +51,9 @@ namespace Aurora.Profiles
             }
         }
 
+        /// <summary>
+        /// Data related to the passed command
+        /// </summary>
         public Command_Wrapper Command_Data
         {
             get
@@ -55,6 +67,9 @@ namespace Aurora.Profiles
             }
         }
 
+        /// <summary>
+        /// The bitmap sent from the wrapper
+        /// </summary>
         public byte[] Sent_Bitmap
         {
             get
@@ -73,6 +88,9 @@ namespace Aurora.Profiles
             }
         }
 
+        /// <summary>
+        /// Lighting information for extra keys that are not part of the bitmap
+        /// </summary>
         public Extra_Keys_Wrapper Extra_Keys
         {
             get
@@ -86,12 +104,19 @@ namespace Aurora.Profiles
             }
         }
 
+        /// <summary>
+        /// Creates a default GameState_Wrapper instance.
+        /// </summary>
         public GameState_Wrapper()
         {
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
 
+        /// <summary>
+        /// Creates a GameState_Wrapper instance based on the passed json data.
+        /// </summary>
+        /// <param name="json_data">The passed json data</param>
         public GameState_Wrapper(string json_data) : base(json_data)
         {
             if (String.IsNullOrWhiteSpace(json_data))
@@ -101,14 +126,28 @@ namespace Aurora.Profiles
             _ParsedData = JObject.Parse(json_data);
         }
 
+        /// <summary>
+        /// A copy constructor, creates a GameState_Wrapper instance based on the data from the passed GameState instance.
+        /// </summary>
+        /// <param name="other_state">The passed GameState</param>
         public GameState_Wrapper(GameState other_state) : base(other_state)
         {
         }
     }
 
+    /// <summary>
+    /// Class representing provider information for the wrapper
+    /// </summary>
     public class Provider_Wrapper : Node
     {
+        /// <summary>
+        /// Name of the program
+        /// </summary>
         public readonly string Name;
+
+        /// <summary>
+        /// AppID of the program (for wrappers, always 0)
+        /// </summary>
         public int AppID;
 
         internal Provider_Wrapper(string JSON)
@@ -119,6 +158,9 @@ namespace Aurora.Profiles
         }
     }
 
+    /// <summary>
+    /// Class for additional wrapper command data such as effects and colors
+    /// </summary>
     public class Command_Wrapper : Node
     {
         public readonly int red_start;
@@ -152,6 +194,9 @@ namespace Aurora.Profiles
         }
     }
 
+    /// <summary>
+    /// Class for additional wrapper keys
+    /// </summary>
     public class Extra_Keys_Wrapper : Node
     {
         public readonly int[] peripheral;

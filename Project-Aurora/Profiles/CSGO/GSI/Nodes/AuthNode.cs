@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.CSGO.GSI.Nodes
 {
+    /// <summary>
+    /// A class representing the authentication information for GSI
+    /// </summary>
     public class AuthNode : Node
     {
+        /// <summary>
+        /// The auth token sent by GSI
+        /// </summary>
         public readonly string Token;
 
         internal AuthNode(string JSON)

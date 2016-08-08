@@ -5,6 +5,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora.Controls.EditorResources
 {
     public class RotateThumb : Thumb
@@ -70,3 +71,5 @@ namespace Aurora.Controls.EditorResources
         }
     }
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

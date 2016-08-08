@@ -2,13 +2,39 @@
 
 namespace Aurora.Profiles.CSGO.GSI.Nodes
 {
+    /// <summary>
+    /// Class representing information about the map
+    /// </summary>
     public class MapNode : Node
     {
+        /// <summary>
+        /// Current gamemode
+        /// </summary>
         public readonly MapMode Mode;
+
+        /// <summary>
+        /// Name of the current map
+        /// </summary>
         public readonly string Name;
+
+        /// <summary>
+        /// Current phase of the map
+        /// </summary>
         public readonly MapPhase Phase;
+
+        /// <summary>
+        /// Current round
+        /// </summary>
         public readonly int Round;
+
+        /// <summary>
+        /// Counter-Terrorist team information
+        /// </summary>
         public readonly MapTeamNode TeamCT;
+
+        /// <summary>
+        /// Terrorist team information
+        /// </summary>
         public readonly MapTeamNode TeamT;
 
         internal MapNode(string JSON)
@@ -23,30 +49,76 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         }
     }
 
+    /// <summary>
+    /// Enum list for each phase of the map
+    /// </summary>
     public enum MapPhase
     {
+        /// <summary>
+        /// Undefined phase
+        /// </summary>
         Undefined,
+
+        /// <summary>
+        /// Warmup phase
+        /// </summary>
         Warmup,
+
+        /// <summary>
+        /// Live match phase
+        /// </summary>
         Live,
+
+        /// <summary>
+        /// Intermission phase
+        /// </summary>
         Intermission,
+
+        /// <summary>
+        /// Match Over phase
+        /// </summary>
         GameOver
     }
 
     public enum MapMode
     {
+        /// <summary>
+        /// Undefined gamemode
+        /// </summary>
         Undefined,
+
+        /// <summary>
+        /// Casual gamemode
+        /// </summary>
         Casual,
+
+        /// <summary>
+        /// Competitive gamemode
+        /// </summary>
         Competitive,
+
+        /// <summary>
+        /// Deathmatch gamemode
+        /// </summary>
         DeathMatch,
         /// <summary>
         /// Gun Game
         /// </summary>
         GunGameProgressive,
+
         /// <summary>
-        /// Arms Race & Demolition
+        /// Arms Race/Demolition gamemode
         /// </summary>
         GunGameTRBomb,
+
+        /// <summary>
+        /// Cooperational mission gamemode
+        /// </summary>
         CoopMission,
+
+        /// <summary>
+        /// Custom gamemode
+        /// </summary>
         Custom
     }
 }

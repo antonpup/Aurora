@@ -67,6 +67,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -79,6 +82,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -250,7 +256,6 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
-    <Compile Include="EffectsEngine\EffectSmoothColorSpectrum.cs" />
     <Compile Include="InputEventsSubscriptions.cs" />
     <Compile Include="Profiles\BF3\BF3ProfileManager.cs" />
     <Compile Include="Profiles\BF3\BF3Settings.cs" />
@@ -402,7 +407,7 @@
     <Compile Include="Devices\Logitech\LogitechDevice.cs" />
     <Compile Include="EffectsEngine\EffectColor.cs" />
     <Compile Include="EffectsEngine\EffectColorFunction.cs" />
-    <Compile Include="EffectsEngine\EffectColorSpectrum.cs" />
+    <Compile Include="EffectsEngine\ColorSpectrum.cs" />
     <Compile Include="EffectsEngine\EffectFrame.cs" />
     <Compile Include="EffectsEngine\Functions\EffectCircle.cs" />
     <Compile Include="EffectsEngine\Functions\EffectFunction.cs" />

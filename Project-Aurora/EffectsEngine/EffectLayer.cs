@@ -6,11 +6,13 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.EffectsEngine
 {
+    /// <summary>
+    /// A class representing a bitmap layer for effects
+    /// </summary>
     public class EffectLayer : IDisposable
     {
         private String name;
@@ -25,6 +27,9 @@ namespace Aurora.EffectsEngine
 
         static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
 
+        /// <summary>
+        /// Creates a new instance of the EffectLayer class with default parameters.
+        /// </summary>
         public EffectLayer()
         {
             name = "Effect Layer";
@@ -34,6 +39,10 @@ namespace Aurora.EffectsEngine
             Fill(Color.FromArgb(0, 0, 0, 0));
         }
 
+        /// <summary>
+        ///  A copy constructor, Creates a new instance of the EffectLayer class from another EffectLayer instance.
+        /// </summary>
+        /// <param name="another_layer">EffectLayer instance to copy data from</param>
         public EffectLayer(EffectLayer another_layer)
         {
             this.name = another_layer.name;
@@ -44,6 +53,10 @@ namespace Aurora.EffectsEngine
             post_functions = new List<EffectColorFunction>(another_layer.post_functions);
         }
 
+        /// <summary>
+        /// Creates a new instance of the EffectLayer class with a specified layer name.
+        /// </summary>
+        /// <param name="name">A layer name</param>
         public EffectLayer(string name)
         {
             this.name = name;
@@ -53,6 +66,11 @@ namespace Aurora.EffectsEngine
             Fill(Color.FromArgb(0, 0, 0, 0));
         }
 
+        /// <summary>
+        /// Creates a new instance of the EffectLayer class with a specified layer name. And fills the layer bitmap with a specified color.
+        /// </summary>
+        /// <param name="name">A layer name</param>
+        /// <param name="color">A color to fill the bitmap with</param>
         public EffectLayer(string name, Color color)
         {
             this.name = name;
@@ -62,6 +80,14 @@ namespace Aurora.EffectsEngine
             Fill(color);
         }
 
+        /// <summary>
+        /// Creates a new instance of the EffectLayer class with a specified layer name. And applies a LayerEffect onto this EffectLayer instance.
+        /// Using the parameters from LayerEffectConfig and a specified region in RectangleF
+        /// </summary>
+        /// <param name="name">A layer name</param>
+        /// <param name="effect">An enum specifying which LayerEffect to apply</param>
+        /// <param name="effect_config">Configurations for the LayerEffect</param>
+        /// <param name="rect">A rectangle specifying what region to apply effects in</param>
         public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effect_config, RectangleF rect = new RectangleF())
         {
             this.name = name;
@@ -286,6 +312,10 @@ namespace Aurora.EffectsEngine
             colormap = null;
         }
 
+        /// <summary>
+        /// Creates a rainbow gradient brush, to be used in effects.
+        /// </summary>
+        /// <returns>Rainbow LinearGradientBrush</returns>
         private LinearGradientBrush CreateRainbowBrush()
         {
             LinearGradientBrush the_brush =
@@ -319,6 +349,10 @@ namespace Aurora.EffectsEngine
             return the_brush;
         }
 
+        /// <summary>
+        /// Fills the entire bitmap of the EffectLayer with a specified brush.
+        /// </summary>
+        /// <param name="brush">Brush to be used during bitmap fill</param>
         public void Fill(Brush brush)
         {
             using (Graphics g = Graphics.FromImage(colormap))
@@ -342,6 +376,10 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        /// <summary>
+        /// Fills the entire bitmap of the EffectLayer with a specified color.
+        /// </summary>
+        /// <param name="color">Color to be used during bitmap fill</param>
         public void Fill(Color color)
         {
             using (Graphics g = Graphics.FromImage(colormap))
@@ -352,7 +390,12 @@ namespace Aurora.EffectsEngine
             }
         }
 
-
+        /// <summary>
+        /// Sets a specific coordinate on the bitmap with a specified color.
+        /// </summary>
+        /// <param name="x">X Coordinate on the bitmap</param>
+        /// <param name="y">Y Coordinate on the bitmap</param>
+        /// <param name="color">Color to be used</param>
         public void Set(int x, int y, Color color)
         {
             BitmapData srcData = colormap.LockBits(
@@ -379,11 +422,21 @@ namespace Aurora.EffectsEngine
             needsRender = true;
         }
 
+        /// <summary>
+        /// Sets a specific Devices.DeviceKeys on the bitmap with a specified color.
+        /// </summary>
+        /// <param name="key">DeviceKey to be set</param>
+        /// <param name="color">Color to be used</param>
         public void Set(Devices.DeviceKeys key, Color color)
         {
             SetOneKey(key, color);
         }
 
+        /// <summary>
+        /// Sets a specific KeySequence on the bitmap with a specified color.
+        /// </summary>
+        /// <param name="sequence">KeySequence to specify what regions of the bitmap need to be changed</param>
+        /// <param name="color">Color to be used</param>
         public void Set(KeySequence sequence, Color color)
         {
             if (sequence.type == KeySequenceType.Sequence)
@@ -416,6 +469,11 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        /// <summary>
+        /// Sets one DeviceKeys key with a specific color on the bitmap
+        /// </summary>
+        /// <param name="key">DeviceKey to be set</param>
+        /// <param name="color">Color to be used</param>
         private void SetOneKey(Devices.DeviceKeys key, Color color)
         {
             Bitmaping keymaping = Effects.GetBitmappingFromDeviceKey(key);
@@ -444,6 +502,12 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        /// <summary>
+        /// Retrieves a color of the specified X and Y coordinate on the bitmap
+        /// </summary>
+        /// <param name="x">X Coordiante on the bitmap</param>
+        /// <param name="y">Y Coordinate on the bitmap</param>
+        /// <returns>Color at (X,Y)</returns>
         public Color Get(int x, int y)
         {
             if (needsRender)
@@ -476,65 +540,81 @@ namespace Aurora.EffectsEngine
             return Color.FromArgb(alpha, red, green, blue);
         }
 
+        /// <summary>
+        /// Retrieves a color of the specified DeviceKeys key from the bitmap
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <returns>Color of the Key</returns>
         public Color Get(Devices.DeviceKeys key)
         {
-            Bitmaping keymaping = Effects.GetBitmappingFromDeviceKey(key);
-
-            if (keymaping.Equals(new Bitmaping(0, 0, 0, 0)) && key == Devices.DeviceKeys.Peripheral)
+            try
             {
-                return peripheral;
-            }
-            else
-            {
-                if (keymaping.bottomright_x - keymaping.topleft_x == 0 || keymaping.bottomright_y - keymaping.topleft_y == 0)
-                    return Color.FromArgb(0, 0, 0);
+                Bitmaping keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-                if (needsRender)
-                    RenderLayer();
-
-                EffectColor color = new EffectColor(0, 0, 0, 0);
-
-                long Red = 0;
-                long Green = 0;
-                long Blue = 0;
-                long Alpha = 0;
-
-                BitmapData srcData = colormap.LockBits(
-                    new Rectangle(keymaping.topleft_x, keymaping.topleft_y, keymaping.bottomright_x - keymaping.topleft_x, keymaping.bottomright_y - keymaping.topleft_y),
-                    ImageLockMode.ReadOnly,
-                    PixelFormat.Format32bppArgb);
-
-                int stride = srcData.Stride;
-
-                IntPtr Scan0 = srcData.Scan0;
-
-                int width = keymaping.bottomright_x - keymaping.topleft_x;
-                int height = keymaping.bottomright_y - keymaping.topleft_y;
-
-                unsafe
+                if (keymaping.Equals(new Bitmaping(0, 0, 0, 0)) && key == Devices.DeviceKeys.Peripheral)
                 {
-                    byte* p = (byte*)(void*)Scan0;
+                    return peripheral;
+                }
+                else
+                {
+                    if (keymaping.bottomright_x - keymaping.topleft_x == 0 || keymaping.bottomright_y - keymaping.topleft_y == 0)
+                        return Color.FromArgb(0, 0, 0);
 
-                    for (int y = 0; y < height; y++)
+                    if (needsRender)
+                        RenderLayer();
+
+                    long Red = 0;
+                    long Green = 0;
+                    long Blue = 0;
+                    long Alpha = 0;
+
+                    BitmapData srcData = colormap.LockBits(
+                        new Rectangle(keymaping.topleft_x, keymaping.topleft_y, keymaping.bottomright_x - keymaping.topleft_x, keymaping.bottomright_y - keymaping.topleft_y),
+                        ImageLockMode.ReadOnly,
+                        PixelFormat.Format32bppArgb);
+
+                    int stride = srcData.Stride;
+
+                    IntPtr Scan0 = srcData.Scan0;
+
+                    int width = keymaping.bottomright_x - keymaping.topleft_x;
+                    int height = keymaping.bottomright_y - keymaping.topleft_y;
+
+                    unsafe
                     {
-                        for (int x = 0; x < width; x++)
+                        byte* p = (byte*)(void*)Scan0;
+
+                        for (int y = 0; y < height; y++)
                         {
-                            Blue += p[(y * stride) + x * 4];
-                            Green += p[(y * stride) + x * 4 + 1];
-                            Red += p[(y * stride) + x * 4 + 2];
-                            Alpha += p[(y * stride) + x * 4 + 3];
+                            for (int x = 0; x < width; x++)
+                            {
+                                Blue += p[(y * stride) + x * 4];
+                                Green += p[(y * stride) + x * 4 + 1];
+                                Red += p[(y * stride) + x * 4 + 2];
+                                Alpha += p[(y * stride) + x * 4 + 3];
+                            }
                         }
                     }
+
+                    int Colorscount = width * height;
+
+                    colormap.UnlockBits(srcData);
+
+                    return Color.FromArgb((int)(Alpha / Colorscount), (int)(Red / Colorscount), (int)(Green / Colorscount), (int)(Blue / Colorscount));
                 }
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine("EffectLayer.Get() Exception: " + exc, Logging_Level.Error);
 
-                int Colorscount = width * height;
-
-                colormap.UnlockBits(srcData);
-
-                return Color.FromArgb((int)(Alpha / Colorscount), (int)(Red / Colorscount), (int)(Green / Colorscount), (int)(Blue / Colorscount));
+                return Color.FromArgb(0, 0, 0);
             }
         }
 
+        /// <summary>
+        /// Get an instance of Drawing.Graphics, to allow drawing on the bitmap.
+        /// </summary>
+        /// <returns>Graphics instance</returns>
         public Graphics GetGraphics()
         {
             if (needsRender)
@@ -543,6 +623,10 @@ namespace Aurora.EffectsEngine
             return Graphics.FromImage(colormap);
         }
 
+        /// <summary>
+        /// Get the current layer bitmap.
+        /// </summary>
+        /// <returns>Layer Bitmap</returns>
         public Bitmap GetBitmap()
         {
             if (needsRender)
@@ -551,28 +635,40 @@ namespace Aurora.EffectsEngine
             return colormap;
         }
 
-        public static EffectLayer operator +(EffectLayer layer1, EffectLayer layer2)
+        /// <summary>
+        /// + Operator, sums two EffectLayer together.
+        /// </summary>
+        /// <param name="lhs">Left Hand Side EffectLayer</param>
+        /// <param name="rhs">Right Hand Side EffectLayer</param>
+        /// <returns>A new instance of EffectLayer, which is a combination of two passed EffectLayers</returns>
+        public static EffectLayer operator +(EffectLayer lhs, EffectLayer rhs)
         {
-            EffectLayer added = new EffectLayer(layer1);
-            added.name += " + " + layer2.name;
+            EffectLayer added = new EffectLayer(lhs);
+            added.name += " + " + rhs.name;
 
             if (added.needsRender)
                 added.RenderLayer();
 
-            if (layer2.needsRender)
-                layer2.RenderLayer();
+            if (rhs.needsRender)
+                rhs.RenderLayer();
 
             using (Graphics g = added.GetGraphics())
             {
-                lock (layer2.bufferLock)
-                    g.DrawImage(layer2.colormap, 0, 0);
+                lock (rhs.bufferLock)
+                    g.DrawImage(rhs.colormap, 0, 0);
             }
 
-            added.Set(Devices.DeviceKeys.Peripheral, Utils.ColorUtils.AddColors(layer1.Get(Devices.DeviceKeys.Peripheral), layer2.Get(Devices.DeviceKeys.Peripheral)));
+            added.Set(Devices.DeviceKeys.Peripheral, Utils.ColorUtils.AddColors(lhs.Get(Devices.DeviceKeys.Peripheral), rhs.Get(Devices.DeviceKeys.Peripheral)));
 
             return added;
         }
 
+        /// <summary>
+        /// * Operator, Multiplies an EffectLayer by a double, adjusting opacity and color of the layer bitmap.
+        /// </summary>
+        /// <param name="layer">EffectLayer to be adjusted</param>
+        /// <param name="value">Double value that each bit in the bitmap will be multiplied by</param>
+        /// <returns>The passed instance of EffectLayer with adjustments</returns>
         public static EffectLayer operator *(EffectLayer layer, double value)
         {
             BitmapData srcData = layer.colormap.LockBits(
@@ -610,23 +706,49 @@ namespace Aurora.EffectsEngine
             return layer;
         }
 
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType effectType = PercentEffectType.Progressive)
+        /// <summary>
+        /// Draws a percent effect on the layer bitmap using a KeySequence with solid colors.
+        /// </summary>
+        /// <param name="foregroundColor">The foreground color, used as a "Progress bar color"</param>
+        /// <param name="backgroundColor">The background color</param>
+        /// <param name="sequence">The sequence of keys that the percent effect will be drawn on</param>
+        /// <param name="value">The current progress value</param>
+        /// <param name="total">The maxiumum progress value</param>
+        /// <param name="percentEffectType">The percent effect type</param>
+        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive)
         {
             if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, effectType);
+                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType);
             else
-                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, effectType);
+                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType);
         }
 
-        public void PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType effectType = PercentEffectType.Progressive)
+        /// <summary>
+        /// Draws a percent effect on the layer bitmap using a KeySequence and a ColorSpectrum.
+        /// </summary>
+        /// <param name="spectrum">The ColorSpectrum to be used as a "Progress bar"</param>
+        /// <param name="sequence">The sequence of keys that the percent effect will be drawn on</param>
+        /// <param name="value">The current progress value</param>
+        /// <param name="total">The maxiumum progress value</param>
+        /// <param name="percentEffectType">The percent effect type</param>
+        public void PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive)
         {
             if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(spectrum, sequence.keys.ToArray(), value, total, effectType);
+                PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType);
             else
-                PercentEffect(spectrum, sequence.freeform, value, total, effectType);
+                PercentEffect(spectrum, sequence.freeform, value, total, percentEffectType);
         }
 
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType effectType = PercentEffectType.Progressive)
+        /// <summary>
+        /// Draws a percent effect on the layer bitmap using an array of DeviceKeys keys and solid colors.
+        /// </summary>
+        /// <param name="foregroundColor">The foreground color, used as a "Progress bar color"</param>
+        /// <param name="backgroundColor">The background color</param>
+        /// <param name="keys">The array of keys that the percent effect will be drawn on</param>
+        /// <param name="value">The current progress value</param>
+        /// <param name="total">The maxiumum progress value</param>
+        /// <param name="percentEffectType">The percent effect type</param>
+        public void PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -640,7 +762,7 @@ namespace Aurora.EffectsEngine
             {
                 Devices.DeviceKeys current_key = keys[i];
 
-                switch (effectType)
+                switch (percentEffectType)
                 {
                     case (PercentEffectType.AllAtOnce):
                         SetOneKey(current_key, Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, progress_total));
@@ -666,7 +788,15 @@ namespace Aurora.EffectsEngine
             }
         }
 
-        public void PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType effectType = PercentEffectType.Progressive)
+        /// <summary>
+        /// Draws a percent effect on the layer bitmap using DeviceKeys keys and a ColorSpectrum.
+        /// </summary>
+        /// <param name="spectrum">The ColorSpectrum to be used as a "Progress bar"</param>
+        /// <param name="keys">The array of keys that the percent effect will be drawn on</param>
+        /// <param name="value">The current progress value</param>
+        /// <param name="total">The maxiumum progress value</param>
+        /// <param name="percentEffectType">The percent effect type</param>
+        public void PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -680,7 +810,7 @@ namespace Aurora.EffectsEngine
             {
                 Devices.DeviceKeys current_key = keys[i];
 
-                switch (effectType)
+                switch (percentEffectType)
                 {
                     case (PercentEffectType.AllAtOnce):
                         SetOneKey(current_key, spectrum.GetColorAt((float)progress_total));
@@ -702,7 +832,16 @@ namespace Aurora.EffectsEngine
             }
         }
 
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.FreeFormObject freeform, double value, double total, PercentEffectType effectType = PercentEffectType.Progressive)
+        /// <summary>
+        /// Draws a percent effect on the layer bitmap using a FreeFormObject and solid colors.
+        /// </summary>
+        /// <param name="foregroundColor">The foreground color, used as a "Progress bar color"</param>
+        /// <param name="backgroundColor">The background color</param>
+        /// <param name="freeform">The FreeFormObject that the progress effect will be drawn on</param>
+        /// <param name="value">The current progress value</param>
+        /// <param name="total">The maxiumum progress value</param>
+        /// <param name="percentEffectType">The percent effect type</param>
+        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive)
         {
             double progress_total = value / total;
             if (progress_total < 0.0 || Double.IsNaN(progress_total))
@@ -722,7 +861,7 @@ namespace Aurora.EffectsEngine
                 if (height < 3) height = 3;
 
 
-                if (effectType == PercentEffectType.AllAtOnce)
+                if (percentEffectType == PercentEffectType.AllAtOnce)
                 {
                     Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
 
@@ -755,7 +894,15 @@ namespace Aurora.EffectsEngine
             }
         }
 
-        public void PercentEffect(ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType effectType = PercentEffectType.Progressive)
+        /// <summary>
+        ///  Draws a percent effect on the layer bitmap using a FreeFormObject and a ColorSpectrum.
+        /// </summary>
+        /// <param name="spectrum">The ColorSpectrum to be used as a "Progress bar"</param>
+        /// <param name="freeform">The FreeFormObject that the progress effect will be drawn on</param>
+        /// <param name="value">The current progress value</param>
+        /// <param name="total">The maxiumum progress value</param>
+        /// <param name="percentEffectType">The percent effect type</param>
+        public void PercentEffect(ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -773,7 +920,7 @@ namespace Aurora.EffectsEngine
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
 
-                if (effectType == PercentEffectType.AllAtOnce)
+                if (percentEffectType == PercentEffectType.AllAtOnce)
                 {
                     Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
 
@@ -805,6 +952,11 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        /// <summary>
+        /// Draws a FreeFormObject on the layer bitmap using a specified color.
+        /// </summary>
+        /// <param name="freeform">The FreeFormObject that will be filled with a color</param>
+        /// <param name="color">The color to be used</param>
         public void DrawFreeForm(Settings.FreeFormObject freeform, Color color)
         {
             using (Graphics g = Graphics.FromImage(colormap))
@@ -829,6 +981,10 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        /// <summary>
+        /// Draws ColorZones on the layer bitmap.
+        /// </summary>
+        /// <param name="colorzones">An array of ColorZones</param>
         public void DrawColorZones(ColorZone[] colorzones)
         {
             foreach (ColorZone cz in colorzones.Reverse())
@@ -886,12 +1042,19 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        /// <summary>
+        /// Adds a post function to the EffectLayer, to be executed at render time.
+        /// </summary>
+        /// <param name="function"></param>
         public void AddPostFunction(EffectColorFunction function)
         {
             this.post_functions.Add(function);
             needsRender = true;
         }
 
+        /// <summary>
+        /// Renders the post functions onto the layer bitmap.
+        /// </summary>
         public void RenderLayer()
         {
             BitmapData srcData = colormap.LockBits(
@@ -941,6 +1104,10 @@ namespace Aurora.EffectsEngine
             needsRender = false;
         }
 
+        /// <summary>
+        /// Returns the layer name
+        /// </summary>
+        /// <returns>Layer name</returns>
         public override string ToString()
         {
             return name;

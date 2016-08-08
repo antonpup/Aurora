@@ -1,370 +1,1061 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 
 namespace Aurora.Devices
 {
+    /// <summary>
+    /// Enum definition, representing everysingle supported device key
+    /// </summary>
     public enum DeviceKeys
     {
+        /// <summary>
+        /// Peripheral Device
+        /// </summary>
         [Description("Peripheral Device")]
         Peripheral = 0,
+
+        /// <summary>
+        /// Escape key
+        /// </summary>
         [Description("Escape")]
         ESC = 1,
+
+        /// <summary>
+        /// F1 key
+        /// </summary>
         [Description("F1")]
         F1 = 2,
+
+        /// <summary>
+        /// F2 key
+        /// </summary>
         [Description("F2")]
         F2 = 3,
+
+        /// <summary>
+        /// F3 key
+        /// </summary>
         [Description("F3")]
         F3 = 4,
+
+        /// <summary>
+        /// F4 key
+        /// </summary>
         [Description("F4")]
         F4 = 5,
+
+        /// <summary>
+        /// F5 key
+        /// </summary>
         [Description("F5")]
         F5 = 6,
+
+        /// <summary>
+        /// F6 key
+        /// </summary>
         [Description("F6")]
         F6 = 7,
+
+        /// <summary>
+        /// F7 key
+        /// </summary>
         [Description("F7")]
         F7 = 8,
+
+        /// <summary>
+        /// F8 key
+        /// </summary>
         [Description("F8")]
         F8 = 9,
+
+        /// <summary>
+        /// F9 key
+        /// </summary>
         [Description("F9")]
         F9 = 10,
+
+        /// <summary>
+        /// F10 key
+        /// </summary>
         [Description("F10")]
         F10 = 11,
+
+        /// <summary>
+        /// F11 key
+        /// </summary>
         [Description("F11")]
         F11 = 12,
+
+        /// <summary>
+        /// F12 key
+        /// </summary>
         [Description("F12")]
         F12 = 13,
+
+        /// <summary>
+        /// Print Screen key
+        /// </summary>
         [Description("Print Screen")]
         PRINT_SCREEN = 14,
+
+        /// <summary>
+        /// Scroll Lock key
+        /// </summary>
         [Description("Scroll Lock")]
         SCROLL_LOCK = 15,
+
+        /// <summary>
+        /// Pause/Break key
+        /// </summary>
         [Description("Pause")]
         PAUSE_BREAK = 16,
 
+
+        /// <summary>
+        /// Half/Full width (Japanese layout) key
+        /// </summary>
         [Description("Half/Full width")]
         JPN_HALFFULLWIDTH = 152,
+
+        /// <summary>
+        /// OEM 5 key
+        /// </summary>
         [Description("OEM 5")]
         OEM5 = 156,
+
+        /// <summary>
+        /// Tilde key
+        /// </summary>
         [Description("Tilde")]
         TILDE = 17,
+        
+        /// <summary>
+        /// One key
+        /// </summary>
         [Description("1")]
         ONE = 18,
+
+        /// <summary>
+        /// Two key
+        /// </summary>
         [Description("2")]
         TWO = 19,
+
+        /// <summary>
+        /// Three key
+        /// </summary>
         [Description("3")]
         THREE = 20,
+
+        /// <summary>
+        /// Four key
+        /// </summary>
         [Description("4")]
         FOUR = 21,
+
+        /// <summary>
+        /// Five key
+        /// </summary>
         [Description("5")]
         FIVE = 22,
+
+        /// <summary>
+        /// Six key
+        /// </summary>
         [Description("6")]
         SIX = 23,
+
+        /// <summary>
+        /// Seven key
+        /// </summary>
         [Description("7")]
         SEVEN = 24,
+
+        /// <summary>
+        /// Eight key
+        /// </summary>
         [Description("8")]
         EIGHT = 25,
+
+        /// <summary>
+        /// Nine key
+        /// </summary>
         [Description("9")]
         NINE = 26,
+
+        /// <summary>
+        /// Zero key
+        /// </summary>
         [Description("0")]
         ZERO = 27,
+
+        /// <summary>
+        /// Minus key
+        /// </summary>
         [Description("-")]
         MINUS = 28,
+
+        /// <summary>
+        /// Equals key
+        /// </summary>
         [Description("=")]
         EQUALS = 29,
+
+        /// <summary>
+        /// Backspace key
+        /// </summary>
         [Description("Backspace")]
         BACKSPACE = 30,
+
+        /// <summary>
+        /// Insert key
+        /// </summary>
         [Description("Insert")]
         INSERT = 31,
+
+        /// <summary>
+        /// Home key
+        /// </summary>
         [Description("Home")]
         HOME = 32,
+
+        /// <summary>
+        /// Page up key
+        /// </summary>
         [Description("Page Up")]
         PAGE_UP = 33,
+
+        /// <summary>
+        /// Numpad Lock key
+        /// </summary>
         [Description("Numpad Lock")]
         NUM_LOCK = 34,
+
+        /// <summary>
+        /// Numpad divide key
+        /// </summary>
         [Description("Numpad /")]
         NUM_SLASH = 35,
+
+        /// <summary>
+        /// Numpad multiply key
+        /// </summary>
         [Description("Numpad *")]
         NUM_ASTERISK = 36,
+
+        /// <summary>
+        /// Numpad minus key
+        /// </summary>
         [Description("Numpad -")]
         NUM_MINUS = 37,
 
+
+        /// <summary>
+        /// Tab key
+        /// </summary>
         [Description("Tab")]
         TAB = 38,
+
+        /// <summary>
+        /// Q key
+        /// </summary>
         [Description("Q")]
         Q = 39,
+
+        /// <summary>
+        /// W key
+        /// </summary>
         [Description("W")]
         W = 40,
+
+        /// <summary>
+        /// E key
+        /// </summary>
         [Description("E")]
         E = 41,
+
+        /// <summary>
+        /// R key
+        /// </summary>
         [Description("R")]
         R = 42,
+
+        /// <summary>
+        /// T key
+        /// </summary>
         [Description("T")]
         T = 43,
+
+        /// <summary>
+        /// Y key
+        /// </summary>
         [Description("Y")]
         Y = 44,
+
+        /// <summary>
+        /// U key
+        /// </summary>
         [Description("U")]
         U = 45,
+
+        /// <summary>
+        /// I key
+        /// </summary>
         [Description("I")]
         I = 46,
+
+        /// <summary>
+        /// O key
+        /// </summary>
         [Description("O")]
         O = 47,
+
+        /// <summary>
+        /// P key
+        /// </summary>
         [Description("P")]
         P = 48,
+
+        /// <summary>
+        /// Open Bracket key
+        /// </summary>
         [Description("{")]
         OPEN_BRACKET = 49,
+
+        /// <summary>
+        /// Close Bracket key
+        /// </summary>
         [Description("}")]
         CLOSE_BRACKET = 50,
+
+        /// <summary>
+        /// Backslash key
+        /// </summary>
         [Description("\\")]
         BACKSLASH = 51,
+
+        /// <summary>
+        /// Delete key
+        /// </summary>
         [Description("Delete")]
         DELETE = 52,
+
+        /// <summary>
+        /// End key
+        /// </summary>
         [Description("End")]
         END = 53,
+
+        /// <summary>
+        /// Page down key
+        /// </summary>
         [Description("Page Down")]
         PAGE_DOWN = 54,
+
+        /// <summary>
+        /// Numpad seven key
+        /// </summary>
         [Description("Numpad 7")]
         NUM_SEVEN = 55,
+
+        /// <summary>
+        /// Numpad eight key
+        /// </summary>
         [Description("Numpad 8")]
         NUM_EIGHT = 56,
+
+        /// <summary>
+        /// Numpad nine key
+        /// </summary>
         [Description("Numpad 9")]
         NUM_NINE = 57,
+
+        /// <summary>
+        /// Numpad add key
+        /// </summary>
         [Description("Numpad +")]
         NUM_PLUS = 58,
 
+
+        /// <summary>
+        /// Caps Lock key
+        /// </summary>
         [Description("Caps Lock")]
         CAPS_LOCK = 59,
+
+        /// <summary>
+        /// A key
+        /// </summary>
         [Description("A")]
         A = 60,
+
+        /// <summary>
+        /// S key
+        /// </summary>
         [Description("S")]
         S = 61,
+
+        /// <summary>
+        /// D key
+        /// </summary>
         [Description("D")]
         D = 62,
+
+        /// <summary>
+        /// F key
+        /// </summary>
         [Description("F")]
         F = 63,
+
+        /// <summary>
+        /// G key
+        /// </summary>
         [Description("G")]
         G = 64,
+
+        /// <summary>
+        /// H key
+        /// </summary>
         [Description("H")]
         H = 65,
+
+        /// <summary>
+        /// J key
+        /// </summary>
         [Description("J")]
         J = 66,
+
+        /// <summary>
+        /// K key
+        /// </summary>
         [Description("K")]
         K = 67,
+
+        /// <summary>
+        /// L key
+        /// </summary>
         [Description("L")]
         L = 68,
+
+        /// <summary>
+        /// Ö (Deutsch) key
+        /// </summary>
         [Description("Ö")]
         DEU_O = 157,
+
+        /// <summary>
+        /// Semicolon key
+        /// </summary>
         [Description("Semicolon")]
         SEMICOLON = 69,
+
+        /// <summary>
+        /// Apostrophe key
+        /// </summary>
         [Description("Apostrophe")]
         APOSTROPHE = 70,
+
+        /// <summary>
+        /// Hashtag key
+        /// </summary>
         [Description("#")]
         HASHTAG = 71,
+
+        /// <summary>
+        /// Enter key
+        /// </summary>
         [Description("Enter")]
         ENTER = 72,
+
+        /// <summary>
+        /// Numpad four key
+        /// </summary>
         [Description("Numpad 4")]
         NUM_FOUR = 73,
+
+        /// <summary>
+        /// Numpad five key
+        /// </summary>
         [Description("Numpad 5")]
         NUM_FIVE = 74,
+
+        /// <summary>
+        /// Numpad six key
+        /// </summary>
         [Description("Numpad 6")]
         NUM_SIX = 75,
 
+
+        /// <summary>
+        /// Left Shift key
+        /// </summary>
         [Description("Left Shift")]
         LEFT_SHIFT = 76,
+
+        /// <summary>
+        /// Non-US Backslash key
+        /// </summary>
         [Description("Non-US Backslash")]
         BACKSLASH_UK = 77,
+
+        /// <summary>
+        /// Z key
+        /// </summary>
         [Description("Z")]
         Z = 78,
+
+        /// <summary>
+        /// X key
+        /// </summary>
         [Description("X")]
         X = 79,
+
+        /// <summary>
+        /// C key
+        /// </summary>
         [Description("C")]
         C = 80,
+
+        /// <summary>
+        /// V key
+        /// </summary>
         [Description("V")]
         V = 81,
+
+        /// <summary>
+        /// B key
+        /// </summary>
         [Description("B")]
         B = 82,
+
+        /// <summary>
+        /// N key
+        /// </summary>
         [Description("N")]
         N = 83,
+
+        /// <summary>
+        /// M key
+        /// </summary>
         [Description("M")]
         M = 84,
+
+        /// <summary>
+        /// Comma key
+        /// </summary>
         [Description("Comma")]
         COMMA = 85,
+
+        /// <summary>
+        /// Period key
+        /// </summary>
         [Description("Period")]
         PERIOD = 86,
+
+        /// <summary>
+        /// Forward Slash key
+        /// </summary>
         [Description("Forward Slash")]
         FORWARD_SLASH = 87,
+
+        /// <summary>
+        /// OEM 8 key
+        /// </summary>
         [Description("OEM 8")]
         OEM8 = 158,
+
+        /// <summary>
+        /// OEM 102 key
+        /// </summary>
         [Description("OEM 102")]
         OEM102 = 159,
+
+        /// <summary>
+        /// Right Shift key
+        /// </summary>
         [Description("Right Shift")]
         RIGHT_SHIFT = 88,
+
+        /// <summary>
+        /// Arrow Up key
+        /// </summary>
         [Description("Arrow Up")]
         ARROW_UP = 89,
+
+        /// <summary>
+        /// Numpad one key
+        /// </summary>
         [Description("Numpad 1")]
         NUM_ONE = 90,
+
+        /// <summary>
+        /// Numpad two key
+        /// </summary>
         [Description("Numpad 2")]
         NUM_TWO = 91,
+
+        /// <summary>
+        /// Numpad three key
+        /// </summary>
         [Description("Numpad 3")]
         NUM_THREE = 92,
+
+        /// <summary>
+        /// Numpad enter key
+        /// </summary>
         [Description("Numpad Enter")]
         NUM_ENTER = 93,
 
+
+        /// <summary>
+        /// Left Control key
+        /// </summary>
         [Description("Left Control")]
         LEFT_CONTROL = 94,
+
+        /// <summary>
+        /// Left Windows key
+        /// </summary>
         [Description("Left Windows Key")]
         LEFT_WINDOWS = 95,
+
+        /// <summary>
+        /// Left Alt key
+        /// </summary>
         [Description("Left Alt")]
         LEFT_ALT = 96,
+
+        /// <summary>
+        /// Non-conversion (Japanese layout) key
+        /// </summary>
         [Description("Non-conversion")]
         JPN_MUHENKAN = 153,
+
+        /// <summary>
+        /// Spacebar key
+        /// </summary>
         [Description("Spacebar")]
         SPACE = 97,
+
+        /// <summary>
+        /// Conversion (Japanese layout) key
+        /// </summary>
         [Description("Conversion")]
         JPN_HENKAN = 154,
+
+        /// <summary>
+        /// Hiragana/Katakana (Japanese layout) key
+        /// </summary>
         [Description("Hiragana/Katakana")]
         JPN_HIRAGANA_KATAKANA = 155,
+
+        /// <summary>
+        /// Right Alt key
+        /// </summary>
         [Description("Right Alt")]
         RIGHT_ALT = 98,
+
+        /// <summary>
+        /// Right Windows key
+        /// </summary>
         [Description("Right Windows Key")]
         RIGHT_WINDOWS = 99,
+
+        /// <summary>
+        /// Application Select key
+        /// </summary>
         [Description("Application Select Key")]
         APPLICATION_SELECT = 100,
+
+        /// <summary>
+        /// Right Control key
+        /// </summary>
         [Description("Right Control")]
         RIGHT_CONTROL = 101,
+
+        /// <summary>
+        /// Arrow Left key
+        /// </summary>
         [Description("Arrow Left")]
         ARROW_LEFT = 102,
+
+        /// <summary>
+        /// Arrow Down key
+        /// </summary>
         [Description("Arrow Down")]
         ARROW_DOWN = 103,
+
+        /// <summary>
+        /// Arrow Right key
+        /// </summary>
         [Description("Arrow Right")]
         ARROW_RIGHT = 104,
+
+        /// <summary>
+        /// Numpad zero key
+        /// </summary>
         [Description("Numpad 0")]
         NUM_ZERO = 105,
+
+        /// <summary>
+        /// Numpad period key
+        /// </summary>
         [Description("Numpad Period")]
         NUM_PERIOD = 106,
 
+
+        /// <summary>
+        /// Function key
+        /// </summary>
         [Description("FN Key")]
         FN_Key = 107,
 
+
+        /// <summary>
+        /// Macrokey 1 key
+        /// </summary>
         [Description("G1")]
         G1 = 108,
+
+        /// <summary>
+        /// Macrokey 2 key
+        /// </summary>
         [Description("G2")]
         G2 = 109,
+
+        /// <summary>
+        /// Macrokey 3 key
+        /// </summary>
         [Description("G3")]
         G3 = 110,
+
+        /// <summary>
+        /// Macrokey 4 key
+        /// </summary>
         [Description("G4")]
         G4 = 111,
+
+        /// <summary>
+        /// Macrokey 5 key
+        /// </summary>
         [Description("G5")]
         G5 = 112,
+
+        /// <summary>
+        /// Macrokey 6 key
+        /// </summary>
         [Description("G6")]
         G6 = 113,
+
+        /// <summary>
+        /// Macrokey 7 key
+        /// </summary>
         [Description("G7")]
         G7 = 114,
+
+        /// <summary>
+        /// Macrokey 8 key
+        /// </summary>
         [Description("G8")]
         G8 = 115,
+
+        /// <summary>
+        /// Macrokey 9 key
+        /// </summary>
         [Description("G9")]
         G9 = 116,
+
+        /// <summary>
+        /// Macrokey 10 key
+        /// </summary>
         [Description("G10")]
         G10 = 117,
+
+        /// <summary>
+        /// Macrokey 11 key
+        /// </summary>
         [Description("G11")]
         G11 = 118,
+
+        /// <summary>
+        /// Macrokey 12 key
+        /// </summary>
         [Description("G12")]
         G12 = 119,
+
+        /// <summary>
+        /// Macrokey 13 key
+        /// </summary>
         [Description("G13")]
         G13 = 120,
+
+        /// <summary>
+        /// Macrokey 14 key
+        /// </summary>
         [Description("G14")]
         G14 = 121,
+
+        /// <summary>
+        /// Macrokey 15 key
+        /// </summary>
         [Description("G15")]
         G15 = 122,
+
+        /// <summary>
+        /// Macrokey 16 key
+        /// </summary>
         [Description("G16")]
         G16 = 123,
+
+        /// <summary>
+        /// Macrokey 17 key
+        /// </summary>
         [Description("G17")]
         G17 = 124,
+
+        /// <summary>
+        /// Macrokey 18 key
+        /// </summary>
         [Description("G18")]
         G18 = 125,
+
+        /// <summary>
+        /// Macrokey 19 key
+        /// </summary>
         [Description("G19")]
         G19 = 126,
+
+        /// <summary>
+        /// Macrokey 20 key
+        /// </summary>
         [Description("G20")]
         G20 = 127,
 
+
+        /// <summary>
+        /// Brand Logo
+        /// </summary>
         [Description("Brand Logo")]
         LOGO = 128,
+
+        /// <summary>
+        /// Brand Logo #2
+        /// </summary>
         [Description("Brand Logo #2")]
         LOGO2 = 129,
+
+        /// <summary>
+        /// Brand Logo #3
+        /// </summary>
         [Description("Brand Logo #3")]
         LOGO3 = 130,
+
+        /// <summary>
+        /// Brightness Switch
+        /// </summary>
         [Description("Brightness Switch")]
         BRIGHTNESS_SWITCH = 131,
+
+        /// <summary>
+        /// Lock Switch
+        /// </summary>
         [Description("Lock Switch")]
         LOCK_SWITCH = 132,
 
+
+        /// <summary>
+        /// Multimedia Play/Pause
+        /// </summary>
         [Description("Media Play/Pause")]
         MEDIA_PLAY_PAUSE = 133,
+
+        /// <summary>
+        /// Multimedia Play
+        /// </summary>
         [Description("Media Play")]
         MEDIA_PLAY = 134,
+
+        /// <summary>
+        /// Multimedia Pause
+        /// </summary>
         [Description("Media Pause")]
         MEDIA_PAUSE = 135,
+
+        /// <summary>
+        /// Multimedia Stop
+        /// </summary>
         [Description("Media Stop")]
         MEDIA_STOP = 136,
+
+        /// <summary>
+        /// Multimedia Previous
+        /// </summary>
         [Description("Media Previous")]
         MEDIA_PREVIOUS = 137,
+
+        /// <summary>
+        /// Multimedia Next
+        /// </summary>
         [Description("Media Next")]
         MEDIA_NEXT = 138,
 
+
+        /// <summary>
+        /// Volume Mute
+        /// </summary>
         [Description("Volume Mute")]
         VOLUME_MUTE = 139,
+
+        /// <summary>
+        /// Volume Down
+        /// </summary>
         [Description("Volume Down")]
         VOLUME_DOWN = 140,
+
+        /// <summary>
+        /// Volume Up
+        /// </summary>
         [Description("Volume Up")]
         VOLUME_UP = 141,
 
+
+        /// <summary>
+        /// Additional Light 1
+        /// </summary>
         [Description("Additional Light 1")]
         ADDITIONALLIGHT1 = 142,
+
+        /// <summary>
+        /// Additional Light 2
+        /// </summary>
         [Description("Additional Light 2")]
         ADDITIONALLIGHT2 = 143,
+
+        /// <summary>
+        /// Additional Light 3
+        /// </summary>
         [Description("Additional Light 3")]
         ADDITIONALLIGHT3 = 144,
+
+        /// <summary>
+        /// Additional Light 4
+        /// </summary>
         [Description("Additional Light 4")]
         ADDITIONALLIGHT4 = 145,
+
+        /// <summary>
+        /// Additional Light 5
+        /// </summary>
         [Description("Additional Light 5")]
         ADDITIONALLIGHT5 = 146,
+
+        /// <summary>
+        /// Additional Light 6
+        /// </summary>
         [Description("Additional Light 6")]
         ADDITIONALLIGHT6 = 147,
+
+        /// <summary>
+        /// Additional Light 7
+        /// </summary>
         [Description("Additional Light 7")]
         ADDITIONALLIGHT7 = 148,
+
+        /// <summary>
+        /// Additional Light 8
+        /// </summary>
         [Description("Additional Light 8")]
         ADDITIONALLIGHT8 = 149,
+
+        /// <summary>
+        /// Additional Light 9
+        /// </summary>
         [Description("Additional Light 9")]
         ADDITIONALLIGHT9 = 150,
+
+        /// <summary>
+        /// Additional Light 10
+        /// </summary>
         [Description("Additional Light 10")]
         ADDITIONALLIGHT10 = 151,
 
+        /// <summary>
+        /// None
+        /// </summary>
         [Description("None")]
         NONE = -1,
     };
 
+    /// <summary>
+    /// An interface for a device class.
+    /// </summary>
     public interface Device
     {
-        String GetDeviceName();
+        /// <summary>
+        /// Gets the device name.
+        /// </summary>
+        /// <returns>Device name</returns>
+        string GetDeviceName();
 
-        String GetDeviceDetails();
+        /// <summary>
+        /// Gets specific details about the device instance.
+        /// </summary>
+        /// <returns>Details about the device instance</returns>
+        string GetDeviceDetails();
 
+        /// <summary>
+        /// Attempts to initialize the device instance.
+        /// </summary>
+        /// <returns>A boolean value representing the success of this call</returns>
         bool Initialize();
 
+        /// <summary>
+        /// Shuts down the device instance.
+        /// </summary>
         void Shutdown();
 
+        /// <summary>
+        /// Resets the device instance.
+        /// </summary>
         void Reset();
 
+        /// <summary>
+        /// Attempts to reconnect the device. [NOT IMPLEMENTED]
+        /// </summary>
+        /// <returns>A boolean value representing the success of this call</returns>
         bool Reconnect();
 
+        /// <summary>
+        /// Gets the initialization status of this device instance.
+        /// </summary>
+        /// <returns>A boolean value representing the initialization status of this device</returns>
         bool IsInitialized();
 
+        /// <summary>
+        /// Gets the connection status of this device instance. [NOT IMPLEMENTED]
+        /// </summary>
+        /// <returns>A boolean value representing the connection status of this device</returns>
         bool IsConnected();
 
+        /// <summary>
+        /// Gets the keyboard connection status for this device instance.
+        /// </summary>
+        /// <returns>A boolean value representing the keyboard connection status of this device</returns>
         bool IsKeyboardConnected();
 
+        /// <summary>
+        /// Gets the peripheral connection status for this device instance.
+        /// </summary>
+        /// <returns>A boolean value representing the peripheral connection status of this device</returns>
         bool IsPeripheralConnected();
 
+        /// <summary>
+        /// Updates the device with a specified color arrangement.
+        /// </summary>
+        /// <param name="keyColors">A dictionary of DeviceKeys their corresponding Colors</param>
+        /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
+        /// <returns></returns>
         bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false);
     }
 }

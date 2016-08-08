@@ -5,11 +5,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora.Controls
 {
-    /// <summary>
-    /// Interaction logic for EffectSettingsWindow.xaml
-    /// </summary>
     public partial class EffectSettingsWindow : Window
     {
         public LayerEffectConfig EffectConfig;
@@ -17,6 +15,7 @@ namespace Aurora.Controls
         public string preview_key = "";
 
         public event EventHandler EffectConfigUpdated;
+
 
         public EffectSettingsWindow()
         {
@@ -168,3 +167,5 @@ namespace Aurora.Controls
         }
     }
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

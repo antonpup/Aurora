@@ -3,40 +3,105 @@ using System.Drawing;
 
 namespace Aurora.Profiles.GTA5.GSI
 {
+    /// <summary>
+    /// Enum of various player states
+    /// </summary>
     public enum PlayerState
     {
+        /// <summary>
+        /// Undefined
+        /// </summary>
         [Description("Undefined")]
         Undefined,
+
+        /// <summary>
+        /// Player is in a menu
+        /// </summary>
         [Description("Menu")]
         Menu,
+
+        /// <summary>
+        /// Player is in singleplayer
+        /// </summary>
         [Description("Singleplayer")]
         PlayingSP,
+
+        /// <summary>
+        /// Player is playing as Trevor
+        /// </summary>
         [Description("Singleplayer - Trevor")]
-        PlayingSP_Trevor, //004FAF
+        PlayingSP_Trevor,
+
+        /// <summary>
+        /// Player is playing as Michael
+        /// </summary>
         [Description("Singleplayer - Michael")]
         PlayingSP_Michael,
+
+        /// <summary>
+        /// Player is playing as Franklins
+        /// </summary>
         [Description("Singleplayer - Franklin")]
         PlayingSP_Franklin,
+
+        /// <summary>
+        /// Player is playing as Chop
+        /// </summary>
         [Description("Singleplayer - Chop")]
         PlayingSP_Chop,
+
+        /// <summary>
+        /// Player is playing multiplayer
+        /// </summary>
         [Description("Multiplayer")]
-        PlayingMP, //E24400
+        PlayingMP,
+
+        /// <summary>
+        /// Player is playing a multiplayer mission
+        /// </summary>
         [Description("Multiplayer - Mission")]
         PlayingMP_Mission,
+
+        /// <summary>
+        /// Player is playing a multiplayer heist finale
+        /// </summary>
         [Description("Multiplayer - Heist Finale")]
         PlayingMP_HeistFinale,
+
+        /// <summary>
+        /// Player is spectating a multiplayer game
+        /// </summary>
         [Description("Multiplayer - Spectator")]
         PlayingMP_Spectator,
+
+        /// <summary>
+        /// Player is in a race, in first position
+        /// </summary>
         [Description("Race - Platinum")]
         PlayingRace_Platinum,
+
+        /// <summary>
+        /// Player is in a race, in second position
+        /// </summary>
         [Description("Race - Gold")]
         PlayingRace_Gold,
+
+        /// <summary>
+        /// Player is in a race, in third position
+        /// </summary>
         [Description("Race - Silver")]
         PlayingRace_Silver,
+
+        /// <summary>
+        /// Player is in a race, in fourth or lower position
+        /// </summary>
         [Description("Race - Bronze")]
         PlayingRace_Bronze,
     }
 
+    /// <summary>
+    /// A class representing various information relating to Grand Theft Auto 5
+    /// </summary>
     public class GameState_GTA5 : GameState_Wrapper
     {
         private PlayerState _CurrentState;
@@ -45,7 +110,9 @@ namespace Aurora.Profiles.GTA5.GSI
         private Color _LeftSirenColor;
         private Color _RightSirenColor;
 
-
+        /// <summary>
+        /// Current game state
+        /// </summary>
         public PlayerState CurrentState
         {
             get
@@ -54,6 +121,9 @@ namespace Aurora.Profiles.GTA5.GSI
             }
         }
 
+        /// <summary>
+        /// A boolean representing if the player is wanted
+        /// </summary>
         public bool HasCops
         {
             get
@@ -62,6 +132,9 @@ namespace Aurora.Profiles.GTA5.GSI
             }
         }
 
+        /// <summary>
+        /// The current background color
+        /// </summary>
         public Color StateColor
         {
             get
@@ -70,6 +143,9 @@ namespace Aurora.Profiles.GTA5.GSI
             }
         }
 
+        /// <summary>
+        /// The current left siren color (Keys F1 - F6)
+        /// </summary>
         public Color LeftSirenColor
         {
             get
@@ -78,6 +154,9 @@ namespace Aurora.Profiles.GTA5.GSI
             }
         }
 
+        /// <summary>
+        /// The current left siren color (Keys F7 - F12)
+        /// </summary>
         public Color RightSirenColor
         {
             get
@@ -86,13 +165,19 @@ namespace Aurora.Profiles.GTA5.GSI
             }
         }
 
-
+        /// <summary>
+        /// Creates a default GameState_GTA5 instance.
+        /// </summary>
         public GameState_GTA5()
         {
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
 
+        /// <summary>
+        /// Creates a GameState_GTA5 instance based on the passed json data.
+        /// </summary>
+        /// <param name="json_data">The passed json data</param>
         public GameState_GTA5(string json_data) : base(json_data)
         {
             Provider.AppID = 271590;
@@ -153,6 +238,10 @@ namespace Aurora.Profiles.GTA5.GSI
             _HasCops = _LeftSirenColor != _RightSirenColor;
         }
 
+        /// <summary>
+        /// A copy constructor, creates a GameState_GTA5 instance based on the data from the passed GameState instance.
+        /// </summary>
+        /// <param name="other_state">The passed GameState</param>
         public GameState_GTA5(GameState other_state) : base(other_state)
         {
         }

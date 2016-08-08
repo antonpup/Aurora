@@ -4,6 +4,9 @@ using System;
 
 namespace Aurora.Profiles.Payday_2.GSI
 {
+    /// <summary>
+    /// A class representing various information retaining to Payday 2
+    /// </summary>
     public class GameState_PD2 : GameState
     {
         private ProviderNode _Provider;
@@ -13,6 +16,9 @@ namespace Aurora.Profiles.Payday_2.GSI
         private GameNode _Game;
         private GameState_PD2 _Previously;
 
+        /// <summary>
+        /// Information about the provider of this GameState
+        /// </summary>
         public ProviderNode Provider
         {
             get
@@ -26,6 +32,9 @@ namespace Aurora.Profiles.Payday_2.GSI
             }
         }
 
+        /// <summary>
+        /// Information about the game lobby
+        /// </summary>
         public LobbyNode Lobby
         {
             get
@@ -39,6 +48,9 @@ namespace Aurora.Profiles.Payday_2.GSI
             }
         }
 
+        /// <summary>
+        /// Information about the game level
+        /// </summary>
         public LevelNode Level
         {
             get
@@ -52,6 +64,9 @@ namespace Aurora.Profiles.Payday_2.GSI
             }
         }
 
+        /// <summary>
+        /// Information about players in the lobby
+        /// </summary>
         public PlayersNode Players
         {
             get
@@ -65,6 +80,9 @@ namespace Aurora.Profiles.Payday_2.GSI
             }
         }
 
+        /// <summary>
+        /// Information about the game
+        /// </summary>
         public GameNode Game
         {
             get
@@ -78,6 +96,9 @@ namespace Aurora.Profiles.Payday_2.GSI
             }
         }
 
+        /// <summary>
+        ///  A previous GameState
+        /// </summary>
         public GameState_PD2 Previously
         {
             get
@@ -91,13 +112,19 @@ namespace Aurora.Profiles.Payday_2.GSI
             }
         }
 
-
+        /// <summary>
+        /// Creates a default GameState_PD2 instance.
+        /// </summary>
         public GameState_PD2()
         {
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
 
+        /// <summary>
+        /// Creates a GameState_PD2 instance based on the passed json data.
+        /// </summary>
+        /// <param name="JSONstring">The passed json data</param>
         public GameState_PD2(string JSONstring)
         {
             if (String.IsNullOrWhiteSpace(JSONstring))
@@ -107,6 +134,10 @@ namespace Aurora.Profiles.Payday_2.GSI
             _ParsedData = JObject.Parse(JSONstring);
         }
 
+        /// <summary>
+        /// A copy constructor, creates a GameState_CSGO instance based on the data from the passed GameState instance.
+        /// </summary>
+        /// <param name="other_state">The passed GameState</param>
         public GameState_PD2(GameState other_state) : base(other_state)
         {
         }

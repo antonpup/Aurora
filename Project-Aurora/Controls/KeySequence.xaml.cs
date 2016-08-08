@@ -5,11 +5,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora.Controls
 {
-    /// <summary>
-    /// Interaction logic for KeySequence.xaml
-    /// </summary>
     public partial class KeySequence : UserControl
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -272,3 +270,5 @@ namespace Aurora.Controls
         }
     }
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

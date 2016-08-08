@@ -212,8 +212,7 @@
                 <Grid>
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Current Keyboard bitmap:" VerticalAlignment="Top"/>
                     <Image x:Name="debug_bitmap_preview" HorizontalAlignment="Left" Margin="152,10,0,0" VerticalAlignment="Top"/>
-                    <Button Content="Record" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" IsEnabled="False" Visibility="Hidden"/>
-
+                    <Button Content="Record" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" IsEnabled="False" Visibility="Collapsed"/>
                 </Grid>
             </TabItem>
         </TabControl>

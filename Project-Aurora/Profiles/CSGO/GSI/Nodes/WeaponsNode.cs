@@ -6,11 +6,21 @@ using System;
 
 namespace Aurora.Profiles.CSGO.GSI.Nodes
 {
+    /// <summary>
+    /// Class representing information about player's weapons
+    /// </summary>
     public class WeaponsNode : Node
     {
         private List<WeaponNode> _Weapons = new List<WeaponNode>();
 
+        /// <summary>
+        /// The number of weapons a player has in their inventory
+        /// </summary>
         public int Count { get { return _Weapons.Count; } }
+
+        /// <summary>
+        /// Player's currently active weapon
+        /// </summary>
         public WeaponNode ActiveWeapon
         {
             get
@@ -35,10 +45,10 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         }
 
         /// <summary>
-        /// Gets the weapon with index &lt;index&gt;
+        /// Gets the weapon at a specific index
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="index">The index to retrieve a weapon at</param>
+        /// <returns>A weapon node at the specified index</returns>
         public WeaponNode this[int index]
         {
             get

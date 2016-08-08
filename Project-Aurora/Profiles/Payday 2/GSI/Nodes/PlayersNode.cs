@@ -3,11 +3,21 @@ using System.Collections.Generic;
 
 namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
+    /// <summary>
+    /// Information about players in the lobby
+    /// </summary>
     public class PlayersNode : Node
     {
         private List<PlayerNode> _Players = new List<PlayerNode>();
 
+        /// <summary>
+        /// Amount of players in the lobby
+        /// </summary>
         public int Count { get { return _Players.Count; } }
+
+        /// <summary>
+        /// The local player
+        /// </summary>
         public PlayerNode LocalPlayer
         {
             get
@@ -31,9 +41,9 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
         }
 
         /// <summary>
-        /// Gets the player with index &lt;index&gt;
+        /// Gets the player at a selected index
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">The index</param>
         /// <returns></returns>
         public PlayerNode this[int index]
         {

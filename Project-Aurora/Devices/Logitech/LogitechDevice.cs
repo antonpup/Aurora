@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace Aurora.Devices.Logitech
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public enum Logitech_keyboardBitmapKeys
     {
         UNKNOWN = -1,
@@ -141,6 +142,7 @@ namespace Aurora.Devices.Logitech
         NUM_PERIOD = 496,
         //500
     };
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
     class LogitechDevice : Device
     {
@@ -716,6 +718,8 @@ namespace Aurora.Devices.Logitech
                         return Logitech_keyboardBitmapKeys.HASHTAG;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return Logitech_keyboardBitmapKeys.TILDE;
+                    else if(Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.ru)
+                        return Logitech_keyboardBitmapKeys.HASHTAG;
                     else
                         return Logitech_keyboardBitmapKeys.BACKSLASH;
                 case (DeviceKeys.DELETE):

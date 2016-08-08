@@ -3,13 +3,23 @@ using System.Linq;
 
 namespace Aurora.Profiles.Dota_2.GSI.Nodes
 {
+    /// <summary>
+    /// Class representing hero abilities
+    /// </summary>
     public class Abilities_Dota2 : Node
     {
         private List<Ability> abilities = new List<Ability>();
+
+        /// <summary>
+        /// The attributes a hero has to spend on abilities
+        /// </summary>
         public readonly Attributes Attributes;
 
         private string json;
 
+        /// <summary>
+        /// The number of abilities
+        /// </summary>
         public int Count { get { return abilities.Count; } }
 
         internal Abilities_Dota2(string json_data) : base(json_data)
@@ -27,9 +37,9 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         }
 
         /// <summary>
-        /// Gets the ability in the selected index
+        /// Gets the ability at a specified index
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">The index</param>
         /// <returns></returns>
         public Ability this[int index]
         {

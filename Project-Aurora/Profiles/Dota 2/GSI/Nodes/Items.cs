@@ -3,12 +3,22 @@ using System.Linq;
 
 namespace Aurora.Profiles.Dota_2.GSI.Nodes
 {
+    /// <summary>
+    /// Class representing item information
+    /// </summary>
     public class Items_Dota2 : Node
     {
         private List<Item> inventory = new List<Item>();
         private List<Item> stash = new List<Item>();
 
+        /// <summary>
+        /// Number of items in the inventory
+        /// </summary>
         public int CountInventory { get { return inventory.Count; } }
+
+        /// <summary>
+        /// Number of items in the stash
+        /// </summary>
         public int CountStash { get { return stash.Count; } }
 
         internal Items_Dota2(string json_data) : base(json_data)
@@ -24,9 +34,9 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         }
 
         /// <summary>
-        /// Gets the inventory item in the selected index
+        /// Gets the inventory item at the specified index
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">The index</param>
         /// <returns></returns>
         public Item GetInventoryAt(int index)
         {
@@ -37,9 +47,9 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         }
 
         /// <summary>
-        /// Gets the stash item in the selected index
+        /// Gets the stash item at the specified index
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">The index</param>
         /// <returns></returns>
         public Item GetStashAt(int index)
         {
@@ -52,16 +62,14 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// <summary>
         /// Checks if item exists in the inventory
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="itemname">The item name</param>
+        /// <returns>A boolean if item is in the inventory</returns>
         public bool InventoryContains(string itemname)
         {
             foreach(Item inventory_item in this.inventory)
             {
-                if (inventory_item.Name == itemname)
-                {
+                if (inventory_item.Name.Equals(itemname))
                     return true;
-                }
             }
 
             return false;
@@ -70,57 +78,49 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// <summary>
         /// Checks if item exists in the stash
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="itemname">The item name</param>
+        /// <returns>A boolean if item is in the stash</returns>
         public bool StashContains(string itemname)
         {
             foreach (Item stash_item in this.stash)
             {
-                if (stash_item.Name == itemname)
-                {
+                if (stash_item.Name.Equals(itemname))
                     return true;
-                }
             }
 
             return false;
         }
 
         /// <summary>
-        /// Gets index of the item in the inventory
+        /// Gets index of the first occurence of the item in the inventory
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="itemname">The item name</param>
+        /// <returns>The first index at which item is found, -1 if not found.</returns>
         public int InventoryIndexOf(string itemname)
         {
-            int index = -1;
             for (int x = 0; x < this.inventory.Count; x++)
             {
-                if (this.inventory[x].Name == itemname)
-                {
+                if (this.inventory[x].Name.Equals(itemname))
                     return x;
-                }
             }
 
-            return index;
+            return -1;
         }
 
         /// <summary>
-        /// Gets index of the item in the stash
+        /// Gets index of the first occurence of the item in the stash
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="itemname">The item name</param>
+        /// <returns>The first index at which item is found, -1 if not found.</returns>
         public int StashIndexOf(string itemname)
         {
-            int index = -1;
             for (int x = 0; x < this.stash.Count; x++)
             {
                 if (this.stash[x].Name == itemname)
-                {
                     return x;
-                }
             }
 
-            return index;
+            return -1;
         }
     }
 }
