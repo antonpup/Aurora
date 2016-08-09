@@ -8,8 +8,16 @@ using System.Windows.Forms;
 
 namespace Aurora.Utils
 {
+    /// <summary>
+    /// A class for Utilities pertaining to keys
+    /// </summary>
     public static class KeyUtils
     {
+        /// <summary>
+        /// Converts Forms.Keys to Devices.DeviceKeys
+        /// </summary>
+        /// <param name="forms_key">The Forms.Key to be converted</param>
+        /// <returns>The resulting Devices.DeviceKeys</returns>
         public static DeviceKeys GetDeviceKey(Keys forms_key)
         {
             switch (forms_key)

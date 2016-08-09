@@ -11,12 +11,26 @@ using Aurora.Profiles.Overlays.SkypeOverlay;
 
 namespace Aurora.Settings
 {
+    /// <summary>
+    /// Enum list for the percent effect type
+    /// </summary>
     public enum PercentEffectType
     {
+        /// <summary>
+        /// All at once
+        /// </summary>
         [Description("All at once")]
         AllAtOnce = 0,
+
+        /// <summary>
+        /// Progressive
+        /// </summary>
         [Description("Progressive")]
         Progressive = 1,
+
+        /// <summary>
+        /// Progressive (Gradual)
+        /// </summary>
         [Description("Progressive (Gradual)")]
         Progressive_Gradual = 2
     }
@@ -39,24 +53,62 @@ namespace Aurora.Settings
         RainFall = 6,
     }
 
+    /// <summary>
+    /// Enum list for the layer effects
+    /// </summary>
     public enum LayerEffects
     {
+        /// <summary>
+        /// None
+        /// </summary>
         [Description("None")]
         None = 0,
+
+        /// <summary>
+        /// Single Color Overlay
+        /// </summary>
         [Description("Single Color Overlay")]
         ColorOverlay = 1,
+
+        /// <summary>
+        /// Color Breathing
+        /// </summary>
         [Description("Color Breathing")]
         ColorBreathing = 2,
+
+        /// <summary>
+        /// Rainbow Shift (Horizontal)
+        /// </summary>
         [Description("Rainbow Shift (Horizontal)")]
         RainbowShift_Horizontal = 3,
+
+        /// <summary>
+        /// Rainbow Shift (Vertical)
+        /// </summary>
         [Description("Rainbow Shift (Vertical)")]
         RainbowShift_Vertical = 4,
+
+        /// <summary>
+        /// Rainbow Shift (Diagonal)
+        /// </summary>
         [Description("Rainbow Shift (Diagonal)")]
         RainbowShift_Diagonal = 5,
+
+        /// <summary>
+        /// Rainbow Shift (Other Diagonal)
+        /// </summary>
         [Description("Rainbow Shift (Other Diagonal)")]
         RainbowShift_Diagonal_Other = 6,
+
+        /// <summary>
+        /// Rainbow Shift (Custom Angle)
+        /// </summary>
         [Description("Rainbow Shift (Custom Angle)")]
         RainbowShift_Custom_Angle = 7,
+
+        /// <summary>
+        /// Gradient Shift (Custom Angle)
+        /// </summary>
         [Description("Gradient Shift (Custom Angle)")]
         GradientShift_Custom_Angle = 8,
     }

@@ -12,12 +12,27 @@ using System.Windows.Forms;
 
 namespace Aurora
 {
+    /// <summary>
+    /// Globally accessible classes and variables
+    /// </summary>
     public static class Global
     {
         public static string ScriptDirectory = "Scripts";
         public static ScriptEngine PythonEngine = Python.CreateEngine();
+
+        /// <summary>
+        /// A boolean indicating if Aurora was started with Debug parameter
+        /// </summary>
         public static bool isDebug = false;
+
+        /// <summary>
+        /// Output logger for errors, warnings, and information
+        /// </summary>
         public static Logger logger = new Logger();
+
+        /// <summary>
+        /// Input event subscriptions
+        /// </summary>
         public static InputEventsSubscriptions input_subscriptions = new InputEventsSubscriptions();
         public static GameEventHandler geh;
         public static NetworkListener net_listener;
@@ -26,6 +41,10 @@ namespace Aurora
         public static KeyboardLayoutManager kbLayout;
         public static Effects effengine = new Effects();
         public static KeyRecorder key_recorder = new KeyRecorder();
+
+        /// <summary>
+        /// Currently held down modifer key
+        /// </summary>
         public static Keys held_modified = Keys.None;
     }
 

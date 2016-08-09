@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Aurora.Devices.ScriptedDevice
 {
-    class ScriptedDevice : Device
+    public class ScriptedDevice : Device
     {
         private bool crashed = false;
         private readonly dynamic script = null;

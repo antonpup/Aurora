@@ -128,8 +128,16 @@ namespace Aurora.Utils
         }
     }
 
+    /// <summary>
+    /// A class for handling Steam games
+    /// </summary>
     public static class SteamUtils
     {
+        /// <summary>
+        /// Retrieves a path to a specified AppID
+        /// </summary>
+        /// <param name="gameId">The game's AppID</param>
+        /// <returns>Path to the location of AppID's install</returns>
         public static string GetGamePath(int gameId)
         {
             Global.logger.LogLine("Trying to get game path for: " + gameId, Logging_Level.Info);

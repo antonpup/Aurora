@@ -5,15 +5,40 @@ using System.Text;
 
 namespace Aurora
 {
+    /// <summary>
+    /// Enum list for every logging levels
+    /// </summary>
     public enum Logging_Level
     {
+        /// <summary>
+        /// None, no logging level
+        /// </summary>
         None,
+
+        /// <summary>
+        /// Information
+        /// </summary>
         Info,
+
+        /// <summary>
+        /// Warning
+        /// </summary>
         Warning,
+
+        /// <summary>
+        /// Error
+        /// </summary>
         Error,
+
+        /// <summary>
+        /// External, should be used for scripts
+        /// </summary>
         External
     }
 
+    /// <summary>
+    /// A logging class
+    /// </summary>
     public class Logger
     {
         private bool retrieved_unique_logfile = false;
@@ -56,6 +81,10 @@ namespace Aurora
             LogLine(systeminfo_sb.ToString(), Logging_Level.None, false);
         }
 
+        /// <summary>
+        /// Gets the path of the currently used log file
+        /// </summary>
+        /// <returns>A path to the log file</returns>
         public string GetPath()
         {
             if (!retrieved_unique_logfile)
@@ -67,6 +96,12 @@ namespace Aurora
             return logfile;
         }
 
+        /// <summary>
+        /// Logs a line into the currently used log file
+        /// </summary>
+        /// <param name="message">Message you wish to log</param>
+        /// <param name="level">The logging level of this message</param>
+        /// <param name="timestamp">A boolean value representing if a timestamp should be included</param>
         public void LogLine(string message, Logging_Level level = Logging_Level.None, bool timestamp = true)
         {
             string logLine = PrepareMessage(message, level, timestamp);

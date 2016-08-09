@@ -48,7 +48,7 @@ namespace Aurora.Profiles.Generic_Application
             layers.Enqueue(cz_layer);
 
             //Scripts
-            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers);
+            Global.Configuration.additional_profiles[profilename].UpdateEffectScripts(layers);
 
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
             if (Global.Configuration.additional_profiles.ContainsKey(profilename) && (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).shortcuts_assistant_enabled)

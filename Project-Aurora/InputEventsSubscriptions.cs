@@ -5,13 +5,31 @@ using Gma.System.MouseKeyHook;
 
 namespace Aurora
 {
+    /// <summary>
+    /// Class for subscribing to various HID input events
+    /// </summary>
     public class InputEventsSubscriptions : IDisposable
     {
         private IKeyboardMouseEvents input_hook = null;
 
+        /// <summary>
+        /// Event for a Key pressed Down on a keyboard
+        /// </summary>
         public event KeyEventHandler KeyDown;
+
+        /// <summary>
+        /// Event for a Key pressed on a keyboard
+        /// </summary>
         public event KeyPressEventHandler KeyPress;
+
+        /// <summary>
+        /// Event for a Key released on a keyboard
+        /// </summary>
         public event KeyEventHandler KeyUp;
+
+        /// <summary>
+        /// Event for a mouse button pressed
+        /// </summary>
         public event MouseEventHandler MouseClick;
 
         public bool Initialize()

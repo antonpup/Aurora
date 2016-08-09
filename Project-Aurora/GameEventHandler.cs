@@ -44,7 +44,6 @@ namespace Aurora
 
         private string process_path = "";
         private long currentTick = 0L;
-        private long nextProcessNameUpdate = 0L;
 
         private PreviewType preview_mode = PreviewType.Desktop;
         private string preview_mode_profile_key = "";
@@ -53,7 +52,7 @@ namespace Aurora
 
         public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            GetActiveWindowsProcessname();
+            process_path = GetActiveWindowsProcessname();
         }
 
         public GameEventHandler()
@@ -143,9 +142,7 @@ namespace Aurora
             string process_name = System.IO.Path.GetFileName(process_path);
 
             if (Global.Configuration.excluded_programs.Contains(process_name))
-            {
                 return;
-            }
 
             EffectsEngine.EffectFrame newframe = new EffectsEngine.EffectFrame();
 
@@ -200,7 +197,7 @@ namespace Aurora
             }
             else if(profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
             {
-                if (process_name == "csgo.exe")
+                if (process_name.Equals("csgo.exe"))
                 {
                     //Update timer set to 100 ticks a second for CSGO for Smooth Bomb Effect
                     update_timer.Interval = 10; // in miliseconds
