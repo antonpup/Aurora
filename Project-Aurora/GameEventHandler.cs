@@ -52,7 +52,13 @@ namespace Aurora
 
         public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            process_path = GetActiveWindowsProcessname();
+            string active_process = GetActiveWindowsProcessname();
+
+            if(!String.IsNullOrWhiteSpace(active_process))
+            {
+                process_path = active_process;
+                Global.logger.LogLine("Process changed: " + process_path, Logging_Level.Info);
+            }
         }
 
         public GameEventHandler()
@@ -76,6 +82,8 @@ namespace Aurora
         {
             dele = new WinEventDelegate(WinEventProc);
             SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
+            SetWinEventHook(EVENT_SYSTEM_MINIMIZESTART, EVENT_SYSTEM_MINIMIZEEND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
+
             try
             {
                 update_timer = new Timer(33);
@@ -108,6 +116,8 @@ namespace Aurora
 
         private const uint WINEVENT_OUTOFCONTEXT = 0;
         private const uint EVENT_SYSTEM_FOREGROUND = 3;
+        private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
+        private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017;
 
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);

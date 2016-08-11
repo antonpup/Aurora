@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-public class ExampleEffect
+public class ExampleDeviceScript
 {
     public string devicename = "Example CS Device Script";
     public bool enabled = false; //Switch to True, to enable it in Aurora
@@ -58,7 +58,7 @@ public class ExampleEffect
         }
     }
     
-    //Custom method to send the color to the deivce
+    //Custom method to send the color to the device
     private void SendColorToDevice(Color color, bool forced)
     {
         //Check if device's current color is the same, no need to update if they are the same

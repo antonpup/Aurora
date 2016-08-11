@@ -417,7 +417,11 @@ namespace Aurora.Profiles.Dota_2
         public GameEvent_Dota2()
         {
             profilename = "Dota 2";
+            UpdateAnimations();
+        }
 
+        public void UpdateAnimations()
+        {
             razor_plasma_field_track = new AnimationTrack("Razor Plasma Field", 2.0f);
             razor_plasma_field_track.SetFrame(0.0f,
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 200, 255), 3)
@@ -1153,6 +1157,9 @@ namespace Aurora.Profiles.Dota_2
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
 
+            if (currenttime - previoustime > 300000 || (currenttime == 0 && previoustime == 0))
+                UpdateAnimations();
+
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
             if (isPlayingKillStreakAnimation && Time.GetMillisecondsSinceEpoch() >= ks_end_time)
@@ -1722,11 +1729,6 @@ namespace Aurora.Profiles.Dota_2
             EffectLayer cz_layer = new EffectLayer("Dota 2 - Color Zones");
             cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
-
-            if (Time.GetSecondsSinceEpoch() % this.updateRate == 0 && (Time.GetSecondsSinceEpoch() != this.lastUpdate))
-            {
-                this.lastUpdate = Time.GetSecondsSinceEpoch();
-            }
 
             frame.AddLayers(layers.ToArray());
         }

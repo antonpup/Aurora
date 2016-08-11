@@ -52,7 +52,7 @@ class main():
         else:
             return False
     
-    #Custom method to send the color to the deivce
+    #Custom method to send the color to the device
     def SendColorToDevice(self, color, forced):
         #Check if device's current color is the same, no need to update if they are the same
         if not self.CompareColors(color, self.device_color) or forced:
