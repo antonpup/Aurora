@@ -4,7 +4,7 @@
 [Link to Aurora's webpage, includes some demos and changelogs](http://aurora.lastbullet.net)
 
 
-Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, The Division, League of Legends, Hotline Miami, and The Talos Principle.
+Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, The Division, League of Legends, Hotline Miami, The Talos Principle, Battlefield 3, Blacklight: Retribution, Magic: The Gathering - Duels of the Planeswalkers 2012, Middle-earth: Shadow of Mordor, Serious Sam 3, Robot Roller-Derby Disco Dodgeball, XCOM: Enemy Unknown, Evolve Stage 2, Metro: Last Light, and Guild Wars 2.
 
 #Requirements
 Recommended:
@@ -39,6 +39,16 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * League of Legends
 * Hotline Miami
 * The Talos Principle
+* Battlefield 3
+* Blacklight: Retribution
+* Magic: The Gathering - Duels of the Planeswalkers 2012
+* Middle-earth: Shadow of Mordor
+* Serious Sam 3
+* Robot Roller-Derby Disco Dodgeball
+* XCOM: Enemy Unknown
+* Evolve Stage 2
+* Metro: Last Light
+* Guild Wars 2
 
 ## Planned Features/Support
 * SteelSeries devices
@@ -59,6 +69,10 @@ Rocket League Demo
 Grand Theft Auto V Demo
 
 [![Grand Theft Auto V Demo](http://img.youtube.com/vi/n_13FYqBu7w/0.jpg)](https://www.youtube.com/watch?v=n_13FYqBu7w)
+
+Robot Roller-Derby Disco Dodgeball Demo
+
+[![Robot Roller-Derby Disco Dodgeball Demo](http://img.youtube.com/vi/3PWnqrD2NUc/0.jpg)](https://www.youtube.com/watch?v=3PWnqrD2NUc)
 
 
 ## Screenshots
@@ -93,6 +107,7 @@ General
 * Ability to select your preferred keyboard layout and brand.
 * Import/Export for profile settings
 * Customizable gradient selections for color zones
+* Scripting support for custom lighitng effects & custom devices
 
 Dota 2 features
 
