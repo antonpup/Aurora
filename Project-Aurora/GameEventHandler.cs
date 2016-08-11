@@ -57,7 +57,7 @@ namespace Aurora
             if(!String.IsNullOrWhiteSpace(active_process))
             {
                 process_path = active_process;
-                Global.logger.LogLine("Process changed: " + process_path, Logging_Level.Info);
+                //Global.logger.LogLine("Process changed: " + process_path, Logging_Level.Info);
             }
         }
 

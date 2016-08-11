@@ -201,7 +201,11 @@ namespace Aurora
 
             Global.logger.LogLine("Listening for game integration calls...", Logging_Level.None);
 
+            Global.logger.LogLine("Loading WinApp...", Logging_Level.None);
             WinApp = new System.Windows.Application();
+            Global.logger.LogLine("Loaded WinApp", Logging_Level.None);
+
+            Global.logger.LogLine("Loading ResourceDictionaries...", Logging_Level.None);
             ResourceDictionary resourceDictionaryCore = new ResourceDictionary();
             resourceDictionaryCore.Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative);
             ResourceDictionary resourceDictionaryToolkit = new ResourceDictionary();
@@ -210,7 +214,11 @@ namespace Aurora
             WinApp.Resources.MergedDictionaries.Add(resourceDictionaryCore);
             WinApp.Resources.MergedDictionaries.Add(resourceDictionaryToolkit);
 
+            Global.logger.LogLine("Loaded ResourceDictionaries", Logging_Level.None);
+
             WinApp.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            Global.logger.LogLine("Loading ConfigUI...", Logging_Level.None);
 
             MainWindow = new ConfigUI();
             WinApp.MainWindow = MainWindow;
@@ -238,6 +246,13 @@ namespace Aurora
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            Exception exc = (Exception)e.ExceptionObject;
+            Global.logger.LogLine("Fatal Exception caught : " + exc, Logging_Level.Error);
+            Global.logger.LogLine(String.Format("Runtime terminating: {0}", e.IsTerminating), Logging_Level.Error);
+
+            System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
+
+            //Perform exit operations
             Global.input_subscriptions.Dispose();
             Global.geh.Destroy();
             Global.net_listener.Stop();
@@ -253,12 +268,6 @@ namespace Aurora
             {
                 Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exception);
             }
-
-            Exception exc = (Exception)e.ExceptionObject;
-            Global.logger.LogLine("Fatal Exception caught : " + exc, Logging_Level.Error);
-            Global.logger.LogLine(String.Format("Runtime terminating: {0}", e.IsTerminating), Logging_Level.Error);
-
-            System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
         }
 
         private static void InstallLogitech()

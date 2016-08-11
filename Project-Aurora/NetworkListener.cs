@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -179,7 +180,7 @@ namespace Aurora
         private void IPCServerThread()
         {
             PipeSecurity pipeSa = new PipeSecurity();
-            pipeSa.SetAccessRule(new PipeAccessRule("Everyone",
+            pipeSa.SetAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null),
                             PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow));
             while (true)
             {
