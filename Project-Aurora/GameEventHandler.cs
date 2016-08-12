@@ -149,7 +149,7 @@ namespace Aurora
         private void update_timer_Tick(object sender, EventArgs e)
         {
 
-            string process_name = System.IO.Path.GetFileName(process_path);
+            string process_name = System.IO.Path.GetFileName(process_path).ToLowerInvariant();
 
             if (Global.Configuration.excluded_programs.Contains(process_name))
                 return;
@@ -267,7 +267,7 @@ namespace Aurora
 
             //Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
 
-            string process_name = System.IO.Path.GetFileName(process_path);
+            string process_name = System.IO.Path.GetFileName(process_path).ToLowerInvariant();
 
             if (Global.Configuration.excluded_programs.Contains(process_name))
             {
