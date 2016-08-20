@@ -109,6 +109,8 @@ namespace Aurora
                 }
             }
 
+            log4net.Config.BasicConfigurator.Configure();
+
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 

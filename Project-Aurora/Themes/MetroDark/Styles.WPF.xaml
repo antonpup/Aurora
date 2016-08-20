@@ -866,7 +866,6 @@
 											         RenderPressed="{TemplateBinding IsPressed}" Background="Black">
 
                                 <Grid Grid.Column="1" Margin="5" IsHitTestVisible="False">
-                                    <Rectangle Width="1" Fill="{StaticResource ComboBoxToggleButtonDropDownSeparatorBackgroundBrush}" HorizontalAlignment="Left" Margin="-1,5,0,5" />
                                     <Path x:Name="Arrow" Width="10" Height="6" Fill="{StaticResource GlyphBackgroundBrush}" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z " Stretch="Fill" />
                                 </Grid>
                             </chrome:ButtonChrome>
@@ -936,7 +935,7 @@
                     <Grid>
                         <ToggleButton x:Name="PART_ColorPickerToggleButton"
                                 IsTabStop="True"
-                                MinHeight="22" 
+                                MinHeight="20" 
                                 Background="{TemplateBinding Background}" 
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 

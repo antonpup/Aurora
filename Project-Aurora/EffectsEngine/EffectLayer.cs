@@ -204,7 +204,7 @@ namespace Aurora.EffectsEngine
                         shift = effect_config.shift_amount;
                     }
 
-                    if(effect_config.animation_reverse)
+                    if (effect_config.animation_reverse)
                     {
                         shift *= -1.0f;
                     }
@@ -227,8 +227,8 @@ namespace Aurora.EffectsEngine
                     }
                     else if (effect_config.animation_type == AnimationType.Zoom_in && effect_config.brush.type == EffectBrush.BrushType.Radial)
                     {
-                        shift = ((Effects.canvas_biggest - effect_config.shift_amount) * 40.0f ) % Effects.canvas_biggest;
-                        
+                        shift = ((Effects.canvas_biggest - effect_config.shift_amount) * 40.0f) % Effects.canvas_biggest;
+
                     }
                     else if (effect_config.animation_type == AnimationType.Zoom_out && effect_config.brush.type == EffectBrush.BrushType.Radial)
                     {
@@ -603,7 +603,7 @@ namespace Aurora.EffectsEngine
                     return Color.FromArgb((int)(Alpha / Colorscount), (int)(Red / Colorscount), (int)(Green / Colorscount), (int)(Blue / Colorscount));
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.LogLine("EffectLayer.Get() Exception: " + exc, Logging_Level.Error);
 
@@ -715,12 +715,12 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive)
+        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType);
+                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed);
             else
-                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType);
+                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flash_past, flash_reversed);
         }
 
         /// <summary>
@@ -731,12 +731,12 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive)
+        public void PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType);
+                PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed);
             else
-                PercentEffect(spectrum, sequence.freeform, value, total, percentEffectType);
+                PercentEffect(spectrum, sequence.freeform, value, total, percentEffectType, flash_past, flash_reversed);
         }
 
         /// <summary>
@@ -748,7 +748,7 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive)
+        public void PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -757,6 +757,14 @@ namespace Aurora.EffectsEngine
                 progress_total = 1.0;
 
             double progress = progress_total * keys.Count();
+
+            if (flash_past > 0.0)
+            {
+                if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
+                {
+                    foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                }
+            }
 
             for (int i = 0; i < keys.Count(); i++)
             {
@@ -796,7 +804,7 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive)
+        public void PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -806,6 +814,16 @@ namespace Aurora.EffectsEngine
 
             double progress = progress_total * keys.Count();
 
+            double flash_amount = 1.0;
+
+            if (flash_past > 0.0)
+            {
+                if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
+                {
+                    flash_amount = Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI);
+                }
+            }
+
             for (int i = 0; i < keys.Count(); i++)
             {
                 Devices.DeviceKeys current_key = keys[i];
@@ -813,20 +831,22 @@ namespace Aurora.EffectsEngine
                 switch (percentEffectType)
                 {
                     case (PercentEffectType.AllAtOnce):
-                        SetOneKey(current_key, spectrum.GetColorAt((float)progress_total));
+                        SetOneKey(current_key, spectrum.GetColorAt((float)progress_total, 1.0f, flash_amount));
                         break;
                     case (PercentEffectType.Progressive_Gradual):
                         if (i == (int)progress)
                         {
                             double percent = (double)progress - i;
-                            SetOneKey(current_key, Utils.ColorUtils.MultiplyColorByScalar(spectrum.GetColorAt((float)i / (float)keys.Count()), percent));
+                            SetOneKey(current_key,
+                                Utils.ColorUtils.MultiplyColorByScalar(spectrum.GetColorAt((float)i / (float)keys.Count(), 1.0f, flash_amount), percent)
+                                );
                         }
                         else if (i < (int)progress)
-                            SetOneKey(current_key, spectrum.GetColorAt((float)i / (float)keys.Count()));
+                            SetOneKey(current_key,spectrum.GetColorAt((float)i / (float)keys.Count(), 1.0f, flash_amount));
                         break;
                     default:
                         if (i < (int)progress)
-                            SetOneKey(current_key, spectrum.GetColorAt((float)i / (float)keys.Count()));
+                            SetOneKey(current_key,spectrum.GetColorAt((float)i / (float)keys.Count(), 1.0f, flash_amount));
                         break;
                 }
             }
@@ -841,7 +861,7 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive)
+        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0 || Double.IsNaN(progress_total))
@@ -849,6 +869,13 @@ namespace Aurora.EffectsEngine
             else if (progress_total > 1.0)
                 progress_total = 1.0;
 
+            if (flash_past > 0.0)
+            {
+                if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
+                {
+                    foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                }
+            }
 
             using (Graphics g = Graphics.FromImage(colormap))
             {
@@ -902,13 +929,23 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive)
+        public void PercentEffect(ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
                 progress_total = 0.0;
             else if (progress_total > 1.0)
                 progress_total = 1.0;
+
+            double flash_amount = 1.0;
+
+            if (flash_past > 0.0)
+            {
+                if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
+                {
+                    flash_amount = Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI);
+                }
+            }
 
             using (Graphics g = Graphics.FromImage(colormap))
             {
@@ -930,7 +967,7 @@ namespace Aurora.EffectsEngine
                     myMatrix.RotateAt(freeform.Angle, rotatePoint, MatrixOrder.Append);
 
                     g.Transform = myMatrix;
-                    g.FillRectangle(new SolidBrush(spectrum.GetColorAt((float)progress_total)), rect);
+                    g.FillRectangle(new SolidBrush(spectrum.GetColorAt((float)progress_total, 1.0f, flash_amount)), rect);
                 }
                 else
                 {
@@ -944,7 +981,7 @@ namespace Aurora.EffectsEngine
                     myMatrix.RotateAt(freeform.Angle, rotatePoint, MatrixOrder.Append);
 
                     g.Transform = myMatrix;
-                    LinearGradientBrush brush = spectrum.ToLinearGradient(width, 0, x_pos, 0);
+                    LinearGradientBrush brush = spectrum.ToLinearGradient(width, 0, x_pos, 0, flash_amount);
                     g.FillRectangle(brush, rect);
                 }
 

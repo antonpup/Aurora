@@ -87,6 +87,9 @@ namespace Aurora.Devices
         {
             foreach (Device device in devices)
             {
+                if (device.IsInitialized())
+                    continue;
+
                 if (device.Initialize())
                     anyInitialized = true;
 
@@ -95,12 +98,15 @@ namespace Aurora.Devices
 
             NewDevicesInitialized?.Invoke(this, new EventArgs());
 
-            if (!retryActivated)
+            if ((Global.Configuration.desktop_profile.Settings as Profiles.Desktop.DesktopSettings).isEnabled)
             {
-                Thread retryThread = new Thread(RetryInitialize);
-                retryThread.Start();
+                if (!retryActivated)
+                {
+                    Thread retryThread = new Thread(RetryInitialize);
+                    retryThread.Start();
 
-                retryActivated = true;
+                    retryActivated = true;
+                }
             }
         }
 
@@ -108,6 +114,9 @@ namespace Aurora.Devices
         {
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
+                if (!(Global.Configuration.desktop_profile.Settings as Profiles.Desktop.DesktopSettings).isEnabled)
+                    break;
+
                 Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);
 
                 foreach (Device device in devices)
@@ -196,7 +205,7 @@ namespace Aurora.Devices
             foreach (Device device in devices)
                 devices_info += device.GetDeviceDetails() + "\r\n";
 
-            if(retryAttemptsLeft > 0)
+            if (retryAttemptsLeft > 0)
                 devices_info += "Retries: " + retryAttemptsLeft + "\r\n";
 
             return devices_info;

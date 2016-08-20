@@ -46,8 +46,8 @@ namespace Aurora
         private readonly double virtual_keyboard_width;
         private readonly double virtual_keyboard_height;
 
-        private readonly double max_width;
-        private readonly double max_height;
+        private readonly double width;
+        private readonly double height;
 
         LayerEditor layer_editor = new LayerEditor();
 
@@ -58,8 +58,8 @@ namespace Aurora
             virtual_keyboard_height = this.keyboard_grid.Height;
             virtual_keyboard_width = this.keyboard_grid.Width;
 
-            max_width = MaxWidth;
-            max_height = MaxHeight;
+            width = Width;
+            height = Height;
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
@@ -75,14 +75,17 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            this.MaxWidth = max_width + (virtial_kb.Width - virtual_keyboard_width);
-            this.Width = this.MaxWidth;
+            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            this.MaxHeight = max_height + (virtial_kb.Height - virtual_keyboard_height);
-            this.Height = this.MaxHeight;
+            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
+
+            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
+            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
+            keyboard_viewbox.UpdateLayout();
+
             this.UpdateLayout();
         }
 
@@ -110,14 +113,17 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            this.MaxWidth = max_width + (virtial_kb.Width - virtual_keyboard_width);
-            this.Width = this.MaxWidth;
+            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            this.MaxHeight = max_height + (virtial_kb.Height - virtual_keyboard_height);
-            this.Height = this.MaxHeight;
+            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
+
+            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
+            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
+            keyboard_viewbox.UpdateLayout();
+
             this.UpdateLayout();
 
             Global.input_subscriptions.Initialize();

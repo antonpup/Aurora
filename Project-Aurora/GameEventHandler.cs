@@ -54,7 +54,7 @@ namespace Aurora
         {
             string active_process = GetActiveWindowsProcessname();
 
-            if(!String.IsNullOrWhiteSpace(active_process))
+            if (!String.IsNullOrWhiteSpace(active_process))
             {
                 process_path = active_process;
                 //Global.logger.LogLine("Process changed: " + process_path, Logging_Level.Info);
@@ -64,9 +64,9 @@ namespace Aurora
         public GameEventHandler()
         {
             //Include all pre-made profiles
-            foreach(var kvp in Global.Configuration.ApplicationProfiles)
+            foreach (var kvp in Global.Configuration.ApplicationProfiles)
             {
-                foreach(string process in kvp.Value.ProcessNames)
+                foreach (string process in kvp.Value.ProcessNames)
                     profiles.Add(process, kvp.Value.Event);
             }
 
@@ -92,7 +92,7 @@ namespace Aurora
                 update_timer.Start();
                 GC.KeepAlive(update_timer);
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.LogLine("GameEventHandler.Init() Exception, " + exc, Logging_Level.Error);
                 return false;
@@ -178,6 +178,8 @@ namespace Aurora
 
             if (Global.Configuration.additional_profiles.ContainsKey(process_name) && (Global.Configuration.additional_profiles[process_name].Settings as GenericApplicationSettings).isEnabled)
             {
+                Global.dev_manager.Initialize();
+
                 if (profiles.ContainsKey(process_name))
                 {
                     profiles[process_name].UpdateLights(newframe);
@@ -192,6 +194,8 @@ namespace Aurora
             }
             else if (preview_mode == PreviewType.GenericApplication && Global.Configuration.additional_profiles.ContainsKey(preview_mode_profile_key) && (Global.Configuration.additional_profiles[preview_mode_profile_key].Settings as GenericApplicationSettings).isEnabled)
             {
+                Global.dev_manager.Initialize();
+
                 if (profiles.ContainsKey(preview_mode_profile_key))
                     profiles[preview_mode_profile_key].UpdateLights(newframe);
                 else
@@ -203,9 +207,11 @@ namespace Aurora
             }
             else if (preview_mode == PreviewType.Predefined && profiles.ContainsKey(preview_mode_profile_key) && profiles[preview_mode_profile_key].IsEnabled())
             {
+                Global.dev_manager.Initialize();
+
                 profiles[preview_mode_profile_key].UpdateLights(newframe);
             }
-            else if(profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
+            else if (profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
             {
                 if (process_name.Equals("csgo.exe"))
                 {
@@ -222,6 +228,8 @@ namespace Aurora
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
                 {
+                    Global.dev_manager.Initialize();
+
                     profiles[process_name].UpdateLights(newframe);
                 }
             }
@@ -233,6 +241,8 @@ namespace Aurora
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
                 {
+                    Global.dev_manager.Initialize();
+
                     profiles[Global.net_listener.WrappedProcess].UpdateLights(newframe);
                 }
             }
@@ -243,7 +253,13 @@ namespace Aurora
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
                 {
-                    desktop_e.UpdateLights(newframe);
+                    if (!(Global.Configuration.desktop_profile.Settings as DesktopSettings).isEnabled)
+                        Global.dev_manager.Shutdown();
+                    else
+                    {
+                        Global.dev_manager.Initialize();
+                        desktop_e.UpdateLights(newframe);
+                    }
                 }
 
             }
@@ -252,7 +268,7 @@ namespace Aurora
             TimedListObject[] overlay_events = overlays.ToArray();
             foreach (TimedListObject evnt in overlay_events)
             {
-                if((evnt.item as LightEvent).IsEnabled())
+                if ((evnt.item as LightEvent).IsEnabled())
                     (evnt.item as LightEvent).UpdateLights(newframe);
             }
 
@@ -319,10 +335,10 @@ namespace Aurora
                             {
                                 string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
 
-                                if(!profiles.ContainsKey(gs_process_name))
+                                if (!profiles.ContainsKey(gs_process_name))
                                     profiles.Add(gs_process_name, new GameEvent_Aurora_Wrapper());
 
-                                if(process_name.EndsWith(gs_process_name))
+                                if (process_name.EndsWith(gs_process_name))
                                 {
                                     profiles[gs_process_name].UpdateLights(newframe, gs as GameState_Wrapper);
                                     resolved_state = true;
@@ -419,8 +435,8 @@ namespace Aurora
                         break;
                     }
                 }
-                
-                if(!isFound)
+
+                if (!isFound)
                 {
                     overlays.Add(new TimedListObject(overlay_event, duration, overlays));
                 }

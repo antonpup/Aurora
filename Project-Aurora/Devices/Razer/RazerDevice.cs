@@ -19,6 +19,8 @@ namespace Aurora.Devices.Razer
         IMousepad mousepad = null;
         IKeypad keypad = null;
 
+        private readonly object action_lock = new object();
+
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
 
         public string GetDeviceName()
@@ -40,67 +42,87 @@ namespace Aurora.Devices.Razer
 
         public bool Initialize()
         {
-            if (!isInitialized)
+            lock (action_lock)
             {
-                try
+                if (!IsInitialized())
                 {
-                    if (!Chroma.IsSdkAvailable())
+                    try
                     {
-                        Global.logger.LogLine("No Chroma SDK available", Logging_Level.Info);
-                        throw new Exception("No Chroma SDK available");
-                        //return false;
-                    }
-
-                    Chroma.Instance.Initialize();
-
-                    Global.logger.LogLine("Razer device, Initialized", Logging_Level.Info);
-
-                    keyboard = Chroma.Instance.Keyboard;
-                    mouse = Chroma.Instance.Mouse;
-                    headset = Chroma.Instance.Headset;
-                    mousepad = Chroma.Instance.Mousepad;
-                    keypad = Chroma.Instance.Keypad;
-
-                    if (keyboard == null &&
-                        mouse == null &&
-                        headset == null &&
-                        mousepad == null &&
-                        keypad == null
-                        )
-                    {
-                        throw new Exception("No devices connected");
-                    }
-                    else
-                    {
-                        if (Global.Configuration.razer_first_time)
+                        if (!Chroma.IsSdkAvailable())
                         {
-                            RazerInstallInstructions instructions = new RazerInstallInstructions();
-                            instructions.ShowDialog();
-
-                            Global.Configuration.razer_first_time = false;
-                            Settings.ConfigManager.Save(Global.Configuration);
+                            Global.logger.LogLine("No Chroma SDK available", Logging_Level.Info);
+                            throw new Exception("No Chroma SDK available");
+                            //return false;
                         }
 
-                        isInitialized = true;
-                        return true;
+                        Chroma.Instance.Initialize();
+
+                        Global.logger.LogLine("Razer device, Initialized", Logging_Level.Info);
+
+                        keyboard = Chroma.Instance.Keyboard;
+                        mouse = Chroma.Instance.Mouse;
+                        headset = Chroma.Instance.Headset;
+                        mousepad = Chroma.Instance.Mousepad;
+                        keypad = Chroma.Instance.Keypad;
+
+                        if (keyboard == null &&
+                            mouse == null &&
+                            headset == null &&
+                            mousepad == null &&
+                            keypad == null
+                            )
+                        {
+                            throw new Exception("No devices connected");
+                        }
+                        else
+                        {
+                            if (Global.Configuration.razer_first_time)
+                            {
+                                RazerInstallInstructions instructions = new RazerInstallInstructions();
+                                instructions.ShowDialog();
+
+                                Global.Configuration.razer_first_time = false;
+                                Settings.ConfigManager.Save(Global.Configuration);
+                            }
+
+                            isInitialized = true;
+                            return true;
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Global.logger.LogLine("Razer device, Exception! Message:" + ex, Logging_Level.Error);
-                }
+                    catch (Exception ex)
+                    {
+                        Global.logger.LogLine("Razer device, Exception! Message:" + ex, Logging_Level.Error);
+                    }
 
 
-                isInitialized = false;
-                return false;
+                    isInitialized = false;
+                    return false;
+                }
+
+                return isInitialized;
             }
-
-            return isInitialized;
-
         }
 
         public void Shutdown()
         {
+            Global.logger.LogLine("Razer device, Shutdown attempt", Logging_Level.Info);
+
+            lock (action_lock)
+            {
+                try
+                {
+                    if (IsInitialized())
+                    {
+                        //Chroma.Instance.Uninitialize();
+                        isInitialized = false;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine("Razer device, Exception during Shutdown. Message: " + exc, Logging_Level.Error);
+                    isInitialized = false;
+                }
+            }
         }
 
         public void Reset()
@@ -119,7 +141,7 @@ namespace Aurora.Devices.Razer
 
         public bool IsInitialized()
         {
-            return isInitialized;
+            return isInitialized && Chroma.Instance.Initialized;
         }
 
         public bool IsConnected()

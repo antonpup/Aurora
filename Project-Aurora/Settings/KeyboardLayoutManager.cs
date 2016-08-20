@@ -97,7 +97,7 @@ namespace Aurora.Settings
 
                 if (brand == PreferredKeyboard.None)
                 {
-                    Global.kbLayout.LoadNone();
+                    LoadNone();
                     _loaded_localization = PreferredKeyboardLocalization.None;
 
                     foreach (var device in Global.dev_manager.GetInitializedDevices())
@@ -108,10 +108,10 @@ namespace Aurora.Settings
                         switch (device.GetDeviceName())
                         {
                             case ("Logitech"):
-                                Global.kbLayout.LoadBrand(PreferredKeyboard.Logitech);
+                                LoadBrand(PreferredKeyboard.Logitech);
                                 break;
                             case ("Corsair"):
-                                Global.kbLayout.LoadBrand(PreferredKeyboard.Corsair);
+                                LoadBrand(PreferredKeyboard.Corsair);
                                 break;
                             /*
                             case ("Razer"):

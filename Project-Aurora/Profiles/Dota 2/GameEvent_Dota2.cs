@@ -1570,7 +1570,8 @@ namespace Aurora.Profiles.Dota_2
                             (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).health_sequence,
                             (double)health,
                             (double)health_max,
-                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).health_effect_type);
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).health_effect_type,
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).health_blink_threshold);
 
                         layers.Enqueue(hpbar_layer);
                     }
@@ -1585,7 +1586,8 @@ namespace Aurora.Profiles.Dota_2
                             (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).mana_sequence,
                             (double)mana,
                             (double)mana_max,
-                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).mana_effect_type);
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).mana_effect_type,
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).mana_blink_threshold);
 
                         layers.Enqueue(manabar_layer);
                     }
