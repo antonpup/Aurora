@@ -24,6 +24,8 @@ namespace Aurora
         Settings.Control_Settings settings_control = new Settings.Control_Settings();
         Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
 
+        Control_LayerControlPresenter layercontrol_presenter = new Control_LayerControlPresenter();
+
         EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
 
         EffectColor transition_color = new EffectColor();
@@ -63,7 +65,17 @@ namespace Aurora
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
+            layer_manager.NewLayer += Layer_manager_NewLayer;
+
             GenerateProfileStack();
+        }
+
+        private void Layer_manager_NewLayer(Settings.Layers.DefaultLayer layer)
+        {
+            layercontrol_presenter.SetLayer(layer);
+
+            this.content_grid.Children.Clear();
+            this.content_grid.Children.Add(layercontrol_presenter);
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)

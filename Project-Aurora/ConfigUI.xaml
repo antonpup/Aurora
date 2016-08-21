@@ -6,17 +6,17 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:local="clr-namespace:Aurora"
              xmlns:tb="http://www.hardcodet.net/taskbar"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.ConfigUI"
+             xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.ConfigUI"
              mc:Ignorable="d" Height="575" Width="926" Title="Aurora" Loaded="Window_Loaded" Initialized="Window_Initialized" Closing="Window_Closing" Activated="Window_Activated" Deactivated="Window_Deactivated" HorizontalContentAlignment="Stretch" MinWidth="926" MinHeight="575">
     <Grid x:Name="bg_grid" Background="#FF660000">
-        <Grid Margin="56,0,0,0">
+        <Grid Margin="266,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Viewbox x:Name="keyboard_viewbox" StretchDirection="Both">
+            <Viewbox x:Name="keyboard_viewbox" StretchDirection="Both" Margin="0,0,7,0">
                 <Border Margin="5,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#A5000000" CornerRadius="8" MinWidth="828" MinHeight="216">
-                        <Grid x:Name="keyboard_grid" Margin="10,10,10,10" Height="192" VerticalAlignment="Top" HorizontalAlignment="Left" Width="803"/>
+                    <Grid x:Name="keyboard_grid" Margin="10,10,10,10" Height="192" VerticalAlignment="Top" HorizontalAlignment="Left" Width="803"/>
                 </Border>
             </Viewbox>
             <Grid x:Name="content_grid" Margin="6,4,7,6" Grid.Row="1"/>
@@ -59,5 +59,6 @@
             </ScrollViewer>
             <Image Source="Resources/settings_icon.png" ToolTip="General Settings" Margin="6,0,10,0" MouseDown="DesktopControl_MouseDown" RenderTransformOrigin="0.5,0.5" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
         </Grid>
+        <Settings:Control_LayerManager x:Name="layer_manager" Margin="61,10,0,10" HorizontalAlignment="Left" Width="200"/>
     </Grid>
 </Window>

@@ -469,6 +469,12 @@
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Provider.cs" />
     <Compile Include="Profiles\GameState.cs" />
+    <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
+      <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Control_LayerManager.xaml.cs">
+      <DependentUpon>Control_LayerManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Control_ScriptManager.xaml.cs">
       <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
     </Compile>
@@ -479,6 +485,10 @@
       <DependentUpon>Control_Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\FreeFormObject.cs" />
+    <Compile Include="Settings\Layers\Control_DefaultLayer.xaml.cs">
+      <DependentUpon>Control_DefaultLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\DefaultLayer.cs" />
     <Compile Include="Settings\ProfileManager.cs" />
     <Compile Include="Settings\KeyboardLayoutManager.cs" />
     <Compile Include="Settings\KeyRecorder.cs" />
@@ -714,6 +724,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Control_LayerControlPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Control_LayerManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Control_ScriptManager.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -723,6 +741,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Control_Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_DefaultLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
