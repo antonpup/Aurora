@@ -1,5 +1,4 @@
-﻿using Aurora.EffectsEngine.Functions;
-using Aurora.Settings;
+﻿using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -23,7 +22,6 @@ namespace Aurora.EffectsEngine
         private bool needsRender = false;
 
         Color peripheral;
-        private List<EffectColorFunction> post_functions = new List<EffectColorFunction>();
 
         static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
 
@@ -50,7 +48,6 @@ namespace Aurora.EffectsEngine
             peripheral = another_layer.peripheral;
 
             needsRender = another_layer.needsRender;
-            post_functions = new List<EffectColorFunction>(another_layer.post_functions);
         }
 
         /// <summary>
@@ -476,16 +473,16 @@ namespace Aurora.EffectsEngine
         /// <param name="color">Color to be used</param>
         private void SetOneKey(Devices.DeviceKeys key, Color color)
         {
-            Bitmaping keymaping = Effects.GetBitmappingFromDeviceKey(key);
+            BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-            if (keymaping.Equals(new Bitmaping(0, 0, 0, 0)) && key == Devices.DeviceKeys.Peripheral)
+            if (keymaping.IsValid && key == Devices.DeviceKeys.Peripheral)
             {
                 peripheral = color;
             }
             else
             {
-                if (keymaping.topleft_y < 0 || keymaping.bottomright_y > Effects.canvas_height ||
-                    keymaping.topleft_x < 0 || keymaping.bottomright_x > Effects.canvas_width)
+                if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
+                    keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
                 {
                     Global.logger.LogLine("Coudln't set key color " + key.ToString(), Logging_Level.Warning);
                     return;
@@ -494,8 +491,7 @@ namespace Aurora.EffectsEngine
                 {
                     using (Graphics g = Graphics.FromImage(colormap))
                     {
-                        Rectangle keyarea = new Rectangle(keymaping.topleft_x, keymaping.topleft_y, keymaping.bottomright_x - keymaping.topleft_x, keymaping.bottomright_y - keymaping.topleft_y);
-                        g.FillRectangle(new SolidBrush(color), keyarea);
+                        g.FillRectangle(new SolidBrush(color), keymaping.Rectangle);
                         needsRender = true;
                     }
                 }
@@ -510,10 +506,6 @@ namespace Aurora.EffectsEngine
         /// <returns>Color at (X,Y)</returns>
         public Color Get(int x, int y)
         {
-            if (needsRender)
-                RenderLayer();
-
-
             BitmapData srcData = colormap.LockBits(
                     new Rectangle(x, y, 1, 1),
                     ImageLockMode.ReadOnly,
@@ -549,19 +541,16 @@ namespace Aurora.EffectsEngine
         {
             try
             {
-                Bitmaping keymaping = Effects.GetBitmappingFromDeviceKey(key);
+                BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-                if (keymaping.Equals(new Bitmaping(0, 0, 0, 0)) && key == Devices.DeviceKeys.Peripheral)
+                if (keymaping.IsValid && key == Devices.DeviceKeys.Peripheral)
                 {
                     return peripheral;
                 }
                 else
                 {
-                    if (keymaping.bottomright_x - keymaping.topleft_x == 0 || keymaping.bottomright_y - keymaping.topleft_y == 0)
+                    if (keymaping.IsEmpty)
                         return Color.FromArgb(0, 0, 0);
-
-                    if (needsRender)
-                        RenderLayer();
 
                     long Red = 0;
                     long Green = 0;
@@ -569,7 +558,7 @@ namespace Aurora.EffectsEngine
                     long Alpha = 0;
 
                     BitmapData srcData = colormap.LockBits(
-                        new Rectangle(keymaping.topleft_x, keymaping.topleft_y, keymaping.bottomright_x - keymaping.topleft_x, keymaping.bottomright_y - keymaping.topleft_y),
+                        keymaping.Rectangle,
                         ImageLockMode.ReadOnly,
                         PixelFormat.Format32bppArgb);
 
@@ -577,16 +566,13 @@ namespace Aurora.EffectsEngine
 
                     IntPtr Scan0 = srcData.Scan0;
 
-                    int width = keymaping.bottomright_x - keymaping.topleft_x;
-                    int height = keymaping.bottomright_y - keymaping.topleft_y;
-
                     unsafe
                     {
                         byte* p = (byte*)(void*)Scan0;
 
-                        for (int y = 0; y < height; y++)
+                        for (int y = 0; y < keymaping.Height; y++)
                         {
-                            for (int x = 0; x < width; x++)
+                            for (int x = 0; x < keymaping.Width; x++)
                             {
                                 Blue += p[(y * stride) + x * 4];
                                 Green += p[(y * stride) + x * 4 + 1];
@@ -596,11 +582,9 @@ namespace Aurora.EffectsEngine
                         }
                     }
 
-                    int Colorscount = width * height;
-
                     colormap.UnlockBits(srcData);
 
-                    return Color.FromArgb((int)(Alpha / Colorscount), (int)(Red / Colorscount), (int)(Green / Colorscount), (int)(Blue / Colorscount));
+                    return Color.FromArgb((int)(Alpha / keymaping.Area), (int)(Red / keymaping.Area), (int)(Green / keymaping.Area), (int)(Blue / keymaping.Area));
                 }
             }
             catch (Exception exc)
@@ -617,9 +601,6 @@ namespace Aurora.EffectsEngine
         /// <returns>Graphics instance</returns>
         public Graphics GetGraphics()
         {
-            if (needsRender)
-                RenderLayer();
-
             return Graphics.FromImage(colormap);
         }
 
@@ -629,9 +610,6 @@ namespace Aurora.EffectsEngine
         /// <returns>Layer Bitmap</returns>
         public Bitmap GetBitmap()
         {
-            if (needsRender)
-                RenderLayer();
-
             return colormap;
         }
 
@@ -645,12 +623,6 @@ namespace Aurora.EffectsEngine
         {
             EffectLayer added = new EffectLayer(lhs);
             added.name += " + " + rhs.name;
-
-            if (added.needsRender)
-                added.RenderLayer();
-
-            if (rhs.needsRender)
-                rhs.RenderLayer();
 
             using (Graphics g = added.GetGraphics())
             {
@@ -1077,68 +1049,6 @@ namespace Aurora.EffectsEngine
                 }
 
             }
-        }
-
-        /// <summary>
-        /// Adds a post function to the EffectLayer, to be executed at render time.
-        /// </summary>
-        /// <param name="function"></param>
-        public void AddPostFunction(EffectColorFunction function)
-        {
-            this.post_functions.Add(function);
-            needsRender = true;
-        }
-
-        /// <summary>
-        /// Renders the post functions onto the layer bitmap.
-        /// </summary>
-        public void RenderLayer()
-        {
-            BitmapData srcData = colormap.LockBits(
-                    new Rectangle(0, 0, colormap.Width, colormap.Height),
-                    ImageLockMode.ReadWrite,
-                    PixelFormat.Format32bppArgb);
-
-            int stride = srcData.Stride;
-
-            IntPtr Scan0 = srcData.Scan0;
-
-            unsafe
-            {
-                byte* p = (byte*)(void*)Scan0;
-
-                Parallel.ForEach(post_functions, (func) =>
-                {
-
-                    Tuple<EffectPoint, Color>[] points = func.getPointMap();
-
-                    foreach (Tuple<EffectPoint, Color> point in points)
-                    {
-                        if (float.IsNaN(point.Item1.X) || float.IsNaN(point.Item1.Y) ||
-                            (int)point.Item1.X >= Effects.canvas_width || (int)point.Item1.Y >= Effects.canvas_height ||
-                            (int)point.Item1.X < 0 || (int)point.Item1.Y < 0
-                            )
-                            continue;
-
-                        int x = (int)point.Item1.X;
-                        int y = (int)point.Item1.Y;
-
-                        Color current_color = Color.FromArgb(p[(y * stride) + x * 4 + 3], p[(y * stride) + x * 4 + 2], p[(y * stride) + x * 4 + 1], p[(y * stride) + x * 4]);
-
-                        Color resulting_color = Utils.ColorUtils.AddColors(current_color, point.Item2);
-
-                        p[(y * stride) + x * 4] = resulting_color.B;
-                        p[(y * stride) + x * 4 + 1] = resulting_color.G;
-                        p[(y * stride) + x * 4 + 2] = resulting_color.R;
-                        p[(y * stride) + x * 4 + 3] = resulting_color.A;
-                    }
-
-                });
-            }
-
-            colormap.UnlockBits(srcData);
-
-            needsRender = false;
         }
 
         /// <summary>

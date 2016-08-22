@@ -1,6 +1,5 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
-using Aurora.EffectsEngine.Functions;
 using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
 using Aurora.Settings;
@@ -1206,6 +1205,9 @@ namespace Aurora.Profiles.Dota_2
 
                     if ((Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).bg_killstreaks_lines)
                     {
+                        /*
+                         * !!!NOTE: TO BE REWORKED INTO ANIMATIONS!!!
+
                         for (int str = 2; str <= curr_ks; str++)
                         {
                             killstreak_offsets[str] -= 0.75f;
@@ -1218,6 +1220,8 @@ namespace Aurora.Profiles.Dota_2
 
                             bg_layer.AddPostFunction(ks_col_func);
                         }
+
+                        */
                     }
                     else
                     {

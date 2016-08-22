@@ -4,7 +4,6 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles.Payday_2.GSI;
 using System.Drawing;
 using Aurora.Profiles.Payday_2.GSI.Nodes;
-using Aurora.EffectsEngine.Functions;
 
 namespace Aurora.Profiles.Payday_2
 {
@@ -147,6 +146,9 @@ namespace Aurora.Profiles.Payday_2
                         / /  ----  / /
 
                         */
+                        
+                        /*
+                         * !!!NOTE: TO BE REWORKED INTO ANIMATIONS!!!
 
                         EffectColorFunction line1_col_func = new EffectColorFunction(
                             new EffectLine(-1f, Effects.canvas_width + assault_yoffset + animation_stage_yoffset),
@@ -181,6 +183,8 @@ namespace Aurora.Profiles.Payday_2
                         //bg_layer.AddPostFunction(line3_col_func);
                         bg_layer.AddPostFunction(line4_col_func);
                         bg_layer.AddPostFunction(line5_col_func);
+
+                        */
                     }
 
                     bg_layer.Fill(bg_color);

@@ -413,15 +413,10 @@
     <Compile Include="Devices\Device.cs" />
     <Compile Include="Devices\Logitech\LogitechDevice.cs" />
     <Compile Include="EffectsEngine\EffectColor.cs" />
-    <Compile Include="EffectsEngine\EffectColorFunction.cs" />
     <Compile Include="EffectsEngine\ColorSpectrum.cs" />
     <Compile Include="EffectsEngine\EffectFrame.cs" />
-    <Compile Include="EffectsEngine\Functions\EffectCircle.cs" />
-    <Compile Include="EffectsEngine\Functions\EffectFunction.cs" />
     <Compile Include="EffectsEngine\EffectLayer.cs" />
     <Compile Include="EffectsEngine\Effects.cs" />
-    <Compile Include="EffectsEngine\Functions\EffectLine.cs" />
-    <Compile Include="EffectsEngine\Functions\EffectPoint.cs" />
     <Compile Include="GameEventHandler.cs" />
     <Compile Include="Profiles\CSGO\Control_CSGO.xaml.cs">
       <DependentUpon>Control_CSGO.xaml</DependentUpon>

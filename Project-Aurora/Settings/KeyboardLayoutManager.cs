@@ -46,8 +46,28 @@ namespace Aurora.Settings
         }
     }
 
+    public enum KeyboardRegion
+    {
+        Origin = 0,
+        TopLeft = 1,
+        TopRight = 2,
+        BottomLeft = 3,
+        BottomRight = 4
+    }
+
+    public class VirtualGroup
+    {
+        public string group_tag;
+
+        public KeyboardRegion origin_region;
+
+        public List<KeyboardKey> grouped_keys = new List<KeyboardKey>();
+    }
+
     public class KeyboardLayoutManager
     {
+        private List<VirtualGroup> groups = new List<VirtualGroup>();
+
         private List<KeyboardKey> keyboard = new List<KeyboardKey>();
 
         private Grid _virtual_keyboard = new Grid();
@@ -64,7 +84,7 @@ namespace Aurora.Settings
 
         private double bitmap_one_pixel = 12.0; // 12 pixels = 1 byte
 
-        private Dictionary<Devices.DeviceKeys, Bitmaping> bitmap_map = new Dictionary<Devices.DeviceKeys, Bitmaping>();
+        private Dictionary<Devices.DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<Devices.DeviceKeys, BitmapRectangle>();
 
         public delegate void LayoutUpdatedEventHandler(object sender);
 
@@ -233,7 +253,7 @@ namespace Aurora.Settings
                 int key_bry = key_tly + key.height_bits;
                 int key_brx = key_tlx + key.width_bits;
 
-                this.bitmap_map[key.tag] = new Bitmaping(key_tlx, key_tly, key_brx, key_bry);
+                this.bitmap_map[key.tag] = new BitmapRectangle(key_tlx, key_tly, key_brx - key_tlx, key_bry - key_tly);
 
                 if (width_bit_max < key_brx) width_bit_max = key_brx;
                 if (height_bit_max < key_bry) height_bit_max = key_bry;

@@ -1,6 +1,5 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
-using Aurora.EffectsEngine.Functions;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
@@ -162,7 +161,7 @@ namespace Aurora.Profiles.Desktop
             Global.input_subscriptions.KeyUp += GlobalHookKeyUp;
         }
 
-        private input_item CreateInputItem(Devices.DeviceKeys key, EffectPoint origin)
+        private input_item CreateInputItem(Devices.DeviceKeys key, PointF origin)
         {
             Color primary_c = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_primary_color;
             Color secondary_c = (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_secondary_color;
@@ -179,13 +178,13 @@ namespace Aurora.Profiles.Desktop
             {
                 AnimationTrack wave = new AnimationTrack("Wave effect", 1.0f);
                 wave.SetFrame(0.0f,
-                    new AnimationCircle(origin.ToPointF(), 0, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    new AnimationCircle(origin, 0, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                     );
                 wave.SetFrame(0.80f,
-                    new AnimationCircle(origin.ToPointF(), Effects.canvas_width * 0.80f, secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    new AnimationCircle(origin, Effects.canvas_width * 0.80f, secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                     );
                 wave.SetFrame(1.00f,
-                    new AnimationCircle(origin.ToPointF(), Effects.canvas_width, Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    new AnimationCircle(origin, Effects.canvas_width, Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                     );
                 anim_mix.AddTrack(wave);
             }
@@ -193,13 +192,13 @@ namespace Aurora.Profiles.Desktop
             {
                 AnimationTrack wave = new AnimationTrack("Filled Wave effect", 1.0f);
                 wave.SetFrame(0.0f,
-                    new AnimationFilledCircle(origin.ToPointF(), 0, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    new AnimationFilledCircle(origin, 0, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                     );
                 wave.SetFrame(0.80f,
-                    new AnimationFilledCircle(origin.ToPointF(), Effects.canvas_width * 0.80f, secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    new AnimationFilledCircle(origin, Effects.canvas_width * 0.80f, secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                     );
                 wave.SetFrame(1.00f,
-                    new AnimationFilledCircle(origin.ToPointF(), Effects.canvas_width, Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                    new AnimationFilledCircle(origin, Effects.canvas_width, Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                     );
                 anim_mix.AddTrack(wave);
             }
@@ -216,38 +215,36 @@ namespace Aurora.Profiles.Desktop
             }
             else if ((Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_type == InteractiveEffects.ArrowFlow)
             {
-                PointF starting_pt = origin.ToPointF();
-
                 AnimationTrack arrow = new AnimationTrack("Arrow Flow effect", 1.0f);
                 arrow.SetFrame(0.0f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(starting_pt, starting_pt, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
-                            new AnimationLine(starting_pt, starting_pt, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                            new AnimationLine(origin, origin, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
+                            new AnimationLine(origin, origin, primary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                         }
                         )
                     );
                 arrow.SetFrame(0.33f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(starting_pt, new PointF(starting_pt.X + Effects.canvas_width * 0.33f, starting_pt.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
-                            new AnimationLine(starting_pt, new PointF(starting_pt.X - Effects.canvas_width * 0.33f, starting_pt.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                            new AnimationLine(origin, new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
+                            new AnimationLine(origin, new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                         }
                         )
                     );
                 arrow.SetFrame(0.66f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(new PointF(starting_pt.X + Effects.canvas_width * 0.33f, starting_pt.Y), new PointF(starting_pt.X + Effects.canvas_width * 0.66f, starting_pt.Y), secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
-                            new AnimationLine(new PointF(starting_pt.X - Effects.canvas_width * 0.33f, starting_pt.Y), new PointF(starting_pt.X - Effects.canvas_width * 0.66f, starting_pt.Y), secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                            new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
+                            new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), secondary_c, (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                         }
                         )
                     );
                 arrow.SetFrame(1.0f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(new PointF(starting_pt.X + Effects.canvas_width * 0.66f, starting_pt.Y), new PointF(starting_pt.X + Effects.canvas_width, starting_pt.Y), Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
-                            new AnimationLine(new PointF(starting_pt.X - Effects.canvas_width * 0.66f, starting_pt.Y), new PointF(starting_pt.X - Effects.canvas_width, starting_pt.Y), Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
+                            new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X + Effects.canvas_width, origin.Y), Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width),
+                            new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X - Effects.canvas_width, origin.Y), Color.FromArgb(0, secondary_c), (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effect_width)
                         }
                         )
                     );
@@ -266,8 +263,8 @@ namespace Aurora.Profiles.Desktop
 
             if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled)
             {
-                EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
-                if (pt != new EffectPoint(0, 0))
+                PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
+                if (pt != new PointF(0, 0))
                 {
                     input_list.Add(CreateInputItem(device_key, pt));
                 }
@@ -301,8 +298,8 @@ namespace Aurora.Profiles.Desktop
 
             if (device_key != Devices.DeviceKeys.NONE && (Global.Configuration.desktop_profile.Settings as DesktopSettings).interactive_effects_enabled)
             {
-                EffectPoint pt = Effects.GetBitmappingFromDeviceKey(device_key).GetCenter();
-                if (pt != new EffectPoint(0, 0))
+                PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
+                if (pt != new PointF(0, 0))
                 {
                     input_list.Add(CreateInputItem(device_key, pt));
                     previous_key = e.KeyCode;
