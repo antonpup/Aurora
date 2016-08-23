@@ -51,6 +51,16 @@ namespace Aurora
         private readonly double width;
         private readonly double height;
 
+        public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ProfileManager), typeof(ConfigUI), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
+
+        public ProfileManager FocusedProfile
+        {
+            get { return (ProfileManager)GetValue(FocusedProfileProperty); }
+            set {
+                SetValue(FocusedProfileProperty, value);
+            }
+        }        
+
         LayerEditor layer_editor = new LayerEditor();
 
         public ConfigUI()
@@ -72,7 +82,7 @@ namespace Aurora
 
         private void Layer_manager_NewLayer(Settings.Layers.DefaultLayer layer)
         {
-            layercontrol_presenter.SetLayer(layer);
+            layercontrol_presenter.Layer = layer;
 
             this.content_grid.Children.Clear();
             this.content_grid.Children.Add(layercontrol_presenter);
@@ -113,8 +123,7 @@ namespace Aurora
             }
 
             this.keyboard_record_message.Visibility = Visibility.Hidden;
-            this.content_grid.Children.Clear();
-            this.content_grid.Children.Add(desktop_control);
+            
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
@@ -139,6 +148,8 @@ namespace Aurora
             this.UpdateLayout();
 
             Global.input_subscriptions.Initialize();
+
+            this.ProfileImage_MouseDown(this.profiles_stack.Children[0], null);
         }
 
         public static bool ApplicationIsActivated()
@@ -343,7 +354,7 @@ namespace Aurora
             this.profiles_stack.Children.Clear();
 
             Image profile_desktop = new Image();
-            profile_desktop.Tag = desktop_control;
+            profile_desktop.Tag = Global.Configuration.desktop_profile;
             profile_desktop.Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative));
             profile_desktop.ToolTip = "Desktop Settings";
             profile_desktop.Margin = new Thickness(0, 5, 0, 0);
@@ -360,7 +371,7 @@ namespace Aurora
                 if (icon != null && control != null)
                 {
                     Image profile_image = new Image();
-                    profile_image.Tag = control;
+                    profile_image.Tag = profile;
                     profile_image.Source = icon;
                     profile_image.ToolTip = profile.Name + " Settings";
                     profile_image.Margin = new Thickness(0, 5, 0, 0);
@@ -379,7 +390,7 @@ namespace Aurora
                 if (icon != null && control != null)
                 {
                     Image profile_image = new Image();
-                    profile_image.Tag = control;
+                    profile_image.Tag = profile;
                     profile_image.Source = icon;
                     profile_image.ToolTip = (profile.Settings as GenericApplicationSettings).ApplicationName + " Settings";
                     profile_image.Margin = new Thickness(0, 5, 0, 0);
@@ -436,12 +447,9 @@ namespace Aurora
 
         private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is UserControl)
+            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is ProfileManager)
             {
-                UserControl tagged_control = (sender as Image).Tag as UserControl;
-
-                this.content_grid.Children.Clear();
-                this.content_grid.Children.Add(tagged_control);
+                this.FocusedProfile = (sender as Image).Tag as ProfileManager;
 
                 var bitmap = (BitmapSource)(sender as Image).Source;
                 var color = GetAverageColor(bitmap);
@@ -453,6 +461,15 @@ namespace Aurora
 
                 UpdateProfileStackBackground(sender as FrameworkElement);
             }
+        }
+
+        private static void FocusedProfileChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
+        {
+            ConfigUI th = source as ConfigUI;
+            ProfileManager value = e.NewValue as ProfileManager;
+
+            th.content_grid.Children.Clear();
+            th.content_grid.Children.Add(value.GetUserControl());
         }
 
         private void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)

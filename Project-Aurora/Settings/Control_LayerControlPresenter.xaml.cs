@@ -21,6 +21,10 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Control_LayerControlPresenter : UserControl
     {
+        protected DefaultLayer _Layer;
+
+        public DefaultLayer Layer { get { return _Layer; } set { _Layer = value; SetLayer(value); } }
+
         public Control_LayerControlPresenter()
         {
             InitializeComponent();
@@ -30,13 +34,17 @@ namespace Aurora.Settings
         {
             InitializeComponent();
 
-            SetLayer(layer);
+            Layer = layer;
         }
 
-        public void SetLayer(DefaultLayer layer)
+        private void SetLayer(DefaultLayer layer)
         {
-            layer_control_grid.Children.Clear();
-            layer_control_grid.Children.Add(layer.Control);
+            this.DataContext = layer;
+            //this.txtLayerName.DataContext = layer;
+            //this.cmbLayerType.DataContext = layer;
+
+            this.grdControl.Children.Clear();
+            this.grdControl.Children.Add(layer.Control);
         }
     }
 }

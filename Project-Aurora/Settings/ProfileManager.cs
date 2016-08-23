@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
+using Aurora.Settings.Layers;
 
 namespace Aurora.Settings
 {
@@ -24,31 +25,34 @@ namespace Aurora.Settings
         public LightEvent Event { get; set; }
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
         internal Dictionary<string, dynamic> EffectScripts { get; set; }
+        protected Type SettingsType = typeof(ProfileSettings);
 
         public event EventHandler ProfileChanged;
 
-        public ProfileManager(string name, string internal_name, string process_name, ProfileSettings settings, LightEvent game_event)
+        public ProfileManager(string name, string internal_name, string process_name, Type settings, LightEvent game_event)
         {
             Name = name;
             InternalName = internal_name;
             ProcessNames = new string[] { process_name };
             Icon = null;
             Control = null;
-            Settings = settings;
+            SettingsType = settings;
+            Settings = (ProfileSettings)Activator.CreateInstance(settings);
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
             EffectScripts = new Dictionary<string, dynamic>();
             LoadProfiles();
         }
 
-        public ProfileManager(string name, string internal_name, string[] process_names, ProfileSettings settings, LightEvent game_event)
+        public ProfileManager(string name, string internal_name, string[] process_names, Type settings, LightEvent game_event)
         {
             Name = name;
             InternalName = internal_name;
             ProcessNames = process_names;
             Icon = null;
             Control = null;
-            Settings = settings;
+            SettingsType = settings;
+            Settings = (ProfileSettings)Activator.CreateInstance(settings);
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
             EffectScripts = new Dictionary<string, dynamic>();
@@ -93,11 +97,10 @@ namespace Aurora.Settings
                 if (result != MessageBoxResult.Yes)
                     return;
 
-                Type setting_type = Settings.GetType();
 
                 Profiles[profile_name] = (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(Settings, setting_type, new JsonSerializerSettings { }),
-                    setting_type,
+                    JsonConvert.SerializeObject(Settings, SettingsType, new JsonSerializerSettings { }),
+                    SettingsType,
                     new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }
                     ); //I know this is bad. You can laugh at me for this one. :(
             }
@@ -126,8 +129,7 @@ namespace Aurora.Settings
         {
             try
             {
-                Type setting_type = Settings.GetType();
-                Settings = (ProfileSettings)Activator.CreateInstance(setting_type);
+                Settings = (ProfileSettings)Activator.CreateInstance(SettingsType);
 
                 foreach (string id in this.EffectScripts.Keys)
                 {
@@ -143,7 +145,7 @@ namespace Aurora.Settings
             }
         }
 
-        internal virtual ProfileSettings LoadProfile(string path)
+        internal ProfileSettings LoadProfile(string path)
         {
             try
             {
@@ -152,7 +154,26 @@ namespace Aurora.Settings
                     string profile_content = File.ReadAllText(path, Encoding.UTF8);
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
-                        return JsonConvert.DeserializeObject<ProfileSettings>(profile_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                    {
+                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                        foreach (DefaultLayer lyr in prof.Layers)
+                        {
+                            lyr.AnythingChanged += this.SaveProfilesEvent;
+                        }
+
+                        prof.Layers.CollectionChanged += (s, e) => {
+                            if (e.NewItems != null)
+                            {
+                                foreach (DefaultLayer lyr in e.NewItems)
+                                {
+                                    lyr.AnythingChanged += this.SaveProfilesEvent;
+                                }
+                            }
+                            this.SaveProfiles();
+                        };
+                        
+                        return prof;
+                    }
                 }
             }
             catch (Exception exc)
@@ -320,6 +341,11 @@ namespace Aurora.Settings
             {
                 Global.logger.LogLine(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
             }
+        }
+
+        public void SaveProfilesEvent(object sender, EventArgs e)
+        {
+            this.SaveProfiles();
         }
 
         public virtual void SaveProfiles()
