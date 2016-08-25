@@ -190,7 +190,7 @@ namespace Aurora.Profiles.GTA5.GSI
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC]
                 );
 
-            if(state_color == Color.FromArgb(255, 175, 79, 0))
+            if(state_color == Color.FromArgb(255, 175, 79, 0) || state_color == Color.FromArgb(255, 176, 80, 0))
                 _CurrentState = PlayerState.PlayingSP_Trevor;
             else if (state_color == Color.FromArgb(255, 48, 255, 255))
                 _CurrentState = PlayerState.PlayingSP_Michael;
