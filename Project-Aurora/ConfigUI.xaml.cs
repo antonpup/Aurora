@@ -207,7 +207,12 @@ namespace Aurora
                                 {
                                     if (keylights.ContainsKey((Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag))
                                     {
-                                        ((child as Border).Child as TextBlock).Foreground = new SolidColorBrush(Utils.ColorUtils.DrawingColorToMediaColor(keylights[(Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag]));
+                                        Color key_color = Utils.ColorUtils.DrawingColorToMediaColor(keylights[(Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag]);
+
+                                        ((child as Border).Child as TextBlock).Foreground = new SolidColorBrush(key_color);
+
+                                        //Backglow
+                                        //((child as Border).Effect as System.Windows.Media.Effects.DropShadowEffect).Color = key_color;
                                     }
 
                                     if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag))

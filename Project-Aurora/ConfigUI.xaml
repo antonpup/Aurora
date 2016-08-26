@@ -16,8 +16,12 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Viewbox x:Name="keyboard_viewbox" StretchDirection="Both" Margin="0,0,7,0">
-                <Border Margin="5,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#A5000000" CornerRadius="8" MinWidth="828" MinHeight="216">
-                    <Grid x:Name="keyboard_grid" Margin="10,10,10,10" Height="192" VerticalAlignment="Top" HorizontalAlignment="Left" Width="803"/>
+                <Border Margin="5,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#A5000000" CornerRadius="8" MinWidth="650" MinHeight="216">
+                    <Grid x:Name="keyboard_grid" Margin="10,10,10,10" Height="192" VerticalAlignment="Top" HorizontalAlignment="Left" Width="803">
+                        <Grid.CacheMode>
+                            <BitmapCache EnableClearType="True"/>
+                        </Grid.CacheMode>
+                    </Grid>
                 </Border>
             </Viewbox>
             <Grid x:Name="content_grid" Margin="6,4,7,6" Grid.Row="1"/>

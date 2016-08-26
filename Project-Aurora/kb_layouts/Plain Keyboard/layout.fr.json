@@ -10,9 +10,9 @@
     "font_size": 12.0,
     "width_bits": 3,
     "height_bits": 3,
-    "margin_left_bits": 1,
+    "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F1",
@@ -27,7 +27,7 @@
     "height_bits": 3,
     "margin_left_bits": 2,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F2",
@@ -42,7 +42,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F3",
@@ -57,7 +57,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F4",
@@ -72,7 +72,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F5",
@@ -87,7 +87,7 @@
     "height_bits": 3,
     "margin_left_bits": 2,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F6",
@@ -102,7 +102,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F7",
@@ -117,7 +117,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F8",
@@ -132,7 +132,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F9",
@@ -147,7 +147,7 @@
     "height_bits": 3,
     "margin_left_bits": 2,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F10",
@@ -162,7 +162,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F11",
@@ -177,7 +177,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "F12",
@@ -192,13 +192,13 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "PRINT",
     "tag": 14,
     "line_break": false,
-    "margin_left": 15.0,
+    "margin_left": 14.0,
     "margin_top": 0.0,
     "width": 30.0,
     "height": 30.0,
@@ -207,7 +207,7 @@
     "height_bits": 3,
     "margin_left_bits": 1,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "SCRL\r\nLOCK",
@@ -222,7 +222,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "PAUSE",
@@ -237,11 +237,11 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "~",
-    "tag": 17,
+    "visualName": "²",
+    "tag": 70,
     "line_break": false,
     "margin_left": 0.0,
     "margin_top": 0.0,
@@ -250,9 +250,9 @@
     "font_size": 12.0,
     "width_bits": 3,
     "height_bits": 3,
-    "margin_left_bits": 1,
+    "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "1",
@@ -267,7 +267,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "2",
@@ -282,7 +282,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "3",
@@ -297,7 +297,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "4",
@@ -312,7 +312,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "5",
@@ -327,7 +327,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "6",
@@ -342,7 +342,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "7",
@@ -357,7 +357,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "8",
@@ -372,7 +372,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "9",
@@ -387,7 +387,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "0",
@@ -402,11 +402,11 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "-",
-    "tag": 28,
+    "visualName": "]",
+    "tag": 49,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -417,10 +417,10 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "=",
+    "visualName": "}",
     "tag": 29,
     "line_break": false,
     "margin_left": 7.0,
@@ -432,7 +432,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "BACKSPACE",
@@ -447,13 +447,13 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "INSERT",
     "tag": 31,
     "line_break": false,
-    "margin_left": 15.0,
+    "margin_left": 14.0,
     "margin_top": 0.0,
     "width": 30.0,
     "height": 30.0,
@@ -462,7 +462,7 @@
     "height_bits": 3,
     "margin_left_bits": 1,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "HOME",
@@ -477,7 +477,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "PAGE\r\nUP",
@@ -492,13 +492,13 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "NUM\r\nLOCK",
     "tag": 34,
     "line_break": false,
-    "margin_left": 15.0,
+    "margin_left": 14.0,
     "margin_top": 0.0,
     "width": 30.0,
     "height": 30.0,
@@ -507,7 +507,7 @@
     "height_bits": 3,
     "margin_left_bits": 1,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "/",
@@ -522,7 +522,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "*",
@@ -537,7 +537,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "-",
@@ -552,7 +552,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "TAB",
@@ -565,324 +565,9 @@
     "font_size": 12.0,
     "width_bits": 4,
     "height_bits": 3,
-    "margin_left_bits": 1,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "Q",
-    "tag": 39,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "W",
-    "tag": 40,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "E",
-    "tag": 41,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "R",
-    "tag": 42,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "T",
-    "tag": 43,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "Y",
-    "tag": 44,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "U",
-    "tag": 45,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "I",
-    "tag": 46,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "O",
-    "tag": 47,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "P",
-    "tag": 48,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "{",
-    "tag": 49,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "}",
-    "tag": 50,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "\\",
-    "tag": 51,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 47.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 5,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "DEL",
-    "tag": 52,
-    "line_break": false,
-    "margin_left": 15.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 9.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 1,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "END",
-    "tag": 53,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 9.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "PAGE\r\nDOWN",
-    "tag": 54,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 9.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "7",
-    "tag": 55,
-    "line_break": false,
-    "margin_left": 15.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 1,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "8",
-    "tag": 56,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "9",
-    "tag": 57,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "+",
-    "tag": 58,
-    "line_break": true,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 67.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 6,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "CAPS\r\nLOCK",
-    "tag": 59,
-    "line_break": false,
-    "margin_left": 0.0,
-    "margin_top": 0.0,
-    "width": 60.0,
-    "height": 30.0,
-    "font_size": 9.0,
-    "width_bits": 5,
-    "height_bits": 3,
-    "margin_left_bits": 1,
-    "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "A",
@@ -897,232 +582,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "S",
-    "tag": 61,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "D",
-    "tag": 62,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "F",
-    "tag": 63,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "G",
-    "tag": 64,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "H",
-    "tag": 65,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "J",
-    "tag": 66,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "K",
-    "tag": 67,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "L",
-    "tag": 68,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": ":",
-    "tag": 69,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "\"",
-    "tag": 70,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "ENTER",
-    "tag": 72,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 74.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 7,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "4",
-    "tag": 73,
-    "line_break": false,
-    "margin_left": 133.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 11,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "5",
-    "tag": 74,
-    "line_break": false,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "6",
-    "tag": 75,
-    "line_break": true,
-    "margin_left": 7.0,
-    "margin_top": 0.0,
-    "width": 30.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 3,
-    "height_bits": 3,
-    "margin_left_bits": 0,
-    "margin_top_bits": 0,
-    "enabled": "true"
-  },
-  {
-    "visualName": "SHIFT",
-    "tag": 76,
-    "line_break": false,
-    "margin_left": 0.0,
-    "margin_top": 0.0,
-    "width": 78.0,
-    "height": 30.0,
-    "font_size": 12.0,
-    "width_bits": 7,
-    "height_bits": 3,
-    "margin_left_bits": 1,
-    "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "Z",
@@ -1137,11 +597,11 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "X",
-    "tag": 79,
+    "visualName": "E",
+    "tag": 41,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1152,11 +612,11 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "C",
-    "tag": 80,
+    "visualName": "R",
+    "tag": 42,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1167,11 +627,11 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "V",
-    "tag": 81,
+    "visualName": "T",
+    "tag": 43,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1182,11 +642,11 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "B",
-    "tag": 82,
+    "visualName": "Y",
+    "tag": 44,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1197,11 +657,11 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "N",
-    "tag": 83,
+    "visualName": "U",
+    "tag": 45,
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
@@ -1212,7 +672,337 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
+  },
+  {
+    "visualName": "I",
+    "tag": 46,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "O",
+    "tag": 47,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "P",
+    "tag": 48,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "..",
+    "tag": 50,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "$",
+    "tag": 69,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 40.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 4,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "DEL",
+    "tag": 52,
+    "line_break": false,
+    "margin_left": 58.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 9.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 5,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "END",
+    "tag": 53,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 9.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "PAGE\r\nDOWN",
+    "tag": 54,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 9.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "7",
+    "tag": 55,
+    "line_break": false,
+    "margin_left": 14.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 1,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "8",
+    "tag": 56,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "9",
+    "tag": 57,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "+",
+    "tag": 58,
+    "line_break": true,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 67.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 6,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "CAPS\r\nLOCK",
+    "tag": 59,
+    "line_break": false,
+    "margin_left": 0.0,
+    "margin_top": 0.0,
+    "width": 60.0,
+    "height": 30.0,
+    "font_size": 9.0,
+    "width_bits": 5,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "Q",
+    "tag": 39,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "S",
+    "tag": 61,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "D",
+    "tag": 62,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "F",
+    "tag": 63,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "G",
+    "tag": 64,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "H",
+    "tag": 65,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "J",
+    "tag": 66,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "K",
+    "tag": 67,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "L",
+    "tag": 68,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
   },
   {
     "visualName": "M",
@@ -1227,10 +1017,220 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
+  },
+  {
+    "visualName": "u",
+    "tag": 17,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "*",
+    "tag": 51,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "ENTER",
+    "tag": 72,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": -37.0,
+    "width": 38.0,
+    "height": 67.0,
+    "font_size": 12.0,
+    "width_bits": 4,
+    "height_bits": 6,
+    "margin_left_bits": 0,
+    "margin_top_bits": -3,
+    "enabled": true
+  },
+  {
+    "visualName": "4",
+    "tag": 73,
+    "line_break": false,
+    "margin_left": 131.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 11,
+    "margin_top_bits": 3,
+    "enabled": true
+  },
+  {
+    "visualName": "5",
+    "tag": 74,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "6",
+    "tag": 75,
+    "line_break": true,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "SHIFT",
+    "tag": 76,
+    "line_break": false,
+    "margin_left": 0.0,
+    "margin_top": 0.0,
+    "width": 48.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 4,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
   },
   {
     "visualName": "<",
+    "tag": 77,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "W",
+    "tag": 40,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "X",
+    "tag": 79,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "C",
+    "tag": 80,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "V",
+    "tag": 81,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "B",
+    "tag": 82,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "N",
+    "tag": 83,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
+  },
+  {
+    "visualName": "?",
     "tag": 85,
     "line_break": false,
     "margin_left": 7.0,
@@ -1242,10 +1242,10 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": ">",
+    "visualName": ".",
     "tag": 86,
     "line_break": false,
     "margin_left": 7.0,
@@ -1257,10 +1257,10 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
-    "visualName": "?",
+    "visualName": "/",
     "tag": 87,
     "line_break": false,
     "margin_left": 7.0,
@@ -1272,7 +1272,22 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
+  },
+  {
+    "visualName": "!",
+    "tag": 158,
+    "line_break": false,
+    "margin_left": 7.0,
+    "margin_top": 0.0,
+    "width": 30.0,
+    "height": 30.0,
+    "font_size": 12.0,
+    "width_bits": 3,
+    "height_bits": 3,
+    "margin_left_bits": 0,
+    "margin_top_bits": 0,
+    "enabled": true
   },
   {
     "visualName": "SHIFT",
@@ -1280,20 +1295,20 @@
     "line_break": false,
     "margin_left": 7.0,
     "margin_top": 0.0,
-    "width": 93.0,
+    "width": 87.0,
     "height": 30.0,
     "font_size": 12.0,
     "width_bits": 8,
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "↑",
     "tag": 89,
     "line_break": false,
-    "margin_left": 52.0,
+    "margin_left": 50.0,
     "margin_top": 0.0,
     "width": 30.0,
     "height": 30.0,
@@ -1302,7 +1317,7 @@
     "height_bits": 3,
     "margin_left_bits": 4,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "1",
@@ -1317,7 +1332,7 @@
     "height_bits": 3,
     "margin_left_bits": 4,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "2",
@@ -1332,7 +1347,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "3",
@@ -1347,7 +1362,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "ENTER",
@@ -1362,7 +1377,7 @@
     "height_bits": 6,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "CTRL",
@@ -1375,9 +1390,9 @@
     "font_size": 12.0,
     "width_bits": 4,
     "height_bits": 3,
-    "margin_left_bits": 1,
+    "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "WIN",
@@ -1392,7 +1407,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "ALT",
@@ -1407,7 +1422,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "SPACE",
@@ -1422,7 +1437,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "ALT",
@@ -1437,7 +1452,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "WIN",
@@ -1452,7 +1467,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "APP",
@@ -1460,14 +1475,14 @@
     "line_break": false,
     "margin_left": 5.0,
     "margin_top": 0.0,
-    "width": 41.0,
+    "width": 40.0,
     "height": 30.0,
     "font_size": 12.0,
     "width_bits": 4,
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "CTRL",
@@ -1475,20 +1490,20 @@
     "line_break": false,
     "margin_left": 5.0,
     "margin_top": 0.0,
-    "width": 48.0,
+    "width": 50.0,
     "height": 30.0,
     "font_size": 12.0,
     "width_bits": 4,
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "←",
     "tag": 102,
     "line_break": false,
-    "margin_left": 15.0,
+    "margin_left": 13.0,
     "margin_top": 0.0,
     "width": 30.0,
     "height": 30.0,
@@ -1497,7 +1512,7 @@
     "height_bits": 3,
     "margin_left_bits": 1,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "↓",
@@ -1512,7 +1527,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "→",
@@ -1527,7 +1542,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": "0",
@@ -1542,12 +1557,12 @@
     "height_bits": 3,
     "margin_left_bits": 1,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   },
   {
     "visualName": ".",
     "tag": 106,
-    "line_break": false,
+    "line_break": true,
     "margin_left": 7.0,
     "margin_top": 0.0,
     "width": 30.0,
@@ -1557,6 +1572,6 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "true"
+    "enabled": true
   }
 ]

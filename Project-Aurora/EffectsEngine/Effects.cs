@@ -246,8 +246,8 @@ namespace Aurora
 
         public void SetCanvasSize(int width, int height)
         {
-            canvas_width = width;
-            canvas_height = height;
+            canvas_width = width == 0 ? 1 : width;
+            canvas_height = height == 0 ? 1 : height;
         }
 
         public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKeys key)

@@ -333,6 +333,21 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.LOCK_SWITCH):
                     return CorsairKeyboardKeyId.WinLock;
 
+                case (DeviceKeys.VOLUME_MUTE):
+                    return CorsairKeyboardKeyId.Mute;
+                case (DeviceKeys.VOLUME_UP):
+                    return CorsairKeyboardKeyId.VolumeUp;
+                case (DeviceKeys.VOLUME_DOWN):
+                    return CorsairKeyboardKeyId.VolumeDown;
+                case (DeviceKeys.MEDIA_STOP):
+                    return CorsairKeyboardKeyId.Stop;
+                case (DeviceKeys.MEDIA_PLAY_PAUSE):
+                    return CorsairKeyboardKeyId.PlayPause;
+                case (DeviceKeys.MEDIA_PREVIOUS):
+                    return CorsairKeyboardKeyId.ScanPreviousTrack;
+                case (DeviceKeys.MEDIA_NEXT):
+                    return CorsairKeyboardKeyId.ScanNextTrack;
+
                 case (DeviceKeys.ESC):
                     return CorsairKeyboardKeyId.Escape;
                 case (DeviceKeys.F1):

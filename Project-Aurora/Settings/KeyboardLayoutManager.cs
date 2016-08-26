@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
 using Aurora.Devices;
+using System.Drawing;
 
 namespace Aurora.Settings
 {
@@ -27,6 +28,7 @@ namespace Aurora.Settings
         public int margin_left_bits;
         public int margin_top_bits;
         public bool enabled = true;
+        public bool absolute_location = false;
 
         public KeyboardKey(String text, Devices.DeviceKeys tag, bool enabled = true, bool linebreak = false, double fontsize = 12, double margin_left = 7, double margin_top = 0, double width = 30, double height = 30, int width_bits = 2, int height_bits = 2, int margin_left_bits = 0, int margin_top_bits = 0)
         {
@@ -48,11 +50,24 @@ namespace Aurora.Settings
 
     public enum KeyboardRegion
     {
-        Origin = 0,
         TopLeft = 1,
         TopRight = 2,
         BottomLeft = 3,
         BottomRight = 4
+    }
+
+    public class VirtualGroupConfiguration
+    {
+        public bool replace_RWin_with_FN = false;
+
+        public Devices.DeviceKeys[] keys_to_remove = new Devices.DeviceKeys[] { };
+
+        public Devices.DeviceKeys[] keys_to_set_as_new_line = new Devices.DeviceKeys[] { };
+
+        /// <summary>
+        /// A list of paths for each included group json
+        /// </summary>
+        public string[] included_features = new string[] {};
     }
 
     public class VirtualGroup
@@ -62,13 +77,321 @@ namespace Aurora.Settings
         public KeyboardRegion origin_region;
 
         public List<KeyboardKey> grouped_keys = new List<KeyboardKey>();
+
+        private RectangleF _region = new RectangleF(0, 0, 0, 0);
+
+        public RectangleF Region { get { return _region; } }
+
+        private Rectangle _region_bitmap = new Rectangle(0, 0, 0, 0);
+
+        public Rectangle BitmapRegion { get { return _region_bitmap; } }
+
+        public VirtualGroup()
+        {
+
+        }
+
+        public VirtualGroup(KeyboardKey[] keys)
+        {
+            double layout_height = 0;
+            double layout_width = 0;
+            double current_height = 0;
+            double current_width = 0;
+
+            int width_bit = 0;
+            int height_bit = 0;
+            int width_bit_max = 1;
+            int height_bit_max = 1;
+
+            foreach (var key in keys)
+            {
+                grouped_keys.Add(key);
+
+                if (key.width + key.margin_left > 0)
+                    current_width += key.width + key.margin_left;
+
+                if (key.margin_top > 0)
+                    current_height += key.margin_top;
+
+
+                if (layout_width < current_width)
+                    layout_width = current_width;
+
+                if (key.line_break)
+                {
+                    current_height += 37;
+                    current_width = 0;
+                }
+
+                if (layout_height < current_height)
+                    layout_height = current_height;
+
+
+                int key_tly = key.margin_top_bits + height_bit;
+                int key_tlx = key.margin_left_bits + width_bit;
+
+                int key_bry = key_tly + key.height_bits;
+                int key_brx = key_tlx + key.width_bits;
+
+                if (width_bit_max < key_brx) width_bit_max = key_brx;
+                if (height_bit_max < key_bry) height_bit_max = key_bry;
+
+
+                if (key.line_break)
+                {
+                    height_bit += 3;
+                    width_bit = 0;
+                }
+                else
+                {
+                    width_bit = key_brx;
+                    height_bit = key_tly;
+                }
+
+            }
+
+            _region.Width = (float)layout_width;
+            _region.Height = (float)layout_height;
+
+            _region_bitmap.Width = width_bit_max;
+            _region_bitmap.Height = height_bit_max;
+
+            //NormalizeKeys();
+        }
+
+        public void AddFeature(KeyboardKey[] keys, KeyboardRegion insertion_region = KeyboardRegion.TopLeft)
+        {
+            double location_x = 0.0D;
+            double location_y = 0.0D;
+            int location_x_bit = 0;
+            int location_y_bit = 0;
+
+            if (insertion_region == KeyboardRegion.TopRight)
+            {
+                location_x = _region.Width;
+                location_x_bit = _region_bitmap.Width;
+            }
+            else if (insertion_region == KeyboardRegion.BottomLeft)
+            {
+                location_y = _region.Height;
+                location_y_bit = _region_bitmap.Height;
+            }
+            else if (insertion_region == KeyboardRegion.BottomRight)
+            {
+                location_x = _region.Width;
+                location_y = _region.Height;
+                location_x_bit = _region_bitmap.Width;
+                location_y_bit = _region_bitmap.Height;
+            }
+
+            float added_width = 0.0f;
+            float added_height = 0.0f;
+            int added_width_bits = 0;
+            int added_height_bits = 0;
+
+            foreach (var key in keys)
+            {
+                key.margin_left += location_x;
+                key.margin_top += location_y;
+
+                key.margin_left_bits += location_x_bit;
+                key.margin_top_bits += location_y_bit;
+
+                grouped_keys.Add(key);
+
+                if (key.width + key.margin_left > _region.Width)
+                    _region.Width += (float)(key.width + key.margin_left - location_x);
+                else if (key.margin_left + added_width < 0)
+                {
+                    added_width = -(float)(key.margin_left);
+                    _region.Width -= (float)(key.margin_left);
+                }
+
+                if (key.height + key.margin_top > _region.Height)
+                    _region.Height += (float)(key.height + key.margin_top - location_y);
+                else if (key.margin_top + added_height < 0)
+                {
+                    added_height = -(float)(key.margin_top);
+                    _region.Height -= (float)(key.margin_top);
+                }
+
+
+                if (key.width_bits + key.margin_left_bits > _region_bitmap.Width)
+                    _region_bitmap.Width += key.width_bits + key.margin_left_bits - location_x_bit;
+                else if (key.margin_left_bits + added_width_bits < 0)
+                {
+                    added_width_bits = -key.margin_left_bits;
+                    _region_bitmap.Width -= key.margin_left_bits;
+                }
+
+                if (key.height_bits + key.margin_top_bits > _region_bitmap.Height)
+                    _region_bitmap.Height += key.height_bits + key.margin_top_bits - location_y_bit;
+                else if (key.margin_top_bits + added_height_bits < 0)
+                {
+                    added_height_bits = -key.margin_top_bits;
+                    _region_bitmap.Height -= key.margin_top_bits;
+                }
+
+            }
+
+            NormalizeKeys();
+        }
+
+        private void NormalizeKeys()
+        {
+            double x_correction = 0.0D;
+            double y_correction = 0.0D;
+
+            int x_correction_bit = 0;
+            int y_correction_bit = 0;
+
+            foreach (var key in grouped_keys)
+            {
+                if (!key.absolute_location)
+                    continue;
+
+                if (key.margin_left < x_correction)
+                    x_correction = key.margin_left;
+
+                if (key.margin_top < y_correction)
+                    y_correction = key.margin_top;
+
+                if (key.margin_left_bits < x_correction_bit)
+                    x_correction_bit = key.margin_left_bits;
+
+                if (key.margin_top_bits < y_correction_bit)
+                    y_correction_bit = key.margin_top_bits;
+            }
+
+            if (grouped_keys.Count > 0)
+            {
+                grouped_keys[0].margin_top -= y_correction;
+                grouped_keys[0].margin_top_bits -= y_correction_bit;
+
+                bool previous_linebreak = true;
+                foreach (var key in grouped_keys)
+                {
+                    if (key.absolute_location)
+                    {
+                        key.margin_top -= y_correction;
+                        key.margin_left -= x_correction;
+                        key.margin_top_bits -= y_correction_bit;
+                        key.margin_left_bits -= x_correction_bit;
+                    }
+                    else
+                    {
+                        if (previous_linebreak && !key.line_break)
+                        {
+                            key.margin_left -= x_correction;
+                            key.margin_left_bits -= x_correction_bit;
+                        }
+
+                        previous_linebreak = key.line_break;
+                    }
+                }
+
+            }
+        }
+
+        public void Clear()
+        {
+            _region = new RectangleF(0, 0, 0, 0);
+            _region_bitmap = new Rectangle(0, 0, 0, 0);
+            grouped_keys.Clear();
+        }
+
+        internal void AdjustFNKey()
+        {
+            var applicable_keys = grouped_keys.FindAll(key => key.tag == DeviceKeys.RIGHT_WINDOWS);
+
+            foreach(var key in applicable_keys)
+            {
+                key.tag = DeviceKeys.FN_Key;
+                key.visualName = "FN";
+            }
+        }
+
+        internal void RemoveKeys(DeviceKeys[] keys_to_remove)
+        {
+            var applicable_keys = grouped_keys.RemoveAll(key => keys_to_remove.Contains(key.tag));
+
+            double layout_height = 0;
+            double layout_width = 0;
+            double current_height = 0;
+            double current_width = 0;
+
+            int width_bit = 0;
+            int height_bit = 0;
+            int width_bit_max = 1;
+            int height_bit_max = 1;
+
+            foreach (var key in grouped_keys)
+            {
+                if (key.width + key.margin_left > 0)
+                    current_width += key.width + key.margin_left;
+
+                if (key.margin_top > 0)
+                    current_height += key.margin_top;
+
+
+                if (layout_width < current_width)
+                    layout_width = current_width;
+
+                if (key.line_break)
+                {
+                    current_height += 37;
+                    current_width = 0;
+                }
+
+                if (layout_height < current_height)
+                    layout_height = current_height;
+
+
+                int key_tly = key.margin_top_bits + height_bit;
+                int key_tlx = key.margin_left_bits + width_bit;
+
+                int key_bry = key_tly + key.height_bits;
+                int key_brx = key_tlx + key.width_bits;
+
+                if (width_bit_max < key_brx) width_bit_max = key_brx;
+                if (height_bit_max < key_bry) height_bit_max = key_bry;
+
+
+                if (key.line_break)
+                {
+                    height_bit += 3;
+                    width_bit = 0;
+                }
+                else
+                {
+                    width_bit = key_brx;
+                    height_bit = key_tly;
+                }
+
+            }
+
+            _region.Width = (float)layout_width;
+            _region.Height = (float)layout_height;
+
+            _region_bitmap.Width = width_bit_max;
+            _region_bitmap.Height = height_bit_max;
+
+        }
+
+        internal void SetNewLineKeys(DeviceKeys[] keys_to_set_as_new_line)
+        {
+            var applicable_keys = grouped_keys.FindAll(key => keys_to_set_as_new_line.Contains(key.tag));
+
+            foreach (var key in applicable_keys)
+                key.line_break = true;
+        }
     }
 
     public class KeyboardLayoutManager
     {
-        private List<VirtualGroup> groups = new List<VirtualGroup>();
+        private VirtualGroup virtual_keyboard_group;
 
-        private List<KeyboardKey> keyboard = new List<KeyboardKey>();
+        //private List<KeyboardKey> keyboard = new List<KeyboardKey>();
 
         private Grid _virtual_keyboard = new Grid();
 
@@ -102,9 +425,11 @@ namespace Aurora.Settings
             }
         }
 
+        private String layoutsPath = "";
+
         public KeyboardLayoutManager()
         {
-            LoadBrand();
+            layoutsPath = Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder);
         }
 
         public void LoadBrand(PreferredKeyboard brand = PreferredKeyboard.None)
@@ -115,107 +440,123 @@ namespace Aurora.Settings
 
                 //Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
 
+                //Load keyboard layout
+                if (Directory.Exists(layoutsPath))
+                {
+                    string culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+                    switch (Global.Configuration.keyboard_localization)
+                    {
+                        case PreferredKeyboardLocalization.None:
+                            break;
+                        case PreferredKeyboardLocalization.intl:
+                            culture = "intl";
+                            break;
+                        case PreferredKeyboardLocalization.us:
+                            culture = "en-US";
+                            break;
+                        case PreferredKeyboardLocalization.uk:
+                            culture = "en-GB";
+                            break;
+                        case PreferredKeyboardLocalization.ru:
+                            culture = "ru-RU";
+                            break;
+                        case PreferredKeyboardLocalization.fr:
+                            culture = "fr-FR";
+                            break;
+                        case PreferredKeyboardLocalization.de:
+                            culture = "de-DE";
+                            break;
+                        case PreferredKeyboardLocalization.jpn:
+                            culture = "ja-JP";
+                            break;
+                    }
+
+                    switch (culture)
+                    {
+                        case ("ja-JP"):
+                            LoadCulture("jpn");
+                            break;
+                        case ("de-DE"):
+                        case ("hsb-DE"):
+                        case ("dsb-DE"):
+                            _loaded_localization = PreferredKeyboardLocalization.de;
+                            LoadCulture("de");
+                            break;
+                        case ("fr-FR"):
+                        case ("br-FR"):
+                        case ("oc-FR"):
+                        case ("co-FR"):
+                        case ("gsw-FR"):
+                            _loaded_localization = PreferredKeyboardLocalization.fr;
+                            LoadCulture("fr");
+                            break;
+                        case ("cy-GB"):
+                        case ("gd-GB"):
+                        case ("en-GB"):
+                            _loaded_localization = PreferredKeyboardLocalization.uk;
+                            LoadCulture("uk");
+                            break;
+                        case ("ru-RU"):
+                        case ("tt-RU"):
+                        case ("ba-RU"):
+                        case ("sah-RU"):
+                            _loaded_localization = PreferredKeyboardLocalization.ru;
+                            LoadCulture("ru");
+                            break;
+                        case ("en-US"):
+                            _loaded_localization = PreferredKeyboardLocalization.us;
+                            LoadCulture("us");
+                            break;
+                        default:
+                            _loaded_localization = PreferredKeyboardLocalization.intl;
+                            LoadCulture("intl");
+                            break;
+                    }
+                }
+
+                var layoutConfigPath = "";
+
                 if (brand == PreferredKeyboard.None)
                 {
                     LoadNone();
-                    _loaded_localization = PreferredKeyboardLocalization.None;
-
-                    foreach (var device in Global.dev_manager.GetInitializedDevices())
-                    {
-                        if (!device.IsKeyboardConnected())
-                            continue;
-
-                        switch (device.GetDeviceName())
-                        {
-                            case ("Logitech"):
-                                LoadBrand(PreferredKeyboard.Logitech);
-                                break;
-                            case ("Corsair"):
-                                LoadBrand(PreferredKeyboard.Corsair);
-                                break;
-                            /*
-                            case ("Razer"):
-                                Global.kbLayout = new KeyboardLayoutManager(KeyboardBrand.Razer);
-                                break;
-                            */
-                            default:
-                                continue;
-                        }
-                    }
+                    return;
                 }
-                else
+                else if (brand == PreferredKeyboard.Logitech_G910)
+                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g910.json");
+                else if (brand == PreferredKeyboard.Logitech_G410)
+                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
+                else if (brand == PreferredKeyboard.Corsair_K95)
+                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
+                else if (brand == PreferredKeyboard.Corsair_K70)
+                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
+                else if (brand == PreferredKeyboard.Corsair_K65)
+                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
+                else if (brand == PreferredKeyboard.Corsair_STRAFE)
+                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+                
+
+                if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
                 {
-                    if (Directory.Exists(Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder)))
+                    string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
+                    VirtualGroupConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualGroupConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                    if(layoutConfig.replace_RWin_with_FN)
+                        virtual_keyboard_group.AdjustFNKey();
+
+                    virtual_keyboard_group.SetNewLineKeys(layoutConfig.keys_to_set_as_new_line);
+                    virtual_keyboard_group.RemoveKeys(layoutConfig.keys_to_remove);
+
+                    foreach (string feature in layoutConfig.included_features)
                     {
-                        string culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+                        string feature_path = Path.Combine(layoutsPath, "Extra Features", feature);
 
-                        switch (Global.Configuration.keyboard_localization)
+                        if (File.Exists(feature_path))
                         {
-                            case PreferredKeyboardLocalization.None:
-                                break;
-                            case PreferredKeyboardLocalization.intl:
-                                culture = "intl";
-                                break;
-                            case PreferredKeyboardLocalization.us:
-                                culture = "en-US";
-                                break;
-                            case PreferredKeyboardLocalization.uk:
-                                culture = "en-GB";
-                                break;
-                            case PreferredKeyboardLocalization.ru:
-                                culture = "ru-RU";
-                                break;
-                            case PreferredKeyboardLocalization.fr:
-                                culture = "fr-FR";
-                                break;
-                            case PreferredKeyboardLocalization.de:
-                                culture = "de-DE";
-                                break;
-                            case PreferredKeyboardLocalization.jpn:
-                                culture = "ja-JP";
-                                break;
-                        }
+                            string feature_content = File.ReadAllText(feature_path, Encoding.UTF8);
+                            VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                        switch (culture)
-                        {
-                            case ("ja-JP"):
-                                LoadCulture(brand, "jpn");
-                                break;
-                            case ("de-DE"):
-                            case ("hsb-DE"):
-                            case ("dsb-DE"):
-                                _loaded_localization = PreferredKeyboardLocalization.de;
-                                LoadCulture(brand, "de");
-                                break;
-                            case ("fr-FR"):
-                            case ("br-FR"):
-                            case ("oc-FR"):
-                            case ("co-FR"):
-                            case ("gsw-FR"):
-                                _loaded_localization = PreferredKeyboardLocalization.fr;
-                                LoadCulture(brand, "fr");
-                                break;
-                            case ("cy-GB"):
-                            case ("gd-GB"):
-                            case ("en-GB"):
-                                _loaded_localization = PreferredKeyboardLocalization.uk;
-                                LoadCulture(brand, "uk");
-                                break;
-                            case ("ru-RU"):
-                            case ("tt-RU"):
-                            case ("ba-RU"):
-                            case ("sah-RU"):
-                                _loaded_localization = PreferredKeyboardLocalization.ru;
-                                LoadCulture(brand, "ru");
-                                break;
-                            case ("en-US"):
-                                _loaded_localization = PreferredKeyboardLocalization.us;
-                                LoadCulture(brand, "us");
-                                break;
-                            default:
-                                _loaded_localization = PreferredKeyboardLocalization.intl;
-                                LoadCulture(brand, "intl");
-                                break;
+                            virtual_keyboard_group.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
                         }
                     }
                 }
@@ -223,8 +564,13 @@ namespace Aurora.Settings
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                LoadDefault();
             }
+
+            //Perform end of load functions
+            CalculateBitmap();
+            CreateUserControl();
+
+            KeyboardLayoutUpdated?.Invoke(this);
         }
 
         private int PixelToByte(int pixel)
@@ -245,7 +591,7 @@ namespace Aurora.Settings
             int height_bit_max = 1;
             bitmap_map.Clear();
 
-            foreach (KeyboardKey key in keyboard)
+            foreach (KeyboardKey key in virtual_keyboard_group.grouped_keys)
             {
                 int key_tly = key.margin_top_bits + height_bit;
                 int key_tlx = key.margin_left_bits + width_bit;
@@ -253,25 +599,31 @@ namespace Aurora.Settings
                 int key_bry = key_tly + key.height_bits;
                 int key_brx = key_tlx + key.width_bits;
 
-                this.bitmap_map[key.tag] = new BitmapRectangle(key_tlx, key_tly, key_brx - key_tlx, key_bry - key_tly);
-
-                if (width_bit_max < key_brx) width_bit_max = key_brx;
-                if (height_bit_max < key_bry) height_bit_max = key_bry;
-
-
-                if (key.line_break)
-                {
-                    height_bit += PixelToByte(37);
-                    width_bit = 0;
-                }
+                if (key.absolute_location)
+                    this.bitmap_map[key.tag] = new BitmapRectangle(key.margin_left_bits, key.margin_top_bits, key_brx - key_tlx, key_bry - key_tly);
                 else
+                    this.bitmap_map[key.tag] = new BitmapRectangle(key_tlx, key_tly, key_brx - key_tlx, key_bry - key_tly);
+
+                if (!key.absolute_location)
                 {
-                    width_bit = key_brx;
-                    height_bit = key_tly;
+                    if (width_bit_max < key_brx) width_bit_max = key_brx;
+                    if (height_bit_max < key_bry) height_bit_max = key_bry;
+
+
+                    if (key.line_break)
+                    {
+                        height_bit += PixelToByte(37);
+                        width_bit = 0;
+                    }
+                    else
+                    {
+                        width_bit = key_brx;
+                        height_bit = key_tly;
+                    }
                 }
             }
 
-            Global.effengine.SetCanvasSize(width_bit_max, height_bit_max);
+            Global.effengine.SetCanvasSize(virtual_keyboard_group.BitmapRegion.Width, virtual_keyboard_group.BitmapRegion.Height);
             Global.effengine.SetBitmapping(this.bitmap_map);
         }
 
@@ -324,12 +676,11 @@ namespace Aurora.Settings
             double cornerRadius = 5;
             double current_height = 0;
             double current_width = 0;
-            bool isFirstInRow = true;
 
-            foreach (KeyboardKey key in keyboard)
+            foreach (KeyboardKey key in virtual_keyboard_group.grouped_keys)
             {
                 double keyMargin_Left = key.margin_left;
-                double keyMargin_Top = (isFirstInRow ? 0 : key.margin_top);
+                double keyMargin_Top = key.margin_top;
 
                 Border keyBorder = new Border();
                 keyBorder.CornerRadius = new CornerRadius(cornerRadius);
@@ -337,15 +688,26 @@ namespace Aurora.Settings
                 keyBorder.Height = key.height;
                 keyBorder.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
                 keyBorder.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                keyBorder.Margin = new Thickness(current_width + keyMargin_Left, current_height + keyMargin_Top, 0, 0);
+                if (key.absolute_location)
+                    keyBorder.Margin = new Thickness(keyMargin_Left, keyMargin_Top, 0, 0);
+                else
+                    keyBorder.Margin = new Thickness(current_width + keyMargin_Left, current_height + keyMargin_Top, 0, 0);
                 keyBorder.Visibility = System.Windows.Visibility.Visible;
                 keyBorder.BorderThickness = new Thickness(1.5);
-                keyBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
-                keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 25, 25, 25));
+                keyBorder.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 128, 128, 128));
+                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 25, 25, 25));
                 keyBorder.IsEnabled = key.enabled;
                 keyBorder.MouseDown += keyboard_grid_pressed;
                 keyBorder.MouseMove += keyboard_grid_moved;
                 keyBorder.IsHitTestVisible = true;
+
+                //Backglow
+                System.Windows.Media.Effects.DropShadowEffect effect = new System.Windows.Media.Effects.DropShadowEffect();
+                effect.BlurRadius = 7;
+                effect.Direction = 0;
+                effect.ShadowDepth = 0;
+                effect.RenderingBias = System.Windows.Media.Effects.RenderingBias.Performance;
+                //keyBorder.Effect = effect;
 
                 if (!key.enabled)
                 {
@@ -358,12 +720,12 @@ namespace Aurora.Settings
                 keyCap.Tag = key.tag;
                 keyCap.FontSize = key.font_size;
                 keyCap.FontWeight = FontWeights.Bold;
-                keyCap.FontFamily = new FontFamily("Calibri");
+                keyCap.FontFamily = new System.Windows.Media.FontFamily("Calibri");
                 keyCap.TextAlignment = TextAlignment.Center;
                 keyCap.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 keyCap.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
                 keyCap.Margin = new Thickness(0);
-                keyCap.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                keyCap.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
                 keyCap.Visibility = System.Windows.Visibility.Visible;
                 keyCap.IsHitTestVisible = true;
 
@@ -376,38 +738,40 @@ namespace Aurora.Settings
                 }
 
                 new_virtual_keyboard.Children.Add(keyBorder);
-                isFirstInRow = false;
 
-                if (key.width + keyMargin_Left > 0)
-                    current_width += key.width + keyMargin_Left;
-
-                if (keyMargin_Top > 0)
-                    current_height += keyMargin_Top;
-
-
-                if (layout_width < current_width)
-                    layout_width = current_width;
-
-                if (key.line_break)
+                if (!key.absolute_location)
                 {
-                    current_height += 37;
-                    current_width = 0;
-                    //isFirstInRow = true;
-                }
+                    if (key.width + keyMargin_Left > 0)
+                        current_width += key.width + keyMargin_Left;
 
-                if (layout_height < current_height)
-                    layout_height = current_height;
+                    if (keyMargin_Top > 0)
+                        current_height += keyMargin_Top;
+
+
+                    if (layout_width < current_width)
+                        layout_width = current_width;
+
+                    if (key.line_break)
+                    {
+                        current_height += 37;
+                        current_width = 0;
+                        //isFirstInRow = true;
+                    }
+
+                    if (layout_height < current_height)
+                        layout_height = current_height;
+                }
             }
 
-            if (keyboard.Count == 0)
+            if (virtual_keyboard_group.grouped_keys.Count == 0)
             {
                 //No items, display error
                 Label error_message = new Label();
                 error_message.Content = new TextBlock()
                 {
-                    Text = "No keyboard detected\r\nPlease ensure that you have SDK enabled for your keyboard",
+                    Text = "No keyboard selected\r\nPlease select your keyboard in the settings",
                     TextAlignment = TextAlignment.Center,
-                    Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0))
+                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0))
                 };
                 error_message.FontSize = 16.0;
                 error_message.FontWeight = FontWeights.Bold;
@@ -423,8 +787,8 @@ namespace Aurora.Settings
             else
             {
                 //Update size
-                new_virtual_keyboard.Width = layout_width;
-                new_virtual_keyboard.Height = layout_height;
+                new_virtual_keyboard.Width = virtual_keyboard_group.Region.Width;
+                new_virtual_keyboard.Height = virtual_keyboard_group.Region.Height;
             }
 
             _virtual_keyboard.Children.Clear();
@@ -438,33 +802,20 @@ namespace Aurora.Settings
             Effects.grid_width = (float)new_virtual_keyboard.Width;
         }
 
-        public void LoadCulture(PreferredKeyboard brand, String culture)
+        private void LoadCulture(String culture)
         {
-            keyboard.Clear();
-
-            var fileName = "layout." + culture + ".json";
-
-            switch (brand)
-            {
-                case (PreferredKeyboard.Corsair):
-                    fileName = "Corsair\\" + fileName;
-                    break;
-                case (PreferredKeyboard.Razer):
-                    fileName = "Razer\\" + fileName;
-                    break;
-                default:
-                    fileName = "Logitech\\" + fileName;
-                    break;
-            }
-
-            var layoutPath = Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder, fileName);
+            var fileName = "Plain Keyboard\\layout." + culture + ".json";
+            var layoutPath = Path.Combine(layoutsPath, fileName);
 
             if (!File.Exists(layoutPath))
                 LoadDefault();
 
             string content = File.ReadAllText(layoutPath, Encoding.UTF8);
-            keyboard = JsonConvert.DeserializeObject<List<KeyboardKey>>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+            KeyboardKey[] keyboard = JsonConvert.DeserializeObject<KeyboardKey[]>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
+            virtual_keyboard_group = new VirtualGroup(keyboard);
+
+            /*
             if (keyboard.Count > 0)
                 keyboard.Last().line_break = false;
 
@@ -472,16 +823,12 @@ namespace Aurora.Settings
 
             if (keyboard.Count > 0)
                 keyboard.Last().line_break = true;
-
-            CalculateBitmap();
-            CreateUserControl();
-
-            KeyboardLayoutUpdated?.Invoke(this);
+            */
         }
 
         public void LoadNone()
         {
-            keyboard.Clear();
+            virtual_keyboard_group.Clear();
 
             CalculateBitmap();
             CreateUserControl();
@@ -491,7 +838,7 @@ namespace Aurora.Settings
 
         public void LoadDefault()
         {
-            keyboard.Clear();
+            List<KeyboardKey> keyboard = new List<KeyboardKey>();
 
             keyboard.Add(new KeyboardKey("ESC", Devices.DeviceKeys.ESC));
 
@@ -618,17 +965,9 @@ namespace Aurora.Settings
             keyboard.Add(new KeyboardKey("0", Devices.DeviceKeys.NUM_ZERO, true, false, 12, 14, 0, 67));
             keyboard.Add(new KeyboardKey(".", Devices.DeviceKeys.NUM_PERIOD, true, true));
 
-            CalculateBitmap();
-            CreateUserControl();
-
-            KeyboardLayoutUpdated?.Invoke(this);
+            virtual_keyboard_group = new VirtualGroup(keyboard.ToArray());
 
             _loaded_localization = PreferredKeyboardLocalization.None;
-        }
-
-        public List<KeyboardKey> GetLayout()
-        {
-            return keyboard;
         }
     }
 }
