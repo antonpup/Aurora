@@ -75,7 +75,7 @@ namespace Aurora
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
-            layer_manager.NewLayer += Layer_manager_NewLayer;
+            ctrlLayerManager.NewLayer += Layer_manager_NewLayer;
 
             GenerateProfileStack();
         }
@@ -84,8 +84,7 @@ namespace Aurora
         {
             layercontrol_presenter.Layer = layer;
 
-            this.content_grid.Children.Clear();
-            this.content_grid.Children.Add(layercontrol_presenter);
+            this.content_grid.Content = layercontrol_presenter;
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
@@ -473,8 +472,20 @@ namespace Aurora
             ConfigUI th = source as ConfigUI;
             ProfileManager value = e.NewValue as ProfileManager;
 
-            th.content_grid.Children.Clear();
-            th.content_grid.Children.Add(value.GetUserControl());
+            th.ctrlLayerManager.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
+
+            if (value == null)
+                return;
+
+            /*th.content_grid.Children.Clear();
+            UIElement element = value.GetUserControl();
+            //th.content_grid.DataContext = element;
+            th.content_grid.MinHeight = ((UserControl)element).MinHeight;
+            th.content_grid.Children.Add(element);
+            th.content_grid.UpdateLayout();*/
+            th.content_grid.Content = value.GetUserControl();
+
+
         }
 
         private void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
@@ -536,8 +547,8 @@ namespace Aurora
                     GenerateProfileStack();
                 }
 
-                this.content_grid.Children.Clear();
-                this.content_grid.Children.Add(new Profiles.Generic_Application.Control_GenericApplication(filename));
+
+                this.content_grid.Content = new Profiles.Generic_Application.Control_GenericApplication(filename);
 
                 current_color = desktop_color_scheme;
                 transitionamount = 0.0f;
@@ -546,8 +557,8 @@ namespace Aurora
 
         private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.content_grid.Children.Clear();
-            this.content_grid.Children.Add(settings_control);
+            this.FocusedProfile = null;
+            this.content_grid.Content = settings_control;
 
             current_color = desktop_color_scheme;
             transitionamount = 0.0f;

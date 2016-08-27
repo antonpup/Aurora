@@ -581,6 +581,9 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
+      <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Control_LayerManager.xaml.cs">
       <DependentUpon>Control_LayerManager.xaml</DependentUpon>
     </Compile>
@@ -598,6 +601,7 @@
       <DependentUpon>Control_DefaultLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\DefaultLayer.cs" />
+    <Compile Include="Settings\Layers\LogicItem.cs" />
     <Compile Include="Settings\ProfileManager.cs" />
     <Compile Include="Settings\KeyboardLayoutManager.cs" />
     <Compile Include="Settings\KeyRecorder.cs" />
@@ -777,6 +781,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Control_LayerControlPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Window_LayerLogicEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

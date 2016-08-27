@@ -12,7 +12,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Profiles.Desktop.Control_Desktop"
              mc:Ignorable="d"
-             d:DesignHeight="261.972" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="261.972" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">

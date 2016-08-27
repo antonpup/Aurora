@@ -10,7 +10,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.DiscoDodgeball.Control_DiscoDodgeball"
              mc:Ignorable="d" 
-             d:DesignHeight="300" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="300" MinHeight="300" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
@@ -24,11 +24,13 @@
         <TabControl>
             <TabItem Header="Overview for Robot Roller-Derby Disco Dodgeball">
                 <Grid>
-                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="824"><Run Text="In order for Robot Roller-Derby Disco Dodgeball support to work, you have to apply the Aurora Wrapper Patch for LightFX for Aurora to receive lighting information. Aurora attempts to automatically install the wrapper on first launch (It will fail to do so if the game was not installed on first launch of Aurora, in which case you need to install the LightFX wrapper). If you wish to uninstall the LightFX wrapper file, you can press &quot;Unpatch Robot Roller-Derby Disco Dodgeball&quot;. "/><Run Text="After patching, make sure to enable LightFX in the game settings."/></TextBlock>
-                    <Button x:Name="patch_button" Content="Patch Robot Roller-Derby Disco Dodgeball" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,199,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="519" Text="Robot Roller-Derby Disco Dodgeball natively offers LightFX effects. The Color Zones is added to allow users to light up additional keys."/>
-                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Robot Roller-Derby Disco Dodgeball" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
-                    <Button x:Name="unpatch_button" Content="Unpatch Robot Roller-Derby Disco Dodgeball" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                    <StackPanel>
+                        <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Robot Roller-Derby Disco Dodgeball" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                        <TextBlock Margin="10,10,10,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for Robot Roller-Derby Disco Dodgeball support to work, you have to apply the Aurora Wrapper Patch for LightFX for Aurora to receive lighting information. Aurora attempts to automatically install the wrapper on first launch (It will fail to do so if the game was not installed on first launch of Aurora, in which case you need to install the LightFX wrapper). If you wish to uninstall the LightFX wrapper file, you can press &quot;Unpatch Robot Roller-Derby Disco Dodgeball&quot;. "/><Run Text="After patching, make sure to enable LightFX in the game settings."/></TextBlock>
+                        <Button x:Name="patch_button" Content="Patch Robot Roller-Derby Disco Dodgeball" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
+                        <Button x:Name="unpatch_button" Content="Unpatch Robot Roller-Derby Disco Dodgeball" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                        <TextBlock Margin="10,10,315,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Robot Roller-Derby Disco Dodgeball natively offers LightFX effects. The Color Zones is added to allow users to light up additional keys."/>
+                    </StackPanel>
                     <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                     <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
                 </Grid>

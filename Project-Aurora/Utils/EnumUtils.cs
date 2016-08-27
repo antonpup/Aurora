@@ -145,4 +145,9 @@ namespace Aurora.Utils
     {
         public LayerTypeToStringVC() : base(LayerType.Solid) { }
     }
+
+    public class LogicOperatorToStringVC : EnumToStringVC
+    {
+        public LogicOperatorToStringVC() : base(LogicOperator.GreaterThan) { }
+    }
 }

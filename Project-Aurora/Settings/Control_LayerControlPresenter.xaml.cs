@@ -40,11 +40,8 @@ namespace Aurora.Settings
         private void SetLayer(DefaultLayer layer)
         {
             this.DataContext = layer;
-            //this.txtLayerName.DataContext = layer;
-            //this.cmbLayerType.DataContext = layer;
 
-            this.grdControl.Children.Clear();
-            this.grdControl.Children.Add(layer.Control);
+            this.ctrlLayerTypeConfig.Content = layer.Control;
         }
     }
 }

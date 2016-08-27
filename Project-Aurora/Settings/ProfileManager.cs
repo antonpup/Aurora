@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
 using Aurora.Settings.Layers;
+using System.Reflection;
 
 namespace Aurora.Settings
 {
@@ -26,25 +27,11 @@ namespace Aurora.Settings
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
         internal Dictionary<string, dynamic> EffectScripts { get; set; }
         protected Type SettingsType = typeof(ProfileSettings);
+        public Dictionary<string, Tuple<Type, string>> ParameterLookup { get; set; }
 
         public event EventHandler ProfileChanged;
 
-        public ProfileManager(string name, string internal_name, string process_name, Type settings, LightEvent game_event)
-        {
-            Name = name;
-            InternalName = internal_name;
-            ProcessNames = new string[] { process_name };
-            Icon = null;
-            Control = null;
-            SettingsType = settings;
-            Settings = (ProfileSettings)Activator.CreateInstance(settings);
-            Event = game_event;
-            Profiles = new Dictionary<string, ProfileSettings>();
-            EffectScripts = new Dictionary<string, dynamic>();
-            LoadProfiles();
-        }
-
-        public ProfileManager(string name, string internal_name, string[] process_names, Type settings, LightEvent game_event)
+        public ProfileManager(string name, string internal_name, string[] process_names, Type settings, LightEvent game_event, Type game_state = null)
         {
             Name = name;
             InternalName = internal_name;
@@ -56,8 +43,15 @@ namespace Aurora.Settings
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
             EffectScripts = new Dictionary<string, dynamic>();
+            ParameterLookup = new Dictionary<string, Tuple<Type, string>>();
+            if (game_state != null)
+            {
+                this.LoadGameStateParameters(game_state);
+            }
             LoadProfiles();
         }
+
+        public ProfileManager(string name, string internal_name, string process_name, Type settings, LightEvent game_event, Type game_state = null) : this(name, internal_name, new string[] { process_name }, settings, game_event, game_state) { }
 
         public virtual UserControl GetUserControl()
         {
@@ -166,6 +160,8 @@ namespace Aurora.Settings
                             {
                                 foreach (DefaultLayer lyr in e.NewItems)
                                 {
+                                    if (lyr == null)
+                                        continue;
                                     lyr.AnythingChanged += this.SaveProfilesEvent;
                                 }
                             }
@@ -367,6 +363,61 @@ namespace Aurora.Settings
             catch (Exception exc)
             {
                 Global.logger.LogLine("Exception during SaveProfiles, " + exc, Logging_Level.Error);
+            }
+        }
+
+        Dictionary<Type, bool> AdditionalAllowedTypes = new Dictionary<Type, bool>
+        {
+            { typeof(string), true },
+        };
+
+        public void LoadGameStateParameters(Type typ, string str = "")
+        {
+            foreach (MemberInfo prop in typ.GetFields().Cast<MemberInfo>().Concat(typ.GetProperties().Cast<MemberInfo>()))
+            {
+                if (prop.GetCustomAttribute(typeof(GameStateIgnoreAttribute)) != null)
+                    continue;
+
+                Type prop_type;
+                switch(prop.MemberType)
+                {
+                    case MemberTypes.Field:
+                        prop_type = ((FieldInfo)prop).FieldType;
+                        break;
+                    case MemberTypes.Property:
+                        prop_type = ((PropertyInfo)prop).PropertyType;
+                        break;
+                    default:
+                        continue;
+                }
+
+                Type temp = null;
+
+                if (prop_type.IsPrimitive || AdditionalAllowedTypes.ContainsKey(prop_type))
+                {
+                    this.ParameterLookup.Add(str + (str == "" ? "" : "/") + prop.Name, new Tuple<Type, string>(prop_type, "gamestate"));
+                }
+                else if (prop_type.IsArray || prop_type.GetInterfaces().Any(t => {
+                    return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null;
+                }))
+                {
+                    RangeAttribute attribute;
+                    if ((attribute = prop.GetCustomAttribute(typeof(RangeAttribute)) as RangeAttribute) != null)
+                    {
+                        for (int i = attribute.Start; i <= attribute.End; i++)
+                        {
+                            this.LoadGameStateParameters(temp ?? prop_type.GetElementType(), str + (str == "" ? "" : "/") + prop_type.Name + "/" + i);
+                        }
+                    }
+                    else
+                    {
+                        //warning
+                    }
+                }
+                else if (prop_type.IsClass)
+                {
+                    this.LoadGameStateParameters(prop_type, str + (str == "" ? "" : "/") + prop.Name);
+                }
             }
         }
     }

@@ -6,6 +6,22 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles
 {
+    public class GameStateIgnoreAttribute : Attribute
+    { }
+
+    public class RangeAttribute : Attribute
+    {
+        public int Start { get; set; }
+
+        public int End { get; set; }
+
+        public RangeAttribute(int start, int end)
+        {
+            Start = start;
+            End = end;
+        }
+    }
+
     /// <summary>
     /// A class representing various information retaining to the game.
     /// </summary>

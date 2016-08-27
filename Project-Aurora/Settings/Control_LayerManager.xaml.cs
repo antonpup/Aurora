@@ -52,7 +52,8 @@ namespace Aurora.Settings
                 ((ProfileManager)e.OldValue).ProfileChanged -= self.UpdateLayers;
 
             self.UpdateLayers();
-            ((ProfileManager)e.NewValue).ProfileChanged += self.UpdateLayers;
+            if (e.NewValue != null)
+                ((ProfileManager)e.NewValue).ProfileChanged += self.UpdateLayers;
         }
 
         public void UpdateLayers()
@@ -62,7 +63,7 @@ namespace Aurora.Settings
 
         public void UpdateLayers(object sender, EventArgs e)
         {
-            this.lstLayers.ItemsSource = this.FocusedProfile.Settings.Layers;
+            this.lstLayers.ItemsSource = this.FocusedProfile?.Settings?.Layers;
         }
 
         private void Layers_listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -70,9 +71,15 @@ namespace Aurora.Settings
             if (e.AddedItems.Count == 1)
             {
                 var hander = NewLayer;
-
                 if (lstLayers.SelectedItem != null)
+                {
+                    if (!(lstLayers.SelectedItem is DefaultLayer))
+                        throw new ArgumentException($"Items contained in the ListView must be of type 'Layer', not '{lstLayers.SelectedItem.GetType()}'");
+
+
                     hander?.Invoke(lstLayers.SelectedItem as DefaultLayer);
+
+                }
             }
         }
 
@@ -93,6 +100,68 @@ namespace Aurora.Settings
         private void btnRemoveLayer_Click(object sender, RoutedEventArgs e)
         {
             this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
+        }
+
+        Point? DragStartPosition;
+        FrameworkElement DraggingItem;
+
+        private void stckLayer_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (DragStartPosition == null || !this.lstLayers.IsMouseOver)
+                return;
+            
+            Point curr = e.GetPosition(null);
+            Point start = (Point)DragStartPosition;
+
+            if (Math.Abs(curr.X - start.X) >= SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(curr.Y - start.Y) >= SystemParameters.MinimumVerticalDragDistance)
+            {
+                DragDrop.DoDragDrop(DraggingItem, DraggingItem.DataContext, DragDropEffects.Move);
+
+            }
+        }
+
+        private void stckLayer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            FrameworkElement stckLayer;
+            if ((stckLayer = sender as FrameworkElement) != null)
+            {
+                //this.lstLayers.SelectedValue = stckLayer.DataContext;
+                DragStartPosition = e.GetPosition(null);
+                DraggingItem = stckLayer;
+                //stckLayer.IsSelected = true;
+            }
+        }
+
+        private void lstLayers_PreviewMouseUp(object sender, EventArgs e)
+        {
+            DraggingItem = null;
+            DragStartPosition = null;
+        }
+
+        //Based on: http://stackoverflow.com/questions/3350187/wpf-c-rearrange-items-in-listbox-via-drag-and-drop
+        private void stckLayer_Drop(object sender, DragEventArgs e)
+        {
+            DefaultLayer droppedData = e.Data.GetData(typeof(DefaultLayer)) as DefaultLayer;
+            DefaultLayer target = ((FrameworkElement)(sender)).DataContext as DefaultLayer;
+
+            int removedIdx = lstLayers.Items.IndexOf(droppedData);
+            int targetIdx = lstLayers.Items.IndexOf(target);
+
+            if (removedIdx < targetIdx)
+            {
+                this.FocusedProfile?.Settings?.Layers.Insert(targetIdx + 1, droppedData);
+                this.FocusedProfile?.Settings?.Layers.RemoveAt(removedIdx);
+            }
+            else
+            {
+                int remIdx = removedIdx + 1;
+                if (this.FocusedProfile?.Settings?.Layers.Count + 1 > remIdx)
+                {
+                    this.FocusedProfile?.Settings?.Layers.Insert(targetIdx, droppedData);
+                    this.FocusedProfile?.Settings?.Layers.RemoveAt(remIdx);
+                }
+            }
         }
     }
 }

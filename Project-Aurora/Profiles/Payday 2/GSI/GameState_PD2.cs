@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles.Payday_2.GSI.Nodes;
+using Aurora.Settings;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -67,6 +68,7 @@ namespace Aurora.Profiles.Payday_2.GSI
         /// <summary>
         /// Information about players in the lobby
         /// </summary>
+        [Range(0, 3)]
         public PlayersNode Players
         {
             get
@@ -99,6 +101,7 @@ namespace Aurora.Profiles.Payday_2.GSI
         /// <summary>
         ///  A previous GameState
         /// </summary>
+        [GameStateIgnore]
         public GameState_PD2 Previously
         {
             get

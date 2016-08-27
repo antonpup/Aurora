@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,18 +55,34 @@ namespace Aurora.Settings.Layers
             }
         }
 
+        protected ObservableCollection<LogicItem> _Logics;
+
+        public ObservableCollection<LogicItem> Logics
+        {
+            get { return _Logics; }
+            set
+            {
+                _Logics = value;
+                AnythingChanged?.Invoke(this, null);
+                if (value != null)
+                    _Logics.CollectionChanged += (sender, e) => AnythingChanged?.Invoke(this, null);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         public DefaultLayer()
         {
             Control = new Control_DefaultLayer();
+            Logics = new ObservableCollection<LogicItem>();
         }
 
-        public DefaultLayer(string name, UserControl control = null)
+        public DefaultLayer(string name, UserControl control = null) : this()
         {
             Name = name;
-            Control = control ?? new Control_DefaultLayer();
+            if (control != null)
+                Control = control;
         }
     }
 }

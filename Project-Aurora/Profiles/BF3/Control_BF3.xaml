@@ -10,7 +10,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.BF3.Control_BF3"
              mc:Ignorable="d" 
-             d:DesignHeight="300" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
@@ -24,11 +24,13 @@
         <TabControl>
             <TabItem Header="Overview for Battlefield 3">
                 <Grid>
-                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="800"><Run Text="For Battlefield 3 support to work, you have to apply the Aurora Wrapper Patch for LightFX in order for Aurora to receive lighting information. Please select &quot;Patch Battlefield 3&quot; and enter the path to your Battlefield 3 installation. The default path is, &quot;C:\Program Files (x86)\Origin Games\Battlefield 3\&quot;."/><LineBreak/><Run/></TextBlock>
-                    <Button x:Name="patch_button" Content="Patch Battlefield 3" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,199,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="519" Text="Battlefield 3 natively offers LightFX effects. The Color Zones is added to allow users to light up additional keys."/>
-                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Battlefield 3" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
-                    <Button x:Name="unpatch_button" Content="Unpatch Battlefield 3" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                    <StackPanel>
+                        <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Battlefield 3" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                        <TextBlock Margin="10,10,34,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="For Battlefield 3 support to work, you have to apply the Aurora Wrapper Patch for LightFX in order for Aurora to receive lighting information. Please select &quot;Patch Battlefield 3&quot; and enter the path to your Battlefield 3 installation. The default path is, &quot;C:\Program Files (x86)\Origin Games\Battlefield 3\&quot;."/><LineBreak/><Run/></TextBlock>
+                        <Button x:Name="patch_button" Content="Patch Battlefield 3" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
+                        <Button x:Name="unpatch_button" Content="Unpatch Battlefield 3" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                        <TextBlock Margin="10,10,312,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Battlefield 3 natively offers LightFX effects. The Color Zones is added to allow users to light up additional keys."/>
+                    </StackPanel>
                     <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                     <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
                 </Grid>
