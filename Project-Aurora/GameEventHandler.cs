@@ -178,7 +178,7 @@ namespace Aurora
 
             if (Global.Configuration.additional_profiles.ContainsKey(process_name) && (Global.Configuration.additional_profiles[process_name].Settings as GenericApplicationSettings).isEnabled)
             {
-                //Global.dev_manager.Initialize();
+                Global.dev_manager.InitializeOnce();
 
                 if (profiles.ContainsKey(process_name))
                 {
@@ -194,7 +194,7 @@ namespace Aurora
             }
             else if (preview_mode == PreviewType.GenericApplication && Global.Configuration.additional_profiles.ContainsKey(preview_mode_profile_key) && (Global.Configuration.additional_profiles[preview_mode_profile_key].Settings as GenericApplicationSettings).isEnabled)
             {
-                //Global.dev_manager.Initialize();
+                Global.dev_manager.InitializeOnce();
 
                 if (profiles.ContainsKey(preview_mode_profile_key))
                     profiles[preview_mode_profile_key].UpdateLights(newframe);
@@ -207,7 +207,7 @@ namespace Aurora
             }
             else if (preview_mode == PreviewType.Predefined && profiles.ContainsKey(preview_mode_profile_key) && profiles[preview_mode_profile_key].IsEnabled())
             {
-                //Global.dev_manager.Initialize();
+                Global.dev_manager.InitializeOnce();
 
                 profiles[preview_mode_profile_key].UpdateLights(newframe);
             }
@@ -228,7 +228,7 @@ namespace Aurora
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
                 {
-                    //Global.dev_manager.Initialize();
+                    Global.dev_manager.InitializeOnce();
 
                     profiles[process_name].UpdateLights(newframe);
                 }
@@ -241,7 +241,7 @@ namespace Aurora
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
                 {
-                    //Global.dev_manager.Initialize();
+                    Global.dev_manager.InitializeOnce();
 
                     profiles[Global.net_listener.WrappedProcess].UpdateLights(newframe);
                 }
@@ -257,7 +257,7 @@ namespace Aurora
                         Global.dev_manager.Shutdown();
                     else
                     {
-                        //Global.dev_manager.Initialize();
+                        Global.dev_manager.InitializeOnce();
                         desktop_e.UpdateLights(newframe);
                     }
                 }

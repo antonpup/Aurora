@@ -138,6 +138,12 @@ namespace Aurora.Devices
             }
         }
 
+        public void InitializeOnce()
+        {
+            if(!anyInitialized)
+                Initialize();
+        }
+
         public bool AnyInitialized()
         {
             return anyInitialized;
@@ -168,6 +174,8 @@ namespace Aurora.Devices
                     Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was shutdown", Logging_Level.Info);
                 }
             }
+
+            anyInitialized = false;
         }
 
         public void ResetDevices()
