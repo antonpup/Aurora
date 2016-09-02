@@ -256,6 +256,233 @@ LogiLed::Logitech_keyboardBitmapKeys ToLogitechBitmap(LogiLed::KeyName keyName)
 	}
 }
 
+LogiLed::KeyName ScanCodeToLogitechKeyName(int scanCode)
+{
+	// Filled out according to: https://msdn.microsoft.com/en-us/library/aa299374(v=vs.60).aspx
+	switch (scanCode)
+	{
+	case(1):
+		return LogiLed::KeyName::ESC;
+	case(59):
+		return LogiLed::KeyName::F1;
+	case(60):
+		return LogiLed::KeyName::F2;
+	case(61):
+		return LogiLed::KeyName::F3;
+	case(62):
+		return LogiLed::KeyName::F4;
+	case(63):
+		return LogiLed::KeyName::F5;
+	case(64):
+		return LogiLed::KeyName::F6;
+	case(65):
+		return LogiLed::KeyName::F7;
+	case(66):
+		return LogiLed::KeyName::F8;
+	case(67):
+		return LogiLed::KeyName::F9;
+	case(68):
+		return LogiLed::KeyName::F10;
+	case(87):
+		return LogiLed::KeyName::F11;
+	case(88):
+		return LogiLed::KeyName::F12;
+	case(55):
+		return LogiLed::KeyName::PRINT_SCREEN;
+	case(70):
+		return LogiLed::KeyName::SCROLL_LOCK;
+		//case(LogiLed::KeyName::PAUSE_BREAK):
+		//	return LogiLed::KeyName::PAUSE_BREAK;
+	case(41):
+		return LogiLed::KeyName::TILDE;
+	case(2):
+		return LogiLed::KeyName::ONE;
+	case(3):
+		return LogiLed::KeyName::TWO;
+	case(4):
+		return LogiLed::KeyName::THREE;
+	case(5):
+		return LogiLed::KeyName::FOUR;
+	case(6):
+		return LogiLed::KeyName::FIVE;
+	case(7):
+		return LogiLed::KeyName::SIX;
+	case(8):
+		return LogiLed::KeyName::SEVEN;
+	case(9):
+		return LogiLed::KeyName::EIGHT;
+	case(10):
+		return LogiLed::KeyName::NINE;
+	case(11):
+		return LogiLed::KeyName::ZERO;
+	case(12):
+		return LogiLed::KeyName::MINUS;
+	case(13):
+		return LogiLed::KeyName::EQUALS;
+	case(14):
+		return LogiLed::KeyName::BACKSPACE;
+	case(82):
+		return LogiLed::KeyName::INSERT;
+	case(71):
+		return LogiLed::KeyName::HOME;
+	case(73):
+		return LogiLed::KeyName::PAGE_UP;
+	case(69):
+		return LogiLed::KeyName::NUM_LOCK;
+		//case(LogiLed::KeyName::NUM_SLASH):
+		//	return LogiLed::KeyName::NUM_SLASH;
+		//case(LogiLed::KeyName::NUM_ASTERISK):
+		//	return LogiLed::KeyName::NUM_ASTERISK;
+		//case(LogiLed::KeyName::NUM_MINUS):
+		//	return LogiLed::KeyName::NUM_MINUS;
+	case(15):
+		return LogiLed::KeyName::TAB;
+	case(16):
+		return LogiLed::KeyName::Q;
+	case(17):
+		return LogiLed::KeyName::W;
+	case(18):
+		return LogiLed::KeyName::E;
+	case(19):
+		return LogiLed::KeyName::R;
+	case(20):
+		return LogiLed::KeyName::T;
+	case(21):
+		return LogiLed::KeyName::Y;
+	case(22):
+		return LogiLed::KeyName::U;
+	case(23):
+		return LogiLed::KeyName::I;
+	case(24):
+		return LogiLed::KeyName::O;
+	case(25):
+		return LogiLed::KeyName::P;
+	case(26):
+		return LogiLed::KeyName::OPEN_BRACKET;
+	case(27):
+		return LogiLed::KeyName::CLOSE_BRACKET;
+	case(43):
+		return LogiLed::KeyName::BACKSLASH;
+	case(83):
+		return LogiLed::KeyName::KEYBOARD_DELETE;
+	case(79):
+		return LogiLed::KeyName::END;
+	case(81):
+		return LogiLed::KeyName::PAGE_DOWN;
+		//case(LogiLed::KeyName::NUM_SEVEN):
+		//	return LogiLed::KeyName::NUM_SEVEN;
+		//case(LogiLed::KeyName::NUM_EIGHT):
+		//	return LogiLed::KeyName::NUM_EIGHT;
+		//case(LogiLed::KeyName::NUM_NINE):
+		//	return LogiLed::KeyName::NUM_NINE;
+		//case(LogiLed::KeyName::NUM_PLUS):
+		//	return LogiLed::KeyName::NUM_PLUS;
+	case(58):
+		return LogiLed::KeyName::CAPS_LOCK;
+	case(30):
+		return LogiLed::KeyName::A;
+	case(31):
+		return LogiLed::KeyName::S;
+	case(32):
+		return LogiLed::KeyName::D;
+	case(33):
+		return LogiLed::KeyName::F;
+	case(34):
+		return LogiLed::KeyName::G;
+	case(35):
+		return LogiLed::KeyName::H;
+	case(36):
+		return LogiLed::KeyName::J;
+	case(37):
+		return LogiLed::KeyName::K;
+	case(38):
+		return LogiLed::KeyName::L;
+	case(39):
+		return LogiLed::KeyName::SEMICOLON;
+	case(40):
+		return LogiLed::KeyName::APOSTROPHE;
+		//case(LogiLed::KeyName::HASHTAG) :
+		//	return LogiLed::KeyName::HASHTAG;
+	case(28):
+		return LogiLed::KeyName::ENTER;
+		//case(LogiLed::KeyName::NUM_FOUR):
+		//	return LogiLed::KeyName::NUM_FOUR;
+		//case(LogiLed::KeyName::NUM_FIVE):
+		//	return LogiLed::KeyName::NUM_FIVE;
+		//case(LogiLed::KeyName::NUM_SIX):
+		//	return LogiLed::KeyName::NUM_SIX;
+	case(42):
+		return LogiLed::KeyName::LEFT_SHIFT;
+		//case(LogiLed::KeyName::BACKSLASH_UK) :
+		//	return LogiLed::KeyName::BACKSLASH_UK;
+	case(44):
+		return LogiLed::KeyName::Z;
+	case(45):
+		return LogiLed::KeyName::X;
+	case(46):
+		return LogiLed::KeyName::C;
+	case(47):
+		return LogiLed::KeyName::V;
+	case(48):
+		return LogiLed::KeyName::B;
+	case(49):
+		return LogiLed::KeyName::N;
+	case(50):
+		return LogiLed::KeyName::M;
+	case(51):
+		return LogiLed::KeyName::COMMA;
+	case(52):
+		return LogiLed::KeyName::PERIOD;
+	case(53):
+		return LogiLed::KeyName::FORWARD_SLASH;
+	case(54):
+		return LogiLed::KeyName::RIGHT_SHIFT;
+	case(72):
+		return LogiLed::KeyName::ARROW_UP;
+		//case(LogiLed::KeyName::NUM_ONE):
+		//	return LogiLed::KeyName::NUM_ONE;
+		//case(LogiLed::KeyName::NUM_TWO):
+		//	return LogiLed::KeyName::NUM_TWO;
+		//case(LogiLed::KeyName::NUM_THREE):
+		//	return LogiLed::KeyName::NUM_THREE;
+		//case(LogiLed::KeyName::NUM_ENTER):
+		//	return LogiLed::KeyName::NUM_ENTER;
+	case(29):
+		return LogiLed::KeyName::LEFT_CONTROL;
+		//case(LogiLed::KeyName::LEFT_WINDOWS):
+		//	return LogiLed::KeyName::LEFT_WINDOWS;
+	case(56):
+		return LogiLed::KeyName::LEFT_ALT;
+	case(57):
+		return LogiLed::KeyName::SPACE;
+		//case(LogiLed::KeyName::RIGHT_ALT):
+		//	return LogiLed::KeyName::RIGHT_ALT;
+		//case(LogiLed::KeyName::RIGHT_WINDOWS):
+		//	return LogiLed::KeyName::RIGHT_WINDOWS;
+		//case(LogiLed::KeyName::APPLICATION_SELECT):
+		//	return LogiLed::KeyName::APPLICATION_SELECT;
+		//case(LogiLed::KeyName::RIGHT_CONTROL):
+		//	return LogiLed::KeyName::RIGHT_CONTROL;
+	case(75):
+		return LogiLed::KeyName::ARROW_LEFT;
+	case(80):
+		return LogiLed::KeyName::ARROW_DOWN;
+	case(77):
+		return LogiLed::KeyName::ARROW_RIGHT;
+		//case(LogiLed::KeyName::NUM_ZERO):
+		//	return LogiLed::KeyName::NUM_ZERO;
+		//case(LogiLed::KeyName::NUM_PERIOD):
+		//	return LogiLed::KeyName::NUM_PERIOD;
+	default:
+		return LogiLed::KeyName::APPLICATION_SELECT; //Used as an error placeholder
+	}
+}
+
+LogiLed::Logitech_keyboardBitmapKeys ScanCodeToLogitechBitmap(int scanCode)
+{
+	return ToLogitechBitmap( ScanCodeToLogitechKeyName(scanCode) );
+}
+
 bool WriteToPipe(const std::string command_cargo)
 {
 	if (!isInitialized)
@@ -605,32 +832,40 @@ void _LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int g
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
 	unsigned char blueValue = (unsigned char)((bluePercentage / 100.0f) * 255);
 
-	std::string contents = "";
-	contents += "\"command\": \"SetLightingForKeyWithScanCode\",";
-	contents += "\"command_data\": {";
+	LogiLed::KeyName keyname = ScanCodeToLogitechKeyName(keyCode);
+	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyname);
 
-	contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
-	contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
-	contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
-	contents += "\"key\": " + std::to_string(keyCode);
-
-	contents += '}';
-
-	//NOT IMPLEMENTED
-	/*
-	LogiLed::Logitech_keyboardBitmapKeys bit_location = ToLogitechBitmap(keyName);
-
-	if (bit_location != LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN)
+	if (isInitialized && (current_device == LOGI_DEVICETYPE_ALL || current_device == LOGI_DEVICETYPE_PERKEY_RGB))
 	{
-	current_bitmap[(int)bit_location] = blueValue;
-	current_bitmap[(int)bit_location + 1] = greenValue;
-	current_bitmap[(int)bit_location + 2] = redValue;
-	current_bitmap[(int)bit_location + 3] = (char)255;
+		if (bit_location == LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN ||
+			(
+				current_bitmap[(int)bit_location] == blueValue &&
+				current_bitmap[(int)bit_location + 1] == greenValue &&
+				current_bitmap[(int)bit_location + 2] == redValue
+				)
+			)
+		{
+			//No need to write on pipe, color did not change
+			return;
+		}
 
-	return WriteToPipe(current_bitmap, ss.str());
+		current_bitmap[(int)bit_location] = blueValue;
+		current_bitmap[(int)bit_location + 1] = greenValue;
+		current_bitmap[(int)bit_location + 2] = redValue;
+
+		std::string contents = "";
+		contents += "\"command\": \"SetLightingForKeyWithScanCode\",";
+		contents += "\"command_data\": {";
+
+		contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
+		contents += "\"green_start\": " + std::to_string((int)greenValue) + ',';
+		contents += "\"blue_start\": " + std::to_string((int)blueValue) + ',';
+		contents += "\"key\": " + std::to_string(keyname);
+
+		contents += "}";
+
+		WriteToPipe(contents);
 	}
-	*/
-	WriteToPipe(contents);
 }
 
 void _LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)

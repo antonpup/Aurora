@@ -172,7 +172,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
                         }
                     }
                 }
-                else if (ngw_state.Command.Equals("SetLightingForKeyWithKeyName"))
+                else if (ngw_state.Command.Equals("SetLightingForKeyWithKeyName") || ngw_state.Command.Equals("SetLightingForKeyWithScanCode"))
                 {
                     var bitmap_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap((LedCSharp.keyboardNames)(ngw_state.Command_Data.key));
 
