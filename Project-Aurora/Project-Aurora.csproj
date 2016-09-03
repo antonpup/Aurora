@@ -884,6 +884,9 @@
     <Resource Include="Resources\RemoveProfile_Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LogitechLed.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="redist\vc_redist.x64.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
