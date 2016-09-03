@@ -149,8 +149,8 @@ namespace Aurora.Settings
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-                        foreach (DefaultLayer lyr in prof.Layers)
+                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
+                        foreach (Layer lyr in prof.Layers)
                         {
                             lyr.AnythingChanged += this.SaveProfilesEvent;
                         }
@@ -158,7 +158,7 @@ namespace Aurora.Settings
                         prof.Layers.CollectionChanged += (s, e) => {
                             if (e.NewItems != null)
                             {
-                                foreach (DefaultLayer lyr in e.NewItems)
+                                foreach (Layer lyr in e.NewItems)
                                 {
                                     if (lyr == null)
                                         continue;
@@ -327,7 +327,8 @@ namespace Aurora.Settings
         {
             try
             {
-                string content = JsonConvert.SerializeObject(profile, Formatting.Indented);
+                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                string content = JsonConvert.SerializeObject(profile, Formatting.Indented, settings);
 
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
                 File.WriteAllText(path, content, Encoding.UTF8);

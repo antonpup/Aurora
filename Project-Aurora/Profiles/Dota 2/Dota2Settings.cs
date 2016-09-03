@@ -133,7 +133,7 @@ namespace Aurora.Profiles.Dota_2
             items_no_charges_color = Color.FromArgb(150, 150, 150);
             items_color = Color.FromArgb(255, 255, 255);
             items_use_item_color = true;
-            items_keys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.V, Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP, Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN };
+            items_keys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.N, Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP, Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN };
 
             // Lighting Areas
             lighting_areas = new List<ColorZone>();

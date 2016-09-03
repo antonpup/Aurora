@@ -23,13 +23,13 @@ namespace Aurora.Settings
 
         public Dictionary<string, ScriptSettings> ScriptSettings { get; set; }
 
-        public ObservableCollection<DefaultLayer> Layers { get; set; }
+        public ObservableCollection<Layer> Layers { get; set; }
 
         public ProfileSettings()
         {
             isEnabled = true;
             ScriptSettings = new Dictionary<string, ScriptSettings>();
-            Layers = new ObservableCollection<DefaultLayer>();
+            Layers = new ObservableCollection<Layer>();
         }
     }
 }

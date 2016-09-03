@@ -21,27 +21,54 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Control_LayerControlPresenter : UserControl
     {
-        protected DefaultLayer _Layer;
+        private bool isSettingNewLayer = false;
 
-        public DefaultLayer Layer { get { return _Layer; } set { _Layer = value; SetLayer(value); } }
+        protected Layer _Layer;
+
+        public Layer Layer { get { return _Layer; } set { _Layer = value; SetLayer(value); } }
 
         public Control_LayerControlPresenter()
         {
             InitializeComponent();
         }
 
-        public Control_LayerControlPresenter(DefaultLayer layer)
+        public Control_LayerControlPresenter(Layer layer)
         {
             InitializeComponent();
 
             Layer = layer;
+            cmbLayerType.SelectedItem = Layer.Handler.Type;
         }
 
-        private void SetLayer(DefaultLayer layer)
+        private void SetLayer(Layer layer)
         {
-            this.DataContext = layer;
+            isSettingNewLayer = true;
 
-            this.ctrlLayerTypeConfig.Content = layer.Control;
+            DataContext = layer;
+
+            cmbLayerType.SelectedItem = Layer.Handler.Type;
+            ctrlLayerTypeConfig.Content = layer.Control;
+            isSettingNewLayer = false;
+        }
+
+        private void cmbLayerType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded && !isSettingNewLayer && sender is ComboBox)
+            {
+                LayerType enumVal = (LayerType)Enum.Parse(typeof(LayerType), ((sender as ComboBox).SelectedItem).ToString());
+
+                switch (enumVal)
+                {
+                    case LayerType.Solid:
+                        _Layer.Handler = new SolidColorLayerHandler();
+                        break;
+                    default:
+                        _Layer.Handler = new DefaultLayerHandler();
+                        break;
+                }
+
+                ctrlLayerTypeConfig.Content = _Layer.Control;
+            }
         }
     }
 }

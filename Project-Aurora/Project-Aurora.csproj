@@ -581,6 +581,12 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_SolidColorLayer.xaml.cs">
+      <DependentUpon>Control_SolidColorLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\DefaultLayerHandler.cs" />
+    <Compile Include="Settings\Layers\LayerHandler.cs" />
+    <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
     <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
       <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
     </Compile>
@@ -600,7 +606,7 @@
     <Compile Include="Settings\Layers\Control_DefaultLayer.xaml.cs">
       <DependentUpon>Control_DefaultLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Layers\DefaultLayer.cs" />
+    <Compile Include="Settings\Layers\Layer.cs" />
     <Compile Include="Settings\Layers\LogicItem.cs" />
     <Compile Include="Settings\ProfileManager.cs" />
     <Compile Include="Settings\KeyboardLayoutManager.cs" />
@@ -783,6 +789,10 @@
     <Page Include="Settings\Control_LayerControlPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_SolidColorLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Window_LayerLogicEditor.xaml">
       <SubType>Designer</SubType>

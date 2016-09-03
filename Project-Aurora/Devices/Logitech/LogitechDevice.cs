@@ -343,7 +343,7 @@ namespace Aurora.Devices.Logitech
 
                     if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.Peripheral)
                     {
-                        SendColorToPeripheral((Color)key.Value, forced);
+                        SendColorToPeripheral((Color)key.Value, forced || !peripheral_updated);
                     }
                     if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.OEM8)
                     {
@@ -360,7 +360,7 @@ namespace Aurora.Devices.Logitech
                     }
                 }
 
-                SendColorsToKeyboard(forced);
+                SendColorsToKeyboard(forced || !keyboard_updated);
                 return true;
             }
             catch (Exception e)
@@ -686,7 +686,10 @@ namespace Aurora.Devices.Logitech
                 case (DeviceKeys.T):
                     return Logitech_keyboardBitmapKeys.T;
                 case (DeviceKeys.Y):
-                    return Logitech_keyboardBitmapKeys.Y;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Logitech_keyboardBitmapKeys.Z;
+                    else
+                        return Logitech_keyboardBitmapKeys.Y;
                 case (DeviceKeys.U):
                     return Logitech_keyboardBitmapKeys.U;
                 case (DeviceKeys.I):
@@ -756,7 +759,10 @@ namespace Aurora.Devices.Logitech
                 case (DeviceKeys.BACKSLASH_UK):
                     return Logitech_keyboardBitmapKeys.BACKSLASH_UK;
                 case (DeviceKeys.Z):
-                    return Logitech_keyboardBitmapKeys.Z;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Logitech_keyboardBitmapKeys.Y;
+                    else
+                        return Logitech_keyboardBitmapKeys.Z;
                 case (DeviceKeys.X):
                     return Logitech_keyboardBitmapKeys.X;
                 case (DeviceKeys.C):

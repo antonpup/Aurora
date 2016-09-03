@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Timers;
@@ -315,6 +316,12 @@ namespace Aurora.Profiles.Desktop
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
             float time = (float)Math.Pow(Math.Sin(1.0D * (internalcounter++ / 10.0f)), 2.0d);
+
+            foreach(var layer in (Global.Configuration.desktop_profile.Settings as DesktopSettings).Layers.Reverse().ToArray())
+            {
+                if(layer.Enabled && layer.LogicPass)
+                    layers.Enqueue(layer.Handler.Render());
+            }
 
             EffectLayer cz_layer = new EffectLayer("Color Zones");
             cz_layer.DrawColorZones((Global.Configuration.desktop_profile.Settings as DesktopSettings).lighting_areas.ToArray());

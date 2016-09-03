@@ -246,10 +246,15 @@ namespace Aurora.Utils
                     else
                         return DeviceKeys.TILDE;
                 case (Keys.OemOpenBrackets):
-                    return DeviceKeys.OPEN_BRACKET;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.MINUS;
+                    else
+                        return DeviceKeys.OPEN_BRACKET;
                 case (Keys.OemPipe):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.BACKSLASH_UK;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.TILDE;
                     else
                         return DeviceKeys.BACKSLASH;
                 case (Keys.OemCloseBrackets):

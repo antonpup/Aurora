@@ -11,6 +11,7 @@ namespace Aurora.Settings.Layers
 {
     public enum LayerType
     {
+        Default,
         Solid,
         Percent
     }
@@ -18,13 +19,14 @@ namespace Aurora.Settings.Layers
     /// <summary>
     /// A class representing a default settings layer
     /// </summary>
-    public class DefaultLayer
+    public class Layer
     {
         public event EventHandler AnythingChanged;
 
         protected string _Name = "New Layer";
 
-        public string Name {
+        public string Name
+        {
             get { return _Name; }
             set
             {
@@ -32,14 +34,21 @@ namespace Aurora.Settings.Layers
                 AnythingChanged?.Invoke(this, null);
             }
         }
-        
+
+        private LayerHandler _Handler = new DefaultLayerHandler();
+
+        public LayerHandler Handler { get { return _Handler; } set { _Handler = value; } }
+
         [JsonIgnore]
-        public UserControl Control { get; set; }
+        public UserControl Control { get { return _Handler.Control; } }
 
         protected bool _Enabled = true;
 
-        public bool Enabled { get { return _Enabled; }
-            set {
+        public bool Enabled
+        {
+            get { return _Enabled; }
+            set
+            {
                 _Enabled = value;
                 AnythingChanged?.Invoke(this, null);
             }
@@ -47,7 +56,9 @@ namespace Aurora.Settings.Layers
 
         protected LayerType _Type;
 
-        public LayerType Type { get { return _Type; }
+        public LayerType Type
+        {
+            get { return _Type; }
             set
             {
                 _Type = value;
@@ -69,20 +80,24 @@ namespace Aurora.Settings.Layers
             }
         }
 
+        public bool LogicPass
+        {
+            get { return true; } //Check every logic and return whether or not the layer is visible/enabled
+        }
+
         /// <summary>
         /// 
         /// </summary>
-        public DefaultLayer()
+        public Layer()
         {
-            Control = new Control_DefaultLayer();
             Logics = new ObservableCollection<LogicItem>();
         }
 
-        public DefaultLayer(string name, UserControl control = null) : this()
+        public Layer(string name, LayerHandler handler = null) : this()
         {
             Name = name;
-            if (control != null)
-                Control = control;
+            if (handler != null)
+                _Handler = handler;
         }
     }
 }

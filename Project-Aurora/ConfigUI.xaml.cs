@@ -80,7 +80,7 @@ namespace Aurora
             GenerateProfileStack();
         }
 
-        private void Layer_manager_NewLayer(Settings.Layers.DefaultLayer layer)
+        private void Layer_manager_NewLayer(Settings.Layers.Layer layer)
         {
             layercontrol_presenter.Layer = layer;
 

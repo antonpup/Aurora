@@ -21,7 +21,7 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Control_LayerManager : UserControl
     {
-        public delegate void NewLayerHandler(DefaultLayer layer);
+        public delegate void NewLayerHandler(Layer layer);
 
         public event NewLayerHandler NewLayer;
 
@@ -73,11 +73,11 @@ namespace Aurora.Settings
                 var hander = NewLayer;
                 if (lstLayers.SelectedItem != null)
                 {
-                    if (!(lstLayers.SelectedItem is DefaultLayer))
+                    if (!(lstLayers.SelectedItem is Layer))
                         throw new ArgumentException($"Items contained in the ListView must be of type 'Layer', not '{lstLayers.SelectedItem.GetType()}'");
 
 
-                    hander?.Invoke(lstLayers.SelectedItem as DefaultLayer);
+                    hander?.Invoke(lstLayers.SelectedItem as Layer);
 
                 }
             }
@@ -85,7 +85,7 @@ namespace Aurora.Settings
 
         private void add_layer_button_Click(object sender, RoutedEventArgs e)
         {
-            DefaultLayer lyr = new DefaultLayer("New layer " + Utils.Time.GetMilliSeconds());
+            Layer lyr = new Layer("New layer " + Utils.Time.GetMilliSeconds());
             lyr.AnythingChanged += this.FocusedProfile.SaveProfilesEvent;
             /*CheckBox new_layer = new CheckBox();
             new_layer.Tag = new DefaultLayer();
@@ -99,7 +99,8 @@ namespace Aurora.Settings
 
         private void btnRemoveLayer_Click(object sender, RoutedEventArgs e)
         {
-            this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
+            if(this.lstLayers.SelectedIndex > -1)
+                this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
         }
 
         Point? DragStartPosition;
@@ -142,8 +143,8 @@ namespace Aurora.Settings
         //Based on: http://stackoverflow.com/questions/3350187/wpf-c-rearrange-items-in-listbox-via-drag-and-drop
         private void stckLayer_Drop(object sender, DragEventArgs e)
         {
-            DefaultLayer droppedData = e.Data.GetData(typeof(DefaultLayer)) as DefaultLayer;
-            DefaultLayer target = ((FrameworkElement)(sender)).DataContext as DefaultLayer;
+            Layer droppedData = e.Data.GetData(typeof(Layer)) as Layer;
+            Layer target = ((FrameworkElement)(sender)).DataContext as Layer;
 
             int removedIdx = lstLayers.Items.IndexOf(droppedData);
             int targetIdx = lstLayers.Items.IndexOf(target);
