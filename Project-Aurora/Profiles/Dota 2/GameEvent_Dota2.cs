@@ -417,6 +417,7 @@ namespace Aurora.Profiles.Dota_2
         {
             profilename = "Dota 2";
             UpdateAnimations();
+            _game_state = new GameState_Dota2();
         }
 
         public void UpdateAnimations()

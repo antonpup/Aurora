@@ -57,6 +57,7 @@ namespace Aurora.Profiles.CSGO
         public GameEvent_CSGO()
         {
             profilename = "CSGO";
+            _game_state = new GameState_CSGO();
         }
 
         public static void SetTeam(PlayerTeam team)

@@ -101,7 +101,6 @@ namespace Aurora.Profiles.Payday_2.GSI
         /// <summary>
         ///  A previous GameState
         /// </summary>
-        [GameStateIgnore]
         public GameState_PD2 Previously
         {
             get

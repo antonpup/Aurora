@@ -17,6 +17,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Information about the provider of this GameState
         /// </summary>
+        [GameStateIgnoreAttribute]
         public Provider_Wrapper Provider
         {
             get
@@ -33,6 +34,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// The sent wrapper command
         /// </summary>
+        [GameStateIgnoreAttribute]
         public string Command
         {
             get
@@ -54,6 +56,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Data related to the passed command
         /// </summary>
+        [GameStateIgnoreAttribute]
         public Command_Wrapper Command_Data
         {
             get
@@ -70,6 +73,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// The bitmap sent from the wrapper
         /// </summary>
+        [GameStateIgnoreAttribute]
         public byte[] Sent_Bitmap
         {
             get
@@ -91,6 +95,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Lighting information for extra keys that are not part of the bitmap
         /// </summary>
+        [GameStateIgnoreAttribute]
         public Extra_Keys_Wrapper Extra_Keys
         {
             get
@@ -199,28 +204,51 @@ namespace Aurora.Profiles
     /// </summary>
     public class Extra_Keys_Wrapper : Node
     {
+        [Range(0, 3)]
         public readonly int[] peripheral;
+        [Range(0, 3)]
         public readonly int[] logo;
+        [Range(0, 3)]
         public readonly int[] badge;
+        [Range(0, 3)]
         public readonly int[] G1;
+        [Range(0, 3)]
         public readonly int[] G2;
+        [Range(0, 3)]
         public readonly int[] G3;
+        [Range(0, 3)]
         public readonly int[] G4;
+        [Range(0, 3)]
         public readonly int[] G5;
+        [Range(0, 3)]
         public readonly int[] G6;
+        [Range(0, 3)]
         public readonly int[] G7;
+        [Range(0, 3)]
         public readonly int[] G8;
+        [Range(0, 3)]
         public readonly int[] G9;
+        [Range(0, 3)]
         public readonly int[] G10;
+        [Range(0, 3)]
         public readonly int[] G11;
+        [Range(0, 3)]
         public readonly int[] G12;
+        [Range(0, 3)]
         public readonly int[] G13;
+        [Range(0, 3)]
         public readonly int[] G14;
+        [Range(0, 3)]
         public readonly int[] G15;
+        [Range(0, 3)]
         public readonly int[] G16;
+        [Range(0, 3)]
         public readonly int[] G17;
+        [Range(0, 3)]
         public readonly int[] G18;
+        [Range(0, 3)]
         public readonly int[] G19;
+        [Range(0, 3)]
         public readonly int[] G20;
 
         internal Extra_Keys_Wrapper(string JSON)

@@ -13,7 +13,7 @@ namespace Aurora.Profiles.Payday_2
     public class PD2ProfileManager : ProfileManager
     {
         public PD2ProfileManager()
-            : base("Payday 2", "pd2", "payday2_win32_release.exe", typeof(PD2Settings), new GameEvent_PD2(), typeof(GameState_PD2))
+            : base("Payday 2", "pd2", "payday2_win32_release.exe", typeof(PD2Settings), new GameEvent_PD2())
         {
         }
 

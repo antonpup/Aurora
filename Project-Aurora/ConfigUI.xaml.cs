@@ -677,6 +677,11 @@ namespace Aurora
         {
             UpdateProfileStackBackground(selected_item);
         }
+
+        private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateProfileStackBackground(selected_item);
+        }
     }
 }
 

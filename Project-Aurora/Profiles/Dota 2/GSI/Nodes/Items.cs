@@ -38,6 +38,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="index">The index</param>
         /// <returns></returns>
+        [Range(0, 5)]
         public Item GetInventoryAt(int index)
         {
             if (index > inventory.Count - 1)
@@ -51,6 +52,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="index">The index</param>
         /// <returns></returns>
+        [Range(0, 5)]
         public Item GetStashAt(int index)
         {
             if (index > stash.Count - 1)

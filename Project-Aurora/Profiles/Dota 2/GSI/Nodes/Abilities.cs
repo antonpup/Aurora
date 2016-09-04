@@ -41,6 +41,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="index">The index</param>
         /// <returns></returns>
+        [Range(0, 5)]
         public Ability this[int index]
         {
             get

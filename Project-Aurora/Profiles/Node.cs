@@ -19,8 +19,8 @@ namespace Aurora.Profiles
         internal string GetString(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
-            
-            if(_ParsedData.TryGetValue(Name, out value))
+
+            if (_ParsedData.TryGetValue(Name, out value))
                 return value.ToString();
             else
                 return "";
@@ -29,8 +29,8 @@ namespace Aurora.Profiles
         internal int GetInt(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
-            
-            if(_ParsedData.TryGetValue(Name, out value))
+
+            if (_ParsedData.TryGetValue(Name, out value))
                 return Convert.ToInt32(value.ToString());
             else
                 return -1;
@@ -59,8 +59,8 @@ namespace Aurora.Profiles
         internal T GetEnum<T>(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
-            
-            if(_ParsedData.TryGetValue(Name, out value) && !String.IsNullOrWhiteSpace(value.ToString()))
+
+            if (_ParsedData.TryGetValue(Name, out value) && !String.IsNullOrWhiteSpace(value.ToString()))
             {
                 var type = typeof(T);
                 if (!type.IsEnum) throw new InvalidOperationException();
@@ -87,8 +87,8 @@ namespace Aurora.Profiles
         internal bool GetBool(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
-            
-            if(_ParsedData.TryGetValue(Name, out value) && value.ToObject<bool>())
+
+            if (_ParsedData.TryGetValue(Name, out value) && value.ToObject<bool>())
                 return value.ToObject<bool>();
             else
                 return false;
