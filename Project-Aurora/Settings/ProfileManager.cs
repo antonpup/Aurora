@@ -28,6 +28,7 @@ namespace Aurora.Settings
         internal Dictionary<string, dynamic> EffectScripts { get; set; }
         protected Type SettingsType = typeof(ProfileSettings);
         public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
+        public bool HasLayers { get; set; }
 
         public event EventHandler ProfileChanged;
 
@@ -50,6 +51,15 @@ namespace Aurora.Settings
                 foreach (var param in ParameterLookup)
                 {
                     Global.logger.LogLine(param.Key);
+                    try
+                    {
+                        var got_value = Utils.GameStateUtils.RetrieveGameStateParameter(game_event._game_state, param.Key);
+                        Global.logger.LogLine(got_value.ToString());
+                    }
+                    catch(Exception exc)
+                    {
+                        Global.logger.LogLine("EXCEPTION");
+                    }
                 }
 
                 Global.logger.LogLine("");

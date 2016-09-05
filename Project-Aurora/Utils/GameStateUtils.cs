@@ -1,5 +1,6 @@
 ﻿using Aurora.Profiles;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -35,6 +36,9 @@ namespace Aurora.Utils
                         prop_type = ((PropertyInfo)prop).PropertyType;
                         break;
                     case MemberTypes.Method:
+                        //if (((MethodInfo)prop).IsSpecialName)
+                            //continue;
+
                         prop_type = ((MethodInfo)prop).ReturnType;
 
                         if (prop.Name.Equals("Equals") || prop.Name.Equals("GetType") || prop.Name.Equals("ToString") || prop.Name.Equals("GetHashCode"))
@@ -66,7 +70,7 @@ namespace Aurora.Utils
                 }
                 else if (prop_type.IsArray || prop_type.GetInterfaces().Any(t =>
                 {
-                    return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null;
+                    return t == typeof(IEnumerable) || t == typeof(IList) || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null);
                 }))
                 {
                     RangeAttribute attribute;
@@ -110,11 +114,72 @@ namespace Aurora.Utils
             return parameters;
         }
 
-        public static object RetrieveGameStateParameter(GameState state, string parameter_path, Type type = null)
+        public static object GetValueFromString(this object obj, string name, object input = null)
         {
+            Type t = obj.GetType();
+            MemberInfo member;
+            if ((member = input == null ? t.GetMember(name).FirstOrDefault() : t.GetMethod(name, new[] { input.GetType() })) != null)
+            {
+                if (member is FieldInfo)
+                    return ((FieldInfo)member).GetValue(obj);
+                else if (member is PropertyInfo)
+                    return ((PropertyInfo)member).GetValue(obj);
+                else if (member is MethodInfo)
+                    return ((MethodInfo)member).Invoke(obj, new[] { input });
+            }
 
 
             return null;
         }
+
+        public static object RetrieveGameStateParameter(GameState state, string parameter_path, params object[] input_values)
+        {
+            string[] parameters = parameter_path.Split('/');
+
+            object property_object = state;
+            int index_pos = 0;
+
+            for (int x = 0; x < parameters.Count(); x++)
+            {
+                if (property_object == null)
+                    return null;
+
+                string param = parameters[x];
+
+                //Following needs validation
+                //If next param is placeholder then take the appropriate input value from the input_values array
+                property_object = property_object.GetValueFromString(param);
+                if (property_object == null)
+                    throw new ArgumentNullException($"Failed to get value {parameter_path}, failed at '{param}'");
+
+                Type property_type = property_object.GetType();
+                Type temp = null;
+                if (x < parameters.Length - 1 && (property_type.IsArray || property_type.GetInterfaces().Any(t =>
+                {
+                    return t == typeof(IEnumerable) || t == typeof(IList) || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null);
+                })) && int.TryParse(parameters[x + 1], out index_pos))
+                {
+                    x++;
+                    Type child_type = temp ?? property_type.GetElementType();
+                    IEnumerable<object> array = (IEnumerable<object>)property_object;
+
+                    if (array.Count() < index_pos)
+                        property_object = array.ElementAt(index_pos);
+                    else
+                        property_object = Activator.CreateInstance(child_type);
+
+                }
+            }
+
+            return property_object;
+        }
+
+
+        /*public static object RetrieveGameStateParameter(GameState state, string parameter_path, Type type = null)
+        {
+
+
+            return null;
+        }*/
     }
 }

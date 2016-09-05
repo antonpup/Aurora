@@ -472,7 +472,7 @@ namespace Aurora
             ConfigUI th = source as ConfigUI;
             ProfileManager value = e.NewValue as ProfileManager;
 
-            th.ctrlLayerManager.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
+            th.ctrlLayerManager.Visibility = value == null || !value.HasLayers ? Visibility.Collapsed : Visibility.Visible;
 
             if (value == null)
                 return;
@@ -484,7 +484,7 @@ namespace Aurora
             th.content_grid.Children.Add(element);
             th.content_grid.UpdateLayout();*/
             th.content_grid.Content = value.GetUserControl();
-
+            th.content_grid.UpdateLayout();
 
         }
 

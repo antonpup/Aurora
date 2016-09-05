@@ -332,6 +332,12 @@
     <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
+    <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
+      <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Worms_WMD\GameEvent_WormsWMD.cs" />
+    <Compile Include="Profiles\Worms_WMD\WormsWMDProfileManager.cs" />
+    <Compile Include="Profiles\Worms_WMD\WormsWMDSettings.cs" />
     <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
       <DependentUpon>Control_Overwatch.xaml</DependentUpon>
     </Compile>
@@ -755,6 +761,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\Worms_WMD\Control_WormsWMD.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Overwatch\Control_Overwatch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -904,6 +914,7 @@
     <Content Include="redist\vc_redist.x86.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\worms_wmd.png" />
     <Resource Include="Resources\xcom_64x64.png" />
     <None Include="Scripts\Devices\example_py_script.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

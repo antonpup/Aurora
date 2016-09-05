@@ -121,6 +121,7 @@ namespace Aurora.Profiles.Dota_2.GSI
         /// <summary>
         /// Information about the local player's hero abilities
         /// </summary>
+        [Range(0, 5)]
         public Abilities_Dota2 Abilities
         {
             get

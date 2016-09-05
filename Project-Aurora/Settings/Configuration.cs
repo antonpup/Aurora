@@ -257,7 +257,8 @@ namespace Aurora.Settings
             { "XCOM", new Profiles.XCOM.XCOMProfileManager() },
             { "Evolve", new Profiles.Evolve.EvolveProfileManager() },
             { "MetroLL", new Profiles.Metro_Last_Light.MetroLLProfileManager() },
-            { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() }
+            { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() },
+            { "WormsWMD", new Profiles.WormsWMD.WormsWMDProfileManager() }
         };
 
         //Overlay Settings
