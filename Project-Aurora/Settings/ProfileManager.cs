@@ -50,15 +50,15 @@ namespace Aurora.Settings
 
                 foreach (var param in ParameterLookup)
                 {
-                    Global.logger.LogLine(param.Key);
+                    //Global.logger.LogLine(param.Key);
                     try
                     {
-                        var got_value = Utils.GameStateUtils.RetrieveGameStateParameter(game_event._game_state, param.Key);
-                        Global.logger.LogLine(got_value.ToString());
+                        //var got_value = Utils.GameStateUtils.RetrieveGameStateParameter(game_event._game_state, param.Key);
+                        //Global.logger.LogLine(got_value.ToString());
                     }
                     catch(Exception exc)
                     {
-                        Global.logger.LogLine("EXCEPTION");
+                        //Global.logger.LogLine("EXCEPTION");
                     }
                 }
 

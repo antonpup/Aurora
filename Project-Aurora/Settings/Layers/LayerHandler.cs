@@ -1,4 +1,5 @@
 ﻿using Aurora.EffectsEngine;
+using Aurora.Profiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace Aurora.Settings.Layers
             AffectedSequence = other.AffectedSequence;
         }
 
-        public virtual EffectLayer Render()
+        public virtual EffectLayer Render(GameState gamestate)
         {
             return new EffectLayer();
         }

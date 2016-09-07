@@ -9,6 +9,9 @@
         public readonly bool IsPassive;
         public readonly int Charges;
 
+        public Item() : this("")
+        {
+        }
 
         internal Item(string json_data) : base(json_data)
         {

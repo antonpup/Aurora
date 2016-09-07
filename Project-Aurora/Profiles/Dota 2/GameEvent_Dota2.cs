@@ -1634,7 +1634,7 @@ namespace Aurora.Profiles.Dota_2
                 {
                     EffectLayer items_layer = new EffectLayer("Dota 2 - Items");
 
-                    for (int index = 0; index < items.CountInventory; index++)
+                    for (int index = 0; index < items.InventoryCount; index++)
                     {
                         Item item = items.GetInventoryAt(index);
                         Devices.DeviceKeys key = (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).items_keys[index];
@@ -1679,7 +1679,7 @@ namespace Aurora.Profiles.Dota_2
                         }
                     }
 
-                    for (int index = 0; index < items.CountStash; index++)
+                    for (int index = 0; index < items.StashCount; index++)
                     {
                         Item item = items.GetStashAt(index);
                         Devices.DeviceKeys key = (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).items_keys[6 + index];

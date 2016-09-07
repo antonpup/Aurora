@@ -134,44 +134,52 @@ namespace Aurora.Utils
 
         public static object RetrieveGameStateParameter(GameState state, string parameter_path, params object[] input_values)
         {
-            string[] parameters = parameter_path.Split('/');
-
-            object property_object = state;
-            int index_pos = 0;
-
-            for (int x = 0; x < parameters.Count(); x++)
+            try
             {
-                if (property_object == null)
-                    return null;
+                string[] parameters = parameter_path.Split('/');
 
-                string param = parameters[x];
+                object property_object = state;
+                int index_pos = 0;
 
-                //Following needs validation
-                //If next param is placeholder then take the appropriate input value from the input_values array
-                property_object = property_object.GetValueFromString(param);
-                if (property_object == null)
-                    throw new ArgumentNullException($"Failed to get value {parameter_path}, failed at '{param}'");
-
-                Type property_type = property_object.GetType();
-                Type temp = null;
-                if (x < parameters.Length - 1 && (property_type.IsArray || property_type.GetInterfaces().Any(t =>
+                for (int x = 0; x < parameters.Count(); x++)
                 {
-                    return t == typeof(IEnumerable) || t == typeof(IList) || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null);
-                })) && int.TryParse(parameters[x + 1], out index_pos))
-                {
-                    x++;
-                    Type child_type = temp ?? property_type.GetElementType();
-                    IEnumerable<object> array = (IEnumerable<object>)property_object;
+                    if (property_object == null)
+                        return null;
 
-                    if (array.Count() < index_pos)
-                        property_object = array.ElementAt(index_pos);
-                    else
-                        property_object = Activator.CreateInstance(child_type);
+                    string param = parameters[x];
 
+                    //Following needs validation
+                    //If next param is placeholder then take the appropriate input value from the input_values array
+                    property_object = property_object.GetValueFromString(param);
+                    if (property_object == null)
+                        throw new ArgumentNullException($"Failed to get value {parameter_path}, failed at '{param}'");
+
+                    Type property_type = property_object.GetType();
+                    Type temp = null;
+                    if (x < parameters.Length - 1 && (property_type.IsArray || property_type.GetInterfaces().Any(t =>
+                    {
+                        return t == typeof(IEnumerable) || t == typeof(IList) || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null);
+                    })) && int.TryParse(parameters[x + 1], out index_pos))
+                    {
+                        x++;
+                        Type child_type = temp ?? property_type.GetElementType();
+                        IEnumerable<object> array = (IEnumerable<object>)property_object;
+
+                        if (array.Count() > index_pos)
+                            property_object = array.ElementAt(index_pos);
+                        else
+                            property_object = Activator.CreateInstance(child_type);
+
+                    }
                 }
-            }
 
-            return property_object;
+                return property_object;
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine($"Exception: {exc}", Logging_Level.Error);
+                return null;
+            }
         }
 
 

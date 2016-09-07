@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Aurora.EffectsEngine;
+using Aurora.Profiles;
 
 namespace Aurora.Settings.Layers
 {
@@ -15,9 +16,9 @@ namespace Aurora.Settings.Layers
             _Type = LayerType.Default;
         }
 
-        public override EffectLayer Render()
+        public override EffectLayer Render(GameState gamestate)
         {
-            return base.Render();
+            return base.Render(gamestate);
         }
     }
 }

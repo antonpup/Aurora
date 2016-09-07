@@ -7,7 +7,11 @@ namespace Aurora.Profiles
     {
         protected Newtonsoft.Json.Linq.JObject _ParsedData;
 
-        internal Node(string json_data)
+        public Node() : this("")
+        {
+        }
+
+        public Node(string json_data)
         {
             if (String.IsNullOrWhiteSpace(json_data))
             {

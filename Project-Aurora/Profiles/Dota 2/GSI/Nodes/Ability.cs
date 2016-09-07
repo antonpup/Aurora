@@ -40,6 +40,10 @@
         /// </summary>
         public readonly bool IsUltimate;
 
+        public Ability() : this("")
+        {
+        }
+
         internal Ability(string json_data) : base(json_data)
         {
             Name = GetString("name");
