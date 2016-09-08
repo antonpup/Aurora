@@ -18,7 +18,13 @@ namespace Aurora.Settings.Layers
         internal UserControl _Control;
 
         [JsonIgnore]
-        public UserControl Control { get { return _Control; } }
+        public UserControl Control
+        {
+            get
+            {
+                return _Control;
+            }
+        }
 
         [JsonIgnore]
         internal LayerType _Type;
@@ -39,6 +45,11 @@ namespace Aurora.Settings.Layers
         public virtual EffectLayer Render(GameState gamestate)
         {
             return new EffectLayer();
+        }
+
+        public virtual void SetProfile(ProfileManager profile)
+        {
+
         }
     }
 }

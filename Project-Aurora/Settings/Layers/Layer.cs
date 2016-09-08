@@ -21,6 +21,8 @@ namespace Aurora.Settings.Layers
     /// </summary>
     public class Layer
     {
+        private ProfileManager _profile;
+
         public event EventHandler AnythingChanged;
 
         protected string _Name = "New Layer";
@@ -37,10 +39,24 @@ namespace Aurora.Settings.Layers
 
         private LayerHandler _Handler = new DefaultLayerHandler();
 
-        public LayerHandler Handler { get { return _Handler; } set { _Handler = value; } }
+        public LayerHandler Handler
+        {
+            get { return _Handler; }
+            set
+            {
+                _Handler = value;
+                _Handler.SetProfile(_profile);
+            }
+        }
 
         [JsonIgnore]
-        public UserControl Control { get { return _Handler.Control; } }
+        public UserControl Control
+        {
+            get
+            {
+                return _Handler.Control;
+            }
+        }
 
         protected bool _Enabled = true;
 
@@ -98,6 +114,13 @@ namespace Aurora.Settings.Layers
             Name = name;
             if (handler != null)
                 _Handler = handler;
+        }
+
+        public void SetProfile(ProfileManager profile)
+        {
+            _profile = profile;
+
+            _Handler?.SetProfile(_profile);
         }
     }
 }

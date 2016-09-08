@@ -64,6 +64,10 @@ namespace Aurora.Settings
 
                 Global.logger.LogLine("");
             }
+            else
+            {
+                ParameterLookup = new Dictionary<string, Tuple<Type, Type>>();
+            }
 
             LoadProfiles();
         }

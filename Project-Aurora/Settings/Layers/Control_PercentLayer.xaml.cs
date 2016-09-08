@@ -21,6 +21,7 @@ namespace Aurora.Settings.Layers
     public partial class Control_PercentLayer : UserControl
     {
         private bool settingsset = false;
+        private bool profileset = false;
 
         public Control_PercentLayer()
         {
@@ -47,6 +48,24 @@ namespace Aurora.Settings.Layers
                 this.CheckBox_threshold_reverse.IsChecked = (this.DataContext as PercentLayerHandler).BlinkDirection;
                 this.KeySequence_keys.Sequence = (this.DataContext as PercentLayerHandler).AffectedSequence;
                 settingsset = true;
+            }
+        }
+
+        internal void SetProfile(ProfileManager profile)
+        {
+            if (profile != null && !profileset)
+            {
+                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
+
+                this.ComboBox_variable.Items.Clear();
+                foreach (var item in var_types_numerical)
+                    this.ComboBox_variable.Items.Add(item.Key);
+
+                this.ComboBox_max_variable.Items.Clear();
+                foreach (var item in var_types_numerical)
+                    this.ComboBox_max_variable.Items.Add(item.Key);
+
+                profileset = true;
             }
         }
 

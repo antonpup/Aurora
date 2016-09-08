@@ -62,5 +62,10 @@ namespace Aurora.Settings.Layers
 
             return percent_layer;
         }
+
+        public override void SetProfile(ProfileManager profile)
+        {
+            (_Control as Control_PercentLayer).SetProfile(profile);
+        }
     }
 }

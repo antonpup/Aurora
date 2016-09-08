@@ -168,6 +168,11 @@ namespace Aurora.Profiles
         public static int CurrentMillisecond { get { return Utils.Time.GetMilliSeconds(); } }
 
         /// <summary>
+        /// Used RAM
+        /// </summary>
+        public static long MemoryUsed { get { return PerformanceInfo.GetTotalMemoryInMiB() - PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
+
+        /// <summary>
         /// Available RAM
         /// </summary>
         public static long MemoryFree { get { return PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
@@ -179,13 +184,35 @@ namespace Aurora.Profiles
 
         private static PerformanceCounter _CPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
 
+        private static float _CPUUsage = 0.0f;
+
+        private static System.Timers.Timer cpuCounterTimer;
+
         /// <summary>
         /// Current CPU Usage
         /// </summary>
-        public static float CPUUsage { get { return _CPUCounter.NextValue() / 100.0f; } }
+        public static float CPUUsage { get { return _CPUUsage; } }
 
         internal LocalPCInformation() : base()
         {
+            if(cpuCounterTimer == null)
+            {
+                cpuCounterTimer = new System.Timers.Timer(1000);
+                cpuCounterTimer.Elapsed += CpuCounterTimer_Elapsed; ;
+                cpuCounterTimer.Start();
+            }
+        }
+
+        private void CpuCounterTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                _CPUUsage = _CPUCounter.NextValue();
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("PerformanceCounter exception: " + exc, Logging_Level.Error);
+            }
         }
     }
 }

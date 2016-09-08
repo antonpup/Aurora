@@ -76,6 +76,7 @@ namespace Aurora.Settings
                     if (!(lstLayers.SelectedItem is Layer))
                         throw new ArgumentException($"Items contained in the ListView must be of type 'Layer', not '{lstLayers.SelectedItem.GetType()}'");
 
+                    (lstLayers.SelectedItem as Layer).SetProfile(FocusedProfile);
 
                     hander?.Invoke(lstLayers.SelectedItem as Layer);
 
@@ -92,7 +93,7 @@ namespace Aurora.Settings
             new_layer.Content = "New layer " + Utils.Time.GetMilliSeconds();
             new_layer.ClickMode = ClickMode.Release;*/
 
-
+            lyr.SetProfile(FocusedProfile);
             this.FocusedProfile?.Settings?.Layers.Add(lyr);
             //this.lstLayers.
         }
