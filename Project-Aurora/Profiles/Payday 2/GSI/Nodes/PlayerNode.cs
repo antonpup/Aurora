@@ -5,7 +5,7 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about a player
     /// </summary>
-    public class PlayerNode : Node
+    public class PlayerNode : Node<PlayerNode>
     {
         /// <summary>
         /// Player name
@@ -93,7 +93,7 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about player's health
     /// </summary>
-    public class HealthNode : Node
+    public class HealthNode : Node<HealthNode>
     {
         /// <summary>
         /// Current health amount
@@ -121,7 +121,7 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about player's armor
     /// </summary>
-    public class ArmorNode : Node
+    public class ArmorNode : Node<ArmorNode>
     {
         /// <summary>
         /// Maximum amount of armor

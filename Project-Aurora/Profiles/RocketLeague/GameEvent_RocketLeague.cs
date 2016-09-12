@@ -225,7 +225,7 @@ namespace Aurora.Profiles.RocketLeague
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             UpdateLights(frame);
         }

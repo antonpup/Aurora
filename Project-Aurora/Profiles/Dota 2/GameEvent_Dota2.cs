@@ -1766,7 +1766,7 @@ namespace Aurora.Profiles.Dota_2
 
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             if (new_game_state is GameState_Dota2)
             {

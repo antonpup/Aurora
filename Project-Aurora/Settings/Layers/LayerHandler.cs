@@ -42,7 +42,7 @@ namespace Aurora.Settings.Layers
             AffectedSequence = other.AffectedSequence;
         }
 
-        public virtual EffectLayer Render(GameState gamestate)
+        public virtual EffectLayer Render(IGameState gamestate)
         {
             return new EffectLayer();
         }

@@ -124,13 +124,13 @@ namespace Aurora.Profiles.Aurora_Wrapper
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             UpdateWrapperLights(new_game_state);
             UpdateLights(frame);
         }
 
-        internal virtual void UpdateWrapperLights(GameState new_game_state)
+        internal virtual void UpdateWrapperLights(IGameState new_game_state)
         {
             if (new_game_state is GameState_Wrapper)
             {

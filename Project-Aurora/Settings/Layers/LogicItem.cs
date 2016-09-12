@@ -44,8 +44,8 @@ namespace Aurora.Settings.Layers
 
     public struct LogicItem
     {
-        public Dictionary<string, List<Tuple<LogicOperator, object>>> ReferenceComparisons { get; set; }
+        public Dictionary<string, Tuple<LogicOperator, object>> ReferenceComparisons { get; set; }
 
-        public List<Tuple<ActionType, object>> Actions { get; set; }
+        public Tuple<ActionType, object> Actions { get; set; }
     }
 }

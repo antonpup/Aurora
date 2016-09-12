@@ -3,7 +3,7 @@
     /// <summary>
     /// Information about the provider of this GameState
     /// </summary>
-    public class Provider_Dota2 : Node
+    public class Provider_Dota2 : Node<Provider_Dota2>
     {
         /// <summary>
         /// Game name

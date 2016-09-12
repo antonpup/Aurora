@@ -20,7 +20,7 @@ namespace Aurora.Settings.Layers
             _Type = LayerType.Solid;
         }
 
-        public override EffectLayer Render(GameState gamestate)
+        public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer solidcolor_layer = new EffectLayer();
             solidcolor_layer.Set(AffectedSequence, PrimaryColor);

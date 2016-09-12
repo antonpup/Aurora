@@ -13,7 +13,7 @@ namespace Aurora.Profiles.CSGO.GSI
     /// <summary>
     /// A class representing various information retaining to Game State Integration of Counter-Strike: Global Offensive
     /// </summary>
-    public class GameState_CSGO : GameState
+    public class GameState_CSGO : GameState<GameState_CSGO>
     {
         private ProviderNode _Provider;
         private MapNode _Map;
@@ -177,7 +177,7 @@ namespace Aurora.Profiles.CSGO.GSI
         /// A copy constructor, creates a GameState_CSGO instance based on the data from the passed GameState instance.
         /// </summary>
         /// <param name="other_state">The passed GameState</param>
-        public GameState_CSGO(GameState other_state) : base(other_state)
+        public GameState_CSGO(IGameState other_state) : base(other_state)
         {
         }
     }

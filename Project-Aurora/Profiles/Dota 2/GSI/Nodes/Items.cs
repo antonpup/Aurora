@@ -6,7 +6,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
     /// <summary>
     /// Class representing item information
     /// </summary>
-    public class Items_Dota2 : Node
+    public class Items_Dota2 : Node<Items_Dota2>
     {
         private List<Item> inventory = new List<Item>();
         private List<Item> stash = new List<Item>();

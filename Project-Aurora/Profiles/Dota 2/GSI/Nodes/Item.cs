@@ -1,6 +1,6 @@
 ﻿namespace Aurora.Profiles.Dota_2.GSI.Nodes
 {
-    public class Item : Node
+    public class Item : Node<Item>
     {
         public readonly string Name;
         public readonly string ContainsRune;

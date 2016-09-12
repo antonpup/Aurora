@@ -143,7 +143,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class representing provider information for the wrapper
     /// </summary>
-    public class Provider_Wrapper : Node
+    public class Provider_Wrapper : Node<Provider_Wrapper>
     {
         /// <summary>
         /// Name of the program
@@ -166,7 +166,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class for additional wrapper command data such as effects and colors
     /// </summary>
-    public class Command_Wrapper : Node
+    public class Command_Wrapper : Node<Command_Wrapper>
     {
         public readonly int red_start;
         public readonly int green_start;
@@ -202,7 +202,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class for additional wrapper keys
     /// </summary>
-    public class Extra_Keys_Wrapper : Node
+    public class Extra_Keys_Wrapper : Node<Extra_Keys_Wrapper>
     {
         [Range(0, 3)]
         public readonly int[] peripheral;

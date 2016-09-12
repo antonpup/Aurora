@@ -9,7 +9,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing team information
     /// </summary>
-    public class MapTeamNode : Node
+    public class MapTeamNode : Node<MapTeamNode>
     {
         /// <summary>
         /// Team score

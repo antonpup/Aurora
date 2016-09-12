@@ -153,7 +153,7 @@ namespace Aurora.Profiles.Desktop
             frame.AddOverlayLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             //This event does not take a game state
             UpdateLights(frame);

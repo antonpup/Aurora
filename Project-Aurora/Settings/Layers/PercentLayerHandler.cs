@@ -27,7 +27,7 @@ namespace Aurora.Settings.Layers
             _Type = LayerType.Percent;
         }
 
-        public override EffectLayer Render(GameState state)
+        public override EffectLayer Render(IGameState state)
         {
             EffectLayer percent_layer = new EffectLayer();
 

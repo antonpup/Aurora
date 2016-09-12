@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
-    public class WeaponsNode : Node
+    public class WeaponsNode : Node<WeaponsNode>
     {
         private List<WeaponNode> _Weapons = new List<WeaponNode>();
 

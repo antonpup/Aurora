@@ -332,6 +332,7 @@
     <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
+    <Compile Include="Profiles\StringProperty.cs" />
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
     </Compile>

@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing ability information
     /// </summary>
-    public class Ability : Node
+    public class Ability : Node<Ability>
     {
         /// <summary>
         /// Ability name

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.Devices;
+﻿using Aurora.Profiles;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Aurora.Profiles
 {
@@ -28,7 +30,20 @@ namespace Aurora.Profiles
     /// <summary>
     /// A class representing various information retaining to the game.
     /// </summary>
-    public class GameState
+    public interface IGameState
+    {
+        /// <summary>
+        /// Information about the local system
+        /// </summary>
+        LocalPCInformation LocalPCInfo { get; }
+
+        Newtonsoft.Json.Linq.JObject _ParsedData { get; set; }
+        string json { get; set; }
+
+        String GetNode(string name);
+    }
+
+    public class GameState<T> : StringProperty<T>, IGameState where T : GameState<T>
     {
         private static LocalPCInformation _localpcinfo;
 
@@ -46,13 +61,13 @@ namespace Aurora.Profiles
             }
         }
 
-        protected Newtonsoft.Json.Linq.JObject _ParsedData;
-        protected string json;
+        public JObject _ParsedData { get; set; }
+        public string json { get; set; }
 
         /// <summary>
         /// Creates a default GameState instance.
         /// </summary>
-        public GameState()
+        public GameState() : base()
         {
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
@@ -62,7 +77,7 @@ namespace Aurora.Profiles
         /// Creates a GameState instance based on the passed json data.
         /// </summary>
         /// <param name="json_data">The passed json data</param>
-        public GameState(string json_data)
+        public GameState(string json_data) : base()
         {
             if (String.IsNullOrWhiteSpace(json_data))
             {
@@ -77,13 +92,13 @@ namespace Aurora.Profiles
         /// A copy constructor, creates a GameState instance based on the data from the passed GameState instance.
         /// </summary>
         /// <param name="other_state">The passed GameState</param>
-        public GameState(GameState other_state)
+        public GameState(IGameState other_state) : base()
         {
             _ParsedData = other_state._ParsedData;
             json = other_state.json;
         }
 
-        internal String GetNode(string name)
+        public String GetNode(string name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -101,6 +116,13 @@ namespace Aurora.Profiles
         {
             return json;
         }
+    }
+
+    public class GameState : GameState<GameState>
+    {
+        public GameState() : base() { }
+        public GameState(IGameState gs) : base(gs) { }
+        public GameState(string json) : base(json) { }
     }
 
     static class PerformanceInfo
@@ -145,42 +167,42 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class representing local computer information
     /// </summary>
-    public class LocalPCInformation : Node
+    public class LocalPCInformation : Node<LocalPCInformation>
     {
         /// <summary>
         /// The current hour
         /// </summary>
-        public static int CurrentHour { get { return Utils.Time.GetHours(); } }
+        public int CurrentHour { get { return Utils.Time.GetHours(); } }
 
         /// <summary>
         /// The current minute
         /// </summary>
-        public static int CurrentMinute { get { return Utils.Time.GetMinutes(); } }
+        public int CurrentMinute { get { return Utils.Time.GetMinutes(); } }
 
         /// <summary>
         /// The current second
         /// </summary>
-        public static int CurrentSecond { get { return Utils.Time.GetSeconds(); } }
+        public int CurrentSecond { get { return Utils.Time.GetSeconds(); } }
 
         /// <summary>
         /// The current millisecond
         /// </summary>
-        public static int CurrentMillisecond { get { return Utils.Time.GetMilliSeconds(); } }
+        public int CurrentMillisecond { get { return Utils.Time.GetMilliSeconds(); } }
 
         /// <summary>
         /// Used RAM
         /// </summary>
-        public static long MemoryUsed { get { return PerformanceInfo.GetTotalMemoryInMiB() - PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
+        public long MemoryUsed { get { return PerformanceInfo.GetTotalMemoryInMiB() - PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
 
         /// <summary>
         /// Available RAM
         /// </summary>
-        public static long MemoryFree { get { return PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
+        public long MemoryFree { get { return PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
 
         /// <summary>
         /// Total RAM
         /// </summary>
-        public static long MemoryTotal { get { return PerformanceInfo.GetTotalMemoryInMiB(); } }
+        public long MemoryTotal { get { return PerformanceInfo.GetTotalMemoryInMiB(); } }
 
         private static PerformanceCounter _CPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
 
@@ -192,7 +214,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Current CPU Usage
         /// </summary>
-        public static float CPUUsage
+        public float CPUUsage
         {
             get
             {

@@ -277,7 +277,7 @@ namespace Aurora
             currentTick += (long)update_timer.Interval;
         }
 
-        public void GameStateUpdate(GameState gs)
+        public void GameStateUpdate(IGameState gs)
         {
             //Debug.WriteLine("Received gs!");
 

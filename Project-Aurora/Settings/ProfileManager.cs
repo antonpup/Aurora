@@ -219,7 +219,7 @@ namespace Aurora.Settings
             }
         }
 
-        public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, GameState state = null)
+        public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
         {
             foreach (KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
             {

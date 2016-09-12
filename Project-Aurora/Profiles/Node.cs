@@ -3,15 +3,16 @@ using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
-    public class Node
+    public class Node<TClass> : StringProperty<TClass> where TClass : Node<TClass>
     {
         protected Newtonsoft.Json.Linq.JObject _ParsedData;
 
-        public Node() : this("")
+        public Node() : base()
         {
+            _ParsedData = new Newtonsoft.Json.Linq.JObject();
         }
 
-        public Node(string json_data)
+        public Node(string json_data) : this()
         {
             if (String.IsNullOrWhiteSpace(json_data))
             {

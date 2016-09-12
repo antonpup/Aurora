@@ -114,44 +114,30 @@ namespace Aurora.Utils
             return parameters;
         }
 
-        public static object GetValueFromString(this object obj, string name, object input = null)
-        {
-            Type t = obj.GetType();
-            MemberInfo member;
-            if ((member = input == null ? t.GetMember(name).FirstOrDefault() : t.GetMethod(name, new[] { input.GetType() })) != null)
-            {
-                if (member is FieldInfo)
-                    return ((FieldInfo)member).GetValue(obj);
-                else if (member is PropertyInfo)
-                    return ((PropertyInfo)member).GetValue(obj);
-                else if (member is MethodInfo)
-                    return ((MethodInfo)member).Invoke(obj, new[] { input });
-            }
+        
 
-
-            return null;
-        }
-
-        public static object RetrieveGameStateParameter(GameState state, string parameter_path, params object[] input_values)
+        public static object RetrieveGameStateParameter(IStringProperty state, string parameter_path, params object[] input_values)
         {
             try
             {
                 string[] parameters = parameter_path.Split('/');
 
-                object property_object = state;
+                object val = null;
+                IStringProperty property_object = state;
                 int index_pos = 0;
 
                 for (int x = 0; x < parameters.Count(); x++)
                 {
                     if (property_object == null)
-                        return null;
+                        return val;
 
                     string param = parameters[x];
 
                     //Following needs validation
                     //If next param is placeholder then take the appropriate input value from the input_values array
-                    property_object = property_object.GetValueFromString(param);
-                    if (property_object == null)
+                    val = property_object.GetValueFromString(param);
+
+                    if (val == null)
                         throw new ArgumentNullException($"Failed to get value {parameter_path}, failed at '{param}'");
 
                     Type property_type = property_object.GetType();
@@ -166,14 +152,15 @@ namespace Aurora.Utils
                         IEnumerable<object> array = (IEnumerable<object>)property_object;
 
                         if (array.Count() > index_pos)
-                            property_object = array.ElementAt(index_pos);
+                            val = array.ElementAt(index_pos);
                         else
-                            property_object = Activator.CreateInstance(child_type);
+                            val = Activator.CreateInstance(child_type);
 
                     }
+                    property_object = val as IStringProperty;
                 }
 
-                return property_object;
+                return val;
             }
             catch(Exception exc)
             {

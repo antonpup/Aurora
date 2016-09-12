@@ -16,7 +16,7 @@ namespace Aurora.Settings.Layers
             _Type = LayerType.Default;
         }
 
-        public override EffectLayer Render(GameState gamestate)
+        public override EffectLayer Render(IGameState gamestate)
         {
             return base.Render(gamestate);
         }

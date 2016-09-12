@@ -1,6 +1,6 @@
 ﻿namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
-    public class ItemNode : Node
+    public class ItemNode : Node<ItemNode>
     {
         public readonly ItemType Type;
         public readonly string ID;

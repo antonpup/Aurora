@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing hero information
     /// </summary>
-    public class Hero_Dota2 : Node
+    public class Hero_Dota2 : Node<Hero_Dota2>
     {
         /// <summary>
         /// Hero ID
