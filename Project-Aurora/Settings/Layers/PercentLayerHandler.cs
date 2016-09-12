@@ -11,13 +11,13 @@ namespace Aurora.Settings.Layers
 {
     public class PercentLayerHandler : LayerHandler
     {
-        public string VariablePath;
-        public string MaxVariablePath;
-        public Color ProgressColor;
-        public Color BackgroundColor;
-        public PercentEffectType PercentType;
-        public double BlinkThreshold;
-        public bool BlinkDirection;
+        public string VariablePath = "";
+        public string MaxVariablePath = "";
+        public Color ProgressColor = Utils.ColorUtils.GenerateRandomColor();
+        public Color BackgroundColor = Utils.ColorUtils.GenerateRandomColor();
+        public PercentEffectType PercentType = PercentEffectType.Progressive_Gradual;
+        public double BlinkThreshold = 0.0;
+        public bool BlinkDirection = false;
 
 
         public PercentLayerHandler()

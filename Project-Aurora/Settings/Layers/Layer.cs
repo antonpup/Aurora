@@ -13,7 +13,8 @@ namespace Aurora.Settings.Layers
     {
         Default,
         Solid,
-        Percent
+        Percent,
+        Interactive
     }
 
     /// <summary>

@@ -65,6 +65,9 @@ namespace Aurora.Settings
                     case LayerType.Percent:
                         _Layer.Handler = new PercentLayerHandler();
                         break;
+                    case LayerType.Interactive:
+                        _Layer.Handler = new InteractiveLayerHandler();
+                        break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;

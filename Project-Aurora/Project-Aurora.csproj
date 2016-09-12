@@ -587,6 +587,9 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_InteractiveLayer.xaml.cs">
+      <DependentUpon>Control_InteractiveLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_PercentLayer.xaml.cs">
       <DependentUpon>Control_PercentLayer.xaml</DependentUpon>
     </Compile>
@@ -594,6 +597,7 @@
       <DependentUpon>Control_SolidColorLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\DefaultLayerHandler.cs" />
+    <Compile Include="Settings\Layers\InteractiveLayerHandler.cs" />
     <Compile Include="Settings\Layers\LayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
@@ -803,6 +807,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Control_LayerControlPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_InteractiveLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

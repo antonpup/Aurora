@@ -185,17 +185,31 @@ namespace Aurora.Profiles
         private static PerformanceCounter _CPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
 
         private static float _CPUUsage = 0.0f;
+        private static float _SmoothCPUUsage = 0.0f;
 
         private static System.Timers.Timer cpuCounterTimer;
 
         /// <summary>
         /// Current CPU Usage
         /// </summary>
-        public static float CPUUsage { get { return _CPUUsage; } }
+        public static float CPUUsage
+        {
+            get
+            {
+                //Global.logger.LogLine($"_CPUUsage = {_CPUUsage}\t\t_SmoothCPUUsage = {_SmoothCPUUsage}");
+
+                if (_SmoothCPUUsage < _CPUUsage)
+                    _SmoothCPUUsage += (_CPUUsage - _SmoothCPUUsage) / 10.0f;
+                else if (_SmoothCPUUsage > _CPUUsage)
+                    _SmoothCPUUsage -= (_SmoothCPUUsage - _CPUUsage) / 10.0f;
+
+                return _SmoothCPUUsage;
+            }
+        }
 
         internal LocalPCInformation() : base()
         {
-            if(cpuCounterTimer == null)
+            if (cpuCounterTimer == null)
             {
                 cpuCounterTimer = new System.Timers.Timer(1000);
                 cpuCounterTimer.Elapsed += CpuCounterTimer_Elapsed; ;
@@ -207,7 +221,7 @@ namespace Aurora.Profiles
         {
             try
             {
-                _CPUUsage = _CPUCounter.NextValue();
+                _CPUUsage = (_CPUUsage + _CPUCounter.NextValue()) / 2.0f;
             }
             catch (Exception exc)
             {
