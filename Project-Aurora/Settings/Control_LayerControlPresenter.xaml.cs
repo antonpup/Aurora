@@ -68,6 +68,9 @@ namespace Aurora.Settings
                     case LayerType.Interactive:
                         _Layer.Handler = new InteractiveLayerHandler();
                         break;
+                    case LayerType.ShortcutAssistant:
+                        _Layer.Handler = new ShortcutAssistantLayerHandler();
+                        break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;

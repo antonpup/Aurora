@@ -14,7 +14,8 @@ namespace Aurora.Settings.Layers
         Default,
         Solid,
         Percent,
-        Interactive
+        Interactive,
+        ShortcutAssistant
     }
 
     /// <summary>
