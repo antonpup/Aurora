@@ -3,6 +3,7 @@ using Aurora.Profiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,8 @@ namespace Aurora.Settings.Layers
 
         [JsonIgnore]
         public LayerType Type { get { return _Type; } }
+
+        public Color PrimaryColor { get; set; }
 
 
         public LayerHandler()

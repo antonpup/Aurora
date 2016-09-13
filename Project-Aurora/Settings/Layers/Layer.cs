@@ -1,7 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Aurora.EffectsEngine;
+using Aurora.Profiles;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -108,7 +111,19 @@ namespace Aurora.Settings.Layers
         /// </summary>
         public Layer()
         {
-            Logics = new ObservableCollection<LogicItem>();
+            Logics = new ObservableCollection<LogicItem>();/* Basic colour changing logic
+            {
+                new LogicItem { Action = new Tuple<LogicItem.ActionType, object>(LogicItem.ActionType.SetColor, Color.FromArgb(Color.Blue.A, Color.Blue.R, Color.Blue.G, Color.Blue.B)), ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>
+                    {
+                        { "LocalPCInfo/CurrentSecond", new Tuple<LogicItem.LogicOperator, object>(LogicItem.LogicOperator.GreaterThan, 45)}
+                    }
+                },
+                new LogicItem { Action = new Tuple<LogicItem.ActionType, object>(LogicItem.ActionType.SetColor, Color.FromArgb(Color.Red.A, Color.Red.R, Color.Red.G, Color.Red.B)), ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>
+                    {
+                        { "LocalPCInfo/CurrentSecond", new Tuple<LogicItem.LogicOperator, object>(LogicItem.LogicOperator.LessThanOrEqual, 45)}
+                    }
+                }
+            };*/
         }
 
         public Layer(string name, LayerHandler handler = null) : this()
@@ -116,6 +131,15 @@ namespace Aurora.Settings.Layers
             Name = name;
             if (handler != null)
                 _Handler = handler;
+        }
+
+        public EffectLayer Render(IGameState gs)
+        {
+            foreach(LogicItem logic in _Logics)
+            {
+                logic.Check(gs, this._Handler);   
+            }
+            return this._Handler.Render(gs);
         }
 
         public void SetProfile(ProfileManager profile)

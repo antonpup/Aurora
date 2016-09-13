@@ -213,7 +213,7 @@ namespace Aurora.Settings.Layers
             return new input_item(key, 0.0f, anim_mix);
         }
 
-        public override EffectLayer Render(GameState gamestate)
+        public override EffectLayer Render(IGameState gamestate)
         {
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
