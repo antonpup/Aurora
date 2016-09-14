@@ -13,7 +13,6 @@ namespace Aurora.Settings.Layers
     {
         public string VariablePath = "";
         public string MaxVariablePath = "";
-        public Color ProgressColor = Utils.ColorUtils.GenerateRandomColor();
         public Color BackgroundColor = Utils.ColorUtils.GenerateRandomColor();
         public PercentEffectType PercentType = PercentEffectType.Progressive_Gradual;
         public double BlinkThreshold = 0.0;
@@ -23,7 +22,7 @@ namespace Aurora.Settings.Layers
         public PercentLayerHandler()
         {
             _Control = new Control_PercentLayer(this);
-
+            PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _Type = LayerType.Percent;
         }
 
@@ -58,7 +57,7 @@ namespace Aurora.Settings.Layers
                 }
             }
 
-            percent_layer.PercentEffect(ProgressColor, BackgroundColor, AffectedSequence, value, maxvalue, PercentType, BlinkThreshold, BlinkDirection);
+            percent_layer.PercentEffect(PrimaryColor, BackgroundColor, AffectedSequence, value, maxvalue, PercentType, BlinkThreshold, BlinkDirection);
 
             return percent_layer;
         }

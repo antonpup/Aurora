@@ -116,14 +116,14 @@ namespace Aurora.Utils
 
         
 
-        public static object RetrieveGameStateParameter(IStringProperty state, string parameter_path, params object[] input_values)
+        public static object RetrieveGameStateParameter(IGameState state, string parameter_path, params object[] input_values)
         {
             try
             {
                 string[] parameters = parameter_path.Split('/');
 
                 object val = null;
-                IStringProperty property_object = state;
+                IStringProperty property_object = state as IStringProperty;
                 int index_pos = 0;
 
                 for (int x = 0; x < parameters.Count(); x++)

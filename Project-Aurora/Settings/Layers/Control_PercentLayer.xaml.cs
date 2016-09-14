@@ -41,7 +41,7 @@ namespace Aurora.Settings.Layers
             {
                 this.ComboBox_variable.Text = (this.DataContext as PercentLayerHandler).VariablePath;
                 this.ComboBox_max_variable.Text = (this.DataContext as PercentLayerHandler).MaxVariablePath;
-                this.ColorPicker_progressColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).ProgressColor);
+                this.ColorPicker_progressColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).PrimaryColor);
                 this.ColorPicker_backgroundColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).BackgroundColor);
                 this.ComboBox_effect_type.SelectedIndex = (int)(this.DataContext as PercentLayerHandler).PercentType;
                 this.updown_blink_value.Value = (int)((this.DataContext as PercentLayerHandler).BlinkThreshold * 100);
@@ -97,7 +97,7 @@ namespace Aurora.Settings.Layers
         private void ColorPicker_progressColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as PercentLayerHandler).ProgressColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as PercentLayerHandler).PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_backgroundColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

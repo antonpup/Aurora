@@ -72,7 +72,7 @@ namespace Aurora.Profiles.Desktop
             foreach(var layer in (Global.Configuration.desktop_profile.Settings as DesktopSettings).Layers.Reverse().ToArray())
             {
                 if(layer.Enabled && layer.LogicPass)
-                    layers.Enqueue(layer.Handler.Render(_game_state));
+                    layers.Enqueue(layer.Render(_game_state));
             }
 
             EffectLayer cz_layer = new EffectLayer("Color Zones");

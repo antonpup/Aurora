@@ -148,6 +148,6 @@ namespace Aurora.Utils
 
     public class LogicOperatorToStringVC : EnumToStringVC
     {
-        public LogicOperatorToStringVC() : base(LogicOperator.GreaterThan) { }
+        public LogicOperatorToStringVC() : base(LogicItem.LogicOperator.GreaterThan) { }
     }
 }
