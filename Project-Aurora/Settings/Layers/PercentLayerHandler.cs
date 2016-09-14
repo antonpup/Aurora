@@ -36,7 +36,7 @@ namespace Aurora.Settings.Layers
             {
                 try
                 {
-                    value = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, VariablePath));
+                    value = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter((IStringProperty)state, VariablePath));
                 }
                 catch(Exception exc)
                 {
@@ -50,7 +50,7 @@ namespace Aurora.Settings.Layers
             {
                 try
                 {
-                    maxvalue = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, MaxVariablePath));
+                    maxvalue = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter((IStringProperty)state, MaxVariablePath));
                 }
                 catch (Exception exc)
                 {

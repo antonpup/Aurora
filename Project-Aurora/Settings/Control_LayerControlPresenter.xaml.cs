@@ -71,6 +71,9 @@ namespace Aurora.Settings
                     case LayerType.ShortcutAssistant:
                         _Layer.Handler = new ShortcutAssistantLayerHandler();
                         break;
+                    case LayerType.Equalizer:
+                        _Layer.Handler = new EqualizerLayerHandler();
+                        break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;

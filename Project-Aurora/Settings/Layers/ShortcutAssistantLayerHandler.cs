@@ -38,7 +38,7 @@ namespace Aurora.Settings.Layers
             _Type = LayerType.ShortcutAssistant;
         }
 
-        public override EffectLayer Render(GameState gamestate)
+        public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
             if (Global.held_modified == Keys.LControlKey || Global.held_modified == Keys.RControlKey)

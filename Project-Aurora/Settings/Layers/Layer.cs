@@ -15,7 +15,8 @@ namespace Aurora.Settings.Layers
         Solid,
         Percent,
         Interactive,
-        ShortcutAssistant
+        ShortcutAssistant,
+        Equalizer
     }
 
     /// <summary>
