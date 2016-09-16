@@ -9,8 +9,17 @@ using System.Threading.Tasks;
 
 namespace Aurora.Settings.Layers
 {
+    public enum AmbilightType
+    {
+        Default,
+        AverageColor
+    }
+
     public class AmbilightLayerHandler : LayerHandler
     {
+        public AmbilightType AmbilightType = AmbilightType.AverageColor;
+
+        private static Color avg_color = Color.Black;
         private static System.Timers.Timer screenshotTimer;
         private static Image screen;
 
@@ -34,8 +43,24 @@ namespace Aurora.Settings.Layers
 
             var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
 
-            using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(newscreen, 0, 0, Effects.canvas_width, Effects.canvas_height);
+            if(AmbilightType == AmbilightType.Default)
+            {
+                using (var graphics = Graphics.FromImage(newImage))
+                    graphics.DrawImage(newscreen, 0, 0, Effects.canvas_width, Effects.canvas_height);
+            }
+            else if(AmbilightType == AmbilightType.AverageColor)
+            {
+                var scaled_down_image = new Bitmap(16, 16);
+
+                using (var graphics = Graphics.FromImage(scaled_down_image))
+                    graphics.DrawImage(newscreen, 0, 0, 16, 16);
+
+                avg_color = Utils.ColorUtils.GetAverageColor(scaled_down_image);
+
+                scaled_down_image?.Dispose();
+            }
+
+            newscreen?.Dispose();
 
             screen = newImage;
         }
@@ -44,10 +69,17 @@ namespace Aurora.Settings.Layers
         {
             EffectLayer ambilight_layer = new EffectLayer();
 
-            using (Graphics g = ambilight_layer.GetGraphics())
+            if (AmbilightType == AmbilightType.Default)
             {
-                if(screen != null)
-                    g.DrawImageUnscaled(screen, 0, 0);
+                using (Graphics g = ambilight_layer.GetGraphics())
+                {
+                    if (screen != null)
+                        g.DrawImageUnscaled(screen, 0, 0);
+                }
+            }
+            else if (AmbilightType == AmbilightType.AverageColor)
+            {
+                ambilight_layer.Fill(avg_color);
             }
 
             return ambilight_layer;

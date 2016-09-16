@@ -168,5 +168,49 @@ namespace Aurora.Utils
 
             return Color.FromArgb((byte)(red / numPixels), (byte)(green / numPixels), (byte)(blue / numPixels));
         }
+
+        /// <summary>
+        /// Returns an average color from a presented Bitmap
+        /// </summary>
+        /// <param name="bitmap">The bitmap to be evaluated</param>
+        /// <returns>An average color from the bitmap</returns>
+        public static Color GetAverageColor(Bitmap bitmap)
+        {
+            long Red = 0;
+            long Green = 0;
+            long Blue = 0;
+            long Alpha = 0;
+
+            int numPixels = bitmap.Width * bitmap.Height;
+
+            BitmapData srcData = bitmap.LockBits(
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
+
+            int stride = srcData.Stride;
+
+            IntPtr Scan0 = srcData.Scan0;
+
+            unsafe
+            {
+                byte* p = (byte*)(void*)Scan0;
+
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        Blue += p[(y * stride) + x * 4];
+                        Green += p[(y * stride) + x * 4 + 1];
+                        Red += p[(y * stride) + x * 4 + 2];
+                        Alpha += p[(y * stride) + x * 4 + 3];
+                    }
+                }
+            }
+
+            bitmap.UnlockBits(srcData);
+
+            return Color.FromArgb((int)(Alpha / numPixels), (int)(Red / numPixels), (int)(Green / numPixels), (int)(Blue / numPixels));
+        }
     }
 }
