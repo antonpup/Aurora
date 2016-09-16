@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Aurora.Utils
 {
@@ -126,6 +128,45 @@ namespace Aurora.Utils
             int alpha = (255 + baseColor.A) / 2;
 
             return System.Drawing.Color.FromArgb(alpha, red, green, blue);
+        }
+
+        /// <summary>
+        /// Returns an average color from a presented Bitmap
+        /// </summary>
+        /// <param name="bitmap">The bitmap to be evaluated</param>
+        /// <returns>An average color from the bitmap</returns>
+        public static Color GetAverageColor(System.Windows.Media.Imaging.BitmapSource bitmap)
+        {
+            var format = bitmap.Format;
+
+            if (format != System.Windows.Media.PixelFormats.Bgr24 &&
+                format != System.Windows.Media.PixelFormats.Bgr32 &&
+                format != System.Windows.Media.PixelFormats.Bgra32 &&
+                format != System.Windows.Media.PixelFormats.Pbgra32)
+            {
+                throw new InvalidOperationException("BitmapSource must have Bgr24, Bgr32, Bgra32 or Pbgra32 format");
+            }
+
+            var width = bitmap.PixelWidth;
+            var height = bitmap.PixelHeight;
+            var numPixels = width * height;
+            var bytesPerPixel = format.BitsPerPixel / 8;
+            var pixelBuffer = new byte[numPixels * bytesPerPixel];
+
+            bitmap.CopyPixels(pixelBuffer, width * bytesPerPixel, 0);
+
+            long blue = 0;
+            long green = 0;
+            long red = 0;
+
+            for (int i = 0; i < pixelBuffer.Length; i += bytesPerPixel)
+            {
+                blue += pixelBuffer[i];
+                green += pixelBuffer[i + 1];
+                red += pixelBuffer[i + 2];
+            }
+
+            return Color.FromArgb((byte)(red / numPixels), (byte)(green / numPixels), (byte)(blue / numPixels));
         }
     }
 }

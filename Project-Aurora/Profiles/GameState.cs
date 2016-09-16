@@ -234,7 +234,7 @@ namespace Aurora.Profiles
             if (cpuCounterTimer == null)
             {
                 cpuCounterTimer = new System.Timers.Timer(1000);
-                cpuCounterTimer.Elapsed += CpuCounterTimer_Elapsed; ;
+                cpuCounterTimer.Elapsed += CpuCounterTimer_Elapsed;
                 cpuCounterTimer.Start();
             }
         }

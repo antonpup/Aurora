@@ -184,8 +184,12 @@
       <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Pranas.ScreenshotCapture, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Pranas.ScreenshotCapture.1.0.11\lib\net40\Pranas.ScreenshotCapture.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -592,6 +596,7 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\AmbilightLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_EqualizerLayer.xaml.cs">
       <DependentUpon>Control_EqualizerLayer.xaml</DependentUpon>
     </Compile>
@@ -641,7 +646,6 @@
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
     <Compile Include="Settings\ProfileSettings.cs" />
-    <Compile Include="Utils\AudioUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\Logger.cs" />

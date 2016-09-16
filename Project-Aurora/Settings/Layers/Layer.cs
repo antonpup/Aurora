@@ -19,7 +19,8 @@ namespace Aurora.Settings.Layers
         Percent,
         Interactive,
         ShortcutAssistant,
-        Equalizer
+        Equalizer,
+        Ambilight
     }
 
     /// <summary>

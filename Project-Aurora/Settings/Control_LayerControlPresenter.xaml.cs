@@ -74,6 +74,9 @@ namespace Aurora.Settings
                     case LayerType.Equalizer:
                         _Layer.Handler = new EqualizerLayerHandler();
                         break;
+                    case LayerType.Ambilight:
+                        _Layer.Handler = new AmbilightLayerHandler();
+                        break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;
