@@ -4,6 +4,7 @@ using NAudio.CoreAudioApi;
 using NAudio.Dsp;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -19,7 +20,32 @@ namespace Aurora.Settings.Layers
         PowerBars
     }
 
-    public class EqualizerLayerHandler : LayerHandler<LayerHandlerProperties>
+    public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerLayerHandlerProperties>
+    {
+        public EqualizerType? _EQType { get; set; }
+
+        [JsonIgnore]
+        public EqualizerType EQType { get { return Logic._EQType ?? _EQType ?? EqualizerType.PowerBars; } }
+
+        public EqualizerLayerHandlerProperties() : base()
+        {
+
+        }
+
+        public EqualizerLayerHandlerProperties(bool arg = false) : base(arg) 
+        {
+
+        }
+
+        public override void Default()
+        {
+            base.Default();
+            _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+            _EQType = EqualizerType.PowerBars;
+        }
+    }
+
+    public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerProperties>
     {
         // Other inputs are also usable. Just look through the NAudio library.
         private IWaveIn waveIn;
@@ -30,7 +56,6 @@ namespace Aurora.Settings.Layers
 
         private Complex[] _ffts = { };
 
-        public EqualizerType EQType = EqualizerType.PowerBars;
 
         public EqualizerLayerHandler()
         {
@@ -60,7 +85,7 @@ namespace Aurora.Settings.Layers
             using (Graphics g = equalizer_layer.GetGraphics())
             {
 
-                switch (EQType)
+                switch (Properties.EQType)
                 {
                     case EqualizerType.Waveform:
                         for (int x = 0; x < Effects.canvas_width * 2; x += 2)
