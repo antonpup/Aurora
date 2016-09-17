@@ -8,7 +8,7 @@ using Aurora.Profiles;
 
 namespace Aurora.Settings.Layers
 {
-    public class DefaultLayerHandler : LayerHandler
+    public class DefaultLayerHandler : LayerHandler<LayerHandlerProperties>
     {
         public DefaultLayerHandler()
         {

@@ -38,8 +38,8 @@ namespace Aurora.Settings.Layers
         {
             if(this.DataContext is SolidColorLayerHandler && !settingsset)
             {
-                this.ColorPicker_primaryColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as SolidColorLayerHandler).PrimaryColor);
-                this.KeySequence_keys.Sequence = (this.DataContext as SolidColorLayerHandler).AffectedSequence;
+                this.ColorPicker_primaryColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as SolidColorLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
+                this.KeySequence_keys.Sequence = (this.DataContext as SolidColorLayerHandler).Properties._Sequence;
 
                 settingsset = true;
             }
@@ -49,7 +49,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is SolidColorLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
             {
-                (this.DataContext as SolidColorLayerHandler).PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as SolidColorLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is SolidColorLayerHandler && sender is Aurora.Controls.KeySequence)
             {
-                (this.DataContext as SolidColorLayerHandler).AffectedSequence = (sender as Aurora.Controls.KeySequence).Sequence;
+                (this.DataContext as SolidColorLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
             }
         }
 

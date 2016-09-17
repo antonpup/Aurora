@@ -44,9 +44,9 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        private LayerHandler _Handler = new DefaultLayerHandler();
+        private ILayerHandler _Handler = new DefaultLayerHandler();
 
-        public LayerHandler Handler
+        public ILayerHandler Handler
         {
             get { return _Handler; }
             set
@@ -113,16 +113,45 @@ namespace Aurora.Settings.Layers
         /// </summary>
         public Layer()
         {
-            Logics = new ObservableCollection<LogicItem>();/* Basic colour changing logic
-            {
-                new LogicItem { Action = new Tuple<LogicItem.ActionType, object>(LogicItem.ActionType.SetColor, Color.FromArgb(Color.Blue.A, Color.Blue.R, Color.Blue.G, Color.Blue.B)), ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>
+            Logics = new ObservableCollection<LogicItem>();
+            // Basic colour changing logic
+            /* {
+                new LogicItem {
+                    Action = new Tuple<LogicItem.ActionType, object>(
+                        LogicItem.ActionType.SetProperty,
+                        new Tuple<string, object>(
+                            "_PrimaryColor",
+                            new RealColor(Color.FromArgb(Color.Blue.A, Color.Blue.R, Color.Blue.G, Color.Blue.B))
+                       )
+                    ),
+                    ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>
                     {
-                        { "LocalPCInfo/CurrentSecond", new Tuple<LogicItem.LogicOperator, object>(LogicItem.LogicOperator.GreaterThan, 45)}
+                        {
+                            "LocalPCInfo/CurrentSecond",
+                            new Tuple<LogicItem.LogicOperator, object>(
+                                LogicItem.LogicOperator.GreaterThan,
+                                45
+                            )
+                        }
                     }
                 },
-                new LogicItem { Action = new Tuple<LogicItem.ActionType, object>(LogicItem.ActionType.SetColor, Color.FromArgb(Color.Red.A, Color.Red.R, Color.Red.G, Color.Red.B)), ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>
+                new LogicItem {
+                    Action = new Tuple<LogicItem.ActionType, object>(
+                        LogicItem.ActionType.SetProperty,
+                        new Tuple<string, object>(
+                            "_PrimaryColor",
+                            new RealColor(Color.FromArgb(Color.Red.A, Color.Red.R, Color.Red.G, Color.Red.B))
+                        )
+                    ),
+                    ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>
                     {
-                        { "LocalPCInfo/CurrentSecond", new Tuple<LogicItem.LogicOperator, object>(LogicItem.LogicOperator.LessThanOrEqual, 45)}
+                        {
+                            "LocalPCInfo/CurrentSecond",
+                            new Tuple<LogicItem.LogicOperator, object>(
+                                LogicItem.LogicOperator.LessThanOrEqual,
+                                45
+                            )
+                        }
                     }
                 }
             };*/

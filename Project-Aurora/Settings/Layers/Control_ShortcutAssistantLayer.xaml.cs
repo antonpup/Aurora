@@ -38,13 +38,13 @@ namespace Aurora.Settings.Layers
         {
             if (this.DataContext is ShortcutAssistantLayerHandler && !settingsset)
             {
-                this.sc_assistant_dim_background.IsChecked = (this.DataContext as ShortcutAssistantLayerHandler).DimBackground;
-                this.sc_assistant_ctrl_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).CtrlKeyColor);
-                this.sc_assistant_ctrl_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).CtrlKeySequence;
-                this.sc_assistant_win_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).WindowsKeyColor);
-                this.sc_assistant_win_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).WindowsKeySequence;
-                this.sc_assistant_alt_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).AltKeyColor);
-                this.sc_assistant_alt_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).AltKeySequence;
+                this.sc_assistant_dim_background.IsChecked = (this.DataContext as ShortcutAssistantLayerHandler).Properties._DimBackground;
+                this.sc_assistant_ctrl_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).Properties._CtrlKeyColor ?? System.Drawing.Color.Empty);
+                this.sc_assistant_ctrl_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).Properties._CtrlKeySequence;
+                this.sc_assistant_win_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).Properties._WindowsKeyColor ?? System.Drawing.Color.Empty);
+                this.sc_assistant_win_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).Properties._WindowsKeySequence;
+                this.sc_assistant_alt_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).Properties._AltKeyColor ?? System.Drawing.Color.Empty);
+                this.sc_assistant_alt_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).Properties._AltKeySequence;
 
                 settingsset = true;
             }
@@ -54,7 +54,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler)
             {
-                (this.DataContext as ShortcutAssistantLayerHandler).DimBackground = (this.sc_assistant_dim_background.IsChecked.HasValue) ? this.sc_assistant_dim_background.IsChecked.Value : false;
+                (this.DataContext as ShortcutAssistantLayerHandler).Properties._DimBackground = (this.sc_assistant_dim_background.IsChecked.HasValue) ? this.sc_assistant_dim_background.IsChecked.Value : false;
             }
         }
 
@@ -62,7 +62,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler && this.sc_assistant_ctrl_color.SelectedColor.HasValue)
             {
-                (this.DataContext as ShortcutAssistantLayerHandler).CtrlKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_ctrl_color.SelectedColor.Value);
+                (this.DataContext as ShortcutAssistantLayerHandler).Properties._CtrlKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_ctrl_color.SelectedColor.Value);
             }
         }
 
@@ -70,7 +70,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler)
             {
-                (this.DataContext as ShortcutAssistantLayerHandler).CtrlKeySequence = (sender as Controls.KeySequence).Sequence;
+                (this.DataContext as ShortcutAssistantLayerHandler).Properties._CtrlKeySequence = (sender as Controls.KeySequence).Sequence;
             }
         }
 
@@ -78,7 +78,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler && this.sc_assistant_win_color.SelectedColor.HasValue)
             {
-                (this.DataContext as ShortcutAssistantLayerHandler).WindowsKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_win_color.SelectedColor.Value);
+                (this.DataContext as ShortcutAssistantLayerHandler).Properties._WindowsKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_win_color.SelectedColor.Value);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler)
             {
-                (this.DataContext as ShortcutAssistantLayerHandler).WindowsKeySequence = (sender as Controls.KeySequence).Sequence;
+                (this.DataContext as ShortcutAssistantLayerHandler).Properties._WindowsKeySequence = (sender as Controls.KeySequence).Sequence;
             }
         }
 
@@ -94,7 +94,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler && this.sc_assistant_alt_color.SelectedColor.HasValue)
             {
-                (this.DataContext as ShortcutAssistantLayerHandler).AltKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_alt_color.SelectedColor.Value);
+                (this.DataContext as ShortcutAssistantLayerHandler).Properties._AltKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_alt_color.SelectedColor.Value);
             }
         }
 
@@ -102,7 +102,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler)
             {
-                (this.DataContext as ShortcutAssistantLayerHandler).AltKeySequence = (sender as Controls.KeySequence).Sequence;
+                (this.DataContext as ShortcutAssistantLayerHandler).Properties._AltKeySequence = (sender as Controls.KeySequence).Sequence;
             }
         }
 

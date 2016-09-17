@@ -42,17 +42,17 @@ namespace Aurora.Settings.Layers
                 //this.ColorPicker_primaryColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as InteractiveLayerHandler).PrimaryColor);
                 //this.KeySequence_keys.Sequence = (this.DataContext as InteractiveLayerHandler).AffectedSequence;
 
-                this.interactive_effects_type.SelectedIndex = (int)(this.DataContext as InteractiveLayerHandler).InteractiveEffect;
-                this.interactive_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as InteractiveLayerHandler).PrimaryColor);
-                this.interactive_effects_random_primary_color_enabled.IsChecked = (this.DataContext as InteractiveLayerHandler).RandomPrimaryColor;
-                this.interactive_effects_secondary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as InteractiveLayerHandler).SecondaryColor);
-                this.interactive_effects_random_secondary_color_enabled.IsChecked = (this.DataContext as InteractiveLayerHandler).RandomSecondaryColor;
-                this.interactive_effects_speed_label.Text = "x " + (this.DataContext as InteractiveLayerHandler).EffectSpeed;
-                this.interactive_effects_speed_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).EffectSpeed;
-                this.interactive_effects_width_label.Text = (this.DataContext as InteractiveLayerHandler).EffectWidth + " px";
-                this.interactive_effects_width_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).EffectWidth;
+                this.interactive_effects_type.SelectedIndex = (int)(this.DataContext as InteractiveLayerHandler).Properties._InteractiveEffect;
+                this.interactive_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as InteractiveLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
+                this.interactive_effects_random_primary_color_enabled.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._RandomPrimaryColor;
+                this.interactive_effects_secondary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as InteractiveLayerHandler).Properties._SecondaryColor ?? System.Drawing.Color.Empty);
+                this.interactive_effects_random_secondary_color_enabled.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._RandomSecondaryColor;
+                this.interactive_effects_speed_label.Text = "x " + (this.DataContext as InteractiveLayerHandler).Properties._EffectSpeed;
+                this.interactive_effects_speed_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectSpeed;
+                this.interactive_effects_width_label.Text = (this.DataContext as InteractiveLayerHandler).Properties._EffectWidth + " px";
+                this.interactive_effects_width_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectWidth;
 
-                this.interactive_effects_mouse_interaction_enable.IsChecked = (this.DataContext as InteractiveLayerHandler).TriggerOnMouseClick;
+                this.interactive_effects_mouse_interaction_enable.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._TriggerOnMouseClick;
 
                 settingsset = true;
             }
@@ -62,7 +62,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
             {
-                (this.DataContext as InteractiveLayerHandler).PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as InteractiveLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
             }
         }
 
@@ -70,7 +70,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is Aurora.Controls.KeySequence)
             {
-                (this.DataContext as InteractiveLayerHandler).AffectedSequence = (sender as Aurora.Controls.KeySequence).Sequence;
+                (this.DataContext as InteractiveLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
             }
         }
 
@@ -86,7 +86,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is ComboBox)
             {
-                (this.DataContext as InteractiveLayerHandler).InteractiveEffect = (InteractiveEffects)Enum.Parse(typeof(InteractiveEffects), (sender as ComboBox).SelectedIndex.ToString());
+                (this.DataContext as InteractiveLayerHandler).Properties._InteractiveEffect = (InteractiveEffects)Enum.Parse(typeof(InteractiveEffects), (sender as ComboBox).SelectedIndex.ToString());
             }
         }
 
@@ -94,7 +94,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
             {
-                (this.DataContext as InteractiveLayerHandler).PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as InteractiveLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
             }
         }
 
@@ -102,7 +102,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
-                (this.DataContext as InteractiveLayerHandler).RandomPrimaryColor = (sender as CheckBox).IsChecked.Value;
+                (this.DataContext as InteractiveLayerHandler).Properties._RandomPrimaryColor = (sender as CheckBox).IsChecked.Value;
             }
         }
 
@@ -110,7 +110,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
             {
-                (this.DataContext as InteractiveLayerHandler).SecondaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as InteractiveLayerHandler).Properties._SecondaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
             }
         }
 
@@ -118,7 +118,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
-                (this.DataContext as InteractiveLayerHandler).RandomSecondaryColor = (sender as CheckBox).IsChecked.Value;
+                (this.DataContext as InteractiveLayerHandler).Properties._RandomSecondaryColor = (sender as CheckBox).IsChecked.Value;
             }
         }
 
@@ -126,7 +126,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is Slider)
             {
-                (this.DataContext as InteractiveLayerHandler).EffectSpeed = (float)(sender as Slider).Value;
+                (this.DataContext as InteractiveLayerHandler).Properties._EffectSpeed = (float)(sender as Slider).Value;
 
                 if (this.interactive_effects_speed_label is TextBlock)
                     this.interactive_effects_speed_label.Text = "x " + this.interactive_effects_speed_slider.Value;
@@ -137,7 +137,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is Slider)
             {
-                (this.DataContext as InteractiveLayerHandler).EffectWidth = (int)(sender as Slider).Value;
+                (this.DataContext as InteractiveLayerHandler).Properties._EffectWidth = (int)(sender as Slider).Value;
 
                 if (this.interactive_effects_width_label is TextBlock)
                     this.interactive_effects_width_label.Text = this.interactive_effects_width_slider.Value + " px";
@@ -148,7 +148,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
-                (this.DataContext as InteractiveLayerHandler).TriggerOnMouseClick = (sender as CheckBox).IsChecked.Value;
+                (this.DataContext as InteractiveLayerHandler).Properties._TriggerOnMouseClick = (sender as CheckBox).IsChecked.Value;
             }
         }
     }

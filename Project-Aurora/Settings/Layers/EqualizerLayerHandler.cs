@@ -19,7 +19,7 @@ namespace Aurora.Settings.Layers
         PowerBars
     }
 
-    public class EqualizerLayerHandler : LayerHandler
+    public class EqualizerLayerHandler : LayerHandler<LayerHandlerProperties>
     {
         // Other inputs are also usable. Just look through the NAudio library.
         private IWaveIn waveIn;
@@ -38,7 +38,7 @@ namespace Aurora.Settings.Layers
 
             _Type = LayerType.Equalizer;
 
-            PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+            //PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
 
             sampleAggregator.FftCalculated += new EventHandler<FftEventArgs>(FftCalculated);
             sampleAggregator.PerformFFT = true;

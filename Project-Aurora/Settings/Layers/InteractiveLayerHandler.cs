@@ -2,6 +2,7 @@
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
 using Aurora.Profiles.Desktop;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -47,16 +48,57 @@ namespace Aurora.Settings.Layers
 
     }
 
-    public class InteractiveLayerHandler : LayerHandler
+    public class InteractiveLayerHandlerProperties : LayerHandlerProperties2Color<InteractiveLayerHandlerProperties>
     {
-        public Color PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
-        public bool RandomPrimaryColor = false;
-        public Color SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
-        public bool RandomSecondaryColor = false;
-        public float EffectSpeed = 1.0f;
-        public InteractiveEffects InteractiveEffect = InteractiveEffects.None;
-        public bool TriggerOnMouseClick = false;
-        public int EffectWidth = 2;
+        public bool? _RandomPrimaryColor { get; set; }
+
+        [JsonIgnore]
+        public bool RandomPrimaryColor { get { return Logic._RandomPrimaryColor ?? _RandomPrimaryColor ?? false; } }
+
+        public bool? _RandomSecondaryColor { get; set; }
+
+        [JsonIgnore]
+        public bool RandomSecondaryColor { get { return Logic._RandomSecondaryColor ?? _RandomSecondaryColor ?? false; } }
+
+        public float? _EffectSpeed { get; set; }
+
+        [JsonIgnore]
+        public float EffectSpeed { get{ return Logic._EffectSpeed ?? _EffectSpeed ?? 0.0f; } }
+
+        public InteractiveEffects? _InteractiveEffect { get; set; }
+
+        [JsonIgnore]
+        public InteractiveEffects InteractiveEffect { get { return Logic._InteractiveEffect ?? _InteractiveEffect ?? InteractiveEffects.None; } }
+
+        public bool? _TriggerOnMouseClick { get; set; }
+
+        [JsonIgnore]
+        public bool TriggerOnMouseClick { get { return Logic._TriggerOnMouseClick ?? _TriggerOnMouseClick ?? false; } }
+
+        public int? _EffectWidth { get; set; }
+
+        [JsonIgnore]
+        public int EffectWidth { get { return Logic._EffectWidth ?? _EffectWidth ?? 0; } }
+
+        public InteractiveLayerHandlerProperties() : base() { }
+
+        public InteractiveLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
+
+        public override void Default()
+        {
+            base.Default();
+            this._RandomPrimaryColor = false;
+            this._RandomSecondaryColor = false;
+            this._EffectSpeed = 1.0f;
+            this._InteractiveEffect = InteractiveEffects.None;
+            this._TriggerOnMouseClick = false;
+            this._EffectWidth = 2;
+        }
+    }
+
+    public class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandlerProperties>
+    {
+        
 
         private List<input_item> _input_list = new List<input_item>();
         private Keys previous_key = Keys.None;
@@ -82,7 +124,7 @@ namespace Aurora.Settings.Layers
 
         private void Input_subscriptions_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (!TriggerOnMouseClick)
+            if (!Properties.TriggerOnMouseClick)
                 return;
 
             Devices.DeviceKeys device_key = Devices.DeviceKeys.Peripheral;
@@ -131,40 +173,40 @@ namespace Aurora.Settings.Layers
 
         private input_item CreateInputItem(Devices.DeviceKeys key, PointF origin)
         {
-            Color primary_c = RandomPrimaryColor ? Utils.ColorUtils.GenerateRandomColor() : PrimaryColor;
-            Color secondary_c = RandomSecondaryColor ? Utils.ColorUtils.GenerateRandomColor() : SecondaryColor;
+            Color primary_c = Properties.RandomPrimaryColor ? Utils.ColorUtils.GenerateRandomColor() : Properties.PrimaryColor;
+            Color secondary_c = Properties.RandomSecondaryColor ? Utils.ColorUtils.GenerateRandomColor() : Properties.SecondaryColor;
 
             AnimationMix anim_mix = new AnimationMix();
 
-            if (InteractiveEffect == InteractiveEffects.Wave)
+            if (Properties.InteractiveEffect == InteractiveEffects.Wave)
             {
                 AnimationTrack wave = new AnimationTrack("Wave effect", 1.0f);
                 wave.SetFrame(0.0f,
-                    new AnimationCircle(origin, 0, primary_c, EffectWidth)
+                    new AnimationCircle(origin, 0, primary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(0.80f,
-                    new AnimationCircle(origin, Effects.canvas_width * 0.80f, secondary_c, EffectWidth)
+                    new AnimationCircle(origin, Effects.canvas_width * 0.80f, secondary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(1.00f,
-                    new AnimationCircle(origin, Effects.canvas_width, Color.FromArgb(0, secondary_c), EffectWidth)
+                    new AnimationCircle(origin, Effects.canvas_width, Color.FromArgb(0, secondary_c), Properties.EffectWidth)
                     );
                 anim_mix.AddTrack(wave);
             }
-            else if (InteractiveEffect == InteractiveEffects.Wave_Filled)
+            else if (Properties.InteractiveEffect == InteractiveEffects.Wave_Filled)
             {
                 AnimationTrack wave = new AnimationTrack("Filled Wave effect", 1.0f);
                 wave.SetFrame(0.0f,
-                    new AnimationFilledCircle(origin, 0, primary_c, EffectWidth)
+                    new AnimationFilledCircle(origin, 0, primary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(0.80f,
-                    new AnimationFilledCircle(origin, Effects.canvas_width * 0.80f, secondary_c, EffectWidth)
+                    new AnimationFilledCircle(origin, Effects.canvas_width * 0.80f, secondary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(1.00f,
-                    new AnimationFilledCircle(origin, Effects.canvas_width, Color.FromArgb(0, secondary_c), EffectWidth)
+                    new AnimationFilledCircle(origin, Effects.canvas_width, Color.FromArgb(0, secondary_c), Properties.EffectWidth)
                     );
                 anim_mix.AddTrack(wave);
             }
-            else if (InteractiveEffect == InteractiveEffects.KeyPress)
+            else if (Properties.InteractiveEffect == InteractiveEffects.KeyPress)
             {
                 ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
                 spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
@@ -172,38 +214,38 @@ namespace Aurora.Settings.Layers
 
                 return new input_item(key, 0.0f, spec);
             }
-            else if (InteractiveEffect == InteractiveEffects.ArrowFlow)
+            else if (Properties.InteractiveEffect == InteractiveEffects.ArrowFlow)
             {
                 AnimationTrack arrow = new AnimationTrack("Arrow Flow effect", 1.0f);
                 arrow.SetFrame(0.0f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(origin, origin, primary_c, EffectWidth),
-                            new AnimationLine(origin, origin, primary_c, EffectWidth)
+                            new AnimationLine(origin, origin, primary_c, Properties.EffectWidth),
+                            new AnimationLine(origin, origin, primary_c, Properties.EffectWidth)
                         }
                         )
                     );
                 arrow.SetFrame(0.33f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(origin, new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), EffectWidth),
-                            new AnimationLine(origin, new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), EffectWidth)
+                            new AnimationLine(origin, new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), Properties.EffectWidth),
+                            new AnimationLine(origin, new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), Properties.EffectWidth)
                         }
                         )
                     );
                 arrow.SetFrame(0.66f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), secondary_c, EffectWidth),
-                            new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), secondary_c, EffectWidth)
+                            new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), secondary_c, Properties.EffectWidth),
+                            new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), secondary_c, Properties.EffectWidth)
                         }
                         )
                     );
                 arrow.SetFrame(1.0f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X + Effects.canvas_width, origin.Y), Color.FromArgb(0, secondary_c), EffectWidth),
-                            new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X - Effects.canvas_width, origin.Y), Color.FromArgb(0, secondary_c), EffectWidth)
+                            new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X + Effects.canvas_width, origin.Y), Color.FromArgb(0, secondary_c), Properties.EffectWidth),
+                            new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X - Effects.canvas_width, origin.Y), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
                         }
                         )
                     );
@@ -262,7 +304,7 @@ namespace Aurora.Settings.Layers
                         _input_list.RemoveAt(x);
                     else
                     {
-                        float trans_added = (EffectSpeed * (getDeltaTime() * 5.0f));
+                        float trans_added = (Properties.EffectSpeed * (getDeltaTime() * 5.0f));
                         _input_list[x].progress += trans_added;
                     }
                 }

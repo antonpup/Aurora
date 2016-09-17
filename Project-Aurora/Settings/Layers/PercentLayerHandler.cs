@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,20 +10,47 @@ using System.Threading.Tasks;
 
 namespace Aurora.Settings.Layers
 {
-    public class PercentLayerHandler : LayerHandler
+    public class PercentLayerHandlerProperties : LayerHandlerProperties2Color<PercentLayerHandlerProperties>
+    {
+        public PercentEffectType? _PercentType { get; set; }
+
+        [JsonIgnore]
+        public PercentEffectType PercentType { get { return Logic._PercentType ?? _PercentType ?? PercentEffectType.Progressive_Gradual; } }
+
+        public double? _BlinkThreshold { get; set; }
+
+        [JsonIgnore]
+        public double BlinkThreshold { get { return Logic._BlinkThreshold ?? _BlinkThreshold ?? 0.0; } }
+
+        public bool? _BlinkDirection { get; set; }
+
+        [JsonIgnore]
+        public bool BlinkDirection { get { return Logic._BlinkDirection ?? _BlinkDirection ?? false; } }
+
+        public PercentLayerHandlerProperties() : base() { }
+
+        public PercentLayerHandlerProperties (bool assign_default = false) : base(assign_default) {}
+
+        public override void Default()
+        {
+            base.Default();
+            this._PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+            this._SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
+            this._PercentType = PercentEffectType.Progressive_Gradual;
+            this._BlinkThreshold = 0.0;
+            this._BlinkDirection = false;
+        }
+    }
+
+    public class PercentLayerHandler : LayerHandler<PercentLayerHandlerProperties>
     {
         public string VariablePath = "";
         public string MaxVariablePath = "";
-        public Color BackgroundColor = Utils.ColorUtils.GenerateRandomColor();
-        public PercentEffectType PercentType = PercentEffectType.Progressive_Gradual;
-        public double BlinkThreshold = 0.0;
-        public bool BlinkDirection = false;
 
-
-        public PercentLayerHandler()
+        public PercentLayerHandler() : base()
         {
             _Control = new Control_PercentLayer(this);
-            PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+            
             _Type = LayerType.Percent;
         }
 
@@ -57,7 +85,7 @@ namespace Aurora.Settings.Layers
                 }
             }
 
-            percent_layer.PercentEffect(PrimaryColor, BackgroundColor, AffectedSequence, value, maxvalue, PercentType, BlinkThreshold, BlinkDirection);
+            percent_layer.PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
 
             return percent_layer;
         }

@@ -41,12 +41,12 @@ namespace Aurora.Settings.Layers
             {
                 this.ComboBox_variable.Text = (this.DataContext as PercentLayerHandler).VariablePath;
                 this.ComboBox_max_variable.Text = (this.DataContext as PercentLayerHandler).MaxVariablePath;
-                this.ColorPicker_progressColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).PrimaryColor);
-                this.ColorPicker_backgroundColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).BackgroundColor);
-                this.ComboBox_effect_type.SelectedIndex = (int)(this.DataContext as PercentLayerHandler).PercentType;
-                this.updown_blink_value.Value = (int)((this.DataContext as PercentLayerHandler).BlinkThreshold * 100);
-                this.CheckBox_threshold_reverse.IsChecked = (this.DataContext as PercentLayerHandler).BlinkDirection;
-                this.KeySequence_keys.Sequence = (this.DataContext as PercentLayerHandler).AffectedSequence;
+                this.ColorPicker_progressColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
+                this.ColorPicker_backgroundColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).Properties._SecondaryColor ?? System.Drawing.Color.Empty);
+                this.ComboBox_effect_type.SelectedIndex = (int)(this.DataContext as PercentLayerHandler).Properties._PercentType;
+                this.updown_blink_value.Value = (int)((this.DataContext as PercentLayerHandler).Properties._BlinkThreshold * 100);
+                this.CheckBox_threshold_reverse.IsChecked = (this.DataContext as PercentLayerHandler).Properties._BlinkDirection;
+                this.KeySequence_keys.Sequence = (this.DataContext as PercentLayerHandler).Properties._Sequence;
                 settingsset = true;
             }
         }
@@ -72,7 +72,7 @@ namespace Aurora.Settings.Layers
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is Aurora.Controls.KeySequence)
-                (this.DataContext as PercentLayerHandler).AffectedSequence = (sender as Aurora.Controls.KeySequence).Sequence;
+                (this.DataContext as PercentLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -97,26 +97,26 @@ namespace Aurora.Settings.Layers
         private void ColorPicker_progressColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as PercentLayerHandler).PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as PercentLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_backgroundColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as PercentLayerHandler).BackgroundColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+                (this.DataContext as PercentLayerHandler).Properties._SecondaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void updown_blink_value_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown && (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.HasValue)
-                (this.DataContext as PercentLayerHandler).BlinkThreshold = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.Value / 100.0D;
+                (this.DataContext as PercentLayerHandler).Properties._BlinkThreshold = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.Value / 100.0D;
         }
 
         private void ComboBox_effect_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is ComboBox)
             {
-                (this.DataContext as PercentLayerHandler).PercentType = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), (sender as ComboBox).SelectedIndex.ToString());
+                (this.DataContext as PercentLayerHandler).Properties._PercentType = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), (sender as ComboBox).SelectedIndex.ToString());
             }
         }
 
@@ -124,7 +124,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
-                (this.DataContext as PercentLayerHandler).BlinkDirection = (sender as CheckBox).IsChecked.Value;
+                (this.DataContext as PercentLayerHandler).Properties._BlinkDirection = (sender as CheckBox).IsChecked.Value;
             }
         }
     }

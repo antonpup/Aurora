@@ -21,15 +21,28 @@ namespace Aurora.Settings.Layers
             OperatorMethodName = op_name;
         }
     }*/
+    
+    public class RealColor
+    {
+        public System.Drawing.Color Color { get; set; }
+
+        public RealColor()
+        {
+
+        }
+
+        public RealColor(System.Drawing.Color color)
+        {
+            this.Color = color;
+        }
+    }
 
     public class LogicItem
     {
         public enum ActionType
         {
             PlayAnimation,
-            SetColor,
-            SetAlpha,
-            SetKeyColor,
+            SetProperty,
         }
 
         public enum LogicOperator
@@ -62,7 +75,7 @@ namespace Aurora.Settings.Layers
 
         public Tuple<ActionType, object> Action { get; set; }
 
-        public void Check(IGameState gs, LayerHandler handler)
+        public void Check(IGameState gs, ILayerHandler handler)
         {
             if (Action == null || ReferenceComparisons == null)
                 return;
@@ -70,6 +83,11 @@ namespace Aurora.Settings.Layers
             foreach (KeyValuePair<string, Tuple<LogicOperator, object>> kvp in ReferenceComparisons)
             {
                 dynamic var = GameStateUtils.RetrieveGameStateParameter(gs, kvp.Key);
+
+                if (var == null)
+                    return;
+
+                Console.WriteLine("Got him");
 
                 dynamic comparison = kvp.Value.Item2;
                 bool valid = false;
@@ -104,8 +122,16 @@ namespace Aurora.Settings.Layers
 
             switch(Action.Item1)
             {
-                case ActionType.SetColor:
-                    handler.PrimaryColor = (Color)Action.Item2;
+                case ActionType.SetProperty:
+                    Tuple<string, object> vars = (Tuple<string, object>)Action.Item2;
+                    string str = vars.Item1;
+                    if (!str.StartsWith("_"))
+                        str = "_" + str;
+                    object var = vars.Item2;
+                    if (var is RealColor)
+                        var = ((RealColor)var).Color;
+                    ((ILogic)handler.Properties).Logic.SetValueFromString(str, var);
+                    //handler.Properties._PrimaryColor = (Color)Action.Item2;
                     break;
                 default:
                     break;

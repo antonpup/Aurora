@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,55 +12,74 @@ namespace Aurora.Profiles
     public interface IStringProperty
     {
         object GetValueFromString(string name, object input = null);
+        void SetValueFromString(string name, object value);
     }
 
     public class StringProperty<T> : IStringProperty
     {
-        public static Dictionary<string, Func<T, object>> PropertyLookup { get; set; }
+        public static Dictionary<string, Tuple<Func<T, object>, Action<T, object>>> PropertyLookup { get; set; }
 
         public StringProperty()
         {
             if (PropertyLookup != null)
                 return;
 
-            PropertyLookup = new Dictionary<string, Func<T, object>>();
+            PropertyLookup = new Dictionary<string, Tuple<Func<T, object>, Action<T, object>>>();
 
             Type typ = typeof(T);
             foreach (MemberInfo prop in typ.GetMembers())
             {
+                ParameterExpression paramExpression = Expression.Parameter(typ);
+                Func<T, object> getp;
                 switch (prop.MemberType)
                 {
-                    case MemberTypes.Property: //Currently going to use Property through this manner, the commented one out below is faster, had some issues getting it to work on this scale though
+                    case MemberTypes.Property:
                     case MemberTypes.Field:
                         Type t = Expression.GetFuncType(typ, typeof(object));
 
-                        var param = Expression.Parameter(typ);
-
-                        PropertyLookup.Add(prop.Name, (Func<T, object>)Expression.Lambda(
+                        LambdaExpression exp = Expression.Lambda(
                             t,
                             Expression.Convert(
-                                Expression.PropertyOrField(param, prop.Name),
+                                Expression.PropertyOrField(paramExpression, prop.Name),
                                 typeof(object)
                             ),
-                            param
-                        ).Compile());
+                            paramExpression
+                        );
+
+                        getp = (Func<T, object>)exp.Compile();
                         break;
                     /*case MemberTypes.Property:
-                        PropertyLookup.Add(prop.Name, (Func<T, object>)Delegate.CreateDelegate(
+                        getp = (Func<T, object>)Delegate.CreateDelegate(
                             typeof(Func<T, object>),
                             ((PropertyInfo)prop).GetMethod
-                        ));
+                        );
+
                         break;*/
                     default:
                         continue;
                 }
+
+
+                
+                Action<T, object> setp = null;
+                if (!(prop.MemberType == MemberTypes.Property && ((PropertyInfo)prop).SetMethod == null))
+                {
+                    ParameterExpression paramExpression2 = Expression.Parameter(typeof(object));
+                    MemberExpression propertyGetterExpression = Expression.PropertyOrField(paramExpression, prop.Name);
+                    setp = Expression.Lambda<Action<T, object>>
+                    (
+                        Expression.Assign(propertyGetterExpression, Expression.ConvertChecked(paramExpression2, ((PropertyInfo)prop).PropertyType)), paramExpression, paramExpression2
+                    ).Compile();
+                }
+                PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>>(getp, setp));
+
             }
         }
         public object GetValueFromString(string name, object input = null)
         {
             if (PropertyLookup.ContainsKey(name))
             {
-                return PropertyLookup[name]((T)(object)this);
+                return PropertyLookup[name].Item1((T)(object)this);
             }
 
             /*Type t = obj.GetType();
@@ -75,6 +95,14 @@ namespace Aurora.Profiles
             }*/
 
             return null;
+        }
+
+        public void SetValueFromString(string name, object value)
+        {
+            if (PropertyLookup.ContainsKey(name))
+            {
+                PropertyLookup[name].Item2((T)(object)this, value);
+            }
         }
     }
 }

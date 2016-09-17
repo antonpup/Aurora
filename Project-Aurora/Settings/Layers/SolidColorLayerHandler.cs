@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace Aurora.Settings.Layers
 {
-    public class SolidColorLayerHandler : LayerHandler
+    public class SolidColorLayerHandler : LayerHandler<LayerHandlerProperties>
     {
-        public Color PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
-
         public SolidColorLayerHandler()
         {
             _Control = new Control_SolidColorLayer(this);
@@ -23,7 +21,7 @@ namespace Aurora.Settings.Layers
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer solidcolor_layer = new EffectLayer();
-            solidcolor_layer.Set(AffectedSequence, PrimaryColor);
+            solidcolor_layer.Set(Properties.Sequence, Properties.PrimaryColor);
             return solidcolor_layer;
         }
     }
