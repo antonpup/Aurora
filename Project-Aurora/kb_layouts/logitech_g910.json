@@ -4,6 +4,6 @@
   "keys_to_set_as_new_line": [ ],
   "included_features": [
     "logitech_g910_features.json",
-    "logitech_g900_features.json"
+    "corsair_katar_features.json"
   ]
 }
