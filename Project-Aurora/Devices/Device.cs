@@ -11,8 +11,9 @@ namespace Aurora.Devices
     {
         /// <summary>
         /// Peripheral Device
+        /// <note type="note">Setting this key will make entire peripheral device one color</note>
         /// </summary>
-        [Description("Peripheral Device")]
+        [Description("All Peripheral Devices")]
         Peripheral = 0,
 
         /// <summary>
@@ -979,6 +980,24 @@ namespace Aurora.Devices
         /// </summary>
         [Description("Additional Light 10")]
         ADDITIONALLIGHT10 = 151,
+
+        /// <summary>
+        /// Peripheral Logo
+        /// </summary>
+        [Description("Peripheral Logo")]
+        Peripheral_Logo = 160,
+
+        /// <summary>
+        /// Peripheral Logo
+        /// </summary>
+        [Description("Peripheral Scroll Wheel")]
+        Peripheral_ScrollWheel = 161,
+
+        /// <summary>
+        /// Peripheral Logo
+        /// </summary>
+        [Description("Peripheral Front Lights")]
+        Peripheral_FrontLight = 162,
 
         /// <summary>
         /// None

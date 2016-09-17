@@ -239,6 +239,18 @@ namespace Aurora.Devices.Corsair
                     {
                         SendColorToPeripheral((Color)(key.Value), forced);
                     }
+                    else if (localKey == CorsairKeyboardKeyId.Invalid && key.Key == DeviceKeys.Peripheral_Logo)
+                    {
+                        SendColorToMouse(CorsairMouseLedId.B1, (Color)(key.Value));
+                    }
+                    else if (localKey == CorsairKeyboardKeyId.Invalid && key.Key == DeviceKeys.Peripheral_FrontLight)
+                    {
+                        SendColorToMouse(CorsairMouseLedId.B2, (Color)(key.Value));
+                    }
+                    else if (localKey == CorsairKeyboardKeyId.Invalid && key.Key == DeviceKeys.Peripheral_ScrollWheel)
+                    {
+                        SendColorToMouse(CorsairMouseLedId.B3, (Color)(key.Value));
+                    }
                     else if (localKey != CorsairKeyboardKeyId.Invalid)
                     {
                         SetOneKey(localKey, (Color)(key.Value));
@@ -318,6 +330,32 @@ namespace Aurora.Devices.Corsair
                     {
                         peripheral_updated = false;
                     }
+                }
+            }
+        }
+
+        private void SendColorToMouse(CorsairMouseLedId ledid, Color color, bool forced = false)
+        {
+            if (Global.Configuration.allow_peripheral_devices)
+            {
+                //Apply and strip Alpha
+                color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+
+                if (mouse != null)
+                {
+                    if (mouse[ledid] != null)
+                        mouse[ledid].Color = color;
+
+                    mouse.Update(true);
+                }
+
+                peripheral_updated = true;
+            }
+            else
+            {
+                if (peripheral_updated)
+                {
+                    peripheral_updated = false;
                 }
             }
         }

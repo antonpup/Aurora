@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Input;
 using Aurora.Devices;
 using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings
 {
@@ -29,6 +30,7 @@ namespace Aurora.Settings
         public int margin_top_bits;
         public bool enabled = true;
         public bool absolute_location = false;
+        public String image = "";
 
         public KeyboardKey(String text, Devices.DeviceKeys tag, bool enabled = true, bool linebreak = false, double fontsize = 12, double margin_left = 7, double margin_top = 0, double width = 30, double height = 30, int width_bits = 2, int height_bits = 2, int margin_left_bits = 0, int margin_top_bits = 0)
         {
@@ -403,7 +405,7 @@ namespace Aurora.Settings
             }
         }
 
-        private TextBlock last_selected_key;
+        private FrameworkElement last_selected_element;
 
         private double bitmap_one_pixel = 12.0; // 12 pixels = 1 byte
 
@@ -627,9 +629,9 @@ namespace Aurora.Settings
             Global.effengine.SetBitmapping(this.bitmap_map);
         }
 
-        private void virtualkeyboard_key_selected(TextBlock key)
+        private void virtualkeyboard_key_selected(FrameworkElement key)
         {
-            if (key.Tag is Devices.DeviceKeys)
+            if (key.Tag is Devices.DeviceKeys && (Devices.DeviceKeys)key.Tag != DeviceKeys.NONE)
             {
                 //Multi key
                 if (Global.key_recorder.IsSingleKey())
@@ -643,7 +645,7 @@ namespace Aurora.Settings
                         Global.key_recorder.RemoveKey((Devices.DeviceKeys)(key.Tag));
                     else
                         Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
-                    last_selected_key = key;
+                    last_selected_element = key;
                 }
             }
         }
@@ -654,13 +656,24 @@ namespace Aurora.Settings
             {
                 virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
             }
+            else if (sender is Border && (sender as Border).Tag != null)
+            {
+                virtualkeyboard_key_selected(sender as Border);
+            }
         }
 
         private void keyboard_grid_moved(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock && last_selected_key != ((sender as Border).Child as TextBlock))
+            if(e.LeftButton == MouseButtonState.Pressed)
             {
-                virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
+                if (sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock && last_selected_element != ((sender as Border).Child as TextBlock))
+                {
+                    virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
+                }
+                else if (sender is Border && (sender as Border).Tag != null && last_selected_element != (sender as Border))
+                {
+                    virtualkeyboard_key_selected(sender as Border);
+                }
             }
         }
 
@@ -676,6 +689,8 @@ namespace Aurora.Settings
             double cornerRadius = 5;
             double current_height = 0;
             double current_width = 0;
+
+            string images_path = Path.Combine(layoutsPath, "Extra Features", "images");
 
             foreach (KeyboardKey key in virtual_keyboard_group.grouped_keys)
             {
@@ -693,7 +708,10 @@ namespace Aurora.Settings
                 else
                     keyBorder.Margin = new Thickness(current_width + keyMargin_Left, current_height + keyMargin_Top, 0, 0);
                 keyBorder.Visibility = System.Windows.Visibility.Visible;
-                keyBorder.BorderThickness = new Thickness(1.5);
+                if(string.IsNullOrWhiteSpace(key.image))
+                    keyBorder.BorderThickness = new Thickness(1.5);
+                else
+                    keyBorder.BorderThickness = new Thickness(0.0);
                 keyBorder.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 128, 128, 128));
                 keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 25, 25, 25));
                 keyBorder.IsEnabled = key.enabled;
@@ -715,21 +733,50 @@ namespace Aurora.Settings
                     keyBorder.ToolTip = new ToolTip { Content = "Changes to this key are not supported" };
                 }
 
-                TextBlock keyCap = new TextBlock();
-                keyCap.Text = key.visualName;
-                keyCap.Tag = key.tag;
-                keyCap.FontSize = key.font_size;
-                keyCap.FontWeight = FontWeights.Bold;
-                keyCap.FontFamily = new System.Windows.Media.FontFamily("Calibri");
-                keyCap.TextAlignment = TextAlignment.Center;
-                keyCap.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-                keyCap.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-                keyCap.Margin = new Thickness(0);
-                keyCap.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
-                keyCap.Visibility = System.Windows.Visibility.Visible;
-                keyCap.IsHitTestVisible = true;
+                if (string.IsNullOrWhiteSpace(key.image))
+                {
+                    TextBlock keyCap = new TextBlock();
+                    keyCap.Text = key.visualName;
+                    keyCap.Tag = key.tag;
+                    keyCap.FontSize = key.font_size;
+                    keyCap.FontWeight = FontWeights.Bold;
+                    keyCap.FontFamily = new System.Windows.Media.FontFamily("Calibri");
+                    keyCap.TextAlignment = TextAlignment.Center;
+                    keyCap.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                    keyCap.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+                    keyCap.Margin = new Thickness(0);
+                    keyCap.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
+                    keyCap.Visibility = System.Windows.Visibility.Visible;
+                    keyCap.IsHitTestVisible = true;
 
-                keyBorder.Child = keyCap;
+                    keyBorder.Child = keyCap;
+                }
+                else
+                {
+                    string image_path = Path.Combine(images_path, key.image);
+
+                    if (System.IO.File.Exists(image_path))
+                    {
+                        var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(image_path));
+                        BitmapImage b = new BitmapImage();
+                        b.BeginInit();
+                        b.StreamSource = memStream;
+                        b.EndInit();
+
+                        if(key.tag == DeviceKeys.NONE)
+                        {
+                            keyBorder.Tag = key.tag;
+                            keyBorder.Background = new ImageBrush(b);
+                        }
+                        else
+                        {
+                            keyBorder.Tag = key.tag;
+                            keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
+                            keyBorder.OpacityMask = new ImageBrush(b);
+                        }
+                    }
+                }
+                
 
                 if (key.tag == DeviceKeys.ESC)
                 {

@@ -56,10 +56,11 @@ namespace Aurora
         public ProfileManager FocusedProfile
         {
             get { return (ProfileManager)GetValue(FocusedProfileProperty); }
-            set {
+            set
+            {
                 SetValue(FocusedProfileProperty, value);
             }
-        }        
+        }
 
         LayerEditor layer_editor = new LayerEditor();
 
@@ -122,7 +123,7 @@ namespace Aurora
             }
 
             this.keyboard_record_message.Visibility = Visibility.Hidden;
-            
+
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
@@ -223,6 +224,31 @@ namespace Aurora
                                             (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)30, (byte)30, (byte)30));
                                         }
                                         else
+                                        {
+                                            (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
+                                            (child as Border).BorderThickness = new Thickness(0);
+                                        }
+                                    }
+                                }
+                                else if (child is Border &&
+                                    (child as Border).Tag is Devices.DeviceKeys &&
+                                    (Devices.DeviceKeys)(child as Border).Tag != Devices.DeviceKeys.NONE
+                                    )
+                                {
+                                    if (keylights.ContainsKey((Devices.DeviceKeys)(child as Border).Tag))
+                                    {
+                                        Color key_color = Utils.ColorUtils.DrawingColorToMediaColor(keylights[(Devices.DeviceKeys)(child as Border).Tag]);
+
+                                        (child as Border).Background = new SolidColorBrush(key_color);
+                                    }
+
+                                    if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)(child as Border).Tag))
+                                    {
+                                        (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
+                                    }
+                                    else
+                                    {
+                                        if (!(child as Border).IsEnabled)
                                         {
                                             (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
                                             (child as Border).BorderThickness = new Thickness(0);

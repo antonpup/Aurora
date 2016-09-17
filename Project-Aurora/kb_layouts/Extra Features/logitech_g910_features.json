@@ -74,6 +74,7 @@
       "height_bits": 3,
       "margin_left_bits": -4,
       "margin_top_bits": 0,
+      "image": "Logi_G910_logo.png",
       "enabled": true,
       "absolute_location": true
     },
