@@ -51,6 +51,13 @@ namespace Aurora.Settings
                     primary,
                     secondary
                     )
+                {
+                    InterpolationColors = new System.Drawing.Drawing2D.ColorBlend(2)
+                    {
+                        Colors = new Color[] { primary, secondary },
+                        Positions = new float[] { 0.0f, 1.0f }
+                    }
+                }
                 );
         }
 
