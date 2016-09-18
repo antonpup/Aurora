@@ -62,6 +62,9 @@ namespace Aurora.Settings
                     case LayerType.Solid:
                         _Layer.Handler = new SolidColorLayerHandler();
                         break;
+                    case LayerType.SolidFilled:
+                        _Layer.Handler = new SolidFillLayerHandler();
+                        break;
                     case LayerType.Percent:
                         _Layer.Handler = new PercentLayerHandler();
                         break;

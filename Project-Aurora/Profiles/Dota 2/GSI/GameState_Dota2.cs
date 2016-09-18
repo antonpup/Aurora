@@ -21,23 +21,16 @@ namespace Aurora.Profiles.Dota_2.GSI
         /// <summary>
         /// Creates a default GameState_Dota2 instance.
         /// </summary>
-        public GameState_Dota2()
+        public GameState_Dota2() : base()
         {
-            json = "{}";
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
 
         /// <summary>
         /// Creates a GameState instance based on the passed json data.
         /// </summary>
         /// <param name="json_data">The passed json data</param>
-        public GameState_Dota2(string json_data)
+        public GameState_Dota2(string json_data) : base(json_data)
         {
-            if (String.IsNullOrWhiteSpace(json_data))
-                json_data = "{}";
-
-            json = json_data;
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);
         }
 
         /// <summary>

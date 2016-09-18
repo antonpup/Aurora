@@ -624,6 +624,9 @@
     <Compile Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml.cs">
       <DependentUpon>Control_ShortcutAssistantLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_SolidFillLayer.xaml.cs">
+      <DependentUpon>Control_SolidFillLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_SolidColorLayer.xaml.cs">
       <DependentUpon>Control_SolidColorLayer.xaml</DependentUpon>
     </Compile>
@@ -634,6 +637,7 @@
     <Compile Include="Settings\Layers\PercentLayerHandler.cs" />
     <Compile Include="Settings\Layers\ShortcutAssistantLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
+    <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
       <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
     </Compile>
@@ -858,6 +862,10 @@
     <Page Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_SolidFillLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Layers\Control_SolidColorLayer.xaml">
       <Generator>MSBuild:Compile</Generator>

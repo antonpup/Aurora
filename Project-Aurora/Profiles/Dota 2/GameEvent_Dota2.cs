@@ -1732,6 +1732,12 @@ namespace Aurora.Profiles.Dota_2
 
             }
 
+            foreach (var layer in (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).Layers.Reverse().ToArray())
+            {
+                if (layer.Enabled && layer.LogicPass)
+                    layers.Enqueue(layer.Render(_game_state));
+            }
+
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("Dota 2 - Color Zones");
             cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).lighting_areas.ToArray());

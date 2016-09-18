@@ -35,7 +35,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Information about the local system
         /// </summary>
-        LocalPCInformation LocalPCInfo { get; }
+        //LocalPCInformation LocalPCInfo { get; }
 
         Newtonsoft.Json.Linq.JObject _ParsedData { get; set; }
         string json { get; set; }
@@ -80,9 +80,7 @@ namespace Aurora.Profiles
         public GameState(string json_data) : base()
         {
             if (String.IsNullOrWhiteSpace(json_data))
-            {
                 json_data = "{}";
-            }
 
             json = json_data;
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);

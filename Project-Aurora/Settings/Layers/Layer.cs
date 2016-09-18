@@ -21,6 +21,9 @@ namespace Aurora.Settings.Layers
         [Description("Solid Color Layer")]
         Solid = 100,
 
+        [Description("Solid Fill Color Layer")]
+        SolidFilled = 110,
+
         [Description("Percent Effect Layer")]
         Percent = 200,
 

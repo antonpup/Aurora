@@ -10,6 +10,7 @@ using System.Windows.Media;
 using Aurora.Devices;
 using Aurora.Settings;
 using Xceed.Wpf.Toolkit;
+using Aurora.Profiles.Dota_2.GSI;
 
 namespace Aurora.Profiles.Dota_2
 {
@@ -211,6 +212,12 @@ namespace Aurora.Profiles.Dota_2
                 this.preview_health_amount.Content = hp_val + "%";
                 GameEvent_Dota2.SetHealth(hp_val);
                 GameEvent_Dota2.SetHealthMax(100);
+
+                /*
+                (profile_manager.Event._game_state as GameState_Dota2).Hero.Health = hp_val;
+                (profile_manager.Event._game_state as GameState_Dota2).Hero.MaxHealth = 100;
+                (profile_manager.Event._game_state as GameState_Dota2).Hero.HealthPercent = hp_val;
+                */
             }
         }
 
@@ -1098,12 +1105,10 @@ namespace Aurora.Profiles.Dota_2
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallGSI()
