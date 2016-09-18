@@ -21,7 +21,7 @@
         public readonly bool CanCast;
 
         /// <summary>
-        /// A boolean representing whether the ability is passives
+        /// A boolean representing whether the ability is passive
         /// </summary>
         public readonly bool IsPassive;
 
