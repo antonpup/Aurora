@@ -25,6 +25,10 @@ namespace Aurora.Settings
 
         public event NewLayerHandler NewLayer;
 
+        public delegate void ProfileOverviewHandler(UserControl profile_control);
+
+        public event ProfileOverviewHandler ProfileOverviewRequest;
+
         public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ProfileManager), typeof(Control_LayerManager), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
 
         public ProfileManager FocusedProfile
@@ -95,12 +99,13 @@ namespace Aurora.Settings
 
             lyr.SetProfile(FocusedProfile);
             this.FocusedProfile?.Settings?.Layers.Add(lyr);
+            this.lstLayers.SelectedItem = lyr;
             //this.lstLayers.
         }
 
         private void btnRemoveLayer_Click(object sender, RoutedEventArgs e)
         {
-            if(this.lstLayers.SelectedIndex > -1)
+            if (this.lstLayers.SelectedIndex > -1)
                 this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
         }
 
@@ -111,7 +116,7 @@ namespace Aurora.Settings
         {
             if (DragStartPosition == null || !this.lstLayers.IsMouseOver)
                 return;
-            
+
             Point curr = e.GetPosition(null);
             Point start = (Point)DragStartPosition;
 
@@ -164,6 +169,18 @@ namespace Aurora.Settings
                     this.FocusedProfile?.Settings?.Layers.RemoveAt(remIdx);
                 }
             }
+        }
+
+        private void lstLayers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ListView)
+                this.btnRemoveLayer.IsEnabled = (sender as ListView).HasItems && (sender as ListView).SelectedIndex > -1;
+        }
+
+        private void btnProfileOverview_Click(object sender, RoutedEventArgs e)
+        {
+            if (FocusedProfile != null)
+                ProfileOverviewRequest?.Invoke(FocusedProfile.Control);
         }
     }
 }

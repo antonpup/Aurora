@@ -157,7 +157,7 @@ namespace Aurora.Settings.Layers
             };*/
         }
 
-        public Layer(string name, LayerHandler handler = null) : this()
+        public Layer(string name, ILayerHandler handler = null) : this()
         {
             Name = name;
             if (handler != null)

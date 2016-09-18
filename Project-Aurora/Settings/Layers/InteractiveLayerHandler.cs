@@ -63,7 +63,7 @@ namespace Aurora.Settings.Layers
         public float? _EffectSpeed { get; set; }
 
         [JsonIgnore]
-        public float EffectSpeed { get{ return Logic._EffectSpeed ?? _EffectSpeed ?? 0.0f; } }
+        public float EffectSpeed { get { return Logic._EffectSpeed ?? _EffectSpeed ?? 0.0f; } }
 
         public InteractiveEffects? _InteractiveEffect { get; set; }
 
@@ -98,8 +98,6 @@ namespace Aurora.Settings.Layers
 
     public class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandlerProperties>
     {
-        
-
         private List<input_item> _input_list = new List<input_item>();
         private Keys previous_key = Keys.None;
 
@@ -127,14 +125,23 @@ namespace Aurora.Settings.Layers
             if (!Properties.TriggerOnMouseClick)
                 return;
 
-            Devices.DeviceKeys device_key = Devices.DeviceKeys.Peripheral;
+            Devices.DeviceKeys[] possible_peripheral_keys = {
+                Devices.DeviceKeys.Peripheral,
+                Devices.DeviceKeys.Peripheral_FrontLight,
+                Devices.DeviceKeys.Peripheral_ScrollWheel,
+                Devices.DeviceKeys.Peripheral_Logo
+            };
 
-            if (device_key != Devices.DeviceKeys.NONE)
+            foreach(Devices.DeviceKeys key in possible_peripheral_keys)
             {
-                PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
-                if (pt != new PointF(0, 0))
+                if (key != Devices.DeviceKeys.NONE)
                 {
-                    _input_list.Add(CreateInputItem(device_key, pt));
+                    PointF pt = Effects.GetBitmappingFromDeviceKey(key).Center;
+                    if (pt != new PointF(0, 0))
+                    {
+                        _input_list.Add(CreateInputItem(key, pt));
+                        break;
+                    }
                 }
             }
         }

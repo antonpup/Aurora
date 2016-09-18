@@ -771,7 +771,7 @@ namespace Aurora.Settings
                         else
                         {
                             keyBorder.Tag = key.tag;
-                            keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
+                            keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
                             keyBorder.OpacityMask = new ImageBrush(b);
                         }
                     }

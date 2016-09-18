@@ -66,6 +66,66 @@ namespace Aurora.Profiles.Desktop
         {
             isEnabled = true;
 
+            Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
+            {
+                new Settings.Layers.Layer("Shortcut Assistant", new Settings.Layers.ShortcutAssistantLayerHandler()
+                {
+                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties()
+                }),
+                new Settings.Layers.Layer("CPU Usage", new Settings.Layers.PercentLayerHandler()
+                {
+                    Properties = new Settings.Layers.PercentLayerHandlerProperties()
+                    {
+                        _PrimaryColor =  Color.FromArgb(0, 205, 255),
+                        _SecondaryColor = Color.FromArgb(0, 65, 80),
+                        _PercentType = PercentEffectType.Progressive_Gradual,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
+                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4,
+                            Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8,
+                            Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
+                        }),
+                        _BlinkThreshold = 0.0,
+                        _BlinkDirection = false
+                        },
+                    VariablePath = "LocalPCInfo/CPUUsage",
+                    MaxVariablePath = "100"
+                }),
+                new Settings.Layers.Layer("RAM Usage", new Settings.Layers.PercentLayerHandler()
+                {
+                    Properties = new Settings.Layers.PercentLayerHandlerProperties()
+                    {
+                        _PrimaryColor =  Color.FromArgb(255, 80, 0),
+                        _SecondaryColor = Color.FromArgb(90, 30, 0),
+                        _PercentType = PercentEffectType.Progressive_Gradual,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
+                            Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR,
+                            Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT,
+                            Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
+                        }),
+                        _BlinkThreshold = 0.0,
+                        _BlinkDirection = false
+                        },
+                    VariablePath = "LocalPCInfo/MemoryUsed",
+                    MaxVariablePath = "LocalPCInfo/MemoryTotal"
+                }),
+                new Settings.Layers.Layer("Interactive Layer", new Settings.Layers.InteractiveLayerHandler()
+                {
+                    Properties = new Settings.Layers.InteractiveLayerHandlerProperties()
+                    {
+                        _InteractiveEffect = InteractiveEffects.Wave_Filled,
+                        _PrimaryColor = Color.FromArgb(0, 255, 0),
+                        _RandomPrimaryColor = true,
+                        _SecondaryColor = Color.FromArgb(255, 0, 0),
+                        _RandomSecondaryColor = true,
+                        _EffectSpeed = 5.0f,
+                        _EffectWidth = 2,
+                        _TriggerOnMouseClick = false
+                    }
+                }
+                )
+            };
+
+
             //Effects
             //// CPU
             cpu_usage_enabled = true;

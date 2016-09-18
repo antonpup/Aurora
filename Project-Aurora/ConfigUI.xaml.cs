@@ -77,8 +77,15 @@ namespace Aurora
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
             ctrlLayerManager.NewLayer += Layer_manager_NewLayer;
+            ctrlLayerManager.ProfileOverviewRequest += CtrlLayerManager_ProfileOverviewRequest;
 
             GenerateProfileStack();
+        }
+
+        private void CtrlLayerManager_ProfileOverviewRequest(UserControl profile_control)
+        {
+            if (this.content_grid.Content != profile_control)
+                this.content_grid.Content = profile_control;
         }
 
         private void Layer_manager_NewLayer(Settings.Layers.Layer layer)

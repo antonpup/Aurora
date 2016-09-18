@@ -13,10 +13,10 @@
     </UserControl.Resources>
     <Grid>
         <Border Background="#A5000000" CornerRadius="8" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="5,10,0,0"/>
-        <Button x:Name="btnAddLayer" Content="Add" Margin="0,8,56,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="26" Click="add_layer_button_Click"/>
-        <Button x:Name="btnRemoveLayer" Content="Remove" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,5,0" Click="btnRemoveLayer_Click"/>
-        <ListView x:Name="lstLayers" Margin="0,33,0,0" SelectionMode="Single" PreviewMouseMove="stckLayer_PreviewMouseMove" PreviewMouseUp="lstLayers_PreviewMouseUp" MouseLeave="lstLayers_PreviewMouseUp" HorizontalContentAlignment="Stretch">
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="6,31,0,0"/>
+        <Button x:Name="btnAddLayer" Content="Add" Margin="0,29,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="26" Click="add_layer_button_Click"/>
+        <Button x:Name="btnRemoveLayer" Content="Remove" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,29,4,0" Click="btnRemoveLayer_Click" IsEnabled="False"/>
+        <ListView x:Name="lstLayers" Margin="0,54,0,0" SelectionMode="Single" PreviewMouseMove="stckLayer_PreviewMouseMove" PreviewMouseUp="lstLayers_PreviewMouseUp" MouseLeave="lstLayers_PreviewMouseUp" HorizontalContentAlignment="Stretch" SelectionChanged="lstLayers_SelectionChanged">
             <ListView.ItemTemplate>
                 <HierarchicalDataTemplate>
                     <DockPanel AllowDrop="True" PreviewMouseLeftButtonDown="stckLayer_PreviewMouseLeftButtonDown" Drop="stckLayer_Drop" HorizontalAlignment="Stretch">
@@ -26,5 +26,6 @@
                 </HierarchicalDataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Button x:Name="btnProfileOverview" Content="Show Profile Overview" Margin="0,4,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfileOverview_Click"/>
     </Grid>
 </UserControl>
