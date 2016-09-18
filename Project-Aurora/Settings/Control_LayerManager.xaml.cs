@@ -180,7 +180,10 @@ namespace Aurora.Settings
         private void btnProfileOverview_Click(object sender, RoutedEventArgs e)
         {
             if (FocusedProfile != null)
+            {
                 ProfileOverviewRequest?.Invoke(FocusedProfile.Control);
+                lstLayers.SelectedIndex = -1;
+            }
         }
     }
 }

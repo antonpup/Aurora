@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,13 +15,26 @@ namespace Aurora.Settings.Layers
 {
     public enum LayerType
     {
-        Default,
-        Solid,
-        Percent,
-        Interactive,
-        ShortcutAssistant,
-        Equalizer,
-        Ambilight
+        [Description("Default Layer")]
+        Default = 0,
+
+        [Description("Solid Color Layer")]
+        Solid = 100,
+
+        [Description("Percent Effect Layer")]
+        Percent = 200,
+
+        [Description("Interactive Layer")]
+        Interactive = 300,
+
+        [Description("Shortcut Assistant Layer")]
+        ShortcutAssistant = 400,
+
+        [Description("Equalizer Layer")]
+        Equalizer = 500,
+
+        [Description("Ambilight Layer")]
+        Ambilight = 600
     }
 
     /// <summary>
