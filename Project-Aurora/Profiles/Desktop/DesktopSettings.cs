@@ -125,7 +125,6 @@ namespace Aurora.Profiles.Desktop
                 )
             };
 
-
             //Effects
             //// CPU
             cpu_usage_enabled = true;

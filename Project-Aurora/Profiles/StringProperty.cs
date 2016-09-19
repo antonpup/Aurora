@@ -66,9 +66,16 @@ namespace Aurora.Profiles
                 {
                     ParameterExpression paramExpression2 = Expression.Parameter(typeof(object));
                     MemberExpression propertyGetterExpression = Expression.PropertyOrField(paramExpression, prop.Name);
+
+                    Type var_type;
+                    if (prop is PropertyInfo)
+                        var_type = ((PropertyInfo)prop).PropertyType;
+                    else
+                        var_type = ((FieldInfo)prop).FieldType;
+
                     setp = Expression.Lambda<Action<T, object>>
                     (
-                        Expression.Assign(propertyGetterExpression, Expression.ConvertChecked(paramExpression2, ((PropertyInfo)prop).PropertyType)), paramExpression, paramExpression2
+                        Expression.Assign(propertyGetterExpression, Expression.ConvertChecked(paramExpression2, var_type)), paramExpression, paramExpression2
                     ).Compile();
                 }
                 PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>>(getp, setp));

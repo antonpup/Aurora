@@ -60,7 +60,7 @@ namespace Aurora
             {
                 SetValue(FocusedProfileProperty, value);
 
-                if(value is Profiles.Desktop.DesktopProfileManager)
+                if(value == null || value is Profiles.Desktop.DesktopProfileManager)
                     Global.geh.SetPreview(PreviewType.Desktop);
                 else if(value is Profiles.Generic_Application.GenericApplicationProfileManager)
                     Global.geh.SetPreview(PreviewType.GenericApplication, value.ProcessNames[0]);
