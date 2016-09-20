@@ -101,6 +101,11 @@ namespace Aurora.Utils
         public KbBrandToStringVC() : base(PreferredKeyboard.None) { }
     }
 
+    public class MouseBrandToStringVC : EnumToStringVC
+    {
+        public MouseBrandToStringVC() : base(PreferredMouse.None) { }
+    }
+
     public class GTA5_PoliceEffectsToStringVC : EnumToStringVC
     {
         public GTA5_PoliceEffectsToStringVC() : base(GTA5_PoliceEffects.Default) { }

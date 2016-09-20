@@ -79,7 +79,8 @@ namespace Aurora.Settings
 
             this.devices_kb_brand.SelectedIndex = (int)Global.Configuration.keyboard_brand;
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
-            this.devices_enable_logitech_color_enhance.IsChecked = Global.Configuration.logitech_enhance_brightness;
+            this.devices_mouse_brand.SelectedIndex = (int)Global.Configuration.mouse_preference;
+            //this.devices_enable_logitech_color_enhance.IsChecked = Global.Configuration.logitech_enhance_brightness;
             this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
@@ -511,7 +512,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.logitech_enhance_brightness = (this.devices_enable_logitech_color_enhance.IsChecked.HasValue) ? this.devices_enable_logitech_color_enhance.IsChecked.Value : false;
+                //Global.Configuration.logitech_enhance_brightness = (this.devices_enable_logitech_color_enhance.IsChecked.HasValue) ? this.devices_enable_logitech_color_enhance.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -615,7 +616,7 @@ namespace Aurora.Settings
                 Global.Configuration.keyboard_localization = (PreferredKeyboardLocalization)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_layout.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand);
+                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference);
             }
         }
 
@@ -623,10 +624,21 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_brand.SelectedIndex.ToString());
+                Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboard), this.devices_kb_brand.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand);
+                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference);
+            }
+        }
+
+        private void devices_mouse_brand_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.mouse_preference = (PreferredMouse)Enum.Parse(typeof(PreferredMouse), this.devices_mouse_brand.SelectedItem.ToString());
+                ConfigManager.Save(Global.Configuration);
+
+                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference);
             }
         }
 

@@ -434,7 +434,7 @@ namespace Aurora.Settings
             layoutsPath = Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder);
         }
 
-        public void LoadBrand(PreferredKeyboard brand = PreferredKeyboard.None)
+        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None)
         {
             try
             {
@@ -519,22 +519,22 @@ namespace Aurora.Settings
 
                 var layoutConfigPath = "";
 
-                if (brand == PreferredKeyboard.None)
+                if (keyboard_preference == PreferredKeyboard.None)
                 {
                     LoadNone();
                     return;
                 }
-                else if (brand == PreferredKeyboard.Logitech_G910)
+                else if (keyboard_preference == PreferredKeyboard.Logitech_G910)
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g910.json");
-                else if (brand == PreferredKeyboard.Logitech_G410)
+                else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
-                else if (brand == PreferredKeyboard.Corsair_K95)
+                else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
-                else if (brand == PreferredKeyboard.Corsair_K70)
+                else if (keyboard_preference == PreferredKeyboard.Corsair_K70)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
-                else if (brand == PreferredKeyboard.Corsair_K65)
+                else if (keyboard_preference == PreferredKeyboard.Corsair_K65)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
-                else if (brand == PreferredKeyboard.Corsair_STRAFE)
+                else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
                 
 
@@ -561,6 +561,33 @@ namespace Aurora.Settings
                             virtual_keyboard_group.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
                         }
                     }
+
+                    string mouse_feature_path = "";
+
+                    switch(mouse_preference)
+                    {
+                        case PreferredMouse.Logitech_G900:
+                            mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
+                            break;
+                        case PreferredMouse.Corsair_Sabre:
+                            mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_sabre_features.json");
+                            break;
+                        case PreferredMouse.Corsair_M65:
+                            mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_m65_features.json");
+                            break;
+                        case PreferredMouse.Corsair_Katar:
+                            mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_katar_features.json");
+                            break;
+                    }
+
+                    if(!string.IsNullOrWhiteSpace(mouse_feature_path))
+                    {
+                        string feature_content = File.ReadAllText(mouse_feature_path, Encoding.UTF8);
+                        VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                        virtual_keyboard_group.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
+                    }
+
                 }
             }
             catch (Exception e)

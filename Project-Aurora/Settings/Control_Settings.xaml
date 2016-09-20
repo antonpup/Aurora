@@ -60,6 +60,16 @@
                 <TextBlock Text="{Binding Converter={StaticResource KbBrandToStringVC}}" />
             </DataTemplate>
 
+            <ObjectDataProvider x:Key="MouseBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:PreferredMouse" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
+            <DataTemplate x:Key="MouseBrandTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource MouseBrandToStringVC}}" />
+            </DataTemplate>
+
             <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="local:AppExitMode" />
@@ -177,17 +187,18 @@
                     <Button x:Name="devices_view_first_time_logitech" Content="View First-time instructions for Logitech" Margin="0,45,215,0" VerticalAlignment="Top" Click="devices_view_first_time_logitech_Click" HorizontalAlignment="Right" Width="214"/>
                     <Button x:Name="devices_view_first_time_corsair" Content="View First-time instructions for Corsair" HorizontalAlignment="Right" Margin="0,70,215,0" VerticalAlignment="Top" Click="devices_view_first_time_corsair_Click"/>
                     <Button x:Name="devices_view_first_time_razer" Content="View First-time instructions for Razer" HorizontalAlignment="Right" Margin="0,95,215,0" VerticalAlignment="Top" Click="devices_view_first_time_razer_Click"/>
-                    <CheckBox x:Name="devices_enable_logitech_color_enhance" Content="Enable color enhancing for Logitech Devices" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" ToolTip="Color enhancing will make Logitech LEDs appear slightly brighter" Checked="devices_enable_logitech_color_enhance_Checked" Unchecked="devices_enable_logitech_color_enhance_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="Preferred Keyboard Layout:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="devices_kb_layout" HorizontalAlignment="Left" Margin="159,33,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource KbLayout}}" ItemTemplate="{Binding Source={StaticResource KbLayoutTemplate}}" SelectionChanged="devices_kb_layout_SelectionChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Preferred Keyboard Brand:" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="154,8,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Preferred Keyboard:" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="120,8,0,0" VerticalAlignment="Top" Width="204" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
                     <Button x:Name="devices_retry" Content="Retry for connected devices" HorizontalAlignment="Right" Margin="0,10,215,0" VerticalAlignment="Top" Click="devices_retry_Click"/>
                     <CheckBox x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" ToolTip="" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
                     <Button x:Name="wrapper_install_logitech" Content="Install Aurora Wrapper Patch for Logitech" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Click="wrapper_install_logitech_Click"/>
                     <Button x:Name="wrapper_install_razer" Content="Install Aurora Wrapper Patch for Razer" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Click="wrapper_install_razer_Click"/>
                     <Button x:Name="wrapper_install_lightfx_32" Content="Install Aurora Wrapper Patch for LightFX (32 bit)" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_32_Click"/>
                     <Button x:Name="wrapper_install_lightfx_64" Content="Install Aurora Wrapper Patch for LightFX (64 bit)" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_64_Click"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Preferred Mouse:" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="devices_mouse_brand" HorizontalAlignment="Left" Margin="106,60,0,0" VerticalAlignment="Top" Width="218" ItemsSource="{Binding Source={StaticResource MouseBrand}}" ItemTemplate="{Binding Source={StaticResource MouseBrandTemplate}}" SelectionChanged="devices_mouse_brand_SelectionChanged"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Updates">

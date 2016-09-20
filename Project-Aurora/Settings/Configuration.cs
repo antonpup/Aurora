@@ -179,6 +179,20 @@ namespace Aurora.Settings
 
     }
 
+    public enum PreferredMouse
+    {
+        [Description("None")]
+        None = 0,
+        [Description("Logitech - G900")]
+        Logitech_G900 = 100,
+        [Description("Corsair - Sabre")]
+        Corsair_Sabre = 200,
+        [Description("Corsair - M65")]
+        Corsair_M65 = 201,
+        [Description("Corsair - Katar")]
+        Corsair_Katar = 202
+    }
+
     public class Configuration
     {
         //First Time Installs
@@ -192,7 +206,6 @@ namespace Aurora.Settings
         public bool use_volume_as_brightness;
         public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
-        public bool logitech_enhance_brightness;
         public float global_brightness;
         public float keyboard_brightness_modifier;
         public float peripheral_brightness_modifier;
@@ -203,6 +216,7 @@ namespace Aurora.Settings
         public MouseOrientationType mouse_orientation;
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
+        public PreferredMouse mouse_preference;
         public HashSet<String> excluded_programs;
 
         [JsonIgnoreAttribute]
@@ -278,7 +292,6 @@ namespace Aurora.Settings
             use_volume_as_brightness = false;
             allow_wrappers_in_background = true;
             allow_all_logitech_bitmaps = true;
-            logitech_enhance_brightness = true;
             global_brightness = 1.0f;
             keyboard_brightness_modifier = 1.0f;
             peripheral_brightness_modifier = 1.0f;
@@ -289,6 +302,7 @@ namespace Aurora.Settings
             mouse_orientation = MouseOrientationType.RightHanded;
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
+            mouse_preference = PreferredMouse.None;
             excluded_programs = new HashSet<string>();
             additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
 
