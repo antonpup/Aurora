@@ -28,9 +28,10 @@ namespace Aurora.Devices
 
         public DeviceManager()
         {
-            devices.Add(new Devices.Logitech.LogitechDevice());
-            devices.Add(new Devices.Corsair.CorsairDevice());
-            devices.Add(new Devices.Razer.RazerDevice());
+            devices.Add(new Devices.Logitech.LogitechDevice()); // Logitech Device
+            devices.Add(new Devices.Corsair.CorsairDevice());   // Corsair Device
+            devices.Add(new Devices.Razer.RazerDevice());       // Razer Device
+            devices.Add(new Devices.Clevo.ClevoDevice());       // Clevo Device
 
             string devices_scripts_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Scripts", "Devices");
 
