@@ -182,6 +182,11 @@ namespace Aurora.Devices.Razer
             }
         }
 
+        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        {
+            return UpdateDevice(colorComposition.keyColors, forced);
+        }
+
         private void SendColorsToKeyboard(bool forced = false)
         {
             if (keyboard != null)

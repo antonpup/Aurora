@@ -152,5 +152,10 @@ namespace Aurora.Devices.ScriptedDevice
                 return false;
             }
         }
+
+        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        {
+            return UpdateDevice(colorComposition.keyColors, forced);
+        }
     }
 }
