@@ -190,16 +190,15 @@ namespace Aurora.Devices
             }
         }
 
-        public bool UpdateDevices(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
+        public bool UpdateDevices(DeviceColorComposition composition, bool forced = false)
         {
             bool anyUpdated = false;
-            Dictionary<DeviceKeys, Color> _keyColors = new Dictionary<DeviceKeys, Color>(keyColors);
 
             foreach (Device device in devices)
             {
                 if (device.IsInitialized())
                 {
-                    if (device.UpdateDevice(_keyColors, forced))
+                    if (device.UpdateDevice(composition, forced))
                         anyUpdated = true;
                 }
             }

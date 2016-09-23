@@ -1007,6 +1007,15 @@ namespace Aurora.Devices
     };
 
     /// <summary>
+    /// Struct representing color settings being sent to devices
+    /// </summary>
+    public struct DeviceColorComposition
+    {
+        public Dictionary<DeviceKeys, Color> keyColors;
+        public Bitmap keyBitmap;
+    }
+
+    /// <summary>
     /// An interface for a device class.
     /// </summary>
     public interface Device
@@ -1076,5 +1085,13 @@ namespace Aurora.Devices
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
         bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false);
+
+        /// <summary>
+        /// Updates the device with a specified color composition.
+        /// </summary>
+        /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>
+        /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
+        /// <returns></returns>
+        bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false);
     }
 }

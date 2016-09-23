@@ -668,6 +668,7 @@
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
     <Compile Include="Settings\ProfileSettings.cs" />
+    <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\Logger.cs" />

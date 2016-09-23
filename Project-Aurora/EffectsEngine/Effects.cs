@@ -304,7 +304,14 @@ namespace Aurora
                 Effects.keyColors = new Dictionary<DeviceKeys, Color>(keyColors);
 
                 pushedframes++;
-                Global.dev_manager.UpdateDevices(keyColors);
+
+                DeviceColorComposition dcc = new DeviceColorComposition()
+                {
+                    keyColors = new Dictionary<DeviceKeys, Color>(keyColors),
+                    keyBitmap = background.GetBitmap()
+                };
+
+                Global.dev_manager.UpdateDevices(dcc);
 
                 var hander = NewLayerRender;
 

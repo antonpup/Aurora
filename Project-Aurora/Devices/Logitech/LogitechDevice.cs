@@ -358,6 +358,11 @@ namespace Aurora.Devices.Logitech
             }
         }
 
+        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        {
+            return UpdateDevice(colorComposition.keyColors, forced);
+        }
+
         public static DeviceKeys ToDeviceKey(keyboardNames key)
         {
             switch (key)
