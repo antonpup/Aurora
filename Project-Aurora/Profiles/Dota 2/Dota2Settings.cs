@@ -1,4 +1,5 @@
 ﻿using Aurora.Settings;
+using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -72,6 +73,138 @@ namespace Aurora.Profiles.Dota_2
             //General
             first_time_installed = false;
             isEnabled = true;
+
+            Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
+            {
+                new Settings.Layers.Layer("Health Indicator", new Settings.Layers.PercentLayerHandler()
+                {
+                    Properties = new Settings.Layers.PercentLayerHandlerProperties()
+                    {
+                        _PrimaryColor =  Color.FromArgb(0, 255, 0),
+                        _SecondaryColor = Color.FromArgb(0, 60, 0),
+                        _PercentType = PercentEffectType.Progressive_Gradual,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
+                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4,
+                            Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8,
+                            Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
+                        }),
+                        _BlinkThreshold = 0.0,
+                        _BlinkDirection = false
+                        },
+                    VariablePath = "Hero/Health",
+                    MaxVariablePath = "Hero/MaxHealth"
+                })
+                {
+                    Logics = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.LogicItem>()
+                    {
+                    }
+                },
+                new Settings.Layers.Layer("Mana Indicator", new Settings.Layers.PercentLayerHandler()
+                {
+                    Properties = new Settings.Layers.PercentLayerHandlerProperties()
+                    {
+                        _PrimaryColor =  Color.FromArgb(0, 125, 255),
+                        _SecondaryColor = Color.FromArgb(0, 0, 60),
+                        _PercentType = PercentEffectType.Progressive_Gradual,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
+                            Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR,
+                            Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT,
+                            Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
+                        }),
+                        _BlinkThreshold = 0.0,
+                        _BlinkDirection = false
+                        },
+                    VariablePath = "Hero/Mana",
+                    MaxVariablePath = "Hero/MaxMana"
+                })
+                {
+                    Logics = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.LogicItem>()
+                    {
+                        new LogicItem()
+                        {
+                            Action = new Tuple<LogicItem.ActionType, object>(
+                                LogicItem.ActionType.SetProperty,
+                                new Tuple<string, object>(
+                                    "_PrimaryColor",
+                                    new RealColor(Color.FromArgb(255, 255, 0, 0))
+                               )
+                            ),
+                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
+                            {
+                                {
+                                    "Hero/IsAlive",
+                                    new Tuple<LogicItem.LogicOperator, object>(
+                                        LogicItem.LogicOperator.Equal,
+                                        false
+                                    )
+                                }
+                            }
+                        },
+                        new LogicItem()
+                        {
+                            Action = new Tuple<LogicItem.ActionType, object>(
+                                LogicItem.ActionType.SetProperty,
+                                new Tuple<string, object>(
+                                    "_SecondaryColor",
+                                    new RealColor(Color.FromArgb(255, 255, 0, 0))
+                               )
+                            ),
+                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
+                            {
+                                {
+                                    "Hero/IsAlive",
+                                    new Tuple<LogicItem.LogicOperator, object>(
+                                        LogicItem.LogicOperator.Equal,
+                                        false
+                                    )
+                                }
+                            }
+                        },
+                        new LogicItem()
+                        {
+                            Action = new Tuple<LogicItem.ActionType, object>(
+                                LogicItem.ActionType.SetProperty,
+                                new Tuple<string, object>(
+                                    "_PrimaryColor",
+                                    null
+                               )
+                            ),
+                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
+                            {
+                                {
+                                    "Hero/IsAlive",
+                                    new Tuple<LogicItem.LogicOperator, object>(
+                                        LogicItem.LogicOperator.Equal,
+                                        true
+                                    )
+                                }
+                            }
+                        },
+                        new LogicItem()
+                        {
+                            Action = new Tuple<LogicItem.ActionType, object>(
+                                LogicItem.ActionType.SetProperty,
+                                new Tuple<string, object>(
+                                    "_SecondaryColor",
+                                   null
+                               )
+                            ),
+                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
+                            {
+                                {
+                                    "Hero/IsAlive",
+                                    new Tuple<LogicItem.LogicOperator, object>(
+                                        LogicItem.LogicOperator.Equal,
+                                        true
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+
 
             //Effects
             //// Background

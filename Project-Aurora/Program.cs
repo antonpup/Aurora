@@ -114,14 +114,14 @@ namespace Aurora
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            /*
+            //Make sure there is only one instance of Aurora
             if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
             {
                 Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
                 Environment.Exit(0);
             }
-            */
+            
 
             if (isDelayed)
                 System.Threading.Thread.Sleep((int)delayTime);
@@ -152,7 +152,6 @@ namespace Aurora
                         ProcessStartInfo updaterProc = new ProcessStartInfo();
                         updaterProc.FileName = updater_path;
                         updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
-                        updaterProc.Verb = "runas";
                         Process.Start(updaterProc);
                     }
                     catch(Exception exc)

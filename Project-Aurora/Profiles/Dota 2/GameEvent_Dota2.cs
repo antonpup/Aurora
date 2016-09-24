@@ -61,8 +61,6 @@ namespace Aurora.Profiles.Dota_2
 
     public class GameEvent_Dota2 : LightEvent
     {
-        private long lastUpdate = 0;
-        private int updateRate = 1; //1 second
         private Random randomizer = new Random();
 
         private static bool isPlayingKillStreakAnimation = false;
@@ -77,9 +75,6 @@ namespace Aurora.Profiles.Dota_2
         private static float[] killstreak_offsets = {  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                                                 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                                             };
-
-        private static float killstreak_line_stop = 5.0f;
-        private static float killstreak_line_spaces = 6.0f;
 
         private static float abiltiyeffect_keyframe = 0.0f;
         private static Dota2AbilityEffects currentabilityeffect = Dota2AbilityEffects.None;
