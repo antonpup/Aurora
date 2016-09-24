@@ -79,16 +79,13 @@ namespace Aurora.Settings
 
             this.devices_kb_brand.SelectedIndex = (int)Global.Configuration.keyboard_brand;
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
-            this.devices_mouse_brand.SelectedIndex = (int)Global.Configuration.mouse_preference;
-            //this.devices_enable_logitech_color_enhance.IsChecked = Global.Configuration.logitech_enhance_brightness;
+            this.devices_mouse_brand.SelectedItem = Global.Configuration.mouse_preference;
             this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
 
             Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
-
-            //Global.effengine.NewLayerRender += OnLayerRendered;
         }
 
         private void Dev_manager_NewDevicesInitialized(object sender, EventArgs e)
