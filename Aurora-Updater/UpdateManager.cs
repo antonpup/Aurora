@@ -7,6 +7,7 @@ using System.IO;
 using Ionic.Zip;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace Aurora_Updater
 {
@@ -67,6 +68,7 @@ namespace Aurora_Updater
         private float extractprogess = 0.0f;
         public UpdateStatus updatestate = UpdateStatus.None;
         private int downloadprogresscheck = 0;
+        private int seconds_left = 15;
 
         public UpdateManager()
         {
@@ -163,9 +165,50 @@ namespace Aurora_Updater
             this.downloadprogess = 1.0f;
 
             if (extractUpdate())
+            {
+                System.Timers.Timer shutdown_timer = new System.Timers.Timer(1000);
+                shutdown_timer.Elapsed += Shutdown_timer_Elapsed;
+                shutdown_timer.Start();
+
                 updatestate = UpdateStatus.Complete;
+            }
             else
                 updatestate = UpdateStatus.Error;
+        }
+
+        private void Shutdown_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (seconds_left > 0)
+            {
+                this.log.Enqueue(new LogEntry($"Restarting Aurora in {seconds_left} second{(seconds_left == 1 ? "" : "s")}..."));
+                seconds_left--;
+            }
+            else
+            {
+                //Kill all Aurora instances
+                foreach (Process proc in Process.GetProcessesByName("Aurora"))
+                    proc.Kill();
+
+                try
+                {
+                    ProcessStartInfo auroraProc = new ProcessStartInfo();
+                    auroraProc.FileName = Path.Combine(Program.exe_path, "Aurora.exe");
+                    Process.Start(auroraProc);
+
+                    Environment.Exit(0); //Exit, no further action required
+                }
+                catch (Exception exc)
+                {
+                    this.log.Enqueue(new LogEntry($"Could not restart Aurora. Error:\r\n{exc}", Color.Red));
+                    this.log.Enqueue(new LogEntry("Please restart Aurora manually.", Color.Red));
+
+                    MessageBox.Show(
+                        $"Could not restart Aurora.\r\nPlease restart Aurora manually.\r\nError:\r\n{exc}",
+                        "Aurora Updater - Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
         }
 
         private bool extractUpdate()
@@ -218,7 +261,7 @@ namespace Aurora_Updater
 
                 log.Enqueue(new LogEntry("All files updated."));
                 log.Enqueue(new LogEntry());
-                log.Enqueue(new LogEntry("You can now close the updater and restart Aurora."));
+                log.Enqueue(new LogEntry("Updater will automatically restart Aurora."));
                 this.extractprogess = 1.0f;
 
                 return true;
