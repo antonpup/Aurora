@@ -23,6 +23,13 @@ namespace Aurora.EffectsEngine
 
         Color peripheral;
 
+        private static Devices.DeviceKeys[] possible_peripheral_keys = {
+                Devices.DeviceKeys.Peripheral,
+                Devices.DeviceKeys.Peripheral_FrontLight,
+                Devices.DeviceKeys.Peripheral_ScrollWheel,
+                Devices.DeviceKeys.Peripheral_Logo
+            };
+
         static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
 
         /// <summary>
@@ -475,9 +482,21 @@ namespace Aurora.EffectsEngine
         {
             BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-            if (keymaping.IsValid && key == Devices.DeviceKeys.Peripheral)
+            if (key == Devices.DeviceKeys.Peripheral)
             {
                 peripheral = color;
+                using (Graphics g = Graphics.FromImage(colormap))
+                {
+                    foreach (Devices.DeviceKeys peri_key in possible_peripheral_keys)
+                    {
+                        BitmapRectangle peri_keymaping = Effects.GetBitmappingFromDeviceKey(peri_key);
+
+                        if (peri_keymaping.IsValid)
+                            g.FillRectangle(new SolidBrush(color), peri_keymaping.Rectangle);
+                    }
+
+                    needsRender = true;
+                }
             }
             else
             {
@@ -543,7 +562,7 @@ namespace Aurora.EffectsEngine
             {
                 BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-                if (keymaping.IsValid && key == Devices.DeviceKeys.Peripheral)
+                if (keymaping.IsEmpty && key == Devices.DeviceKeys.Peripheral)
                 {
                     return peripheral;
                 }
@@ -552,39 +571,7 @@ namespace Aurora.EffectsEngine
                     if (keymaping.IsEmpty)
                         return Color.FromArgb(0, 0, 0);
 
-                    long Red = 0;
-                    long Green = 0;
-                    long Blue = 0;
-                    long Alpha = 0;
-
-                    BitmapData srcData = colormap.LockBits(
-                        keymaping.Rectangle,
-                        ImageLockMode.ReadOnly,
-                        PixelFormat.Format32bppArgb);
-
-                    int stride = srcData.Stride;
-
-                    IntPtr Scan0 = srcData.Scan0;
-
-                    unsafe
-                    {
-                        byte* p = (byte*)(void*)Scan0;
-
-                        for (int y = 0; y < keymaping.Height; y++)
-                        {
-                            for (int x = 0; x < keymaping.Width; x++)
-                            {
-                                Blue += p[(y * stride) + x * 4];
-                                Green += p[(y * stride) + x * 4 + 1];
-                                Red += p[(y * stride) + x * 4 + 2];
-                                Alpha += p[(y * stride) + x * 4 + 3];
-                            }
-                        }
-                    }
-
-                    colormap.UnlockBits(srcData);
-
-                    return Color.FromArgb((int)(Alpha / keymaping.Area), (int)(Red / keymaping.Area), (int)(Green / keymaping.Area), (int)(Blue / keymaping.Area));
+                    return Utils.BitmapUtils.GetRegionColor(colormap, keymaping.Rectangle);
                 }
             }
             catch (Exception exc)
@@ -630,7 +617,7 @@ namespace Aurora.EffectsEngine
                     g.DrawImage(rhs.colormap, 0, 0);
             }
 
-            added.Set(Devices.DeviceKeys.Peripheral, Utils.ColorUtils.AddColors(lhs.Get(Devices.DeviceKeys.Peripheral), rhs.Get(Devices.DeviceKeys.Peripheral)));
+            added.peripheral = Utils.ColorUtils.AddColors(lhs.peripheral, rhs.peripheral);
 
             return added;
         }
