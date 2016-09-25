@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Utils;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -11,7 +12,8 @@ namespace Aurora.Devices.Clevo
         private bool isInitialized = false;
 
         // Settings
-        private bool useGlobalPeriphericColors;
+        // TODO: Theese settings could be implemented with posibility of configuration from the Aurora GUI (Or external JSON, INI, Settings, etc)
+        private bool useGlobalPeriphericColors = false;
         private bool useTouchpad = true;
 
         // Clevo Controll Class
@@ -78,13 +80,18 @@ namespace Aurora.Devices.Clevo
 
         public void Shutdown()
         {
-            // TODO: Implement reverse KB Colors to previous state
+            if (this.IsInitialized())
+            {
+                clevo.ResetKBLEDColors();
+                clevo.Release();
+            }
         }
 
         public void Reset()
         {
             if (this.IsInitialized())
             {
+                clevo.ResetKBLEDColors();
                 clevo.Release();
                 isInitialized = clevo.Initialize();
             }
@@ -161,10 +168,29 @@ namespace Aurora.Devices.Clevo
                         ColorUpdated = true;
                     }
 
-                    // Right Side (From F11 to NUMPAD ENTER)
-                    BitmapRectangle keymap_num_enter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
-                    BitmapRectangle region_right = new BitmapRectangle(keymap_f11.Left, keymap_f11.Bottom, keymap_num_enter.Left, keymap_num_enter.Bottom);
-                    Color RegionRightColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
+                    // Right Side - F11 to CTRL_RIGHT (1/4)
+                    BitmapRectangle keymap_ctrlright = Effects.GetBitmappingFromDeviceKey(DeviceKeys.RIGHT_CONTROL);
+                    BitmapRectangle region_right = new BitmapRectangle(keymap_f11.Left, keymap_f11.Top, keymap_ctrlright.Right, keymap_ctrlright.Bottom);
+                    Color RegionRightColor1 = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
+
+                    // Right Side - NUMLOCK to NUMENTER (2/4)
+                    BitmapRectangle keymap_numlock = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_LOCK);
+                    BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
+                    region_right = new BitmapRectangle(keymap_numlock.Left, keymap_numlock.Top, keymap_numenter.Right, keymap_numenter.Bottom);
+                    Color RegionRightColor2 = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
+
+                    // Right Side - PRINTSCR to PAGEDOWN (3/4)
+                    BitmapRectangle keymap_printscr = Effects.GetBitmappingFromDeviceKey(DeviceKeys.PRINT_SCREEN);
+                    BitmapRectangle keymap_pagedown = Effects.GetBitmappingFromDeviceKey(DeviceKeys.PAGE_DOWN);
+                    region_right = new BitmapRectangle(keymap_printscr.Left, keymap_printscr.Top, keymap_pagedown.Right, keymap_pagedown.Bottom);
+                    Color RegionRightColor3 = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
+
+                    // Right Side - Direction Keys (4/4)
+                    // TODO: To be implemented
+
+                    // Final Composition
+                    Color RegionRightColor = ColorUtils.BlendColors(ColorUtils.BlendColors(RegionRightColor1, RegionRightColor2, 0.5), RegionRightColor3, 0.5);
+
                     if (!ColorKBRight.Equals(RegionRightColor))
                     {
                         ColorKBRight = RegionRightColor;
@@ -190,6 +216,7 @@ namespace Aurora.Devices.Clevo
             {
                 if (forced || !LastColorKBLeft.Equals(ColorKBLeft))
                 {
+                    // MYSTERY: // Why is it B,R,G instead of R,G,B? SetKBLED uses R,G,B but only B,R,G returns the correct colors. Is bitshifting different in C# than in C++?
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBLeft, ColorKBLeft.B, ColorKBLeft.R, ColorKBLeft.G, (double)(ColorKBLeft.A / 0xff));
                     LastColorKBLeft = ColorKBLeft;
                 }
