@@ -143,19 +143,26 @@ namespace Aurora.Settings
         Corsair = 2,
         [Description("Razer")]
         Razer = 3,
-        [Description("Logitech - G910")]
-        Logitech_G910 = 4,
-        [Description("Logitech - G410")]
-        Logitech_G410 = 8,
-        [Description("Corsair - K95")]
-        Corsair_K95 = 5,
-        [Description("Corsair - K70")]
-        Corsair_K70 = 6,
-        [Description("Corsair - K65")]
-        Corsair_K65 = 9,
-        [Description("Corsair - STRAFE")]
-        Corsair_STRAFE = 7
 
+        //Logitech range is 100-199
+        [Description("Logitech - G910")]
+        Logitech_G910 = 100,
+        [Description("Logitech - G410")]
+        Logitech_G410 = 101,
+
+        //Corsair range is 200-299
+        [Description("Corsair - K95")]
+        Corsair_K95 = 200,
+        [Description("Corsair - K70")]
+        Corsair_K70 = 201,
+        [Description("Corsair - K65")]
+        Corsair_K65 = 202,
+        [Description("Corsair - STRAFE")]
+        Corsair_STRAFE = 203
+
+        //Razer range is 300-399
+
+        //Clevo range is 400-499
     }
 
     public enum PreferredKeyboardLocalization
@@ -183,14 +190,24 @@ namespace Aurora.Settings
     {
         [Description("None")]
         None = 0,
+
+        //Logitech range is 100-199
         [Description("Logitech - G900")]
         Logitech_G900 = 100,
+
+        //Corsair range is 200-299
         [Description("Corsair - Sabre")]
         Corsair_Sabre = 200,
         [Description("Corsair - M65")]
         Corsair_M65 = 201,
         [Description("Corsair - Katar")]
-        Corsair_Katar = 202
+        Corsair_Katar = 202,
+
+        //Razer range is 300-399
+
+        //Clevo range is 400-499
+        [Description("Clevo - Touchpad")]
+        Clevo_Touchpad = 400
     }
 
     public class Configuration
