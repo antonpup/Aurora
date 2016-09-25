@@ -147,20 +147,29 @@ namespace Aurora.Devices.Clevo
                 }
 
                 if (!useGlobalPeriphericColors) { // Clevo 3 region keyboard
+
                     // Left Side (From ESC to Half Spacebar)
                     BitmapRectangle keymap_esc = Effects.GetBitmappingFromDeviceKey(DeviceKeys.ESC);
                     BitmapRectangle keymap_space = Effects.GetBitmappingFromDeviceKey(DeviceKeys.SPACE);
                     PointF spacebar_center = keymap_space.Center; // Key Center
-                    BitmapRectangle region_left = new BitmapRectangle(keymap_esc.Left, keymap_esc.Top, (int)spacebar_center.X - keymap_esc.Left, (int)spacebar_center.Y - keymap_esc.Top);
+
+                    int spacebar_x = (int) spacebar_center.X - keymap_esc.Left;
+                    int height = (int)spacebar_center.Y - keymap_esc.Top;
+
+                    BitmapRectangle region_left = new BitmapRectangle(keymap_esc.Left, keymap_esc.Top, spacebar_x, height);
                     Color RegionLeftColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_left);
-                    if (!ColorKBLeft.Equals(RegionLeftColor)) {
+                    if (!ColorKBLeft.Equals(RegionLeftColor))
+                    {
                         ColorKBLeft = RegionLeftColor;
                         ColorUpdated = true;
                     }
 
                     // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
                     BitmapRectangle keymap_f11 = Effects.GetBitmappingFromDeviceKey(DeviceKeys.F11);
-                    BitmapRectangle region_center = new BitmapRectangle((int)spacebar_center.X - keymap_esc.Left, (int)spacebar_center.Y - keymap_esc.Top, keymap_f11.Left, keymap_f11.Top);
+
+                    int f11_x_width = Convert.ToInt32(keymap_f11.Center.X - spacebar_x);
+
+                    BitmapRectangle region_center = new BitmapRectangle(spacebar_x, keymap_esc.Top, f11_x_width, height);
                     Color RegionCenterColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_center);
                     if (!ColorKBCenter.Equals(RegionCenterColor))
                     {
@@ -168,28 +177,10 @@ namespace Aurora.Devices.Clevo
                         ColorUpdated = true;
                     }
 
-                    // Right Side - F11 to CTRL_RIGHT (1/4)
-                    BitmapRectangle keymap_ctrlright = Effects.GetBitmappingFromDeviceKey(DeviceKeys.RIGHT_CONTROL);
-                    BitmapRectangle region_right = new BitmapRectangle(keymap_f11.Left, keymap_f11.Top, keymap_ctrlright.Right, keymap_ctrlright.Bottom);
-                    Color RegionRightColor1 = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
-
-                    // Right Side - NUMLOCK to NUMENTER (2/4)
-                    BitmapRectangle keymap_numlock = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_LOCK);
+                    // Right Side
                     BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
-                    region_right = new BitmapRectangle(keymap_numlock.Left, keymap_numlock.Top, keymap_numenter.Right, keymap_numenter.Bottom);
-                    Color RegionRightColor2 = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
-
-                    // Right Side - PRINTSCR to PAGEDOWN (3/4)
-                    BitmapRectangle keymap_printscr = Effects.GetBitmappingFromDeviceKey(DeviceKeys.PRINT_SCREEN);
-                    BitmapRectangle keymap_pagedown = Effects.GetBitmappingFromDeviceKey(DeviceKeys.PAGE_DOWN);
-                    region_right = new BitmapRectangle(keymap_printscr.Left, keymap_printscr.Top, keymap_pagedown.Right, keymap_pagedown.Bottom);
-                    Color RegionRightColor3 = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
-
-                    // Right Side - Direction Keys (4/4)
-                    // TODO: To be implemented
-
-                    // Final Composition
-                    Color RegionRightColor = ColorUtils.BlendColors(ColorUtils.BlendColors(RegionRightColor1, RegionRightColor2, 0.5), RegionRightColor3, 0.5);
+                    BitmapRectangle region_right = new BitmapRectangle(Convert.ToInt32(keymap_f11.Center.X), keymap_esc.Top, Convert.ToInt32(keymap_numenter.Center.X - keymap_f11.Center.X), height);
+                    Color RegionRightColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
 
                     if (!ColorKBRight.Equals(RegionRightColor))
                     {
