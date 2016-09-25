@@ -58,6 +58,7 @@ namespace Aurora_Updater
             }
             
 
+            /*
             if (StaticStorage.manager.updatestate != UpdateStatus.InProgress)
             {
                 this.progressTimer.Enabled = false;
@@ -65,7 +66,7 @@ namespace Aurora_Updater
                 
                 return;
             }
-
+            */
         }
     }
 }
