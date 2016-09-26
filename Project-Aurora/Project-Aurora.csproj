@@ -287,6 +287,10 @@
     <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballProfileManager.cs" />
     <Compile Include="Profiles\DiscoDodgeball\GameEvent_DiscoDodgeball.cs" />
     <Compile Include="Profiles\Dota 2\Dota2ProfileManager.cs" />
+    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2BackgroundLayer.xaml.cs">
+      <DependentUpon>Control_Dota2BackgroundLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Dota 2\Layers\Dota2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Evolve\Control_Evolve.xaml.cs">
       <DependentUpon>Control_Evolve.xaml</DependentUpon>
     </Compile>
@@ -776,6 +780,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Dota 2\Control_Dota2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Dota 2\Layers\Control_Dota2BackgroundLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -37,7 +37,10 @@ namespace Aurora.Settings.Layers
         Equalizer = 500,
 
         [Description("Ambilight Layer")]
-        Ambilight = 600
+        Ambilight = 600,
+
+        [Description("Dota 2 Background Layer")]
+        Dota2Background = 800,
     }
 
     /// <summary>
@@ -46,6 +49,9 @@ namespace Aurora.Settings.Layers
     public class Layer
     {
         private ProfileManager _profile;
+
+        [JsonIgnore]
+        public ProfileManager AssociatedProfile { get { return _profile; } }
 
         public event EventHandler AnythingChanged;
 

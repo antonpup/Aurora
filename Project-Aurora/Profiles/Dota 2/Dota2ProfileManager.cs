@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.IO;
 using Newtonsoft.Json;
+using Aurora.Settings.Layers;
 
 namespace Aurora.Profiles.Dota_2
 {
@@ -14,6 +15,7 @@ namespace Aurora.Profiles.Dota_2
         public Dota2ProfileManager()
             : base("Dota 2", "dota2", "dota2.exe", typeof(Dota2Settings), new GameEvent_Dota2())
         {
+            AvailableLayers.Add(LayerType.Dota2Background);
         }
 
         public override UserControl GetUserControl()

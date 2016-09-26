@@ -29,6 +29,7 @@ namespace Aurora.Settings
         protected Type SettingsType = typeof(ProfileSettings);
         public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
         public bool HasLayers { get; set; }
+        public HashSet<LayerType> AvailableLayers { get; set; }
 
         public event EventHandler ProfileChanged;
 
@@ -62,12 +63,24 @@ namespace Aurora.Settings
                     }
                 }
 
-                Global.logger.LogLine("");
+                //Global.logger.LogLine("");
             }
             else
             {
                 ParameterLookup = new Dictionary<string, Tuple<Type, Type>>();
             }
+
+            if (AvailableLayers == null)
+                AvailableLayers = new HashSet<LayerType>();
+
+            AvailableLayers.Add(LayerType.Default);
+            AvailableLayers.Add(LayerType.Solid);
+            AvailableLayers.Add(LayerType.SolidFilled);
+            AvailableLayers.Add(LayerType.Percent);
+            AvailableLayers.Add(LayerType.Interactive);
+            AvailableLayers.Add(LayerType.ShortcutAssistant);
+            AvailableLayers.Add(LayerType.Equalizer);
+            AvailableLayers.Add(LayerType.Ambilight);
 
             LoadProfiles();
         }

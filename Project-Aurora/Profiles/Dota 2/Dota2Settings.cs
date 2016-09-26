@@ -120,88 +120,9 @@ namespace Aurora.Profiles.Dota_2
                 {
                     Logics = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.LogicItem>()
                     {
-                        new LogicItem()
-                        {
-                            Action = new Tuple<LogicItem.ActionType, object>(
-                                LogicItem.ActionType.SetProperty,
-                                new Tuple<string, object>(
-                                    "_PrimaryColor",
-                                    new RealColor(Color.FromArgb(255, 255, 0, 0))
-                               )
-                            ),
-                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
-                            {
-                                {
-                                    "Hero/IsAlive",
-                                    new Tuple<LogicItem.LogicOperator, object>(
-                                        LogicItem.LogicOperator.Equal,
-                                        false
-                                    )
-                                }
-                            }
-                        },
-                        new LogicItem()
-                        {
-                            Action = new Tuple<LogicItem.ActionType, object>(
-                                LogicItem.ActionType.SetProperty,
-                                new Tuple<string, object>(
-                                    "_SecondaryColor",
-                                    new RealColor(Color.FromArgb(255, 255, 0, 0))
-                               )
-                            ),
-                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
-                            {
-                                {
-                                    "Hero/IsAlive",
-                                    new Tuple<LogicItem.LogicOperator, object>(
-                                        LogicItem.LogicOperator.Equal,
-                                        false
-                                    )
-                                }
-                            }
-                        },
-                        new LogicItem()
-                        {
-                            Action = new Tuple<LogicItem.ActionType, object>(
-                                LogicItem.ActionType.SetProperty,
-                                new Tuple<string, object>(
-                                    "_PrimaryColor",
-                                    null
-                               )
-                            ),
-                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
-                            {
-                                {
-                                    "Hero/IsAlive",
-                                    new Tuple<LogicItem.LogicOperator, object>(
-                                        LogicItem.LogicOperator.Equal,
-                                        true
-                                    )
-                                }
-                            }
-                        },
-                        new LogicItem()
-                        {
-                            Action = new Tuple<LogicItem.ActionType, object>(
-                                LogicItem.ActionType.SetProperty,
-                                new Tuple<string, object>(
-                                    "_SecondaryColor",
-                                   null
-                               )
-                            ),
-                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
-                            {
-                                {
-                                    "Hero/IsAlive",
-                                    new Tuple<LogicItem.LogicOperator, object>(
-                                        LogicItem.LogicOperator.Equal,
-                                        true
-                                    )
-                                }
-                            }
-                        }
                     }
-                }
+                },
+                new Settings.Layers.Layer("Dota 2 Background", new Layers.Dota2BackgroundLayerHandler())
             };
 
 

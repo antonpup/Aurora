@@ -282,14 +282,10 @@ namespace Aurora
                 EffectLayer[] layers_array = frame.GetLayers().ToArray();
 
                 foreach (EffectLayer layer in layers_array)
-                {
                     background += layer;
-                }
 
                 foreach (EffectLayer layer in over_layers_array)
-                {
                     background += layer;
-                }
 
                 //Apply Brightness
                 Dictionary<DeviceKeys, Color> peripehralColors = new Dictionary<DeviceKeys, Color>();
@@ -301,9 +297,7 @@ namespace Aurora
                 }
 
                 foreach (Devices.DeviceKeys key in possible_peripheral_keys)
-                {
                     background.Set(key, Utils.ColorUtils.BlendColors(peripehralColors[key], Color.Black, (1.0f - Global.Configuration.peripheral_brightness_modifier)));
-                }
 
                 background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.keyboard_brightness_modifier)), Color.Black));
 
@@ -314,9 +308,7 @@ namespace Aurora
                 Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
 
                 foreach (Devices.DeviceKeys key in allKeys)
-                {
                     keyColors[key] = background.Get(key);
-                }
 
                 Effects.keyColors = new Dictionary<DeviceKeys, Color>(keyColors);
 

@@ -59,9 +59,12 @@ namespace Aurora.Profiles.Dota_2
 
             this.game_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).isEnabled;
 
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.None);
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
+            if (!this.preview_team.HasItems)
+            {
+                this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.None);
+                this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
+                this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
+            }
 
             this.background_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).bg_team_enabled;
             this.t_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).dire_color);
@@ -204,6 +207,8 @@ namespace Aurora.Profiles.Dota_2
                     GameEvent_Dota2.SetTeam(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
                     break;
             }
+
+            (profile_manager.Event._game_state as GameState_Dota2).Player.Team = (Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
         }
 
         private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

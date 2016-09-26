@@ -1,4 +1,5 @@
-﻿using Aurora.Settings.Layers;
+﻿using Aurora.Profiles.Dota_2.Layers;
+using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,11 @@ namespace Aurora.Settings
 
             DataContext = layer;
 
+            cmbLayerType.Items.Clear();
+
+            foreach(var layertype in layer.AssociatedProfile.AvailableLayers)
+                cmbLayerType.Items.Add(layertype);
+
             cmbLayerType.SelectedItem = Layer.Handler.Type;
             ctrlLayerTypeConfig.Content = layer.Control;
             isSettingNewLayer = false;
@@ -79,6 +85,9 @@ namespace Aurora.Settings
                         break;
                     case LayerType.Ambilight:
                         _Layer.Handler = new AmbilightLayerHandler();
+                        break;
+                    case LayerType.Dota2Background:
+                        _Layer.Handler = new Dota2BackgroundLayerHandler();
                         break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
