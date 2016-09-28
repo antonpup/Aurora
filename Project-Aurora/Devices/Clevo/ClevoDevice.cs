@@ -1,4 +1,5 @@
 ﻿using Aurora.Utils;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,6 +16,7 @@ namespace Aurora.Devices.Clevo
         // TODO: Theese settings could be implemented with posibility of configuration from the Aurora GUI (Or external JSON, INI, Settings, etc)
         private bool useGlobalPeriphericColors = false;
         private bool useTouchpad = true;
+        private bool updateLightsOnLogon = true;
 
         // Clevo Controll Class
         private ClevoSetKBLED clevo = new ClevoSetKBLED();
@@ -28,7 +30,10 @@ namespace Aurora.Devices.Clevo
         private Color LastColorKBCenter = Color.Black;
         private Color LastColorKBLeft = Color.Black;
         private Color LastColorKBRight = Color.Black;
-        private Color LastColorTouchpad = Color.Black; 
+        private Color LastColorTouchpad = Color.Black;
+
+        // Session Switch Handler
+        private SessionSwitchEventHandler sseh;
 
         public string GetDeviceName()
         {
@@ -60,6 +65,12 @@ namespace Aurora.Devices.Clevo
                         throw new Exception("Could not connect to Clevo WMI Interface");
                     }
 
+                    // Update Lights on Logon (Clevo sometimes resets the lights when you Hibernate, this would fix wrong colors)
+                    if (updateLightsOnLogon) {
+                        sseh = new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
+                        SystemEvents.SessionSwitch += sseh;
+                    }
+
                     // Mark Initialized = TRUE
                     isInitialized = true;
                     return true;
@@ -78,12 +89,27 @@ namespace Aurora.Devices.Clevo
 
         }
 
+        // Handle Logon Event
+        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (this.IsInitialized() && e.Reason.Equals(SessionSwitchReason.SessionUnlock)) { // Only Update when Logged In
+                this.SendColorsToKeyboard(true);
+            }
+        }
+
         public void Shutdown()
         {
             if (this.IsInitialized())
             {
+                // Release Clevo Connection
                 clevo.ResetKBLEDColors();
                 clevo.Release();
+
+                // Uninstantiate Session Switch
+                if (sseh != null) {
+                    SystemEvents.SessionSwitch -= sseh;
+                    sseh = null;
+                }
             }
         }
 
@@ -203,7 +229,7 @@ namespace Aurora.Devices.Clevo
 
         private void SendColorsToKeyboard(bool forced = false)
         {
-            if (ColorUpdated)
+            if (forced || ColorUpdated)
             {
                 if (forced || !LastColorKBLeft.Equals(ColorKBLeft))
                 {
