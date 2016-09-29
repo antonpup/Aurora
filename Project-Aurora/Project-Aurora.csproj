@@ -618,6 +618,18 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml.cs">
+      <DependentUpon>Control_ColorizedKeycapBlank.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Keycaps\Control_ColorizedKeycap.xaml.cs">
+      <DependentUpon>Control_ColorizedKeycap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Keycaps\Control_DefaultKeycapBackglowOnly.xaml.cs">
+      <DependentUpon>Control_DefaultKeycapBackglowOnly.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Keycaps\Control_DefaultKeycapBackglow.xaml.cs">
+      <DependentUpon>Control_DefaultKeycapBackglow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Keycaps\Control_DefaultKeycap.xaml.cs">
       <DependentUpon>Control_DefaultKeycap.xaml</DependentUpon>
     </Compile>
@@ -863,6 +875,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Keycaps\Control_ColorizedKeycap.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Keycaps\Control_DefaultKeycapBackglowOnly.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Keycaps\Control_DefaultKeycapBackglow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Settings\Keycaps\Control_DefaultKeycap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1073,6 +1101,7 @@
     <Resource Include="Resources\evolve_48x48.png" />
     <Resource Include="Resources\metro_ll_48x48.png" />
     <Resource Include="Resources\gw2_48x48.png" />
+    <Resource Include="Resources\keycap_backglow.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\FreeForm_Circle.png" />

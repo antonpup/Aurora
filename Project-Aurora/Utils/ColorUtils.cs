@@ -74,6 +74,28 @@ namespace Aurora.Utils
         }
 
         /// <summary>
+        /// Blends two colors together by a specified amount
+        /// </summary>
+        /// <param name="background">The background color (When percent is at 0.0D, only this color is shown)</param>
+        /// <param name="foreground">The foreground color (When percent is at 1.0D, only this color is shown)</param>
+        /// <param name="percent">The blending percent value</param>
+        /// <returns>The blended color</returns>
+        public static System.Windows.Media.Color BlendColors(System.Windows.Media.Color background, System.Windows.Media.Color foreground, double percent)
+        {
+            if (percent < 0.0)
+                percent = 0.0;
+            else if (percent > 1.0)
+                percent = 1.0;
+
+            int Red = (byte)Math.Min((Int32)foreground.R * percent + (Int32)background.R * (1.0 - percent), 255);
+            int Green = (byte)Math.Min((Int32)foreground.G * percent + (Int32)background.G * (1.0 - percent), 255);
+            int Blue = (byte)Math.Min((Int32)foreground.B * percent + (Int32)background.B * (1.0 - percent), 255);
+            int Alpha = (byte)Math.Min((Int32)foreground.A * percent + (Int32)background.A * (1.0 - percent), 255);
+
+            return System.Windows.Media.Color.FromArgb((byte)Alpha, (byte)Red, (byte)Green, (byte)Blue);
+        }
+
+        /// <summary>
         /// Adds two colors together by using the alpha component of the foreground color
         /// </summary>
         /// <param name="background">The background color</param>
@@ -104,6 +126,22 @@ namespace Aurora.Utils
             int Alpha = ColorByteMultiplication(color.A, scalar);
 
             return System.Drawing.Color.FromArgb(Alpha, Red, Green, Blue);
+        }
+
+        /// <summary>
+        /// Multiplies a Drawing Color instance by a scalar value
+        /// </summary>
+        /// <param name="color">The color to be multiplied</param>
+        /// <param name="scalar">The scalar amount for multiplication</param>
+        /// <returns>The multiplied Color</returns>
+        public static System.Windows.Media.Color MultiplyColorByScalar(System.Windows.Media.Color color, double scalar)
+        {
+            int Red = ColorByteMultiplication(color.R, scalar);
+            int Green = ColorByteMultiplication(color.G, scalar);
+            int Blue = ColorByteMultiplication(color.B, scalar);
+            int Alpha = ColorByteMultiplication(color.A, scalar);
+
+            return System.Windows.Media.Color.FromArgb((byte)Alpha, (byte)Red, (byte)Green, (byte)Blue);
         }
 
         /// <summary>

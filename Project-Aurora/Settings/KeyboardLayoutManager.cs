@@ -396,6 +396,8 @@ namespace Aurora.Settings
 
         //private List<KeyboardKey> keyboard = new List<KeyboardKey>();
 
+        private Dictionary<Devices.DeviceKeys, IKeycap> _virtual_keyboard_map = new Dictionary<DeviceKeys, IKeycap>();
+
         private Grid _virtual_keyboard = new Grid();
 
         public Grid Virtual_keyboard
@@ -710,6 +712,7 @@ namespace Aurora.Settings
         private void CreateUserControl()
         {
             Grid new_virtual_keyboard = new Grid();
+            _virtual_keyboard_map.Clear();
 
             double layout_height = 0;
             double layout_width = 0;
@@ -731,9 +734,14 @@ namespace Aurora.Settings
                 if (!String.IsNullOrWhiteSpace(key.image))
                     image_path = Path.Combine(images_path, key.image);
 
+                //TO DO: Select keycap here
+
                 UserControl keycap = new Control_DefaultKeycap(key, image_path);
 
                 new_virtual_keyboard.Children.Add(keycap);
+
+                if (key.tag != DeviceKeys.NONE && !_virtual_keyboard_map.ContainsKey(key.tag) && keycap is IKeycap)
+                    _virtual_keyboard_map.Add(key.tag, keycap as IKeycap);
 
                 if (key.absolute_location)
                     keycap.Margin = new Thickness(key.margin_left, key.margin_top, 0, 0);
@@ -975,6 +983,15 @@ namespace Aurora.Settings
             virtual_keyboard_group = new VirtualGroup(keyboard.ToArray());
 
             _loaded_localization = PreferredKeyboardLocalization.None;
+        }
+
+        public void SetKeyboardColors(Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights)
+        {
+            foreach (var kvp in _virtual_keyboard_map)
+            {
+                if (keylights.ContainsKey(kvp.Key))
+                    kvp.Value.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(keylights[kvp.Key]));
+            }
         }
     }
 }
