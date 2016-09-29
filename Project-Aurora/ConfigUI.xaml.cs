@@ -15,6 +15,7 @@ using Aurora.Settings;
 using Aurora.Controls;
 using Aurora.Profiles.Generic_Application;
 using System.IO;
+using Aurora.Settings.Keycaps;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
@@ -60,13 +61,13 @@ namespace Aurora
             {
                 SetValue(FocusedProfileProperty, value);
 
-                if(value == null || value is Profiles.Desktop.DesktopProfileManager)
+                if (value == null || value is Profiles.Desktop.DesktopProfileManager)
                     Global.geh.SetPreview(PreviewType.Desktop);
-                else if(value is Profiles.Generic_Application.GenericApplicationProfileManager)
+                else if (value is Profiles.Generic_Application.GenericApplicationProfileManager)
                     Global.geh.SetPreview(PreviewType.GenericApplication, value.ProcessNames[0]);
                 else
                     Global.geh.SetPreview(PreviewType.Predefined, value.ProcessNames[0]);
-                
+
             }
         }
 
@@ -210,11 +211,17 @@ namespace Aurora
                             if (Global.geh.GetPreview() != PreviewType.None)
                                 keylights = Global.effengine.GetKeyboardLights();
 
-                            Border[] keys = virtial_kb.Children.OfType<Border>().ToArray();
+                            IKeycap[] keys = virtial_kb.Children.OfType<IKeycap>().ToArray();
 
-
-                            foreach (var child in keys)
+                            foreach (var key in keys)
                             {
+                                Devices.DeviceKeys device_key = key.GetKey();
+
+                                if (keylights.ContainsKey(device_key))
+                                    key.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(keylights[device_key]));
+
+                                /*
+
                                 if (child is Border &&
                                     (child as Border).Child is TextBlock &&
                                     ((child as Border).Child as TextBlock).Tag is Devices.DeviceKeys
@@ -271,7 +278,9 @@ namespace Aurora
                                     }
                                 }
 
-                            }//);
+                            }//); */
+
+                            }
 
                             if (Global.key_recorder.IsRecording())
                                 this.keyboard_record_message.Visibility = System.Windows.Visibility.Visible;

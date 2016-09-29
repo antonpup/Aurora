@@ -31,7 +31,7 @@ namespace Aurora.Settings
 
                 if(isSingleKey)
                 {
-
+                    StopRecording();
                 }
             }
         }

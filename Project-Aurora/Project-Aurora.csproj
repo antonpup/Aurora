@@ -618,6 +618,10 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Keycaps\Control_DefaultKeycap.xaml.cs">
+      <DependentUpon>Control_DefaultKeycap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Keycaps\IKeycap.cs" />
     <Compile Include="Settings\Layers\AmbilightLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_EqualizerLayer.xaml.cs">
       <DependentUpon>Control_EqualizerLayer.xaml</DependentUpon>
@@ -856,6 +860,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Control_LayerControlPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Keycaps\Control_DefaultKeycap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

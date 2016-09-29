@@ -44,7 +44,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 this.ColorPicker_Radiant.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2BackgroundLayerHandler).Properties._RadiantColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_Default.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Dota2BackgroundLayerHandler).Properties._DefaultColor ?? System.Drawing.Color.Empty);
                 this.Checkbox_DimEnabled.IsChecked = (this.DataContext as Dota2BackgroundLayerHandler).Properties._DimEnabled;
-                this.TextBox_DimValue.Text = (this.DataContext as Dota2BackgroundLayerHandler).Properties._DimDelay + "s";
+                this.TextBox_DimValue.Text = (int)(this.DataContext as Dota2BackgroundLayerHandler).Properties._DimDelay + "s";
                 this.Slider_DimSelector.Value = (this.DataContext as Dota2BackgroundLayerHandler).Properties._DimDelay.Value;
 
                 settingsset = true;
