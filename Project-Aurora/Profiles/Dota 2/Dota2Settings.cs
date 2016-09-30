@@ -76,6 +76,8 @@ namespace Aurora.Profiles.Dota_2
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {
+                
+                new Settings.Layers.Layer("Dota 2 Respawn", new Layers.Dota2RespawnLayerHandler()),
                 new Settings.Layers.Layer("Health Indicator", new Settings.Layers.PercentLayerHandler()
                 {
                     Properties = new Settings.Layers.PercentLayerHandlerProperties()

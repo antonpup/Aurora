@@ -290,7 +290,11 @@
     <Compile Include="Profiles\Dota 2\Layers\Control_Dota2BackgroundLayer.xaml.cs">
       <DependentUpon>Control_Dota2BackgroundLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2RespawnLayer.xaml.cs">
+      <DependentUpon>Control_Dota2RespawnLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\Dota 2\Layers\Dota2BackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\Dota 2\Layers\Dota2RespawnLayerHandler.cs" />
     <Compile Include="Profiles\Evolve\Control_Evolve.xaml.cs">
       <DependentUpon>Control_Evolve.xaml</DependentUpon>
     </Compile>
@@ -419,24 +423,6 @@
     <None Include="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\Corsair\layout.de.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Corsair\layout.fr.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Corsair\layout.intl.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Corsair\layout.ru.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Corsair\layout.uk.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Corsair\layout.us.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="kb_layouts\corsair_k65.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -485,27 +471,6 @@
     <None Include="kb_layouts\Extra Features\logitech_g910_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\Logitech\layout.de.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Logitech\layout.fr.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Logitech\layout.intl.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Logitech\layout.jpn.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Logitech\layout.ru.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Logitech\layout.uk.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Logitech\layout.us.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="kb_layouts\logitech_g410.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -531,24 +496,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.us.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Razer\layout.de.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Razer\layout.fr.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Razer\layout.intl.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Razer\layout.ru.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Razer\layout.uk.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Razer\layout.us.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Scripts\Devices\example_script.cs">
@@ -800,6 +747,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Dota 2\Layers\Control_Dota2BackgroundLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Dota 2\Layers\Control_Dota2RespawnLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

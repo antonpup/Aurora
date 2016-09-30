@@ -41,6 +41,10 @@ namespace Aurora.Settings.Layers
 
         [Description("Dota 2 Background Layer")]
         Dota2Background = 800,
+
+        [Description("Dota 2 Respawn Layer")]
+        Dota2Respawn = 801,
+
     }
 
     /// <summary>

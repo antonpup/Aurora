@@ -48,17 +48,13 @@ namespace Aurora.Settings.Layers
         private void ColorPicker_primaryColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is SolidColorLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-            {
                 (this.DataContext as SolidColorLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-            }
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is SolidColorLayerHandler && sender is Aurora.Controls.KeySequence)
-            {
                 (this.DataContext as SolidColorLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
-            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

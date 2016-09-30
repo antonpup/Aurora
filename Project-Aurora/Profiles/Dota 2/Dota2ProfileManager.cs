@@ -16,6 +16,7 @@ namespace Aurora.Profiles.Dota_2
             : base("Dota 2", "dota2", "dota2.exe", typeof(Dota2Settings), new GameEvent_Dota2())
         {
             AvailableLayers.Add(LayerType.Dota2Background);
+            AvailableLayers.Add(LayerType.Dota2Respawn);
         }
 
         public override UserControl GetUserControl()

@@ -158,6 +158,7 @@ namespace Aurora.Profiles.Dota_2
                             {
                                 this.preview_respawn_time.Content = "Seconds to respawn: " + this.respawn_time;
                                 GameEvent_Dota2.SetRespawnTime(this.respawn_time);
+                                (profile_manager.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
 
                                 this.respawn_time--;
                             }
@@ -248,7 +249,7 @@ namespace Aurora.Profiles.Dota_2
             (profile_manager.Event._game_state as GameState_Dota2).Hero.IsAlive = false;
 
             respawn_time = 15;
-            GameEvent_Dota2.SetRespawnTime(this.respawn_time);
+            (profile_manager.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
             this.preview_killplayer.IsEnabled = false;
             GameEvent_Dota2.SetKillStreak(killstreak = 0);
             this.preview_killstreak_label.Content = "Killstreak: " + this.killstreak;
