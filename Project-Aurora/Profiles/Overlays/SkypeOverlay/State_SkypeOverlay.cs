@@ -47,8 +47,8 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
 
     public class Skype_Integration : Node<Skype_Integration>
     {
-        public readonly int MissedMessagesCount;
-        public readonly bool IsCalled;
+        public int MissedMessagesCount;
+        public bool IsCalled;
 
         internal Skype_Integration(string JSON) : base(JSON)
         {

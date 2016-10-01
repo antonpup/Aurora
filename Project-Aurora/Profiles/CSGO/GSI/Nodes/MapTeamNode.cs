@@ -14,7 +14,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// <summary>
         /// Team score
         /// </summary>
-        public readonly int Score;
+        public int Score;
 
         internal MapTeamNode(string JSON)
             : base(JSON)
