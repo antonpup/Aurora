@@ -92,6 +92,9 @@ namespace Aurora.Settings
                     case LayerType.Dota2Respawn:
                         _Layer.Handler = new Dota2RespawnLayerHandler();
                         break;
+                    case LayerType.Dota2Abilities:
+                        _Layer.Handler = new Dota2AbilityLayerHandler();
+                        break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;

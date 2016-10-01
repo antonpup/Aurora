@@ -15,7 +15,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// <summary>
         /// The attributes a hero has to spend on abilities
         /// </summary>
-        public readonly Attributes Attributes;
+        public Attributes Attributes;
 
         private string json;
 

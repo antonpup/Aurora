@@ -45,6 +45,9 @@ namespace Aurora.Settings.Layers
         [Description("Dota 2 Respawn Layer")]
         Dota2Respawn = 801,
 
+        [Description("Dota 2 Abilies Layer")]
+        Dota2Abilities = 802,
+
     }
 
     /// <summary>
