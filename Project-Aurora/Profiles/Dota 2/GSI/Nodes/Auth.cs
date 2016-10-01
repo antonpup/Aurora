@@ -8,7 +8,7 @@
         /// <summary>
         /// The auth token sent by this GSI
         /// </summary>
-        public readonly string Token;
+        public string Token;
 
         internal Auth_Dota2(string json_data) : base(json_data)
         {
