@@ -12,7 +12,7 @@
     "height_bits": 3,
     "margin_left_bits": 9,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "G7",
@@ -27,7 +27,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "G8",
@@ -42,7 +42,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "G9",
@@ -57,7 +57,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "LOGO",
@@ -72,7 +72,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "ESC",
@@ -327,7 +327,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "^",
@@ -657,7 +657,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "TAB",
@@ -972,7 +972,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "CAPS\r\nLOCK",
@@ -1242,7 +1242,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "SHIFT",
@@ -1527,7 +1527,7 @@
     "height_bits": 3,
     "margin_left_bits": 0,
     "margin_top_bits": 0,
-    "enabled": "false"
+    "enabled": "true"
   },
   {
     "visualName": "CTRL",

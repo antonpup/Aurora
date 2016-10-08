@@ -44,7 +44,7 @@ namespace Aurora.Devices.Razer
             {
                 try
                 {
-                    if (!Chroma.IsSdkAvailable())
+                    if (!Chroma.SdkAvailable)
                     {
                         Global.logger.LogLine("No Chroma SDK available", Logging_Level.Info);
                         throw new Exception("No Chroma SDK available");
@@ -171,7 +171,7 @@ namespace Aurora.Devices.Razer
         private void SetOneKey(Key localKey, System.Drawing.Color color)
         {
             if (keyboard != null && keyboard[localKey] != null)
-                keyboard.SetKey(localKey, color);
+                keyboard.SetKey(localKey, new Corale.Colore.Core.Color(color.R, color.G, color.B));
         }
 
         private void SendColorToPeripheral(System.Drawing.Color color, bool forced = false)
@@ -181,16 +181,16 @@ namespace Aurora.Devices.Razer
                 if (Global.Configuration.allow_peripheral_devices)
                 {
                     if (mouse != null)
-                        mouse.SetAll(color);
+                        mouse.SetAll(new Corale.Colore.Core.Color(color.R, color.G, color.B));
 
                     if (mousepad != null)
-                        mousepad.SetAll(color);
+                        mousepad.SetAll(new Corale.Colore.Core.Color(color.R, color.G, color.B));
 
                     if (headset != null)
-                        headset.SetAll(color);
+                        headset.SetAll(new Corale.Colore.Core.Color(color.R, color.G, color.B));
 
                     if (keypad != null)
-                        keypad.SetAll(color);
+                        keypad.SetAll(new Corale.Colore.Core.Color(color.R, color.G, color.B));
 
                     previous_peripheral_Color = color;
                     peripheral_updated = true;

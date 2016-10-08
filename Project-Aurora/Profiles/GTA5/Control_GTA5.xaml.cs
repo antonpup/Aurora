@@ -298,11 +298,18 @@ namespace Aurora.Profiles.GTA5
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = @"Aurora.exe";
-            startInfo.Arguments = @"-install_logitech";
-            startInfo.Verb = "runas";
-            Process.Start(startInfo);
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = @"Aurora.exe";
+                startInfo.Arguments = @"-install_logitech";
+                startInfo.Verb = "runas";
+                Process.Start(startInfo);
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Could not start Aurora Logitech Patcher. Error: " + exc, Logging_Level.Error);
+            }
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
