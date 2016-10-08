@@ -193,7 +193,7 @@ namespace Aurora.Profiles
             duration = GetInt("duration");
             interval = GetInt("interval");
             effect_type = GetString("effect_type");
-            effect_type = GetString("effect_config");
+            effect_config = GetString("effect_config");
             key = GetInt("key");
             custom_mode = GetInt("custom_mode");
         }
