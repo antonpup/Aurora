@@ -28,6 +28,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -249,6 +250,8 @@
     <Compile Include="Devices\Corsair\CorsairInstallInstructions.xaml.cs">
       <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Masterkeys\MasterkeysDevice.cs" />
+    <Compile Include="Devices\Masterkeys\MasterkeysSDK.cs" />
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>

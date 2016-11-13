@@ -143,6 +143,10 @@ namespace Aurora.Settings
         Corsair = 2,
         [Description("Razer")]
         Razer = 3,
+        [Description("Clevo")]
+        Clevo = 4,
+        [Description("MasterKeys")]
+        Masterkeys = 5,
 
         //Logitech range is 100-199
         [Description("Logitech - G910")]
@@ -158,11 +162,17 @@ namespace Aurora.Settings
         [Description("Corsair - K65")]
         Corsair_K65 = 202,
         [Description("Corsair - STRAFE")]
-        Corsair_STRAFE = 203
+        Corsair_STRAFE = 203,
 
         //Razer range is 300-399
 
         //Clevo range is 400-499
+
+        //Masterkeys range is 500-599
+        [Description("Masterkeys - Pro L")]
+        Masterkeys_ProL = 500,
+        [Description("Masterkeys - Pro S")]
+        Masterkeys_ProS = 501
     }
 
     public enum PreferredKeyboardLocalization
