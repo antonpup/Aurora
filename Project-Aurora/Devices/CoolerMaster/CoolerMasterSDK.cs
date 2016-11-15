@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
-using static Masterkeys.MasterkeysSDK;
+using static CoolerMaster.CoolerMasterSDK;
 
-namespace Masterkeys
+namespace CoolerMaster
 {
     
-    class MasterkeysSDK
+    class CoolerMasterSDK
     {
         public enum EFF_INDEX
         {
@@ -90,7 +90,7 @@ namespace Masterkeys
 
         public const int MAX_LED_COLUMN = 22;
 
-        public const string sdkDLL = @"\x64\MasterkeysSDK.dll";
+        public const string sdkDLL = @"\x64\CoolerMasterSDK.dll";
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void KEY_CALLBACK(int iRow, int iColumn, [MarshalAs(UnmanagedType.I1)] bool bPressed);
