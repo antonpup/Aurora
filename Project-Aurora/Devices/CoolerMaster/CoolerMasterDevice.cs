@@ -1,13 +1,13 @@
-﻿using Masterkeys;
+﻿using CoolerMaster;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
-namespace Aurora.Devices.Masterkeys
+namespace Aurora.Devices.CoolerMaster
 {
-    static class MasterkeysKeys
+    static class CoolerMasterKeys
     {
         public static readonly Dictionary<DeviceKeys, int[]> KeyCoords = new Dictionary<DeviceKeys, int[]>
         {
@@ -118,11 +118,11 @@ namespace Aurora.Devices.Masterkeys
         };
     }
 
-    class MasterkeysDevice : Device
+    class CoolerMasterDevice : Device
     {
         
 
-        private String devicename = "Masterkeys";
+        private String devicename = "CoolerMaster";
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
@@ -132,12 +132,12 @@ namespace Aurora.Devices.Masterkeys
 
 
         //Keyboard stuff
-        private MasterkeysSDK.COLOR_MATRIX color_matrix = new MasterkeysSDK.COLOR_MATRIX();
-        private MasterkeysSDK.KEY_COLOR[,] key_colors = new MasterkeysSDK.KEY_COLOR[MasterkeysSDK.MAX_LED_ROW, MasterkeysSDK.MAX_LED_COLUMN];
+        private CoolerMasterSDK.COLOR_MATRIX color_matrix = new CoolerMasterSDK.COLOR_MATRIX();
+        private CoolerMasterSDK.KEY_COLOR[,] key_colors = new CoolerMasterSDK.KEY_COLOR[CoolerMasterSDK.MAX_LED_ROW, CoolerMasterSDK.MAX_LED_COLUMN];
         private Color peripheral_Color = Color.Black;
 
         //Previous data
-        private MasterkeysSDK.KEY_COLOR[,] previous_key_colors = new MasterkeysSDK.KEY_COLOR[MasterkeysSDK.MAX_LED_ROW, MasterkeysSDK.MAX_LED_COLUMN];
+        private CoolerMasterSDK.KEY_COLOR[,] previous_key_colors = new CoolerMasterSDK.KEY_COLOR[CoolerMasterSDK.MAX_LED_ROW, CoolerMasterSDK.MAX_LED_COLUMN];
         private Color previous_peripheral_Color = Color.Black;
 
 
@@ -149,16 +149,16 @@ namespace Aurora.Devices.Masterkeys
                 {
                     try
                     {
-                        MasterkeysSDK.SetControlDevice(MasterkeysSDK.DEVICE_INDEX.DEV_MKeys_L);
-                        if (MasterkeysSDK.IsDevicePlug() && MasterkeysSDK.EnableLedControl(true))
+                        CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_L);
+                        if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
                         {
                             isInitialized = true;
                             return true;
                         }
                         else
                         {
-                            MasterkeysSDK.SetControlDevice(MasterkeysSDK.DEVICE_INDEX.DEV_MKeys_S);
-                            if (MasterkeysSDK.IsDevicePlug() && MasterkeysSDK.EnableLedControl(true))
+                            CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_S);
+                            if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
                             {
                                 isInitialized = true;
                                 return true;
@@ -192,7 +192,7 @@ namespace Aurora.Devices.Masterkeys
             {
                 if (isInitialized)
                 {
-                    MasterkeysSDK.EnableLedControl(false);
+                    CoolerMasterSDK.EnableLedControl(false);
                     isInitialized = false;
                 }
             }
@@ -236,7 +236,7 @@ namespace Aurora.Devices.Masterkeys
 
         private void SetOneKey(int[] key, Color color)
         {
-            MasterkeysSDK.KEY_COLOR key_color = new MasterkeysSDK.KEY_COLOR(color.R, color.G, color.B);
+            CoolerMasterSDK.KEY_COLOR key_color = new CoolerMasterSDK.KEY_COLOR(color.R, color.G, color.B);
             key_colors[key[0], key[1]] = key_color;
         }
 
@@ -245,7 +245,7 @@ namespace Aurora.Devices.Masterkeys
             if (KeyColorComparer.Equals(key_colors, previous_key_colors) || forced)
             {
                 color_matrix.KeyColor = key_colors;
-                MasterkeysSDK.SetAllLedColor(color_matrix);
+                CoolerMasterSDK.SetAllLedColor(color_matrix);
                 previous_key_colors = null;
                 previous_key_colors = key_colors;
                 keyboard_updated = true;
@@ -270,7 +270,7 @@ namespace Aurora.Devices.Masterkeys
                 {
                     int[] coordinates;
 
-                    if (MasterkeysKeys.KeyCoords.TryGetValue(key.Key, out coordinates))
+                    if (CoolerMasterKeys.KeyCoords.TryGetValue(key.Key, out coordinates))
                     {
                         SetOneKey(coordinates, (Color)key.Value);
                     }

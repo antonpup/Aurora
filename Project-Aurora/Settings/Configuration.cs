@@ -145,8 +145,8 @@ namespace Aurora.Settings
         Razer = 3,
         [Description("Clevo")]
         Clevo = 4,
-        [Description("MasterKeys")]
-        Masterkeys = 5,
+        [Description("CoolerMaster")]
+        CoolerMaster = 5,
 
         //Logitech range is 100-199
         [Description("Logitech - G910")]
@@ -168,7 +168,7 @@ namespace Aurora.Settings
 
         //Clevo range is 400-499
 
-        //Masterkeys range is 500-599
+        //CoolerMaster range is 500-599
         [Description("Masterkeys - Pro L")]
         Masterkeys_ProL = 500,
         [Description("Masterkeys - Pro S")]

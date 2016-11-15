@@ -249,8 +249,8 @@
     <Compile Include="Devices\Corsair\CorsairInstallInstructions.xaml.cs">
       <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Masterkeys\MasterkeysDevice.cs" />
-    <Compile Include="Devices\Masterkeys\MasterkeysSDK.cs" />
+    <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
+    <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
