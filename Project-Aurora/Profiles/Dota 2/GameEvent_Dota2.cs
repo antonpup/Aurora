@@ -1719,13 +1719,13 @@ namespace Aurora.Profiles.Dota_2
                         }
                     }
 
-                    //Scripts
-                    Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
-
                     layers.Enqueue(items_layer);
                 }
 
             }
+
+            //Scripts
+            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
 
             foreach (var layer in (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).Layers.Reverse().ToArray())
             {
