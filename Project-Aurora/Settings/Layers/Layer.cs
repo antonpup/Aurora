@@ -48,6 +48,12 @@ namespace Aurora.Settings.Layers
         [Description("Dota 2 Abilies Layer")]
         Dota2Abilities = 802,
 
+        [Description("Dota 2 Items Layer")]
+        Dota2Items = 803,
+
+        [Description("Dota 2 Hero Abiliy Effects Layer")]
+        Dota2HeroAbiltiyEffects = 804,
+
     }
 
     /// <summary>

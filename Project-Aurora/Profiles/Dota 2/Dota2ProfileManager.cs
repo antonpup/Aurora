@@ -17,6 +17,9 @@ namespace Aurora.Profiles.Dota_2
         {
             AvailableLayers.Add(LayerType.Dota2Background);
             AvailableLayers.Add(LayerType.Dota2Respawn);
+            AvailableLayers.Add(LayerType.Dota2Abilities);
+            AvailableLayers.Add(LayerType.Dota2Items);
+            AvailableLayers.Add(LayerType.Dota2HeroAbiltiyEffects);
         }
 
         public override UserControl GetUserControl()
