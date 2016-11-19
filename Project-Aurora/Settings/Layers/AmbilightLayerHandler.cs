@@ -17,11 +17,12 @@ namespace Aurora.Settings.Layers
 
     public class AmbilightLayerHandler : LayerHandler
     {
-        public AmbilightType AmbilightType = AmbilightType.AverageColor;
+        public AmbilightType AmbilightType = AmbilightType.Default;
 
         private static Color avg_color = Color.Black;
         private static System.Timers.Timer screenshotTimer;
         private static Image screen;
+        private static long last_use_time = 0;
 
         public AmbilightLayerHandler()
         {
@@ -63,10 +64,18 @@ namespace Aurora.Settings.Layers
             newscreen?.Dispose();
 
             screen = newImage;
+
+            if(Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000) //If wasn't used for 2 seconds
+                screenshotTimer.Stop();
         }
 
         public override EffectLayer Render(IGameState gamestate)
         {
+            last_use_time = Utils.Time.GetMillisecondsSinceEpoch();
+
+            if (!screenshotTimer.Enabled) // Static timer isn't running, start it!
+                screenshotTimer.Start();
+
             EffectLayer ambilight_layer = new EffectLayer();
 
             if (AmbilightType == AmbilightType.Default)
