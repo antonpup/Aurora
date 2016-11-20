@@ -539,6 +539,10 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L)
+                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
+                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
+                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
 
                 if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
                 {
