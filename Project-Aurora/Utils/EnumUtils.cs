@@ -160,4 +160,9 @@ namespace Aurora.Utils
     {
         public AppDetectionModeToStringVC() : base(ApplicationDetectionMode.WindowsEvents) { }
     }
+
+    public class KeycapTypeToStringVC : EnumToStringVC
+    {
+        public KeycapTypeToStringVC() : base(KeycapType.Default) { }
+    }
 }

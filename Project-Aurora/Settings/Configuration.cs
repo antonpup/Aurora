@@ -210,6 +210,20 @@ namespace Aurora.Settings
         Clevo_Touchpad = 400
     }
 
+    public enum KeycapType
+    {
+        [Description("Default")]
+        Default = 0,
+        [Description("Default (with Backglow)")]
+        Default_backglow = 1,
+        [Description("Default (Backglow only)")]
+        Default_backglow_only = 2,
+        [Description("Colorized")]
+        Colorized = 3,
+        [Description("Colorized (blank)")]
+        Colorized_blank = 4
+    }
+
     public enum ApplicationDetectionMode
     {
         [Description("Windows Events (Default)")]
@@ -243,6 +257,7 @@ namespace Aurora.Settings
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
         public PreferredMouse mouse_preference;
+        public KeycapType virtualkeyboard_keycap_type;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
 
@@ -330,6 +345,7 @@ namespace Aurora.Settings
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
             mouse_preference = PreferredMouse.None;
+            virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
             additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();

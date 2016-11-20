@@ -734,9 +734,26 @@ namespace Aurora.Settings
                 if (!String.IsNullOrWhiteSpace(key.image))
                     image_path = Path.Combine(images_path, key.image);
 
-                //TO DO: Select keycap here
+                UserControl keycap;
 
-                UserControl keycap = new Control_DefaultKeycap(key, image_path);
+                switch(Global.Configuration.virtualkeyboard_keycap_type)
+                {
+                    case KeycapType.Default_backglow:
+                        keycap = new Control_DefaultKeycapBackglow(key, image_path);
+                        break;
+                    case KeycapType.Default_backglow_only:
+                        keycap = new Control_DefaultKeycapBackglowOnly(key, image_path);
+                        break;
+                    case KeycapType.Colorized:
+                        keycap = new Control_ColorizedKeycap(key, image_path);
+                        break;
+                    case KeycapType.Colorized_blank:
+                        keycap = new Control_ColorizedKeycapBlank(key, image_path);
+                        break;
+                    default:
+                        keycap = new Control_DefaultKeycap(key, image_path);
+                        break;
+                }
 
                 new_virtual_keyboard.Children.Add(keycap);
 
