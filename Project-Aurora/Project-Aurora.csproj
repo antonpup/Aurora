@@ -302,6 +302,9 @@
     <Compile Include="Profiles\Dota 2\Layers\Control_Dota2ItemLayer.xaml.cs">
       <DependentUpon>Control_Dota2ItemLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2KillstreakLayer.xaml.cs">
+      <DependentUpon>Control_Dota2KillstreakLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\Dota 2\Layers\Control_Dota2RespawnLayer.xaml.cs">
       <DependentUpon>Control_Dota2RespawnLayer.xaml</DependentUpon>
     </Compile>
@@ -309,13 +312,14 @@
     <Compile Include="Profiles\Dota 2\Layers\Dota2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Dota 2\Layers\Dota2HeroAbiltiyEffectsLayerHandler.cs" />
     <Compile Include="Profiles\Dota 2\Layers\Dota2ItemLayerHandler.cs" />
+    <Compile Include="Profiles\Dota 2\Layers\Dota2KillstreakLayerHandler.cs" />
     <Compile Include="Profiles\Dota 2\Layers\Dota2RespawnLayerHandler.cs" />
-    <Compile Include="Profiles\Dota 2\Evolve\Control_Evolve.xaml.cs">
+    <Compile Include="Profiles\Evolve\Control_Evolve.xaml.cs">
       <DependentUpon>Control_Evolve.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Dota 2\Evolve\EvolveProfileManager.cs" />
-    <Compile Include="Profiles\Dota 2\Evolve\EvolveSettings.cs" />
-    <Compile Include="Profiles\Dota 2\Evolve\GameEvent_Evolve.cs" />
+    <Compile Include="Profiles\Evolve\EvolveProfileManager.cs" />
+    <Compile Include="Profiles\Evolve\EvolveSettings.cs" />
+    <Compile Include="Profiles\Evolve\GameEvent_Evolve.cs" />
     <Compile Include="Profiles\Generic_Application\Control_GenericApplication.xaml.cs">
       <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
     </Compile>
@@ -777,11 +781,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\Dota 2\Layers\Control_Dota2KillstreakLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\Dota 2\Layers\Control_Dota2RespawnLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Profiles\Dota 2\Evolve\Control_Evolve.xaml">
+    <Page Include="Profiles\Evolve\Control_Evolve.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

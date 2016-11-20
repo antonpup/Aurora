@@ -20,6 +20,7 @@ namespace Aurora.Profiles.Dota_2
             AvailableLayers.Add(LayerType.Dota2Abilities);
             AvailableLayers.Add(LayerType.Dota2Items);
             AvailableLayers.Add(LayerType.Dota2HeroAbiltiyEffects);
+            AvailableLayers.Add(LayerType.Dota2Killstreak);
         }
 
         public override UserControl GetUserControl()

@@ -54,6 +54,9 @@ namespace Aurora.Settings.Layers
         [Description("Dota 2 Hero Abiliy Effects Layer")]
         Dota2HeroAbiltiyEffects = 804,
 
+        [Description("Dota 2 Killstreak Layer")]
+        Dota2Killstreak = 805,
+
     }
 
     /// <summary>

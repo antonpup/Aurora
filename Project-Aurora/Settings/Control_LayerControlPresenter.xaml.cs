@@ -95,6 +95,15 @@ namespace Aurora.Settings
                     case LayerType.Dota2Abilities:
                         _Layer.Handler = new Dota2AbilityLayerHandler();
                         break;
+                    case LayerType.Dota2Items:
+                        _Layer.Handler = new Dota2ItemLayerHandler();
+                        break;
+                    case LayerType.Dota2HeroAbiltiyEffects:
+                        _Layer.Handler = new Dota2HeroAbiltiyEffectsLayerHandler();
+                        break;
+                    case LayerType.Dota2Killstreak:
+                        _Layer.Handler = new Dota2KillstreakLayerHandler();
+                        break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;
