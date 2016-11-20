@@ -27,6 +27,10 @@ namespace Aurora.Devices.CoolerMaster
                      {DeviceKeys.PRINT_SCREEN, new int [] {0, 15} },
                      {DeviceKeys.SCROLL_LOCK, new int [] {0, 16} },
                      {DeviceKeys.PAUSE_BREAK, new int [] {0, 17} },
+                     {DeviceKeys.Profile_Key1, new int [] {0, 17} },
+                     {DeviceKeys.Profile_Key2, new int [] {0, 17} },
+                     {DeviceKeys.Profile_Key3, new int [] {0, 17} },
+                     {DeviceKeys.Profile_Key4, new int [] {0, 17} },
                      {DeviceKeys.TILDE, new int [] {1, 0} },
                      {DeviceKeys.ONE, new int [] {1, 1} },
                      {DeviceKeys.TWO, new int [] {1, 2} },
@@ -122,7 +126,7 @@ namespace Aurora.Devices.CoolerMaster
     {
         
 
-        private String devicename = "CoolerMaster";
+        private String devicename = "Cooler Master";
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
@@ -134,11 +138,11 @@ namespace Aurora.Devices.CoolerMaster
         //Keyboard stuff
         private CoolerMasterSDK.COLOR_MATRIX color_matrix = new CoolerMasterSDK.COLOR_MATRIX();
         private CoolerMasterSDK.KEY_COLOR[,] key_colors = new CoolerMasterSDK.KEY_COLOR[CoolerMasterSDK.MAX_LED_ROW, CoolerMasterSDK.MAX_LED_COLUMN];
-        private Color peripheral_Color = Color.Black;
+        //private Color peripheral_Color = Color.Black;
 
         //Previous data
-        private CoolerMasterSDK.KEY_COLOR[,] previous_key_colors = new CoolerMasterSDK.KEY_COLOR[CoolerMasterSDK.MAX_LED_ROW, CoolerMasterSDK.MAX_LED_COLUMN];
-        private Color previous_peripheral_Color = Color.Black;
+        //private CoolerMasterSDK.KEY_COLOR[,] previous_key_colors = new CoolerMasterSDK.KEY_COLOR[CoolerMasterSDK.MAX_LED_ROW, CoolerMasterSDK.MAX_LED_COLUMN];
+        //private Color previous_peripheral_Color = Color.Black;
 
 
         public bool Initialize()
@@ -165,7 +169,7 @@ namespace Aurora.Devices.CoolerMaster
                             }
                             else
                             {
-                                Global.logger.LogLine("Masterkeys Keyboard control could not be initialized", Logging_Level.Error);
+                                Global.logger.LogLine("Cooler Master device control could not be initialized", Logging_Level.Error);
 
                                 isInitialized = false;
                                 return false;
@@ -176,7 +180,7 @@ namespace Aurora.Devices.CoolerMaster
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine("There was an error initializing Masterkeys LED SDK.\r\n" + exc.Message, Logging_Level.Error);
+                        Global.logger.LogLine("There was an error initializing Cooler Master SDK.\r\n" + exc.Message, Logging_Level.Error);
 
                         return false;
                     }
@@ -242,14 +246,10 @@ namespace Aurora.Devices.CoolerMaster
 
         private void SendColorsToKeyboard(bool forced = false)
         {
-            if (KeyColorComparer.Equals(key_colors, previous_key_colors) || forced)
-            {
-                color_matrix.KeyColor = key_colors;
-                CoolerMasterSDK.SetAllLedColor(color_matrix);
-                previous_key_colors = null;
-                previous_key_colors = key_colors;
-                keyboard_updated = true;
-            }
+            color_matrix.KeyColor = key_colors;
+            CoolerMasterSDK.SetAllLedColor(color_matrix);
+            //previous_key_colors = key_colors;
+            keyboard_updated = true;
         }
 
         private void SendColorToPeripheral(Color color, bool forced = false)
@@ -268,7 +268,7 @@ namespace Aurora.Devices.CoolerMaster
             {     
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    int[] coordinates;
+                    int[] coordinates = new int[2];
 
                     if (CoolerMasterKeys.KeyCoords.TryGetValue(key.Key, out coordinates))
                     {

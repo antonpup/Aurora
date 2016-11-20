@@ -61,22 +61,6 @@ namespace CoolerMaster
                 this.g = g;
                 this.b = b;
             }
-            public override bool Equals(Object obj)
-            {
-                return obj is KEY_COLOR && this == (KEY_COLOR)obj;
-            }
-            public override int GetHashCode()
-            {
-                return r.GetHashCode() ^ g.GetHashCode() ^ b.GetHashCode();
-            }
-            public static bool operator ==(KEY_COLOR x, KEY_COLOR y)
-            {
-                return x.r == y.r && x.g == y.g && x.b == y.b;
-            }
-            public static bool operator !=(KEY_COLOR x, KEY_COLOR y)
-            {
-                return !(x == y);
-            }
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -90,7 +74,7 @@ namespace CoolerMaster
 
         public const int MAX_LED_COLUMN = 22;
 
-        public const string sdkDLL = @"\x64\CoolerMasterSDK.dll";
+        public const string sdkDLL = @"SDKDLL.dll";
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void KEY_CALLBACK(int iRow, int iColumn, [MarshalAs(UnmanagedType.I1)] bool bPressed);
@@ -148,26 +132,6 @@ namespace CoolerMaster
         [DllImport(sdkDLL, EntryPoint = "SetKeyCallBack")]
         public static extern void SetKeyCallBack(KEY_CALLBACK callback);
 
-    }
-
-    class KeyColorComparer : System.Collections.Generic.IEqualityComparer<KEY_COLOR>
-    {
-        public bool Equals(KEY_COLOR x, KEY_COLOR y)
-        {
-            if (Object.ReferenceEquals(x, y)) return true;
-
-            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
-                return false;
-
-            return x == y;
-        }
-
-        public int GetHashCode(KEY_COLOR key_color)
-        {
-            if (Object.ReferenceEquals(key_color, null)) return 0;
-
-            return key_color.GetHashCode();
-        }
     }
 
 }

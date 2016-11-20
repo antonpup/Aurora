@@ -168,11 +168,11 @@ namespace Aurora.Settings
 
         //Clevo range is 400-499
 
-        //CoolerMaster range is 500-599
+        //Cooler Master range is 500-599
         [Description("Masterkeys Pro L")]
-        Masterkeys_ProL = 500,
+        Masterkeys_Pro_L = 500,
         [Description("Masterkeys Pro S")]
-        Masterkeys_ProS = 501
+        Masterkeys_Pro_S = 501
     }
 
     public enum PreferredKeyboardLocalization
@@ -219,7 +219,7 @@ namespace Aurora.Settings
         [Description("Clevo - Touchpad")]
         Clevo_Touchpad = 400
 
-        //CoolerMaster range is 500-599
+        //Cooler Master range is 500-599
     }
 
     public enum KeycapType
