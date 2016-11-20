@@ -210,6 +210,15 @@ namespace Aurora.Settings
         Clevo_Touchpad = 400
     }
 
+    public enum ApplicationDetectionMode
+    {
+        [Description("Windows Events (Default)")]
+        WindowsEvents = 0,
+
+        [Description("Foreground App")]
+        ForegroroundApp = 1
+    }
+
     public class Configuration
     {
         //First Time Installs
@@ -234,6 +243,7 @@ namespace Aurora.Settings
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
         public PreferredMouse mouse_preference;
+        public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
 
         [JsonIgnoreAttribute]
@@ -320,6 +330,7 @@ namespace Aurora.Settings
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
             mouse_preference = PreferredMouse.None;
+            detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
             additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
 

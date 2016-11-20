@@ -44,6 +44,7 @@ namespace Aurora
 
         private string process_path = "";
         private long currentTick = 0L;
+        private long nextProcessNameUpdate = 0L;
 
         private PreviewType preview_mode = PreviewType.Desktop;
         private string preview_mode_profile_key = "";
@@ -52,12 +53,15 @@ namespace Aurora
 
         public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            string active_process = GetActiveWindowsProcessname();
-
-            if (!String.IsNullOrWhiteSpace(active_process))
+            if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.WindowsEvents)
             {
-                process_path = active_process;
-                //Global.logger.LogLine("Process changed: " + process_path, Logging_Level.Info);
+                string active_process = GetActiveWindowsProcessname();
+
+                if (!String.IsNullOrWhiteSpace(active_process))
+                {
+                    process_path = active_process;
+                    //Global.logger.LogLine("Process changed: " + process_path, Logging_Level.Info);
+                }
             }
         }
 
@@ -148,6 +152,11 @@ namespace Aurora
 
         private void update_timer_Tick(object sender, EventArgs e)
         {
+            if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
+            {
+                process_path = GetActiveWindowsProcessname();
+                nextProcessNameUpdate = currentTick + 1000L;
+            }
 
             string process_name = System.IO.Path.GetFileName(process_path).ToLowerInvariant();
 
@@ -282,6 +291,12 @@ namespace Aurora
             //Debug.WriteLine("Received gs!");
 
             //Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
+
+            if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
+            {
+                process_path = GetActiveWindowsProcessname();
+                nextProcessNameUpdate = currentTick + 1000L;
+            }
 
             string process_name = System.IO.Path.GetFileName(process_path).ToLowerInvariant();
 

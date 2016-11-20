@@ -29,6 +29,7 @@ namespace Aurora.Settings
             this.start_silently_enabled.IsChecked = Global.Configuration.start_silently;
 
             this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
+            this.app_detection_mode.SelectedIndex = (int)Global.Configuration.detection_mode;
 
             this.volume_as_brightness_enabled.IsChecked = Global.Configuration.use_volume_as_brightness;
 
@@ -154,6 +155,15 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.close_mode = (AppExitMode)Enum.Parse(typeof(AppExitMode), this.app_exit_mode.SelectedIndex.ToString());
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void app_detection_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.detection_mode = (ApplicationDetectionMode)Enum.Parse(typeof(ApplicationDetectionMode), this.app_detection_mode.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
