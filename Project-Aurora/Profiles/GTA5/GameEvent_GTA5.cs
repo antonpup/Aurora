@@ -4,6 +4,7 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles.GTA5.GSI;
 using System.Drawing;
 using Aurora.Settings;
+using System.Linq;
 
 namespace Aurora.Profiles.GTA5
 {
@@ -248,6 +249,12 @@ namespace Aurora.Profiles.GTA5
 
             //Scripts
             Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
+
+            foreach (var layer in Global.Configuration.ApplicationProfiles[profilename].Settings.Layers.Reverse().ToArray())
+            {
+                if (layer.Enabled && layer.LogicPass)
+                    layers.Enqueue(layer.Render(_game_state));
+            }
 
             frame.AddLayers(layers.ToArray());
         }

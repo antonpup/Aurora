@@ -6,8 +6,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
              xmlns:utils="clr-namespace:Aurora.Utils"
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" x:Name="ctrlMain">
+             mc:Ignorable="d" x:Name="ctrlMain">
     <UserControl.Resources>
         <ResourceDictionary>
             <utils:ColorConverter x:Key="ColorConverter"/>
@@ -18,15 +17,15 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Label HorizontalAlignment="Left" Margin="0,10,0,0" Content="Primary Color:" VerticalAlignment="Top" Height="24" Width="75" Padding="0" VerticalContentAlignment="Center"  />
-        <xctk:ColorPicker x:Name="clrPrimary" Margin="80,10,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="210"/>
+        <Label HorizontalAlignment="Left" Margin="0,27,0,0" Content="Off Color:" VerticalAlignment="Top" Height="24" Padding="0" VerticalContentAlignment="Center"  />
+        <xctk:ColorPicker x:Name="clrPrimary" Margin="55,56,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="210"/>
 
-        <Label HorizontalAlignment="Left" Margin="0,39,0,0" Content="Secondary Color:" VerticalAlignment="Top" Padding="0" VerticalContentAlignment="Center" Height="24" Width="92"/>
-        <xctk:ColorPicker x:Name="clrSecondary" Margin="97,39,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._SecondaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="193"/>
+        <Label HorizontalAlignment="Left" Margin="0,56,0,0" Content="On Color:" VerticalAlignment="Top" Padding="0" VerticalContentAlignment="Center" Height="24"/>
+        <xctk:ColorPicker x:Name="clrSecondary" Margin="56,27,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._SecondaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="209"/>
 
-        <CheckBox Content="Pulse" Margin="0,68,252,0" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._Pulse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <CheckBox Content="Pulse" Margin="10,85,242,0" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._Pulse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <Label Content="Key:" Margin="0,88,0,0" Padding="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbKey" Margin="26,88,0,0" VerticalAlignment="Top" ItemTemplate="{StaticResource KeysTemplate}" SelectedItem="{Binding Path=Properties._ToggledKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="264"/>
+        <Label Content="Key:" Padding="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbKey" Margin="26,0,0,0" VerticalAlignment="Top" ItemTemplate="{StaticResource KeysTemplate}" SelectedItem="{Binding Path=Properties._ToggledKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="200"/>
     </Grid>
 </UserControl>

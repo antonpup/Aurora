@@ -32,6 +32,12 @@ namespace Aurora.Profiles.ShadowOfMordor
             //Scripts
             Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
 
+            foreach (var layer in Global.Configuration.ApplicationProfiles[profilename].Settings.Layers.Reverse().ToArray())
+            {
+                if (layer.Enabled && layer.LogicPass)
+                    layers.Enqueue(layer.Render(_game_state));
+            }
+
             frame.AddLayers(layers.ToArray());
         }
     }
