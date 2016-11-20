@@ -76,6 +76,11 @@ namespace Aurora.Utils
         public DeviceKeysToStringVC() : base(Devices.DeviceKeys.NONE) { }
     }
 
+    public class KeysToStringVC : EnumToStringVC
+    {
+        public KeysToStringVC() : base(System.Windows.Forms.Keys.None) { }
+    }
+
     public class PercentEffectTypeToStringVC : EnumToStringVC
     {
         public PercentEffectTypeToStringVC() : base(PercentEffectType.Progressive) { }

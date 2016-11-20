@@ -39,6 +39,9 @@ namespace Aurora.Settings.Layers
         [Description("Ambilight Layer")]
         Ambilight = 600,
 
+        [Description("Lock Color Layer")]
+        LockColor = 700,
+
         [Description("Dota 2 Background Layer")]
         Dota2Background = 800,
 

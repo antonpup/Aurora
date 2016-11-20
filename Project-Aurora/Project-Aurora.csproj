@@ -607,6 +607,9 @@
     <Compile Include="Settings\Layers\Control_InteractiveLayer.xaml.cs">
       <DependentUpon>Control_InteractiveLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_LockColourLayer.xaml.cs">
+      <DependentUpon>Control_LockColourLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_PercentLayer.xaml.cs">
       <DependentUpon>Control_PercentLayer.xaml</DependentUpon>
     </Compile>
@@ -623,6 +626,7 @@
     <Compile Include="Settings\Layers\EqualizerLayerHandler.cs" />
     <Compile Include="Settings\Layers\InteractiveLayerHandler.cs" />
     <Compile Include="Settings\Layers\LayerHandler.cs" />
+    <Compile Include="Settings\Layers\LockColourLayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentLayerHandler.cs" />
     <Compile Include="Settings\Layers\ShortcutAssistantLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
@@ -886,6 +890,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_InteractiveLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_LockColourLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
