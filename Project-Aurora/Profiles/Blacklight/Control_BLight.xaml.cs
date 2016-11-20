@@ -83,12 +83,10 @@ namespace Aurora.Profiles.Blacklight
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallWrapper(string installpath = "")

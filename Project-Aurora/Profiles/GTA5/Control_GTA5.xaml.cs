@@ -280,12 +280,10 @@ namespace Aurora.Profiles.GTA5
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
