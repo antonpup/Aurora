@@ -169,13 +169,10 @@ namespace Aurora.Devices.Corsair
                 {
                     CorsairLedId localKey = ToCorsair(key.Key);
 
-                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
-                    {
-                        SendColorToPeripheral((Color)(key.Value), forced);
-                    }
-                    else if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo)
+                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo || localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToMouse(CorsairLedId.B1, (Color)(key.Value));
+                        SendColorToPeripheral((Color)(key.Value), forced);
                     }
                     else if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_FrontLight)
                     {
@@ -252,10 +249,10 @@ namespace Aurora.Devices.Corsair
 
                     if (headset != null)
                     {
-                        if (headset[CorsairHeadsetLedId.LeftLogo] != null)
-                            headset[CorsairHeadsetLedId.LeftLogo].Color = color;
-                        if (headset[CorsairHeadsetLedId.RightLogo] != null)
-                            headset[CorsairHeadsetLedId.RightLogo].Color = color;
+                        if (headset[CorsairLedId.LeftLogo] != null)
+                            headset[CorsairLedId.LeftLogo].Color = color;
+                        if (headset[CorsairLedId.RightLogo] != null)
+                            headset[CorsairLedId.RightLogo].Color = color;
 
                         headset.Update(true);
                     }
