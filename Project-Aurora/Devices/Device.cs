@@ -988,16 +988,52 @@ namespace Aurora.Devices
         Peripheral_Logo = 160,
 
         /// <summary>
-        /// Peripheral Logo
+        /// Peripheral Scroll Wheel
         /// </summary>
         [Description("Peripheral Scroll Wheel")]
         Peripheral_ScrollWheel = 161,
 
         /// <summary>
-        /// Peripheral Logo
+        /// Peripheral Front-facing lights
         /// </summary>
         [Description("Peripheral Front Lights")]
         Peripheral_FrontLight = 162,
+
+        /// <summary>
+        /// Profile key 1
+        /// </summary>
+        [Description("Profile Key 1")]
+        Profile_Key1 = 163,
+
+        /// <summary>
+        /// Profile key 2
+        /// </summary>
+        [Description("Profile Key 2")]
+        Profile_Key2 = 164,
+
+        /// <summary>
+        /// Profile key 3
+        /// </summary>
+        [Description("Profile Key 3")]
+        Profile_Key3 = 165,
+
+        /// <summary>
+        /// Profile key 4
+        /// </summary>
+        [Description("Profile Key 4")]
+        Profile_Key4 = 166,
+
+        /// <summary>
+        /// Profile key 5
+        /// </summary>
+        [Description("Profile Key 5")]
+        Profile_Key5 = 167,
+
+        /// <summary>
+        /// Profile key 6
+        /// </summary>
+        [Description("Profile Key 6")]
+        Profile_Key6 = 168,
 
         /// <summary>
         /// None
