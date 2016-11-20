@@ -72,6 +72,12 @@ namespace Aurora.Profiles.Generic_Application
             }
             layers.Enqueue(sc_assistant_layer);
 
+            foreach (var layer in Global.Configuration.additional_profiles[profilename].Settings.Layers.Reverse().ToArray())
+            {
+                if (layer.Enabled && layer.LogicPass)
+                    layers.Enqueue(layer.Render(_game_state));
+            }
+
             frame.AddLayers(layers.ToArray());
         }
 

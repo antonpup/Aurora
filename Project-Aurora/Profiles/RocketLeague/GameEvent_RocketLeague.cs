@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using Aurora.Settings;
 using System.IO;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Aurora.Profiles.RocketLeague
 {
@@ -221,6 +222,12 @@ namespace Aurora.Profiles.RocketLeague
 
             //Scripts
             Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers);
+
+            foreach (var layer in Global.Configuration.ApplicationProfiles[profilename].Settings.Layers.Reverse().ToArray())
+            {
+                if (layer.Enabled && layer.LogicPass)
+                    layers.Enqueue(layer.Render(_game_state));
+            }
 
             frame.AddLayers(layers.ToArray());
         }

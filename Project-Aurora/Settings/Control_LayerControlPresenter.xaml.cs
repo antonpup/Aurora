@@ -33,10 +33,8 @@ namespace Aurora.Settings
             InitializeComponent();
         }
 
-        public Control_LayerControlPresenter(Layer layer)
+        public Control_LayerControlPresenter(Layer layer) : this()
         {
-            InitializeComponent();
-
             Layer = layer;
             cmbLayerType.SelectedItem = Layer.Handler.Type;
         }
@@ -85,6 +83,9 @@ namespace Aurora.Settings
                         break;
                     case LayerType.Ambilight:
                         _Layer.Handler = new AmbilightLayerHandler();
+                        break;
+                    case LayerType.LockColor:
+                        _Layer.Handler = new LockColourLayerHandler();
                         break;
                     case LayerType.Dota2Background:
                         _Layer.Handler = new Dota2BackgroundLayerHandler();

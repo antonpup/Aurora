@@ -64,12 +64,10 @@ namespace Aurora.Profiles.Generic_Application
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.GenericApplication, app_key);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private void sc_assistant_enabled_Checked(object sender, RoutedEventArgs e)

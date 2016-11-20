@@ -241,7 +241,7 @@ namespace Aurora.Settings
         [Description("Windows Events (Default)")]
         WindowsEvents = 0,
 
-        [Description("Foreground App")]
+        [Description("Foreground App Scan")]
         ForegroroundApp = 1
     }
 

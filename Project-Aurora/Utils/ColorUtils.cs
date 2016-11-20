@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
+using System.Windows.Data;
 
 namespace Aurora.Utils
 {
@@ -249,6 +251,19 @@ namespace Aurora.Utils
             bitmap.UnlockBits(srcData);
 
             return Color.FromArgb((int)(Alpha / numPixels), (int)(Red / numPixels), (int)(Green / numPixels), (int)(Blue / numPixels));
+        }
+    }
+
+    public class ColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return ColorUtils.DrawingColorToMediaColor((System.Drawing.Color)value);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return ColorUtils.MediaColorToDrawingColor((System.Windows.Media.Color)value);
         }
     }
 }

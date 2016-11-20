@@ -81,6 +81,7 @@ namespace Aurora.Settings
             AvailableLayers.Add(LayerType.ShortcutAssistant);
             AvailableLayers.Add(LayerType.Equalizer);
             AvailableLayers.Add(LayerType.Ambilight);
+            AvailableLayers.Add(LayerType.LockColor);
 
             LoadProfiles();
         }
