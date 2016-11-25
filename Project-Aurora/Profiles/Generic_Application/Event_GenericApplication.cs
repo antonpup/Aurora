@@ -82,7 +82,7 @@ namespace Aurora.Profiles.Generic_Application
             UpdateLights(frame);
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             throw new NotImplementedException();
         }

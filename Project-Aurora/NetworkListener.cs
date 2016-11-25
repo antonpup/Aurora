@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Aurora
 {
-    public delegate void NewGameStateHandler(GameState gamestate);
+    public delegate void NewGameStateHandler(IGameState gamestate);
 
     public class NetworkListener
     {
@@ -23,9 +23,9 @@ namespace Aurora
         private int connection_port;
         private HttpListener net_Listener;
         private AutoResetEvent waitForConnection = new AutoResetEvent(false);
-        private GameState currentGameState;
+        private IGameState currentGameState;
 
-        public GameState CurrentGameState
+        public IGameState CurrentGameState
         {
             get
             {

@@ -252,7 +252,7 @@ namespace Aurora.Profiles.GTA5
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             if (new_game_state is GameState_GTA5)
             {
@@ -266,13 +266,14 @@ namespace Aurora.Profiles.GTA5
                     statecol = newgs.StateColor;
 
                     have_cops = newgs.HasCops;
-                    left_siren_color = newgs.LeftSirenColor;
-                    right_siren_color = newgs.RightSirenColor;
 
-                    if (have_cops && special_mode != newgs.Command_Data.custom_mode)
+                    if (have_cops && left_siren_color != newgs.LeftSirenColor && right_siren_color != newgs.RightSirenColor)
                     {
                         siren_keyframe++;
                     }
+
+                    left_siren_color = newgs.LeftSirenColor;
+                    right_siren_color = newgs.RightSirenColor;
 
                     special_mode = newgs.Command_Data.custom_mode;
 

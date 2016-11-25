@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Aurora.Settings.Layers;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Aurora.Settings
 {
@@ -21,10 +23,13 @@ namespace Aurora.Settings
 
         public Dictionary<string, ScriptSettings> ScriptSettings { get; set; }
 
+        public ObservableCollection<Layer> Layers { get; set; }
+
         public ProfileSettings()
         {
             isEnabled = true;
             ScriptSettings = new Dictionary<string, ScriptSettings>();
+            Layers = new ObservableCollection<Layer>();
         }
     }
 }

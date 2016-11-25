@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Aurora.Devices;
 using Aurora.Settings;
+using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Profiles.Dota_2
 {
@@ -88,12 +89,15 @@ namespace Aurora.Profiles.Dota_2
             this.health_hurt_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).hurt_color);
             this.health_effect_type.SelectedIndex = (int)(profile_manager.Settings as Dota2Settings).health_effect_type;
             this.hp_ks.Sequence = (profile_manager.Settings as Dota2Settings).health_sequence;
+            this.health_blink_below_updown.Value = (int)((profile_manager.Settings as Dota2Settings).health_blink_threshold * 100);
 
             this.mana_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).mana_enabled;
             this.mana_hasmana_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).mana_color);
             this.mana_nomana_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).nomana_color);
             this.mana_effect_type.SelectedIndex = (int)(profile_manager.Settings as Dota2Settings).mana_effect_type;
             this.mana_ks.Sequence = (profile_manager.Settings as Dota2Settings).mana_sequence;
+            this.mana_blink_below_updown.Value = (int)((profile_manager.Settings as Dota2Settings).mana_blink_threshold * 100);
+
 
             this.mimic_respawn_timer_checkbox.IsChecked = (profile_manager.Settings as Dota2Settings).mimic_respawn_timer;
             this.mimic_respawn_color_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).mimic_respawn_timer_color);
@@ -159,17 +163,17 @@ namespace Aurora.Profiles.Dota_2
         private void patch_button_Click(object sender, RoutedEventArgs e)
         {
             if (InstallGSI())
-                MessageBox.Show("Aurora GSI Config file installed successfully.");
+                System.Windows.MessageBox.Show("Aurora GSI Config file installed successfully.");
             else
-                MessageBox.Show("Aurora GSI Config file could not be installed.\r\nGame is not installed.");
+                System.Windows.MessageBox.Show("Aurora GSI Config file could not be installed.\r\nGame is not installed.");
         }
 
         private void unpatch_button_Click(object sender, RoutedEventArgs e)
         {
             if (UninstallGSI())
-                MessageBox.Show("Aurora GSI Config file uninstalled successfully.");
+                System.Windows.MessageBox.Show("Aurora GSI Config file uninstalled successfully.");
             else
-                MessageBox.Show("Aurora GSI Config file could not be uninstalled.\r\nGame is not installed.");
+                System.Windows.MessageBox.Show("Aurora GSI Config file could not be uninstalled.\r\nGame is not installed.");
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
@@ -444,6 +448,15 @@ namespace Aurora.Profiles.Dota_2
             }
         }
 
+        private void health_blink_below_updown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
+            {
+                (profile_manager.Settings as Dota2Settings).health_blink_threshold = (sender as IntegerUpDown).Value.Value / 100.0D;
+                profile_manager.SaveProfiles();
+            }
+        }
+
         ////Player Mana
 
         private void mana_enabled_Checked(object sender, RoutedEventArgs e)
@@ -487,6 +500,15 @@ namespace Aurora.Profiles.Dota_2
             if (IsLoaded)
             {
                 (profile_manager.Settings as Dota2Settings).mana_sequence = (sender as Controls.KeySequence).Sequence;
+                profile_manager.SaveProfiles();
+            }
+        }
+
+        private void mana_blink_below_updown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (IsLoaded && (sender as IntegerUpDown).Value.HasValue)
+            {
+                (profile_manager.Settings as Dota2Settings).mana_blink_threshold = (sender as IntegerUpDown).Value.Value / 100.0D;
                 profile_manager.SaveProfiles();
             }
         }
@@ -1076,7 +1098,7 @@ namespace Aurora.Profiles.Dota_2
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, "dota2.exe");
+            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

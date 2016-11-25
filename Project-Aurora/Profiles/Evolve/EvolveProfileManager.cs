@@ -12,7 +12,7 @@ namespace Aurora.Profiles.Evolve
     public class EvolveProfileManager : ProfileManager
     {
         public EvolveProfileManager()
-            : base("Evolve Stage 2", "Evolve", "evolve.exe", new EvolveSettings(), new GameEvent_Evolve())
+            : base("Evolve Stage 2", "Evolve", "evolve.exe", typeof(EvolveSettings), new GameEvent_Evolve())
         {
         }
 
@@ -30,26 +30,6 @@ namespace Aurora.Profiles.Evolve
                 Icon = new BitmapImage(new Uri(@"Resources/evolve_48x48.png", UriKind.Relative));
 
             return Icon;
-        }
-
-        internal override ProfileSettings LoadProfile(string path)
-        {
-            try
-            {
-                if (File.Exists(path))
-                {
-                    string profile_content = File.ReadAllText(path, Encoding.UTF8);
-
-                    if (!String.IsNullOrWhiteSpace(profile_content))
-                        return JsonConvert.DeserializeObject<EvolveSettings>(profile_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
-            }
-
-            return null;
         }
     }
 }

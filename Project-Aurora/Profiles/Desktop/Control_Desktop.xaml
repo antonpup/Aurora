@@ -12,7 +12,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Profiles.Desktop.Control_Desktop"
              mc:Ignorable="d"
-             d:DesignHeight="261.972" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="261.972" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -56,7 +56,8 @@
         <TabControl>
             <TabItem Header="Overview for Desktop">
                 <Grid>
-                    <TextBlock Margin="10,10,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="This is a profile for Desktop effects. This profile will be active during non-gaming profiles."/><LineBreak/><Run/><LineBreak/><Run Text="This profile includes CPU and RAM usage indicators, a shortcuts assistant, color zones, and interactive effects."/></TextBlock>
+                    <CheckBox x:Name="profile_enabled" Content="Enable Aurora to provide lighting effects for desktop" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="This is a profile for Desktop effects. This profile will be active during non-gaming profiles."/><LineBreak/><Run/><LineBreak/><Run Text="This profile includes CPU and RAM usage indicators, a shortcuts assistant, color zones, and interactive effects."/></TextBlock>
                     <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                     <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
                 </Grid>

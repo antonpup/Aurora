@@ -1,5 +1,4 @@
 ﻿using Aurora.EffectsEngine;
-using Aurora.EffectsEngine.Functions;
 using Aurora.Settings;
 using System;
 using System.Collections.Generic;
@@ -131,7 +130,7 @@ namespace Aurora.Profiles.Desktop
 
                     foreach (Devices.DeviceKeys raindrop in raindrops_keys)
                     {
-                        EffectPoint pt = Effects.GetBitmappingFromDeviceKey(raindrop).GetCenter();
+                        PointF pt = Effects.GetBitmappingFromDeviceKey(raindrop).Center;
 
                         float transition_value = 1.0f - raindrops[raindrop];
                         float radius = transition_value * Effects.canvas_biggest;
@@ -154,7 +153,7 @@ namespace Aurora.Profiles.Desktop
             frame.AddOverlayLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             //This event does not take a game state
             UpdateLights(frame);

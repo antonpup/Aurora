@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Aurora.Profiles.RocketLeague"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.Profiles.RocketLeague.Control_RocketLeague"
              mc:Ignorable="d" 
-             d:DesignHeight="261.972" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Unloaded="UserControl_Unloaded" Loaded="UserControl_Loaded">
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850" Unloaded="UserControl_Unloaded" Loaded="UserControl_Loaded">
     <Grid>
         <TabControl>
             <TabItem Header="Overview for Rocket League">

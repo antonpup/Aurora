@@ -15,7 +15,7 @@ namespace Aurora.Profiles.RocketLeague
     public class RocketLeagueProfileManager : ProfileManager
     {
         public RocketLeagueProfileManager()
-            : base("Rocket League", "rocketleague", "rocketleague.exe", new RocketLeagueSettings(), new GameEvent_RocketLeague())
+            : base("Rocket League", "rocketleague", "rocketleague.exe", typeof(RocketLeagueSettings), new GameEvent_RocketLeague())
         {
         }
 
@@ -33,26 +33,6 @@ namespace Aurora.Profiles.RocketLeague
                 Icon = new BitmapImage(new Uri(@"Resources/rocketleague_256x256.png", UriKind.Relative));
 
             return Icon;
-        }
-
-        internal override ProfileSettings LoadProfile(string path)
-        {
-            try
-            {
-                if (File.Exists(path))
-                {
-                    string profile_content = File.ReadAllText(path, Encoding.UTF8);
-
-                    if (!String.IsNullOrWhiteSpace(profile_content))
-                        return JsonConvert.DeserializeObject<RocketLeagueSettings>(profile_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
-            }
-
-            return null;
         }
     }
 }

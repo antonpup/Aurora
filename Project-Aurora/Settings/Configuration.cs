@@ -135,14 +135,27 @@ namespace Aurora.Settings
 
     public enum PreferredKeyboard
     {
-        [Description("Automatic Detection")]
+        [Description("None")]
         None = 0,
         [Description("Logitech")]
         Logitech = 1,
         [Description("Corsair")]
         Corsair = 2,
         [Description("Razer")]
-        Razer = 3
+        Razer = 3,
+        [Description("Logitech - G910")]
+        Logitech_G910 = 4,
+        [Description("Logitech - G410")]
+        Logitech_G410 = 8,
+        [Description("Corsair - K95")]
+        Corsair_K95 = 5,
+        [Description("Corsair - K70")]
+        Corsair_K70 = 6,
+        [Description("Corsair - K65")]
+        Corsair_K65 = 9,
+        [Description("Corsair - STRAFE")]
+        Corsair_STRAFE = 7
+
     }
 
     public enum PreferredKeyboardLocalization
@@ -244,7 +257,8 @@ namespace Aurora.Settings
             { "XCOM", new Profiles.XCOM.XCOMProfileManager() },
             { "Evolve", new Profiles.Evolve.EvolveProfileManager() },
             { "MetroLL", new Profiles.Metro_Last_Light.MetroLLProfileManager() },
-            { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() }
+            { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() },
+            { "WormsWMD", new Profiles.WormsWMD.WormsWMDProfileManager() }
         };
 
         //Overlay Settings

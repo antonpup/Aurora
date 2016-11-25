@@ -241,19 +241,36 @@ namespace Aurora.Utils
                 case (Keys.ProcessKey):
                     return DeviceKeys.JPN_HALFFULLWIDTH;
                 case (Keys.Oemtilde):
-                    return DeviceKeys.TILDE;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                        return DeviceKeys.APOSTROPHE;
+                    else
+                        return DeviceKeys.TILDE;
                 case (Keys.OemOpenBrackets):
-                    return DeviceKeys.OPEN_BRACKET;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.MINUS;
+                    else
+                        return DeviceKeys.OPEN_BRACKET;
                 case (Keys.OemPipe):
-                    return DeviceKeys.BACKSLASH;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                        return DeviceKeys.BACKSLASH_UK;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.TILDE;
+                    else
+                        return DeviceKeys.BACKSLASH;
                 case (Keys.OemCloseBrackets):
                     return DeviceKeys.CLOSE_BRACKET;
                 case (Keys.OemQuotes):
-                    return DeviceKeys.APOSTROPHE;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                        return DeviceKeys.HASHTAG;
+                    else
+                        return DeviceKeys.APOSTROPHE;
                 case (Keys.OemBackslash):
                     return DeviceKeys.BACKSLASH_UK;
                 case (Keys.Oem8):
-                    return DeviceKeys.OEM8;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                        return DeviceKeys.TILDE;
+                    else
+                        return DeviceKeys.OEM8;
                 case (Keys.Play):
                     return DeviceKeys.MEDIA_PLAY;
                 default:

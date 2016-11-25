@@ -1,12 +1,14 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System;
+using System.Collections;
 
 namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
     /// <summary>
     /// Information about players in the lobby
     /// </summary>
-    public class PlayersNode : Node
+    public class PlayersNode : Node<PlayersNode>, IEnumerable<PlayerNode>
     {
         private List<PlayerNode> _Players = new List<PlayerNode>();
 
@@ -56,6 +58,16 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
 
                 return _Players[index];
             }
+        }
+
+        public IEnumerator<PlayerNode> GetEnumerator()
+        {
+            return _Players.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _Players.GetEnumerator();
         }
     }
 }

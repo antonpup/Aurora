@@ -190,7 +190,7 @@ namespace Aurora.Profiles.GTA5.GSI
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC]
                 );
 
-            if(state_color == Color.FromArgb(255, 175, 79, 0))
+            if(state_color == Color.FromArgb(255, 175, 79, 0) || state_color == Color.FromArgb(255, 176, 80, 0))
                 _CurrentState = PlayerState.PlayingSP_Trevor;
             else if (state_color == Color.FromArgb(255, 48, 255, 255))
                 _CurrentState = PlayerState.PlayingSP_Michael;
@@ -198,7 +198,7 @@ namespace Aurora.Profiles.GTA5.GSI
                 _CurrentState = PlayerState.PlayingSP_Franklin;
             else if (state_color == Color.FromArgb(255, 127, 0, 0))
                 _CurrentState = PlayerState.PlayingSP_Chop;
-            else if (state_color == Color.FromArgb(255, 0, 68, 226))
+            else if (state_color == Color.FromArgb(255, 0, 68, 226) || state_color == Color.FromArgb(255, 0, 70, 228))
                 _CurrentState = PlayerState.PlayingMP;
             else if (state_color == Color.FromArgb(255, 255, 170, 0))
                 _CurrentState = PlayerState.PlayingRace_Gold;
@@ -208,7 +208,7 @@ namespace Aurora.Profiles.GTA5.GSI
                 _CurrentState = PlayerState.PlayingRace_Bronze;
             else if (state_color == Color.FromArgb(255, 193, 79, 79))
                 _CurrentState = PlayerState.PlayingMP_Mission;
-            else if (state_color == Color.FromArgb(255, 255, 122, 196))
+            else if (state_color == Color.FromArgb(255, 255, 122, 196) || state_color == Color.FromArgb(255, 156, 110, 175))
                 _CurrentState = PlayerState.PlayingMP_HeistFinale;
             else if (state_color == Color.FromArgb(255, 142, 127, 153))
                 _CurrentState = PlayerState.PlayingMP_Spectator;

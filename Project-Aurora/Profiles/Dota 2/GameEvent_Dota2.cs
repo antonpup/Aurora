@@ -1,6 +1,5 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
-using Aurora.EffectsEngine.Functions;
 using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
 using Aurora.Settings;
@@ -418,6 +417,7 @@ namespace Aurora.Profiles.Dota_2
         {
             profilename = "Dota 2";
             UpdateAnimations();
+            _game_state = new GameState_Dota2();
         }
 
         public void UpdateAnimations()
@@ -1206,6 +1206,9 @@ namespace Aurora.Profiles.Dota_2
 
                     if ((Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).bg_killstreaks_lines)
                     {
+                        /*
+                         * !!!NOTE: TO BE REWORKED INTO ANIMATIONS!!!
+
                         for (int str = 2; str <= curr_ks; str++)
                         {
                             killstreak_offsets[str] -= 0.75f;
@@ -1218,6 +1221,8 @@ namespace Aurora.Profiles.Dota_2
 
                             bg_layer.AddPostFunction(ks_col_func);
                         }
+
+                        */
                     }
                     else
                     {
@@ -1570,7 +1575,8 @@ namespace Aurora.Profiles.Dota_2
                             (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).health_sequence,
                             (double)health,
                             (double)health_max,
-                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).health_effect_type);
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).health_effect_type,
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).health_blink_threshold);
 
                         layers.Enqueue(hpbar_layer);
                     }
@@ -1585,7 +1591,8 @@ namespace Aurora.Profiles.Dota_2
                             (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).mana_sequence,
                             (double)mana,
                             (double)mana_max,
-                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).mana_effect_type);
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).mana_effect_type,
+                            (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).mana_blink_threshold);
 
                         layers.Enqueue(manabar_layer);
                     }
@@ -1627,7 +1634,7 @@ namespace Aurora.Profiles.Dota_2
                 {
                     EffectLayer items_layer = new EffectLayer("Dota 2 - Items");
 
-                    for (int index = 0; index < items.CountInventory; index++)
+                    for (int index = 0; index < items.InventoryCount; index++)
                     {
                         Item item = items.GetInventoryAt(index);
                         Devices.DeviceKeys key = (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).items_keys[index];
@@ -1672,7 +1679,7 @@ namespace Aurora.Profiles.Dota_2
                         }
                     }
 
-                    for (int index = 0; index < items.CountStash; index++)
+                    for (int index = 0; index < items.StashCount; index++)
                     {
                         Item item = items.GetStashAt(index);
                         Devices.DeviceKeys key = (Global.Configuration.ApplicationProfiles[profilename].Settings as Dota2Settings).items_keys[6 + index];
@@ -1759,7 +1766,7 @@ namespace Aurora.Profiles.Dota_2
 
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             if (new_game_state is GameState_Dota2)
             {

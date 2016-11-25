@@ -24,6 +24,8 @@ namespace Aurora
         Settings.Control_Settings settings_control = new Settings.Control_Settings();
         Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
 
+        Control_LayerControlPresenter layercontrol_presenter = new Control_LayerControlPresenter();
+
         EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
 
         EffectColor transition_color = new EffectColor();
@@ -46,8 +48,18 @@ namespace Aurora
         private readonly double virtual_keyboard_width;
         private readonly double virtual_keyboard_height;
 
-        private readonly double max_width;
-        private readonly double max_height;
+        private readonly double width;
+        private readonly double height;
+
+        public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ProfileManager), typeof(ConfigUI), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
+
+        public ProfileManager FocusedProfile
+        {
+            get { return (ProfileManager)GetValue(FocusedProfileProperty); }
+            set {
+                SetValue(FocusedProfileProperty, value);
+            }
+        }        
 
         LayerEditor layer_editor = new LayerEditor();
 
@@ -58,12 +70,21 @@ namespace Aurora
             virtual_keyboard_height = this.keyboard_grid.Height;
             virtual_keyboard_width = this.keyboard_grid.Width;
 
-            max_width = MaxWidth;
-            max_height = MaxHeight;
+            width = Width;
+            height = Height;
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
+            ctrlLayerManager.NewLayer += Layer_manager_NewLayer;
+
             GenerateProfileStack();
+        }
+
+        private void Layer_manager_NewLayer(Settings.Layers.Layer layer)
+        {
+            layercontrol_presenter.Layer = layer;
+
+            this.content_grid.Content = layercontrol_presenter;
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
@@ -75,14 +96,17 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            this.MaxWidth = max_width + (virtial_kb.Width - virtual_keyboard_width);
-            this.Width = this.MaxWidth;
+            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            this.MaxHeight = max_height + (virtial_kb.Height - virtual_keyboard_height);
-            this.Height = this.MaxHeight;
+            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
+
+            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
+            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
+            keyboard_viewbox.UpdateLayout();
+
             this.UpdateLayout();
         }
 
@@ -98,8 +122,7 @@ namespace Aurora
             }
 
             this.keyboard_record_message.Visibility = Visibility.Hidden;
-            this.content_grid.Children.Clear();
-            this.content_grid.Children.Add(desktop_control);
+            
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
@@ -110,17 +133,22 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            this.MaxWidth = max_width + (virtial_kb.Width - virtual_keyboard_width);
-            this.Width = this.MaxWidth;
+            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            this.MaxHeight = max_height + (virtial_kb.Height - virtual_keyboard_height);
-            this.Height = this.MaxHeight;
+            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
+
+            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
+            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
+            keyboard_viewbox.UpdateLayout();
+
             this.UpdateLayout();
 
             Global.input_subscriptions.Initialize();
+
+            this.ProfileImage_MouseDown(this.profiles_stack.Children[0], null);
         }
 
         public static bool ApplicationIsActivated()
@@ -178,7 +206,12 @@ namespace Aurora
                                 {
                                     if (keylights.ContainsKey((Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag))
                                     {
-                                        ((child as Border).Child as TextBlock).Foreground = new SolidColorBrush(Utils.ColorUtils.DrawingColorToMediaColor(keylights[(Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag]));
+                                        Color key_color = Utils.ColorUtils.DrawingColorToMediaColor(keylights[(Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag]);
+
+                                        ((child as Border).Child as TextBlock).Foreground = new SolidColorBrush(key_color);
+
+                                        //Backglow
+                                        //((child as Border).Effect as System.Windows.Media.Effects.DropShadowEffect).Color = key_color;
                                     }
 
                                     if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag))
@@ -325,7 +358,7 @@ namespace Aurora
             this.profiles_stack.Children.Clear();
 
             Image profile_desktop = new Image();
-            profile_desktop.Tag = desktop_control;
+            profile_desktop.Tag = Global.Configuration.desktop_profile;
             profile_desktop.Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative));
             profile_desktop.ToolTip = "Desktop Settings";
             profile_desktop.Margin = new Thickness(0, 5, 0, 0);
@@ -342,7 +375,7 @@ namespace Aurora
                 if (icon != null && control != null)
                 {
                     Image profile_image = new Image();
-                    profile_image.Tag = control;
+                    profile_image.Tag = profile;
                     profile_image.Source = icon;
                     profile_image.ToolTip = profile.Name + " Settings";
                     profile_image.Margin = new Thickness(0, 5, 0, 0);
@@ -361,7 +394,7 @@ namespace Aurora
                 if (icon != null && control != null)
                 {
                     Image profile_image = new Image();
-                    profile_image.Tag = control;
+                    profile_image.Tag = profile;
                     profile_image.Source = icon;
                     profile_image.ToolTip = (profile.Settings as GenericApplicationSettings).ApplicationName + " Settings";
                     profile_image.Margin = new Thickness(0, 5, 0, 0);
@@ -418,12 +451,9 @@ namespace Aurora
 
         private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is UserControl)
+            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is ProfileManager)
             {
-                UserControl tagged_control = (sender as Image).Tag as UserControl;
-
-                this.content_grid.Children.Clear();
-                this.content_grid.Children.Add(tagged_control);
+                this.FocusedProfile = (sender as Image).Tag as ProfileManager;
 
                 var bitmap = (BitmapSource)(sender as Image).Source;
                 var color = GetAverageColor(bitmap);
@@ -435,6 +465,27 @@ namespace Aurora
 
                 UpdateProfileStackBackground(sender as FrameworkElement);
             }
+        }
+
+        private static void FocusedProfileChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
+        {
+            ConfigUI th = source as ConfigUI;
+            ProfileManager value = e.NewValue as ProfileManager;
+
+            th.ctrlLayerManager.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
+
+            if (value == null)
+                return;
+
+            /*th.content_grid.Children.Clear();
+            UIElement element = value.GetUserControl();
+            //th.content_grid.DataContext = element;
+            th.content_grid.MinHeight = ((UserControl)element).MinHeight;
+            th.content_grid.Children.Add(element);
+            th.content_grid.UpdateLayout();*/
+            th.content_grid.Content = value.GetUserControl();
+            th.content_grid.UpdateLayout();
+
         }
 
         private void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
@@ -496,8 +547,8 @@ namespace Aurora
                     GenerateProfileStack();
                 }
 
-                this.content_grid.Children.Clear();
-                this.content_grid.Children.Add(new Profiles.Generic_Application.Control_GenericApplication(filename));
+
+                this.content_grid.Content = new Profiles.Generic_Application.Control_GenericApplication(filename);
 
                 current_color = desktop_color_scheme;
                 transitionamount = 0.0f;
@@ -506,8 +557,8 @@ namespace Aurora
 
         private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.content_grid.Children.Clear();
-            this.content_grid.Children.Add(settings_control);
+            this.FocusedProfile = null;
+            this.content_grid.Content = settings_control;
 
             current_color = desktop_color_scheme;
             transitionamount = 0.0f;
@@ -623,6 +674,11 @@ namespace Aurora
         }
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            UpdateProfileStackBackground(selected_item);
+        }
+
+        private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateProfileStackBackground(selected_item);
         }

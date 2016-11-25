@@ -3,7 +3,7 @@
     /// <summary>
     /// Information about the game lobby
     /// </summary>
-    public class LobbyNode : Node
+    public class LobbyNode : Node<LobbyNode>
     {
         /// <summary>
         /// Lobby difficulty

@@ -10,6 +10,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
+using Aurora.Settings.Layers;
+using System.Reflection;
 
 namespace Aurora.Settings
 {
@@ -24,36 +26,53 @@ namespace Aurora.Settings
         public LightEvent Event { get; set; }
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
         internal Dictionary<string, dynamic> EffectScripts { get; set; }
+        protected Type SettingsType = typeof(ProfileSettings);
+        public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
+        public bool HasLayers { get; set; }
 
         public event EventHandler ProfileChanged;
 
-        public ProfileManager(string name, string internal_name, string process_name, ProfileSettings settings, LightEvent game_event)
-        {
-            Name = name;
-            InternalName = internal_name;
-            ProcessNames = new string[] { process_name };
-            Icon = null;
-            Control = null;
-            Settings = settings;
-            Event = game_event;
-            Profiles = new Dictionary<string, ProfileSettings>();
-            EffectScripts = new Dictionary<string, dynamic>();
-            LoadProfiles();
-        }
-
-        public ProfileManager(string name, string internal_name, string[] process_names, ProfileSettings settings, LightEvent game_event)
+        public ProfileManager(string name, string internal_name, string[] process_names, Type settings, LightEvent game_event)
         {
             Name = name;
             InternalName = internal_name;
             ProcessNames = process_names;
             Icon = null;
             Control = null;
-            Settings = settings;
+            SettingsType = settings;
+            Settings = (ProfileSettings)Activator.CreateInstance(settings);
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
             EffectScripts = new Dictionary<string, dynamic>();
+            if(game_event._game_state != null)
+            {
+                ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(game_event._game_state.GetType());
+
+                foreach (var param in ParameterLookup)
+                {
+                    //Global.logger.LogLine(param.Key);
+                    try
+                    {
+                        //var got_value = Utils.GameStateUtils.RetrieveGameStateParameter(game_event._game_state, param.Key);
+                        //Global.logger.LogLine(got_value.ToString());
+                    }
+                    catch(Exception exc)
+                    {
+                        //Global.logger.LogLine("EXCEPTION");
+                    }
+                }
+
+                Global.logger.LogLine("");
+            }
+            else
+            {
+                ParameterLookup = new Dictionary<string, Tuple<Type, Type>>();
+            }
+
             LoadProfiles();
         }
+
+        public ProfileManager(string name, string internal_name, string process_name, Type settings, LightEvent game_event) : this(name, internal_name, new string[] { process_name }, settings, game_event) { }
 
         public virtual UserControl GetUserControl()
         {
@@ -93,11 +112,10 @@ namespace Aurora.Settings
                 if (result != MessageBoxResult.Yes)
                     return;
 
-                Type setting_type = Settings.GetType();
 
                 Profiles[profile_name] = (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(Settings, setting_type, new JsonSerializerSettings { }),
-                    setting_type,
+                    JsonConvert.SerializeObject(Settings, SettingsType, new JsonSerializerSettings { }),
+                    SettingsType,
                     new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }
                     ); //I know this is bad. You can laugh at me for this one. :(
             }
@@ -126,8 +144,7 @@ namespace Aurora.Settings
         {
             try
             {
-                Type setting_type = Settings.GetType();
-                Settings = (ProfileSettings)Activator.CreateInstance(setting_type);
+                Settings = (ProfileSettings)Activator.CreateInstance(SettingsType);
 
                 foreach (string id in this.EffectScripts.Keys)
                 {
@@ -143,7 +160,7 @@ namespace Aurora.Settings
             }
         }
 
-        internal virtual ProfileSettings LoadProfile(string path)
+        internal ProfileSettings LoadProfile(string path)
         {
             try
             {
@@ -152,7 +169,28 @@ namespace Aurora.Settings
                     string profile_content = File.ReadAllText(path, Encoding.UTF8);
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
-                        return JsonConvert.DeserializeObject<ProfileSettings>(profile_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                    {
+                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
+                        foreach (Layer lyr in prof.Layers)
+                        {
+                            lyr.AnythingChanged += this.SaveProfilesEvent;
+                        }
+
+                        prof.Layers.CollectionChanged += (s, e) => {
+                            if (e.NewItems != null)
+                            {
+                                foreach (Layer lyr in e.NewItems)
+                                {
+                                    if (lyr == null)
+                                        continue;
+                                    lyr.AnythingChanged += this.SaveProfilesEvent;
+                                }
+                            }
+                            this.SaveProfiles();
+                        };
+                        
+                        return prof;
+                    }
                 }
             }
             catch (Exception exc)
@@ -181,7 +219,7 @@ namespace Aurora.Settings
             }
         }
 
-        public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, GameState state = null)
+        public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
         {
             foreach (KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
             {
@@ -310,7 +348,8 @@ namespace Aurora.Settings
         {
             try
             {
-                string content = JsonConvert.SerializeObject(profile, Formatting.Indented);
+                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                string content = JsonConvert.SerializeObject(profile, Formatting.Indented, settings);
 
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
                 File.WriteAllText(path, content, Encoding.UTF8);
@@ -320,6 +359,11 @@ namespace Aurora.Settings
             {
                 Global.logger.LogLine(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
             }
+        }
+
+        public void SaveProfilesEvent(object sender, EventArgs e)
+        {
+            this.SaveProfiles();
         }
 
         public virtual void SaveProfiles()

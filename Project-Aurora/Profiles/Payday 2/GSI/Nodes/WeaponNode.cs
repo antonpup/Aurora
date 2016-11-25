@@ -1,6 +1,6 @@
 ﻿namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
-    public class WeaponNode : Node
+    public class WeaponNode : Node<WeaponNode>
     {
         public readonly WeaponType Type;
         public readonly string ID;

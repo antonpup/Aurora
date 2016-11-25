@@ -5,7 +5,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing various player statistics
     /// </summary>
-    public class MatchStatsNode : Node
+    public class MatchStatsNode : Node<MatchStatsNode>
     {
         /// <summary>
         /// Amount of kills

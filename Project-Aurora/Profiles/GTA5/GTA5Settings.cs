@@ -68,9 +68,9 @@ namespace Aurora.Profiles.GTA5
             bg_franklin = Color.FromArgb(48, 255, 0);
             bg_chop = Color.FromArgb(127, 0, 0);
             bg_michael = Color.FromArgb(48, 255, 255);
-            bg_trevor = Color.FromArgb(175, 79, 0);
-            bg_online = Color.FromArgb(0, 68, 226);
-            bg_online_mission = Color.FromArgb(192, 79, 79);
+            bg_trevor = Color.FromArgb(176, 80, 0);
+            bg_online = Color.FromArgb(0, 70, 228);
+            bg_online_mission = Color.FromArgb(156, 110, 175);
             bg_online_heistfinale = Color.FromArgb(255, 122, 196);
             bg_online_spectator = Color.FromArgb(142, 127, 153);
             bg_race_gold = Color.FromArgb(255, 170, 0);

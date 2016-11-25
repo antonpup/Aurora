@@ -9,6 +9,8 @@ namespace Aurora.Profiles.BF3
         public GameEvent_BF3()
         {
             profilename = "BF3";
+
+            _game_state = new GameState_Wrapper();
         }
 
         public override bool IsEnabled()

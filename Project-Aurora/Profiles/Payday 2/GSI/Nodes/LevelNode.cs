@@ -5,7 +5,7 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about the level
     /// </summary>
-    public class LevelNode : Node
+    public class LevelNode : Node<LevelNode>
     {
         /// <summary>
         /// Level ID

@@ -165,8 +165,9 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="position">The position value of range</param>
         /// <param name="max_position">The maxiumum position value, used to calculate a value in [0.0f , 1.0f] range</param>
+        /// /// <param name="opacity">The opacity amount [0.0D - 1.0D]</param>
         /// <returns>The color</returns>
-        public Color GetColorAt(float position, float max_position = 1.0f)
+        public Color GetColorAt(float position, float max_position = 1.0f, double opacity = 1.0D)
         {
             position = CorrectPosition((position / max_position) + shift);
 
@@ -191,7 +192,12 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            return Utils.ColorUtils.BlendColors(colors[closest_lower], colors[closest_higher], ((double)( (position / max_position) - closest_lower ) / (double)(closest_higher - closest_lower)));
+            return Utils.ColorUtils.MultiplyColorByScalar(
+                Utils.ColorUtils.BlendColors(
+                    colors[closest_lower], colors[closest_higher], ((double)( (position / max_position) - closest_lower ) / (double)(closest_higher - closest_lower))
+                    ),
+                opacity
+                );
         }
 
         /// <summary>
@@ -201,8 +207,9 @@ namespace Aurora.EffectsEngine
         /// <param name="height">The height of the LinearGradientBrush</param>
         /// <param name="x">The X coordinate of the LinearGradientBrush</param>
         /// <param name="y">The Y coordinate of the LinearGradientBrush</param>
+        /// <param name="opacity">The opacity amount [0.0D - 1.0D]</param>
         /// <returns>The resulting LinearGradientBrush</returns>
-        public LinearGradientBrush ToLinearGradient(float width, float height = 0.0f, float x = 0.0f, float y = 0.0f)
+        public LinearGradientBrush ToLinearGradient(float width, float height = 0.0f, float x = 0.0f, float y = 0.0f, double opacity = 1.0D)
         {
             LinearGradientBrush brush =
                     new LinearGradientBrush(
@@ -215,7 +222,13 @@ namespace Aurora.EffectsEngine
             brush_positions.Sort();
 
             foreach (float val in brush_positions)
-                brush_colors.Add(colors[val]);
+            {
+                brush_colors.Add(
+                    Utils.ColorUtils.MultiplyColorByScalar(
+                        colors[val],
+                        opacity)
+                    );
+            }
 
             if (brush_positions[0] != 0.0f)
             {

@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles.Payday_2.GSI.Nodes;
+using Aurora.Settings;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -7,7 +8,7 @@ namespace Aurora.Profiles.Payday_2.GSI
     /// <summary>
     /// A class representing various information retaining to Payday 2
     /// </summary>
-    public class GameState_PD2 : GameState
+    public class GameState_PD2 : GameState<GameState_PD2>
     {
         private ProviderNode _Provider;
         private LobbyNode _Lobby;
@@ -67,6 +68,7 @@ namespace Aurora.Profiles.Payday_2.GSI
         /// <summary>
         /// Information about players in the lobby
         /// </summary>
+        [Range(0, 3)]
         public PlayersNode Players
         {
             get
@@ -138,7 +140,7 @@ namespace Aurora.Profiles.Payday_2.GSI
         /// A copy constructor, creates a GameState_CSGO instance based on the data from the passed GameState instance.
         /// </summary>
         /// <param name="other_state">The passed GameState</param>
-        public GameState_PD2(GameState other_state) : base(other_state)
+        public GameState_PD2(IGameState other_state) : base(other_state)
         {
         }
     }

@@ -32,6 +32,8 @@ namespace Aurora.Profiles.Desktop
             this.profilemanager.ProfileManager = Global.Configuration.desktop_profile;
             this.scriptmanager.ProfileManager = Global.Configuration.desktop_profile;
 
+            this.profile_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).isEnabled;
+
             this.cpu_usage_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_usage_enabled;
             this.cpu_usage_used_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_used_color);
             this.cpu_usage_free_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((Global.Configuration.desktop_profile.Settings as DesktopSettings).cpu_free_color);
@@ -80,6 +82,15 @@ namespace Aurora.Profiles.Desktop
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (Global.Configuration.desktop_profile.Settings as DesktopSettings).isEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
+                Global.Configuration.desktop_profile.SaveProfiles();
+            }
         }
 
         ////CPU/RAM Settings
