@@ -329,7 +329,7 @@ namespace Aurora.Devices.Logitech
                 {
                     Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key.Key);
 
-                    if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.Peripheral)
+                    if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.Peripheral_Logo || localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral((Color)key.Value, forced || !peripheral_updated);
                     }
@@ -830,8 +830,6 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.K;
                 case (DeviceKeys.L):
                     return Logitech_keyboardBitmapKeys.L;
-                case (DeviceKeys.DEU_O):
-                    return Logitech_keyboardBitmapKeys.SEMICOLON;
                 case (DeviceKeys.SEMICOLON):
                     return Logitech_keyboardBitmapKeys.SEMICOLON;
                 case (DeviceKeys.APOSTROPHE):

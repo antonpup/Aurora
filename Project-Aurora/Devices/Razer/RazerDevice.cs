@@ -159,7 +159,7 @@ namespace Aurora.Devices.Razer
                 {
                     Key localKey = ToRazer(key.Key);
 
-                    if (localKey == Key.Invalid && key.Key == DeviceKeys.Peripheral)
+                    if (localKey == Key.Invalid && key.Key == DeviceKeys.Peripheral_Logo || localKey == Key.Invalid && key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(key.Value, forced);
                     }

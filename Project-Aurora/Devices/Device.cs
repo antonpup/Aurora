@@ -204,6 +204,12 @@ namespace Aurora.Devices
         EQUALS = 29,
 
         /// <summary>
+        /// OEM 6 key
+        /// </summary>
+        [Description("OEM 6")]
+        OEM6 = 169,
+
+        /// <summary>
         /// Backspace key
         /// </summary>
         [Description("Backspace")]
@@ -319,10 +325,22 @@ namespace Aurora.Devices
         P = 48,
 
         /// <summary>
+        /// OEM 1 key
+        /// </summary>
+        [Description("OEM 1")]
+        OEM1 = 170,
+
+        /// <summary>
         /// Open Bracket key
         /// </summary>
         [Description("{")]
         OPEN_BRACKET = 49,
+
+        /// <summary>
+        /// OEM Plus key
+        /// </summary>
+        [Description("OEM Plus")]
+        OEMPlus = 171,
 
         /// <summary>
         /// Close Bracket key
@@ -440,10 +458,10 @@ namespace Aurora.Devices
         L = 68,
 
         /// <summary>
-        /// Ö (Deutsch) key
+        /// OEM Tilde key
         /// </summary>
-        [Description("Ö")]
-        DEU_O = 157,
+        [Description("OEM Tilde")]
+        OEMTilde = 157,
 
         /// <summary>
         /// Semicolon key
