@@ -14,11 +14,11 @@ namespace Aurora.Profiles.Blacklight
     {
         private ProfileManager profile_manager;
 
-        public Control_BLight()
+        public Control_BLight(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["BLight"];
+            profile_manager = profile;
 
             SetSettings();
 

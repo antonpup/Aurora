@@ -12,36 +12,48 @@ using System.Windows.Media;
 using System.Linq;
 using Aurora.Settings.Layers;
 using System.Reflection;
+using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings
 {
     public class ProfileManager
     {
+        #region Public Properties
         public string Name { get; set; }
         public string InternalName { get; set; }
         public string[] ProcessNames { get; set; }
-        internal ImageSource Icon { get; set; }
-        internal UserControl Control { get; set; }
+        public string IconURI { get; set; }
         public ProfileSettings Settings { get; set; }
         public LightEvent Event { get; set; }
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
-        internal Dictionary<string, dynamic> EffectScripts { get; set; }
-        protected Type SettingsType = typeof(ProfileSettings);
         public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
         public bool HasLayers { get; set; }
         public HashSet<LayerType> AvailableLayers { get; set; }
-
         public event EventHandler ProfileChanged;
+        #endregion
 
-        public ProfileManager(string name, string internal_name, string[] process_names, Type settings, LightEvent game_event)
+        #region Internal Properties
+        internal ImageSource Icon { get; set; }
+        internal UserControl Control { get; set; }
+        internal Dictionary<string, dynamic> EffectScripts { get; set; }
+        #endregion
+
+        #region Private Fields/Properties
+        protected Type SettingsType = typeof(ProfileSettings);
+        protected Type ControlType = null;
+        #endregion
+
+        public ProfileManager(string name, string internal_name, string[] process_names, Type settings, Type control, LightEvent game_event)
         {
             Name = name;
             InternalName = internal_name;
             ProcessNames = process_names;
             Icon = null;
             Control = null;
+            ControlType = control;
             SettingsType = settings;
             Settings = (ProfileSettings)Activator.CreateInstance(settings);
+            game_event.Profile = this;
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
             EffectScripts = new Dictionary<string, dynamic>();
@@ -49,26 +61,25 @@ namespace Aurora.Settings
             {
                 ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(game_event._game_state.GetType());
 
+                #if DEBUG
                 foreach (var param in ParameterLookup)
                 {
-                    //Global.logger.LogLine(param.Key);
+                    Global.logger.LogLine(param.Key);
                     try
                     {
-                        //var got_value = Utils.GameStateUtils.RetrieveGameStateParameter(game_event._game_state, param.Key);
-                        //Global.logger.LogLine(got_value.ToString());
+                        var got_value = Utils.GameStateUtils.RetrieveGameStateParameter(game_event._game_state, param.Key);
+                        Global.logger.LogLine(got_value.ToString());
                     }
                     catch(Exception exc)
                     {
-                        //Global.logger.LogLine("EXCEPTION");
+                        Global.logger.LogLine("EXCEPTION");
                     }
                 }
-
                 //Global.logger.LogLine("");
+                #endif
             }
             else
-            {
                 ParameterLookup = new Dictionary<string, Tuple<Type, Type>>();
-            }
 
             if (AvailableLayers == null)
                 AvailableLayers = new HashSet<LayerType>();
@@ -86,16 +97,16 @@ namespace Aurora.Settings
             LoadProfiles();
         }
 
-        public ProfileManager(string name, string internal_name, string process_name, Type settings, LightEvent game_event) : this(name, internal_name, new string[] { process_name }, settings, game_event) { }
+        public ProfileManager(string name, string internal_name, string process_name, Type settings, Type control, LightEvent game_event) : this(name, internal_name, new string[] { process_name }, settings, control, game_event) { }
 
         public virtual UserControl GetUserControl()
         {
-            return null;
+            return Control ?? (Control = (UserControl)Activator.CreateInstance(this.ControlType, this));
         }
 
         public virtual ImageSource GetIcon()
         {
-            return null;
+            return Icon ?? (Icon = new BitmapImage(new Uri(IconURI, UriKind.Relative)));
         }
 
         public void SwitchToProfile(string profile_name)
@@ -349,8 +360,6 @@ namespace Aurora.Settings
                         }
                     }
                 }
-
-
             }
             else
             {

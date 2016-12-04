@@ -14,11 +14,11 @@ namespace Aurora.Profiles.BF3
     {
         private ProfileManager profile_manager;
 
-        public Control_BF3()
+        public Control_BF3(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["BF3"];
+            profile_manager = profile;
 
             SetSettings();
 

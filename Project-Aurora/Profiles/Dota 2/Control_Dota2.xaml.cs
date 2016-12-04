@@ -25,11 +25,11 @@ namespace Aurora.Profiles.Dota_2
         private Timer preview_respawn_timer;
         private int killstreak = 0;
 
-        public Control_Dota2()
+        public Control_Dota2(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Dota 2"];
+            profile_manager = profile;
 
             SetSettings();
 

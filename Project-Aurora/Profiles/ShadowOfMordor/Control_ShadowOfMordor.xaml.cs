@@ -14,11 +14,11 @@ namespace Aurora.Profiles.ShadowOfMordor
     {
         private ProfileManager profile_manager;
 
-        public Control_ShadowOfMordor()
+        public Control_ShadowOfMordor(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["ShadowOfMordor"];
+            profile_manager = profile;
 
             SetSettings();
 

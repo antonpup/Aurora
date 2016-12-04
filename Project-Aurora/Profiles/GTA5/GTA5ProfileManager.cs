@@ -12,24 +12,9 @@ namespace Aurora.Profiles.GTA5
     public class GTA5ProfileManager : ProfileManager
     {
         public GTA5ProfileManager()
-            : base("GTA 5", "gta5", "gta5.exe", typeof(GTA5Settings), new GameEvent_GTA5())
+            : base("GTA 5", "gta5", "gta5.exe", typeof(GTA5Settings), typeof(Control_GTA5), new GameEvent_GTA5())
         {
-        }
-
-        public override UserControl GetUserControl()
-        {
-            if (Control == null)
-                Control = new Control_GTA5();
-
-            return Control;
-        }
-
-        public override ImageSource GetIcon()
-        {
-            if (Icon == null)
-                Icon = new BitmapImage(new Uri(@"Resources/gta5_64x64.png", UriKind.Relative));
-
-            return Icon;
+            IconURI = "Resources/gta5_64x64.png";
         }
     }
 }

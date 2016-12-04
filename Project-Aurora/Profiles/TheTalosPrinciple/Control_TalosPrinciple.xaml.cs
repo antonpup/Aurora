@@ -14,11 +14,11 @@ namespace Aurora.Profiles.TheTalosPrinciple
     {
         private ProfileManager profile_manager;
 
-        public Control_TalosPrinciple()
+        public Control_TalosPrinciple(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Talos"];
+            profile_manager = profile;
 
             SetSettings();
 

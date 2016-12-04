@@ -15,24 +15,9 @@ namespace Aurora.Profiles.RocketLeague
     public class RocketLeagueProfileManager : ProfileManager
     {
         public RocketLeagueProfileManager()
-            : base("Rocket League", "rocketleague", "rocketleague.exe", typeof(RocketLeagueSettings), new GameEvent_RocketLeague())
+            : base("Rocket League", "rocketleague", "rocketleague.exe", typeof(RocketLeagueSettings), typeof(Control_RocketLeague), new GameEvent_RocketLeague())
         {
-        }
-
-        public override UserControl GetUserControl()
-        {
-            if (Control == null)
-                Control = new Control_RocketLeague();
-
-            return Control;
-        }
-
-        public override ImageSource GetIcon()
-        {
-            if (Icon == null)
-                Icon = new BitmapImage(new Uri(@"Resources/rocketleague_256x256.png", UriKind.Relative));
-
-            return Icon;
+            IconURI = "Resources/rocketleague_256x256.png";
         }
     }
 }

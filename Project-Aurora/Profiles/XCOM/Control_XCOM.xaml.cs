@@ -14,11 +14,11 @@ namespace Aurora.Profiles.XCOM
     {
         private ProfileManager profile_manager;
 
-        public Control_XCOM()
+        public Control_XCOM(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["XCOM"];
+            profile_manager = profile;
 
             SetSettings();
 

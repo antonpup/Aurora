@@ -12,11 +12,11 @@ namespace Aurora.Profiles.Overwatch
     {
         private ProfileManager profile_manager;
 
-        public Control_Overwatch()
+        public Control_Overwatch(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Overwatch"];
+            profile_manager = profile;
 
             SetSettings();
         }

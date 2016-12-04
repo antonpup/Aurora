@@ -14,11 +14,11 @@ namespace Aurora.Profiles.Serious_Sam_3
     {
         private ProfileManager profile_manager;
 
-        public Control_SSam3()
+        public Control_SSam3(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["SSam3"];
+            profile_manager = profile;
 
             SetSettings();
 

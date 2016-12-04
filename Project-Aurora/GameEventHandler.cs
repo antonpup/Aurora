@@ -188,31 +188,32 @@ namespace Aurora
             if (Global.Configuration.additional_profiles.ContainsKey(process_name) && (Global.Configuration.additional_profiles[process_name].Settings as GenericApplicationSettings).isEnabled)
             {
                 Global.dev_manager.InitializeOnce();
-
-                if (profiles.ContainsKey(process_name))
+                Global.Configuration.additional_profiles[process_name].Event.UpdateLights(newframe);
+                /*if (profiles.ContainsKey(process_name))
                 {
-                    profiles[process_name].UpdateLights(newframe);
+                    profiles[process_name]
                 }
                 else
                 {
-                    Event_GenericApplication app_event = new Event_GenericApplication(process_name);
+                    Event_GenericApplication app_event = new Event_GenericApplication();
                     app_event.UpdateLights(newframe);
                     profiles.Add(process_name, app_event);
-                }
+                }*/
 
             }
             else if (preview_mode == PreviewType.GenericApplication && Global.Configuration.additional_profiles.ContainsKey(preview_mode_profile_key) && (Global.Configuration.additional_profiles[preview_mode_profile_key].Settings as GenericApplicationSettings).isEnabled)
             {
                 Global.dev_manager.InitializeOnce();
+                Global.Configuration.additional_profiles[preview_mode_profile_key].Event.UpdateLights(newframe);
 
-                if (profiles.ContainsKey(preview_mode_profile_key))
+                /*if (profiles.ContainsKey(preview_mode_profile_key))
                     profiles[preview_mode_profile_key].UpdateLights(newframe);
                 else
                 {
-                    Event_GenericApplication app_event = new Event_GenericApplication(preview_mode_profile_key);
+                    Event_GenericApplication app_event = new Event_GenericApplication();
                     app_event.UpdateLights(newframe);
                     profiles.Add(preview_mode_profile_key, app_event);
-                }
+                }*/
             }
             else if (preview_mode == PreviewType.Predefined && profiles.ContainsKey(preview_mode_profile_key) && profiles[preview_mode_profile_key].IsEnabled())
             {

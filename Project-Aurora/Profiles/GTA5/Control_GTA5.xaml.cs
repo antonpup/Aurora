@@ -19,11 +19,11 @@ namespace Aurora.Profiles.GTA5
 
         private Timer preview_wantedlevel_timer;
 
-        public Control_GTA5()
+        public Control_GTA5(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["GTA5"];
+            profile_manager = profile;
 
             SetSettings();
 

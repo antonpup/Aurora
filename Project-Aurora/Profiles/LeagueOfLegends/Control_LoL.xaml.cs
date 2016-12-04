@@ -14,11 +14,11 @@ namespace Aurora.Profiles.LeagueOfLegends
     {
         private ProfileManager profile_manager;
 
-        public Control_LoL()
+        public Control_LoL(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["League of Legends"];
+            profile_manager = profile;
 
             SetSettings();
 

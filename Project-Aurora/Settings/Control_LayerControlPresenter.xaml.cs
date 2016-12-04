@@ -111,6 +111,7 @@ namespace Aurora.Settings
                 }
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
+                this._Layer.AssociatedProfile.SaveProfiles();
             }
         }
     }

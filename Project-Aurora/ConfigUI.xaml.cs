@@ -23,7 +23,7 @@ namespace Aurora
     partial class ConfigUI : Window
     {
         Settings.Control_Settings settings_control = new Settings.Control_Settings();
-        Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
+        //Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
 
         Control_LayerControlPresenter layercontrol_presenter = new Control_LayerControlPresenter();
 
@@ -530,7 +530,7 @@ namespace Aurora
                 }
 
 
-                this.content_grid.Content = new Profiles.Generic_Application.Control_GenericApplication(filename);
+                this.content_grid.Content = Global.Configuration.additional_profiles[filename].Control;
 
                 current_color = desktop_color_scheme;
                 transitionamount = 0.0f;

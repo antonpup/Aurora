@@ -13,11 +13,11 @@ namespace Aurora.Profiles.WormsWMD
     {
         private ProfileManager profile_manager;
 
-        public Control_WormsWMD()
+        public Control_WormsWMD(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["WormsWMD"];
+            profile_manager = profile;
 
             SetSettings();
         }

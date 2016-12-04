@@ -14,11 +14,11 @@ namespace Aurora.Profiles.DiscoDodgeball
     {
         private ProfileManager profile_manager;
 
-        public Control_DiscoDodgeball()
+        public Control_DiscoDodgeball(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["DiscoDodgeball"];
+            profile_manager = profile;
 
             SetSettings();
 

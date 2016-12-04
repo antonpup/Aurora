@@ -12,11 +12,11 @@ namespace Aurora.Profiles.TheDivision
     {
         private ProfileManager profile_manager;
 
-        public Control_TheDivision()
+        public Control_TheDivision(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["The Division"];
+            profile_manager = profile;
 
             SetSettings();
         }

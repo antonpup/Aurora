@@ -13,24 +13,9 @@ namespace Aurora.Profiles.Magic_Duels_2012
     {
 
         public MagicDuels2012ProfileManager()
-            : base("Magic: The Gathering - Duels of the Planeswalkers 2012", "magic_2012", "magic_2012.exe", typeof(MagicDuels2012Settings), new GameEvent_MagicDuels2012())
+            : base("Magic: The Gathering - Duels of the Planeswalkers 2012", "magic_2012", "magic_2012.exe", typeof(MagicDuels2012Settings), typeof(Control_MagicDuels2012), new GameEvent_MagicDuels2012())
         {
-        }
-
-        public override UserControl GetUserControl()
-        {
-            if (Control == null)
-                Control = new Control_MagicDuels2012();
-
-            return Control;
-        }
-
-        public override ImageSource GetIcon()
-        {
-            if (Icon == null)
-                Icon = new BitmapImage(new Uri(@"Resources/magic_duels_64x64.png", UriKind.Relative));
-
-            return Icon;
+            IconURI = "Resources/magic_duels_64x64.png";
         }
     }
 }

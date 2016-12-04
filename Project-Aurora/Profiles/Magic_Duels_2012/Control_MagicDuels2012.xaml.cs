@@ -14,11 +14,11 @@ namespace Aurora.Profiles.Magic_Duels_2012
     {
         private ProfileManager profile_manager;
 
-        public Control_MagicDuels2012()
+        public Control_MagicDuels2012(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["MagicDuels2012"];
+            profile_manager = profile;
 
             SetSettings();
 

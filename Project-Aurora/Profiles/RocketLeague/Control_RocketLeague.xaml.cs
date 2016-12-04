@@ -15,11 +15,11 @@ namespace Aurora.Profiles.RocketLeague
     {
         private ProfileManager profile_manager;
 
-        public Control_RocketLeague()
+        public Control_RocketLeague(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["RocketLeague"];
+            profile_manager = profile;
 
             SetSettings();
 

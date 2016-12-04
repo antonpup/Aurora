@@ -16,11 +16,11 @@ namespace Aurora.Profiles.Payday_2
     {
         private ProfileManager profile_manager;
 
-        public Control_PD2()
+        public Control_PD2(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Payday 2"];
+            profile_manager = profile;
 
             SetSettings();
 

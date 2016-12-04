@@ -12,24 +12,9 @@ namespace Aurora.Profiles.DiscoDodgeball
     public class DiscoDodgeballProfileManager : ProfileManager
     {
         public DiscoDodgeballProfileManager()
-            : base("Robot Roller-Derby Disco Dodgeball", "DiscoDodgeball", "disco dodgeball.exe", typeof(DiscoDodgeballSettings), new GameEvent_DiscoDodgeball())
+            : base("Robot Roller-Derby Disco Dodgeball", "DiscoDodgeball", "disco dodgeball.exe", typeof(DiscoDodgeballSettings), typeof(Control_DiscoDodgeball), new GameEvent_DiscoDodgeball())
         {
-        }
-
-        public override UserControl GetUserControl()
-        {
-            if (Control == null)
-                Control = new Control_DiscoDodgeball();
-
-            return Control;
-        }
-
-        public override ImageSource GetIcon()
-        {
-            if (Icon == null)
-                Icon = new BitmapImage(new Uri(@"Resources/disco_dodgeball_32x32.png", UriKind.Relative));
-
-            return Icon;
+            IconURI = "Resources/disco_dodgeball_32x32.png";
         }
     }
 }

@@ -51,10 +51,12 @@ namespace Aurora.Settings
         public static void FocusedProfileChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
         {
             Control_LayerManager self = source as Control_LayerManager;
-
             if (e.OldValue != null)
-                ((ProfileManager)e.OldValue).ProfileChanged -= self.UpdateLayers;
-
+            {
+                ProfileManager prof = ((ProfileManager)e.OldValue);
+                prof.ProfileChanged -= self.UpdateLayers;
+                prof.SaveProfiles();
+            }
             self.UpdateLayers();
             if (e.NewValue != null)
                 ((ProfileManager)e.NewValue).ProfileChanged += self.UpdateLayers;
@@ -86,6 +88,7 @@ namespace Aurora.Settings
 
                 }
             }
+            this.FocusedProfile.SaveProfiles();
         }
 
         private void add_layer_button_Click(object sender, RoutedEventArgs e)

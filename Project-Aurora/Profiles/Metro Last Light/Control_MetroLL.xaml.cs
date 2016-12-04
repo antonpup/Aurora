@@ -14,11 +14,11 @@ namespace Aurora.Profiles.Metro_Last_Light
     {
         private ProfileManager profile_manager;
 
-        public Control_MetroLL()
+        public Control_MetroLL(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["MetroLL"];
+            profile_manager = profile;
 
             SetSettings();
 

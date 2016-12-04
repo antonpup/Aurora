@@ -14,11 +14,11 @@ namespace Aurora.Profiles.HotlineMiami
     {
         private ProfileManager profile_manager;
 
-        public Control_HM()
+        public Control_HM(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Hotline"];
+            profile_manager = profile;
 
             SetSettings();
 

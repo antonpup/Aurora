@@ -26,16 +26,31 @@ namespace Aurora.Profiles.Aurora_Wrapper
         internal float colorEnhance_initial_factor = 3.0f;
         internal int colorEnhance_color_factor = 90;
 
-        public override void UpdateLights(EffectFrame frame)
+        protected virtual void UpdateExtraLights(Queue<EffectLayer> layers)
+        {
+
+        }
+
+        public override sealed void UpdateLights(EffectFrame frame)
         {
             UpdateWrapperLights(frame);
 
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            //Scripts
-            if(!String.IsNullOrWhiteSpace(profilename))
-                Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
+            //No need to repeat the code around this everytime this is inherited
+            this.UpdateExtraLights(layers);
 
+            if (this.Profile != null)
+            {
+                //Scripts
+                this.Profile.UpdateEffectScripts(layers, _game_state);
+
+                foreach (var layer in this.Profile.Settings.Layers.Reverse().ToArray())
+                {
+                    if (layer.Enabled && layer.LogicPass)
+                        layers.Enqueue(layer.Render(_game_state));
+                }
+            }
             frame.AddLayers(layers.ToArray());
         }
 
