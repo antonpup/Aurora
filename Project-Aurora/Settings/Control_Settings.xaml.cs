@@ -87,6 +87,9 @@ namespace Aurora.Settings
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
 
+            this.atmoorb_enabled.IsChecked = Global.Configuration.atmoorb_enabled;
+            this.atmoorb_IDs.Text = Global.Configuration.atmoorb_ids;
+
             Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
         }
 
@@ -849,6 +852,32 @@ namespace Aurora.Settings
             {
                 Global.logger.LogLine("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
+            }
+        }
+
+        private void atmoorb_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.atmoorb_enabled = (this.atmoorb_enabled.IsChecked.HasValue) ? this.atmoorb_enabled.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+        private void atmoorb_enabled_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.atmoorb_enabled = (this.atmoorb_enabled.IsChecked.HasValue) ? this.atmoorb_enabled.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void atmoorb_IDs_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.atmoorb_ids = this.atmoorb_IDs.Text;
+                ConfigManager.Save(Global.Configuration);
             }
         }
     }

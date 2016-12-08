@@ -225,6 +225,15 @@
                     <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="82,87,0,0" VerticalAlignment="Top" Width="218" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectionChanged="ComboBox_virtualkeyboard_keycap_type_SelectionChanged"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="AmbiLight">
+                <Grid>
+                    <Label x:Name="labelatmoorb_enabled" Content="Enable AtmoOrb" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="labelatmoorb_IDs" Content="Orb IDs" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="atmoorb_enabled" Content="" HorizontalAlignment="Left" Margin="113,16,0,0" VerticalAlignment="Top" Checked="atmoorb_enabled_Checked" Unchecked="atmoorb_enabled_Unchecked"/>
+                    <TextBox x:Name="atmoorb_IDs" HorizontalAlignment="Left" Height="23" Margin="10,72,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="142" TextChanged="atmoorb_IDs_TextChanged"/>
+                    <Label x:Name="hintatmoorb_IDs" Content="For multiple IDs separate with comma" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
+                </Grid>
+            </TabItem>
             <TabItem Header="Updates">
                 <Grid>
                     <Button x:Name="updates_check" Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>
