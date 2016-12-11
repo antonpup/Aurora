@@ -1,11 +1,14 @@
-﻿namespace Aurora.Profiles
+﻿using Aurora.Settings;
+
+namespace Aurora.Profiles
 {
     /// <summary>
     /// Class responsible for applying EffectLayers to an EffectFrame based on GameState information.
     /// </summary>
     public class LightEvent
     {
-        internal string profilename = "";
+        //internal string profilename = "";
+        public ProfileManager Profile { get; set; }
         internal IGameState _game_state;
 
         /// <summary>

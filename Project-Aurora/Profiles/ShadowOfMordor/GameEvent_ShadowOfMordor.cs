@@ -9,30 +9,19 @@ namespace Aurora.Profiles.ShadowOfMordor
     {
         public GameEvent_ShadowOfMordor()
         {
-            profilename = "ShadowOfMordor";
         }
 
         public override bool IsEnabled()
         {
-            return (Global.Configuration.ApplicationProfiles[profilename].Settings as ShadowOfMordorSettings).isEnabled;
+            return this.Profile.Settings.isEnabled;
         }
 
-        public override void UpdateLights(EffectFrame frame)
+        protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
-            //Update wrapper lighting    
-            UpdateWrapperLights(frame);
-
-            Queue<EffectLayer> layers = new Queue<EffectLayer>();
-
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("Shadow of Mordor - Color Zones");
-            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles[profilename].Settings as ShadowOfMordorSettings).lighting_areas.ToArray());
+            cz_layer.DrawColorZones((this.Profile.Settings as ShadowOfMordorSettings).lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
-
-            //Scripts
-            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
-
-            frame.AddLayers(layers.ToArray());
         }
     }
 }

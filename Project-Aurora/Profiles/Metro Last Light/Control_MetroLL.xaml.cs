@@ -14,11 +14,11 @@ namespace Aurora.Profiles.Metro_Last_Light
     {
         private ProfileManager profile_manager;
 
-        public Control_MetroLL()
+        public Control_MetroLL(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["MetroLL"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -82,12 +82,10 @@ namespace Aurora.Profiles.Metro_Last_Light
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallWrapper(string installpath = "")

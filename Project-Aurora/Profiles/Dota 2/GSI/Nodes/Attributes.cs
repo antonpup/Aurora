@@ -8,7 +8,7 @@
         /// <summary>
         /// Amount of levels to spend
         /// </summary>
-        public readonly int Level;
+        public int Level;
 
         internal Attributes(string json_data) : base(json_data)
         {

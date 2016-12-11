@@ -1,4 +1,5 @@
-﻿using Aurora.Settings.Layers;
+﻿using Aurora.Profiles.Dota_2.Layers;
+using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,8 @@ namespace Aurora.Settings
             InitializeComponent();
         }
 
-        public Control_LayerControlPresenter(Layer layer)
+        public Control_LayerControlPresenter(Layer layer) : this()
         {
-            InitializeComponent();
-
             Layer = layer;
             cmbLayerType.SelectedItem = Layer.Handler.Type;
         }
@@ -45,6 +44,11 @@ namespace Aurora.Settings
             isSettingNewLayer = true;
 
             DataContext = layer;
+
+            cmbLayerType.Items.Clear();
+
+            foreach(var layertype in layer.AssociatedProfile.AvailableLayers)
+                cmbLayerType.Items.Add(layertype);
 
             cmbLayerType.SelectedItem = Layer.Handler.Type;
             ctrlLayerTypeConfig.Content = layer.Control;
@@ -80,12 +84,34 @@ namespace Aurora.Settings
                     case LayerType.Ambilight:
                         _Layer.Handler = new AmbilightLayerHandler();
                         break;
+                    case LayerType.LockColor:
+                        _Layer.Handler = new LockColourLayerHandler();
+                        break;
+                    case LayerType.Dota2Background:
+                        _Layer.Handler = new Dota2BackgroundLayerHandler();
+                        break;
+                    case LayerType.Dota2Respawn:
+                        _Layer.Handler = new Dota2RespawnLayerHandler();
+                        break;
+                    case LayerType.Dota2Abilities:
+                        _Layer.Handler = new Dota2AbilityLayerHandler();
+                        break;
+                    case LayerType.Dota2Items:
+                        _Layer.Handler = new Dota2ItemLayerHandler();
+                        break;
+                    case LayerType.Dota2HeroAbiltiyEffects:
+                        _Layer.Handler = new Dota2HeroAbiltiyEffectsLayerHandler();
+                        break;
+                    case LayerType.Dota2Killstreak:
+                        _Layer.Handler = new Dota2KillstreakLayerHandler();
+                        break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;
                 }
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
+                this._Layer.AssociatedProfile.SaveProfiles();
             }
         }
     }

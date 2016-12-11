@@ -17,7 +17,16 @@ namespace Aurora.Profiles
             if (String.IsNullOrWhiteSpace(json_data))
                 json_data = "{}";
 
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);
+            try
+            {
+                _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine($"Exception during Node parsing. Exception: {exc}", Logging_Level.Error);
+
+                _ParsedData = Newtonsoft.Json.Linq.JObject.Parse("{}");
+            }
         }
 
         internal string GetString(string Name)

@@ -57,7 +57,7 @@ namespace Aurora.Settings.Layers
         public virtual void Default()
         {
             Logic = (TProperty)Activator.CreateInstance(typeof(TProperty), new object[] { true });
-            _PrimaryColor = Color.White;
+            _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _Sequence = new KeySequence();
         }
     }
@@ -74,7 +74,7 @@ namespace Aurora.Settings.Layers
         public override void Default()
         {
             base.Default();
-            _SecondaryColor = Color.White;
+            _SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
         }
     }
 

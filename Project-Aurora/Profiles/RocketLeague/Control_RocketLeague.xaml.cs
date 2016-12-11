@@ -15,11 +15,11 @@ namespace Aurora.Profiles.RocketLeague
     {
         private ProfileManager profile_manager;
 
-        public Control_RocketLeague()
+        public Control_RocketLeague(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["RocketLeague"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -234,12 +234,10 @@ namespace Aurora.Profiles.RocketLeague
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private void preview_boost_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

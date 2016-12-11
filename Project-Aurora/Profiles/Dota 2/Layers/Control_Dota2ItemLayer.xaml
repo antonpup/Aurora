@@ -1,0 +1,83 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.Dota_2.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="Aurora.Profiles.Dota_2.Layers.Control_Dota2ItemLayer"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <Grid>
+        <xctk:ColorPicker x:Name="ColorPicker_Item_Empty" Margin="91,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="152" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="ColorPicker_Item_Empty_SelectedColorChanged" />
+        <TextBlock HorizontalAlignment="Left" Margin="0,3,0,0" TextWrapping="Wrap" Text="Item slot empty:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="ColorPicker_Item_Cooldown" Margin="136,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="ColorPicker_Item_Cooldown_SelectedColorChanged" />
+        <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Item on cooldown Color:" VerticalAlignment="Top"/>
+        <GroupBox Header="Inventory &amp; Stash Keys" HorizontalAlignment="Left" Margin="248,0,-204,0" VerticalAlignment="Top" Height="102" Width="256" BorderBrush="DimGray">
+            <Grid Margin="0,0,0,0">
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="12,10,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="item_slot1_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot1_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="49,10,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="item_slot2_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot2_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="86,10,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="item_slot3_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot3_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="12,47,0,0" VerticalAlignment="Top" CornerRadius="5" Grid.RowSpan="2">
+                    <TextBlock x:Name="item_slot4_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot4_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="49,47,0,0" VerticalAlignment="Top" CornerRadius="5" Grid.RowSpan="2">
+                    <TextBlock x:Name="item_slot5_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot5_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="86,47,0,0" VerticalAlignment="Top" CornerRadius="5" Grid.RowSpan="2">
+                    <TextBlock x:Name="item_slot6_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot6_textblock_MouseDown" FontSize="9"/>
+                </Border>
+
+
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="stash_slot1_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="stash_slot1_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="172,10,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="stash_slot2_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="stash_slot2_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="209,10,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="stash_slot3_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="stash_slot3_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="135,47,0,0" VerticalAlignment="Top" CornerRadius="5" Grid.RowSpan="2">
+                    <TextBlock x:Name="stash_slot4_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="stash_slot4_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="172,47,0,0" VerticalAlignment="Top" CornerRadius="5" Grid.RowSpan="2">
+                    <TextBlock x:Name="stash_slot5_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="stash_slot5_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="209,47,0,0" VerticalAlignment="Top" CornerRadius="5" Grid.RowSpan="2">
+                    <TextBlock x:Name="stash_slot6_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="stash_slot6_textblock_MouseDown" FontSize="9"/>
+                </Border>
+                <Label Content="Inventory" HorizontalAlignment="Left" Margin="-28,31,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+                </Label>
+                <Label Content="Stash" HorizontalAlignment="Left" Margin="108,31,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+                </Label>
+            </Grid>
+        </GroupBox>
+        <xctk:ColorPicker x:Name="ColorPicker_Item_NoCharges" Margin="125,58,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="118" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="ColorPicker_Item_NoCharges_SelectedColorChanged" />
+        <TextBlock HorizontalAlignment="Left" Margin="0,61,0,0" TextWrapping="Wrap" Text="Item no charges Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="ColorPicker_Item_Color" Margin="63,87,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="180" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="ColorPicker_Item_Color_SelectedColorChanged" />
+        <TextBlock HorizontalAlignment="Left" Margin="0,90,0,0" TextWrapping="Wrap" Text="Item Color:" VerticalAlignment="Top"/>
+        <CheckBox x:Name="CheckBox_Use_Item_Colors" Content="Color keys based on item icon color" HorizontalAlignment="Left" Margin="0,116,0,-2" VerticalAlignment="Top" Unchecked="CheckBox_Use_Item_Colors_Checked" Checked="CheckBox_Use_Item_Colors_Checked"/>
+
+    </Grid>
+</UserControl>

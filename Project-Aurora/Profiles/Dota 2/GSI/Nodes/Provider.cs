@@ -8,22 +8,22 @@
         /// <summary>
         /// Game name
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Game's Steam AppID
         /// </summary>
-        public readonly int AppID;
+        public int AppID;
 
         /// <summary>
         /// Game's version
         /// </summary>
-        public readonly int Version;
+        public int Version;
 
         /// <summary>
         /// Current timestamp
         /// </summary>
-        public readonly string TimeStamp;
+        public string TimeStamp;
 
         internal Provider_Dota2(string json_data) : base(json_data)
         {

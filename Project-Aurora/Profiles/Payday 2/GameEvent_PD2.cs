@@ -4,6 +4,7 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles.Payday_2.GSI;
 using System.Drawing;
 using Aurora.Profiles.Payday_2.GSI.Nodes;
+using System.Linq;
 
 namespace Aurora.Profiles.Payday_2
 {
@@ -32,7 +33,6 @@ namespace Aurora.Profiles.Payday_2
 
         public GameEvent_PD2()
         {
-            profilename = "Payday 2";
         }
 
         public static void SetHealth(float health)
@@ -116,25 +116,27 @@ namespace Aurora.Profiles.Payday_2
 
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
+            PD2Settings settings = (PD2Settings)this.Profile.Settings;
+
             //update background
-            if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).bg_enabled)
+            if (settings.bg_enabled)
             {
                 EffectLayer bg_layer = new EffectLayer("Payday 2 - Background");
 
-                Color bg_color = (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).ambient_color;
+                Color bg_color = settings.ambient_color;
 
                 if ((level_phase == LevelPhase.Assault || level_phase == LevelPhase.Winters) && game_state == GameStates.Ingame)
                 {
                     if (level_phase == LevelPhase.Assault)
-                        bg_color = (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).assault_color;
+                        bg_color = settings.assault_color;
                     else if (level_phase == LevelPhase.Winters)
-                        bg_color = (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).winters_color;
+                        bg_color = settings.winters_color;
 
-                    double blend_percent = Math.Pow(Math.Sin(((currenttime % 1300L) / 1300.0D) * (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).assault_speed_mult * 2.0D * Math.PI), 2.0D);
+                    double blend_percent = Math.Pow(Math.Sin(((currenttime % 1300L) / 1300.0D) * settings.assault_speed_mult * 2.0D * Math.PI), 2.0D);
 
-                    bg_color = Utils.ColorUtils.BlendColors((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).assault_fade_color, bg_color, blend_percent);
+                    bg_color = Utils.ColorUtils.BlendColors(settings.assault_fade_color, bg_color, blend_percent);
 
-                    if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).assault_animation_enabled)
+                    if (settings.assault_animation_enabled)
                     {
 
                         Color effect_contours = Color.FromArgb(200, Color.Black);
@@ -189,23 +191,23 @@ namespace Aurora.Profiles.Payday_2
 
                     bg_layer.Fill(bg_color);
 
-                    if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).bg_peripheral_use)
+                    if (settings.bg_peripheral_use)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
                 }
                 else if (level_phase == LevelPhase.Stealth && game_state == GameStates.Ingame)
                 {
-                    if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).bg_show_suspicion)
+                    if (settings.bg_show_suspicion)
                     {
                         double percentSuspicious = ((double)suspicion_amount / (double)1.0);
 
-                        ColorSpectrum suspicion_spec = new ColorSpectrum((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).low_suspicion_color, (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).high_suspicion_color);
-                        suspicion_spec.SetColorAt(0.5f, (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).medium_suspicion_color);
+                        ColorSpectrum suspicion_spec = new ColorSpectrum(settings.low_suspicion_color, settings.high_suspicion_color);
+                        suspicion_spec.SetColorAt(0.5f, settings.medium_suspicion_color);
 
                         Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Effects.editor_to_canvas_width / Effects.canvas_width), 1.0f / (Effects.editor_to_canvas_height / Effects.canvas_height)));
 
-                        bg_layer.PercentEffect(suspicion_spec, suspicionSequence, percentSuspicious, 1.0D, (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).suspicion_effect_type);
+                        bg_layer.PercentEffect(suspicion_spec, suspicionSequence, percentSuspicious, 1.0D, settings.suspicion_effect_type);
 
-                        if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).bg_peripheral_use)
+                        if (settings.bg_peripheral_use)
                             bg_layer.Set(Devices.DeviceKeys.Peripheral, suspicion_spec.GetColorAt((float)percentSuspicious));
                     }
                 }
@@ -221,14 +223,14 @@ namespace Aurora.Profiles.Payday_2
 
                     bg_layer.Fill(no_return_color);
 
-                    if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).bg_peripheral_use)
+                    if (settings.bg_peripheral_use)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, no_return_color);
                 }
                 else
                 {
                     bg_layer.Fill(bg_color);
 
-                    if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).bg_peripheral_use)
+                    if (settings.bg_peripheral_use)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
                 }
 
@@ -250,25 +252,25 @@ namespace Aurora.Profiles.Payday_2
                 {
                     //Update Health
                     EffectLayer hpbar_layer = new EffectLayer("Payday 2 - HP Bar");
-                    if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).health_enabled)
-                        hpbar_layer.PercentEffect((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).healthy_color,
-                                (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).hurt_color,
-                                (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).health_sequence,
+                    if (settings.health_enabled)
+                        hpbar_layer.PercentEffect(settings.healthy_color,
+                                settings.hurt_color,
+                                settings.health_sequence,
                                 (double)health,
                                 (double)health_max,
-                                (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).health_effect_type);
+                                settings.health_effect_type);
 
                     layers.Enqueue(hpbar_layer);
 
                     //Update Health
                     EffectLayer ammobar_layer = new EffectLayer("Payday 2 - Ammo Bar");
-                    if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).ammo_enabled)
-                        hpbar_layer.PercentEffect((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).ammo_color,
-                                (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).noammo_color,
-                                (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).ammo_sequence,
+                    if (settings.ammo_enabled)
+                        hpbar_layer.PercentEffect(settings.ammo_color,
+                                settings.noammo_color,
+                                settings.ammo_sequence,
                                 (double)clip,
                                 (double)clip_max,
-                                (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).ammo_effect_type);
+                                settings.ammo_effect_type);
 
                     layers.Enqueue(ammobar_layer);
                 }
@@ -281,7 +283,7 @@ namespace Aurora.Profiles.Payday_2
                     else if (incapAlpha < 0)
                         incapAlpha = 0;
 
-                    Color incapColor = Color.FromArgb(incapAlpha, (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).downed_color);
+                    Color incapColor = Color.FromArgb(incapAlpha, settings.downed_color);
                     EffectLayer incap_layer = new EffectLayer("Payday 2 - Incapacitated", incapColor);
                     incap_layer.Set(Devices.DeviceKeys.Peripheral, incapColor);
 
@@ -289,24 +291,24 @@ namespace Aurora.Profiles.Payday_2
                 }
                 else if (player_state == PlayerState.Arrested)
                 {
-                    Color arrstedColor = (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).arrested_color;
+                    Color arrstedColor = settings.arrested_color;
                     EffectLayer arrested_layer = new EffectLayer("Payday 2 - Arrested", arrstedColor);
                     arrested_layer.Set(Devices.DeviceKeys.Peripheral, arrstedColor);
 
                     layers.Enqueue(arrested_layer);
                 }
 
-                if (isSwanSong && (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).swansong_enabled)
+                if (isSwanSong && settings.swansong_enabled)
                 {
                     EffectLayer swansong_layer = new EffectLayer("Payday 2 - Swansong");
 
-                    double blend_percent = Math.Pow(Math.Cos((currenttime % 1300L) / 1300.0D * (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).swansong_speed_mult * 2.0D * Math.PI), 2.0D);
+                    double blend_percent = Math.Pow(Math.Cos((currenttime % 1300L) / 1300.0D * settings.swansong_speed_mult * 2.0D * Math.PI), 2.0D);
 
-                    Color swansongColor = Utils.ColorUtils.MultiplyColorByScalar((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).swansong_color, blend_percent);
+                    Color swansongColor = Utils.ColorUtils.MultiplyColorByScalar(settings.swansong_color, blend_percent);
 
                     swansong_layer.Fill(swansongColor);
 
-                    if ((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).bg_peripheral_use)
+                    if (settings.bg_peripheral_use)
                         swansong_layer.Set(Devices.DeviceKeys.Peripheral, swansongColor);
 
                     layers.Enqueue(swansong_layer);
@@ -327,11 +329,17 @@ namespace Aurora.Profiles.Payday_2
 
             //ColorZones
             EffectLayer cz_layer = new EffectLayer("Payday 2 - Color Zones");
-            cz_layer.DrawColorZones((Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).lighting_areas.ToArray());
+            cz_layer.DrawColorZones(settings.lighting_areas.ToArray());
             layers.Enqueue(cz_layer);
 
             //Scripts
-            Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
+            this.Profile.UpdateEffectScripts(layers, _game_state);
+
+            foreach (var layer in settings.Layers.Reverse().ToArray())
+            {
+                if (layer.Enabled && layer.LogicPass)
+                    layers.Enqueue(layer.Render(_game_state));
+            }
 
             frame.AddLayers(layers.ToArray());
 
@@ -375,7 +383,7 @@ namespace Aurora.Profiles.Payday_2
 
         public override bool IsEnabled()
         {
-            return (Global.Configuration.ApplicationProfiles[profilename].Settings as PD2Settings).isEnabled;
+            return this.Profile.Settings.isEnabled;
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Aurora.Settings
             this.start_silently_enabled.IsChecked = Global.Configuration.start_silently;
 
             this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
+            this.app_detection_mode.SelectedIndex = (int)Global.Configuration.detection_mode;
 
             this.volume_as_brightness_enabled.IsChecked = Global.Configuration.use_volume_as_brightness;
 
@@ -77,9 +78,10 @@ namespace Aurora.Settings
             this.idle_effects_amount.Value = Global.Configuration.idle_amount;
             this.idle_effects_frequency.Value = (int)Global.Configuration.idle_frequency;
 
-            this.devices_kb_brand.SelectedIndex = (int)Global.Configuration.keyboard_brand;
+            this.devices_kb_brand.SelectedItem = Global.Configuration.keyboard_brand;
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
             this.devices_mouse_brand.SelectedItem = Global.Configuration.mouse_preference;
+            this.ComboBox_virtualkeyboard_keycap_type.SelectedItem = Global.Configuration.virtualkeyboard_keycap_type;
             this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
@@ -154,6 +156,15 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.close_mode = (AppExitMode)Enum.Parse(typeof(AppExitMode), this.app_exit_mode.SelectedIndex.ToString());
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void app_detection_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.detection_mode = (ApplicationDetectionMode)Enum.Parse(typeof(ApplicationDetectionMode), this.app_detection_mode.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -621,7 +632,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboard), this.devices_kb_brand.SelectedIndex.ToString());
+                Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboard), this.devices_kb_brand.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
                 Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference);
@@ -633,6 +644,17 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.mouse_preference = (PreferredMouse)Enum.Parse(typeof(PreferredMouse), this.devices_mouse_brand.SelectedItem.ToString());
+                ConfigManager.Save(Global.Configuration);
+
+                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference);
+            }
+        }
+
+        private void ComboBox_virtualkeyboard_keycap_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.virtualkeyboard_keycap_type = (KeycapType)Enum.Parse(typeof(KeycapType), this.ComboBox_virtualkeyboard_keycap_type.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
                 Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference);

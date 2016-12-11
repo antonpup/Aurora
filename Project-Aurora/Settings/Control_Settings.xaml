@@ -70,6 +70,16 @@
                 <TextBlock Text="{Binding Converter={StaticResource MouseBrandToStringVC}}" />
             </DataTemplate>
 
+            <ObjectDataProvider x:Key="KeycapType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:KeycapType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
+            <DataTemplate x:Key="KeycapTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource KeycapTypeToStringVC}}" />
+            </DataTemplate>
+
             <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="local:AppExitMode" />
@@ -78,6 +88,16 @@
             <EnumValueConverters:appexitmodeToStringVC x:Key="appexitmodeToStringVC"/>
             <DataTemplate x:Key="appexitmodeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource appexitmodeToStringVC}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="AppDetectionMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:ApplicationDetectionMode" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:AppDetectionModeToStringVC x:Key="AppDetectionModeToStringVC"/>
+            <DataTemplate x:Key="AppDetectionModeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource AppDetectionModeToStringVC}}" />
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -91,11 +111,11 @@
                     <TextBlock HorizontalAlignment="Left" Margin="11,171,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
                     <TextBlock HorizontalAlignment="Left" Margin="11,203,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
                     <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,149,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
-                    <ListBox x:Name="excluded_listbox" HorizontalAlignment="Left" Height="196" Margin="579,64,0,0" VerticalAlignment="Top" Width="160"/>
-                    <Label Content="Excluded Processes" HorizontalAlignment="Left" Margin="579,10,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="excluded_process_name" HorizontalAlignment="Left" Height="23" Margin="579,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160"/>
-                    <Button x:Name="excluded_add" Content="Add Process" HorizontalAlignment="Left" Margin="744,36,0,0" VerticalAlignment="Top" Click="excluded_add_Click"/>
-                    <Button x:Name="excluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="744,64,0,0" VerticalAlignment="Top" Click="excluded_remove_Click"/>
+                    <ListBox x:Name="excluded_listbox" HorizontalAlignment="Left" Height="171" Margin="579,91,0,0" VerticalAlignment="Top" Width="160"/>
+                    <Label Content="Excluded Processes" HorizontalAlignment="Left" Margin="579,37,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="excluded_process_name" HorizontalAlignment="Left" Height="23" Margin="579,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160"/>
+                    <Button x:Name="excluded_add" Content="Add Process" HorizontalAlignment="Left" Margin="744,63,0,0" VerticalAlignment="Top" Click="excluded_add_Click"/>
+                    <Button x:Name="excluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="744,91,0,0" VerticalAlignment="Top" Click="excluded_remove_Click"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,75,0,0" TextWrapping="Wrap" Text="Keyboard brightness modifier: " VerticalAlignment="Top"/>
                     <Slider x:Name="brightness_kb_slider" HorizontalAlignment="Left" Margin="178,74,0,0" VerticalAlignment="Top" Width="150" ValueChanged="brightness_kb_slider_ValueChanged" Maximum="1"/>
                     <TextBlock x:Name="brightness_kb_label" HorizontalAlignment="Left" Margin="333,75,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
@@ -121,6 +141,8 @@
                     <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="What to do when Aurora window is closed:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="app_exit_mode" HorizontalAlignment="Left" Margin="242,27,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource appexitmode}}" ItemTemplate="{Binding Source={StaticResource appexitmodeTemplate}}" SelectionChanged="app_exit_mode_SelectionChanged"/>
                     <CheckBox x:Name="start_silently_enabled" Content="Start Aurora in a minimized state" HorizontalAlignment="Left" Margin="156,10,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="496,13,0,0" TextWrapping="Wrap" Text="Application Detection Method:" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="app_detection_mode" HorizontalAlignment="Left" Margin="664,10,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource AppDetectionMode}}" ItemTemplate="{Binding Source={StaticResource AppDetectionModeTemplate}}" SelectionChanged="app_detection_mode_SelectionChanged"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">
@@ -192,13 +214,15 @@
                     <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Preferred Keyboard:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="120,8,0,0" VerticalAlignment="Top" Width="204" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
                     <Button x:Name="devices_retry" Content="Retry for connected devices" HorizontalAlignment="Right" Margin="0,10,215,0" VerticalAlignment="Top" Click="devices_retry_Click"/>
-                    <CheckBox x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" ToolTip="" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
-                    <Button x:Name="wrapper_install_logitech" Content="Install Aurora Wrapper Patch for Logitech" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Click="wrapper_install_logitech_Click"/>
-                    <Button x:Name="wrapper_install_razer" Content="Install Aurora Wrapper Patch for Razer" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Click="wrapper_install_razer_Click"/>
-                    <Button x:Name="wrapper_install_lightfx_32" Content="Install Aurora Wrapper Patch for LightFX (32 bit)" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_32_Click"/>
-                    <Button x:Name="wrapper_install_lightfx_64" Content="Install Aurora Wrapper Patch for LightFX (64 bit)" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_64_Click"/>
+                    <CheckBox x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="10,116,0,0" VerticalAlignment="Top" ToolTip="" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
+                    <Button x:Name="wrapper_install_logitech" Content="Install Aurora Wrapper Patch for Logitech" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" Click="wrapper_install_logitech_Click"/>
+                    <Button x:Name="wrapper_install_razer" Content="Install Aurora Wrapper Patch for Razer" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Click="wrapper_install_razer_Click"/>
+                    <Button x:Name="wrapper_install_lightfx_32" Content="Install Aurora Wrapper Patch for LightFX (32 bit)" HorizontalAlignment="Left" Margin="10,186,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_32_Click"/>
+                    <Button x:Name="wrapper_install_lightfx_64" Content="Install Aurora Wrapper Patch for LightFX (64 bit)" HorizontalAlignment="Left" Margin="10,211,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_64_Click"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Preferred Mouse:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="devices_mouse_brand" HorizontalAlignment="Left" Margin="106,60,0,0" VerticalAlignment="Top" Width="218" ItemsSource="{Binding Source={StaticResource MouseBrand}}" ItemTemplate="{Binding Source={StaticResource MouseBrandTemplate}}" SelectionChanged="devices_mouse_brand_SelectionChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,89,0,0" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="82,87,0,0" VerticalAlignment="Top" Width="218" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectionChanged="ComboBox_virtualkeyboard_keycap_type_SelectionChanged"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Updates">

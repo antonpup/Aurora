@@ -37,7 +37,29 @@ namespace Aurora.Settings.Layers
         Equalizer = 500,
 
         [Description("Ambilight Layer")]
-        Ambilight = 600
+        Ambilight = 600,
+
+        [Description("Lock Color Layer")]
+        LockColor = 700,
+
+        [Description("Dota 2 Background Layer")]
+        Dota2Background = 800,
+
+        [Description("Dota 2 Respawn Layer")]
+        Dota2Respawn = 801,
+
+        [Description("Dota 2 Abilies Layer")]
+        Dota2Abilities = 802,
+
+        [Description("Dota 2 Items Layer")]
+        Dota2Items = 803,
+
+        [Description("Dota 2 Hero Abiliy Effects Layer")]
+        Dota2HeroAbiltiyEffects = 804,
+
+        [Description("Dota 2 Killstreak Layer")]
+        Dota2Killstreak = 805,
+
     }
 
     /// <summary>
@@ -46,6 +68,9 @@ namespace Aurora.Settings.Layers
     public class Layer
     {
         private ProfileManager _profile;
+
+        [JsonIgnore]
+        public ProfileManager AssociatedProfile { get { return _profile; } }
 
         public event EventHandler AnythingChanged;
 

@@ -22,16 +22,35 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
         internal Dictionary<Devices.DeviceKeys, Color> colors = new Dictionary<Devices.DeviceKeys, Color>();
 
-        public override void UpdateLights(EffectFrame frame)
+        internal bool colorEnhance_Enabled = false;
+        internal float colorEnhance_initial_factor = 3.0f;
+        internal int colorEnhance_color_factor = 90;
+
+        protected virtual void UpdateExtraLights(Queue<EffectLayer> layers)
+        {
+
+        }
+
+        public override sealed void UpdateLights(EffectFrame frame)
         {
             UpdateWrapperLights(frame);
 
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            //Scripts
-            if(!String.IsNullOrWhiteSpace(profilename))
-                Global.Configuration.ApplicationProfiles[profilename].UpdateEffectScripts(layers, _game_state);
+            //No need to repeat the code around this everytime this is inherited
+            this.UpdateExtraLights(layers);
 
+            if (this.Profile != null)
+            {
+                //Scripts
+                this.Profile.UpdateEffectScripts(layers, _game_state);
+
+                foreach (var layer in this.Profile.Settings.Layers.Reverse().ToArray())
+                {
+                    if (layer.Enabled && layer.LogicPass)
+                        layers.Enqueue(layer.Render(_game_state));
+                }
+            }
             frame.AddLayers(layers.ToArray());
         }
 
@@ -39,7 +58,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            EffectLayer colorfill_layer = new EffectLayer("Aurora Wrapper - Color Fill", last_fill_color);
+            EffectLayer colorfill_layer = new EffectLayer("Aurora Wrapper - Color Fill", GetBoostedColor(last_fill_color));
 
             layers.Enqueue(colorfill_layer);
 
@@ -49,19 +68,19 @@ namespace Aurora.Profiles.Aurora_Wrapper
             foreach (var key in allkeys)
             {
                 if (key == Devices.DeviceKeys.LOGO && logo.Length == 4)
-                    bitmap_layer.Set(key, Color.FromArgb(logo[3], logo[2], logo[1], logo[0]));
+                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(logo[3], logo[2], logo[1], logo[0])));
                 else if (key == Devices.DeviceKeys.Peripheral && peripheral.Length == 4)
-                    bitmap_layer.Set(key, Color.FromArgb(peripheral[3], peripheral[2], peripheral[1], peripheral[0]));
+                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(peripheral[3], peripheral[2], peripheral[1], peripheral[0])));
                 else if (key == Devices.DeviceKeys.G1 && g1.Length == 4)
-                    bitmap_layer.Set(key, Color.FromArgb(g1[3], g1[2], g1[1], g1[0]));
+                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g1[3], g1[2], g1[1], g1[0])));
                 else if (key == Devices.DeviceKeys.G2 && g2.Length == 4)
-                    bitmap_layer.Set(key, Color.FromArgb(g2[3], g2[2], g2[1], g2[0]));
+                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g2[3], g2[2], g2[1], g2[0])));
                 else if (key == Devices.DeviceKeys.G3 && g3.Length == 4)
-                    bitmap_layer.Set(key, Color.FromArgb(g3[3], g3[2], g3[1], g3[0]));
+                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g3[3], g3[2], g3[1], g3[0])));
                 else if (key == Devices.DeviceKeys.G4 && g4.Length == 4)
-                    bitmap_layer.Set(key, Color.FromArgb(g4[3], g4[2], g4[1], g4[0]));
+                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g4[3], g4[2], g4[1], g4[0])));
                 else if (key == Devices.DeviceKeys.G5 && g5.Length == 4)
-                    bitmap_layer.Set(key, Color.FromArgb(g5[3], g5[2], g5[1], g5[0]));
+                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g5[3], g5[2], g5[1], g5[0])));
                 else
                 {
                     Devices.Logitech.Logitech_keyboardBitmapKeys logi_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap(key);
@@ -75,7 +94,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
                         r = bitmap[(int)logi_key + 2];
                         a = bitmap[(int)logi_key + 3];
 
-                        bitmap_layer.Set(key, Color.FromArgb(a, r, g, b));
+                        bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(a, r, g, b)));
                     }
                 }
             }
@@ -96,11 +115,11 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 else
                 {
                     if (key_effects[key] is LogiFlashSingleKey)
-                        effects_layer.Set((key_effects[key] as LogiFlashSingleKey).key, (key_effects[key] as LogiFlashSingleKey).GetColor(currentTime - (key_effects[key] as LogiFlashSingleKey).timeStarted));
+                        effects_layer.Set((key_effects[key] as LogiFlashSingleKey).key, GetBoostedColor((key_effects[key] as LogiFlashSingleKey).GetColor(currentTime - (key_effects[key] as LogiFlashSingleKey).timeStarted)));
                     else if (key_effects[key] is LogiPulseSingleKey)
-                        effects_layer.Set((key_effects[key] as LogiPulseSingleKey).key, (key_effects[key] as LogiPulseSingleKey).GetColor(currentTime - (key_effects[key] as LogiPulseSingleKey).timeStarted));
+                        effects_layer.Set((key_effects[key] as LogiPulseSingleKey).key, GetBoostedColor((key_effects[key] as LogiPulseSingleKey).GetColor(currentTime - (key_effects[key] as LogiPulseSingleKey).timeStarted)));
                     else
-                        effects_layer.Set((key_effects[key] as KeyEffect).key, (key_effects[key] as KeyEffect).GetColor(currentTime - (key_effects[key] as KeyEffect).timeStarted));
+                        effects_layer.Set((key_effects[key] as KeyEffect).key, GetBoostedColor((key_effects[key] as KeyEffect).GetColor(currentTime - (key_effects[key] as KeyEffect).timeStarted)));
 
                 }
             }
@@ -375,6 +394,24 @@ namespace Aurora.Profiles.Aurora_Wrapper
         public override bool IsEnabled()
         {
             return Global.Configuration.allow_all_logitech_bitmaps;
+        }
+
+        private Color GetBoostedColor(Color color)
+        {
+            if (!colorEnhance_Enabled)
+                return color;
+
+            // initial_factor * (1 - (x / color_factor))
+
+            float boost_amount = 0.0f;
+            boost_amount += colorEnhance_initial_factor * (1.0f - (color.R / colorEnhance_color_factor));
+            boost_amount += colorEnhance_initial_factor * (1.0f - (color.G / colorEnhance_color_factor));
+            boost_amount += colorEnhance_initial_factor * (1.0f - (color.B / colorEnhance_color_factor));
+            boost_amount /= colorEnhance_initial_factor;
+
+            boost_amount = boost_amount <= 1.0f ? 1.0f : boost_amount;
+
+            return Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
         }
     }
 

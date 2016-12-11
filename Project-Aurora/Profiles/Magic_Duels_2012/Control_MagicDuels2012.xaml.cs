@@ -14,11 +14,11 @@ namespace Aurora.Profiles.Magic_Duels_2012
     {
         private ProfileManager profile_manager;
 
-        public Control_MagicDuels2012()
+        public Control_MagicDuels2012(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["MagicDuels2012"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -83,12 +83,10 @@ namespace Aurora.Profiles.Magic_Duels_2012
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallWrapper(string installpath = "")

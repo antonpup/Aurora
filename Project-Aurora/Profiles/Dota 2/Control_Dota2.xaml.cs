@@ -25,11 +25,11 @@ namespace Aurora.Profiles.Dota_2
         private Timer preview_respawn_timer;
         private int killstreak = 0;
 
-        public Control_Dota2()
+        public Control_Dota2(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Dota 2"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -59,9 +59,12 @@ namespace Aurora.Profiles.Dota_2
 
             this.game_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).isEnabled;
 
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.None);
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
-            this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
+            if (!this.preview_team.HasItems)
+            {
+                this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.None);
+                this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
+                this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
+            }
 
             this.background_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).bg_team_enabled;
             this.t_colorpicker.SelectedColor = ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as Dota2Settings).dire_color);
@@ -155,6 +158,7 @@ namespace Aurora.Profiles.Dota_2
                             {
                                 this.preview_respawn_time.Content = "Seconds to respawn: " + this.respawn_time;
                                 GameEvent_Dota2.SetRespawnTime(this.respawn_time);
+                                (profile_manager.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
 
                                 this.respawn_time--;
                             }
@@ -204,6 +208,8 @@ namespace Aurora.Profiles.Dota_2
                     GameEvent_Dota2.SetTeam(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
                     break;
             }
+
+            (profile_manager.Event._game_state as GameState_Dota2).Player.Team = (Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
         }
 
         private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -243,7 +249,7 @@ namespace Aurora.Profiles.Dota_2
             (profile_manager.Event._game_state as GameState_Dota2).Hero.IsAlive = false;
 
             respawn_time = 15;
-            GameEvent_Dota2.SetRespawnTime(this.respawn_time);
+            (profile_manager.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
             this.preview_killplayer.IsEnabled = false;
             GameEvent_Dota2.SetKillStreak(killstreak = 0);
             this.preview_killstreak_label.Content = "Killstreak: " + this.killstreak;

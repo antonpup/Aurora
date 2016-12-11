@@ -6,6 +6,7 @@ using CUE.NET.Devices.Keyboard;
 using CUE.NET.Devices.Keyboard.Enums;
 using CUE.NET.Devices.Mouse;
 using CUE.NET.Devices.Mouse.Enums;
+using CUE.NET.Devices.Mousemat;
 using CUE.NET.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace Aurora.Devices.Corsair
         CorsairKeyboard keyboard;
         CorsairMouse mouse;
         CorsairHeadset headset;
+        CorsairMousemat mousemat;
 
         private readonly object action_lock = new object();
 
@@ -41,7 +43,7 @@ namespace Aurora.Devices.Corsair
         {
             if (isInitialized)
             {
-                return devicename + ": " + (keyboard != null ? keyboard.DeviceInfo.Model + " " : "") + (mouse != null ? mouse.DeviceInfo.Model + " " : "") + (headset != null ? headset.DeviceInfo.Model + " " : "");
+                return devicename + ": " + (keyboard != null ? keyboard.DeviceInfo.Model + " " : "") + (mouse != null ? mouse.DeviceInfo.Model + " " : "") + (headset != null ? headset.DeviceInfo.Model + " " : "") + (mousemat != null ? mousemat.DeviceInfo.Model + " " : "");
             }
             else
             {
@@ -67,8 +69,10 @@ namespace Aurora.Devices.Corsair
                         keyboard = CueSDK.KeyboardSDK;
                         mouse = CueSDK.MouseSDK;
                         headset = CueSDK.HeadsetSDK;
+                        mousemat = CueSDK.MousematSDK;
 
-                        if (keyboard == null && mouse == null && headset == null)
+
+                        if (keyboard == null && mouse == null && headset == null && mousemat == null)
                             throw new WrapperException("No devices found");
                         else
                         {
@@ -165,13 +169,10 @@ namespace Aurora.Devices.Corsair
                 {
                     CorsairLedId localKey = ToCorsair(key.Key);
 
-                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
-                    {
-                        SendColorToPeripheral((Color)(key.Value), forced);
-                    }
-                    else if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo)
+                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo || localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToMouse(CorsairLedId.B1, (Color)(key.Value));
+                        SendColorToPeripheral((Color)(key.Value), forced);
                     }
                     else if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_FrontLight)
                     {
@@ -248,12 +249,48 @@ namespace Aurora.Devices.Corsair
 
                     if (headset != null)
                     {
-                        if (headset[CorsairHeadsetLedId.LeftLogo] != null)
-                            headset[CorsairHeadsetLedId.LeftLogo].Color = color;
-                        if (headset[CorsairHeadsetLedId.RightLogo] != null)
-                            headset[CorsairHeadsetLedId.RightLogo].Color = color;
+                        if (headset[CorsairLedId.LeftLogo] != null)
+                            headset[CorsairLedId.LeftLogo].Color = color;
+                        if (headset[CorsairLedId.RightLogo] != null)
+                            headset[CorsairLedId.RightLogo].Color = color;
 
                         headset.Update(true);
+                    }
+
+                    if (mousemat != null)
+                    {
+                        if (mousemat[CorsairLedId.Zone1] != null)
+                            mousemat[CorsairLedId.Zone1].Color = color;
+                        if (mousemat[CorsairLedId.Zone2] != null)
+                            mousemat[CorsairLedId.Zone2].Color = color;
+                        if (mousemat[CorsairLedId.Zone3] != null)
+                            mousemat[CorsairLedId.Zone3].Color = color;
+                        if (mousemat[CorsairLedId.Zone4] != null)
+                            mousemat[CorsairLedId.Zone4].Color = color;
+                        if (mousemat[CorsairLedId.Zone5] != null)
+                            mousemat[CorsairLedId.Zone5].Color = color;
+                        if (mousemat[CorsairLedId.Zone6] != null)
+                            mousemat[CorsairLedId.Zone6].Color = color;
+                        if (mousemat[CorsairLedId.Zone7] != null)
+                            mousemat[CorsairLedId.Zone7].Color = color;
+                        if (mousemat[CorsairLedId.Zone8] != null)
+                            mousemat[CorsairLedId.Zone8].Color = color;
+                        if (mousemat[CorsairLedId.Zone9] != null)
+                            mousemat[CorsairLedId.Zone9].Color = color;
+                        if (mousemat[CorsairLedId.Zone10] != null)
+                            mousemat[CorsairLedId.Zone10].Color = color;
+                        if (mousemat[CorsairLedId.Zone11] != null)
+                            mousemat[CorsairLedId.Zone11].Color = color;
+                        if (mousemat[CorsairLedId.Zone12] != null)
+                            mousemat[CorsairLedId.Zone12].Color = color;
+                        if (mousemat[CorsairLedId.Zone13] != null)
+                            mousemat[CorsairLedId.Zone13].Color = color;
+                        if (mousemat[CorsairLedId.Zone14] != null)
+                            mousemat[CorsairLedId.Zone14].Color = color;
+                        if (mousemat[CorsairLedId.Zone15] != null)
+                            mousemat[CorsairLedId.Zone15].Color = color;
+
+                        mousemat.Update(true);
                     }
 
                     previous_peripheral_Color = color;

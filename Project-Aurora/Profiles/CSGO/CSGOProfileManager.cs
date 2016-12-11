@@ -12,24 +12,9 @@ namespace Aurora.Profiles.CSGO
     public class CSGOProfileManager : ProfileManager
     {
         public CSGOProfileManager()
-            : base("CS:GO", "csgo", "csgo.exe", typeof(CSGOSettings), new GameEvent_CSGO())
+            : base("CS:GO", "csgo", "csgo.exe", typeof(CSGOSettings), typeof(Control_CSGO), new GameEvent_CSGO())
         {
-        }
-
-        public override UserControl GetUserControl()
-        {
-            if (Control == null)
-                Control = new Control_CSGO();
-
-            return Control;
-        }
-
-        public override ImageSource GetIcon()
-        {
-            if (Icon == null)
-                Icon = new BitmapImage(new Uri(@"Resources/csgo_64x64.png", UriKind.Relative));
-
-            return Icon;
+            IconURI = "Resources/csgo_64x64.png";
         }
     }
 }

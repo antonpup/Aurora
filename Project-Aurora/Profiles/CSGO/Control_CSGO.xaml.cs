@@ -22,11 +22,11 @@ namespace Aurora.Profiles.CSGO
         private int preview_kills = 0;
         private int preview_killshs = 0;
 
-        public Control_CSGO()
+        public Control_CSGO(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["CSGO"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -645,12 +645,10 @@ namespace Aurora.Profiles.CSGO
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallGSI()

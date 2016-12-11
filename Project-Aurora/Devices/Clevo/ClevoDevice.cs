@@ -1,21 +1,39 @@
-﻿using Corale.Colore.Core;
-using Corale.Colore.Razer.Keyboard;
+﻿using Aurora.Utils;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Aurora.Devices.Clevo
 {
     class ClevoDevice : Device
     {
-        private String devicename = "Clevo Keyboard";
+        // Generic Variables
+        private string devicename = "Clevo Keyboard";
         private bool isInitialized = false;
 
+        // Settings
+        // TODO: Theese settings could be implemented with posibility of configuration from the Aurora GUI (Or external JSON, INI, Settings, etc)
+        private bool useGlobalPeriphericColors = false;
+        private bool useTouchpad = true;
+        private bool updateLightsOnLogon = true;
+
+        // Clevo Controll Class
         private ClevoSetKBLED clevo = new ClevoSetKBLED();
 
-        private Color globalKBColor = new Color(0, 0, 0);
-        private bool globalKBColorUpdated = false;
+        // Color Variables
+        private Color ColorKBCenter = Color.Black;
+        private Color ColorKBLeft = Color.Black;
+        private Color ColorKBRight = Color.Black;
+        private Color ColorTouchpad = Color.Black;
+        private bool ColorUpdated;
+        private Color LastColorKBCenter = Color.Black;
+        private Color LastColorKBLeft = Color.Black;
+        private Color LastColorKBRight = Color.Black;
+        private Color LastColorTouchpad = Color.Black;
 
-        private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
+        // Session Switch Handler
+        private SessionSwitchEventHandler sseh;
 
         public string GetDeviceName()
         {
@@ -47,6 +65,12 @@ namespace Aurora.Devices.Clevo
                         throw new Exception("Could not connect to Clevo WMI Interface");
                     }
 
+                    // Update Lights on Logon (Clevo sometimes resets the lights when you Hibernate, this would fix wrong colors)
+                    if (updateLightsOnLogon) {
+                        sseh = new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
+                        SystemEvents.SessionSwitch += sseh;
+                    }
+
                     // Mark Initialized = TRUE
                     isInitialized = true;
                     return true;
@@ -65,14 +89,35 @@ namespace Aurora.Devices.Clevo
 
         }
 
+        // Handle Logon Event
+        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (this.IsInitialized() && e.Reason.Equals(SessionSwitchReason.SessionUnlock)) { // Only Update when Logged In
+                this.SendColorsToKeyboard(true);
+            }
+        }
+
         public void Shutdown()
         {
+            if (this.IsInitialized())
+            {
+                // Release Clevo Connection
+                clevo.ResetKBLEDColors();
+                clevo.Release();
+
+                // Uninstantiate Session Switch
+                if (sseh != null) {
+                    SystemEvents.SessionSwitch -= sseh;
+                    sseh = null;
+                }
+            }
         }
 
         public void Reset()
         {
             if (this.IsInitialized())
             {
+                clevo.ResetKBLEDColors();
                 clevo.Release();
                 isInitialized = clevo.Initialize();
             }
@@ -93,55 +138,128 @@ namespace Aurora.Devices.Clevo
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false) // Is this necessary?
         {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        {
+
+            Dictionary<DeviceKeys, Color> keyColors = colorComposition.keyColors;
             try
             {
-                foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
+                foreach (KeyValuePair<DeviceKeys, Color> pair in keyColors)
                 {
-                    if (key.Key == DeviceKeys.Peripheral)
+                    if (useGlobalPeriphericColors)
                     {
-                        SetGlobalKBColor(key.Value, forced);
+                        if (pair.Key == DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
+                        {
+                            ColorKBLeft = pair.Value;
+                            ColorKBCenter = pair.Value;
+                            ColorKBRight = pair.Value;
+                            ColorTouchpad = pair.Value;
+                            ColorUpdated = true;
+                        }
+                    }
+                    else
+                    {
+                        // TouchPad (It would be nice to have a Touchpad Peripheral)
+                        if (pair.Key == DeviceKeys.Peripheral) {
+                            ColorTouchpad = pair.Value;
+                            ColorUpdated = true;
+                        }
+                    }
+                }
+
+                if (!useGlobalPeriphericColors) { // Clevo 3 region keyboard
+
+                    // Left Side (From ESC to Half Spacebar)
+                    BitmapRectangle keymap_esc = Effects.GetBitmappingFromDeviceKey(DeviceKeys.ESC);
+                    BitmapRectangle keymap_space = Effects.GetBitmappingFromDeviceKey(DeviceKeys.SPACE);
+                    PointF spacebar_center = keymap_space.Center; // Key Center
+
+                    int spacebar_x = (int) spacebar_center.X - keymap_esc.Left;
+                    int height = (int)spacebar_center.Y - keymap_esc.Top;
+
+                    BitmapRectangle region_left = new BitmapRectangle(keymap_esc.Left, keymap_esc.Top, spacebar_x, height);
+                    Color RegionLeftColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_left);
+                    if (!ColorKBLeft.Equals(RegionLeftColor))
+                    {
+                        ColorKBLeft = RegionLeftColor;
+                        ColorUpdated = true;
                     }
 
-                    // TODO: Implement custom regions on keyboard? Clevo only supports 3 regions on keyboard + touchpad
+                    // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
+                    BitmapRectangle keymap_f11 = Effects.GetBitmappingFromDeviceKey(DeviceKeys.F11);
+
+                    int f11_x_width = Convert.ToInt32(keymap_f11.Center.X - spacebar_x);
+
+                    BitmapRectangle region_center = new BitmapRectangle(spacebar_x, keymap_esc.Top, f11_x_width, height);
+                    Color RegionCenterColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_center);
+                    if (!ColorKBCenter.Equals(RegionCenterColor))
+                    {
+                        ColorKBCenter = RegionCenterColor;
+                        ColorUpdated = true;
+                    }
+
+                    // Right Side
+                    BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
+                    BitmapRectangle region_right = new BitmapRectangle(Convert.ToInt32(keymap_f11.Center.X), keymap_esc.Top, Convert.ToInt32(keymap_numenter.Center.X - keymap_f11.Center.X), height);
+                    Color RegionRightColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
+
+                    if (!ColorKBRight.Equals(RegionRightColor))
+                    {
+                        ColorKBRight = RegionRightColor;
+                        ColorUpdated = true;
+                    }
+
                 }
 
                 SendColorsToKeyboard(forced);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Global.logger.LogLine("Corsair device, error when updating device. Error: " + e, Logging_Level.Error);
-                Console.WriteLine(e);
+                Global.logger.LogLine("Clevo device, error when updating device. Error: " + exception, Logging_Level.Error, true);
+                Console.WriteLine(exception);
                 return false;
             }
         }
 
-       
-
-        private void SetGlobalKBColor(System.Drawing.Color color, bool forced = false)
-        {
-            globalKBColor = color;
-            globalKBColorUpdated = true;
-        }
-
         private void SendColorsToKeyboard(bool forced = false)
         {
-            // Update all regions and Keys
-            if (globalKBColorUpdated) { 
-                clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBLeft, globalKBColor.R, globalKBColor.G, globalKBColor.B, globalKBColor.A/255);
-                clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBCenter, globalKBColor.R, globalKBColor.G, globalKBColor.B, globalKBColor.A / 255);
-                clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBRight, globalKBColor.R, globalKBColor.G, globalKBColor.B, globalKBColor.A / 255);
-                clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorTouchpad, globalKBColor.R, globalKBColor.G, globalKBColor.B, globalKBColor.A / 255);
-                globalKBColorUpdated = false;
+            if (forced || ColorUpdated)
+            {
+                if (forced || !LastColorKBLeft.Equals(ColorKBLeft))
+                {
+                    // MYSTERY: // Why is it B,R,G instead of R,G,B? SetKBLED uses R,G,B but only B,R,G returns the correct colors. Is bitshifting different in C# than in C++?
+                    clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBLeft, ColorKBLeft.B, ColorKBLeft.R, ColorKBLeft.G, (double)(ColorKBLeft.A / 0xff));
+                    LastColorKBLeft = ColorKBLeft;
+                }
+                if (forced || !LastColorKBCenter.Equals(ColorKBCenter))
+                {
+                    clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBCenter, ColorKBCenter.B, ColorKBCenter.R, ColorKBCenter.G, (double)(ColorKBCenter.A / 0xff));
+                    LastColorKBCenter = ColorKBCenter;
+                }
+                if (forced || !LastColorKBRight.Equals(ColorKBRight))
+                {
+                    clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBRight, ColorKBRight.B, ColorKBRight.R, ColorKBRight.G, (double)(ColorKBRight.A / 0xff));
+                    LastColorKBRight = ColorKBRight;
+                }
+                if (forced || (useTouchpad && !LastColorTouchpad.Equals(ColorTouchpad)))
+                {
+                    clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorTouchpad, ColorTouchpad.B, ColorTouchpad.R, ColorTouchpad.G, (double)(ColorTouchpad.A / 0xff));
+                    LastColorTouchpad = ColorTouchpad;
+                }
+                ColorUpdated = false;
             }
         }
 
-
+        // Device Status Methods
         public bool IsKeyboardConnected()
         {
-            return true; // TODO: Implement Keyboard functionality
+            return isInitialized;
         }
 
         public bool IsPeripheralConnected()

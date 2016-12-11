@@ -329,11 +329,11 @@ namespace Aurora.Devices.Logitech
                 {
                     Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key.Key);
 
-                    if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.Peripheral)
+                    if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.Peripheral_Logo || localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral((Color)key.Value, forced || !peripheral_updated);
                     }
-                    if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.OEM8)
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.OEM8)
                     {
                         double alpha_amt = (key.Value.A / 255.0);
                         int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
@@ -341,6 +341,105 @@ namespace Aurora.Devices.Logitech
                         int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
 
                         LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(220, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G1)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_1, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G2)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_2, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G3)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_3, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G4)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_4, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G5)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_5, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G6)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_6, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G7)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_7, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G8)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_8, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.G9)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_9, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.LOGO)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_LOGO, red_amt, green_amt, blue_amt);
+                    }
+                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN && key.Key == DeviceKeys.LOGO2)
+                    {
+                        double alpha_amt = (key.Value.A / 255.0);
+                        int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
+                        int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
+                        int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+
+                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_BADGE, red_amt, green_amt, blue_amt);
                     }
                     else if (localKey != Logitech_keyboardBitmapKeys.UNKNOWN)
                     {
@@ -731,8 +830,6 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.K;
                 case (DeviceKeys.L):
                     return Logitech_keyboardBitmapKeys.L;
-                case (DeviceKeys.DEU_O):
-                    return Logitech_keyboardBitmapKeys.SEMICOLON;
                 case (DeviceKeys.SEMICOLON):
                     return Logitech_keyboardBitmapKeys.SEMICOLON;
                 case (DeviceKeys.APOSTROPHE):

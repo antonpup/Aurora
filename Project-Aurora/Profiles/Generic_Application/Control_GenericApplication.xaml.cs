@@ -14,15 +14,11 @@ namespace Aurora.Profiles.Generic_Application
     {
         private ProfileManager profile_manager;
 
-        private string app_key = "";
-
-        public Control_GenericApplication(string application_key)
+        public Control_GenericApplication(ProfileManager profile)
         {
             InitializeComponent();
 
-            app_key = application_key;
-
-            profile_manager = Global.Configuration.additional_profiles[app_key];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -51,12 +47,17 @@ namespace Aurora.Profiles.Generic_Application
             this.cz_day.ColorZonesList = (profile_manager.Settings as GenericApplicationSettings).lighting_areas_day;
             this.cz_night.ColorZonesList = (profile_manager.Settings as GenericApplicationSettings).lighting_areas_night;
         }
-
+        
+        private bool HasProfile()
+        {
+            return Global.Configuration.additional_profiles.ContainsKey(profile_manager.ProcessNames[0]);
+        }
+               
         private void app_name_textbox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (this.IsInitialized)
             {
-                if (Global.Configuration.additional_profiles.ContainsKey(app_key))
+                if (HasProfile())
                     (profile_manager.Settings as GenericApplicationSettings).ApplicationName = app_name_textbox.Text;
                 ConfigManager.Save(Global.Configuration);
             }
@@ -64,17 +65,15 @@ namespace Aurora.Profiles.Generic_Application
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.GenericApplication, app_key);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private void sc_assistant_enabled_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && Global.Configuration.additional_profiles.ContainsKey(app_key))
+            if (IsLoaded && HasProfile())
             {
                 (profile_manager.Settings as GenericApplicationSettings).shortcuts_assistant_enabled = (this.sc_assistant_enabled.IsChecked.HasValue) ? this.sc_assistant_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
@@ -83,7 +82,7 @@ namespace Aurora.Profiles.Generic_Application
 
         private void sc_assistant_ctrl_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            if (IsLoaded && this.sc_assistant_ctrl_color.SelectedColor.HasValue && Global.Configuration.additional_profiles.ContainsKey(app_key))
+            if (IsLoaded && this.sc_assistant_ctrl_color.SelectedColor.HasValue && HasProfile())
             {
                 (profile_manager.Settings as GenericApplicationSettings).ctrl_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_ctrl_color.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
@@ -92,7 +91,7 @@ namespace Aurora.Profiles.Generic_Application
 
         private void sc_assistant_ctrl_keys_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && Global.Configuration.additional_profiles.ContainsKey(app_key))
+            if (IsLoaded && HasProfile())
             {
                 (profile_manager.Settings as GenericApplicationSettings).ctrl_key_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
@@ -101,7 +100,7 @@ namespace Aurora.Profiles.Generic_Application
 
         private void sc_assistant_alt_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            if (IsLoaded && this.sc_assistant_alt_color.SelectedColor.HasValue && Global.Configuration.additional_profiles.ContainsKey(app_key))
+            if (IsLoaded && this.sc_assistant_alt_color.SelectedColor.HasValue && HasProfile())
             {
                 (profile_manager.Settings as GenericApplicationSettings).alt_key_color = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_alt_color.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
@@ -110,7 +109,7 @@ namespace Aurora.Profiles.Generic_Application
 
         private void sc_assistant_alt_keys_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && Global.Configuration.additional_profiles.ContainsKey(app_key))
+            if (IsLoaded && HasProfile())
             {
                 (profile_manager.Settings as GenericApplicationSettings).alt_key_sequence = (sender as Controls.KeySequence).Sequence;
                 ConfigManager.Save(Global.Configuration);
@@ -119,7 +118,7 @@ namespace Aurora.Profiles.Generic_Application
 
         private void cz_day_ColorZonesListUpdated(object sender, EventArgs e)
         {
-            if (IsInitialized && Global.Configuration.additional_profiles.ContainsKey(app_key))
+            if (IsInitialized && HasProfile())
             {
                 (profile_manager.Settings as GenericApplicationSettings).lighting_areas_day = (sender as ColorZones).ColorZonesList;
                 ConfigManager.Save(Global.Configuration);
@@ -128,7 +127,7 @@ namespace Aurora.Profiles.Generic_Application
 
         private void cz_night_ColorZonesListUpdated(object sender, EventArgs e)
         {
-            if (IsInitialized && Global.Configuration.additional_profiles.ContainsKey(app_key))
+            if (IsInitialized && HasProfile())
             {
                 (profile_manager.Settings as GenericApplicationSettings).lighting_areas_night = (sender as ColorZones).ColorZonesList;
                 ConfigManager.Save(Global.Configuration);
@@ -137,7 +136,7 @@ namespace Aurora.Profiles.Generic_Application
 
         private void profile_enabled_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && Global.Configuration.additional_profiles.ContainsKey(app_key))
+            if (IsLoaded && HasProfile())
             {
                 (profile_manager.Settings as GenericApplicationSettings).isEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);

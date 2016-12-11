@@ -15,6 +15,7 @@ using Aurora.Settings;
 using Aurora.Controls;
 using Aurora.Profiles.Generic_Application;
 using System.IO;
+using Aurora.Settings.Keycaps;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
@@ -22,7 +23,7 @@ namespace Aurora
     partial class ConfigUI : Window
     {
         Settings.Control_Settings settings_control = new Settings.Control_Settings();
-        Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
+        //Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
 
         Control_LayerControlPresenter layercontrol_presenter = new Control_LayerControlPresenter();
 
@@ -60,13 +61,13 @@ namespace Aurora
             {
                 SetValue(FocusedProfileProperty, value);
 
-                if(value == null || value is Profiles.Desktop.DesktopProfileManager)
+                if (value == null || value is Profiles.Desktop.DesktopProfileManager)
                     Global.geh.SetPreview(PreviewType.Desktop);
-                else if(value is Profiles.Generic_Application.GenericApplicationProfileManager)
+                else if (value is Profiles.Generic_Application.GenericApplicationProfileManager)
                     Global.geh.SetPreview(PreviewType.GenericApplication, value.ProcessNames[0]);
                 else
                     Global.geh.SetPreview(PreviewType.Predefined, value.ProcessNames[0]);
-                
+
             }
         }
 
@@ -208,70 +209,10 @@ namespace Aurora
                             Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights = new Dictionary<Devices.DeviceKeys, System.Drawing.Color>();
 
                             if (Global.geh.GetPreview() != PreviewType.None)
-                                keylights = Global.effengine.GetKeyboardLights();
-
-                            Border[] keys = virtial_kb.Children.OfType<Border>().ToArray();
-
-
-                            foreach (var child in keys)
                             {
-                                if (child is Border &&
-                                    (child as Border).Child is TextBlock &&
-                                    ((child as Border).Child as TextBlock).Tag is Devices.DeviceKeys
-                                    )
-                                {
-                                    if (keylights.ContainsKey((Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag))
-                                    {
-                                        Color key_color = Utils.ColorUtils.DrawingColorToMediaColor(keylights[(Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag]);
-
-                                        ((child as Border).Child as TextBlock).Foreground = new SolidColorBrush(key_color);
-
-                                        //Backglow
-                                        //((child as Border).Effect as System.Windows.Media.Effects.DropShadowEffect).Color = key_color;
-                                    }
-
-                                    if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag))
-                                        (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
-                                    else
-                                    {
-                                        if ((child as Border).IsEnabled)
-                                        {
-                                            (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)30, (byte)30, (byte)30));
-                                        }
-                                        else
-                                        {
-                                            (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
-                                            (child as Border).BorderThickness = new Thickness(0);
-                                        }
-                                    }
-                                }
-                                else if (child is Border &&
-                                    (child as Border).Tag is Devices.DeviceKeys &&
-                                    (Devices.DeviceKeys)(child as Border).Tag != Devices.DeviceKeys.NONE
-                                    )
-                                {
-                                    if (keylights.ContainsKey((Devices.DeviceKeys)(child as Border).Tag))
-                                    {
-                                        Color key_color = Utils.ColorUtils.DrawingColorToMediaColor(keylights[(Devices.DeviceKeys)(child as Border).Tag]);
-
-                                        (child as Border).Background = new SolidColorBrush(key_color);
-                                    }
-
-                                    if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)(child as Border).Tag))
-                                    {
-                                        (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
-                                    }
-                                    else
-                                    {
-                                        if (!(child as Border).IsEnabled)
-                                        {
-                                            (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
-                                            (child as Border).BorderThickness = new Thickness(0);
-                                        }
-                                    }
-                                }
-
-                            }//);
+                                keylights = Global.effengine.GetKeyboardLights();
+                                Global.kbLayout.SetKeyboardColors(keylights);
+                            }
 
                             if (Global.key_recorder.IsRecording())
                                 this.keyboard_record_message.Visibility = System.Windows.Visibility.Visible;
@@ -589,7 +530,7 @@ namespace Aurora
                 }
 
 
-                this.content_grid.Content = new Profiles.Generic_Application.Control_GenericApplication(filename);
+                this.content_grid.Content = Global.Configuration.additional_profiles[filename].Control;
 
                 current_color = desktop_color_scheme;
                 transitionamount = 0.0f;

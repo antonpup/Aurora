@@ -11,6 +11,7 @@ using System.Windows.Input;
 using Aurora.Devices;
 using System.Drawing;
 using System.Windows.Media.Imaging;
+using Aurora.Settings.Keycaps;
 
 namespace Aurora.Settings
 {
@@ -69,7 +70,7 @@ namespace Aurora.Settings
         /// <summary>
         /// A list of paths for each included group json
         /// </summary>
-        public string[] included_features = new string[] {};
+        public string[] included_features = new string[] { };
     }
 
     public class VirtualGroup
@@ -306,7 +307,7 @@ namespace Aurora.Settings
         {
             var applicable_keys = grouped_keys.FindAll(key => key.tag == DeviceKeys.RIGHT_WINDOWS);
 
-            foreach(var key in applicable_keys)
+            foreach (var key in applicable_keys)
             {
                 key.tag = DeviceKeys.FN_Key;
                 key.visualName = "FN";
@@ -394,6 +395,8 @@ namespace Aurora.Settings
         private VirtualGroup virtual_keyboard_group;
 
         //private List<KeyboardKey> keyboard = new List<KeyboardKey>();
+
+        private Dictionary<Devices.DeviceKeys, IKeycap> _virtual_keyboard_map = new Dictionary<DeviceKeys, IKeycap>();
 
         private Grid _virtual_keyboard = new Grid();
 
@@ -536,14 +539,17 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
-                
+                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L)
+                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
+                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
+                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
 
                 if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
                 {
                     string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
                     VirtualGroupConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualGroupConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                    if(layoutConfig.replace_RWin_with_FN)
+                    if (layoutConfig.replace_RWin_with_FN)
                         virtual_keyboard_group.AdjustFNKey();
 
                     virtual_keyboard_group.SetNewLineKeys(layoutConfig.keys_to_set_as_new_line);
@@ -564,7 +570,7 @@ namespace Aurora.Settings
 
                     string mouse_feature_path = "";
 
-                    switch(mouse_preference)
+                    switch (mouse_preference)
                     {
                         case PreferredMouse.Logitech_G900:
                             mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
@@ -578,9 +584,12 @@ namespace Aurora.Settings
                         case PreferredMouse.Corsair_Katar:
                             mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_katar_features.json");
                             break;
+                        case PreferredMouse.Clevo_Touchpad:
+                            mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json");
+                            break;
                     }
 
-                    if(!string.IsNullOrWhiteSpace(mouse_feature_path))
+                    if (!string.IsNullOrWhiteSpace(mouse_feature_path))
                     {
                         string feature_content = File.ReadAllText(mouse_feature_path, Encoding.UTF8);
                         VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
@@ -691,7 +700,7 @@ namespace Aurora.Settings
 
         private void keyboard_grid_moved(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock && last_selected_element != ((sender as Border).Child as TextBlock))
                 {
@@ -707,13 +716,13 @@ namespace Aurora.Settings
         private void CreateUserControl()
         {
             Grid new_virtual_keyboard = new Grid();
+            _virtual_keyboard_map.Clear();
 
             double layout_height = 0;
             double layout_width = 0;
 
             double baseline_x = 0.0;
             double baseline_y = 0.0;
-            double cornerRadius = 5;
             double current_height = 0;
             double current_width = 0;
 
@@ -724,94 +733,47 @@ namespace Aurora.Settings
                 double keyMargin_Left = key.margin_left;
                 double keyMargin_Top = key.margin_top;
 
-                Border keyBorder = new Border();
-                keyBorder.CornerRadius = new CornerRadius(cornerRadius);
-                keyBorder.Width = key.width;
-                keyBorder.Height = key.height;
-                keyBorder.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                keyBorder.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                string image_path = "";
+
+                if (!String.IsNullOrWhiteSpace(key.image))
+                    image_path = Path.Combine(images_path, key.image);
+
+                UserControl keycap;
+
+                switch(Global.Configuration.virtualkeyboard_keycap_type)
+                {
+                    case KeycapType.Default_backglow:
+                        keycap = new Control_DefaultKeycapBackglow(key, image_path);
+                        break;
+                    case KeycapType.Default_backglow_only:
+                        keycap = new Control_DefaultKeycapBackglowOnly(key, image_path);
+                        break;
+                    case KeycapType.Colorized:
+                        keycap = new Control_ColorizedKeycap(key, image_path);
+                        break;
+                    case KeycapType.Colorized_blank:
+                        keycap = new Control_ColorizedKeycapBlank(key, image_path);
+                        break;
+                    default:
+                        keycap = new Control_DefaultKeycap(key, image_path);
+                        break;
+                }
+
+                new_virtual_keyboard.Children.Add(keycap);
+
+                if (key.tag != DeviceKeys.NONE && !_virtual_keyboard_map.ContainsKey(key.tag) && keycap is IKeycap)
+                    _virtual_keyboard_map.Add(key.tag, keycap as IKeycap);
+
                 if (key.absolute_location)
-                    keyBorder.Margin = new Thickness(keyMargin_Left, keyMargin_Top, 0, 0);
+                    keycap.Margin = new Thickness(key.margin_left, key.margin_top, 0, 0);
                 else
-                    keyBorder.Margin = new Thickness(current_width + keyMargin_Left, current_height + keyMargin_Top, 0, 0);
-                keyBorder.Visibility = System.Windows.Visibility.Visible;
-                if(string.IsNullOrWhiteSpace(key.image))
-                    keyBorder.BorderThickness = new Thickness(1.5);
-                else
-                    keyBorder.BorderThickness = new Thickness(0.0);
-                keyBorder.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 128, 128, 128));
-                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 25, 25, 25));
-                keyBorder.IsEnabled = key.enabled;
-                keyBorder.MouseDown += keyboard_grid_pressed;
-                keyBorder.MouseMove += keyboard_grid_moved;
-                keyBorder.IsHitTestVisible = true;
-
-                //Backglow
-                System.Windows.Media.Effects.DropShadowEffect effect = new System.Windows.Media.Effects.DropShadowEffect();
-                effect.BlurRadius = 7;
-                effect.Direction = 0;
-                effect.ShadowDepth = 0;
-                effect.RenderingBias = System.Windows.Media.Effects.RenderingBias.Performance;
-                //keyBorder.Effect = effect;
-
-                if (!key.enabled)
-                {
-                    ToolTipService.SetShowOnDisabled(keyBorder, true);
-                    keyBorder.ToolTip = new ToolTip { Content = "Changes to this key are not supported" };
-                }
-
-                if (string.IsNullOrWhiteSpace(key.image))
-                {
-                    TextBlock keyCap = new TextBlock();
-                    keyCap.Text = key.visualName;
-                    keyCap.Tag = key.tag;
-                    keyCap.FontSize = key.font_size;
-                    keyCap.FontWeight = FontWeights.Bold;
-                    keyCap.FontFamily = new System.Windows.Media.FontFamily("Calibri");
-                    keyCap.TextAlignment = TextAlignment.Center;
-                    keyCap.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-                    keyCap.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-                    keyCap.Margin = new Thickness(0);
-                    keyCap.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
-                    keyCap.Visibility = System.Windows.Visibility.Visible;
-                    keyCap.IsHitTestVisible = true;
-
-                    keyBorder.Child = keyCap;
-                }
-                else
-                {
-                    string image_path = Path.Combine(images_path, key.image);
-
-                    if (System.IO.File.Exists(image_path))
-                    {
-                        var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(image_path));
-                        BitmapImage b = new BitmapImage();
-                        b.BeginInit();
-                        b.StreamSource = memStream;
-                        b.EndInit();
-
-                        if(key.tag == DeviceKeys.NONE)
-                        {
-                            keyBorder.Tag = key.tag;
-                            keyBorder.Background = new ImageBrush(b);
-                        }
-                        else
-                        {
-                            keyBorder.Tag = key.tag;
-                            keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
-                            keyBorder.OpacityMask = new ImageBrush(b);
-                        }
-                    }
-                }
-                
+                    keycap.Margin = new Thickness(current_width + key.margin_left, current_height + key.margin_top, 0, 0);
 
                 if (key.tag == DeviceKeys.ESC)
                 {
-                    baseline_x = keyBorder.Margin.Left;
-                    baseline_y = keyBorder.Margin.Top;
+                    baseline_x = keycap.Margin.Left;
+                    baseline_y = keycap.Margin.Top;
                 }
-
-                new_virtual_keyboard.Children.Add(keyBorder);
 
                 if (!key.absolute_location)
                 {
@@ -1042,6 +1004,15 @@ namespace Aurora.Settings
             virtual_keyboard_group = new VirtualGroup(keyboard.ToArray());
 
             _loaded_localization = PreferredKeyboardLocalization.None;
+        }
+
+        public void SetKeyboardColors(Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights)
+        {
+            foreach (var kvp in _virtual_keyboard_map)
+            {
+                if (keylights.ContainsKey(kvp.Key))
+                    kvp.Value.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(keylights[kvp.Key]));
+            }
         }
     }
 }

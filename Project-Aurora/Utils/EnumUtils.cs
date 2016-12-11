@@ -76,6 +76,11 @@ namespace Aurora.Utils
         public DeviceKeysToStringVC() : base(Devices.DeviceKeys.NONE) { }
     }
 
+    public class KeysToStringVC : EnumToStringVC
+    {
+        public KeysToStringVC() : base(System.Windows.Forms.Keys.None) { }
+    }
+
     public class PercentEffectTypeToStringVC : EnumToStringVC
     {
         public PercentEffectTypeToStringVC() : base(PercentEffectType.Progressive) { }
@@ -154,5 +159,15 @@ namespace Aurora.Utils
     public class LogicOperatorToStringVC : EnumToStringVC
     {
         public LogicOperatorToStringVC() : base(LogicItem.LogicOperator.GreaterThan) { }
+    }
+
+    public class AppDetectionModeToStringVC : EnumToStringVC
+    {
+        public AppDetectionModeToStringVC() : base(ApplicationDetectionMode.WindowsEvents) { }
+    }
+
+    public class KeycapTypeToStringVC : EnumToStringVC
+    {
+        public KeycapTypeToStringVC() : base(KeycapType.Default) { }
     }
 }

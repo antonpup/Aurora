@@ -13,13 +13,17 @@ namespace Aurora.Profiles.Desktop
     /// </summary>
     public partial class Control_Desktop : UserControl
     {
-        public Control_Desktop()
+        private ProfileManager profile_manager;
+
+        public Control_Desktop(ProfileManager profile)
         {
             InitializeComponent();
 
+            profile_manager = profile;
+
             SetSettings();
 
-            Global.Configuration.desktop_profile.ProfileChanged += Desktop_profile_ProfileChanged;
+            profile_manager.ProfileChanged += Desktop_profile_ProfileChanged;
         }
 
         private void Desktop_profile_ProfileChanged(object sender, EventArgs e)
@@ -29,12 +33,12 @@ namespace Aurora.Profiles.Desktop
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = Global.Configuration.desktop_profile;
-            this.scriptmanager.ProfileManager = Global.Configuration.desktop_profile;
+            this.profilemanager.ProfileManager = profile_manager;
+            this.scriptmanager.ProfileManager = profile_manager;
 
-            this.profile_enabled.IsChecked = (Global.Configuration.desktop_profile.Settings as DesktopSettings).isEnabled;
+            this.profile_enabled.IsChecked = (profile_manager.Settings as DesktopSettings).isEnabled;
 
-            this.desktop_cz.ColorZonesList = (Global.Configuration.desktop_profile.Settings as DesktopSettings).lighting_areas;
+            this.desktop_cz.ColorZonesList = (profile_manager.Settings as DesktopSettings).lighting_areas;
 
         }
 
@@ -50,8 +54,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.desktop_profile.Settings as DesktopSettings).isEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
-                Global.Configuration.desktop_profile.SaveProfiles();
+                (profile_manager.Settings as DesktopSettings).isEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
+                profile_manager.SaveProfiles();
             }
         }
 
@@ -67,8 +71,8 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (Global.Configuration.desktop_profile.Settings as DesktopSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
-                Global.Configuration.desktop_profile.SaveProfiles();
+                (profile_manager.Settings as DesktopSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                profile_manager.SaveProfiles();
             }
         }
     }

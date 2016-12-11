@@ -132,6 +132,13 @@ namespace Aurora
         int pushedframes = 0;
         Timer fpsDebugTimer = new Timer(1000D);
 
+        private static Devices.DeviceKeys[] possible_peripheral_keys = {
+                    Devices.DeviceKeys.Peripheral,
+                    Devices.DeviceKeys.Peripheral_FrontLight,
+                    Devices.DeviceKeys.Peripheral_ScrollWheel,
+                    Devices.DeviceKeys.Peripheral_Logo
+                };
+
 
         private static object bitmap_lock = new object();
 
@@ -275,19 +282,23 @@ namespace Aurora
                 EffectLayer[] layers_array = frame.GetLayers().ToArray();
 
                 foreach (EffectLayer layer in layers_array)
-                {
                     background += layer;
-                }
 
                 foreach (EffectLayer layer in over_layers_array)
-                {
                     background += layer;
-                }
 
                 //Apply Brightness
-                Color peri_col = background.Get(DeviceKeys.Peripheral);
+                Dictionary<DeviceKeys, Color> peripehralColors = new Dictionary<DeviceKeys, Color>();
 
-                background.Set(DeviceKeys.Peripheral, Utils.ColorUtils.BlendColors(peri_col, Color.Black, (1.0f - Global.Configuration.peripheral_brightness_modifier)));
+                foreach (Devices.DeviceKeys key in possible_peripheral_keys)
+                {
+                    if(!peripehralColors.ContainsKey(key))
+                        peripehralColors.Add(key, background.Get(key));
+                }
+
+                foreach (Devices.DeviceKeys key in possible_peripheral_keys)
+                    background.Set(key, Utils.ColorUtils.BlendColors(peripehralColors[key], Color.Black, (1.0f - Global.Configuration.peripheral_brightness_modifier)));
+
                 background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.keyboard_brightness_modifier)), Color.Black));
 
                 if (Global.Configuration.use_volume_as_brightness)
@@ -297,9 +308,7 @@ namespace Aurora
                 Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
 
                 foreach (Devices.DeviceKeys key in allKeys)
-                {
                     keyColors[key] = background.Get(key);
-                }
 
                 Effects.keyColors = new Dictionary<DeviceKeys, Color>(keyColors);
 

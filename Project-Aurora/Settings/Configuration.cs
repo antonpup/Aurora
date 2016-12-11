@@ -143,19 +143,36 @@ namespace Aurora.Settings
         Corsair = 2,
         [Description("Razer")]
         Razer = 3,
-        [Description("Logitech - G910")]
-        Logitech_G910 = 4,
-        [Description("Logitech - G410")]
-        Logitech_G410 = 8,
-        [Description("Corsair - K95")]
-        Corsair_K95 = 5,
-        [Description("Corsair - K70")]
-        Corsair_K70 = 6,
-        [Description("Corsair - K65")]
-        Corsair_K65 = 9,
-        [Description("Corsair - STRAFE")]
-        Corsair_STRAFE = 7
+        [Description("Clevo")]
+        Clevo = 4,
+        [Description("Cooler Master")]
+        CoolerMaster = 5,
 
+        //Logitech range is 100-199
+        [Description("Logitech - G910")]
+        Logitech_G910 = 100,
+        [Description("Logitech - G410")]
+        Logitech_G410 = 101,
+
+        //Corsair range is 200-299
+        [Description("Corsair - K95")]
+        Corsair_K95 = 200,
+        [Description("Corsair - K70")]
+        Corsair_K70 = 201,
+        [Description("Corsair - K65")]
+        Corsair_K65 = 202,
+        [Description("Corsair - STRAFE")]
+        Corsair_STRAFE = 203,
+
+        //Razer range is 300-399
+
+        //Clevo range is 400-499
+
+        //Cooler Master range is 500-599
+        [Description("Masterkeys Pro L")]
+        Masterkeys_Pro_L = 500,
+        [Description("Masterkeys Pro S")]
+        Masterkeys_Pro_S = 501
     }
 
     public enum PreferredKeyboardLocalization
@@ -183,14 +200,49 @@ namespace Aurora.Settings
     {
         [Description("None")]
         None = 0,
+
+        //Logitech range is 100-199
         [Description("Logitech - G900")]
         Logitech_G900 = 100,
+
+        //Corsair range is 200-299
         [Description("Corsair - Sabre")]
         Corsair_Sabre = 200,
         [Description("Corsair - M65")]
         Corsair_M65 = 201,
         [Description("Corsair - Katar")]
-        Corsair_Katar = 202
+        Corsair_Katar = 202,
+
+        //Razer range is 300-399
+
+        //Clevo range is 400-499
+        [Description("Clevo - Touchpad")]
+        Clevo_Touchpad = 400
+
+        //Cooler Master range is 500-599
+    }
+
+    public enum KeycapType
+    {
+        [Description("Default")]
+        Default = 0,
+        [Description("Default (with Backglow)")]
+        Default_backglow = 1,
+        [Description("Default (Backglow only)")]
+        Default_backglow_only = 2,
+        [Description("Colorized")]
+        Colorized = 3,
+        [Description("Colorized (blank)")]
+        Colorized_blank = 4
+    }
+
+    public enum ApplicationDetectionMode
+    {
+        [Description("Windows Events (Default)")]
+        WindowsEvents = 0,
+
+        [Description("Foreground App Scan")]
+        ForegroroundApp = 1
     }
 
     public class Configuration
@@ -217,6 +269,8 @@ namespace Aurora.Settings
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
         public PreferredMouse mouse_preference;
+        public KeycapType virtualkeyboard_keycap_type;
+        public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
 
         [JsonIgnoreAttribute]
@@ -303,6 +357,8 @@ namespace Aurora.Settings
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
             mouse_preference = PreferredMouse.None;
+            virtualkeyboard_keycap_type = KeycapType.Default;
+            detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
             additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
 

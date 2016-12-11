@@ -148,7 +148,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Name of the program
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// AppID of the program (for wrappers, always 0)
@@ -168,18 +168,18 @@ namespace Aurora.Profiles
     /// </summary>
     public class Command_Wrapper : Node<Command_Wrapper>
     {
-        public readonly int red_start;
-        public readonly int green_start;
-        public readonly int blue_start;
-        public readonly int red_end;
-        public readonly int green_end;
-        public readonly int blue_end;
-        public readonly int duration;
-        public readonly int interval;
-        public readonly string effect_type;
-        public readonly string effect_config;
-        public readonly int key;
-        public readonly int custom_mode;
+        public int red_start;
+        public int green_start;
+        public int blue_start;
+        public int red_end;
+        public int green_end;
+        public int blue_end;
+        public int duration;
+        public int interval;
+        public string effect_type;
+        public string effect_config;
+        public int key;
+        public int custom_mode;
 
         internal Command_Wrapper(string JSON)
             : base(JSON)
@@ -193,7 +193,7 @@ namespace Aurora.Profiles
             duration = GetInt("duration");
             interval = GetInt("interval");
             effect_type = GetString("effect_type");
-            effect_type = GetString("effect_config");
+            effect_config = GetString("effect_config");
             key = GetInt("key");
             custom_mode = GetInt("custom_mode");
         }
@@ -205,51 +205,51 @@ namespace Aurora.Profiles
     public class Extra_Keys_Wrapper : Node<Extra_Keys_Wrapper>
     {
         [Range(0, 3)]
-        public readonly int[] peripheral;
+        public int[] peripheral;
         [Range(0, 3)]
-        public readonly int[] logo;
+        public int[] logo;
         [Range(0, 3)]
-        public readonly int[] badge;
+        public int[] badge;
         [Range(0, 3)]
-        public readonly int[] G1;
+        public int[] G1;
         [Range(0, 3)]
-        public readonly int[] G2;
+        public int[] G2;
         [Range(0, 3)]
-        public readonly int[] G3;
+        public int[] G3;
         [Range(0, 3)]
-        public readonly int[] G4;
+        public int[] G4;
         [Range(0, 3)]
-        public readonly int[] G5;
+        public int[] G5;
         [Range(0, 3)]
-        public readonly int[] G6;
+        public int[] G6;
         [Range(0, 3)]
-        public readonly int[] G7;
+        public int[] G7;
         [Range(0, 3)]
-        public readonly int[] G8;
+        public int[] G8;
         [Range(0, 3)]
-        public readonly int[] G9;
+        public int[] G9;
         [Range(0, 3)]
-        public readonly int[] G10;
+        public int[] G10;
         [Range(0, 3)]
-        public readonly int[] G11;
+        public int[] G11;
         [Range(0, 3)]
-        public readonly int[] G12;
+        public int[] G12;
         [Range(0, 3)]
-        public readonly int[] G13;
+        public int[] G13;
         [Range(0, 3)]
-        public readonly int[] G14;
+        public int[] G14;
         [Range(0, 3)]
-        public readonly int[] G15;
+        public int[] G15;
         [Range(0, 3)]
-        public readonly int[] G16;
+        public int[] G16;
         [Range(0, 3)]
-        public readonly int[] G17;
+        public int[] G17;
         [Range(0, 3)]
-        public readonly int[] G18;
+        public int[] G18;
         [Range(0, 3)]
-        public readonly int[] G19;
+        public int[] G19;
         [Range(0, 3)]
-        public readonly int[] G20;
+        public int[] G20;
 
         internal Extra_Keys_Wrapper(string JSON)
             : base(JSON)

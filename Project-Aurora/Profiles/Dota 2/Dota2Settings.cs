@@ -76,6 +76,8 @@ namespace Aurora.Profiles.Dota_2
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {
+                
+                new Settings.Layers.Layer("Dota 2 Respawn", new Layers.Dota2RespawnLayerHandler()),
                 new Settings.Layers.Layer("Health Indicator", new Settings.Layers.PercentLayerHandler()
                 {
                     Properties = new Settings.Layers.PercentLayerHandlerProperties()
@@ -120,88 +122,13 @@ namespace Aurora.Profiles.Dota_2
                 {
                     Logics = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.LogicItem>()
                     {
-                        new LogicItem()
-                        {
-                            Action = new Tuple<LogicItem.ActionType, object>(
-                                LogicItem.ActionType.SetProperty,
-                                new Tuple<string, object>(
-                                    "_PrimaryColor",
-                                    new RealColor(Color.FromArgb(255, 255, 0, 0))
-                               )
-                            ),
-                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
-                            {
-                                {
-                                    "Hero/IsAlive",
-                                    new Tuple<LogicItem.LogicOperator, object>(
-                                        LogicItem.LogicOperator.Equal,
-                                        false
-                                    )
-                                }
-                            }
-                        },
-                        new LogicItem()
-                        {
-                            Action = new Tuple<LogicItem.ActionType, object>(
-                                LogicItem.ActionType.SetProperty,
-                                new Tuple<string, object>(
-                                    "_SecondaryColor",
-                                    new RealColor(Color.FromArgb(255, 255, 0, 0))
-                               )
-                            ),
-                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
-                            {
-                                {
-                                    "Hero/IsAlive",
-                                    new Tuple<LogicItem.LogicOperator, object>(
-                                        LogicItem.LogicOperator.Equal,
-                                        false
-                                    )
-                                }
-                            }
-                        },
-                        new LogicItem()
-                        {
-                            Action = new Tuple<LogicItem.ActionType, object>(
-                                LogicItem.ActionType.SetProperty,
-                                new Tuple<string, object>(
-                                    "_PrimaryColor",
-                                    null
-                               )
-                            ),
-                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
-                            {
-                                {
-                                    "Hero/IsAlive",
-                                    new Tuple<LogicItem.LogicOperator, object>(
-                                        LogicItem.LogicOperator.Equal,
-                                        true
-                                    )
-                                }
-                            }
-                        },
-                        new LogicItem()
-                        {
-                            Action = new Tuple<LogicItem.ActionType, object>(
-                                LogicItem.ActionType.SetProperty,
-                                new Tuple<string, object>(
-                                    "_SecondaryColor",
-                                   null
-                               )
-                            ),
-                            ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>()
-                            {
-                                {
-                                    "Hero/IsAlive",
-                                    new Tuple<LogicItem.LogicOperator, object>(
-                                        LogicItem.LogicOperator.Equal,
-                                        true
-                                    )
-                                }
-                            }
-                        }
                     }
-                }
+                },
+                new Settings.Layers.Layer("Dota 2 Ability Keys", new Layers.Dota2AbilityLayerHandler()),
+                new Settings.Layers.Layer("Dota 2 Item Keys", new Layers.Dota2ItemLayerHandler()),
+                new Settings.Layers.Layer("Dota 2 Hero Ability Effects", new Layers.Dota2HeroAbiltiyEffectsLayerHandler()),
+                new Settings.Layers.Layer("Dota 2 Killstreaks", new Layers.Dota2KillstreakLayerHandler()),
+                new Settings.Layers.Layer("Dota 2 Background", new Layers.Dota2BackgroundLayerHandler())
             };
 
 
