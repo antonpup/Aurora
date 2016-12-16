@@ -29,7 +29,6 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool Pulse { get { return (Logic._Pulse ?? _Pulse) ?? false; } }
 
-
         public override void Default()
         {
             base.Default();
@@ -67,7 +66,8 @@ namespace Aurora.Settings.Layers
             else
                 clr = Properties.SecondaryColor;
 
-            layer.Set(KeyUtils.GetDeviceKey(Properties.ToggledKey), clr);
+            layer.Set(Properties.Sequence, clr);
+            //layer.Set(KeyUtils.GetDeviceKey(Properties.ToggledKey), clr);
 
             return layer;
         }
