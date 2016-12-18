@@ -339,6 +339,12 @@
     <Compile Include="Profiles\Guild Wars 2\GameEvent_GW2.cs" />
     <Compile Include="Profiles\Guild Wars 2\GW2ProfileManager.cs" />
     <Compile Include="Profiles\Guild Wars 2\GW2Settings.cs" />
+    <Compile Include="Profiles\Blade and Soul\Control_BnS.xaml.cs">
+      <DependentUpon>Control_BnS.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Blade and Soul\GameEvent_BnS.cs" />
+    <Compile Include="Profiles\Blade and Soul\BnSProfileManager.cs" />
+    <Compile Include="Profiles\Blade and Soul\BnSSettings.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
@@ -823,6 +829,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\Blade and Soul\Control_BnS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\HotlineMiami\Control_HM.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1115,6 +1125,7 @@
     <Resource Include="Resources\evolve_48x48.png" />
     <Resource Include="Resources\metro_ll_48x48.png" />
     <Resource Include="Resources\gw2_48x48.png" />
+    <Resource Include="Resources\bns_48x48.png" />
     <Resource Include="Resources\keycap_backglow.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
