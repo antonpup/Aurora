@@ -21,7 +21,6 @@ namespace Aurora.Profiles.Blade_and_Soul
             //Effects
             //// Lighting Areas
             lighting_areas = new List<ColorZone>() {
-                ///new ColorZone(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE, Devices.DeviceKeys.Q, Devices.DeviceKeys.E, Devices.DeviceKeys.V, Devices.DeviceKeys.R }, System.Drawing.Color.Orange, "Movement")
             };
         }
     }
