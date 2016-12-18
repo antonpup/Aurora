@@ -112,7 +112,8 @@ namespace Aurora
             log4net.Config.BasicConfigurator.Configure();
 
             AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.Equals("devenv.exe"))
+                currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             //Make sure there is only one instance of Aurora
             if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)

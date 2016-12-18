@@ -25,6 +25,8 @@ namespace Aurora.Settings
 
         public ObservableCollection<Layer> Layers { get; set; }
 
+        public bool Hidden { get; set; }
+
         public ProfileSettings()
         {
             isEnabled = true;

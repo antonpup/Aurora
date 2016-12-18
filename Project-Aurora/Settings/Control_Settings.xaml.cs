@@ -87,6 +87,8 @@ namespace Aurora.Settings
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
 
+            this.btnEdit.Tag = false;
+
             Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
         }
 
@@ -850,6 +852,15 @@ namespace Aurora.Settings
                 Global.logger.LogLine("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
             }
+        }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigUI config = this.DataContext as ConfigUI;
+            Button btn = sender as Button;
+            btn.Tag = !(bool)btn.Tag;
+            btn.Content = (bool)btn.Tag ? "Stop Editing" : "Edit Profiles List";
+            config.IsEditing = (bool)btn.Tag;
         }
     }
 }

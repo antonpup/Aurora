@@ -334,6 +334,8 @@ namespace Aurora.Settings
         public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
 
+        public List<string> ProfileOrder { get; set; }
+
         public Configuration()
         {
             //First Time Installs
@@ -389,6 +391,8 @@ namespace Aurora.Settings
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
+
+            ProfileOrder = new List<string>(ApplicationProfiles.Keys);
         }
     }
 
@@ -418,7 +422,11 @@ namespace Aurora.Settings
             config.desktop_profile.LoadProfiles();
 
             foreach (var kvp in config.ApplicationProfiles)
+            {
                 kvp.Value.LoadProfiles();
+                if (!config.ProfileOrder.Contains(kvp.Key))
+                    config.ProfileOrder.Add(kvp.Key);
+            }
 
 
             if (Directory.Exists(AdditionalProfilesPath))
