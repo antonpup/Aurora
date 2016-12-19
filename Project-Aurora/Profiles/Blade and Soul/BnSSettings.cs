@@ -20,8 +20,7 @@ namespace Aurora.Profiles.Blade_and_Soul
 
             //Effects
             //// Lighting Areas
-            lighting_areas = new List<ColorZone>() {
-            };
+            lighting_areas = new List<ColorZone>();
         }
     }
 }

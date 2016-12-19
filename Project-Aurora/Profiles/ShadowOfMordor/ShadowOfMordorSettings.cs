@@ -1,5 +1,6 @@
 ﻿using Aurora.Settings;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Aurora.Profiles.ShadowOfMordor
 {
@@ -18,12 +19,31 @@ namespace Aurora.Profiles.ShadowOfMordor
             isEnabled = true;
             first_time_installed = false;
 
+            Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
+            {
+                new Settings.Layers.Layer("Movement", new Settings.Layers.SolidColorLayerHandler()
+                {
+                    Properties = new Settings.Layers.LayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Blue,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE })
+                    }
+                }
+                ),
+                new Settings.Layers.Layer("Other Actions", new Settings.Layers.SolidColorLayerHandler()
+                {
+                    Properties = new Settings.Layers.LayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.LightBlue,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.V, Devices.DeviceKeys.I, Devices.DeviceKeys.K, Devices.DeviceKeys.M })
+                    }
+                }
+                )
+            };
+
             //Effects
             //// Lighting Areas
-            lighting_areas = new List<ColorZone>() {
-                new ColorZone(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE }, System.Drawing.Color.Blue, "Movement"),
-                new ColorZone(new Devices.DeviceKeys[] { Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.V, Devices.DeviceKeys.I, Devices.DeviceKeys.K, Devices.DeviceKeys.M }, System.Drawing.Color.LightBlue, "Other Actions")
-            };
+            lighting_areas = new List<ColorZone>();
         }
     }
 }

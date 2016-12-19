@@ -1,5 +1,6 @@
 ﻿using Aurora.Settings;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Aurora.Profiles.HotlineMiami
 {
@@ -18,12 +19,31 @@ namespace Aurora.Profiles.HotlineMiami
             isEnabled = true;
             first_time_installed = false;
 
+            Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
+            {
+                new Settings.Layers.Layer("Movement", new Settings.Layers.SolidColorLayerHandler()
+                {
+                    Properties = new Settings.Layers.LayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Yellow,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
+                    }
+                }
+                ),
+                new Settings.Layers.Layer("Other Actions", new Settings.Layers.SolidColorLayerHandler()
+                {
+                    Properties = new Settings.Layers.LayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Red,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.R, Devices.DeviceKeys.ESC })
+                    }
+                }
+                )
+            };
+
             //Effects
             //// Lighting Areas
-            lighting_areas = new List<ColorZone>() {
-                new ColorZone(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D }, System.Drawing.Color.Yellow, "Movement"),
-                new ColorZone(new Devices.DeviceKeys[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.R, Devices.DeviceKeys.ESC }, System.Drawing.Color.Red, "Other Actions")
-            };
+            lighting_areas = new List<ColorZone>();
         }
     }
 }
