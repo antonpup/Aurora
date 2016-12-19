@@ -88,7 +88,7 @@ namespace Aurora.Settings
 
                 }
             }
-            this.FocusedProfile.SaveProfiles();
+            this.FocusedProfile?.SaveProfiles();
         }
 
         private void add_layer_button_Click(object sender, RoutedEventArgs e)

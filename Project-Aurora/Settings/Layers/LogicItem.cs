@@ -37,6 +37,22 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    public enum LogicOperator
+    {
+        //[AssociatedOperator("op_GreaterThan")]
+        GreaterThan,
+        //[AssociatedOperator("op_GreaterThanOrEqual")]
+        GreaterThanOrEqual,
+        //[AssociatedOperator("op_LessThan")]
+        LessThan,
+        //[AssociatedOperator("op_LessThanOrEqual")]
+        LessThanOrEqual,
+        //[AssociatedOperator("op_Equality")]
+        Equal,
+        //[AssociatedOperator("op_Inequality")]
+        NotEqual
+    }
+
     public class LogicItem
     {
         public enum ActionType
@@ -45,21 +61,7 @@ namespace Aurora.Settings.Layers
             SetProperty,
         }
 
-        public enum LogicOperator
-        {
-            //[AssociatedOperator("op_GreaterThan")]
-            GreaterThan,
-            //[AssociatedOperator("op_GreaterThanOrEqual")]
-            GreaterThanOrEqual,
-            //[AssociatedOperator("op_LessThan")]
-            LessThan,
-            //[AssociatedOperator("op_LessThanOrEqual")]
-            LessThanOrEqual,
-            //[AssociatedOperator("op_Equality")]
-            Equal,
-            //[AssociatedOperator("op_Inequality")]
-            NotEqual
-        }
+        
 
         public static Dictionary<LogicOperator, Func<dynamic, dynamic, bool>> OperatorFuncs = new Dictionary<LogicOperator, Func<dynamic, dynamic, bool>>
         {

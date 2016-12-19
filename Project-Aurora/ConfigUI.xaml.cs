@@ -73,6 +73,15 @@ namespace Aurora
 
         LayerEditor layer_editor = new LayerEditor();
 
+        private bool _IsEditing = false;
+
+        public bool IsEditing { get { return _IsEditing; }
+            set {
+                _IsEditing = value;
+                this.EditModeChanged(value);
+            }
+        }
+
         public ConfigUI()
         {
             InitializeComponent();
@@ -89,6 +98,7 @@ namespace Aurora
             ctrlLayerManager.ProfileOverviewRequest += CtrlLayerManager_ProfileOverviewRequest;
 
             GenerateProfileStack();
+            settings_control.DataContext = this;
         }
 
         private void CtrlLayerManager_ProfileOverviewRequest(UserControl profile_control)
@@ -334,33 +344,38 @@ namespace Aurora
             Global.geh.SetPreview(PreviewType.None);
         }
 
+        private Image profile_add;
+
         private void GenerateProfileStack()
         {
             selected_item = null;
             this.profiles_stack.Children.Clear();
 
-            Image profile_desktop = new Image();
-            profile_desktop.Tag = Global.Configuration.desktop_profile;
-            profile_desktop.Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative));
-            profile_desktop.ToolTip = "Desktop Settings";
-            profile_desktop.Margin = new Thickness(0, 5, 0, 0);
+            Image profile_desktop = new Image {
+                Tag = Global.Configuration.desktop_profile,
+                Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative)),
+                ToolTip = "Desktop Settings",
+                Margin = new Thickness(0, 5, 0, 0)
+            };
             profile_desktop.MouseDown += ProfileImage_MouseDown;
             this.profiles_stack.Children.Add(profile_desktop);
 
             //Included Game Profiles
-            foreach (KeyValuePair<string, ProfileManager> kvp in Global.Configuration.ApplicationProfiles)
+            foreach (string profile_k in Global.Configuration.ProfileOrder)
             {
-                ProfileManager profile = kvp.Value;
+                ProfileManager profile = Global.Configuration.ApplicationProfiles[profile_k];
                 ImageSource icon = profile.GetIcon();
                 UserControl control = profile.GetUserControl();
 
                 if (icon != null && control != null)
                 {
-                    Image profile_image = new Image();
-                    profile_image.Tag = profile;
-                    profile_image.Source = icon;
-                    profile_image.ToolTip = profile.Name + " Settings";
-                    profile_image.Margin = new Thickness(0, 5, 0, 0);
+                    Image profile_image = new Image {
+                        Tag = profile,
+                        Source = icon,
+                        ToolTip = profile.Name + " Settings",
+                        Margin = new Thickness(0, 5, 0, 0),
+                        Visibility = profile.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
+                    };
                     profile_image.MouseDown += ProfileImage_MouseDown;
                     this.profiles_stack.Children.Add(profile_image);
                 }
@@ -375,30 +390,38 @@ namespace Aurora
 
                 if (icon != null && control != null)
                 {
-                    Image profile_image = new Image();
-                    profile_image.Tag = profile;
-                    profile_image.Source = icon;
-                    profile_image.ToolTip = (profile.Settings as GenericApplicationSettings).ApplicationName + " Settings";
-                    profile_image.Margin = new Thickness(0, 5, 0, 0);
+                    GenericApplicationSettings settings = (profile.Settings as GenericApplicationSettings);
+                    Image profile_image = new Image
+                    {
+                        Tag = profile,
+                        Source = icon,
+                        ToolTip = settings.ApplicationName + " Settings",
+                        Margin = new Thickness(0, 5, 0, 0)
+                    };
                     profile_image.MouseDown += ProfileImage_MouseDown;
 
-                    Image profile_remove = new Image();
-                    profile_remove.Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative));
-                    profile_remove.ToolTip = "Remove " + (profile.Settings as GenericApplicationSettings).ApplicationName + " Profile";
-                    profile_remove.HorizontalAlignment = HorizontalAlignment.Right;
-                    profile_remove.VerticalAlignment = VerticalAlignment.Bottom;
-                    profile_remove.Height = 16;
-                    profile_remove.Width = 16;
-                    profile_remove.Visibility = Visibility.Hidden;
+                    Image profile_remove = new Image
+                    {
+                        Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative)),
+                        ToolTip = $"Remove {settings.ApplicationName} Profile",
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Height = 16,
+                        Width = 16,
+                        Visibility = Visibility.Hidden,
+                        Tag = kvp.Key
+                    };
                     profile_remove.MouseDown += RemoveProfile_MouseDown;
-                    profile_remove.Tag = kvp.Key;
 
-                    Grid profile_grid = new Grid();
-                    profile_grid.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-                    profile_grid.Margin = new Thickness(0, 5, 0, 0);
-                    profile_grid.Tag = profile_remove;
+                    Grid profile_grid = new Grid {
+                        Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                        Margin = new Thickness(0, 5, 0, 0),
+                        Tag = profile_remove
+                    };
+
                     profile_grid.MouseEnter += Profile_grid_MouseEnter;
                     profile_grid.MouseLeave += Profile_grid_MouseLeave;
+
                     profile_grid.Children.Add(profile_image);
                     profile_grid.Children.Add(profile_remove);
 
@@ -407,12 +430,55 @@ namespace Aurora
             }
 
             //Add new profiles button
-            Image profile_add = new Image();
-            profile_add.Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative));
-            profile_add.ToolTip = "Add a new Lighting Profile";
-            profile_add.Margin = new Thickness(0, 5, 0, 0);
+            profile_add = new Image {
+                Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative)),
+                ToolTip = "Add a new Lighting Profile",
+                Margin = new Thickness(0, 5, 0, 0)
+            };
             profile_add.MouseDown += AddProfile_MouseDown;
             this.profiles_stack.Children.Add(profile_add);
+        }
+
+        protected void EditModeChanged(bool value)
+        {
+            foreach (FrameworkElement ctrl in profiles_stack.Children)
+            {
+                Image img = ctrl as Image ?? (ctrl is Grid ? ((Grid)ctrl).Children[0] as Image : null);
+                if (img != null)
+                {
+                    ProfileManager profile = img.Tag as ProfileManager;
+                    if (profile != null) {
+                        img.Visibility = profile.Settings.Hidden && !value ? Visibility.Collapsed : Visibility.Visible;
+                        img.Opacity = profile.Settings.Hidden && value ? 0.5 : 1;
+                    }
+
+                    if (value) {
+                        img.MouseDown -= ProfileImage_MouseDown;
+                        img.MouseDown += ProfileImage_Edit_MouseDown;
+                        img.MouseUp += ProfileImage_Edit_MouseUp;
+                    } else {
+                        img.MouseDown += ProfileImage_MouseDown;
+                        img.MouseDown -= ProfileImage_Edit_MouseDown;
+                        img.MouseUp -= ProfileImage_Edit_MouseUp;
+                    }
+                }
+            }
+
+            profile_add.Visibility = value ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void ProfileImage_Edit_MouseDown(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+
+        private void ProfileImage_Edit_MouseUp(object sender, MouseEventArgs e)
+        {
+            Image img = sender as Image;
+            ProfileManager profile = img.Tag as ProfileManager;
+            profile.Settings.Hidden = !profile.Settings.Hidden;
+            img.Opacity = profile.Settings.Hidden ? 0.5 : 1;
         }
 
         private void Profile_grid_MouseLeave(object sender, MouseEventArgs e)

@@ -29,11 +29,22 @@ namespace Aurora.Settings.Layers
             cmbKey.Items.Add(System.Windows.Forms.Keys.CapsLock);
             cmbKey.Items.Add(System.Windows.Forms.Keys.NumLock);
             cmbKey.Items.Add(System.Windows.Forms.Keys.Scroll);
+            this.Loaded += (obj, e) => { this.SetSettings(); };
         }
 
         public Control_LockColourLayer(LockColourLayerHandler datacontext) : this()
         {
             this.DataContext = datacontext;
+        }
+
+        public void SetSettings()
+        {
+            this.keysLock.Sequence = ((LockColourLayerHandler)this.DataContext).Properties._Sequence;
+        }
+
+        private void keysLock_SequenceUpdated(object sender, EventArgs e)
+        {
+            ((LockColourLayerHandler)this.DataContext).Properties._Sequence = ((Controls.KeySequence)sender).Sequence;
         }
     }
 }

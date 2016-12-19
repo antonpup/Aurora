@@ -17,6 +17,8 @@ namespace Aurora.Profiles.Desktop
         KeyPress = 2,
         [Description("Arrow Flow")]
         ArrowFlow = 4,
+        [Description("Key Wave (Rainbow)")]
+        Wave_Rainbow = 5,
     }
 
     public class DesktopSettings : ProfileSettings
