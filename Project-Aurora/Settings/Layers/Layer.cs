@@ -27,6 +27,9 @@ namespace Aurora.Settings.Layers
         [Description("Breathing Layer")]
         Breathing = 120,
 
+        [Description("Blinking Layer")]
+        Blinking = 121,
+
         [Description("Percent Effect Layer")]
         Percent = 200,
 

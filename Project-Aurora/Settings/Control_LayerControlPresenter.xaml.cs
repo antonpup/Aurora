@@ -87,6 +87,9 @@ namespace Aurora.Settings
                     case LayerType.Breathing:
                         _Layer.Handler = new BreathingLayerHandler();
                         break;
+                    case LayerType.Blinking:
+                        _Layer.Handler = new BlinkingLayerHandler();
+                        break;
                     case LayerType.LockColor:
                         _Layer.Handler = new LockColourLayerHandler();
                         break;

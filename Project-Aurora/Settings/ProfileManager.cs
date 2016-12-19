@@ -88,6 +88,7 @@ namespace Aurora.Settings
             AvailableLayers.Add(LayerType.Solid);
             AvailableLayers.Add(LayerType.SolidFilled);
             AvailableLayers.Add(LayerType.Breathing);
+            AvailableLayers.Add(LayerType.Blinking);
             AvailableLayers.Add(LayerType.Percent);
             AvailableLayers.Add(LayerType.Interactive);
             AvailableLayers.Add(LayerType.ShortcutAssistant);

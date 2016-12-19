@@ -621,7 +621,11 @@
     </Compile>
     <Compile Include="Settings\Keycaps\IKeycap.cs" />
     <Compile Include="Settings\Layers\AmbilightLayerHandler.cs" />
+    <Compile Include="Settings\Layers\BlinkingLayerHandler.cs" />
     <Compile Include="Settings\Layers\BreathingLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_BlinkingLayer.xaml.cs">
+      <DependentUpon>Control_BlinkingLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_EqualizerLayer.xaml.cs">
       <DependentUpon>Control_EqualizerLayer.xaml</DependentUpon>
     </Compile>
@@ -912,6 +916,10 @@
     <Page Include="Settings\Keycaps\Control_DefaultKeycap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_BlinkingLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Layers\Control_EqualizerLayer.xaml">
       <SubType>Designer</SubType>
