@@ -108,7 +108,7 @@ namespace Aurora.Devices.AtmoOrbDevice
       try
       {
         var multiCastIp = IPAddress.Parse("239.15.18.2");
-        var port = int.Parse("49692");
+        var port = 49692;
 
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         ipClientEndpoint = new IPEndPoint(multiCastIp, port);
