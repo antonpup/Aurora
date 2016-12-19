@@ -621,8 +621,12 @@
     </Compile>
     <Compile Include="Settings\Keycaps\IKeycap.cs" />
     <Compile Include="Settings\Layers\AmbilightLayerHandler.cs" />
+    <Compile Include="Settings\Layers\BreathingLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_EqualizerLayer.xaml.cs">
       <DependentUpon>Control_EqualizerLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\Control_BreathingLayer.xaml.cs">
+      <DependentUpon>Control_BreathingLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\Control_InteractiveLayer.xaml.cs">
       <DependentUpon>Control_InteractiveLayer.xaml</DependentUpon>
@@ -912,6 +916,10 @@
     <Page Include="Settings\Layers\Control_EqualizerLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_BreathingLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Layers\Control_InteractiveLayer.xaml">
       <SubType>Designer</SubType>
