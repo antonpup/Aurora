@@ -13,27 +13,27 @@
         <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Can not cast ability Color:" VerticalAlignment="Top"/>
         <GroupBox Header="Ability Keys" HorizontalAlignment="Left" Margin="0,58,0,-48" VerticalAlignment="Top" Height="80" Width="245" BorderBrush="DimGray">
             <Grid Margin="0,0,0,0">
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="10,21,0,0" VerticalAlignment="Top" CornerRadius="5">
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="10,21,0,0" VerticalAlignment="Top" CornerRadius="5">
                     <TextBlock x:Name="ability_key1_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="ability_key1_textblock_MouseDown" FontSize="9"/>
                 </Border>
                 <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="1st" VerticalAlignment="Top" Width="32" TextAlignment="Center"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="47,21,0,0" VerticalAlignment="Top" CornerRadius="5">
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="47,21,0,0" VerticalAlignment="Top" CornerRadius="5">
                     <TextBlock x:Name="ability_key2_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="ability_key2_textblock_MouseDown" FontSize="9"/>
                 </Border>
                 <TextBlock HorizontalAlignment="Left" Margin="47,0,0,0" TextWrapping="Wrap" Text="2nd" VerticalAlignment="Top" Width="32" TextAlignment="Center"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="84,21,0,0" VerticalAlignment="Top" CornerRadius="5">
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="84,21,0,0" VerticalAlignment="Top" CornerRadius="5">
                     <TextBlock x:Name="ability_key3_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="ability_key3_textblock_MouseDown" FontSize="9"/>
                 </Border>
                 <TextBlock HorizontalAlignment="Left" Margin="84,0,0,0" TextWrapping="Wrap" Text="3rd" VerticalAlignment="Top" Width="32" TextAlignment="Center"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="121,21,0,0" VerticalAlignment="Top" CornerRadius="5">
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="121,21,0,0" VerticalAlignment="Top" CornerRadius="5">
                     <TextBlock x:Name="ability_key4_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="ability_key4_textblock_MouseDown" FontSize="9"/>
                 </Border>
                 <TextBlock HorizontalAlignment="Left" Margin="121,0,0,0" TextWrapping="Wrap" Text="4th" VerticalAlignment="Top" Width="32" TextAlignment="Center"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="158,21,0,0" VerticalAlignment="Top" CornerRadius="5">
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="158,21,0,0" VerticalAlignment="Top" CornerRadius="5">
                     <TextBlock x:Name="ability_key5_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="ability_key5_textblock_MouseDown" FontSize="9"/>
                 </Border>
                 <TextBlock HorizontalAlignment="Left" Margin="158,0,0,0" TextWrapping="Wrap" Text="5th" VerticalAlignment="Top" Width="32" TextAlignment="Center"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="195,21,0,0" VerticalAlignment="Top" CornerRadius="5">
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="195,21,0,0" VerticalAlignment="Top" CornerRadius="5">
                     <TextBlock x:Name="ability_key6_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="ability_key6_textblock_MouseDown" FontSize="9"/>
                 </Border>
                 <TextBlock HorizontalAlignment="Left" Margin="195,0,0,0" TextWrapping="Wrap" Text="Ulti" VerticalAlignment="Top" Width="32" TextAlignment="Center"/>

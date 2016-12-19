@@ -147,7 +147,6 @@ namespace Aurora.Profiles.Dota_2
                         {
                             if (this.respawn_time < 0)
                             {
-                                GameEvent_Dota2.SetAlive(true);
                                 (profile_manager.Event._game_state as GameState_Dota2).Hero.IsAlive = true;
 
                                 this.preview_killplayer.IsEnabled = true;
@@ -157,7 +156,6 @@ namespace Aurora.Profiles.Dota_2
                             else
                             {
                                 this.preview_respawn_time.Content = "Seconds to respawn: " + this.respawn_time;
-                                GameEvent_Dota2.SetRespawnTime(this.respawn_time);
                                 (profile_manager.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
 
                                 this.respawn_time--;
@@ -196,19 +194,6 @@ namespace Aurora.Profiles.Dota_2
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            switch ((Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam)this.preview_team.Items[this.preview_team.SelectedIndex])
-            {
-                case (Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.None):
-                    GameEvent_Dota2.SetTeam(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.None);
-                    break;
-                case (Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant):
-                    GameEvent_Dota2.SetTeam(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
-                    break;
-                default:
-                    GameEvent_Dota2.SetTeam(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
-                    break;
-            }
-
             (profile_manager.Event._game_state as GameState_Dota2).Player.Team = (Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
         }
 
@@ -218,8 +203,6 @@ namespace Aurora.Profiles.Dota_2
             if (this.preview_health_amount is Label)
             {
                 this.preview_health_amount.Content = hp_val + "%";
-                GameEvent_Dota2.SetHealth(hp_val);
-                GameEvent_Dota2.SetHealthMax(100);
                 
                 (profile_manager.Event._game_state as GameState_Dota2).Hero.Health = hp_val;
                 (profile_manager.Event._game_state as GameState_Dota2).Hero.MaxHealth = 100;
@@ -234,8 +217,6 @@ namespace Aurora.Profiles.Dota_2
             if (this.preview_mana_amount is Label)
             {
                 this.preview_mana_amount.Content = mana_val + "%";
-                GameEvent_Dota2.SetMana(mana_val);
-                GameEvent_Dota2.SetManaMax(100);
 
                 (profile_manager.Event._game_state as GameState_Dota2).Hero.Mana = mana_val;
                 (profile_manager.Event._game_state as GameState_Dota2).Hero.MaxMana = 100;
@@ -245,13 +226,12 @@ namespace Aurora.Profiles.Dota_2
 
         private void preview_killplayer_Click(object sender, RoutedEventArgs e)
         {
-            GameEvent_Dota2.SetAlive(false);
             (profile_manager.Event._game_state as GameState_Dota2).Hero.IsAlive = false;
 
             respawn_time = 15;
             (profile_manager.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
             this.preview_killplayer.IsEnabled = false;
-            GameEvent_Dota2.SetKillStreak(killstreak = 0);
+            (profile_manager.Event._game_state as GameState_Dota2).Player.KillStreak = this.killstreak = 0;
             this.preview_killstreak_label.Content = "Killstreak: " + this.killstreak;
 
             preview_respawn_timer.Start();
@@ -259,8 +239,8 @@ namespace Aurora.Profiles.Dota_2
 
         private void preview_addkill_Click(object sender, RoutedEventArgs e)
         {
-            GameEvent_Dota2.SetKillStreak(killstreak++);
-            GameEvent_Dota2.GotAKill();
+            (profile_manager.Event._game_state as GameState_Dota2).Player.KillStreak = killstreak++;
+            (profile_manager.Event._game_state as GameState_Dota2).Player.Kills++;
             this.preview_killstreak_label.Content = "Killstreak: " + this.killstreak;
         }
 
