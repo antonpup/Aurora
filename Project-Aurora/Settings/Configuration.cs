@@ -303,6 +303,11 @@ namespace Aurora.Settings
         [JsonIgnoreAttribute]
         public ProfileManager desktop_profile = new Profiles.Desktop.DesktopProfileManager();
 
+        // AtmoOrb Settings
+        public bool atmoorb_enabled;
+        public bool atmoorb_use_smoothing;
+        public string atmoorb_ids;
+
         [JsonIgnoreAttribute]
         public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
         {
@@ -393,6 +398,11 @@ namespace Aurora.Settings
             skype_overlay_settings = new SkypeOverlaySettings();
 
             ProfileOrder = new List<string>(ApplicationProfiles.Keys);
+
+            // AtmoOrb Settings
+            atmoorb_enabled = false;
+            atmoorb_use_smoothing = true;
+            atmoorb_ids = "1";
         }
     }
 
