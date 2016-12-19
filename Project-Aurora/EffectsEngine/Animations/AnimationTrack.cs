@@ -58,20 +58,14 @@ namespace Aurora.EffectsEngine.Animations
 
             foreach (KeyValuePair<float, AnimationFrame> kvp in _animations)
             {
-                if (kvp.Key  == time)
-                {
+                if (kvp.Key == time)
                     return kvp.Value;
-                }
 
                 if (kvp.Key > time && kvp.Key < closest_higher)
-                {
                     closest_higher = kvp.Key;
-                }
 
                 if (kvp.Key < time && kvp.Key > closest_lower)
-                {
                     closest_lower = kvp.Key;
-                }
             }
 
             return _animations[closest_lower].BlendWith(_animations[closest_higher], ((double)(time - closest_lower) / (double)(closest_higher - closest_lower)));

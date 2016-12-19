@@ -199,6 +199,94 @@ namespace Aurora.Settings.Layers
                     );
                 anim_mix.AddTrack(wave);
             }
+            else if (Properties.InteractiveEffect == InteractiveEffects.Wave_Rainbow)
+            {
+
+                float dT = (float)(Math.Sqrt((double)Properties.EffectWidth - 0.7) * Math.Sqrt(12.0)) * 0.0065f;
+
+                AnimationTrack wave_red = new AnimationTrack("Wave effect (red)", 1.00f - dT * 6);
+                AnimationTrack wave_orange = new AnimationTrack("Wave effect (orange)", 1.00f - dT * 5);
+                AnimationTrack wave_yellow = new AnimationTrack("Wave effect (yellow)", 1.00f - dT * 4);
+                AnimationTrack wave_green = new AnimationTrack("Wave effect (green)", 1.00f - dT * 3);
+                AnimationTrack wave_lightblue = new AnimationTrack("Wave effect (light blue)", 1.00f - dT * 2);
+                AnimationTrack wave_blue = new AnimationTrack("Wave effect (blue)", 1.00f - dT * 1);
+                AnimationTrack wave_purple = new AnimationTrack("Wave effect (purple)", 1.00f);
+
+                wave_red.SetFrame(0.0f,
+                    new AnimationCircle(origin, 0, Color.Red, Properties.EffectWidth)
+                    );
+                wave_red.SetFrame(1.00f - dT * 6,
+                    new AnimationCircle(origin, Effects.canvas_width, Color.Red, Properties.EffectWidth)
+                    );
+
+                wave_orange.SetFrame(0.0f,
+                    new AnimationCircle(origin, 0, Color.Orange, Properties.EffectWidth)
+                    );
+                wave_orange.SetFrame(0.0f + dT,
+                    new AnimationCircle(origin, 0, Color.Orange, Properties.EffectWidth)
+                    );
+                wave_orange.SetFrame(1.00f - dT * 5,
+                    new AnimationCircle(origin, Effects.canvas_width, Color.Orange, Properties.EffectWidth)
+                    );
+
+                wave_yellow.SetFrame(0.0f,
+                    new AnimationCircle(origin, 0, Color.Yellow, Properties.EffectWidth)
+                    );
+                wave_yellow.SetFrame(0.0f + dT * 2,
+                    new AnimationCircle(origin, 0, Color.Yellow, Properties.EffectWidth)
+                    );
+                wave_yellow.SetFrame(1.00f - dT * 4,
+                    new AnimationCircle(origin, Effects.canvas_width, Color.Yellow, Properties.EffectWidth)
+                    );
+
+                wave_green.SetFrame(0.0f,
+                    new AnimationCircle(origin, 0, Color.Green, Properties.EffectWidth)
+                    );
+                wave_green.SetFrame(0.0f + dT * 3,
+                    new AnimationCircle(origin, 0, Color.Green, Properties.EffectWidth)
+                    );
+                wave_green.SetFrame(1.00f - dT * 3,
+                    new AnimationCircle(origin, Effects.canvas_width, Color.Green, Properties.EffectWidth)
+                    );
+
+                wave_lightblue.SetFrame(0.0f,
+                    new AnimationCircle(origin, 0, Color.Blue, Properties.EffectWidth)
+                    );
+                wave_lightblue.SetFrame(0.0f + dT * 4,
+                    new AnimationCircle(origin, 0, Color.Blue, Properties.EffectWidth)
+                    );
+                wave_lightblue.SetFrame(1.00f - dT * 2,
+                    new AnimationCircle(origin, Effects.canvas_width, Color.Blue, Properties.EffectWidth)
+                    );
+
+                wave_blue.SetFrame(0.0f,
+                    new AnimationCircle(origin, 0, Color.DarkBlue, Properties.EffectWidth)
+                    );
+                wave_blue.SetFrame(0.0f + dT * 5,
+                    new AnimationCircle(origin, 0, Color.DarkBlue, Properties.EffectWidth)
+                    );
+                wave_blue.SetFrame(1.00f - dT,
+                    new AnimationCircle(origin, Effects.canvas_width, Color.DarkBlue, Properties.EffectWidth)
+                    );
+
+                wave_purple.SetFrame(0.0f,
+                    new AnimationCircle(origin, 0, Color.Purple, Properties.EffectWidth)
+                    );
+                wave_purple.SetFrame(0.0f + dT * 6,
+                    new AnimationCircle(origin, 0, Color.Purple, Properties.EffectWidth)
+                    );
+                wave_purple.SetFrame(1.00f,
+                    new AnimationCircle(origin, Effects.canvas_width, Color.Purple, Properties.EffectWidth)
+                    );
+
+                anim_mix.AddTrack(wave_red);
+                anim_mix.AddTrack(wave_orange);
+                anim_mix.AddTrack(wave_yellow);
+                anim_mix.AddTrack(wave_green);
+                anim_mix.AddTrack(wave_lightblue);
+                anim_mix.AddTrack(wave_blue);
+                anim_mix.AddTrack(wave_purple);
+            }
             else if (Properties.InteractiveEffect == InteractiveEffects.Wave_Filled)
             {
                 AnimationTrack wave = new AnimationTrack("Filled Wave effect", 1.0f);
