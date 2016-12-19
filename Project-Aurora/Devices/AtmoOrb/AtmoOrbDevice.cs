@@ -171,7 +171,11 @@ namespace Aurora.Devices.AtmoOrbDevice
           // 1 = force off
           // 2 = use lamp smoothing and validate by Orb ID
           // 4 = validate by Orb ID
-          bytes[3] = 2;
+
+          if (Global.Configuration.atmoorb_use_smoothing)
+            bytes[3] = 2;
+          else
+             bytes[3] = 4;
 
           // Orb ID
           bytes[4] = byte.Parse(orbID);

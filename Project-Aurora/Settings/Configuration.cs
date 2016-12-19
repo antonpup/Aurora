@@ -305,6 +305,7 @@ namespace Aurora.Settings
 
         // AtmoOrb Settings
         public bool atmoorb_enabled;
+        public bool atmoorb_use_smoothing;
         public string atmoorb_ids;
 
         [JsonIgnoreAttribute]
@@ -400,6 +401,7 @@ namespace Aurora.Settings
 
             // AtmoOrb Settings
             atmoorb_enabled = false;
+            atmoorb_use_smoothing = true;
             atmoorb_ids = "1";
         }
     }

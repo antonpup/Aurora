@@ -88,6 +88,7 @@ namespace Aurora.Settings
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
 
             this.atmoorb_enabled.IsChecked = Global.Configuration.atmoorb_enabled;
+            this.atmoorb_use_smoothing.IsChecked = Global.Configuration.atmoorb_use_smoothing;
             this.atmoorb_IDs.Text = Global.Configuration.atmoorb_ids;
 
             this.btnEdit.Tag = false;
@@ -871,6 +872,25 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.atmoorb_enabled = (this.atmoorb_enabled.IsChecked.HasValue) ? this.atmoorb_enabled.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+
+        private void atmoorb_use_smoothing_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.atmoorb_use_smoothing = (this.atmoorb_use_smoothing.IsChecked.HasValue) ? this.atmoorb_use_smoothing.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void atmoorb_use_smoothing_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.atmoorb_use_smoothing = (this.atmoorb_use_smoothing.IsChecked.HasValue) ? this.atmoorb_use_smoothing.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
