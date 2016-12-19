@@ -230,8 +230,8 @@
         <Grid>
           <Label x:Name="labelatmoorb_enabled" Content="Enable AtmoOrb" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
           <Label x:Name="labelatmoorb_IDs" Content="Orb IDs" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top"/>
-          <CheckBox x:Name="atmoorb_enabled" Content="" HorizontalAlignment="Left" Margin="113,16,0,0" VerticalAlignment="Top" Checked="atmoorb_enabled_Checked" Unchecked="atmoorb_enabled_Unchecked"/>
-          <TextBox x:Name="atmoorb_IDs" HorizontalAlignment="Left" Height="23" Margin="113,77,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="142" TextChanged="atmoorb_IDs_TextChanged"/>
+          <CheckBox x:Name="atmoorb_enabled" Content="" HorizontalAlignment="Left" Margin="115,16,0,0" VerticalAlignment="Top" Checked="atmoorb_enabled_Checked" Unchecked="atmoorb_enabled_Unchecked"/>
+          <TextBox x:Name="atmoorb_IDs" HorizontalAlignment="Left" Height="23" Margin="122,77,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="142" TextChanged="atmoorb_IDs_TextChanged"/>
           <Label x:Name="hintatmoorb_IDs" Content="For multiple IDs separate with comma" HorizontalAlignment="Left" Margin="90,106,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
         </Grid>
       </TabItem>
@@ -261,7 +261,7 @@
         </Grid>
       </TabItem>
     </TabControl>
-    <Label x:Name="labelatmoorb_use_smoothing" Content="Use smoothing" HorizontalAlignment="Left" Margin="14,66,0,0" VerticalAlignment="Top"/>
-    <CheckBox x:Name="atmoorb_use_smoothing" Content="" HorizontalAlignment="Left" Margin="116,73,0,0" VerticalAlignment="Top" Checked="atmoorb_use_smoothing_Checked" Unchecked="atmoorb_use_smoothing_Unchecked"/>
+    <Label x:Name="labelatmoorb_use_smoothing" Content="Use smoothing" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>
+    <CheckBox x:Name="atmoorb_use_smoothing" Content="" HorizontalAlignment="Left" Margin="115,73,0,0" VerticalAlignment="Top" Checked="atmoorb_use_smoothing_Checked" Unchecked="atmoorb_use_smoothing_Unchecked"/>
   </Grid>
 </UserControl>
