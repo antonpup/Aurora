@@ -73,12 +73,12 @@ namespace Aurora
 
         LayerEditor layer_editor = new LayerEditor();
 
-        private bool _IsEditing = false;
+        private bool _ShowHidden = false;
 
-        public bool IsEditing { get { return _IsEditing; }
+        public bool ShowHidden { get { return _ShowHidden; }
             set {
-                _IsEditing = value;
-                this.EditModeChanged(value);
+                _ShowHidden = value;
+                this.ShowHiddenChanged(value);
             }
         }
 
@@ -346,6 +346,11 @@ namespace Aurora
 
         private Image profile_add;
 
+        private Image profile_hidden;
+
+        private BitmapImage _visible = new BitmapImage(new Uri(@"Resources/Visible.png", UriKind.Relative));
+        private BitmapImage _not_visible = new BitmapImage(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
+
         private void GenerateProfileStack()
         {
             selected_item = null;
@@ -429,6 +434,16 @@ namespace Aurora
                 }
             }
 
+            //Show hidden profiles button
+            profile_hidden = new Image
+            {
+                Source = _not_visible,
+                ToolTip = "Toggle Hidden profiles' visibility",
+                Margin = new Thickness(0, 5, 0, 0)
+            };
+            profile_hidden.MouseDown += HiddenProfile_MouseDown;
+            this.profiles_stack.Children.Add(profile_hidden);
+
             //Add new profiles button
             profile_add = new Image {
                 Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative)),
@@ -439,8 +454,15 @@ namespace Aurora
             this.profiles_stack.Children.Add(profile_add);
         }
 
-        protected void EditModeChanged(bool value)
+        private void HiddenProfile_MouseDown(object sender, EventArgs e)
         {
+            this.ShowHidden = !this.ShowHidden;
+        }
+
+        protected void ShowHiddenChanged(bool value)
+        {
+            profile_hidden.Source = value ? _visible : _not_visible;
+
             foreach (FrameworkElement ctrl in profiles_stack.Children)
             {
                 Image img = ctrl as Image ?? (ctrl is Grid ? ((Grid)ctrl).Children[0] as Image : null);
@@ -449,29 +471,48 @@ namespace Aurora
                     ProfileManager profile = img.Tag as ProfileManager;
                     if (profile != null) {
                         img.Visibility = profile.Settings.Hidden && !value ? Visibility.Collapsed : Visibility.Visible;
-                        img.Opacity = profile.Settings.Hidden && value ? 0.5 : 1;
-                    }
-
-                    if (value) {
-                        img.MouseDown -= ProfileImage_MouseDown;
-                        img.MouseDown += ProfileImage_Edit_MouseDown;
-                        img.MouseUp += ProfileImage_Edit_MouseUp;
-                    } else {
-                        img.MouseDown += ProfileImage_MouseDown;
-                        img.MouseDown -= ProfileImage_Edit_MouseDown;
-                        img.MouseUp -= ProfileImage_Edit_MouseUp;
+                        img.Opacity = profile.Settings.Hidden ? 0.5 : 1;
                     }
                 }
             }
 
-            profile_add.Visibility = value ? Visibility.Collapsed : Visibility.Visible;
+            //profile_add.Visibility = value ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        private void ProfileImage_Edit_MouseDown(object sender, MouseEventArgs e)
+        private void mbtnHidden_Checked(object sender, RoutedEventArgs e)
         {
-            
+            MenuItem btn = sender as MenuItem;
+            Image img = this.cmenuProfiles.PlacementTarget as Image;
+
+            if (img != null)
+            {
+                img.Opacity = btn.IsChecked ? 0.5 : 1;
+
+                if (!this.ShowHidden && btn.IsChecked)
+                    img.Visibility = Visibility.Collapsed;
+
+                (img.Tag as ProfileManager)?.SaveProfiles();
+            }
         }
 
+        private void cmenuProfiles_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (!(((ContextMenu)e.Source).PlacementTarget is Image))
+                e.Handled = true;
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu context = (ContextMenu)e.OriginalSource;
+
+            Image img = (Image)context.PlacementTarget;
+            ProfileManager profile = img.Tag as ProfileManager;
+            context.DataContext = profile;
+            /*
+            this.mbtnEnabled.IsChecked = profile.Settings.isEnabled;
+            this.mbtnHidden.IsChecked = profile.Settings.Hidden;*/
+
+        }
 
         private void ProfileImage_Edit_MouseUp(object sender, MouseEventArgs e)
         {
@@ -499,19 +540,28 @@ namespace Aurora
 
         private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            
             if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is ProfileManager)
             {
-                this.FocusedProfile = (sender as Image).Tag as ProfileManager;
+                if (e == null || e.LeftButton == MouseButtonState.Pressed)
+                {
+                    this.FocusedProfile = (sender as Image).Tag as ProfileManager;
 
-                var bitmap = (BitmapSource)(sender as Image).Source;
-                var color = Utils.ColorUtils.GetAverageColor(bitmap);
+                    var bitmap = (BitmapSource)(sender as Image).Source;
+                    var color = Utils.ColorUtils.GetAverageColor(bitmap);
 
-                current_color = new EffectColor(color);
-                current_color *= 0.85f;
+                    current_color = new EffectColor(color);
+                    current_color *= 0.85f;
 
-                transitionamount = 0.0f;
+                    transitionamount = 0.0f;
 
-                UpdateProfileStackBackground(sender as FrameworkElement);
+                    UpdateProfileStackBackground(sender as FrameworkElement);
+                }
+                else if (e.RightButton == MouseButtonState.Pressed)
+                {
+                    this.cmenuProfiles.PlacementTarget = (Image)sender;
+                    this.cmenuProfiles.IsOpen = true;
+                }
             }
         }
 
@@ -696,6 +746,8 @@ namespace Aurora
         {
             UpdateProfileStackBackground(selected_item);
         }
+
+        
     }
 }
 

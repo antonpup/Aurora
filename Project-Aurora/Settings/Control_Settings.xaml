@@ -143,7 +143,6 @@
                     <CheckBox x:Name="start_silently_enabled" Content="Start Aurora in a minimized state" HorizontalAlignment="Left" Margin="156,10,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="496,13,0,0" TextWrapping="Wrap" Text="Application Detection Method:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="app_detection_mode" HorizontalAlignment="Left" Margin="664,10,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource AppDetectionMode}}" ItemTemplate="{Binding Source={StaticResource AppDetectionModeTemplate}}" SelectionChanged="app_detection_mode_SelectionChanged"/>
-                    <Button x:Name="btnEdit" Content="Edit Profiles List" Margin="10,224,0,0" HorizontalAlignment="Left" Width="90" VerticalAlignment="Top" Click="btnEdit_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">
