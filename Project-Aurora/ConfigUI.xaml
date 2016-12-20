@@ -45,8 +45,8 @@
                 <StackPanel x:Name="profiles_stack" RenderTransformOrigin="0.5,0" MinHeight="542" MaxHeight="542" MinWidth="40" MaxWidth="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="6,0,0,0">
                     <StackPanel.ContextMenu>
                         <ContextMenu x:Name="cmenuProfiles" Opened="ContextMenu_Opened" ContextMenuOpening="cmenuProfiles_ContextMenuOpening">
-                            <MenuItem x:Name="mbtnHidden" Header="Hidden" IsCheckable="True" IsChecked="{Binding Path=Settings.Hidden, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="mbtnHidden_Checked" Unchecked="mbtnHidden_Checked"/>
-                            <MenuItem x:Name="mbtnEnabled" Header="Enabled" IsCheckable="True" IsChecked="{Binding Path=Settings.isEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <MenuItem x:Name="mbtnEnabled" Header="Enabled" IsCheckable="True" IsChecked="{Binding Settings.isEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <MenuItem x:Name="mbtnHidden" Header="Hidden" IsCheckable="True" IsChecked="{Binding Settings.Hidden, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="mbtnHidden_Checked" Unchecked="mbtnHidden_Checked"/>
                         </ContextMenu>
                     </StackPanel.ContextMenu>
                 </StackPanel>

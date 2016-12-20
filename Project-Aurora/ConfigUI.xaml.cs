@@ -434,6 +434,15 @@ namespace Aurora
                 }
             }
 
+            //Add new profiles button
+            profile_add = new Image {
+                Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative)),
+                ToolTip = "Add a new Lighting Profile",
+                Margin = new Thickness(0, 5, 0, 0)
+            };
+            profile_add.MouseDown += AddProfile_MouseDown;
+            this.profiles_stack.Children.Add(profile_add);
+
             //Show hidden profiles button
             profile_hidden = new Image
             {
@@ -443,15 +452,6 @@ namespace Aurora
             };
             profile_hidden.MouseDown += HiddenProfile_MouseDown;
             this.profiles_stack.Children.Add(profile_hidden);
-
-            //Add new profiles button
-            profile_add = new Image {
-                Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative)),
-                ToolTip = "Add a new Lighting Profile",
-                Margin = new Thickness(0, 5, 0, 0)
-            };
-            profile_add.MouseDown += AddProfile_MouseDown;
-            this.profiles_stack.Children.Add(profile_add);
         }
 
         private void HiddenProfile_MouseDown(object sender, EventArgs e)
