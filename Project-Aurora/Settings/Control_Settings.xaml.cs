@@ -91,9 +91,6 @@ namespace Aurora.Settings
             this.atmoorb_enabled.IsChecked = Global.Configuration.atmoorb_enabled;
             this.atmoorb_use_smoothing.IsChecked = Global.Configuration.atmoorb_use_smoothing;
             this.atmoorb_IDs.Text = Global.Configuration.atmoorb_ids;
-
-            this.btnEdit.Tag = false;
-
             Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
         }
 
@@ -914,15 +911,6 @@ namespace Aurora.Settings
                 Global.Configuration.atmoorb_ids = this.atmoorb_IDs.Text;
                 ConfigManager.Save(Global.Configuration);
             }
-        }
-
-        private void btnEdit_Click(object sender, RoutedEventArgs e)
-        {
-            ConfigUI config = this.DataContext as ConfigUI;
-            Button btn = sender as Button;
-            btn.Tag = !(bool)btn.Tag;
-            btn.Content = (bool)btn.Tag ? "Stop Editing" : "Edit Profiles List";
-            config.IsEditing = (bool)btn.Tag;
         }
     }
 }

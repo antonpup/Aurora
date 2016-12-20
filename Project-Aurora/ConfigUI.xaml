@@ -42,7 +42,14 @@
         </tb:TaskbarIcon>
         <Grid x:Name="profiles_background" HorizontalAlignment="Left" Width="56" Background="#3F000000">
             <ScrollViewer HorizontalAlignment="Left" Width="56" UseLayoutRounding="False" CanContentScroll="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,40" Padding="0,0,6,0" ScrollChanged="ScrollViewer_ScrollChanged" SizeChanged="ScrollViewer_SizeChanged">
-                <StackPanel x:Name="profiles_stack" RenderTransformOrigin="0.5,0" MinHeight="542" MaxHeight="542" MinWidth="40" MaxWidth="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="6,0,0,0"/>
+                <StackPanel x:Name="profiles_stack" RenderTransformOrigin="0.5,0" MinHeight="542" MaxHeight="542" MinWidth="40" MaxWidth="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="6,0,0,0">
+                    <StackPanel.ContextMenu>
+                        <ContextMenu x:Name="cmenuProfiles" Opened="ContextMenu_Opened" ContextMenuOpening="cmenuProfiles_ContextMenuOpening">
+                            <MenuItem x:Name="mbtnHidden" Header="Hidden" IsCheckable="True" IsChecked="{Binding Path=Settings.Hidden, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="mbtnHidden_Checked" Unchecked="mbtnHidden_Checked"/>
+                            <MenuItem x:Name="mbtnEnabled" Header="Enabled" IsCheckable="True" IsChecked="{Binding Path=Settings.isEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                </StackPanel>
             </ScrollViewer>
             <Image Source="Resources/settings_icon.png" ToolTip="General Settings" Margin="6,0,10,0" MouseDown="DesktopControl_MouseDown" RenderTransformOrigin="0.5,0.5" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
         </Grid>
