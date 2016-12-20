@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles.Dota_2.Layers;
+using Aurora.Profiles.CSGO.Layers;
 using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
@@ -110,6 +111,9 @@ namespace Aurora.Settings
                         break;
                     case LayerType.Dota2Killstreak:
                         _Layer.Handler = new Dota2KillstreakLayerHandler();
+                        break;
+                    case LayerType.CSGOBackground:
+                        _Layer.Handler = new CSGOBackgroundLayerHandler();
                         break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();

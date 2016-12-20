@@ -437,7 +437,7 @@ namespace Aurora.Settings
             layoutsPath = Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder);
         }
 
-        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None)
+        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
         {
             try
             {
@@ -529,6 +529,8 @@ namespace Aurora.Settings
                 }
                 else if (keyboard_preference == PreferredKeyboard.Logitech_G910)
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g910.json");
+                else if (keyboard_preference == PreferredKeyboard.Logitech_G810)
+                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g810.json");
                 else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
@@ -593,6 +595,33 @@ namespace Aurora.Settings
                     {
                         string feature_content = File.ReadAllText(mouse_feature_path, Encoding.UTF8);
                         VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                        if (mouse_orientation == MouseOrientationType.LeftHanded)
+                        {
+                            if (feature_config.origin_region == KeyboardRegion.TopRight)
+                                feature_config.origin_region = KeyboardRegion.TopLeft;
+                            else if (feature_config.origin_region == KeyboardRegion.BottomRight)
+                                feature_config.origin_region = KeyboardRegion.BottomLeft;
+
+                            double outline_width = 0.0;
+                            int outline_width_bits = 0;
+
+                            foreach (var key in feature_config.grouped_keys)
+                            {
+                                if (outline_width == 0.0 && outline_width_bits == 0) //We found outline (NOTE: Outline has to be first in the grouped keys)
+                                {
+                                    if (key.tag == DeviceKeys.NONE)
+                                    {
+                                        outline_width = key.width + 2*key.margin_left;
+                                        outline_width_bits = key.width_bits + 2*key.margin_left_bits;
+                                    }
+                                }
+
+                                key.margin_left -= outline_width;
+                                key.margin_left_bits -= outline_width_bits;
+                            }
+
+                        }
 
                         virtual_keyboard_group.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
                     }
@@ -740,7 +769,7 @@ namespace Aurora.Settings
 
                 UserControl keycap;
 
-                switch(Global.Configuration.virtualkeyboard_keycap_type)
+                switch (Global.Configuration.virtualkeyboard_keycap_type)
                 {
                     case KeycapType.Default_backglow:
                         keycap = new Control_DefaultKeycapBackglow(key, image_path);

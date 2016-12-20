@@ -111,6 +111,11 @@ namespace Aurora.Utils
         public MouseBrandToStringVC() : base(PreferredMouse.None) { }
     }
 
+    public class MouseOrientationToStringVC : EnumToStringVC
+    {
+        public MouseOrientationToStringVC() : base(MouseOrientationType.RightHanded) { }
+    }
+
     public class GTA5_PoliceEffectsToStringVC : EnumToStringVC
     {
         public GTA5_PoliceEffectsToStringVC() : base(GTA5_PoliceEffects.Default) { }

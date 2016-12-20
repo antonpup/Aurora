@@ -125,8 +125,6 @@ namespace Aurora.Settings
 
     public enum MouseOrientationType
     {
-        [Description("None")]
-        None = 0,
         [Description("Right Handed")]
         RightHanded = 1,
         [Description("Left Handed")]
@@ -153,6 +151,8 @@ namespace Aurora.Settings
         Logitech_G910 = 100,
         [Description("Logitech - G410")]
         Logitech_G410 = 101,
+        [Description("Logitech - G810")]
+        Logitech_G810 = 102,
 
         //Corsair range is 200-299
         [Description("Corsair - K95")]

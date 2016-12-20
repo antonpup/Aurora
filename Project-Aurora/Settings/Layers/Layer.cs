@@ -66,6 +66,9 @@ namespace Aurora.Settings.Layers
         [Description("Dota 2 Killstreak Layer")]
         Dota2Killstreak = 805,
 
+        [Description("CSGO Background Layer")]
+        CSGOBackground = 850,
+
     }
 
     /// <summary>

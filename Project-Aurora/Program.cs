@@ -167,7 +167,7 @@ namespace Aurora
             Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
             Global.kbLayout = new KeyboardLayoutManager();
 
-            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference);
+            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
 
             Global.logger.LogLine("Input Hooking", Logging_Level.Info);
             Global.input_subscriptions.KeyDown += InputHookKeyDown;

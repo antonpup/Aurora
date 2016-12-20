@@ -285,6 +285,10 @@
     </Compile>
     <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
     <Compile Include="Profiles\CSGO\CSGOProfileManager.cs" />
+    <Compile Include="Profiles\CSGO\Layers\Control_CSGOBackgroundLayer.xaml.cs">
+      <DependentUpon>Control_CSGOBackgroundLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CSGO\Layers\CSGOBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Desktop\DesktopProfileManager.cs" />
     <Compile Include="Profiles\DiscoDodgeball\Control_DiscoDodgeball.xaml.cs">
       <DependentUpon>Control_DiscoDodgeball.xaml</DependentUpon>
@@ -496,6 +500,9 @@
     <None Include="kb_layouts\Extra Features\logitech_g900_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\logitech_g810_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\logitech_g910_left_bottom_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -506,6 +513,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g410.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_g810.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g910.json">
@@ -785,6 +795,10 @@
     <Page Include="Profiles\CSGO\Control_CSGO.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\CSGO\Layers\Control_CSGOBackgroundLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Desktop\Control_Desktop.xaml">
       <SubType>Designer</SubType>
