@@ -19,6 +19,6 @@
         <TextBlock HorizontalAlignment="Left" Margin="0,100,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
         <Slider x:Name="blinking_effect_speed_slider" HorizontalAlignment="Left" Margin="80,100,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" ValueChanged="blinking_effect_speed_slider_ValueChanged" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="20"/>
         <TextBlock x:Name="blinking_effect_speed_label" HorizontalAlignment="Left" Margin="225,100,-1,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
-        <Controls:KeySequence x:Name="KeySequence_keys" Margin="254,0,0,0" RecordingTag="PercentLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
+        <Controls:KeySequence x:Name="KeySequence_keys" Margin="254,0,0,0" RecordingTag="Blinking Layer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
     </Grid>
 </UserControl>

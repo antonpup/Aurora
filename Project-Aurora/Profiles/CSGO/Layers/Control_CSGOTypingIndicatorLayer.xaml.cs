@@ -41,7 +41,7 @@ namespace Aurora.Profiles.CSGO.Layers
             if (this.DataContext is CSGOTypingIndicatorLayerHandler && !settingsset)
             {
                 this.ColorPicker_TypingKeys.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOTypingIndicatorLayerHandler).Properties._TypingKeysColor ?? System.Drawing.Color.Empty);
-                this.KeySequence_keys.Sequence = (this.DataContext as CSGOTypingIndicatorLayerHandler).Properties.Sequence;
+                this.KeySequence_keys.Sequence = (this.DataContext as CSGOTypingIndicatorLayerHandler).Properties._Sequence;
 
                 settingsset = true;
             }

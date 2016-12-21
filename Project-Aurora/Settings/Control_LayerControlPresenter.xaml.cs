@@ -1,5 +1,6 @@
 ﻿using Aurora.Profiles.Dota_2.Layers;
 using Aurora.Profiles.CSGO.Layers;
+using Aurora.Profiles.GTA5.Layers;
 using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
@@ -129,6 +130,12 @@ namespace Aurora.Settings
                         break;
                     case LayerType.CSGOTyping:
                         _Layer.Handler = new CSGOTypingIndicatorLayerHandler();
+                        break;
+                    case LayerType.GTA5Background:
+                        _Layer.Handler = new GTA5BackgroundLayerHandler();
+                        break;
+                    case LayerType.GTA5PoliceSiren:
+                        _Layer.Handler = new GTA5PoliceSirenLayerHandler();
                         break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();

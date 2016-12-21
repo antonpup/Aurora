@@ -14,11 +14,11 @@
         <TextBlock HorizontalAlignment="Left" Margin="0,27,0,0" TextWrapping="Wrap" Text="T Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_Flash" Margin="101,50,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="143" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Flash_SelectedColorChanged" UsingAlphaChannel="False" />
         <TextBlock HorizontalAlignment="Left" Margin="0,52,0,0" TextWrapping="Wrap" Text="Bomb Flash Color:" VerticalAlignment="Top"/>
-        <CheckBox x:Name="Checkbox_DisplayWinningTeam" Content="Display winning team color" HorizontalAlignment="Left" Margin="0,105,0,-49" VerticalAlignment="Top" Checked="Checkbox_DisplayWinningTeam_Checked" Unchecked="Checkbox_DisplayWinningTeam_Checked"/>
+        <CheckBox x:Name="Checkbox_DisplayWinningTeam" Content="Display winning team color" HorizontalAlignment="Left" Margin="0,105,0,0" VerticalAlignment="Top" Checked="Checkbox_DisplayWinningTeam_Checked" Unchecked="Checkbox_DisplayWinningTeam_Checked"/>
         <xctk:ColorPicker x:Name="ColorPicker_Primed" Margin="112,75,0,-23" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="132" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Primed_SelectedColorChanged" UsingAlphaChannel="False" />
         <TextBlock HorizontalAlignment="Left" Margin="0,77,0,-21" TextWrapping="Wrap" Text="Bomb Primed Color:" VerticalAlignment="Top"/>
-        <CheckBox x:Name="Checkbox_GradualEffect" Content="Use gradual effect" HorizontalAlignment="Left" Margin="0,126,0,-70" VerticalAlignment="Top" Checked="Checkbox_GradualEffect_Checked" Unchecked="Checkbox_GradualEffect_Checked"/>
-        <CheckBox x:Name="Checkbox_DisplayOnPeripherals" Content="Display effect on peripheral devices" HorizontalAlignment="Left" Margin="0,147,0,-40" Checked="Checkbox_DisplayOnPeripherals_Checked" Unchecked="Checkbox_DisplayOnPeripherals_Checked" Height="16" VerticalAlignment="Top"/>
-        <Controls:KeySequence x:Name="KeySequence_keys" Margin="254,0,0,0" RecordingTag="PercentLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
+        <CheckBox x:Name="Checkbox_GradualEffect" Content="Use gradual effect" HorizontalAlignment="Left" Margin="0,126,0,0" VerticalAlignment="Top" Checked="Checkbox_GradualEffect_Checked" Unchecked="Checkbox_GradualEffect_Checked"/>
+        <CheckBox x:Name="Checkbox_DisplayOnPeripherals" Content="Display effect on peripheral devices" HorizontalAlignment="Left" Margin="0,147,0,0" Checked="Checkbox_DisplayOnPeripherals_Checked" Unchecked="Checkbox_DisplayOnPeripherals_Checked" Height="16" VerticalAlignment="Top"/>
+        <Controls:KeySequence x:Name="KeySequence_keys" Margin="254,0,0,0" RecordingTag="CSGO - Bomb Effect" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
     </Grid>
 </UserControl>

@@ -61,6 +61,12 @@ namespace Aurora.Profiles.GTA5
             //General
             isEnabled = true;
 
+            Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
+            {
+                new Settings.Layers.Layer("GTA 5 Police Siren", new Layers.GTA5PoliceSirenLayerHandler()),
+                new Settings.Layers.Layer("GTA 5 Background", new Layers.GTA5BackgroundLayerHandler())
+            };
+
             //Effects
             //// Background
             bg_color_enabled = true;

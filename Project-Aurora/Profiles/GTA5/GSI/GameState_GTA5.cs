@@ -21,12 +21,6 @@ namespace Aurora.Profiles.GTA5.GSI
         Menu,
 
         /// <summary>
-        /// Player is in singleplayer
-        /// </summary>
-        [Description("Singleplayer")]
-        PlayingSP,
-
-        /// <summary>
         /// Player is playing as Trevor
         /// </summary>
         [Description("Singleplayer - Trevor")]
@@ -104,66 +98,32 @@ namespace Aurora.Profiles.GTA5.GSI
     /// </summary>
     public class GameState_GTA5 : GameState_Wrapper
     {
-        private PlayerState _CurrentState;
-        private bool _HasCops;
-        private Color _StateColor;
-        private Color _LeftSirenColor;
-        private Color _RightSirenColor;
 
         /// <summary>
         /// Current game state
         /// </summary>
-        public PlayerState CurrentState
-        {
-            get
-            {
-                return _CurrentState;
-            }
-        }
+        public PlayerState CurrentState;
 
         /// <summary>
         /// A boolean representing if the player is wanted
         /// </summary>
-        public bool HasCops
-        {
-            get
-            {
-                return _HasCops;
-            }
-        }
+        public bool HasCops;
 
         /// <summary>
         /// The current background color
         /// </summary>
-        public Color StateColor
-        {
-            get
-            {
-                return _StateColor;
-            }
-        }
+        public Color StateColor;
+
 
         /// <summary>
         /// The current left siren color (Keys F1 - F6)
         /// </summary>
-        public Color LeftSirenColor
-        {
-            get
-            {
-                return _LeftSirenColor;
-            }
-        }
+        public Color LeftSirenColor;
 
         /// <summary>
         /// The current left siren color (Keys F7 - F12)
         /// </summary>
-        public Color RightSirenColor
-        {
-            get
-            {
-                return _RightSirenColor;
-            }
-        }
+        public Color RightSirenColor;
 
         /// <summary>
         /// Creates a default GameState_GTA5 instance.
@@ -191,43 +151,43 @@ namespace Aurora.Profiles.GTA5.GSI
                 );
 
             if(state_color == Color.FromArgb(255, 175, 79, 0) || state_color == Color.FromArgb(255, 176, 80, 0))
-                _CurrentState = PlayerState.PlayingSP_Trevor;
+                CurrentState = PlayerState.PlayingSP_Trevor;
             else if (state_color == Color.FromArgb(255, 48, 255, 255))
-                _CurrentState = PlayerState.PlayingSP_Michael;
+                CurrentState = PlayerState.PlayingSP_Michael;
             else if (state_color == Color.FromArgb(255, 48, 255, 0))
-                _CurrentState = PlayerState.PlayingSP_Franklin;
+                CurrentState = PlayerState.PlayingSP_Franklin;
             else if (state_color == Color.FromArgb(255, 127, 0, 0))
-                _CurrentState = PlayerState.PlayingSP_Chop;
+                CurrentState = PlayerState.PlayingSP_Chop;
             else if (state_color == Color.FromArgb(255, 0, 68, 226) || state_color == Color.FromArgb(255, 0, 70, 228))
-                _CurrentState = PlayerState.PlayingMP;
+                CurrentState = PlayerState.PlayingMP;
             else if (state_color == Color.FromArgb(255, 255, 170, 0))
-                _CurrentState = PlayerState.PlayingRace_Gold;
+                CurrentState = PlayerState.PlayingRace_Gold;
             else if (state_color == Color.FromArgb(255, 191, 191, 191))
-                _CurrentState = PlayerState.PlayingRace_Silver;
+                CurrentState = PlayerState.PlayingRace_Silver;
             else if (state_color == Color.FromArgb(255, 255, 51, 0))
-                _CurrentState = PlayerState.PlayingRace_Bronze;
+                CurrentState = PlayerState.PlayingRace_Bronze;
             else if (state_color == Color.FromArgb(255, 193, 79, 79))
-                _CurrentState = PlayerState.PlayingMP_Mission;
+                CurrentState = PlayerState.PlayingMP_Mission;
             else if (state_color == Color.FromArgb(255, 255, 122, 196) || state_color == Color.FromArgb(255, 156, 110, 175))
-                _CurrentState = PlayerState.PlayingMP_HeistFinale;
+                CurrentState = PlayerState.PlayingMP_HeistFinale;
             else if (state_color == Color.FromArgb(255, 142, 127, 153))
-                _CurrentState = PlayerState.PlayingMP_Spectator;
+                CurrentState = PlayerState.PlayingMP_Spectator;
             else
             {
-                _CurrentState = PlayerState.Undefined;
+                CurrentState = PlayerState.Undefined;
                 Global.logger.LogLine("Undefined color - " + state_color);
             }
 
-            _StateColor = state_color;
+            StateColor = state_color;
 
-            _LeftSirenColor = JSonToColor(
+            LeftSirenColor = JSonToColor(
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 3],
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 2],
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 1],
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1]
                 );
 
-            _RightSirenColor = JSonToColor(
+            RightSirenColor = JSonToColor(
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 3],
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 2],
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 1],
@@ -235,7 +195,7 @@ namespace Aurora.Profiles.GTA5.GSI
                 );
 
 
-            _HasCops = _LeftSirenColor != _RightSirenColor;
+            HasCops = LeftSirenColor != RightSirenColor;
         }
 
         /// <summary>

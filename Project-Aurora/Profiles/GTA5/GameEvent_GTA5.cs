@@ -20,6 +20,7 @@ namespace Aurora.Profiles.GTA5
 
         public GameEvent_GTA5()
         {
+            _game_state = new GameState_GTA5();
         }
 
         public static void SetCurrentState(PlayerState newstate)
@@ -42,61 +43,6 @@ namespace Aurora.Profiles.GTA5
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
             GTA5Settings settings = (GTA5Settings)this.Profile.Settings;
-
-            if (settings.bg_color_enabled)
-            {
-
-                EffectLayer bg_layer = new EffectLayer("GTA 5 - Background");
-
-                Color bg_color = settings.bg_ambient;
-
-                switch (curr_state)
-                {
-                    case PlayerState.PlayingSP_Trevor:
-                        bg_color = settings.bg_trevor;
-                        break;
-                    case PlayerState.PlayingSP_Franklin:
-                        bg_color = settings.bg_franklin;
-                        break;
-                    case PlayerState.PlayingSP_Michael:
-                        bg_color = settings.bg_michael;
-                        break;
-                    case PlayerState.PlayingSP_Chop:
-                        bg_color = settings.bg_chop;
-                        break;
-                    case PlayerState.PlayingMP:
-                        bg_color = settings.bg_online;
-                        break;
-                    case PlayerState.PlayingMP_Mission:
-                        bg_color = settings.bg_online_mission;
-                        break;
-                    case PlayerState.PlayingMP_HeistFinale:
-                        bg_color = settings.bg_online_heistfinale;
-                        break;
-                    case PlayerState.PlayingMP_Spectator:
-                        bg_color = settings.bg_online_spectator;
-                        break;
-                    case PlayerState.PlayingRace_Gold:
-                        bg_color = settings.bg_race_gold;
-                        break;
-                    case PlayerState.PlayingRace_Silver:
-                        bg_color = settings.bg_race_silver;
-                        break;
-                    case PlayerState.PlayingRace_Bronze:
-                        bg_color = settings.bg_race_bronze;
-                        break;
-                    default:
-                        bg_color = settings.bg_ambient;
-                        break;
-                }
-
-                bg_layer.Fill(bg_color);
-
-                if (settings.bg_peripheral_use)
-                    bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
-
-                layers.Enqueue(bg_layer);
-            }
 
             if (settings.siren_enabled && have_cops)
             {

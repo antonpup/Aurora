@@ -149,7 +149,7 @@ namespace Aurora.Settings.Layers
 
         public LayerHandler(LayerHandler other) : base()
         {
-            Properties._Sequence = other.Properties.Sequence;
+            Properties._Sequence = other.Properties._Sequence;
         }
 
         public virtual EffectLayer Render(IGameState gamestate)

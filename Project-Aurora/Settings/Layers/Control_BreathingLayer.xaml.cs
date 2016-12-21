@@ -47,7 +47,7 @@ namespace Aurora.Settings.Layers
                 this.breathing_effect_random_secondary_color_enabled.IsChecked = (this.DataContext as BreathingLayerHandler).Properties._RandomSecondaryColor;
                 this.breathing_effect_speed_label.Text = "x " + (this.DataContext as BreathingLayerHandler).Properties._EffectSpeed;
                 this.breathing_effect_speed_slider.Value = (float)(this.DataContext as BreathingLayerHandler).Properties._EffectSpeed;
-                this.KeySequence_keys.Sequence = (this.DataContext as BreathingLayerHandler).Properties.Sequence;
+                this.KeySequence_keys.Sequence = (this.DataContext as BreathingLayerHandler).Properties._Sequence;
 
                 settingsset = true;
             }

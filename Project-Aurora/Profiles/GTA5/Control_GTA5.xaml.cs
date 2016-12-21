@@ -1,4 +1,5 @@
 ﻿using Aurora.Controls;
+using Aurora.Profiles.GTA5.GSI;
 using Aurora.Settings;
 using System;
 using System.Diagnostics;
@@ -18,6 +19,7 @@ namespace Aurora.Profiles.GTA5
         private ProfileManager profile_manager;
 
         private Timer preview_wantedlevel_timer;
+        private int frame = 0;
 
         public Control_GTA5(ProfileManager profile)
         {
@@ -37,37 +39,35 @@ namespace Aurora.Profiles.GTA5
             this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as GTA5Settings).isEnabled;
-
-            this.background_enabled.IsChecked = (profile_manager.Settings as GTA5Settings).bg_color_enabled;
-            this.background_peripheral_use.IsChecked = (profile_manager.Settings as GTA5Settings).bg_peripheral_use;
-            this.bg_ambient_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_ambient);
-            this.bg_franklin_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_franklin);
-            this.bg_michael_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_michael);
-            this.bg_trevor_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_trevor);
-            this.bg_chop_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_chop);
-            this.bg_online_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_online);
-            this.bg_online_mission_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_online_mission);
-            this.bg_online_heistfinale_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_online_heistfinale);
-            this.bg_online_spectator_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_online_spectator);
-            this.bg_race_gold_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_race_gold);
-            this.bg_race_silver_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_race_silver);
-            this.bg_race_bronze_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).bg_race_bronze);
-
-            this.siren_enabled.IsChecked = (profile_manager.Settings as GTA5Settings).siren_enabled;
-            this.left_siren_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).left_siren_color);
-            this.right_siren_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((profile_manager.Settings as GTA5Settings).right_siren_color);
-            this.siren_effect_type.SelectedIndex = (int)(profile_manager.Settings as GTA5Settings).siren_type;
-
-            this.siren_left_keysequence.Sequence = (profile_manager.Settings as GTA5Settings).left_siren_sequence;
-            this.siren_right_keysequence.Sequence = (profile_manager.Settings as GTA5Settings).right_siren_sequence;
-
-            this.cz.ColorZonesList = (profile_manager.Settings as GTA5Settings).lighting_areas;
         }
 
+        private void preview_state_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Event._game_state as GameState_GTA5).CurrentState = (GTA5.GSI.PlayerState)Enum.Parse(typeof(GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString());
+                GameEvent_GTA5.SetCurrentState((GTA5.GSI.PlayerState)Enum.Parse(typeof(GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString())); //REMOVE
+            }
+        }
 
         private void Preview_wantedlevel_timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            GameEvent_GTA5.IncrementSirenKeyframe();
+            if(frame % 2 == 0)
+            {
+                (profile_manager.Event._game_state as GameState_GTA5).LeftSirenColor = System.Drawing.Color.Red;
+                (profile_manager.Event._game_state as GameState_GTA5).RightSirenColor = System.Drawing.Color.Blue;
+            }
+            else
+            {
+                (profile_manager.Event._game_state as GameState_GTA5).LeftSirenColor = System.Drawing.Color.Blue;
+                (profile_manager.Event._game_state as GameState_GTA5).RightSirenColor = System.Drawing.Color.Red;
+            }
+
+            frame++;
+
+            Global.logger.LogLine("frame = " + frame);
+
+            GameEvent_GTA5.IncrementSirenKeyframe(); //REMOVE
         }
 
         private void preview_wantedlevel_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -78,219 +78,16 @@ namespace Aurora.Profiles.GTA5
                 if (value == 0)
                 {
                     preview_wantedlevel_timer.Stop();
-                    GameEvent_GTA5.SetCopStatus(false);
+                    (profile_manager.Event._game_state as GameState_GTA5).HasCops = false;
+                    GameEvent_GTA5.SetCopStatus(false); //REMOVE
                 }
                 else
                 {
                     preview_wantedlevel_timer.Start();
                     preview_wantedlevel_timer.Interval = 600D - 50D * value;
-                    GameEvent_GTA5.SetCopStatus(true);
+                    (profile_manager.Event._game_state as GameState_GTA5).HasCops = true;
+                    GameEvent_GTA5.SetCopStatus(true); //REMOVE
                 }
-            }
-        }
-
-        private void background_enabled_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_color_enabled = (this.background_enabled.IsChecked.HasValue) ? this.background_enabled.IsChecked.Value : false;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void background_peripheral_use_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_peripheral_use = (this.background_peripheral_use.IsChecked.HasValue) ? this.background_peripheral_use.IsChecked.Value : false;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_ambient_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_ambient_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_ambient = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_ambient_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_franklin_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_franklin_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_franklin = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_franklin_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_michael_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_michael_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_michael = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_michael_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_trevor_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_trevor_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_trevor = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_trevor_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_chop_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_chop_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_chop = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_chop_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_online_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_online_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_online = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_online_mission_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_online_mission_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_online_mission = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_mission_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_online_heistfinale_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_online_heistfinale_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_online_heistfinale = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_heistfinale_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_online_spectator_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_online_spectator_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_online_spectator = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_online_spectator_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_race_gold_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_race_gold_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_race_gold = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_gold_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_race_silver_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_race_silver_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_race_silver = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_silver_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void bg_race_bronze_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.bg_race_bronze_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).bg_race_bronze = Utils.ColorUtils.MediaColorToDrawingColor(this.bg_race_bronze_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void siren_enabled_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Settings as GTA5Settings).siren_enabled = (this.siren_enabled.IsChecked.HasValue) ? this.siren_enabled.IsChecked.Value : false;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void left_siren_color_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.left_siren_color_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).left_siren_color = Utils.ColorUtils.MediaColorToDrawingColor(this.left_siren_color_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void right_siren_color_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.right_siren_color_colorpicker.SelectedColor.HasValue)
-            {
-                (profile_manager.Settings as GTA5Settings).right_siren_color = Utils.ColorUtils.MediaColorToDrawingColor(this.right_siren_color_colorpicker.SelectedColor.Value);
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void siren_effect_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Settings as GTA5Settings).siren_type = (GTA5_PoliceEffects)Enum.Parse(typeof(GTA5_PoliceEffects), this.siren_effect_type.SelectedIndex.ToString());
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void siren_left_keysequence_SequenceUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Settings as GTA5Settings).left_siren_sequence = (sender as Controls.KeySequence).Sequence;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void siren_right_keysequence_SequenceUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Settings as GTA5Settings).right_siren_sequence = (sender as Controls.KeySequence).Sequence;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Settings as GTA5Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                GameEvent_GTA5.SetCurrentState((GTA5.GSI.PlayerState)Enum.Parse(typeof(GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString()));
             }
         }
 

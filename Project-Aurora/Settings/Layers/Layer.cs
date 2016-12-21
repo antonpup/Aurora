@@ -13,6 +13,10 @@ using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
+    /// <summary>
+    /// All available layer types. Note: There is a large overhead for generap purpose layers, so there is ample room for adding new layers that apply to all profiles.
+    /// Each game reserves 50 unique layer types.
+    /// </summary>
     public enum LayerType
     {
         [Description("Default Layer")]
@@ -83,6 +87,12 @@ namespace Aurora.Settings.Layers
 
         [Description("CSGO Typing Layer")]
         CSGOTyping = 855,
+
+        [Description("GTA 5 Background Layer")]
+        GTA5Background = 900,
+
+        [Description("GTA 5 Police Siren Layer")]
+        GTA5PoliceSiren = 901,
 
     }
 

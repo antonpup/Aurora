@@ -47,7 +47,7 @@ namespace Aurora.Settings.Layers
                 this.blinking_effect_random_secondary_color_enabled.IsChecked = (this.DataContext as BlinkingLayerHandler).Properties._RandomSecondaryColor;
                 this.blinking_effect_speed_label.Text = "x " + (this.DataContext as BlinkingLayerHandler).Properties._EffectSpeed;
                 this.blinking_effect_speed_slider.Value = (float)(this.DataContext as BlinkingLayerHandler).Properties._EffectSpeed;
-                this.KeySequence_keys.Sequence = (this.DataContext as BlinkingLayerHandler).Properties.Sequence;
+                this.KeySequence_keys.Sequence = (this.DataContext as BlinkingLayerHandler).Properties._Sequence;
 
                 settingsset = true;
             }

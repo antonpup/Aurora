@@ -47,7 +47,7 @@ namespace Aurora.Profiles.CSGO.Layers
                 this.Checkbox_DisplayWinningTeam.IsChecked = (this.DataContext as CSGOBombLayerHandler).Properties._DisplayWinningTeamColor;
                 this.Checkbox_GradualEffect.IsChecked = (this.DataContext as CSGOBombLayerHandler).Properties._GradualEffect;
                 this.Checkbox_DisplayOnPeripherals.IsChecked = (this.DataContext as CSGOBombLayerHandler).Properties._PeripheralUse;
-                this.KeySequence_keys.Sequence = (this.DataContext as CSGOBombLayerHandler).Properties.Sequence;
+                this.KeySequence_keys.Sequence = (this.DataContext as CSGOBombLayerHandler).Properties._Sequence;
 
                 settingsset = true;
             }

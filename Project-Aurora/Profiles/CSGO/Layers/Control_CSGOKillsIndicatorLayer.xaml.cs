@@ -42,7 +42,7 @@ namespace Aurora.Profiles.CSGO.Layers
             {
                 this.ColorPicker_RegularKill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOKillIndicatorLayerHandler).Properties._RegularKillColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_HeadshotKill.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOKillIndicatorLayerHandler).Properties._HeadshotKillColor ?? System.Drawing.Color.Empty);
-                this.KeySequence_keys.Sequence = (this.DataContext as CSGOKillIndicatorLayerHandler).Properties.Sequence;
+                this.KeySequence_keys.Sequence = (this.DataContext as CSGOKillIndicatorLayerHandler).Properties._Sequence;
 
                 settingsset = true;
             }

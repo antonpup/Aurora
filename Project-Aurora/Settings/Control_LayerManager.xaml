@@ -26,6 +26,6 @@
                 </HierarchicalDataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button x:Name="btnProfileOverview" Content="Show Profile Overview" Margin="0,4,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfileOverview_Click"/>
+        <Button x:Name="btnProfileOverview" Content="Show Profile Overview/Options" Margin="0,4,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfileOverview_Click"/>
     </Grid>
 </UserControl>
