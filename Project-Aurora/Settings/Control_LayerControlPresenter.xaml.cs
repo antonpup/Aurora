@@ -115,6 +115,21 @@ namespace Aurora.Settings
                     case LayerType.CSGOBackground:
                         _Layer.Handler = new CSGOBackgroundLayerHandler();
                         break;
+                    case LayerType.CSGOBomb:
+                        _Layer.Handler = new CSGOBombLayerHandler();
+                        break;
+                    case LayerType.CSGOKillsIndicator:
+                        _Layer.Handler = new CSGOKillIndicatorLayerHandler();
+                        break;
+                    case LayerType.CSGOBurning:
+                        _Layer.Handler = new CSGOBurningLayerHandler();
+                        break;
+                    case LayerType.CSGOFlashbang:
+                        _Layer.Handler = new CSGOFlashbangLayerHandler();
+                        break;
+                    case LayerType.CSGOTyping:
+                        _Layer.Handler = new CSGOTypingIndicatorLayerHandler();
+                        break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;

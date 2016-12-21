@@ -285,9 +285,29 @@
     </Compile>
     <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
     <Compile Include="Profiles\CSGO\CSGOProfileManager.cs" />
+    <Compile Include="Profiles\CSGO\Layers\Control_CSGOTypingIndicatorLayer.xaml.cs">
+      <DependentUpon>Control_CSGOTypingIndicatorLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CSGO\Layers\Control_CSGOFlashbangLayer.xaml.cs">
+      <DependentUpon>Control_CSGOFlashbangLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CSGO\Layers\Control_CSGOBurningLayer.xaml.cs">
+      <DependentUpon>Control_CSGOBurningLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CSGO\Layers\Control_CSGOKillsIndicatorLayer.xaml.cs">
+      <DependentUpon>Control_CSGOKillsIndicatorLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CSGO\Layers\Control_CSGOBombLayer.xaml.cs">
+      <DependentUpon>Control_CSGOBombLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\CSGO\Layers\Control_CSGOBackgroundLayer.xaml.cs">
       <DependentUpon>Control_CSGOBackgroundLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\CSGO\Layers\CSGOTypingIndicatorLayerHandler.cs" />
+    <Compile Include="Profiles\CSGO\Layers\CSGOFlashbangLayerHandler.cs" />
+    <Compile Include="Profiles\CSGO\Layers\CSGOBurningLayerHandler.cs" />
+    <Compile Include="Profiles\CSGO\Layers\CSGOKillsIndicatorLayerHandler.cs" />
+    <Compile Include="Profiles\CSGO\Layers\CSGOBombLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Desktop\DesktopProfileManager.cs" />
     <Compile Include="Profiles\DiscoDodgeball\Control_DiscoDodgeball.xaml.cs">
@@ -795,6 +815,26 @@
     <Page Include="Profiles\CSGO\Control_CSGO.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\CSGO\Layers\Control_CSGOTypingIndicatorLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\CSGO\Layers\Control_CSGOFlashbangLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\CSGO\Layers\Control_CSGOBurningLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\CSGO\Layers\Control_CSGOKillsIndicatorLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\CSGO\Layers\Control_CSGOBombLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\CSGO\Layers\Control_CSGOBackgroundLayer.xaml">
       <Generator>MSBuild:Compile</Generator>

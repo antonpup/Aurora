@@ -18,6 +18,8 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// </summary>
         public int Count { get { return _Weapons.Count; } }
 
+        private WeaponNode _ActiveWeaponDummy = new WeaponNode("");
+
         /// <summary>
         /// Player's currently active weapon
         /// </summary>
@@ -31,7 +33,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
                         return w;
                 }
 
-                return new WeaponNode("");
+                return _ActiveWeaponDummy;
             }
         }
 

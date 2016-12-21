@@ -69,6 +69,21 @@ namespace Aurora.Settings.Layers
         [Description("CSGO Background Layer")]
         CSGOBackground = 850,
 
+        [Description("CSGO Bomb Layer")]
+        CSGOBomb = 851,
+
+        [Description("CSGO Kills Indicator Layer")]
+        CSGOKillsIndicator = 852,
+
+        [Description("CSGO Burning Effect Layer")]
+        CSGOBurning = 853,
+
+        [Description("CSGO Flashbang Effect Layer")]
+        CSGOFlashbang = 854,
+
+        [Description("CSGO Typing Layer")]
+        CSGOTyping = 855,
+
     }
 
     /// <summary>

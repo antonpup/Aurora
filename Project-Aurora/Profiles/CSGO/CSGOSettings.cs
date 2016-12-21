@@ -80,6 +80,9 @@ namespace Aurora.Profiles.CSGO
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {
 
+                new Settings.Layers.Layer("CSGO Typing Indicator", new Layers.CSGOTypingIndicatorLayerHandler()),
+                new Settings.Layers.Layer("CSGO Kills Indicator", new Layers.CSGOKillIndicatorLayerHandler()),
+                new Settings.Layers.Layer("CSGO Flashbang Effect", new Layers.CSGOFlashbangLayerHandler()),
                 new Settings.Layers.Layer("Health Indicator", new Settings.Layers.PercentLayerHandler()
                 {
                     Properties = new Settings.Layers.PercentLayerHandlerProperties()
@@ -116,7 +119,9 @@ namespace Aurora.Profiles.CSGO
                     VariablePath = "Player/Weapons/ActiveWeapon/AmmoClip",
                     MaxVariablePath = "Player/Weapons/ActiveWeapon/AmmoClipMax"
                 }),
-                new Settings.Layers.Layer("Dota 2 Background", new Layers.CSGOBackgroundLayerHandler())
+                new Settings.Layers.Layer("CSGO Bomb Effect", new Layers.CSGOBombLayerHandler()),
+                new Settings.Layers.Layer("CSGO Burning Effect", new Layers.CSGOBurningLayerHandler()),
+                new Settings.Layers.Layer("CSGO Background", new Layers.CSGOBackgroundLayerHandler())
             };
 
             //Effects
