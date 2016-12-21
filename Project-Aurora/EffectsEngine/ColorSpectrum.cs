@@ -176,17 +176,17 @@ namespace Aurora.EffectsEngine
 
             foreach (KeyValuePair<float, Color> kvp in colors)
             {
-                if((kvp.Key * max_position) == position)
+                if(kvp.Key == position)
                 {
                     return kvp.Value;
                 }
 
-                if((kvp.Key * max_position) > position && kvp.Key < closest_higher)
+                if(kvp.Key > position && kvp.Key < closest_higher)
                 {
                     closest_higher = kvp.Key;
                 }
 
-                if ((kvp.Key * max_position) < position && kvp.Key > closest_lower)
+                if (kvp.Key < position && kvp.Key > closest_lower)
                 {
                     closest_lower = kvp.Key;
                 }
@@ -194,7 +194,7 @@ namespace Aurora.EffectsEngine
 
             return Utils.ColorUtils.MultiplyColorByScalar(
                 Utils.ColorUtils.BlendColors(
-                    colors[closest_lower], colors[closest_higher], ((double)( (position / max_position) - closest_lower ) / (double)(closest_higher - closest_lower))
+                    colors[closest_lower], colors[closest_higher], ((double)( position - closest_lower ) / (double)(closest_higher - closest_lower))
                     ),
                 opacity
                 );
