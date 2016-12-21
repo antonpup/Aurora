@@ -194,6 +194,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Roccat-Talk.1.0.0.0\lib\net45\Roccat-Talk.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -259,6 +263,7 @@
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Razer\RazerDevice.cs" />
+    <Compile Include="Devices\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
@@ -523,6 +528,9 @@
     <None Include="kb_layouts\Extra Features\logitech_g810_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\roccat_ryos_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\logitech_g910_left_bottom_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -536,6 +544,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g810.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\roccat_ryos.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g910.json">
@@ -1108,6 +1119,12 @@
     <Resource Include="Resources\RemoveProfile_Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CroccatTalkWrapper\win32-x86-64\talkfx-c.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CroccatTalkWrapper\win32-x86\talkfx-c.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="kb_layouts\Extra Features\images\Corsair_Katar_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -252,6 +252,28 @@ namespace Aurora.Utils
 
             return Color.FromArgb((int)(Alpha / numPixels), (int)(Red / numPixels), (int)(Green / numPixels), (int)(Blue / numPixels));
         }
+
+        /// <summary>
+        /// Returns a Luma coefficient for brightness of a color
+        /// </summary>
+        /// <param name="color">Color to be evaluated</param>
+        /// <returns>The brightness of the color. [0 = Dark, 255 = Bright]</returns>
+        public static byte GetColorBrightness(System.Drawing.Color color)
+        {
+            //Source: http://stackoverflow.com/a/12043228
+            return (byte)(0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B);
+        }
+
+        /// <summary>
+        /// Returns whether or not a color is considered to be dark, based on Luma coefficient
+        /// </summary>
+        /// <param name="color">Color to be evaluated</param>
+        /// <returns>Whether or not the color is dark</returns>
+        public static bool IsColorDark(System.Drawing.Color color)
+        {
+            //Source: http://stackoverflow.com/a/12043228
+            return GetColorBrightness(color) < 40;
+        }
     }
 
     public class ColorConverter : IValueConverter

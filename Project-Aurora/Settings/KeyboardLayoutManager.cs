@@ -545,6 +545,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
+                else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
+                    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
 
                 if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
                 {

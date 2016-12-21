@@ -172,7 +172,11 @@ namespace Aurora.Settings
         [Description("Masterkeys Pro L")]
         Masterkeys_Pro_L = 500,
         [Description("Masterkeys Pro S")]
-        Masterkeys_Pro_S = 501
+        Masterkeys_Pro_S = 501,
+
+        //Roccat range is 600-699
+        [Description("Roccat Ryos")]
+        Roccat_Ryos = 600
     }
 
     public enum PreferredKeyboardLocalization
