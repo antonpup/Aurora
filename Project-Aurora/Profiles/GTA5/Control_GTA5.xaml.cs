@@ -46,7 +46,6 @@ namespace Aurora.Profiles.GTA5
             if (IsLoaded)
             {
                 (profile_manager.Event._game_state as GameState_GTA5).CurrentState = (GTA5.GSI.PlayerState)Enum.Parse(typeof(GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString());
-                GameEvent_GTA5.SetCurrentState((GTA5.GSI.PlayerState)Enum.Parse(typeof(GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString())); //REMOVE
             }
         }
 
@@ -64,10 +63,6 @@ namespace Aurora.Profiles.GTA5
             }
 
             frame++;
-
-            Global.logger.LogLine("frame = " + frame);
-
-            GameEvent_GTA5.IncrementSirenKeyframe(); //REMOVE
         }
 
         private void preview_wantedlevel_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -79,14 +74,12 @@ namespace Aurora.Profiles.GTA5
                 {
                     preview_wantedlevel_timer.Stop();
                     (profile_manager.Event._game_state as GameState_GTA5).HasCops = false;
-                    GameEvent_GTA5.SetCopStatus(false); //REMOVE
                 }
                 else
                 {
                     preview_wantedlevel_timer.Start();
                     preview_wantedlevel_timer.Interval = 600D - 50D * value;
                     (profile_manager.Event._game_state as GameState_GTA5).HasCops = true;
-                    GameEvent_GTA5.SetCopStatus(true); //REMOVE
                 }
             }
         }
