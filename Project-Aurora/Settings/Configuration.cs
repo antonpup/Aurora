@@ -51,6 +51,8 @@ namespace Aurora.Settings
         StarFall = 5,
         [Description("Rain Fall")]
         RainFall = 6,
+        [Description("Blackout")]
+        Blackout = 7,
     }
 
     /// <summary>

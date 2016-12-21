@@ -49,8 +49,7 @@ namespace Aurora.Profiles.Desktop
                 case IdleEffects.Dim:
                     layer = new EffectLayer("Idle - Dim");
 
-                    Color dim_color = Color.FromArgb(125, 0, 0, 0);
-                    layer.Fill(dim_color);
+                    layer.Fill(Color.FromArgb(125, 0, 0, 0));
 
                     layers.Enqueue(layer);
                     break;
@@ -143,6 +142,13 @@ namespace Aurora.Profiles.Desktop
 
                         raindrops[raindrop] -= getDeltaTime() * 0.05f * Global.Configuration.idle_speed;
                     }
+
+                    layers.Enqueue(layer);
+                    break;
+                case IdleEffects.Blackout:
+                    layer = new EffectLayer("Idle - Blackout");
+
+                    layer.Fill(Color.Black);
 
                     layers.Enqueue(layer);
                     break;
