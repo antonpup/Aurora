@@ -7,9 +7,8 @@ namespace Aurora.Profiles
     /// </summary>
     public class LightEvent
     {
-        //internal string profilename = "";
         public ProfileManager Profile { get; set; }
-        internal IGameState _game_state;
+        internal IGameState _game_state = new GameState();
 
         /// <summary>
         /// Adds new layers to the passed EffectFrame instance based on GameState information.
