@@ -31,6 +31,8 @@ namespace Aurora.Settings
 
         public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ProfileManager), typeof(Control_LayerManager), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
 
+        public Dictionary<ProfileManager, Layer> LastSelectedLayer = new Dictionary<ProfileManager, Layer>();
+
         public ProfileManager FocusedProfile
         {
             get { return (ProfileManager)GetValue(FocusedProfileProperty); }
@@ -56,10 +58,23 @@ namespace Aurora.Settings
                 ProfileManager prof = ((ProfileManager)e.OldValue);
                 prof.ProfileChanged -= self.UpdateLayers;
                 prof.SaveProfiles();
+
+                if (self.LastSelectedLayer.ContainsKey(prof))
+                    self.LastSelectedLayer.Remove(prof);
+
+                self.LastSelectedLayer.Add(prof, self.lstLayers.SelectedItem as Layer);
+
             }
             self.UpdateLayers();
             if (e.NewValue != null)
-                ((ProfileManager)e.NewValue).ProfileChanged += self.UpdateLayers;
+            {
+                ProfileManager profile = ((ProfileManager)e.NewValue);
+
+                profile.ProfileChanged += self.UpdateLayers;
+
+                if (self.LastSelectedLayer.ContainsKey(profile))
+                    self.lstLayers.SelectedItem = self.LastSelectedLayer[profile];
+            }
         }
 
         public void UpdateLayers()
@@ -82,9 +97,11 @@ namespace Aurora.Settings
                     if (!(lstLayers.SelectedItem is Layer))
                         throw new ArgumentException($"Items contained in the ListView must be of type 'Layer', not '{lstLayers.SelectedItem.GetType()}'");
 
-                    (lstLayers.SelectedItem as Layer).SetProfile(FocusedProfile);
+                    Layer lyr = (Layer)lstLayers.SelectedItem;
 
-                    hander?.Invoke(lstLayers.SelectedItem as Layer);
+                    lyr.SetProfile(FocusedProfile);
+
+                    hander?.Invoke(lyr);
 
                 }
             }
