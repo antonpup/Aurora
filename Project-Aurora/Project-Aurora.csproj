@@ -692,6 +692,9 @@
     <Compile Include="Settings\Layers\Control_BreathingLayer.xaml.cs">
       <DependentUpon>Control_BreathingLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_GradientFillLayer.xaml.cs">
+      <DependentUpon>Control_GradientFillLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_InteractiveLayer.xaml.cs">
       <DependentUpon>Control_InteractiveLayer.xaml</DependentUpon>
     </Compile>
@@ -707,6 +710,9 @@
     <Compile Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml.cs">
       <DependentUpon>Control_ShortcutAssistantLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_GradientLayer.xaml.cs">
+      <DependentUpon>Control_GradientLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_SolidFillLayer.xaml.cs">
       <DependentUpon>Control_SolidFillLayer.xaml</DependentUpon>
     </Compile>
@@ -715,12 +721,14 @@
     </Compile>
     <Compile Include="Settings\Layers\DefaultLayerHandler.cs" />
     <Compile Include="Settings\Layers\EqualizerLayerHandler.cs" />
+    <Compile Include="Settings\Layers\GradientFillLayerHandler.cs" />
     <Compile Include="Settings\Layers\InteractiveLayerHandler.cs" />
     <Compile Include="Settings\Layers\LayerHandler.cs" />
     <Compile Include="Settings\Layers\LockColourLayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentGradientLayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentLayerHandler.cs" />
     <Compile Include="Settings\Layers\ShortcutAssistantLayerHandler.cs" />
+    <Compile Include="Settings\Layers\GradientLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
@@ -1033,6 +1041,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Settings\Layers\Control_GradientFillLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Settings\Layers\Control_InteractiveLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1052,6 +1064,10 @@
     <Page Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_GradientLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Layers\Control_SolidFillLayer.xaml">
       <Generator>MSBuild:Compile</Generator>

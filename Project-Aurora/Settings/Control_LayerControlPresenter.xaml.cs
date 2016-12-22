@@ -72,6 +72,12 @@ namespace Aurora.Settings
                     case LayerType.SolidFilled:
                         _Layer.Handler = new SolidFillLayerHandler();
                         break;
+                    case LayerType.Gradient:
+                        _Layer.Handler = new GradientLayerHandler();
+                        break;
+                    case LayerType.GradientFill:
+                        _Layer.Handler = new GradientFillLayerHandler();
+                        break;
                     case LayerType.Percent:
                         _Layer.Handler = new PercentLayerHandler();
                         break;

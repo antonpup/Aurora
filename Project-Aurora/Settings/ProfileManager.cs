@@ -87,6 +87,8 @@ namespace Aurora.Settings
             AvailableLayers.Add(LayerType.Default);
             AvailableLayers.Add(LayerType.Solid);
             AvailableLayers.Add(LayerType.SolidFilled);
+            AvailableLayers.Add(LayerType.Gradient);
+            AvailableLayers.Add(LayerType.GradientFill);
             AvailableLayers.Add(LayerType.Breathing);
             AvailableLayers.Add(LayerType.Blinking);
             AvailableLayers.Add(LayerType.Percent);

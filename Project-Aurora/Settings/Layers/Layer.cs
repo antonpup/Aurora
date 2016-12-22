@@ -28,6 +28,12 @@ namespace Aurora.Settings.Layers
         [Description("Solid Fill Color Layer")]
         SolidFilled = 110,
 
+        [Description("Gradient Layer")]
+        Gradient = 115,
+
+        [Description("Gradient Fill Layer")]
+        GradientFill = 116,
+
         [Description("Breathing Layer")]
         Breathing = 120,
 
