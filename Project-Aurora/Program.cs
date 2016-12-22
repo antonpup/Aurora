@@ -208,13 +208,9 @@ namespace Aurora
             Global.logger.LogLine("Loaded WinApp", Logging_Level.None);
 
             Global.logger.LogLine("Loading ResourceDictionaries...", Logging_Level.None);
-            ResourceDictionary resourceDictionaryCore = new ResourceDictionary();
-            resourceDictionaryCore.Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative);
-            ResourceDictionary resourceDictionaryToolkit = new ResourceDictionary();
-            resourceDictionaryToolkit.Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative);
 
-            WinApp.Resources.MergedDictionaries.Add(resourceDictionaryCore);
-            WinApp.Resources.MergedDictionaries.Add(resourceDictionaryToolkit);
+            WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
+            WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
 
             Global.logger.LogLine("Loaded ResourceDictionaries", Logging_Level.None);
 

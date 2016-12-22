@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Settings.Layers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,27 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Window_LayerLogicEditor : Window
     {
-        public Window_LayerLogicEditor()
+        public Window_LayerLogicEditor(Layer layer)
         {
             InitializeComponent();
+            this.DataContext = layer;
+        }
+
+        private void Grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //this.stckLogic.Children.Clear();
+            LogicItem logic = e.NewValue as LogicItem;
+            
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            ((Layer)this.DataContext).Logics.Add(new LogicItem());
+        }
+
+        private void btnAddCheck_Click(object sender, RoutedEventArgs e)
+        {
+            //((LogicItem)this.grdLogicEdit.DataContext).ReferenceComparisons.Add(new Tuple<string, Tuple<LogicOperator, object>>(null, new Tuple<LogicOperator, object>(null, null)));
         }
     }
 }

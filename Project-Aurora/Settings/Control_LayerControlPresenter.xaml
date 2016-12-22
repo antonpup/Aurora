@@ -28,6 +28,6 @@
         <TextBlock HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" Text="Layer type:" VerticalAlignment="Top"/>
         <ComboBox x:Name="cmbLayerType" HorizontalAlignment="Left" Margin="72,37,0,0" VerticalAlignment="Top" Width="206" SelectionChanged="cmbLayerType_SelectionChanged" ItemTemplate="{Binding Source={StaticResource LayerTypeTemplate}}"/>
         <UserControl x:Name="ctrlLayerTypeConfig" Margin="10,64,10,10"/>
-        <Button x:Name="btnLogic" Content="View Layer Logic" HorizontalAlignment="Left" Margin="283,10,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnLogic" Content="View Layer Logic" HorizontalAlignment="Left" Margin="283,10,0,0" VerticalAlignment="Top" Click="btnLogic_Click" Visibility="Hidden"/>
     </Grid>
 </UserControl>

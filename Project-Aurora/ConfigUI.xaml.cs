@@ -505,6 +505,9 @@ namespace Aurora
         {
             ContextMenu context = (ContextMenu)e.OriginalSource;
 
+            if (!(context.PlacementTarget is Image))
+                return;
+
             Image img = (Image)context.PlacementTarget;
             ProfileManager profile = img.Tag as ProfileManager;
             context.DataContext = profile;

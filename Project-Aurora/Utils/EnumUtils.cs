@@ -165,6 +165,11 @@ namespace Aurora.Utils
     {
         public LogicOperatorToStringVC() : base(LogicOperator.GreaterThan) { }
     }
+    
+    public class ActionTypeToStringVC : EnumToStringVC
+    {
+        public ActionTypeToStringVC() : base(ActionType.SetProperty) { }
+    }
 
     public class AppDetectionModeToStringVC : EnumToStringVC
     {

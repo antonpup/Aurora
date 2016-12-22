@@ -53,16 +53,14 @@ namespace Aurora.Settings.Layers
         NotEqual
     }
 
+    public enum ActionType
+    {
+        PlayAnimation,
+        SetProperty,
+    }
+
     public class LogicItem
     {
-        public enum ActionType
-        {
-            PlayAnimation,
-            SetProperty,
-        }
-
-        
-
         public static Dictionary<LogicOperator, Func<dynamic, dynamic, bool>> OperatorFuncs = new Dictionary<LogicOperator, Func<dynamic, dynamic, bool>>
         {
             { LogicOperator.GreaterThan, Operator.GreaterThan<dynamic> },
@@ -73,28 +71,28 @@ namespace Aurora.Settings.Layers
             { LogicOperator.NotEqual, Operator.NotEqual<dynamic> }
         };
 
-        public Dictionary<string, Tuple<LogicOperator, object>> ReferenceComparisons { get; set; } = new Dictionary<string, Tuple<LogicOperator, object>>();
+        public List<Tuple<string, Tuple<LogicOperator, object>>> ReferenceComparisons { get; set; } = new List<Tuple<string, Tuple<LogicOperator, object>>>();
 
-        public Tuple<ActionType, object> Action { get; set; }
+        public Tuple<ActionType, object> Action { get; set; } = null;
 
         public void Check(IGameState gs, ILayerHandler handler)
         {
             if (Action == null || ReferenceComparisons == null)
                 return;
 
-            foreach (KeyValuePair<string, Tuple<LogicOperator, object>> kvp in ReferenceComparisons)
+            foreach (Tuple<string, Tuple<LogicOperator, object>> kvp in ReferenceComparisons)
             {
-                dynamic var = GameStateUtils.RetrieveGameStateParameter(gs, kvp.Key);
+                dynamic var = GameStateUtils.RetrieveGameStateParameter(gs, kvp.Item1);
 
                 if (var == null)
                     return;
 
                 Console.WriteLine("Got him");
 
-                dynamic comparison = kvp.Value.Item2;
+                dynamic comparison = kvp.Item2.Item2;
                 bool valid = false;
 
-                switch(kvp.Value.Item1)
+                switch(kvp.Item2.Item1)
                 {
                     case LogicOperator.GreaterThan:
                         valid = Operator.GreaterThan(var, comparison);
@@ -138,6 +136,33 @@ namespace Aurora.Settings.Layers
                 default:
                     break;
             }
+        }
+        public override string ToString()
+        {
+            string str = "if ";
+
+            if (ReferenceComparisons.Count > 0)
+            {
+                for (int i = 0; i < ReferenceComparisons.Count; i++)
+                {
+                    if (i > 0)
+                        str += "and ";
+                    var check = ReferenceComparisons[i];
+                    str += $"{check.Item1} is {check.Item2.Item1.ToString()} {check.Item2.Item2.ToString()}";
+                    
+                }
+            }
+            else
+                str += "Empty ";
+
+            str += "then ";
+
+            if (Action != null)
+                str += $"{Action.Item1.ToString()} {Action.Item2}";
+            else
+                str += "Empty";
+
+            return str;
         }
     }
 }
