@@ -131,8 +131,6 @@ namespace Aurora.Profiles.Dota_2
                 new Settings.Layers.Layer("Dota 2 Background", new Layers.Dota2BackgroundLayerHandler())
             };
 
-
-
             //Effects
             //// Background
             bg_team_enabled = true;

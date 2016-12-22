@@ -39,7 +39,19 @@ namespace Aurora.EffectsEngine
 
             start = new System.Drawing.PointF(0, 0);
             end = new System.Drawing.PointF(1, 0);
-            center = new System.Drawing.PointF(0.5f, 0.5f);
+            center = new System.Drawing.PointF(0.0f, 0.0f);
+        }
+
+        public EffectBrush(ColorSpectrum spectrum)
+        {
+            type = BrushType.Linear;
+
+            foreach(var color in spectrum.GetSpectrumColors())
+                color_gradients.Add(color.Key, color.Value);
+
+            start = new System.Drawing.PointF(0, 0);
+            end = new System.Drawing.PointF(1, 0);
+            center = new System.Drawing.PointF(0.0f, 0.0f);
         }
 
         public EffectBrush(System.Drawing.Brush brush)
@@ -318,6 +330,18 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        public EffectBrush SetBrushType(BrushType type)
+        {
+            this.type = type;
+            return this;
+        }
+
+        public EffectBrush SetWrap(BrushWrap wrap)
+        {
+            this.wrap = wrap;
+            return this;
+        }
+
         public System.Drawing.Brush GetDrawingBrush()
         {
             if (true/*_drawingbrush == null*/)
@@ -516,6 +540,23 @@ namespace Aurora.EffectsEngine
             }
 
             return _mediabrush;
+        }
+
+        public ColorSpectrum GetColorSpectrum()
+        {
+            ColorSpectrum spectrum = new ColorSpectrum();
+
+            if(type == BrushType.Solid)
+            {
+                spectrum = new ColorSpectrum(color_gradients[0.0f]);
+            }
+            else if(type == BrushType.Linear)
+            {
+                foreach (var color in color_gradients)
+                    spectrum.SetColorAt(color.Key, color.Value);
+            }
+
+            return spectrum;
         }
     }
 }

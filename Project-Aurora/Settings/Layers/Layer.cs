@@ -37,6 +37,9 @@ namespace Aurora.Settings.Layers
         [Description("Percent Effect Layer")]
         Percent = 200,
 
+        [Description("Percent Gradient Effect Layer")]
+        PercentGradient = 201,
+
         [Description("Interactive Layer")]
         Interactive = 300,
 
@@ -93,6 +96,9 @@ namespace Aurora.Settings.Layers
 
         [Description("GTA 5 Police Siren Layer")]
         GTA5PoliceSiren = 901,
+
+        [Description("RocketLeague Background Layer")]
+        RocketLeagueBackground = 950,
 
     }
 

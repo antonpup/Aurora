@@ -90,6 +90,7 @@ namespace Aurora.Settings
             AvailableLayers.Add(LayerType.Breathing);
             AvailableLayers.Add(LayerType.Blinking);
             AvailableLayers.Add(LayerType.Percent);
+            AvailableLayers.Add(LayerType.PercentGradient);
             AvailableLayers.Add(LayerType.Interactive);
             AvailableLayers.Add(LayerType.ShortcutAssistant);
             AvailableLayers.Add(LayerType.Equalizer);

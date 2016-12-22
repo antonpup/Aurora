@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using Aurora.EffectsEngine;
+using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -40,6 +41,41 @@ namespace Aurora.Profiles.RocketLeague
         {
             //Genereal
             isEnabled = true;
+
+            Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
+            {
+                new Settings.Layers.Layer("Boost Indicator", new Settings.Layers.PercentGradientLayerHandler()
+                {
+                    Properties = new Settings.Layers.PercentGradientLayerHandlerProperties()
+                    {
+                        _PercentType = PercentEffectType.Progressive_Gradual,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
+                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4, Devices.DeviceKeys.F5,
+                            Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8, Devices.DeviceKeys.F9, Devices.DeviceKeys.F10,
+                            Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
+                        }),
+                        _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
+                        _BlinkThreshold = 0.0,
+                        _BlinkDirection = false
+                        },
+                    VariablePath = "Player/BoostAmount",
+                    MaxVariablePath = "1.0"
+                }),
+                new Settings.Layers.Layer("Boost Indicator (Peripheral)", new Settings.Layers.PercentGradientLayerHandler()
+                {
+                    Properties = new Settings.Layers.PercentGradientLayerHandlerProperties()
+                    {
+                        _PercentType = PercentEffectType.AllAtOnce,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Peripheral } ),
+                        _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
+                        _BlinkThreshold = 0.0,
+                        _BlinkDirection = false
+                        },
+                    VariablePath = "Player/BoostAmount",
+                    MaxVariablePath = "1.0"
+                }),
+                new Settings.Layers.Layer("Rocket League Background", new Layers.RocketLeagueBackgroundLayerHandler())
+            };
 
             //Effects
             //// Background

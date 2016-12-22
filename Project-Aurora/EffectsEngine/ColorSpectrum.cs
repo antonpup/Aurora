@@ -105,7 +105,8 @@ namespace Aurora.EffectsEngine
         /// <summary>
         /// Reverses the colors and their positions of the ColorSpectrum.
         /// </summary>
-        public void Flip()
+        /// <returns>Itself</returns>
+        public ColorSpectrum Flip()
         {
             Dictionary<float, Color> newcolors = new Dictionary<float, Color>();
 
@@ -115,16 +116,21 @@ namespace Aurora.EffectsEngine
             }
 
             colors = newcolors;
+
+            return this;
         }
 
         /// <summary>
         /// Shifts the internal position counter by a specified amount.
         /// </summary>
         /// <param name="shift_amount">The amount to shift the internal counter by</param>
-        public void Shift(float shift_amount)
+        /// <returns>Itself</returns>
+        public ColorSpectrum Shift(float shift_amount)
         {
             shift += shift_amount;
             shift = shift % 10.0f;
+
+            return this;
         }
 
         /// <summary>
@@ -149,7 +155,8 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="position">The position value of range [0.0f, 1.0f]</param>
         /// <param name="color">The color to be set</param>
-        public void SetColorAt(float position, Color color)
+        /// <returns>Itself</returns>
+        public ColorSpectrum SetColorAt(float position, Color color)
         {
             if (position <= 0.0f)
                 position = 0.0f;
@@ -158,6 +165,8 @@ namespace Aurora.EffectsEngine
                 position = 1.0f;
 
             colors[position] = color;
+
+            return this;
         }
 
         /// <summary>
@@ -248,6 +257,15 @@ namespace Aurora.EffectsEngine
             brush.InterpolationColors = color_blend;
 
             return brush;
+        }
+
+        /// <summary>
+        /// Retrieves the colors and their positions on the spectrum
+        /// </summary>
+        /// <returns>Dictionary with position within the spectrum and color</returns>
+        public Dictionary<float, Color> GetSpectrumColors()
+        {
+            return new Dictionary<float, Color>(colors);
         }
     }
 }

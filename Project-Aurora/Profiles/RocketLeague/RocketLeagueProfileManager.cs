@@ -1,4 +1,5 @@
 ﻿using Aurora.Settings;
+using Aurora.Settings.Layers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace Aurora.Profiles.RocketLeague
         public RocketLeagueProfileManager()
             : base("Rocket League", "rocketleague", "rocketleague.exe", typeof(RocketLeagueSettings), typeof(Control_RocketLeague), new GameEvent_RocketLeague())
         {
+            AvailableLayers.Add(LayerType.RocketLeagueBackground);
+
             IconURI = "Resources/rocketleague_256x256.png";
         }
     }

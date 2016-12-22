@@ -413,6 +413,13 @@
     <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml.cs">
+      <DependentUpon>Control_RocketLeagueBackgroundLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\StringProperty.cs" />
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
@@ -688,6 +695,9 @@
     <Compile Include="Settings\Layers\Control_LockColourLayer.xaml.cs">
       <DependentUpon>Control_LockColourLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_PercentGradientLayer.xaml.cs">
+      <DependentUpon>Control_PercentGradientLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_PercentLayer.xaml.cs">
       <DependentUpon>Control_PercentLayer.xaml</DependentUpon>
     </Compile>
@@ -705,6 +715,7 @@
     <Compile Include="Settings\Layers\InteractiveLayerHandler.cs" />
     <Compile Include="Settings\Layers\LayerHandler.cs" />
     <Compile Include="Settings\Layers\LockColourLayerHandler.cs" />
+    <Compile Include="Settings\Layers\PercentGradientLayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentLayerHandler.cs" />
     <Compile Include="Settings\Layers\ShortcutAssistantLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
@@ -939,6 +950,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Worms_WMD\Control_WormsWMD.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1016,6 +1031,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_LockColourLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_PercentGradientLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

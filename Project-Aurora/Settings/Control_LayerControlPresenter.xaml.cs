@@ -1,6 +1,7 @@
 ﻿using Aurora.Profiles.Dota_2.Layers;
 using Aurora.Profiles.CSGO.Layers;
 using Aurora.Profiles.GTA5.Layers;
+using Aurora.Profiles.RocketLeague.Layers;
 using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,9 @@ namespace Aurora.Settings
                     case LayerType.Percent:
                         _Layer.Handler = new PercentLayerHandler();
                         break;
+                    case LayerType.PercentGradient:
+                        _Layer.Handler = new PercentGradientLayerHandler();
+                        break;
                     case LayerType.Interactive:
                         _Layer.Handler = new InteractiveLayerHandler();
                         break;
@@ -136,6 +140,9 @@ namespace Aurora.Settings
                         break;
                     case LayerType.GTA5PoliceSiren:
                         _Layer.Handler = new GTA5PoliceSirenLayerHandler();
+                        break;
+                    case LayerType.RocketLeagueBackground:
+                        _Layer.Handler = new RocketLeagueBackgroundLayerHandler();
                         break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
