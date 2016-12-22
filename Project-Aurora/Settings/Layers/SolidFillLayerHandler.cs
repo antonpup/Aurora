@@ -39,9 +39,7 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            EffectLayer solidfilled_layer = new EffectLayer();
-            solidfilled_layer.Fill(Properties.PrimaryColor);
-            return solidfilled_layer;
+            return new EffectLayer().Fill(Properties.PrimaryColor);
         }
     }
 }

@@ -357,7 +357,8 @@ namespace Aurora.EffectsEngine
         /// Fills the entire bitmap of the EffectLayer with a specified brush.
         /// </summary>
         /// <param name="brush">Brush to be used during bitmap fill</param>
-        public void Fill(Brush brush)
+        /// <returns>Itself</returns>
+        public EffectLayer Fill(Brush brush)
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
@@ -378,13 +379,16 @@ namespace Aurora.EffectsEngine
                 g.FillRectangle(brush, rect);
                 needsRender = true;
             }
+
+            return this;
         }
 
         /// <summary>
         /// Fills the entire bitmap of the EffectLayer with a specified color.
         /// </summary>
         /// <param name="color">Color to be used during bitmap fill</param>
-        public void Fill(Color color)
+        /// <returns>Itself</returns>
+        public EffectLayer Fill(Color color)
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
@@ -392,6 +396,8 @@ namespace Aurora.EffectsEngine
                 g.FillRectangle(new SolidBrush(color), rect);
                 needsRender = true;
             }
+
+            return this;
         }
 
         /// <summary>
@@ -400,7 +406,8 @@ namespace Aurora.EffectsEngine
         /// <param name="x">X Coordinate on the bitmap</param>
         /// <param name="y">Y Coordinate on the bitmap</param>
         /// <param name="color">Color to be used</param>
-        public void Set(int x, int y, Color color)
+        /// <returns>Itself</returns>
+        public EffectLayer Set(int x, int y, Color color)
         {
             BitmapData srcData = colormap.LockBits(
                     new Rectangle(x, y, 1, 1),
@@ -424,6 +431,8 @@ namespace Aurora.EffectsEngine
             colormap.UnlockBits(srcData);
 
             needsRender = true;
+
+            return this;
         }
 
         /// <summary>
@@ -431,9 +440,12 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
-        public void Set(Devices.DeviceKeys key, Color color)
+        /// <returns>Itself</returns>
+        public EffectLayer Set(Devices.DeviceKeys key, Color color)
         {
             SetOneKey(key, color);
+
+            return this;
         }
 
         /// <summary>
@@ -441,7 +453,8 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="sequence">KeySequence to specify what regions of the bitmap need to be changed</param>
         /// <param name="color">Color to be used</param>
-        public void Set(KeySequence sequence, Color color)
+        /// <returns>Itself</returns>
+        public EffectLayer Set(KeySequence sequence, Color color)
         {
             if (sequence.type == KeySequenceType.Sequence)
             {
@@ -471,6 +484,8 @@ namespace Aurora.EffectsEngine
                     g.FillRectangle(new SolidBrush(color), rect);
                 }
             }
+
+            return this;
         }
 
         /// <summary>
@@ -478,7 +493,8 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
-        private void SetOneKey(Devices.DeviceKeys key, Color color)
+        /// <returns>Itself</returns>
+        private EffectLayer SetOneKey(Devices.DeviceKeys key, Color color)
         {
             BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
@@ -504,7 +520,7 @@ namespace Aurora.EffectsEngine
                     keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
                 {
                     Global.logger.LogLine("Coudln't set key color " + key.ToString(), Logging_Level.Warning);
-                    return;
+                    return this; ;
                 }
                 else
                 {
@@ -515,6 +531,8 @@ namespace Aurora.EffectsEngine
                     }
                 }
             }
+
+            return this;
         }
 
         /// <summary>
@@ -674,12 +692,15 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        /// <returns>Itself</returns>
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
                 PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed);
             else
                 PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flash_past, flash_reversed);
+
+            return this;
         }
 
         /// <summary>
@@ -690,12 +711,15 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        /// <returns>Itself</returns>
+        public EffectLayer PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
                 PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed);
             else
                 PercentEffect(spectrum, sequence.freeform, value, total, percentEffectType, flash_past, flash_reversed);
+
+            return this;
         }
 
         /// <summary>
@@ -707,7 +731,8 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        /// <returns>Itself</returns>
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -753,6 +778,8 @@ namespace Aurora.EffectsEngine
                         break;
                 }
             }
+
+            return this;
         }
 
         /// <summary>
@@ -763,7 +790,8 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        /// <returns>Itself</returns>
+        public EffectLayer PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -809,6 +837,8 @@ namespace Aurora.EffectsEngine
                         break;
                 }
             }
+
+            return this;
         }
 
         /// <summary>
@@ -820,7 +850,8 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(Color foregroundColor, Color backgroundColor, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        /// <returns>Itself</returns>
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0 || Double.IsNaN(progress_total))
@@ -878,6 +909,8 @@ namespace Aurora.EffectsEngine
                     g.FillRectangle(new SolidBrush(foregroundColor), rect);
                 }
             }
+
+            return this;
         }
 
         /// <summary>
@@ -888,7 +921,8 @@ namespace Aurora.EffectsEngine
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
-        public void PercentEffect(ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        /// <returns>Itself</returns>
+        public EffectLayer PercentEffect(ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -944,7 +978,7 @@ namespace Aurora.EffectsEngine
                     g.FillRectangle(brush, rect);
                 }
 
-
+                return this;
             }
         }
 
@@ -953,7 +987,8 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="freeform">The FreeFormObject that will be filled with a color</param>
         /// <param name="color">The color to be used</param>
-        public void DrawFreeForm(Settings.FreeFormObject freeform, Color color)
+        /// <returns>Itself</returns>
+        public EffectLayer DrawFreeForm(Settings.FreeFormObject freeform, Color color)
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
@@ -975,13 +1010,16 @@ namespace Aurora.EffectsEngine
                 g.Transform = myMatrix;
                 g.FillRectangle(new SolidBrush(color), rect);
             }
+
+            return this;
         }
 
         /// <summary>
         /// Draws ColorZones on the layer bitmap.
         /// </summary>
         /// <param name="colorzones">An array of ColorZones</param>
-        public void DrawColorZones(ColorZone[] colorzones)
+        /// <returns>Itself</returns>
+        public EffectLayer DrawColorZones(ColorZone[] colorzones)
         {
             foreach (ColorZone cz in colorzones.Reverse())
             {
@@ -1036,6 +1074,8 @@ namespace Aurora.EffectsEngine
                 }
 
             }
+
+            return this;
         }
 
         /// <summary>

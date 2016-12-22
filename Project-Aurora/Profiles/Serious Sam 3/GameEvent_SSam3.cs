@@ -19,9 +19,7 @@ namespace Aurora.Profiles.Serious_Sam_3
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            EffectLayer cz_layer = new EffectLayer("SSam3 - Color Zones");
-            cz_layer.DrawColorZones((this.Profile.Settings as SSam3Settings).lighting_areas.ToArray());
-            layers.Enqueue(cz_layer);
+            layers.Enqueue(new EffectLayer("SSam3 - Color Zones").DrawColorZones((this.Profile.Settings as SSam3Settings).lighting_areas.ToArray()));
         }
     }
 }

@@ -19,9 +19,7 @@ namespace Aurora.Profiles.Metro_Last_Light
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            EffectLayer cz_layer = new EffectLayer("MetroLL - Color Zones");
-            cz_layer.DrawColorZones((this.Profile?.Settings as MetroLLSettings).lighting_areas.ToArray());
-            layers.Enqueue(cz_layer);
+            layers.Enqueue(new EffectLayer("MetroLL - Color Zones").DrawColorZones((this.Profile?.Settings as MetroLLSettings).lighting_areas.ToArray()));
         }
     }
 }

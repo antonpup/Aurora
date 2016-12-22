@@ -22,9 +22,7 @@ namespace Aurora.Profiles.LeagueOfLegends
             //ColorZones
             if (!((this.Profile.Settings as LoLSettings).disable_cz_on_dark && last_fill_color.Equals(Color.Black)))
             {
-                EffectLayer cz_layer = new EffectLayer("League - Color Zones");
-                cz_layer.DrawColorZones((this.Profile.Settings as LoLSettings).lighting_areas.ToArray());
-                layers.Enqueue(cz_layer);
+                layers.Enqueue(new EffectLayer("League - Color Zones").DrawColorZones((this.Profile.Settings as LoLSettings).lighting_areas.ToArray()));
             }
         }
     }

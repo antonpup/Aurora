@@ -328,9 +328,7 @@ namespace Aurora.Profiles.Payday_2
             }
 
             //ColorZones
-            EffectLayer cz_layer = new EffectLayer("Payday 2 - Color Zones");
-            cz_layer.DrawColorZones(settings.lighting_areas.ToArray());
-            layers.Enqueue(cz_layer);
+            layers.Enqueue(new EffectLayer("Payday 2 - Color Zones").DrawColorZones(settings.lighting_areas.ToArray()));
 
             //Scripts
             this.Profile.UpdateEffectScripts(layers, _game_state);

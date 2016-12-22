@@ -19,9 +19,7 @@ namespace Aurora.Profiles.Blacklight
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            EffectLayer cz_layer = new EffectLayer("Blacklight - Color Zones");
-            cz_layer.DrawColorZones((this.Profile.Settings as BLightSettings).lighting_areas.ToArray());
-            layers.Enqueue(cz_layer);
+            layers.Enqueue(new EffectLayer("Blacklight - Color Zones").DrawColorZones((this.Profile.Settings as BLightSettings).lighting_areas.ToArray()));
         }
     }
 }

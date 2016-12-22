@@ -49,8 +49,6 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            EffectLayer layer = new EffectLayer();
-
             Color clr;
 
             if (System.Windows.Forms.Control.IsKeyLocked(Properties.ToggledKey))
@@ -66,10 +64,7 @@ namespace Aurora.Settings.Layers
             else
                 clr = Properties.SecondaryColor;
 
-            layer.Set(Properties.Sequence, clr);
-            //layer.Set(KeyUtils.GetDeviceKey(Properties.ToggledKey), clr);
-
-            return layer;
+            return new EffectLayer().Set(Properties.Sequence, clr);
         }
     }
 }

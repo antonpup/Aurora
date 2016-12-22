@@ -30,8 +30,6 @@ namespace Aurora.Profiles.Generic_Application
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            EffectLayer cz_layer = new EffectLayer("Color Zones");
-
             ColorZone[] zones = { };
 
             GenericApplicationSettings settings = (GenericApplicationSettings)this.Profile.Settings;
@@ -50,8 +48,7 @@ namespace Aurora.Profiles.Generic_Application
                 }
             }
 
-            cz_layer.DrawColorZones(zones.ToArray());
-            layers.Enqueue(cz_layer);
+            layers.Enqueue(new EffectLayer("Color Zones").DrawColorZones(zones.ToArray()));
 
             //Scripts
             this.Profile.UpdateEffectScripts(layers);

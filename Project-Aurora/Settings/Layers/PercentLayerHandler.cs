@@ -56,8 +56,6 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer percent_layer = new EffectLayer();
-
             double value = 0;
             if (!double.TryParse(VariablePath, out value) && !string.IsNullOrWhiteSpace(VariablePath))
             {
@@ -85,9 +83,7 @@ namespace Aurora.Settings.Layers
                 }
             }
 
-            percent_layer.PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
-
-            return percent_layer;
+            return new EffectLayer().PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
         }
 
         public override void SetProfile(ProfileManager profile)
