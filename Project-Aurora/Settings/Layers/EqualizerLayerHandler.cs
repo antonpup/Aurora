@@ -57,6 +57,7 @@ namespace Aurora.Settings.Layers
 
         private Complex[] _ffts = { };
 
+        float[] previous_freq_results = null;
 
         public EqualizerLayerHandler()
         {
@@ -84,6 +85,12 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
+            double[] freqs = {125, 250, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 10000, 12000, 14000, 16000 };
+            double[] freq_results = new double[freqs.Length];
+
+            if (previous_freq_results == null)
+                previous_freq_results = new float[freqs.Length];
+
             EffectLayer equalizer_layer = new EffectLayer();
 
             using (Graphics g = equalizer_layer.GetGraphics())
@@ -100,79 +107,48 @@ namespace Aurora.Settings.Layers
                         }
                         break;
                     case EqualizerType.PowerBars:
-                        double[] freqs = { 32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000 };
-                        double[] freq_results = new double[freqs.Length];
 
-                        int band = 0;
-                        for (int n = 0; n < _ffts.Length / 2; n++)
+                        //Perform FFT again to get frequencies
+                        FastFourierTransform.FFT(true, (int)Math.Log(fftLength, 2.0), _ffts);
+
+                        for(int x = 0; x < freqs.Length; x++)
                         {
-                            band = (int)((double)n / (_ffts.Length / 2) * freq_results.Length);
+                            int bin = (int)(freqs[x] / (waveIn.WaveFormat.SampleRate / _ffts.Length));
 
-                            Complex c = _ffts[n];
-                            double intensityDB = 20 * Math.Log10(Math.Sqrt(c.X * c.X + c.Y * c.Y));
-                            double minDB = -90;
-                            if (intensityDB < minDB) intensityDB = minDB;
-                            double percent = 1.0 - ( intensityDB / minDB );
+                            //System.Diagnostics.Debug.WriteLine($"bin = {bin} for Hz = {freqs[x]}");
 
-                            freq_results[band] += percent;
-                            freq_results[band] /= 2;
+                            Complex c = _ffts[bin];
+                            double intensityDB = Math.Log10(Math.Sqrt(c.X * c.X + c.Y * c.Y));
+
+                            freq_results[x] += intensityDB;
                         }
 
                         float bar_width = Effects.canvas_width / (float)freqs.Length;
 
                         for (int f_x = 0; f_x < freq_results.Length; f_x++)
                         {
-                            float fft_val = (float)freq_results[f_x];
+                            float fft_val = (float)(freq_results[f_x] + 4.5) / 2.0f;
+
+                            if (fft_val > 1.0f) fft_val = 1.0f;
+
+                            if (fft_val <= 0 || previous_freq_results[f_x] - fft_val > 0.10)
+                                fft_val = previous_freq_results[f_x] - 0.10f;
 
                             float x = f_x * bar_width;
                             float y = Effects.canvas_height;
                             float width = bar_width;
                             float height = fft_val * Effects.canvas_height;
 
+                            previous_freq_results[f_x] = fft_val;
+
                             g.FillRectangle(new SolidBrush(f_x % 2 == 0 ? Color.Red : Color.Green), x, y - height, width, height);
                         }
 
-
-                        /*
-
-                        int band = 0;
-                        for (int n = 0; n < _ffts.Length; n++)
-                        {
-                            band = (int)((double)n / (_ffts.Length) * freq_results.Length);
-                            freq_results[band] += Math.Sqrt(_ffts[n].X * _ffts[n].X + _ffts[n].Y * _ffts[n].Y);
-                        }
-
-                        float bar_width = Effects.canvas_width / (float)freqs.Length;
-
-                        for (int f_x = 0; f_x < freq_results.Length; f_x++)
-                        {
-                            float fft_val = (float)(10.0f * Math.Log10(freq_results[f_x]));
-
-                            float x = f_x * bar_width;
-                            float y = Effects.canvas_height;
-                            float width = bar_width;
-                            float height = fft_val;
-
-                            g.FillRectangle(new SolidBrush(f_x % 2 == 0 ? Color.Red : Color.Green), x, y - height, width, height);
-                        }*/
                         break;
                 }
             }
 
             return equalizer_layer;
-        }
-
-        private double GetYPosLog(Complex c)
-        {
-            // not entirely sure whether the multiplier should be 10 or 20 in this case.
-            // going with 10 from here http://stackoverflow.com/a/10636698/7532
-            double intensityDB = 10 * Math.Log10(Math.Sqrt(c.X * c.X + c.Y * c.Y));
-            double minDB = -90;
-            if (intensityDB < minDB) intensityDB = minDB;
-            double percent = intensityDB / minDB;
-            // we want 0dB to be at the top (i.e. yPos = 0)
-            double yPos = percent * Effects.canvas_height;
-            return yPos;
         }
 
         void OnDataAvailable(object sender, WaveInEventArgs e)
