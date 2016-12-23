@@ -7,10 +7,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
-    public class PercentLayerHandlerProperties : LayerHandlerProperties2Color<PercentLayerHandlerProperties>
+    public class PercentLayerHandlerProperties<TProperty> : LayerHandlerProperties2Color<TProperty> where TProperty : PercentLayerHandlerProperties<TProperty>
     {
         public PercentEffectType? _PercentType { get; set; }
 
@@ -27,9 +28,19 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool BlinkDirection { get { return Logic._BlinkDirection ?? _BlinkDirection ?? false; } }
 
+        public string _VariablePath { get; set; }
+
+        [JsonIgnore]
+        public string VariablePath { get { return Logic._VariablePath ?? _VariablePath ?? string.Empty; } }
+
+        public string _MaxVariablePath { get; set; }
+
+        [JsonIgnore]
+        public string MaxVariablePath { get { return Logic._MaxVariablePath ?? _MaxVariablePath ?? string.Empty; } }
+
         public PercentLayerHandlerProperties() : base() { }
 
-        public PercentLayerHandlerProperties (bool assign_default = false) : base(assign_default) {}
+        public PercentLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
         public override void Default()
         {
@@ -42,40 +53,37 @@ namespace Aurora.Settings.Layers
         }
     }
 
-    public class PercentLayerHandler : LayerHandler<PercentLayerHandlerProperties>
+    public class PercentLayerHandlerProperties : PercentLayerHandlerProperties<PercentLayerHandlerProperties>
     {
-        public string VariablePath = "";
-        public string MaxVariablePath = "";
+        public PercentLayerHandlerProperties() : base() { }
 
-        public PercentLayerHandler() : base()
-        {
-            _Control = new Control_PercentLayer(this);
-            
-            _Type = LayerType.Percent;
-        }
+        public PercentLayerHandlerProperties(bool empty = false) : base(empty) { }
+    }
 
+    public class PercentLayerHandler<TProperty> : LayerHandler<TProperty> where TProperty : PercentLayerHandlerProperties<TProperty>
+    {
         public override EffectLayer Render(IGameState state)
         {
             double value = 0;
-            if (!double.TryParse(VariablePath, out value) && !string.IsNullOrWhiteSpace(VariablePath))
+            if (!double.TryParse(Properties.VariablePath, out value) && !string.IsNullOrWhiteSpace(Properties.VariablePath))
             {
                 try
                 {
-                    value = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, VariablePath));
+                    value = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, Properties.VariablePath));
                 }
-                catch(Exception exc)
+                catch (Exception exc)
                 {
                     value = 0;
                 }
             }
-                
+
 
             double maxvalue = 0;
-            if (!double.TryParse(MaxVariablePath, out maxvalue) && !string.IsNullOrWhiteSpace(MaxVariablePath))
+            if (!double.TryParse(Properties.MaxVariablePath, out maxvalue) && !string.IsNullOrWhiteSpace(Properties.MaxVariablePath))
             {
                 try
                 {
-                    maxvalue = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, MaxVariablePath));
+                    maxvalue = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, Properties.MaxVariablePath));
                 }
                 catch (Exception exc)
                 {
@@ -88,7 +96,30 @@ namespace Aurora.Settings.Layers
 
         public override void SetProfile(ProfileManager profile)
         {
-            (_Control as Control_PercentLayer).SetProfile(profile);
+            if (profile != null)
+            {
+                double value;
+                if (!double.TryParse(Properties._VariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._VariablePath) && !profile.ParameterLookup.ContainsKey(Properties._VariablePath))
+                    Properties._VariablePath = string.Empty;
+
+                if (!double.TryParse(Properties._MaxVariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._MaxVariablePath) && !profile.ParameterLookup.ContainsKey(Properties._MaxVariablePath))
+                    Properties._MaxVariablePath = string.Empty;
+            }
+            (Control as Control_PercentLayer).SetProfile(profile);
+            
+        }
+    }
+
+    public class PercentLayerHandler : PercentLayerHandler<PercentLayerHandlerProperties>
+    {
+        public PercentLayerHandler() : base()
+        {
+            _Type = LayerType.Percent;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_PercentLayer(this);
         }
     }
 }

@@ -56,10 +56,10 @@ namespace Aurora.Profiles.RocketLeague
                         }),
                         _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
                         _BlinkThreshold = 0.0,
-                        _BlinkDirection = false
-                        },
-                    VariablePath = "Player/BoostAmount",
-                    MaxVariablePath = "1.0"
+                        _BlinkDirection = false,
+                        _VariablePath = "Player/BoostAmount",
+                        _MaxVariablePath = "1.0",
+                    },
                 }),
                 new Settings.Layers.Layer("Boost Indicator (Peripheral)", new Settings.Layers.PercentGradientLayerHandler()
                 {
@@ -69,10 +69,10 @@ namespace Aurora.Profiles.RocketLeague
                         _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Peripheral } ),
                         _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
                         _BlinkThreshold = 0.0,
-                        _BlinkDirection = false
-                        },
-                    VariablePath = "Player/BoostAmount",
-                    MaxVariablePath = "1.0"
+                        _BlinkDirection = false,
+                        _VariablePath = "Player/BoostAmount",
+                        _MaxVariablePath = "1.0"
+                    },
                 }),
                 new Settings.Layers.Layer("Rocket League Background", new Layers.RocketLeagueBackgroundLayerHandler())
             };

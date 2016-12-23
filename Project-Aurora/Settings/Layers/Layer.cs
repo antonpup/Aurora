@@ -111,7 +111,7 @@ namespace Aurora.Settings.Layers
     /// <summary>
     /// A class representing a default settings layer
     /// </summary>
-    public class Layer
+    public class Layer : ICloneable
     {
         private ProfileManager _profile;
 
@@ -266,6 +266,17 @@ namespace Aurora.Settings.Layers
             _profile = profile;
 
             _Handler?.SetProfile(_profile);
+        }
+
+        public object Clone()
+        {
+            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            return JsonConvert.DeserializeObject(
+                    str,
+                    this.GetType(),
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All }
+                    );
         }
     }
 }

@@ -96,10 +96,11 @@ namespace Aurora.Profiles.CSGO
                             Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
                         }),
                         _BlinkThreshold = 0.0,
-                        _BlinkDirection = false
+                        _BlinkDirection = false,
+                        _VariablePath = "Player/State/Health",
+                        _MaxVariablePath = "100"
                         },
-                    VariablePath = "Player/State/Health",
-                    MaxVariablePath = "100"
+                    
                 }),
                 new Settings.Layers.Layer("Ammo Indicator", new Settings.Layers.PercentLayerHandler()
                 {
@@ -114,10 +115,10 @@ namespace Aurora.Profiles.CSGO
                             Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
                         }),
                         _BlinkThreshold = 0.15,
-                        _BlinkDirection = false
-                        },
-                    VariablePath = "Player/Weapons/ActiveWeapon/AmmoClip",
-                    MaxVariablePath = "Player/Weapons/ActiveWeapon/AmmoClipMax"
+                        _BlinkDirection = false,
+                        _VariablePath = "Player/Weapons/ActiveWeapon/AmmoClip",
+                        _MaxVariablePath = "Player/Weapons/ActiveWeapon/AmmoClipMax"
+                    },
                 }),
                 new Settings.Layers.Layer("CSGO Bomb Effect", new Layers.CSGOBombLayerHandler()),
                 new Settings.Layers.Layer("CSGO Burning Effect", new Layers.CSGOBurningLayerHandler()),

@@ -26,8 +26,6 @@ namespace Aurora.Settings.Layers
 
         public AmbilightLayerHandler()
         {
-            _Control = new Control_DefaultLayer();
-
             _Type = LayerType.Ambilight;
 
             if (screenshotTimer == null)
@@ -36,6 +34,11 @@ namespace Aurora.Settings.Layers
                 screenshotTimer.Elapsed += ScreenshotTimer_Elapsed;
                 screenshotTimer.Start();
             }
+        }
+
+        protected override System.Windows.Controls.UserControl CreateControl()
+        {
+            return new Control_DefaultLayer();
         }
 
         private void ScreenshotTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

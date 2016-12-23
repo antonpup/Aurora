@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -111,13 +112,16 @@ namespace Aurora.Settings.Layers
 
         public InteractiveLayerHandler()
         {
-            _Control = new Control_InteractiveLayer(this);
-
             _Type = LayerType.Interactive;
 
             Global.input_subscriptions.KeyDown += Input_subscriptions_KeyDown;
             Global.input_subscriptions.KeyUp += Input_subscriptions_KeyUp;
             Global.input_subscriptions.MouseClick += Input_subscriptions_MouseClick;
+        }
+
+        protected override System.Windows.Controls.UserControl CreateControl()
+        {
+            return new Control_InteractiveLayer(this);
         }
 
         private void Input_subscriptions_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)

@@ -91,10 +91,10 @@ namespace Aurora.Profiles.Dota_2
                             Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
                         }),
                         _BlinkThreshold = 0.0,
-                        _BlinkDirection = false
-                        },
-                    VariablePath = "Hero/Health",
-                    MaxVariablePath = "Hero/MaxHealth"
+                        _BlinkDirection = false,
+                        _VariablePath = "Hero/Health",
+                        _MaxVariablePath = "Hero/MaxHealth"
+                    },
                 })
                 {
                     Logics = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.LogicItem>()
@@ -114,10 +114,10 @@ namespace Aurora.Profiles.Dota_2
                             Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
                         }),
                         _BlinkThreshold = 0.0,
-                        _BlinkDirection = false
-                        },
-                    VariablePath = "Hero/Mana",
-                    MaxVariablePath = "Hero/MaxMana"
+                        _BlinkDirection = false,
+                        _VariablePath = "Hero/Mana",
+                        _MaxVariablePath = "Hero/MaxMana"
+                    },
                 })
                 {
                     Logics = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.LogicItem>()

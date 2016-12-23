@@ -37,7 +37,7 @@ namespace Aurora.Settings
         {
             get { return (ProfileManager)GetValue(FocusedProfileProperty); }
             set
-            {
+            { 
                 SetValue(FocusedProfileProperty, value);
             }
         }
@@ -203,6 +203,26 @@ namespace Aurora.Settings
             {
                 ProfileOverviewRequest?.Invoke(FocusedProfile.Control);
                 lstLayers.SelectedIndex = -1;
+            }
+        }
+
+        private void lstLayers_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                if (e.Key == Key.C)
+                    Global.Clipboard = ((Layer)this.lstLayers.SelectedItem).Clone();
+                else if (e.Key == Key.V && Global.Clipboard is Layer)
+                {
+                    Layer lyr = (Layer)Global.Clipboard;
+
+                    if (FocusedProfile.AvailableLayers.Contains(lyr.Handler.Type))
+                    {
+                        lyr.Name += " - Copy";
+                        lyr.SetProfile(FocusedProfile);
+                        FocusedProfile.Settings.Layers.Add(lyr);
+                    }
+                }
             }
         }
     }

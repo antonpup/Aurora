@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -32,9 +33,12 @@ namespace Aurora.Settings.Layers
     {
         public SolidFillLayerHandler()
         {
-            _Control = new Control_SolidFillLayer(this);
-
             _Type = LayerType.SolidFilled;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_SolidFillLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

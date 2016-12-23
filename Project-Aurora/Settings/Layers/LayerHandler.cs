@@ -112,7 +112,7 @@ namespace Aurora.Settings.Layers
         {
             get
             {
-                return _Control;
+                return _Control ?? (_Control = this.CreateControl());
             }
         }
 
@@ -160,6 +160,11 @@ namespace Aurora.Settings.Layers
         public virtual void SetProfile(ProfileManager profile)
         {
 
+        }
+
+        protected virtual UserControl CreateControl()
+        {
+            return null;
         }
     }
 

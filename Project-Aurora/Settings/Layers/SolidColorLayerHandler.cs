@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -13,9 +14,12 @@ namespace Aurora.Settings.Layers
     {
         public SolidColorLayerHandler()
         {
-            _Control = new Control_SolidColorLayer(this);
-
             _Type = LayerType.Solid;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_SolidColorLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

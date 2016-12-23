@@ -46,6 +46,8 @@ namespace Aurora
         /// Currently held down modifer key
         /// </summary>
         public static Keys held_modified = Keys.None;
+
+        public static object Clipboard { get; set; }
     }
 
     static class Program

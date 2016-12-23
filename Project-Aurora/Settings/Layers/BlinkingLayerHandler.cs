@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -49,9 +50,12 @@ namespace Aurora.Settings.Layers
 
         public BlinkingLayerHandler()
         {
-            _Control = new Control_BlinkingLayer(this);
-
             _Type = LayerType.Blinking;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_BlinkingLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Drawing;
 using Aurora.Utils;
 using System.Windows.Forms;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -42,9 +43,12 @@ namespace Aurora.Settings.Layers
     {
         public LockColourLayerHandler() : base()
         {
-            _Control = new Control_LockColourLayer(this);
-
             _Type = LayerType.LockColor;
+        }
+
+        protected override System.Windows.Controls.UserControl CreateControl()
+        {
+            return new Control_LockColourLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

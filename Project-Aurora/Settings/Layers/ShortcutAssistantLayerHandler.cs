@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -79,9 +80,12 @@ namespace Aurora.Settings.Layers
     {
         public ShortcutAssistantLayerHandler()
         {
-            _Control = new Control_ShortcutAssistantLayer(this);
-
             _Type = LayerType.ShortcutAssistant;
+        }
+
+        protected override System.Windows.Controls.UserControl CreateControl()
+        {
+            return new Control_ShortcutAssistantLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

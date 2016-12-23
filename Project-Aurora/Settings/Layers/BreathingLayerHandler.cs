@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -49,9 +50,12 @@ namespace Aurora.Settings.Layers
 
         public BreathingLayerHandler()
         {
-            _Control = new Control_BreathingLayer(this);
-
             _Type = LayerType.Breathing;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_BreathingLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

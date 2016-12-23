@@ -39,8 +39,8 @@ namespace Aurora.Settings.Layers
         {
             if (this.DataContext is PercentLayerHandler && !settingsset)
             {
-                this.ComboBox_variable.Text = (this.DataContext as PercentLayerHandler).VariablePath;
-                this.ComboBox_max_variable.Text = (this.DataContext as PercentLayerHandler).MaxVariablePath;
+                this.ComboBox_variable.Text = (this.DataContext as PercentLayerHandler).Properties._VariablePath;
+                this.ComboBox_max_variable.Text = (this.DataContext as PercentLayerHandler).Properties._MaxVariablePath;
                 this.ColorPicker_progressColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_backgroundColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as PercentLayerHandler).Properties._SecondaryColor ?? System.Drawing.Color.Empty);
                 this.ComboBox_effect_type.SelectedIndex = (int)(this.DataContext as PercentLayerHandler).Properties._PercentType;
@@ -67,6 +67,8 @@ namespace Aurora.Settings.Layers
 
                 profileset = true;
             }
+            settingsset = false;
+            this.SetSettings();
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
@@ -85,13 +87,13 @@ namespace Aurora.Settings.Layers
         private void ComboBox_variable_TextChanged(object sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is ComboBox)
-                (this.DataContext as PercentLayerHandler).VariablePath = (sender as ComboBox).Text;
+                (this.DataContext as PercentLayerHandler).Properties._VariablePath = (sender as ComboBox).Text;
         }
 
         private void ComboBox_max_variable_TextChanged(object sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is ComboBox)
-                (this.DataContext as PercentLayerHandler).MaxVariablePath = (sender as ComboBox).Text;
+                (this.DataContext as PercentLayerHandler).Properties._MaxVariablePath = (sender as ComboBox).Text;
         }
 
         private void ColorPicker_progressColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

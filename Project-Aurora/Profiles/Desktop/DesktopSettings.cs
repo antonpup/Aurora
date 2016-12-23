@@ -87,10 +87,10 @@ namespace Aurora.Profiles.Desktop
                             Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
                         }),
                         _BlinkThreshold = 0.0,
-                        _BlinkDirection = false
-                        },
-                    VariablePath = "LocalPCInfo/CPUUsage",
-                    MaxVariablePath = "100"
+                        _BlinkDirection = false,
+                        _VariablePath = "LocalPCInfo/CPUUsage",
+                        _MaxVariablePath = "100"
+                    },
                 }),
                 new Settings.Layers.Layer("RAM Usage", new Settings.Layers.PercentLayerHandler()
                 {
@@ -105,10 +105,10 @@ namespace Aurora.Profiles.Desktop
                             Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
                         }),
                         _BlinkThreshold = 0.0,
-                        _BlinkDirection = false
-                        },
-                    VariablePath = "LocalPCInfo/MemoryUsed",
-                    MaxVariablePath = "LocalPCInfo/MemoryTotal"
+                        _BlinkDirection = false,
+                        _VariablePath = "LocalPCInfo/MemoryUsed",
+                        _MaxVariablePath = "LocalPCInfo/MemoryTotal"
+                    },
                 }),
                 new Settings.Layers.Layer("Interactive Layer", new Settings.Layers.InteractiveLayerHandler()
                 {

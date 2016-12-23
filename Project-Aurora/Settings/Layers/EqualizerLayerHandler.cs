@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -59,8 +60,6 @@ namespace Aurora.Settings.Layers
 
         public EqualizerLayerHandler()
         {
-            _Control = new Control_EqualizerLayer(this);
-
             _Type = LayerType.Equalizer;
 
             //PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
@@ -76,6 +75,11 @@ namespace Aurora.Settings.Layers
             waveIn.DataAvailable += OnDataAvailable;
 
             waveIn.StartRecording();
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_EqualizerLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

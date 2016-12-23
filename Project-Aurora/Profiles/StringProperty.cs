@@ -13,6 +13,7 @@ namespace Aurora.Profiles
     {
         object GetValueFromString(string name, object input = null);
         void SetValueFromString(string name, object value);
+        IStringProperty Clone();
     }
 
     public class StringProperty<T> : IStringProperty
@@ -110,6 +111,11 @@ namespace Aurora.Profiles
             {
                 PropertyLookup[name].Item2((T)(object)this, value);
             }
+        }
+
+        public IStringProperty Clone()
+        {
+            return (IStringProperty)this.MemberwiseClone();
         }
     }
 }
