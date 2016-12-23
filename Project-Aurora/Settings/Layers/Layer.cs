@@ -106,6 +106,9 @@ namespace Aurora.Settings.Layers
         [Description("Rocket League Background Layer")]
         RocketLeagueBackground = 950,
 
+        [Description("Payday 2 Background Layer")]
+        PD2Background = 1000,
+
     }
 
     /// <summary>

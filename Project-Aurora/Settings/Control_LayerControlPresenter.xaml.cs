@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Aurora.Profiles.PD2.Layers;
 
 namespace Aurora.Settings
 {
@@ -149,6 +150,9 @@ namespace Aurora.Settings
                         break;
                     case LayerType.RocketLeagueBackground:
                         _Layer.Handler = new RocketLeagueBackgroundLayerHandler();
+                        break;
+                    case LayerType.PD2Background:
+                        _Layer.Handler = new PD2BackgroundLayerHandler();
                         break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();

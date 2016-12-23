@@ -18,7 +18,7 @@ namespace Aurora.Profiles
 
     public class StringProperty<T> : IStringProperty
     {
-        public static Dictionary<string, Tuple<Func<T, object>, Action<T, object>>> PropertyLookup { get; set; }
+        public static Dictionary<string, Tuple<Func<T, object>, Action<T, object>>> PropertyLookup { get; set; } = null;
 
         public StringProperty()
         {
@@ -79,7 +79,8 @@ namespace Aurora.Profiles
                         Expression.Assign(propertyGetterExpression, Expression.ConvertChecked(paramExpression2, var_type)), paramExpression, paramExpression2
                     ).Compile();
                 }
-                PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>>(getp, setp));
+                if (!PropertyLookup.ContainsKey(prop.Name))
+                    PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>>(getp, setp));
 
             }
         }

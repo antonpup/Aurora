@@ -53,6 +53,11 @@ namespace Aurora.Profiles.Payday_2
             //General
             isEnabled = true;
 
+            Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>
+            {
+                new Settings.Layers.Layer("Payday 2 Background", new PD2.Layers.PD2BackgroundLayerHandler())
+            };
+
             //Effects
             //// Background
             bg_enabled = true;

@@ -76,6 +76,9 @@ namespace Aurora.Settings.Layers
 
                 profileset = true;
             }
+
+            settingsset = false;
+            this.SetSettings();
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)

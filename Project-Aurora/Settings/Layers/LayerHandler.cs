@@ -164,7 +164,7 @@ namespace Aurora.Settings.Layers
 
         protected virtual UserControl CreateControl()
         {
-            return null;
+            return new Control_DefaultLayer();
         }
     }
 

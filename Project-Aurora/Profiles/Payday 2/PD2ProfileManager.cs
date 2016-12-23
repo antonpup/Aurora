@@ -16,6 +16,7 @@ namespace Aurora.Profiles.Payday_2
             : base("Payday 2", "pd2", "payday2_win32_release.exe", typeof(PD2Settings), typeof(Control_PD2), new GameEvent_PD2())
         {
             IconURI = "Resources/pd2_64x64.png";
+            this.AvailableLayers.Add(Aurora.Settings.Layers.LayerType.PD2Background);
         }
     }
 }
