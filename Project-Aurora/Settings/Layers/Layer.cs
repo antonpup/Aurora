@@ -140,7 +140,9 @@ namespace Aurora.Settings.Layers
             set
             {
                 _Handler = value;
-                _Handler.SetProfile(_profile);
+
+                if(_profile != null)
+                    _Handler.SetProfile(_profile);
             }
         }
 

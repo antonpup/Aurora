@@ -60,23 +60,6 @@ namespace Aurora.Settings
             if(game_event._game_state != null)
             {
                 ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(game_event._game_state.GetType());
-
-                #if DEBUG
-                foreach (var param in ParameterLookup)
-                {
-                    Global.logger.LogLine(param.Key);
-                    try
-                    {
-                        var got_value = Utils.GameStateUtils.RetrieveGameStateParameter(game_event._game_state, param.Key);
-                        Global.logger.LogLine(got_value.ToString());
-                    }
-                    catch(Exception exc)
-                    {
-                        Global.logger.LogLine("EXCEPTION");
-                    }
-                }
-                //Global.logger.LogLine("");
-                #endif
             }
             else
                 ParameterLookup = new Dictionary<string, Tuple<Type, Type>>();
