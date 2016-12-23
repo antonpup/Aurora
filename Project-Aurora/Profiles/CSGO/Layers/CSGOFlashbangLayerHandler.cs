@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Profiles.CSGO.Layers
 {
@@ -38,9 +39,12 @@ namespace Aurora.Profiles.CSGO.Layers
     {
         public CSGOFlashbangLayerHandler() : base()
         {
-            _Control = new Control_CSGOFlashbangLayer(this);
-
             _Type = LayerType.CSGOFlashbang;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_CSGOFlashbangLayer(this);
         }
 
         public override EffectLayer Render(IGameState state)
@@ -65,7 +69,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override void SetProfile(ProfileManager profile)
         {
-            (_Control as Control_CSGOFlashbangLayer).SetProfile(profile);
+            (Control as Control_CSGOFlashbangLayer).SetProfile(profile);
         }
     }
 }

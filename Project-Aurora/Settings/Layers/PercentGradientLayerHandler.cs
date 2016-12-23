@@ -76,5 +76,19 @@ namespace Aurora.Settings.Layers
 
             return percent_layer;
         }
+
+        public override void SetProfile(ProfileManager profile)
+        {
+            if (profile != null)
+            {
+                double value;
+                if (!double.TryParse(Properties._VariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._VariablePath) && !profile.ParameterLookup.ContainsKey(Properties._VariablePath))
+                    Properties._VariablePath = string.Empty;
+
+                if (!double.TryParse(Properties._MaxVariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._MaxVariablePath) && !profile.ParameterLookup.ContainsKey(Properties._MaxVariablePath))
+                    Properties._MaxVariablePath = string.Empty;
+            }
+            (Control as Control_PercentGradientLayer).SetProfile(profile);
+        }
     }
 }

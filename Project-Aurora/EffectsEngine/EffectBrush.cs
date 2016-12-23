@@ -73,6 +73,7 @@ namespace Aurora.EffectsEngine
 
                 start = lgb.Rectangle.Location;
                 end = new System.Drawing.PointF(lgb.Rectangle.Width, lgb.Rectangle.Height);
+                center = new System.Drawing.PointF(0.0f, 0.0f);
 
                 switch (lgb.WrapMode)
                 {
@@ -123,13 +124,13 @@ namespace Aurora.EffectsEngine
 
                 System.Drawing.Drawing2D.PathGradientBrush pgb = (brush as System.Drawing.Drawing2D.PathGradientBrush);
 
+                start = pgb.Rectangle.Location;
+                end = new System.Drawing.PointF(pgb.Rectangle.Width, pgb.Rectangle.Height);
                 center = new System.Drawing.PointF(
                     pgb.CenterPoint.X,
                     pgb.CenterPoint.Y
                     );
 
-                start = pgb.Rectangle.Location;
-                end = new System.Drawing.PointF(pgb.Rectangle.Width, pgb.Rectangle.Height);
 
                 switch (pgb.WrapMode)
                 {
@@ -233,6 +234,7 @@ namespace Aurora.EffectsEngine
 
                 start = new System.Drawing.PointF((float)lgb.StartPoint.X, (float)lgb.StartPoint.Y);
                 end = new System.Drawing.PointF((float)lgb.EndPoint.X, (float)lgb.EndPoint.Y);
+                center = new System.Drawing.PointF(0.0f, 0.0f);
 
                 switch (lgb.SpreadMethod)
                 {
@@ -262,13 +264,12 @@ namespace Aurora.EffectsEngine
 
                 System.Windows.Media.RadialGradientBrush rgb = (brush as System.Windows.Media.RadialGradientBrush);
 
+                start = new System.Drawing.PointF(0, 0);
+                end = new System.Drawing.PointF((float)rgb.RadiusX * 2.0f, (float)rgb.RadiusY * 2.0f);
                 center = new System.Drawing.PointF(
                     (float)rgb.Center.X,
                     (float)rgb.Center.Y
                     );
-
-                start = new System.Drawing.PointF(0, 0);
-                end = new System.Drawing.PointF((float)rgb.RadiusX * 2.0f, (float)rgb.RadiusY * 2.0f);
 
                 switch (rgb.SpreadMethod)
                 {

@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Profiles.GTA5.Layers
 {
@@ -76,9 +77,12 @@ namespace Aurora.Profiles.GTA5.Layers
 
         public GTA5PoliceSirenLayerHandler() : base()
         {
-            _Control = new Control_GTA5PoliceSirenLayer(this);
-
             _Type = LayerType.GTA5PoliceSiren;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_GTA5PoliceSirenLayer(this);
         }
 
         public override EffectLayer Render(IGameState state)
@@ -226,7 +230,7 @@ namespace Aurora.Profiles.GTA5.Layers
 
         public override void SetProfile(ProfileManager profile)
         {
-            (_Control as Control_GTA5PoliceSirenLayer).SetProfile(profile);
+            (Control as Control_GTA5PoliceSirenLayer).SetProfile(profile);
         }
     }
 }

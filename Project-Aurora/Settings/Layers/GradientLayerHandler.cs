@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -35,9 +36,12 @@ namespace Aurora.Settings.Layers
 
         public GradientLayerHandler()
         {
-            _Control = new Control_GradientLayer(this);
-
             _Type = LayerType.Gradient;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_GradientLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

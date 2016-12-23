@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Profiles.GTA5.Layers
 {
@@ -102,9 +103,12 @@ namespace Aurora.Profiles.GTA5.Layers
     {
         public GTA5BackgroundLayerHandler() : base()
         {
-            _Control = new Control_GTA5BackgroundLayer(this);
-
             _Type = LayerType.GTA5Background;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_GTA5BackgroundLayer(this);
         }
 
         public override EffectLayer Render(IGameState state)
@@ -165,7 +169,7 @@ namespace Aurora.Profiles.GTA5.Layers
 
         public override void SetProfile(ProfileManager profile)
         {
-            (_Control as Control_GTA5BackgroundLayer).SetProfile(profile);
+            (Control as Control_GTA5BackgroundLayer).SetProfile(profile);
         }
     }
 }

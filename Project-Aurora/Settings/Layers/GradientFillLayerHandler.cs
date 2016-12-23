@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -37,13 +38,14 @@ namespace Aurora.Settings.Layers
 
     public class GradientFillLayerHandler : LayerHandler<GradientFillLayerHandlerProperties>
     {
-        private EffectLayer temp_layer;
-
         public GradientFillLayerHandler()
         {
-            _Control = new Control_GradientFillLayer(this);
-
             _Type = LayerType.GradientFill;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_GradientFillLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)

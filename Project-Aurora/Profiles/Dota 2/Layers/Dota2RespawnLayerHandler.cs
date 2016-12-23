@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
@@ -55,9 +56,12 @@ namespace Aurora.Profiles.Dota_2.Layers
     {
         public Dota2RespawnLayerHandler() : base()
         {
-            _Control = new Control_Dota2RespawnLayer(this);
-
             _Type = LayerType.Dota2Respawn;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_Dota2RespawnLayer(this);
         }
 
         public override EffectLayer Render(IGameState state)
@@ -88,7 +92,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public override void SetProfile(ProfileManager profile)
         {
-            (_Control as Control_Dota2RespawnLayer).SetProfile(profile);
+            (Control as Control_Dota2RespawnLayer).SetProfile(profile);
         }
     }
 }

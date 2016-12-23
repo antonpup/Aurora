@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Profiles.CSGO.Layers
 {
@@ -55,9 +56,12 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public CSGOKillIndicatorLayerHandler() : base()
         {
-            _Control = new Control_CSGOKillIndicatorLayer(this);
-
             _Type = LayerType.CSGOKillsIndicator;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_CSGOKillIndicatorLayer(this);
         }
 
         public override EffectLayer Render(IGameState state)
@@ -111,7 +115,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override void SetProfile(ProfileManager profile)
         {
-            (_Control as Control_CSGOKillIndicatorLayer).SetProfile(profile);
+            (Control as Control_CSGOKillIndicatorLayer).SetProfile(profile);
         }
     }
 }

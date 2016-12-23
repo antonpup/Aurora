@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Profiles.CSGO.Layers
 {
@@ -46,9 +47,12 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public CSGOBurningLayerHandler() : base()
         {
-            _Control = new Control_CSGOBurningLayer(this);
-
             _Type = LayerType.CSGOBurning;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_CSGOBurningLayer(this);
         }
 
         public override EffectLayer Render(IGameState state)
@@ -110,7 +114,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override void SetProfile(ProfileManager profile)
         {
-            (_Control as Control_CSGOBurningLayer).SetProfile(profile);
+            (Control as Control_CSGOBurningLayer).SetProfile(profile);
         }
     }
 }

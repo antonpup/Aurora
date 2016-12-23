@@ -11,6 +11,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Aurora.Profiles.RocketLeague.Layers
 {
@@ -56,9 +57,12 @@ namespace Aurora.Profiles.RocketLeague.Layers
     {
         public RocketLeagueBackgroundLayerHandler() : base()
         {
-            _Control = new Control_RocketLeagueBackgroundLayer(this);
-
             _Type = LayerType.RocketLeagueBackground;
+        }
+
+        protected override UserControl CreateControl()
+        {
+            return new Control_RocketLeagueBackgroundLayer(this);
         }
 
         public override EffectLayer Render(IGameState state)
@@ -141,7 +145,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
         public override void SetProfile(ProfileManager profile)
         {
-            (_Control as Control_RocketLeagueBackgroundLayer).SetProfile(profile);
+            (Control as Control_RocketLeagueBackgroundLayer).SetProfile(profile);
         }
     }
 }
