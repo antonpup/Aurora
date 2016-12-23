@@ -167,8 +167,6 @@ namespace Aurora.Settings.Layers
             if (previous_key == e.KeyCode)
                 return;
 
-            //Global.logger.LogLine($"Keycode: { e.KeyCode }");
-
             Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
 
             if (device_key != Devices.DeviceKeys.NONE)

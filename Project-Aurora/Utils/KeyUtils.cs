@@ -229,15 +229,24 @@ namespace Aurora.Utils
                 case (Keys.OemSemicolon):
                     return DeviceKeys.SEMICOLON;
                 case (Keys.Oemplus):
-                    return DeviceKeys.EQUALS;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.CLOSE_BRACKET;
+                    else
+                        return DeviceKeys.EQUALS;
                 case (Keys.Oemcomma):
                     return DeviceKeys.COMMA;
                 case (Keys.OemMinus):
-                    return DeviceKeys.MINUS;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.FORWARD_SLASH;
+                    else
+                        return DeviceKeys.MINUS;
                 case (Keys.OemPeriod):
                     return DeviceKeys.PERIOD;
                 case (Keys.OemQuestion):
-                    return DeviceKeys.FORWARD_SLASH;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.HASHTAG;
+                    else
+                        return DeviceKeys.FORWARD_SLASH;
                 case (Keys.ProcessKey):
                     return DeviceKeys.JPN_HALFFULLWIDTH;
                 case (Keys.Oemtilde):
@@ -253,12 +262,13 @@ namespace Aurora.Utils
                 case (Keys.OemPipe):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.BACKSLASH_UK;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return DeviceKeys.TILDE;
                     else
                         return DeviceKeys.BACKSLASH;
                 case (Keys.OemCloseBrackets):
-                    return DeviceKeys.CLOSE_BRACKET;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.EQUALS;
+                    else
+                        return DeviceKeys.CLOSE_BRACKET;
                 case (Keys.OemQuotes):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.HASHTAG;
