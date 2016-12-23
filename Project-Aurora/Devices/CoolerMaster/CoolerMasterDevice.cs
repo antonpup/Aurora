@@ -124,8 +124,6 @@ namespace Aurora.Devices.CoolerMaster
 
     class CoolerMasterDevice : Device
     {
-        
-
         private String devicename = "Cooler Master";
         private bool isInitialized = false;
 
@@ -246,6 +244,9 @@ namespace Aurora.Devices.CoolerMaster
 
         private void SendColorsToKeyboard(bool forced = false)
         {
+            if (Global.Configuration.devices_disable_keyboard)
+                return;
+
             color_matrix.KeyColor = key_colors;
             CoolerMasterSDK.SetAllLedColor(color_matrix);
             //previous_key_colors = key_colors;

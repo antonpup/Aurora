@@ -208,7 +208,7 @@ namespace Aurora.Devices.Corsair
 
         private void SendColorsToKeyboard(bool forced = false)
         {
-            if (keyboard != null)
+            if (keyboard != null && !Global.Configuration.devices_disable_keyboard)
             {
                 keyboard.Update(true);
                 keyboard_updated = true;
@@ -233,7 +233,7 @@ namespace Aurora.Devices.Corsair
                     //Apply and strip Alpha
                     color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
-                    if (mouse != null)
+                    if (mouse != null && !Global.Configuration.devices_disable_mouse)
                     {
                         if (mouse[CorsairLedId.B1] != null)
                             mouse[CorsairLedId.B1].Color = color;
@@ -247,7 +247,7 @@ namespace Aurora.Devices.Corsair
                         mouse.Update(true);
                     }
 
-                    if (headset != null)
+                    if (headset != null && !Global.Configuration.devices_disable_headset)
                     {
                         if (headset[CorsairLedId.LeftLogo] != null)
                             headset[CorsairLedId.LeftLogo].Color = color;
@@ -257,7 +257,7 @@ namespace Aurora.Devices.Corsair
                         headset.Update(true);
                     }
 
-                    if (mousemat != null)
+                    if (mousemat != null && !Global.Configuration.devices_disable_mouse)
                     {
                         if (mousemat[CorsairLedId.Zone1] != null)
                             mousemat[CorsairLedId.Zone1].Color = color;
@@ -308,6 +308,9 @@ namespace Aurora.Devices.Corsair
 
         private void SendColorToMouse(CorsairLedId ledid, Color color, bool forced = false)
         {
+            if (Global.Configuration.devices_disable_mouse)
+                return;
+
             if (Global.Configuration.allow_peripheral_devices)
             {
                 //Apply and strip Alpha

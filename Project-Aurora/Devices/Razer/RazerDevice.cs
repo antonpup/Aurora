@@ -189,7 +189,7 @@ namespace Aurora.Devices.Razer
 
         private void SendColorsToKeyboard(bool forced = false)
         {
-            if (keyboard != null)
+            if (keyboard != null && !Global.Configuration.devices_disable_keyboard)
             {
                 keyboard_updated = true;
             }
@@ -197,7 +197,7 @@ namespace Aurora.Devices.Razer
 
         private void SetOneKey(Key localKey, System.Drawing.Color color)
         {
-            if (keyboard != null && keyboard[localKey] != null)
+            if (keyboard != null && keyboard[localKey] != null && !Global.Configuration.devices_disable_keyboard)
                 keyboard.SetKey(localKey, new Color(color.R, color.G, color.B));
         }
 
@@ -207,16 +207,16 @@ namespace Aurora.Devices.Razer
             {
                 if (Global.Configuration.allow_peripheral_devices)
                 {
-                    if (mouse != null)
+                    if (mouse != null && !Global.Configuration.devices_disable_mouse)
                         mouse.SetAll(new Color(color.R, color.G, color.B));
 
-                    if (mousepad != null)
+                    if (mousepad != null && !Global.Configuration.devices_disable_mouse)
                         mousepad.SetAll(new Color(color.R, color.G, color.B));
 
-                    if (headset != null)
+                    if (headset != null && !Global.Configuration.devices_disable_headset)
                         headset.SetAll(new Color(color.R, color.G, color.B));
 
-                    if (keypad != null)
+                    if (keypad != null && !Global.Configuration.devices_disable_keyboard)
                         keypad.SetAll(new Color(color.R, color.G, color.B));
 
                     previous_peripheral_Color = color;

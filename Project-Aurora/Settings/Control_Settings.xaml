@@ -235,6 +235,9 @@
                     <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="82,114,0,0" VerticalAlignment="Top" Width="218" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectionChanged="ComboBox_virtualkeyboard_keycap_type_SelectionChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,89,0,0" TextWrapping="Wrap" Text="Mouse Orientation:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="devices_mouse_orientation" HorizontalAlignment="Left" Margin="117,87,0,0" VerticalAlignment="Top" Width="207" ItemsSource="{Binding Source={StaticResource MouseOrientation}}" ItemTemplate="{Binding Source={StaticResource MouseOrientationTemplate}}" SelectionChanged="devices_mouse_orientation_SelectionChanged"/>
+                    <CheckBox x:Name="devices_disable_keyboard_lighting" Content="Disable Keyboard Lighting" Margin="465,141,215,111" Checked="devices_disable_keyboard_lighting_Checked" Unchecked="devices_disable_keyboard_lighting_Checked" />
+                    <CheckBox x:Name="devices_disable_mouse_lighting" Content="Disable Mouse Lighting" Margin="465,162,215,90" Checked="devices_disable_mouse_lighting_Checked" Unchecked="devices_disable_mouse_lighting_Checked" />
+                    <CheckBox x:Name="devices_disable_headset_lighting" Content="Disable Headset Lighting" Margin="465,183,215,69" Checked="devices_disable_headset_lighting_Checked" Unchecked="devices_disable_headset_lighting_Checked" />
                 </Grid>
             </TabItem>
             <TabItem Header="AtmoOrb">
