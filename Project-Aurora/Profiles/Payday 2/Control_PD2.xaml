@@ -100,6 +100,11 @@
                     <ComboBox x:Name="preview_gamestate" HorizontalAlignment="Left" Margin="90,12,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource PD2_GameStateType}}" ItemTemplate="{Binding Source={StaticResource PD2_GameStateTypeTemplate}}" SelectionChanged="preview_gamestate_SelectionChanged"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="Color Zones">
+                <Grid>
+                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

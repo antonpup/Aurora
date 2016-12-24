@@ -10,7 +10,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.WormsWMD.Control_WormsWMD"
              mc:Ignorable="d" 
-             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850" >
     <UserControl.Resources>
         <ResourceDictionary>
             <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
@@ -33,15 +33,16 @@
                         </StackPanel>
                         <Button x:Name="unpatch_button" Content="Unpatch Worms W.M.D" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
                     </StackPanel>
-                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="63" Width="300"/>
+                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
+                    <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Color Enhancing">
                 <Grid>
-                    <CheckBox x:Name="ow_ce_enabled" Content="Enable Color Enhancing" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="ow_ce_enabled_Checked" Unchecked="ow_ce_enabled_Checked"/>
+                    <CheckBox x:Name="ce_enabled" Content="Enable Color Enhancing" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="ce_enabled_Checked" Unchecked="ce_enabled_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Color Factor:" VerticalAlignment="Top"/>
-                    <Slider x:Name="ow_ce_color_factor" HorizontalAlignment="Left" Margin="82,30,0,0" VerticalAlignment="Top" Width="200" Minimum="1" Maximum="255" Value="90" ValueChanged="ow_ce_color_factor_ValueChanged"/>
-                    <TextBlock x:Name="ow_ce_color_factor_label" HorizontalAlignment="Left" Margin="287,33,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top"/>
+                    <Slider x:Name="ce_color_factor" HorizontalAlignment="Left" Margin="82,30,0,0" VerticalAlignment="Top" Width="200" Minimum="1" Maximum="255" Value="90" ValueChanged="ce_color_factor_ValueChanged"/>
+                    <TextBlock x:Name="ce_color_factor_label" HorizontalAlignment="Left" Margin="287,33,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -21,14 +21,17 @@ namespace Aurora.Profiles.Payday_2
 
             PD2Settings settings = (PD2Settings)this.Profile.Settings;
 
-            //Scripts
-            this.Profile.UpdateEffectScripts(layers, _game_state);
-
             foreach (var layer in settings.Layers.Reverse().ToArray())
             {
                 if (layer.Enabled && layer.LogicPass)
                     layers.Enqueue(layer.Render(_game_state));
             }
+
+            //Scripts
+            this.Profile.UpdateEffectScripts(layers, _game_state);
+
+            //ColorZones
+            layers.Enqueue(new EffectLayer("PD2 - Color Zones").DrawColorZones((this.Profile.Settings as PD2Settings).lighting_areas.ToArray()));
 
             frame.AddLayers(layers.ToArray());
         }

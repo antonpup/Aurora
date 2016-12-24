@@ -39,6 +39,7 @@ namespace Aurora.Profiles.Payday_2
             this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as PD2Settings).isEnabled;
+            this.cz.ColorZonesList = (profile_manager.Settings as PD2Settings).lighting_areas;
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
@@ -166,6 +167,15 @@ namespace Aurora.Profiles.Payday_2
             if (IsLoaded && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
                 (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.IsSwanSong = (sender as CheckBox).IsChecked.Value;
+            }
+        }
+
+        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Settings as PD2Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                profile_manager.SaveProfiles();
             }
         }
     }

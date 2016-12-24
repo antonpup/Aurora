@@ -62,6 +62,8 @@ namespace Aurora.Profiles.CSGO
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.Undefined);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.CT);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.T);
+
+            this.cz.ColorZonesList = (profile_manager.Settings as CSGOSettings).lighting_areas;
         }
 
         private void preview_bomb_timer_Tick(object sender, EventArgs e)
@@ -273,6 +275,15 @@ namespace Aurora.Profiles.CSGO
             preview_killshs = 0;
 
             preview_kills_label.Text = String.Format("Kills: {0} Headshots: {1}", preview_kills, preview_killshs);
+        }
+
+        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Settings as CSGOSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                profile_manager.SaveProfiles();
+            }
         }
 
         private bool InstallGSI()

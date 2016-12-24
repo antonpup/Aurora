@@ -18,8 +18,9 @@ namespace Aurora.Profiles.Blade_and_Soul
 
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Blade and Soul - Color Zones").DrawColorZones((this.Profile.Settings as BnSSettings).lighting_areas.ToArray()));
+            this.colorEnhance_Enabled = (this.Profile.Settings as BnSSettings).colorEnhance_Enabled;
+            this.colorEnhance_initial_factor = (this.Profile.Settings as BnSSettings).colorEnhance_initial_factor;
+            this.colorEnhance_color_factor = (this.Profile.Settings as BnSSettings).colorEnhance_color_factor;
         }
     }
 }

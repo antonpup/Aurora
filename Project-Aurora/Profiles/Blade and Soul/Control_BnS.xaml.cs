@@ -36,7 +36,9 @@ namespace Aurora.Profiles.Blade_and_Soul
             this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as BnSSettings).isEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as BnSSettings).lighting_areas;
+            this.ce_enabled.IsChecked = (profile_manager.Settings as BnSSettings).colorEnhance_Enabled;
+            this.ce_color_factor.Value = (profile_manager.Settings as BnSSettings).colorEnhance_color_factor;
+            this.ce_color_factor_label.Text = (profile_manager.Settings as BnSSettings).colorEnhance_color_factor.ToString();
         }
 
         private void patch_32bit_button_Click(object sender, RoutedEventArgs e)
@@ -69,21 +71,23 @@ namespace Aurora.Profiles.Blade_and_Soul
             }
         }
 
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
+        private void ce_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as BnSSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Settings as BnSSettings).colorEnhance_Enabled = (this.ce_enabled.IsChecked.HasValue) ? this.ce_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void ce_color_factor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-        }
-
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
+            if (IsLoaded)
+            {
+                (profile_manager.Settings as BnSSettings).colorEnhance_color_factor = (int)this.ce_color_factor.Value;
+                this.ce_color_factor_label.Text = ((int)this.ce_color_factor.Value).ToString();
+                profile_manager.SaveProfiles();
+            }
         }
     }
 }

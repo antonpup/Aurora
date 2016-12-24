@@ -87,21 +87,27 @@ namespace Aurora.Profiles.RocketLeague
             {
                 using (MemoryReader memread = new MemoryReader(process_search[0]))
                 {
-                    (_game_state as GameState_RocketLeague).Player.Team = (PlayerTeam)Enum.Parse(typeof(PlayerTeam), memread.ReadInt(pointers.Team.baseAddress, pointers.Team.pointers).ToString()); //NOTE: USE TRYPARSE
+                    PlayerTeam parsed_team = PlayerTeam.Undefined;
+                    if(Enum.TryParse<PlayerTeam>(memread.ReadInt(pointers.Team.baseAddress, pointers.Team.pointers).ToString(), out parsed_team))
+                        (_game_state as GameState_RocketLeague).Player.Team = parsed_team;
+
                     (_game_state as GameState_RocketLeague).Match.OrangeTeam_Score = memread.ReadInt(pointers.Orange_score.baseAddress, pointers.Orange_score.pointers);
                     (_game_state as GameState_RocketLeague).Match.BlueTeam_Score = memread.ReadInt(pointers.Blue_score.baseAddress, pointers.Blue_score.pointers);
                     (_game_state as GameState_RocketLeague).Player.BoostAmount = memread.ReadFloat(pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers);
                 }
             }
 
-            //Scripts
-            this.Profile.UpdateEffectScripts(layers);
-
             foreach (var layer in this.Profile.Settings.Layers.Reverse().ToArray())
             {
                 if (layer.Enabled && layer.LogicPass)
                     layers.Enqueue(layer.Render(_game_state));
             }
+
+            //Scripts
+            this.Profile.UpdateEffectScripts(layers);
+
+            //ColorZones
+            layers.Enqueue(new EffectLayer("Rocket League - Color Zones").DrawColorZones((this.Profile.Settings as RocketLeagueSettings).lighting_areas.ToArray()));
 
             frame.AddLayers(layers.ToArray());
         }

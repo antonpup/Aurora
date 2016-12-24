@@ -24,12 +24,13 @@ namespace Aurora.Profiles.WormsWMD
 
         private void SetSettings()
         {
+            this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = profile_manager.Settings.isEnabled;
-            this.ow_ce_enabled.IsChecked = (profile_manager.Settings as WormsWMDSettings).colorEnhance_Enabled;
-            this.ow_ce_color_factor.Value = (profile_manager.Settings as WormsWMDSettings).colorEnhance_color_factor;
-            this.ow_ce_color_factor_label.Text = (profile_manager.Settings as WormsWMDSettings).colorEnhance_color_factor.ToString();
+            this.ce_enabled.IsChecked = (profile_manager.Settings as WormsWMDSettings).colorEnhance_Enabled;
+            this.ce_color_factor.Value = (profile_manager.Settings as WormsWMDSettings).colorEnhance_color_factor;
+            this.ce_color_factor_label.Text = (profile_manager.Settings as WormsWMDSettings).colorEnhance_color_factor.ToString();
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -111,14 +112,6 @@ namespace Aurora.Profiles.WormsWMD
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-        }
-
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
@@ -128,21 +121,21 @@ namespace Aurora.Profiles.WormsWMD
             }
         }
 
-        private void ow_ce_enabled_Checked(object sender, RoutedEventArgs e)
+        private void ce_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as WormsWMDSettings).colorEnhance_Enabled = (this.ow_ce_enabled.IsChecked.HasValue) ? this.ow_ce_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as WormsWMDSettings).colorEnhance_Enabled = (this.ce_enabled.IsChecked.HasValue) ? this.ce_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
 
-        private void ow_ce_color_factor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ce_color_factor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as WormsWMDSettings).colorEnhance_color_factor = (int)this.ow_ce_color_factor.Value;
-                this.ow_ce_color_factor_label.Text = ((int)this.ow_ce_color_factor.Value).ToString();
+                (profile_manager.Settings as WormsWMDSettings).colorEnhance_color_factor = (int)this.ce_color_factor.Value;
+                this.ce_color_factor_label.Text = ((int)this.ce_color_factor.Value).ToString();
                 profile_manager.SaveProfiles();
             }
         }

@@ -39,6 +39,7 @@ namespace Aurora.Profiles.RocketLeague
             this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).isEnabled;
+            this.cz.ColorZonesList = (profile_manager.Settings as RocketLeagueSettings).lighting_areas;
 
             if (!this.preview_team.HasItems)
             {
@@ -83,6 +84,15 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
                 (profile_manager.Event._game_state as GameState_RocketLeague).Match.BlueTeam_Score = (sender as IntegerUpDown).Value.Value;
+        }
+
+        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Settings as RocketLeagueSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                profile_manager.SaveProfiles();
+            }
         }
     }
 }
