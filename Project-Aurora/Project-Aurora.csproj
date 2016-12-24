@@ -1260,6 +1260,8 @@
     </Content>
     <Resource Include="Resources\Not Visible.png" />
     <Resource Include="Resources\Visible.png" />
+    <Resource Include="Resources\Daytime_Icon.png" />
+    <Resource Include="Resources\Nighttime_Icon.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

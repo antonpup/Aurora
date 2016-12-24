@@ -4,6 +4,8 @@ using System.Linq;
 using Aurora.EffectsEngine;
 using Aurora.Settings;
 using System.Windows.Forms;
+using System.Collections.ObjectModel;
+using Aurora.Settings.Layers;
 
 namespace Aurora.Profiles.Generic_Application
 {
@@ -30,53 +32,25 @@ namespace Aurora.Profiles.Generic_Application
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            ColorZone[] zones = { };
-
             GenericApplicationSettings settings = (GenericApplicationSettings)this.Profile.Settings;
 
-            if (HasProfile())
-            {
-                if (!(Global.Configuration.nighttime_enabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute))
-                    )
-                {
-                    zones = settings.lighting_areas_day.ToArray();
-                }
-                else
-                {
-                    zones = settings.lighting_areas_night.ToArray();
-                }
-            }
-
-            layers.Enqueue(new EffectLayer("Color Zones").DrawColorZones(zones.ToArray()));
+            ObservableCollection<Layer> timeLayers = settings.Layers;
 
             //Scripts
             this.Profile.UpdateEffectScripts(layers);
 
-
-            EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
-            if (HasProfile() && settings.shortcuts_assistant_enabled)
+            if (HasProfile())
             {
-                if (Global.held_modified == Keys.LControlKey || Global.held_modified == Keys.RControlKey)
+                if ((Global.Configuration.nighttime_enabled &&
+                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute)) ||
+                    settings._simulateNighttime
+                    )
                 {
-                    if (Global.held_modified == Keys.LControlKey)
-                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_CONTROL, settings.ctrl_key_color);
-                    else
-                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_CONTROL, settings.ctrl_key_color);
-                    sc_assistant_layer.Set(settings.ctrl_key_sequence, settings.ctrl_key_color);
-                }
-                else if (Global.held_modified == Keys.LMenu || Global.held_modified == Keys.RMenu)
-                {
-                    if (Global.held_modified == Keys.LMenu)
-                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_ALT, settings.alt_key_color);
-                    else
-                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_ALT, settings.alt_key_color);
-                    sc_assistant_layer.Set(settings.alt_key_sequence, settings.alt_key_color);
+                    timeLayers = settings.Layers_NightTime;
                 }
             }
-            layers.Enqueue(sc_assistant_layer);
 
-            foreach (var layer in settings.Layers.Reverse().ToArray())
+            foreach (var layer in timeLayers.Reverse().ToArray())
             {
                 if (layer.Enabled && layer.LogicPass)
                     layers.Enqueue(layer.Render(_game_state));

@@ -85,6 +85,15 @@ namespace Aurora.Settings
         public void UpdateLayers(object sender, EventArgs e)
         {
             this.lstLayers.ItemsSource = this.FocusedProfile?.Settings?.Layers;
+
+            if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager)
+            {
+                this.grid_timeselection.Visibility = Visibility.Visible;
+                this.radiobtn_daytime.IsChecked = true;
+                this.radiobtn_nighttime.IsChecked = false;
+            }
+            else
+                this.grid_timeselection.Visibility = Visibility.Collapsed;
         }
 
         private void Layers_listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -114,9 +123,15 @@ namespace Aurora.Settings
             lyr.AnythingChanged += this.FocusedProfile.SaveProfilesEvent;
 
             lyr.SetProfile(FocusedProfile);
-            this.FocusedProfile?.Settings?.Layers.Add(lyr);
+
+            if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
+            {
+                ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Add(lyr);
+            }
+            else
+                this.FocusedProfile?.Settings?.Layers.Add(lyr);
+
             this.lstLayers.SelectedItem = lyr;
-            //this.lstLayers.
         }
 
         private void btnRemoveLayer_Click(object sender, RoutedEventArgs e)
@@ -124,7 +139,12 @@ namespace Aurora.Settings
             if (this.lstLayers.SelectedIndex > -1)
             {
                 if (MessageBox.Show($"Are you sure you want to delete Layer '{((Layer)lstLayers.SelectedItem).Name}'", "Confirm action", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-                    this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
+                {
+                    if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
+                        ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.RemoveAt(this.lstLayers.SelectedIndex);
+                    else
+                        this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
+                }
             }
         }
 
@@ -176,16 +196,36 @@ namespace Aurora.Settings
 
             if (removedIdx < targetIdx)
             {
-                this.FocusedProfile?.Settings?.Layers.Insert(targetIdx + 1, droppedData);
-                this.FocusedProfile?.Settings?.Layers.RemoveAt(removedIdx);
+                if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
+                {
+                    ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Insert(targetIdx + 1, droppedData);
+                    ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.RemoveAt(removedIdx);
+                }
+                else
+                {
+                    this.FocusedProfile?.Settings?.Layers.Insert(targetIdx + 1, droppedData);
+                    this.FocusedProfile?.Settings?.Layers.RemoveAt(removedIdx);
+                }
             }
             else
             {
                 int remIdx = removedIdx + 1;
-                if (this.FocusedProfile?.Settings?.Layers.Count + 1 > remIdx)
+
+                if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
                 {
-                    this.FocusedProfile?.Settings?.Layers.Insert(targetIdx, droppedData);
-                    this.FocusedProfile?.Settings?.Layers.RemoveAt(remIdx);
+                    if (((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Count + 1 > remIdx)
+                    {
+                        ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Insert(targetIdx, droppedData);
+                        ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.RemoveAt(remIdx);
+                    }
+                }
+                else
+                {
+                    if (this.FocusedProfile?.Settings?.Layers.Count + 1 > remIdx)
+                    {
+                        this.FocusedProfile?.Settings?.Layers.Insert(targetIdx, droppedData);
+                        this.FocusedProfile?.Settings?.Layers.RemoveAt(remIdx);
+                    }
                 }
             }
         }
@@ -219,7 +259,12 @@ namespace Aurora.Settings
                     {
                         lyr.Name += " - Copy";
                         lyr.SetProfile(FocusedProfile);
-                        FocusedProfile.Settings.Layers.Add(lyr);
+
+                        if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
+                            ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Add(lyr);
+                        else
+                            FocusedProfile.Settings.Layers.Add(lyr);
+
                     }
                 }
             }
@@ -227,6 +272,23 @@ namespace Aurora.Settings
             {
                 this.btnRemoveLayer_Click(null, null);
             }
+        }
+
+        private void radiobtn_daytime_Checked(object sender, RoutedEventArgs e)
+        {
+            radiobtn_nighttime.IsChecked = false;
+
+            if(FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager)
+                this.lstLayers.ItemsSource = ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers;
+        }
+
+        private void radiobtn_nighttime_Checked(object sender, RoutedEventArgs e)
+        {
+            radiobtn_daytime.IsChecked = false;
+
+            if (FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager)
+                this.lstLayers.ItemsSource = ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime;
+
         }
     }
 }

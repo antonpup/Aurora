@@ -13,7 +13,7 @@
         /// <summary>
         /// Spectator
         /// </summary>
-        Spectator = 400021321,
+        Spectator = 400021321, //4294967295
 
         /// <summary>
         /// Blue Team
