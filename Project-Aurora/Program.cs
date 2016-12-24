@@ -292,9 +292,7 @@ namespace Aurora
                 logitech_path = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
 
                 if (!Directory.Exists(Path.GetDirectoryName(logitech_path)))
-                {
                     Directory.CreateDirectory(Path.GetDirectoryName(logitech_path));
-                }
 
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
 
@@ -331,9 +329,7 @@ namespace Aurora
                 logitech_path_64 = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x64\LogitechLed.dll";
 
                 if (!Directory.Exists(Path.GetDirectoryName(logitech_path_64)))
-                {
                     Directory.CreateDirectory(Path.GetDirectoryName(logitech_path_64));
-                }
 
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
 
