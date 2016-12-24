@@ -85,8 +85,11 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            double[] freqs = {125, 250, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 10000, 12000, 14000, 16000 };
+            double[] freqs = { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
             double[] freq_results = new double[freqs.Length];
+
+            float min = -15;
+            float max = 15;
 
             if (previous_freq_results == null)
                 previous_freq_results = new float[freqs.Length];
@@ -109,7 +112,7 @@ namespace Aurora.Settings.Layers
                     case EqualizerType.PowerBars:
 
                         //Perform FFT again to get frequencies
-                        FastFourierTransform.FFT(true, (int)Math.Log(fftLength, 2.0), _ffts);
+                        FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _ffts);
 
                         for(int x = 0; x < freqs.Length; x++)
                         {
@@ -118,7 +121,7 @@ namespace Aurora.Settings.Layers
                             //System.Diagnostics.Debug.WriteLine($"bin = {bin} for Hz = {freqs[x]}");
 
                             Complex c = _ffts[bin];
-                            double intensityDB = Math.Log10(Math.Sqrt(c.X * c.X + c.Y * c.Y));
+                            double intensityDB = 10 * Math.Log10(Math.Sqrt(c.X * c.X + c.Y * c.Y));
 
                             freq_results[x] += intensityDB;
                         }
@@ -127,7 +130,9 @@ namespace Aurora.Settings.Layers
 
                         for (int f_x = 0; f_x < freq_results.Length; f_x++)
                         {
-                            float fft_val = (float)(freq_results[f_x] + 4.5) / 2.0f;
+                            float fft_val = (float)(freq_results[f_x]);
+
+                            fft_val = (float)((fft_val - min) / (max - min));
 
                             if (fft_val > 1.0f) fft_val = 1.0f;
 
