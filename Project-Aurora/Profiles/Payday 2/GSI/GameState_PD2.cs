@@ -25,9 +25,7 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Provider == null)
-                {
                     _Provider = new ProviderNode(_ParsedData["provider"]?.ToString() ?? "");
-                }
 
                 return _Provider;
             }
@@ -41,9 +39,7 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Lobby == null)
-                {
                     _Lobby = new LobbyNode(_ParsedData["lobby"]?.ToString() ?? "");
-                }
 
                 return _Lobby;
             }
@@ -57,11 +53,23 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Level == null)
-                {
                     _Level = new LevelNode(_ParsedData["level"]?.ToString() ?? "");
-                }
 
                 return _Level;
+            }
+        }
+
+        /// <summary>
+        /// Information about the local player
+        /// </summary>
+        public PlayerNode LocalPlayer
+        {
+            get
+            {
+                if (_Players == null)
+                    _Players = new PlayersNode(_ParsedData["players"]?.ToString() ?? "");
+
+                return _Players.LocalPlayer;
             }
         }
 
@@ -74,9 +82,7 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Players == null)
-                {
                     _Players = new PlayersNode(_ParsedData["players"]?.ToString() ?? "");
-                }
 
                 return _Players;
             }
@@ -90,9 +96,7 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Game == null)
-                {
                     _Game = new GameNode(_ParsedData["game"]?.ToString() ?? "");
-                }
 
                 return _Game;
             }

@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Aurora.Profiles.PD2.Layers
+namespace Aurora.Profiles.Payday_2.Layers
 {
     public class PD2BackgroundLayerHandlerProperties : LayerHandlerProperties2Color<PD2BackgroundLayerHandlerProperties>
     {

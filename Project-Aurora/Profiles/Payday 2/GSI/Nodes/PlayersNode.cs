@@ -11,11 +11,13 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     public class PlayersNode : Node<PlayersNode>, IEnumerable<PlayerNode>
     {
         private List<PlayerNode> _Players = new List<PlayerNode>();
+        private PlayerNode _LocalPlayer = new PlayerNode("");
 
         /// <summary>
         /// Amount of players in the lobby
         /// </summary>
         public int Count { get { return _Players.Count; } }
+
 
         /// <summary>
         /// The local player
@@ -27,10 +29,10 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
                 foreach (PlayerNode player in _Players)
                 {
                     if (player.IsLocalPlayer)
-                        return player;
+                        _LocalPlayer = player;
                 }
 
-                return new PlayerNode("");
+                return _LocalPlayer;
             }
         }
 

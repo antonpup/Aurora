@@ -109,6 +109,12 @@ namespace Aurora.Settings.Layers
         [Description("Payday 2 Background Layer")]
         PD2Background = 1000,
 
+        [Description("Payday 2 Flashbang Layer")]
+        PD2Flashbang = 1001,
+
+        [Description("Payday 2 States Layer")]
+        PD2States = 1002,
+
     }
 
     /// <summary>

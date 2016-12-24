@@ -17,7 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Aurora.Profiles.PD2.Layers;
+using Aurora.Profiles.Payday_2.Layers;
 
 namespace Aurora.Settings
 {
@@ -153,6 +153,12 @@ namespace Aurora.Settings
                         break;
                     case LayerType.PD2Background:
                         _Layer.Handler = new PD2BackgroundLayerHandler();
+                        break;
+                    case LayerType.PD2Flashbang:
+                        _Layer.Handler = new PD2FlashbangLayerHandler();
+                        break;
+                    case LayerType.PD2States:
+                        _Layer.Handler = new PD2StatesLayerHandler();
                         break;
                     default:
                         _Layer.Handler = new DefaultLayerHandler();

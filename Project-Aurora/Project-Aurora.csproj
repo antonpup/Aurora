@@ -416,9 +416,17 @@
     <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
     <Compile Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
+    <Compile Include="Profiles\Payday 2\Layers\Control_PD2StatesLayer.xaml.cs">
+      <DependentUpon>Control_PD2StatesLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Payday 2\Layers\Control_PD2FlashbangLayer.xaml.cs">
+      <DependentUpon>Control_PD2FlashbangLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\Payday 2\Layers\Control_PD2BackgroundLayer.xaml.cs">
       <DependentUpon>Control_PD2BackgroundLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Payday 2\Layers\PD2StatesLayerHandler.cs" />
+    <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
@@ -968,6 +976,14 @@
     <Page Include="Profiles\Metro Last Light\Control_MetroLL.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Payday 2\Layers\Control_PD2StatesLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Payday 2\Layers\Control_PD2FlashbangLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Payday 2\Layers\Control_PD2BackgroundLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
