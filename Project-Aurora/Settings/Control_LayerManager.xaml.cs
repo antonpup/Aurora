@@ -112,10 +112,6 @@ namespace Aurora.Settings
         {
             Layer lyr = new Layer("New layer " + Utils.Time.GetMilliSeconds());
             lyr.AnythingChanged += this.FocusedProfile.SaveProfilesEvent;
-            /*CheckBox new_layer = new CheckBox();
-            new_layer.Tag = new DefaultLayer();
-            new_layer.Content = "New layer " + Utils.Time.GetMilliSeconds();
-            new_layer.ClickMode = ClickMode.Release;*/
 
             lyr.SetProfile(FocusedProfile);
             this.FocusedProfile?.Settings?.Layers.Add(lyr);

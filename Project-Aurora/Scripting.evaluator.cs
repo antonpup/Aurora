@@ -58,7 +58,6 @@ namespace CSScriptEvaluatorApi
             //Profile(); //uncomment if want to test performance of the engines
         }
 
-
         class EvaluatorSamples
         {
             public void RunAll()
@@ -192,6 +191,11 @@ namespace CSScriptEvaluatorApi
                 // added automatically by CS-Script. The auto-generated class declaration also indicates 
                 // that the class implements ICalc interface. Meaning that it will trigger compile error
                 // if the set of methods in the script code doesn't implement all interface members.
+
+                //This use-case uses Interface Alignment and this requires all assemblies involved to have 
+                //non-empty Assembly.Location 
+                CSScript.GlobalSettings.InMemoryAssembly = false;
+
                 ICalc script = CSScript.Evaluator
                                        .LoadMethod<ICalc>(
                                                      @"int Sum(int a, int b)
@@ -207,7 +211,7 @@ namespace CSScriptEvaluatorApi
                 // 1 - LoadCode compiles code and returns instance of a first class in the compiled assembly
                 // 2 - The script class implements host app interface so the returned object can be type casted into it
 
-                var script = (ICalc) CSScript.Evaluator
+                var script = (ICalc)CSScript.Evaluator
                                             .LoadCode(@"using System;
                                                         public class Script : CSScriptEvaluatorApi.ICalc
                                                         {
@@ -225,6 +229,10 @@ namespace CSScriptEvaluatorApi
                 // 1 - LoadCode compiles code and returns instance of a first class in the compiled assembly
                 // 2- The script class doesn't implement host app interface but it can still be aligned to
                 // one as long at it implements the  interface members
+
+                //This use-case uses Interface Alignment and this requires all assemblies involved to have 
+                //non-empty Assembly.Location 
+                CSScript.GlobalSettings.InMemoryAssembly = false;
 
                 ICalc script = CSScript.MonoEvaluator
                                        .LoadCode<ICalc>(@"using System;

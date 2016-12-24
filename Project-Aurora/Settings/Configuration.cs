@@ -137,12 +137,14 @@ namespace Aurora.Settings
     {
         [Description("None")]
         None = 0,
+        /*
         [Description("Logitech")]
         Logitech = 1,
         [Description("Corsair")]
         Corsair = 2,
         [Description("Razer")]
         Razer = 3,
+        */
         [Description("Clevo")]
         Clevo = 4,
         [Description("Cooler Master")]
@@ -197,7 +199,7 @@ namespace Aurora.Settings
         fr = 5,
         [Description("Deutsch")]
         de = 6,
-        [Description("Japanese (Logitech Only)")]
+        [Description("Japanese")]
         jpn = 7
 
     }

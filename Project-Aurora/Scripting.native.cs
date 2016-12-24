@@ -168,8 +168,12 @@ namespace CSScriptNativeApi
                 // one as long at it implements the  interface members
                 // 3 - In this sample host object is passed into script routine.
 
+                //This use-case uses Interface Alignment and this requires all assemblies involved to have 
+                //non-empty Assembly.Location 
+                CSScript.GlobalSettings.InMemoryAssembly = false;
+
                 ICalc calc = CSScript.LoadCode(@"using CSScriptNativeApi;
-                                                 public class Script : ICalc
+                                                 public class Script  
                                                  { 
                                                      public int Sum(int a, int b)
                                                      {
@@ -200,6 +204,10 @@ namespace CSScriptNativeApi
                 // * long living script class instances may get disposed in remote domain even if they are 
                 //   being referenced in the current AppDomain. You need to use the usual .NET techniques
                 //   to prevent that. See LifetimeManagement.cs sample for details.  
+
+                //This use-case uses Interface Alignment and this requires all assemblies involved to have 
+                //non-empty Assembly.Location 
+                CSScript.GlobalSettings.InMemoryAssembly = false;
 
                 var code = @"using System;
                              public class Script : MarshalByRefObject
@@ -251,6 +259,7 @@ namespace CSScriptNativeApi
     public interface ICalc
     {
         HostApp Host { get; set; }
+
         int Sum(int a, int b);
     }
 }
