@@ -1,19 +1,16 @@
 # Aurora - Unified Lighting Effects
 ![Aurora Logo](https://dl.dropboxusercontent.com/u/30675690/Aurora/aurora_logo_256x256.png)
 
-[Link to Aurora's webpage, includes some demos and changelogs](http://aurora.lastbullet.net)
+[Link to Aurora's webpage, includes some demos and changelogs](http://project-aurora.com/)
 
 
-Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, The Division, League of Legends, Hotline Miami, The Talos Principle, Battlefield 3, Blacklight: Retribution, Magic: The Gathering - Duels of the Planeswalkers 2012, Middle-earth: Shadow of Mordor, Serious Sam 3, Robot Roller-Derby Disco Dodgeball, XCOM: Enemy Unknown, Evolve Stage 2, Metro: Last Light, and Guild Wars 2.
+Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, The Division, League of Legends, Hotline Miami, The Talos Principle, Battlefield 3, Blacklight: Retribution, Magic: The Gathering - Duels of the Planeswalkers 2012, Middle-earth: Shadow of Mordor, Serious Sam 3, Robot Roller-Derby Disco Dodgeball, XCOM: Enemy Unknown, Evolve Stage 2, Metro: Last Light, Guild Wars 2, Worms W.M.D, and Blade and Soul.
 
 #Requirements
 Recommended:
 * OS: Windows based operating system
 * Processor: Quad core processor
-* Memory: 255 MB RAM 
-* Keyboard: Any RGB supported keyboard (Logitech, Razer, Corsair)
-* Mouse: Any RGB supported mouse (Logitech, Razer, Corsair)
-* Headset: Any RGB supported headset (Logitech, Razer, Corsair)
+* Memory: 255 MB RAM
 * Sotware : Make sure to have installed [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 * Internet Connection: Required for automatic updates
 * Additional Notes: Being able to run games with stable performance
@@ -26,7 +23,7 @@ Recommended:
 
 ## Run this program in the background at windows start
 You can set Aurora to run on Windows Startup. Go into Settings and check "Start with Windows".
-![Aurora Settings](http://puu.sh/pfzCk/cdd27da0bf.png)
+![Aurora Settings](https://puu.sh/sZA0V/10c9adf163.png)
 
 ## Natively Supported Games
 * Dota 2
@@ -49,6 +46,16 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * Evolve Stage 2
 * Metro: Last Light
 * Guild Wars 2
+* Worms W.M.D
+* Blade and Soul
+
+## Natively Supported Devices
+* Logitech
+* Corsair
+* Razer
+* Clevo
+* Cooler Master
+* AtmoOrb
 
 ## Planned Features/Support
 * SteelSeries devices
@@ -76,11 +83,14 @@ Robot Roller-Derby Disco Dodgeball Demo
 
 
 ## Screenshots
-![Dota 2 Settings](http://puu.sh/pfBE1/356d4ad345.png)
-![CSGO Settings](http://puu.sh/pfBI8/856c99b177.png)
-![GTA 5 Settings](http://puu.sh/pfBKD/36e07ccb3d.png)
-![Rocket League Settings](http://puu.sh/pfBMO/10936feb79.png)
-![Payday 2 Settings](http://puu.sh/pfBSS/209f30dbde.png)
+![Desktop Settings](https://puu.sh/sZzxe/fb5101bf4e.png)
+![Dota 2 Settings](https://puu.sh/sZzBn/e365e4da75.png)
+![CSGO Settings](https://puu.sh/sZzEA/496457da51.png)
+![GTA 5 Settings](https://puu.sh/sZzHe/50943d1455.png)
+![Rocket League Settings](https://puu.sh/sZzJs/45a609b843.png)
+![Payday 2 Settings](https://puu.sh/sZzRa/0ee4101856.png)
+![Skype Integration Settings](https://puu.sh/sZzWl/c0ca3573fd.png)
+
 
 ## Indepth features
 General
@@ -88,25 +98,30 @@ General
 * Support for per-key Logitech devices
 * Support for Razer Chroma devices
 * Support for per-key Corsair devices
+* Support for Cooler Master devices
+* Support for Clevo devices
+* Support for AtmoOrb
 * Support for popular online games: Dota 2, CS:GO, GTA 5, Rocket League, and Overwatch
 * Display volume percentage on the keyboard
 * Display CPU and Memory usage on the keyboard
-* Define custom zones with individual effects
+* Layering system for effects
+* Define custom layers with individual effects
 * Key selection via freeform region
 * Customizable “away from keyboard” effects
 * Set global peripheral brightness on the fly without having to leave your game
 * Completely turn off peripheral lights after a specific time
-* Interactive keyboard effects such as: Key Fade, Key Wave
+* Interactive keyboard effects such as: Key Fade, Key Wave, and Arrow Flow
 * Preview lighting effects without having to launch the game
 * Simultaneous support for different brands of RGB peripheral devices
 * Support for a wide range of models from all the top brands of RGB peripherals
 * Support for almost any Logitech LED and Razer Chroma supported games
-* Add other programs to define custom lighting zones for daytime and nighttime themes
+* Add other programs to define custom lighting layers for daytime and nighttime themes
 * Display shortcut keys with Shortcuts Assistant
 * Automatic updater
 * Ability to select your preferred keyboard layout and brand.
+* Ability to select your mouse, and it's orientation (left/right handed)
 * Import/Export for profile settings
-* Customizable gradient selections for color zones
+* Customizable gradient layers
 * Scripting support for custom lighitng effects & custom devices
 
 Dota 2 features
@@ -117,7 +132,8 @@ Dota 2 features
 * Health and Mana indicators
 * Ability and Item indicators
 * Hero ability effects
-* Custom Lighting Zones
+* Layering system
+* Rearrange and add general layers
 
 CS:GO features
 
@@ -127,50 +143,61 @@ CS:GO features
 * Kill indicators
 * Burning and Flashbang effects
 * Chat/Console typing keys
-* Custom Lighting Zones
+* Layering system
+* Rearrange and add general layers
 
 Grand Theft Auto V features
 
 * Dynamic background lighting (based on current character or race position)
 * Custom police siren effects
-* Custom Lighting Zones
+* Layering system
+* Rearrange and add general layers
 
 Rocket League features
 
 * Team-based background lighting
 * Score-split for background effect
 * Boost indicator
-* Custom Lighting Zones
+* Layering system
+* Rearrange and add general layers
 
 Overwatch features
 
 * Overwatch effects are controlled by the game itself
+* Layering system
+* Rearrange and add general layers
 
 Payday 2 features
 
 * Assault-based background lighting effects
 * Suspicion background effect
 * Player health and ammo indicators
-* Custom Lighting Zones
+* Layering system
+* Rearrange and add general layers
 
 The Division features
 
 * The Division effects are controlled by the game itself
+* Layering system
+* Rearrange and add general layers
 
 League of Legends features
 
 * League of Legends reacts to player HP, when damaged, healed, or killed.
-* Custom Lighting Zones
+* Layering system
+* Rearrange and add general layers
 
 Hotline Miami features
 
 * Hotline Miami has a slowly alternating color effect.
-* Custom Lighting Zones
+* Layering system
+* Rearrange and add general layers
 
 The Talos Principle features
 
 * The Talos Principle changes color based on the puzzle color you are in.
-* Custom Lighting Zones
+* Layering system
+* Rearrange and add general layers
 
 
 
@@ -197,7 +224,7 @@ The Talos Principle features
    
 * Q: Some keys in the program state that they are not supported. What does this mean?
 
-   A: It means that changes to those keys are not currently possible. This is present on Logitech keyboards with G-keys and logo. We do keep up contact with Logitech SDK guys to help us.
+   A: It means that changes to those keys are not currently possible. When it's possible to change those keys via SDK, then their support will be added.
    
 * Q: Aurora is constantly crashing! Help!
 
