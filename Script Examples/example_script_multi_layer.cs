@@ -13,7 +13,7 @@ public class ExampleEffect
 
     public KeySequence DefaultKeys = new KeySequence();
     
-    public EffectLayer[] UpdateLights(ScriptSettings settings, GameState state = null)
+    public EffectLayer[] UpdateLights(ScriptSettings settings, IGameState state = null)
     {
         Queue<EffectLayer> layers = new Queue<EffectLayer>();
         
