@@ -122,7 +122,10 @@ namespace Aurora.Settings
         private void btnRemoveLayer_Click(object sender, RoutedEventArgs e)
         {
             if (this.lstLayers.SelectedIndex > -1)
-                this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
+            {
+                if (MessageBox.Show($"Are you sure you want to delete Layer '{((Layer)lstLayers.SelectedItem).Name}'", "Confirm action", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                    this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
+            }
         }
 
         Point? DragStartPosition;
@@ -219,6 +222,10 @@ namespace Aurora.Settings
                         FocusedProfile.Settings.Layers.Add(lyr);
                     }
                 }
+            }
+            else if (e.Key == Key.Delete && this.lstLayers.SelectedItem != null)
+            {
+                this.btnRemoveLayer_Click(null, null);
             }
         }
     }
