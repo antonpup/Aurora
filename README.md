@@ -118,7 +118,7 @@ General
 * Add other programs to define custom lighting layers for daytime and nighttime themes
 * Display shortcut keys with Shortcuts Assistant
 * Automatic updater
-* Ability to select your preferred keyboard layout and brand.
+* Ability to select your preferred keyboard layout and brand
 * Ability to select your mouse, and it's orientation (left/right handed)
 * Import/Export for profile settings
 * Customizable gradient layers

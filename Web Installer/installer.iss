@@ -2,7 +2,7 @@
 AppId={{9444602B-C5D8-4EF5-9D5B-E76D06B53C71}
 AppName=Aurora
 AppVersion=1.0.0
-AppVerName=Aurora Web installer 1.0.0
+AppVerName=Aurora Web Installer 1.0.0
 AppPublisher=Anton Pupkov
 AppPublisherURL=http://www.project-aurora.com/
 AppSupportURL=https://github.com/antonpup/Aurora/issues/
@@ -21,7 +21,7 @@ WizardImageFile=Aurora-wizard.bmp
 #include <idp.iss>
 
 [Messages]
-WelcomeLabel2=Welcome to Aurora!%n%nBefore we begin, it's a good idea to close down anything that isn't critical. During the install, we will download approximately 8 MB of data.%n%nContributors:%n• Antonpup%n• Pigeoncraft%n• GreatBigBushyBeard%n• HexaCubist%n%nProject Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support.
+WelcomeLabel2=This will install Aurora on your computer.%n%nThis installer will download the latest version of Aurora. Please make sure you have an internet connection, the installer will download approximately 10 MB of data.%n%nAurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support.
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
