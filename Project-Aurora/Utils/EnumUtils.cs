@@ -180,4 +180,9 @@ namespace Aurora.Utils
     {
         public KeycapTypeToStringVC() : base(KeycapType.Default) { }
     }
+
+    public class AmbilightEffectsToStringVC : EnumToStringVC
+    {
+        public AmbilightEffectsToStringVC() : base(AmbilightType.Default) { }
+    }
 }
