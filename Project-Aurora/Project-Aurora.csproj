@@ -1252,12 +1252,6 @@
     <Content Include="LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="redist\vc_redist.x64.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="redist\vc_redist.x86.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Resources\Not Visible.png" />
     <Resource Include="Resources\Visible.png" />
     <Resource Include="Resources\Daytime_Icon.png" />
