@@ -13,6 +13,7 @@ namespace Aurora.Profiles.Overlays
         public Color med_color;
         public Color high_color;
         public int delay;
+        public bool dim_background;
 
         public VolumeOverlaySettings()
         {
@@ -28,6 +29,8 @@ namespace Aurora.Profiles.Overlays
             high_color = Color.Red;
 
             delay = 3;
+
+            dim_background = false;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Aurora.EffectsEngine;
 using NAudio.CoreAudioApi;
+using System.Drawing;
+using Aurora.Settings.Layers;
 
 namespace Aurora.Profiles.Overlays
 {
@@ -18,7 +20,7 @@ namespace Aurora.Profiles.Overlays
                 Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
                 EffectLayer volume_bar = new EffectLayer("Overlay - Volume Bar");
-
+                
                 MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
                 MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
                 float currentVolume = defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar;
@@ -28,6 +30,12 @@ namespace Aurora.Profiles.Overlays
 
                 volume_bar.PercentEffect(volume_spec, Global.Configuration.volume_overlay_settings.sequence, currentVolume, 1.0f);
 
+                if (Global.Configuration.volume_overlay_settings.dim_background)
+                {
+                    EffectLayer volume_black_base = new EffectLayer("Overlay - Volume Base");
+                    volume_black_base.PercentEffect(new ColorSpectrum(Color.Black), Global.Configuration.volume_overlay_settings.sequence, 1, 1);
+                    layers.Enqueue(volume_black_base);
+                }
                 layers.Enqueue(volume_bar);
 
                 frame.AddOverlayLayers(layers.ToArray());
