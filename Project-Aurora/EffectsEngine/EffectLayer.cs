@@ -241,6 +241,8 @@ namespace Aurora.EffectsEngine
                             float y_offset = (Effects.canvas_height / 2.0f) * percent;
 
 
+                            (brush as PathGradientBrush).WrapMode = WrapMode.Clamp;
+
                             if (!rect.IsEmpty)
                             {
                                 x_offset = (rect.Width / 2.0f) * percent;

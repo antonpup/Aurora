@@ -75,8 +75,11 @@ namespace Aurora
 
         private bool _ShowHidden = false;
 
-        public bool ShowHidden { get { return _ShowHidden; }
-            set {
+        public bool ShowHidden
+        {
+            get { return _ShowHidden; }
+            set
+            {
                 _ShowHidden = value;
                 this.ShowHiddenChanged(value);
             }
@@ -334,7 +337,15 @@ namespace Aurora
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            Global.geh.SetPreview(saved_preview, saved_preview_key);
+            if(saved_preview == PreviewType.None && FocusedProfile != null)
+            {
+                if (FocusedProfile is ProfileManager)
+                    Global.geh.SetPreview(PreviewType.Predefined, saved_preview_key);
+                else if(FocusedProfile is GenericApplicationProfileManager)
+                    Global.geh.SetPreview(PreviewType.GenericApplication, saved_preview_key);
+            }
+            else
+                Global.geh.SetPreview(saved_preview, saved_preview_key);
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
@@ -356,7 +367,8 @@ namespace Aurora
             selected_item = null;
             this.profiles_stack.Children.Clear();
 
-            Image profile_desktop = new Image {
+            Image profile_desktop = new Image
+            {
                 Tag = Global.Configuration.desktop_profile,
                 Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative)),
                 ToolTip = "Desktop Settings",
@@ -374,7 +386,8 @@ namespace Aurora
 
                 if (icon != null && control != null)
                 {
-                    Image profile_image = new Image {
+                    Image profile_image = new Image
+                    {
                         Tag = profile,
                         Source = icon,
                         ToolTip = profile.Name + " Settings",
@@ -418,7 +431,8 @@ namespace Aurora
                     };
                     profile_remove.MouseDown += RemoveProfile_MouseDown;
 
-                    Grid profile_grid = new Grid {
+                    Grid profile_grid = new Grid
+                    {
                         Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
                         Margin = new Thickness(0, 5, 0, 0),
                         Tag = profile_remove
@@ -435,7 +449,8 @@ namespace Aurora
             }
 
             //Add new profiles button
-            profile_add = new Image {
+            profile_add = new Image
+            {
                 Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative)),
                 ToolTip = "Add a new Lighting Profile",
                 Margin = new Thickness(0, 5, 0, 0)
@@ -469,7 +484,8 @@ namespace Aurora
                 if (img != null)
                 {
                     ProfileManager profile = img.Tag as ProfileManager;
-                    if (profile != null) {
+                    if (profile != null)
+                    {
                         img.Visibility = profile.Settings.Hidden && !value ? Visibility.Collapsed : Visibility.Visible;
                         img.Opacity = profile.Settings.Hidden ? 0.5 : 1;
                     }
@@ -543,7 +559,7 @@ namespace Aurora
 
         private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+
             if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is ProfileManager)
             {
                 if (e == null || e.LeftButton == MouseButtonState.Pressed)
@@ -750,7 +766,7 @@ namespace Aurora
             UpdateProfileStackBackground(selected_item);
         }
 
-        
+
     }
 }
 
