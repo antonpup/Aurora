@@ -140,10 +140,13 @@ namespace Aurora.Settings
             {
                 if (MessageBox.Show($"Are you sure you want to delete Layer '{((Layer)lstLayers.SelectedItem).Name}'", "Confirm action", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                 {
+                    int index = this.lstLayers.SelectedIndex;
                     if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
                         ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.RemoveAt(this.lstLayers.SelectedIndex);
                     else
-                        this.FocusedProfile?.Settings?.Layers.RemoveAt(this.lstLayers.SelectedIndex);
+                        this.FocusedProfile?.Settings?.Layers.RemoveAt(index);
+
+                    this.lstLayers.SelectedIndex = Math.Max(0, index - 1);
                 }
             }
         }
@@ -268,7 +271,7 @@ namespace Aurora.Settings
                     }
                 }
             }
-            else if (e.Key == Key.Delete && this.lstLayers.SelectedItem != null)
+            else if (e.Key == Key.Delete)
             {
                 this.btnRemoveLayer_Click(null, null);
             }

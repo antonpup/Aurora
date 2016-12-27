@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings"
              xmlns:Utils="clr-namespace:Aurora.Utils"
-             mc:Ignorable="d" d:DesignWidth="180" MinWidth="180" MinHeight="180">
+             mc:Ignorable="d" d:DesignWidth="180" MinWidth="180" MinHeight="180" KeyDown="lstLayers_KeyDown">
     <UserControl.Resources>
         <ResourceDictionary>
             <Utils:TextCharacterLimitConv x:Key="TextCharacterLimitConv" MaxLength="24"/>
