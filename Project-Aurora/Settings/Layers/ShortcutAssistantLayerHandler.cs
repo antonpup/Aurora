@@ -19,6 +19,11 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool DimBackground { get { return (Logic._DimBackground ?? _DimBackground) ?? false; } }
 
+        public Color? _DimColor { get; set; }
+
+        [JsonIgnore]
+        public Color DimColor { get { return (Logic._DimColor ?? _DimColor) ?? Color.Empty; } }
+
         public Color? _CtrlKeyColor { get; set; }
 
         [JsonIgnore]
@@ -57,6 +62,7 @@ namespace Aurora.Settings.Layers
         {
             base.Default();
             _DimBackground = true;
+            _DimColor = Color.FromArgb(169, 0, 0, 0);
             _CtrlKeyColor = Color.Red;
             _WindowsKeyColor = Color.Blue;
             _AltKeyColor = Color.Yellow;
@@ -90,13 +96,11 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            Color DimColor = Color.FromArgb(169, 0, 0, 0); // Color.FromArgb((int)(byte.MaxValue / 2) + 1, 0, 0, 0);
-
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
             if (Global.held_modified == Keys.LControlKey || Global.held_modified == Keys.RControlKey)
             {
                 if (Properties.DimBackground)
-                    sc_assistant_layer.Fill(DimColor);
+                    sc_assistant_layer.Fill(Properties.DimColor);
 
                 if (Global.held_modified == Keys.LControlKey)
                     sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_CONTROL, Properties.CtrlKeyColor);
@@ -107,7 +111,7 @@ namespace Aurora.Settings.Layers
             else if (Global.held_modified == Keys.LMenu || Global.held_modified == Keys.RMenu)
             {
                 if (Properties.DimBackground)
-                    sc_assistant_layer.Fill(DimColor);
+                    sc_assistant_layer.Fill(Properties.DimColor);
 
                 if (Global.held_modified == Keys.LMenu)
                     sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_ALT, Properties.AltKeyColor);
@@ -118,7 +122,7 @@ namespace Aurora.Settings.Layers
             else if (Global.held_modified == Keys.LWin || Global.held_modified == Keys.RWin)
             {
                 if (Properties.DimBackground)
-                    sc_assistant_layer.Fill(DimColor);
+                    sc_assistant_layer.Fill(Properties.DimColor);
 
                 if (Global.held_modified == Keys.LWin)
                     sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_WINDOWS, Properties.WindowsKeyColor);

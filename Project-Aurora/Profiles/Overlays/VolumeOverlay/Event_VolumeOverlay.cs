@@ -19,8 +19,11 @@ namespace Aurora.Profiles.Overlays
             {
                 Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
+                if (Global.Configuration.volume_overlay_settings.dim_background)
+                    layers.Enqueue(new EffectLayer("Overlay - Volume Base", Global.Configuration.volume_overlay_settings.dim_color));
+
                 EffectLayer volume_bar = new EffectLayer("Overlay - Volume Bar");
-                
+
                 MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
                 MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
                 float currentVolume = defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar;
@@ -30,12 +33,6 @@ namespace Aurora.Profiles.Overlays
 
                 volume_bar.PercentEffect(volume_spec, Global.Configuration.volume_overlay_settings.sequence, currentVolume, 1.0f);
 
-                if (Global.Configuration.volume_overlay_settings.dim_background)
-                {
-                    EffectLayer volume_black_base = new EffectLayer("Overlay - Volume Base");
-                    volume_black_base.Fill(Color.Black);
-                    layers.Enqueue(volume_black_base);
-                }
                 layers.Enqueue(volume_bar);
 
                 frame.AddOverlayLayers(layers.ToArray());
