@@ -33,7 +33,7 @@ namespace Aurora.Profiles.Overlays
                 if (Global.Configuration.volume_overlay_settings.dim_background)
                 {
                     EffectLayer volume_black_base = new EffectLayer("Overlay - Volume Base");
-                    volume_black_base.PercentEffect(new ColorSpectrum(Color.Black), Global.Configuration.volume_overlay_settings.sequence, 1, 1);
+                    volume_black_base.Fill(Color.Black);
                     layers.Enqueue(volume_black_base);
                 }
                 layers.Enqueue(volume_bar);
