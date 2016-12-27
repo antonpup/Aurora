@@ -522,12 +522,7 @@ namespace Aurora.Settings
 
                 var layoutConfigPath = "";
 
-                if (keyboard_preference == PreferredKeyboard.None)
-                {
-                    LoadNone();
-                    return;
-                }
-                else if (keyboard_preference == PreferredKeyboard.Logitech_G910)
+                if (keyboard_preference == PreferredKeyboard.Logitech_G910)
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g910.json");
                 else if (keyboard_preference == PreferredKeyboard.Logitech_G810)
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g810.json");
@@ -541,12 +536,23 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+                else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow)
+                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow.json");
+                else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_X)
+                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_x.json");
+                else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_TE)
+                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_te.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
-                else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
-                    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
+                //else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
+                //    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
+                else
+                {
+                    LoadNone();
+                    return;
+                }
 
                 if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
                 {

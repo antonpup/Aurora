@@ -144,11 +144,12 @@ namespace Aurora.Settings
         Corsair = 2,
         [Description("Razer")]
         Razer = 3,
-        */
+        
         [Description("Clevo")]
         Clevo = 4,
         [Description("Cooler Master")]
         CoolerMaster = 5,
+        */
 
         //Logitech range is 100-199
         [Description("Logitech - G910")]
@@ -169,6 +170,12 @@ namespace Aurora.Settings
         Corsair_STRAFE = 203,
 
         //Razer range is 300-399
+        [Description("Razer - Blackwidow")]
+        Razer_Blackwidow = 300,
+        [Description("Razer - Blackwidow X")]
+        Razer_Blackwidow_X = 301,
+        [Description("Razer - Blackwidow Tournament Edition")]
+        Razer_Blackwidow_TE = 302,
 
         //Clevo range is 400-499
 
@@ -179,8 +186,8 @@ namespace Aurora.Settings
         Masterkeys_Pro_S = 501,
 
         //Roccat range is 600-699
-        [Description("Roccat Ryos")]
-        Roccat_Ryos = 600
+        //[Description("Roccat Ryos")]
+        //Roccat_Ryos = 600
     }
 
     public enum PreferredKeyboardLocalization
