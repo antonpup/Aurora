@@ -256,6 +256,8 @@ namespace Aurora.Settings
                 {
                     Global.logger.LogLine(string.Format("Script disabled! Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
                     scr.Value.Enabled = false;
+                    scr.Value.ExceptionHit = true;
+                    scr.Value.Exception = exc;
                 }
             }
         }

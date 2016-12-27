@@ -288,4 +288,25 @@ namespace Aurora.Utils
             return ColorUtils.MediaColorToDrawingColor((System.Windows.Media.Color)value);
         }
     }
+
+    public class BoolToColorConverter : IValueConverter
+    {
+        public static Tuple<Color, Color> TextWhiteRed = new Tuple<Color, Color>(Color.FromArgb(255, 186, 186, 186), Color.Red);
+
+        public static Tuple<Color, Color> TextRedWhite = new Tuple<Color, Color>(Color.Red, Color.FromArgb(255, 186, 186, 186));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool b = (bool)value;
+            Tuple<Color, Color> clrs = parameter as Tuple<Color, Color> ?? TextWhiteRed;
+            Color clr = b ? clrs.Item1 : clrs.Item2;
+
+            return new System.Windows.Media.SolidColorBrush(ColorUtils.DrawingColorToMediaColor(clr));
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
