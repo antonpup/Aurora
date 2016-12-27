@@ -42,10 +42,10 @@
         <ComboBox x:Name="eq_view_type" HorizontalAlignment="Left" Margin="65,25,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource EqualizerPresentationType}}" ItemTemplate="{Binding Source={StaticResource EqualizerPresentationTypeTemplate}}" SelectionChanged="eq_view_type_SelectionChanged"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="0,54,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="Clr_primary_color" Margin="80,52,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="Clr_primary_color_SelectedColorChanged" />
+        <xctk:ColorPicker x:Name="Clr_primary_color" Margin="80,52,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="Clr_primary_color_SelectedColorChanged" UsingAlphaChannel="True" />
 
         <TextBlock HorizontalAlignment="Left" Margin="0,83,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="Clr_secondary_color" Margin="95,81,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" ColorMode="ColorCanvas" SelectedColorChanged="Clr_secondary_color_SelectedColorChanged" />
+        <xctk:ColorPicker x:Name="Clr_secondary_color" Margin="95,81,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" ColorMode="ColorCanvas" SelectedColorChanged="Clr_secondary_color_SelectedColorChanged" UsingAlphaChannel="True" />
 
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Gradient (Linear Only): " VerticalAlignment="Top" Margin="0,110,0,0"/>
         <ncore:ColorBox x:Name="gradient_editor" HorizontalAlignment="Left" Height="60" Margin="0,130,0,0" VerticalAlignment="Top" Width="260" BrushChanged="Gradient_editor_BrushChanged"/>

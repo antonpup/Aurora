@@ -10,10 +10,10 @@
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_BreathingLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
-        <xctk:ColorPicker x:Name="breathing_effect_primary_color_colorpicker" Margin="80,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="breathing_effect_primary_color_colorpicker_SelectedColorChanged" />
+        <xctk:ColorPicker x:Name="breathing_effect_primary_color_colorpicker" Margin="80,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="breathing_effect_primary_color_colorpicker_SelectedColorChanged" UsingAlphaChannel="True" />
         <TextBlock HorizontalAlignment="Left" Margin="0,3,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="breathing_effect_random_primary_color_enabled" Content="Use a random primary color" HorizontalAlignment="Left" Margin="0,29,0,0" VerticalAlignment="Top" Checked="breathing_effect_random_primary_color_enabled_Checked" Unchecked="breathing_effect_random_primary_color_enabled_Checked"/>
-        <xctk:ColorPicker x:Name="breathing_effect_secondary_color_colorpicker" Margin="95,49,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" SelectedColorChanged="breathing_effect_secondary_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" />
+        <xctk:ColorPicker x:Name="breathing_effect_secondary_color_colorpicker" Margin="95,49,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" SelectedColorChanged="breathing_effect_secondary_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
         <TextBlock HorizontalAlignment="Left" Margin="0,52,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="breathing_effect_random_secondary_color_enabled" Content="Use a random secondary color" HorizontalAlignment="Left" Margin="0,78,0,0" VerticalAlignment="Top" Checked="breathing_effect_random_secondary_color_enabled_Checked" Unchecked="breathing_effect_random_secondary_color_enabled_Checked"/>
         <TextBlock HorizontalAlignment="Left" Margin="0,100,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>

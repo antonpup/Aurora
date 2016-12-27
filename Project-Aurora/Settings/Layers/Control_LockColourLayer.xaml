@@ -19,10 +19,10 @@
     </UserControl.Resources>
     <Grid>
         <Label HorizontalAlignment="Left" Margin="0,27,0,0" Content="Off Color:" VerticalAlignment="Top" Height="24" Padding="0" VerticalContentAlignment="Center"  />
-        <xctk:ColorPicker x:Name="clrPrimary" Margin="55,56,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="210"/>
+        <xctk:ColorPicker x:Name="clrPrimary" Margin="55,56,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="210" UsingAlphaChannel="True"/>
 
         <Label HorizontalAlignment="Left" Margin="0,56,0,0" Content="On Color:" VerticalAlignment="Top" Padding="0" VerticalContentAlignment="Center" Height="24"/>
-        <xctk:ColorPicker x:Name="clrSecondary" Margin="56,27,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._SecondaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="209"/>
+        <xctk:ColorPicker x:Name="clrSecondary" Margin="56,27,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._SecondaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="209" UsingAlphaChannel="True"/>
 
         <CheckBox Content="Pulse" Margin="10,85,324,0" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._Pulse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 

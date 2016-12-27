@@ -25,7 +25,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <xctk:ColorPicker x:Name="cz_colorpicker" Margin="66,75,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="cz_colorpicker_SelectedColorChanged" HorizontalAlignment="Left" Width="177" />
+        <xctk:ColorPicker x:Name="cz_colorpicker" Margin="66,75,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="cz_colorpicker_SelectedColorChanged" HorizontalAlignment="Left" Width="177" />
         <TextBlock HorizontalAlignment="Left" Margin="0,78,0,0" TextWrapping="Wrap" Text="Zone Color:" VerticalAlignment="Top"/>
         <ListBox x:Name="cz_list" Margin="248,46,0,0" SelectionChanged="cz_list_SelectionChanged" MinWidth="162" MinHeight="177" HorizontalAlignment="Left" Width="162" />
         <Button x:Name="cz_list_add" Content="New Zone" Margin="0,47,10,0" VerticalAlignment="Top" Click="cz_list_add_Click" HorizontalAlignment="Right" Width="100"/>

@@ -26,9 +26,9 @@
 
     <Grid>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Progress Color:" VerticalAlignment="Top" Margin="0,60,0,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_progressColor" HorizontalAlignment="Left" Height="24" Margin="85,56,0,0" VerticalAlignment="Top" Width="182" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_progressColor_SelectedColorChanged"/>
+        <xctk:ColorPicker x:Name="ColorPicker_progressColor" HorizontalAlignment="Left" Height="24" Margin="85,56,0,0" VerticalAlignment="Top" Width="182" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_progressColor_SelectedColorChanged" UsingAlphaChannel="True"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Background Color:" VerticalAlignment="Top" Margin="0,89,0,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_backgroundColor" HorizontalAlignment="Left" Height="24" Margin="103,85,0,0" VerticalAlignment="Top" Width="164" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_backgroundColor_SelectedColorChanged"/>
+        <xctk:ColorPicker x:Name="ColorPicker_backgroundColor" HorizontalAlignment="Left" Height="24" Margin="103,85,0,0" VerticalAlignment="Top" Width="164" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_backgroundColor_SelectedColorChanged" UsingAlphaChannel="True"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Current Value:" VerticalAlignment="Top" Margin="0,4,0,0"/>
         <ComboBox x:Name="ComboBox_variable" HorizontalAlignment="Left" Margin="79,0,0,0" VerticalAlignment="Top" Width="188" IsEditable="True" TextBoxBase.TextChanged="ComboBox_variable_TextChanged" Height="22"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Maximum Value:" VerticalAlignment="Top" Margin="0,31,0,0"/>

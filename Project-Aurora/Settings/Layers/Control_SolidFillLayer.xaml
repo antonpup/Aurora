@@ -9,6 +9,6 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Color:" VerticalAlignment="Top" Margin="0,4,0,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_primaryColor" HorizontalAlignment="Left" Height="24" Margin="36,0,0,0" VerticalAlignment="Top" Width="139" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_primaryColor_SelectedColorChanged"/>
+        <xctk:ColorPicker x:Name="ColorPicker_primaryColor" HorizontalAlignment="Left" Height="24" Margin="36,0,0,0" VerticalAlignment="Top" Width="139" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_primaryColor_SelectedColorChanged" UsingAlphaChannel="True"/>
     </Grid>
 </UserControl>

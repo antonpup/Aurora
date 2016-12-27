@@ -7,11 +7,11 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
-        <xctk:ColorPicker x:Name="ColorPicker_CT" Margin="53,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="191" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_CT_SelectedColorChanged" />
+        <xctk:ColorPicker x:Name="ColorPicker_CT" Margin="53,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="191" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_CT_SelectedColorChanged" />
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="CT Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_T" Margin="46,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="198" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_T_SelectedColorChanged" UsingAlphaChannel="False" />
+        <xctk:ColorPicker x:Name="ColorPicker_T" Margin="46,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="198" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_T_SelectedColorChanged" UsingAlphaChannel="True" />
         <TextBlock HorizontalAlignment="Left" Margin="0,27,0,0" TextWrapping="Wrap" Text="T Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,50,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="False" />
+        <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,50,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="True" />
         <TextBlock HorizontalAlignment="Left" Margin="0,52,0,0" TextWrapping="Wrap" Text="Ambient Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="Checkbox_DimEnabled" Content="Dim background after time &amp; on death" HorizontalAlignment="Left" Margin="0,73,0,-20" VerticalAlignment="Top" Checked="Checkbox_DimEnabled_enabled_Checked" Unchecked="Checkbox_DimEnabled_enabled_Checked"/>
         <TextBlock HorizontalAlignment="Left" Margin="0,93,0,-41" TextWrapping="Wrap" Text="Dim delay:" VerticalAlignment="Top"/>
