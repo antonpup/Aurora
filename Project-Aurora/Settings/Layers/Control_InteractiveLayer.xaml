@@ -24,11 +24,11 @@
     </UserControl.Resources>
     
     <Grid>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Interactive Effect Type: " VerticalAlignment="Top"/>
         <ComboBox x:Name="interactive_effects_type" HorizontalAlignment="Left" Margin="127,-2,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource InteractiveEffects}}" ItemTemplate="{Binding Source={StaticResource InteractiveEffectsTemplate}}" SelectionChanged="interactive_effects_type_SelectionChanged"/>
         <xctk:ColorPicker x:Name="interactive_effects_primary_color_colorpicker" Margin="80,25,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="interactive_effects_primary_color_colorpicker_SelectedColorChanged" />
         <TextBlock HorizontalAlignment="Left" Margin="0,28,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="interactive_effects_random_primary_color_enabled" Content="Use a random primary color" HorizontalAlignment="Left" Margin="0,54,0,0" VerticalAlignment="Top" Checked="interactive_effects_random_primary_color_enabled_Checked" Unchecked="interactive_effects_random_primary_color_enabled_Checked"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Interactive Effect Type: " VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="interactive_effects_secondary_color_colorpicker" Margin="95,74,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" SelectedColorChanged="interactive_effects_secondary_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" />
         <TextBlock HorizontalAlignment="Left" Margin="0,77,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="interactive_effects_random_secondary_color_enabled" Content="Use a random secondary color" HorizontalAlignment="Left" Margin="0,103,0,0" VerticalAlignment="Top" Checked="interactive_effects_random_secondary_color_enabled_Checked" Unchecked="interactive_effects_random_secondary_color_enabled_Checked"/>

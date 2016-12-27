@@ -185,4 +185,14 @@ namespace Aurora.Utils
     {
         public AmbilightEffectsToStringVC() : base(AmbilightType.Default) { }
     }
+
+    public class EqualizerTypeToStringVC : EnumToStringVC
+    {
+        public EqualizerTypeToStringVC() : base(EqualizerType.PowerBars) { }
+    }
+
+    public class EqualizerPresentationTypeToStringVC : EnumToStringVC
+    {
+        public EqualizerPresentationTypeToStringVC() : base(EqualizerPresentationType.SolidColor) { }
+    }
 }

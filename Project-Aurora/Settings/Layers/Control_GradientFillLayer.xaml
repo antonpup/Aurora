@@ -28,14 +28,14 @@
     </UserControl.Resources>
 
     <Grid>
-        <Controls:KeySequence x:Name="KeySequence_keys" Margin="265,0,0,24" HorizontalAlignment="Left" Width="230" RecordingTag="SolidColorLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated"/>
+        <Controls:KeySequence x:Name="KeySequence_keys" Margin="265,0,0,0" HorizontalAlignment="Left" Width="230" RecordingTag="SolidColorLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Gradient (Linear Only): " VerticalAlignment="Top"/>
         <ncore:ColorBox x:Name="gradient_editor" HorizontalAlignment="Left" Height="80" Margin="0,21,0,0" VerticalAlignment="Top" Width="260" BrushChanged="Gradient_editor_BrushChanged"/>
+        <Button x:Name="Button_SetGradientRainbow" Content="Set to Rainbow" HorizontalAlignment="Left" Margin="0,106,0,0" VerticalAlignment="Top" Click="Button_SetGradientRainbow_Click"/>
+        <Button x:Name="Button_SetGradientRainbowLoop" Content="Set to Rainbow (Seamless)" Margin="91,106,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Click="Button_SetGradientRainbowLoop_Click"/>
         <TextBlock HorizontalAlignment="Left" Margin="0,133,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
         <Slider x:Name="effect_speed_slider" HorizontalAlignment="Left" Margin="80,133,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="10" ValueChanged="effect_speed_slider_ValueChanged"/>
         <TextBlock x:Name="effect_speed_label" HorizontalAlignment="Left" Margin="225,133,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Gradient (Linear Only): " VerticalAlignment="Top"/>
-        <Button x:Name="Button_SetGradientRainbow" Content="Set to Rainbow" HorizontalAlignment="Left" Margin="0,106,0,0" VerticalAlignment="Top" Click="Button_SetGradientRainbow_Click"/>
-        <Button x:Name="Button_SetGradientRainbowLoop" Content="Set to Rainbow (Seamless)" Margin="91,106,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Click="Button_SetGradientRainbowLoop_Click"/>
         <CheckBox x:Name="CheckBox_FillEntire" Content="Fill entire keyboard canvas" HorizontalAlignment="Left" Margin="0,160,0,0" VerticalAlignment="Top" Checked="CheckBox_FillEntire_Checked" Unchecked="CheckBox_FillEntire_Checked"/>
     </Grid>
 </UserControl>

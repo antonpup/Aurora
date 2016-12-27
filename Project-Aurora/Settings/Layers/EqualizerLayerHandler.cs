@@ -7,6 +7,7 @@ using NAudio.Wave.SampleProviders;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,23 +18,65 @@ namespace Aurora.Settings.Layers
 {
     public enum EqualizerType
     {
+        [Description("Power Spectrum")]
+        PowerBars,
+
+        [Description("Waveform")]
         Waveform,
-        PowerBars
+
+        [Description("Waveform (From bottom)")]
+        Waveform_Bottom
+
+    }
+
+    public enum EqualizerPresentationType
+    {
+        [Description("Solid Color")]
+        SolidColor,
+
+        [Description("Alternating Colors")]
+        AlternatingColor,
+
+        [Description("Gradient")]
+        Gradient,
+
+        [Description("Gradient Color Shift")]
+        GradientColorShift
     }
 
     public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerLayerHandlerProperties>
     {
+        public Color? _SecondaryColor { get; set; }
+
+        [JsonIgnore]
+        public Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
+
+        public EffectBrush _Gradient { get; set; }
+
+        [JsonIgnore]
+        public EffectBrush Gradient { get { return Logic._Gradient ?? _Gradient ?? new EffectBrush().SetBrushType(EffectBrush.BrushType.Linear); } }
+
         public EqualizerType? _EQType { get; set; }
 
         [JsonIgnore]
         public EqualizerType EQType { get { return Logic._EQType ?? _EQType ?? EqualizerType.PowerBars; } }
+
+        public EqualizerPresentationType? _ViewType { get; set; }
+
+        [JsonIgnore]
+        public EqualizerPresentationType ViewType { get { return Logic._ViewType ?? _ViewType ?? EqualizerPresentationType.SolidColor; } }
+
+        public float? _MaxAmplitude { get; set; }
+
+        [JsonIgnore]
+        public float MaxAmplitude { get { return Logic._MaxAmplitude ?? _MaxAmplitude ?? 20.0f; } }
 
         public EqualizerLayerHandlerProperties() : base()
         {
 
         }
 
-        public EqualizerLayerHandlerProperties(bool arg = false) : base(arg) 
+        public EqualizerLayerHandlerProperties(bool arg = false) : base(arg)
         {
 
         }
@@ -42,28 +85,35 @@ namespace Aurora.Settings.Layers
         {
             base.Default();
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+            _SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
+            _Gradient = new EffectBrush(ColorSpectrum.RainbowLoop).SetBrushType(EffectBrush.BrushType.Linear);
             _EQType = EqualizerType.PowerBars;
+            _ViewType = EqualizerPresentationType.SolidColor;
+            _MaxAmplitude = 20.0f;
         }
     }
 
     public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerProperties>
     {
-        // Other inputs are also usable. Just look through the NAudio library.
+        float[] freqs = { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 }; //{ 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
+
+        private List<float> flux_array = new List<float>();
+
         private IWaveIn waveIn;
         private static int fftLength = 1024; // NAudio fft wants powers of two! was 8192
 
-        // There might be a sample aggregator in NAudio somewhere but I made a variation for my needs
         private SampleAggregator sampleAggregator = new SampleAggregator(fftLength);
-
         private Complex[] _ffts = { };
+        private Complex[] _ffts_prev = { };
 
-        float[] previous_freq_results = null;
+        private float[] previous_freq_results = null;
 
         public EqualizerLayerHandler()
         {
             _Type = LayerType.Equalizer;
 
-            //PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+            _ffts = new Complex[fftLength];
+            _ffts_prev = new Complex[fftLength];
 
             sampleAggregator.FftCalculated += new EventHandler<FftEventArgs>(FftCalculated);
             sampleAggregator.PerformFFT = true;
@@ -85,11 +135,7 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            double[] freqs = { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
             double[] freq_results = new double[freqs.Length];
-
-            float min = -15;
-            float max = 15;
 
             if (previous_freq_results == null)
                 previous_freq_results = new float[freqs.Length];
@@ -98,15 +144,28 @@ namespace Aurora.Settings.Layers
 
             using (Graphics g = equalizer_layer.GetGraphics())
             {
+                int wave_step_amount = _ffts.Length / Effects.canvas_width;
 
                 switch (Properties.EQType)
                 {
                     case EqualizerType.Waveform:
-                        for (int x = 0; x < Effects.canvas_width * 2; x += 2)
+                        for (int x = 0; x < Effects.canvas_width; x++)
                         {
-                            float fft_val = _ffts[x].X;
+                            float fft_val = _ffts.Length > x * wave_step_amount ? _ffts[x * wave_step_amount].X : 0.0f;
 
-                            g.DrawLine(new Pen(Color.Red), x / 2, Effects.canvas_height_center, x / 2, Effects.canvas_height_center - fft_val * 1000.0f);
+                            Color col = GetColor(fft_val, x, Effects.canvas_width);
+
+                            g.DrawLine(new Pen(col), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val * 500.0f);
+                        }
+                        break;
+                    case EqualizerType.Waveform_Bottom:
+                        for (int x = 0; x < Effects.canvas_width; x++) 
+                        {
+                            float fft_val = _ffts.Length > x * wave_step_amount ? _ffts[x * wave_step_amount ].X : 0.0f;
+
+                            Color col = GetColor(fft_val, x, Effects.canvas_width);
+
+                            g.DrawLine(new Pen(col), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val) * 1000.0f);
                         }
                         break;
                     case EqualizerType.PowerBars:
@@ -114,30 +173,51 @@ namespace Aurora.Settings.Layers
                         //Perform FFT again to get frequencies
                         FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _ffts);
 
-                        for(int x = 0; x < freqs.Length; x++)
+                        while (flux_array.Count < freqs.Length)
                         {
-                            int bin = (int)(freqs[x] / (waveIn.WaveFormat.SampleRate / _ffts.Length));
-
-                            //System.Diagnostics.Debug.WriteLine($"bin = {bin} for Hz = {freqs[x]}");
-
-                            Complex c = _ffts[bin];
-                            double intensityDB = 10 * Math.Log10(Math.Sqrt(c.X * c.X + c.Y * c.Y));
-
-                            freq_results[x] += intensityDB;
+                            flux_array.Add(0.0f);
                         }
 
-                        float bar_width = Effects.canvas_width / (float)freqs.Length;
+                        int startF = 0;
+                        int endF = 0;
 
-                        for (int f_x = 0; f_x < freq_results.Length; f_x++)
+                        float threshhold = 300.0f;
+
+                        for (int x = 0; x < freqs.Length - 1; x++)
                         {
-                            float fft_val = (float)(freq_results[f_x]);
+                            startF = freqToBin(freqs[x]);
+                            endF = freqToBin(freqs[x + 1]);
 
-                            fft_val = (float)((fft_val - min) / (max - min));
+                            float flux = 0.0f;
 
-                            if (fft_val > 1.0f) fft_val = 1.0f;
+                            for (int j = startF; j <= endF; j++)
+                            {
+                                float curr_fft = (float)Math.Sqrt(_ffts[j].X * _ffts[j].X + _ffts[j].Y * _ffts[j].Y);
+                                float prev_fft = (float)Math.Sqrt(_ffts_prev[j].X * _ffts_prev[j].X + _ffts_prev[j].Y * _ffts_prev[j].Y);
 
-                            if (fft_val <= 0 || previous_freq_results[f_x] - fft_val > 0.10)
-                                fft_val = previous_freq_results[f_x] - 0.10f;
+                                float value = curr_fft - prev_fft;
+                                float flux_calc = (value + Math.Abs(value)) / 2;
+                                if (flux < flux_calc)
+                                    flux = flux_calc;
+
+                                flux = flux > threshhold ? 0.0f : flux;
+                            }
+
+                            flux_array[x] = flux;
+                        }
+
+                        //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
+
+                        float bar_width = Effects.canvas_width / (float)(freqs.Length - 1);
+
+                        for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
+                        {
+                            float fft_val = flux_array[f_x] / Properties.MaxAmplitude;
+
+                            fft_val = Math.Min(1.0f, fft_val);
+
+                            if (previous_freq_results[f_x] - fft_val > 0.10)
+                                fft_val = previous_freq_results[f_x] - 0.15f;
 
                             float x = f_x * bar_width;
                             float y = Effects.canvas_height;
@@ -146,7 +226,9 @@ namespace Aurora.Settings.Layers
 
                             previous_freq_results[f_x] = fft_val;
 
-                            g.FillRectangle(new SolidBrush(f_x % 2 == 0 ? Color.Red : Color.Green), x, y - height, width, height);
+                            Color col = GetColor(-(f_x % 2), f_x, freq_results.Length - 1);
+
+                            g.FillRectangle(new SolidBrush(col), x, y - height, width, height);
                         }
 
                         break;
@@ -181,7 +263,30 @@ namespace Aurora.Settings.Layers
             // Do something with e.result!
             //Global.logger.LogLine($"{e.Result.ToString()}");
 
+            _ffts_prev = new List<Complex>(_ffts).ToArray();
             _ffts = e.Result;
+        }
+
+        private int freqToBin(float freq)
+        {
+            return (int)(freq / (waveIn.WaveFormat.SampleRate / _ffts.Length));
+        }
+
+        private Color GetColor(float value, float position, float max_position)
+        {
+            if (Properties.ViewType == EqualizerPresentationType.AlternatingColor)
+            {
+                if (value >= 0)
+                    return Properties.PrimaryColor;
+                else
+                    return Properties.SecondaryColor;
+            }
+            else if (Properties.ViewType == EqualizerPresentationType.Gradient)
+                return Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position);
+            else if (Properties.ViewType == EqualizerPresentationType.GradientColorShift)
+                return Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000);
+            else
+                return Properties.PrimaryColor;
         }
     }
 
@@ -226,7 +331,7 @@ namespace Aurora.Settings.Layers
                 if (fftPos >= fftLength)
                 {
                     fftPos = 0;
-                    FastFourierTransform.FFT(true, m, fftBuffer);
+                    //FastFourierTransform.FFT(true, m, fftBuffer);
                     FftCalculated(this, fftArgs);
                 }
             }

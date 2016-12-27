@@ -78,7 +78,7 @@ namespace Aurora.Settings
             AvailableLayers.Add(LayerType.PercentGradient);
             AvailableLayers.Add(LayerType.Interactive);
             AvailableLayers.Add(LayerType.ShortcutAssistant);
-            //AvailableLayers.Add(LayerType.Equalizer);
+            AvailableLayers.Add(LayerType.Equalizer);
             AvailableLayers.Add(LayerType.Ambilight);
             AvailableLayers.Add(LayerType.LockColor);
 
