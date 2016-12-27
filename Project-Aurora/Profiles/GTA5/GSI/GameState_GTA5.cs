@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace Aurora.Profiles.GTA5.GSI
@@ -133,6 +134,11 @@ namespace Aurora.Profiles.GTA5.GSI
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
+        
+        private byte RoundTo5(byte no)
+        {
+            return (byte)(Math.Round((double)no / 5) * 5);
+        }
 
         /// <summary>
         /// Creates a GameState_GTA5 instance based on the passed json data.
@@ -142,35 +148,36 @@ namespace Aurora.Profiles.GTA5.GSI
         {
             Provider.AppID = 271590;
 
+
             //Get Current State
             Color state_color = JSonToColor(
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 3],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 2],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 1],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC]
+                RoundTo5(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 3]),
+                RoundTo5(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 2]),
+                RoundTo5(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 1]),
+                RoundTo5(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC])
                 );
 
-            if(state_color == Color.FromArgb(255, 175, 79, 0) || state_color == Color.FromArgb(255, 176, 80, 0))
+            if(state_color == Color.FromArgb(255, 175, 80, 0))
                 CurrentState = PlayerState.PlayingSP_Trevor;
-            else if (state_color == Color.FromArgb(255, 48, 255, 255))
+            else if (state_color == Color.FromArgb(255, 50, 255, 255))
                 CurrentState = PlayerState.PlayingSP_Michael;
-            else if (state_color == Color.FromArgb(255, 48, 255, 0))
+            else if (state_color == Color.FromArgb(255, 50, 255, 0))
                 CurrentState = PlayerState.PlayingSP_Franklin;
-            else if (state_color == Color.FromArgb(255, 127, 0, 0))
+            else if (state_color == Color.FromArgb(255, 125, 0, 0))
                 CurrentState = PlayerState.PlayingSP_Chop;
-            else if (state_color == Color.FromArgb(255, 0, 68, 226) || state_color == Color.FromArgb(255, 0, 70, 228))
+            else if (state_color == Color.FromArgb(255, 0, 70, 225) || state_color == Color.FromArgb(255, 0, 70, 230) || state_color == Color.FromArgb(255, 65, 205, 35))
                 CurrentState = PlayerState.PlayingMP;
             else if (state_color == Color.FromArgb(255, 255, 170, 0))
                 CurrentState = PlayerState.PlayingRace_Gold;
-            else if (state_color == Color.FromArgb(255, 191, 191, 191))
+            else if (state_color == Color.FromArgb(255, 190, 190, 190))
                 CurrentState = PlayerState.PlayingRace_Silver;
-            else if (state_color == Color.FromArgb(255, 255, 51, 0))
+            else if (state_color == Color.FromArgb(255, 255, 50, 0))
                 CurrentState = PlayerState.PlayingRace_Bronze;
-            else if (state_color == Color.FromArgb(255, 193, 79, 79))
+            else if (state_color == Color.FromArgb(255, 195, 80, 80))
                 CurrentState = PlayerState.PlayingMP_Mission;
-            else if (state_color == Color.FromArgb(255, 255, 122, 196) || state_color == Color.FromArgb(255, 156, 110, 175))
+            else if (state_color == Color.FromArgb(255, 255, 120, 195) || state_color == Color.FromArgb(255, 155, 110, 175))
                 CurrentState = PlayerState.PlayingMP_HeistFinale;
-            else if (state_color == Color.FromArgb(255, 142, 127, 153))
+            else if (state_color == Color.FromArgb(255, 140, 125, 155))
                 CurrentState = PlayerState.PlayingMP_Spectator;
             else
             {
