@@ -58,6 +58,7 @@ namespace Aurora.Settings
             this.volume_high_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.high_color);
             this.volume_ks.Sequence = Global.Configuration.volume_overlay_settings.sequence;
             this.volume_effects_delay.Value = Global.Configuration.volume_overlay_settings.delay;
+            this.volume_overlay_dim_background.IsChecked = Global.Configuration.volume_overlay_settings.dim_background;
 
             this.skype_overlay_enabled.IsChecked = Global.Configuration.skype_overlay_settings.enabled;
             this.skype_unread_messages_enabled.IsChecked = Global.Configuration.skype_overlay_settings.mm_enabled;
@@ -945,6 +946,15 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.atmoorb_ids = this.atmoorb_IDs.Text;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void volume_overlay_dim_background_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.volume_overlay_settings.dim_background = (this.volume_overlay_dim_background.IsChecked.HasValue) ? this.volume_overlay_dim_background.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
