@@ -104,9 +104,9 @@ namespace Aurora.Settings
                 Type setting_type = Profiles[profile_name].GetType();
 
                 Settings = (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(Profiles[profile_name], setting_type, new JsonSerializerSettings { }),
+                    JsonConvert.SerializeObject(Profiles[profile_name], setting_type, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }),
                     setting_type,
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All }
                     ); //I know this is bad. You can laugh at me for this one. :(
 
                 if (ProfileChanged != null)
