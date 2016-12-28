@@ -95,7 +95,7 @@ namespace Aurora.Settings.Layers
 
     public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerProperties>
     {
-        float[] freqs = { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 }; //{ 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
+        float[] freqs = { 60, 170, 310, 600, 1000, 2000, 3000, 4000, 5000 };
 
         private List<float> flux_array = new List<float>();
 
@@ -264,12 +264,12 @@ namespace Aurora.Settings.Layers
             //Global.logger.LogLine($"{e.Result.ToString()}");
 
             _ffts_prev = new List<Complex>(_ffts).ToArray();
-            _ffts = e.Result;
+            _ffts = new List<Complex>(e.Result).ToArray();
         }
 
         private int freqToBin(float freq)
         {
-            return (int)(freq / (waveIn.WaveFormat.SampleRate / _ffts.Length));
+            return (int)(freq / (44000 / _ffts.Length));
         }
 
         private Color GetColor(float value, float position, float max_position)

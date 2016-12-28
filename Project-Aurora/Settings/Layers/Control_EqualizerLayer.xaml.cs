@@ -57,6 +57,9 @@ namespace Aurora.Settings.Layers
                     Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
                 }
 
+                this.updown_max_amplitude_value.Value = (int)(this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude;
+
+
                 settingsset = true;
             }
         }
@@ -127,6 +130,12 @@ namespace Aurora.Settings.Layers
             {
                 Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
             }
+        }
+
+        private void updown_max_amplitude_value_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown && (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.HasValue)
+                (this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.Value;
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)

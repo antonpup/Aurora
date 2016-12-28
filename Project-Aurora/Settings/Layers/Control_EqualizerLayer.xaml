@@ -52,5 +52,8 @@
         <Button x:Name="Button_SetGradientRainbow" Content="Set to Rainbow" HorizontalAlignment="Left" Margin="0,195,0,0" VerticalAlignment="Top" Click="Button_SetGradientRainbow_Click"/>
         <Button x:Name="Button_SetGradientRainbowLoop" Content="Set to Rainbow (Seamless)" Margin="91,195,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Click="Button_SetGradientRainbowLoop_Click"/>
 
+        <TextBlock HorizontalAlignment="Left" Margin="302,4,0,0" TextWrapping="Wrap" Text="Max amplitude (Power bars only): " VerticalAlignment="Top"/>
+        <xctk:IntegerUpDown x:Name="updown_max_amplitude_value" HorizontalAlignment="Left" Height="24" Margin="487,0,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="120" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged"/>
+
     </Grid>
 </UserControl>

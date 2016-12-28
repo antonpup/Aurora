@@ -29,9 +29,9 @@
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Current Value:" VerticalAlignment="Top" Margin="0,4,0,0"/>
         <ComboBox x:Name="ComboBox_variable" HorizontalAlignment="Left" Margin="79,0,0,0" VerticalAlignment="Top" Width="188" IsEditable="True" TextBoxBase.TextChanged="ComboBox_variable_TextChanged" Height="22"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Maximum Value:" VerticalAlignment="Top" Margin="0,31,0,0"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,145,0,-23" TextWrapping="Wrap" Text="Blink threshold: " VerticalAlignment="Top"/>
         <ComboBox x:Name="ComboBox_effect_type" HorizontalAlignment="Left" Margin="67,114,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="ComboBox_effect_type_SelectionChanged" ItemsSource="{Binding Source={StaticResource PercentEffectType}}" ItemTemplate="{Binding Source={StaticResource PercentEffectTypeTemplate}}" />
         <TextBlock HorizontalAlignment="Left" Margin="0,117,0,0" TextWrapping="Wrap" Text="Effect Type:" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,145,0,-23" TextWrapping="Wrap" Text="Blink threshold: " VerticalAlignment="Top"/>
         <xctk:IntegerUpDown x:Name="updown_blink_value" HorizontalAlignment="Left" Height="24" Margin="90,141,0,-27" VerticalAlignment="Top" Width="50" Value="1" Maximum="100" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="updown_blink_value_ValueChanged"/>
         <TextBlock HorizontalAlignment="Left" Margin="145,145,0,-23" TextWrapping="Wrap" Text="%" VerticalAlignment="Top" RenderTransformOrigin="0.6,0.542"/>
         <ComboBox x:Name="ComboBox_max_variable" HorizontalAlignment="Left" Margin="92,29,0,0" VerticalAlignment="Top" Width="175" IsEditable="True" TextBoxBase.TextChanged="ComboBox_max_variable_TextChanged" Height="22"/>
