@@ -46,12 +46,6 @@ namespace Aurora.Profiles.GTA5.GSI
         PlayingSP_Chop,
 
         /// <summary>
-        /// Player is playing multiplayer
-        /// </summary>
-        [Description("Multiplayer")]
-        PlayingMP,
-
-        /// <summary>
         /// Player is playing a multiplayer mission
         /// </summary>
         [Description("Multiplayer - Mission")]
@@ -165,8 +159,6 @@ namespace Aurora.Profiles.GTA5.GSI
                 CurrentState = PlayerState.PlayingSP_Franklin;
             else if (state_color == Color.FromArgb(255, 125, 0, 0))
                 CurrentState = PlayerState.PlayingSP_Chop;
-            else if (state_color == Color.FromArgb(255, 0, 70, 225) || state_color == Color.FromArgb(255, 0, 70, 230) || state_color == Color.FromArgb(255, 65, 205, 35))
-                CurrentState = PlayerState.PlayingMP;
             else if (state_color == Color.FromArgb(255, 255, 170, 0))
                 CurrentState = PlayerState.PlayingRace_Gold;
             else if (state_color == Color.FromArgb(255, 190, 190, 190))

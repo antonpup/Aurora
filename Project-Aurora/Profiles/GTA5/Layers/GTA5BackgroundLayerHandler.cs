@@ -15,11 +15,6 @@ namespace Aurora.Profiles.GTA5.Layers
 {
     public class GTA5BackgroundLayerHandlerProperties : LayerHandlerProperties2Color<GTA5BackgroundLayerHandlerProperties>
     {
-        public Color? _DefaultColor { get; set; }
-
-        [JsonIgnore]
-        public Color DefaultColor { get { return Logic._DefaultColor ?? _DefaultColor ?? Color.Empty; } }
-
         public Color? _FranklinColor { get; set; }
 
         [JsonIgnore]
@@ -39,11 +34,6 @@ namespace Aurora.Profiles.GTA5.Layers
 
         [JsonIgnore]
         public Color ChopColor { get { return Logic._ChopColor ?? _ChopColor ?? Color.Empty; } }
-
-        public Color? _OnlineColor { get; set; }
-
-        [JsonIgnore]
-        public Color OnlineColor { get { return Logic._OnlineColor ?? _OnlineColor ?? Color.Empty; } }
 
         public Color? _OnlineSpectatorColor { get; set; }
 
@@ -83,12 +73,10 @@ namespace Aurora.Profiles.GTA5.Layers
         {
             base.Default();
 
-            this._DefaultColor = Color.FromArgb(255, 255, 255);
             this._FranklinColor = Color.FromArgb(48, 255, 0);
             this._MichaelColor = Color.FromArgb(48, 255, 255);
             this._TrevorColor = Color.FromArgb(176, 80, 0);
             this._ChopColor = Color.FromArgb(127, 0, 0);
-            this._OnlineColor = Color.FromArgb(0, 70, 228);
             this._OnlineMissionColor = Color.FromArgb(156, 110, 175);
             this._OnlineHeistFinaleColor = Color.FromArgb(255, 122, 196);
             this._OnlineSpectatorColor = Color.FromArgb(142, 127, 153);
@@ -119,7 +107,7 @@ namespace Aurora.Profiles.GTA5.Layers
             {
                 GameState_GTA5 gta5state = state as GameState_GTA5;
 
-                Color bg_color = Properties.DefaultColor;
+                Color bg_color;
 
                 switch (gta5state.CurrentState)
                 {
@@ -134,9 +122,6 @@ namespace Aurora.Profiles.GTA5.Layers
                         break;
                     case PlayerState.PlayingSP_Chop:
                         bg_color = Properties.ChopColor;
-                        break;
-                    case PlayerState.PlayingMP:
-                        bg_color = Properties.OnlineColor;
                         break;
                     case PlayerState.PlayingMP_Mission:
                         bg_color = Properties.OnlineMissionColor;
@@ -157,7 +142,7 @@ namespace Aurora.Profiles.GTA5.Layers
                         bg_color = Properties.RaceBronzeColor;
                         break;
                     default:
-                        bg_color = Properties.DefaultColor;
+                        bg_color = gta5state.StateColor;
                         break;
                 }
 
