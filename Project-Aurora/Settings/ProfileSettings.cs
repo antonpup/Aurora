@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Aurora.Settings
 {
@@ -23,19 +24,19 @@ namespace Aurora.Settings
                     ExceptionHit = false;
                     Exception = null;
                 }
-                InvokePropertyChanged("Enabled");
+                InvokePropertyChanged();
             }
         }
 
         private bool _ExceptionHit = false;
 
         [JsonIgnore]
-        public bool ExceptionHit { get { return _ExceptionHit; } set { _ExceptionHit = value; InvokePropertyChanged("ExceptionHit"); } }
+        public bool ExceptionHit { get { return _ExceptionHit; } set { _ExceptionHit = value; InvokePropertyChanged(); } }
 
         private Exception _Exception = null;
 
         [JsonIgnore]
-        public Exception Exception { get { return _Exception; } set { _Exception = value; InvokePropertyChanged("Exception"); } }
+        public Exception Exception { get { return _Exception; } set { _Exception = value; InvokePropertyChanged(); } }
 
         public ScriptSettings(dynamic script)
         {
@@ -43,13 +44,9 @@ namespace Aurora.Settings
                 Keys = script.DefaultKeys;
         }
 
-        private void InvokePropertyChanged(String propertyName)
+        private void InvokePropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
-
-            PropertyChangedEventHandler changed = PropertyChanged;
-
-            if (changed != null) changed(this, e);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
