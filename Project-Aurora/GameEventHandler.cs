@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Timers;
+//using System.Timers;
+using System.Threading;
 using Aurora.Profiles;
 using Aurora.Profiles.Desktop;
 using System.Runtime.InteropServices;
@@ -41,6 +42,7 @@ namespace Aurora
         private bool isForced = false;
 
         private Timer update_timer;
+        private int timer_interval = 33;
 
         private string process_path = "";
         private long currentTick = 0L;
@@ -90,10 +92,21 @@ namespace Aurora
 
             try
             {
-                update_timer = new Timer(33);
+                update_timer = new System.Threading.Timer(g => {
+                    Stopwatch watch = new Stopwatch();
+                    watch.Start();
+                    update_timer_Tick(g, null);
+                    watch.Stop();
+                    int time = (int)watch.ElapsedMilliseconds;
+                    int refresh_time = Math.Max(timer_interval - time, 0);
+                    //Global.logger.LogLine($"Update took {time}ms, updating again in {refresh_time}ms");
+                    update_timer.Change(refresh_time, Timeout.Infinite);
+                }, null, 0, System.Threading.Timeout.Infinite);
+
+                /*update_timer = new Timer(33);
                 update_timer.Elapsed += new ElapsedEventHandler(update_timer_Tick);
                 update_timer.Interval = 33; // in miliseconds
-                update_timer.Start();
+                update_timer.Start();*/
                 GC.KeepAlive(update_timer);
             }
             catch (Exception exc)
@@ -107,7 +120,7 @@ namespace Aurora
 
         public void Destroy()
         {
-            update_timer?.Stop();
+            update_timer?.Dispose();
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -225,12 +238,12 @@ namespace Aurora
                 if (process_name.Equals("csgo.exe"))
                 {
                     //Update timer set to 100 ticks a second for CSGO for Smooth Bomb Effect
-                    update_timer.Interval = 10; // in miliseconds
+                    timer_interval = 10; // in miliseconds
                 }
                 else
                 {
                     //UPDATE at 30 ticks per second for rest.
-                    update_timer.Interval = 33;
+                    timer_interval = 33;
                 }
 
                 if (!(Global.Configuration.time_based_dimming_enabled && Global.Configuration.time_based_dimming_affect_games &&
@@ -244,7 +257,7 @@ namespace Aurora
             }
             else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && profiles.ContainsKey(Global.net_listener.WrappedProcess) && profiles[Global.net_listener.WrappedProcess].IsEnabled())
             {
-                update_timer.Interval = 33; // in miliseconds
+                timer_interval = 33; // in miliseconds
 
                 if (!(Global.Configuration.time_based_dimming_enabled && Global.Configuration.time_based_dimming_affect_games &&
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
@@ -257,7 +270,7 @@ namespace Aurora
             }
             else
             {
-                update_timer.Interval = 1000.0D / 30; //50 in miliseconds
+                timer_interval = (int)(1000.0D / 30); //50 in miliseconds
                 if (!(Global.Configuration.time_based_dimming_enabled &&
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
@@ -283,7 +296,7 @@ namespace Aurora
 
             Global.effengine.PushFrame(newframe);
 
-            currentTick += (long)update_timer.Interval;
+            currentTick += (long)timer_interval;
         }
 
         public void ResetGameState(string process)

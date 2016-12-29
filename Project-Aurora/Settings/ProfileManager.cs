@@ -234,7 +234,7 @@ namespace Aurora.Settings
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
         {
-            lock (this.Settings)
+            lock (this.Settings.ScriptSettings)
             {
                 foreach (KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
                 {
