@@ -1,0 +1,19 @@
+<assembly>
+    <id>full</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+            <includes>
+                <include>aurora.lights:AuroraPiLighting</include>
+                <include>com.pi4j:pi4j-core</include>
+                <include>be.pixxis:LedStrip</include>
+                <include>com.google.code.gson:gson</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+</assembly>
