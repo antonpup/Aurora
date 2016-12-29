@@ -100,7 +100,7 @@ namespace Aurora
                     int time = (int)watch.ElapsedMilliseconds;
                     int refresh_time = Math.Max(timer_interval - time, 0);
                     //Global.logger.LogLine($"Update took {time}ms, updating again in {refresh_time}ms");
-                    update_timer.Change(refresh_time, Timeout.Infinite);
+                    update_timer?.Change(refresh_time, Timeout.Infinite);
                 }, null, 0, System.Threading.Timeout.Infinite);
 
                 /*update_timer = new Timer(33);
@@ -121,6 +121,7 @@ namespace Aurora
         public void Destroy()
         {
             update_timer?.Dispose();
+            update_timer = null;
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
