@@ -107,7 +107,7 @@ namespace Aurora.Profiles.GTA5.GSI
         /// <summary>
         /// The current background color
         /// </summary>
-        public Color StateColor;
+        public Color? StateColor = null;
 
 
         /// <summary>
@@ -174,10 +174,10 @@ namespace Aurora.Profiles.GTA5.GSI
             else
             {
                 CurrentState = PlayerState.Undefined;
+                StateColor = state_color;
                 Global.logger.LogLine("Undefined color - " + state_color);
             }
 
-            StateColor = state_color;
 
             LeftSirenColor = JSonToColor(
                 Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 3],

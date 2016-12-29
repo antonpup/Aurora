@@ -14,9 +14,8 @@ namespace Aurora.Profiles.CSGO
 {
     public class GameEvent_CSGO : LightEvent
     {
-        public GameEvent_CSGO()
+        public GameEvent_CSGO() : base()
         {
-            _game_state = new GameState_CSGO();
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -58,6 +57,11 @@ namespace Aurora.Profiles.CSGO
                     Global.logger.LogLine(gs.ToString(), Logging_Level.None);
                 }
             }
+        }
+
+        public override void ResetGameState()
+        {
+            _game_state = new GameState_CSGO();
         }
 
         public override bool IsEnabled()

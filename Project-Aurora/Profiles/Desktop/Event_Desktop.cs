@@ -17,11 +17,9 @@ namespace Aurora.Profiles.Desktop
     {
         private long internalcounter;
 
-        public Event_Desktop()
+        public Event_Desktop() : base()
         {
             internalcounter = 0;
-
-            _game_state = new GameState();
         }
 
         public override void UpdateLights(EffectFrame frame)

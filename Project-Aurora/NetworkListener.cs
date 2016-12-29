@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 namespace Aurora
 {
     public delegate void NewGameStateHandler(IGameState gamestate);
+    public delegate void WrapperConnectionClosedHandler(string process);
 
     public class NetworkListener
     {
@@ -53,10 +54,12 @@ namespace Aurora
         /// </summary>
         public event NewGameStateHandler NewGameState = delegate { };
 
+        public event WrapperConnectionClosedHandler WrapperConnectionClosed = delegate { };
+
         /// <summary>
         /// Returns whether or not the wrapper is connected through IPC
         /// </summary>
-        public bool IsWrapperConnected { get { return wrapper_connected; } }
+        public bool IsWrapperConnected { get { return wrapper_connected; }  }
 
         /// <summary>
         /// Returns the process of the wrapped connection
@@ -225,12 +228,16 @@ namespace Aurora
                         }
                     }
 
+                    WrapperConnectionClosed?.Invoke(wrapped_process);
+
                     wrapper_connected = false;
                     wrapped_process = "";
                     Global.logger.LogLine("[IPCServer] Pipe connection lost");
                 }
                 catch (Exception exc)
                 {
+                    WrapperConnectionClosed?.Invoke(wrapped_process);
+
                     wrapper_connected = false;
                     wrapped_process = "";
                     Global.logger.LogLine("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);

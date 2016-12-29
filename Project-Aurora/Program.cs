@@ -188,6 +188,7 @@ namespace Aurora
             {
                 Global.net_listener = new NetworkListener(9088);
                 Global.net_listener.NewGameState += new NewGameStateHandler(Global.geh.GameStateUpdate);
+                Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.geh.ResetGameState);
             }
             catch (Exception exc)
             {

@@ -159,7 +159,6 @@ namespace Aurora
             }
 
             string process_name = System.IO.Path.GetFileName(process_path).ToLowerInvariant();
-
             if (Global.Configuration.excluded_programs.Contains(process_name))
                 return;
 
@@ -285,6 +284,12 @@ namespace Aurora
             Global.effengine.PushFrame(newframe);
 
             currentTick += (long)update_timer.Interval;
+        }
+
+        public void ResetGameState(string process)
+        {
+            if (profiles.ContainsKey(process))
+                profiles[process].ResetGameState();
         }
 
         public void GameStateUpdate(IGameState gs)

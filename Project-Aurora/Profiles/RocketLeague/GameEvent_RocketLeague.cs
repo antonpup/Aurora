@@ -21,9 +21,8 @@ namespace Aurora.Profiles.RocketLeague
         //Pointers
         private RocketLeaguePointers pointers;
 
-        public GameEvent_RocketLeague()
+        public GameEvent_RocketLeague() : base()
         {
-            _game_state = new GameState_RocketLeague();
 
             FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.Path = System.IO.Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Pointers");
@@ -67,6 +66,11 @@ namespace Aurora.Profiles.RocketLeague
             {
                 isInitialized = false;
             }
+        }
+
+        public override void ResetGameState()
+        {
+            _game_state = new GameState_RocketLeague();
         }
 
         public override bool IsEnabled()

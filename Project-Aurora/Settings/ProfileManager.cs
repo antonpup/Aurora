@@ -234,30 +234,33 @@ namespace Aurora.Settings
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
         {
-            foreach (KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
+            lock (this.Settings)
             {
-                try
+                foreach (KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
                 {
-                    dynamic script = this.EffectScripts[scr.Key];
-                    dynamic script_layers = script.UpdateLights(scr.Value, state);
-                    if (layers != null)
+                    try
                     {
-                        if(script_layers is EffectLayer)
-                            layers.Enqueue(script_layers as EffectLayer);
-                        else if(script_layers is EffectLayer[])
+                        dynamic script = this.EffectScripts[scr.Key];
+                        dynamic script_layers = script.UpdateLights(scr.Value, state);
+                        if (layers != null)
                         {
-                            foreach (var layer in (script_layers as EffectLayer[]))
-                                layers.Enqueue(layer);
+                            if (script_layers is EffectLayer)
+                                layers.Enqueue(script_layers as EffectLayer);
+                            else if (script_layers is EffectLayer[])
+                            {
+                                foreach (var layer in (script_layers as EffectLayer[]))
+                                    layers.Enqueue(layer);
+                            }
                         }
+
                     }
-                        
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.LogLine(string.Format("Script disabled! Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
-                    scr.Value.Enabled = false;
-                    scr.Value.ExceptionHit = true;
-                    scr.Value.Exception = exc;
+                    catch (Exception exc)
+                    {
+                        Global.logger.LogLine(string.Format("Script disabled! Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
+                        scr.Value.Enabled = false;
+                        scr.Value.ExceptionHit = true;
+                        scr.Value.Exception = exc;
+                    }
                 }
             }
         }

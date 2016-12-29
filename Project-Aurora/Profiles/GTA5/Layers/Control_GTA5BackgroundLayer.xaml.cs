@@ -40,6 +40,7 @@ namespace Aurora.Profiles.GTA5.Layers
         {
             if (this.DataContext is GTA5BackgroundLayerHandler && !settingsset)
             {
+                this.ColorPicker_Default.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as GTA5BackgroundLayerHandler).Properties._DefaultColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_Michael.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as GTA5BackgroundLayerHandler).Properties._MichaelColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_Franklin.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as GTA5BackgroundLayerHandler).Properties._FranklinColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_Trevor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as GTA5BackgroundLayerHandler).Properties._TrevorColor ?? System.Drawing.Color.Empty);
@@ -70,6 +71,12 @@ namespace Aurora.Profiles.GTA5.Layers
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
+        }
+
+        private void ColorPicker_Default_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is GTA5BackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
+                (this.DataContext as GTA5BackgroundLayerHandler).Properties._DefaultColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_Michael_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

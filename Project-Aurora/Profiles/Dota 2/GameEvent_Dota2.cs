@@ -15,9 +15,8 @@ namespace Aurora.Profiles.Dota_2
 {
     public class GameEvent_Dota2 : LightEvent
     {
-        public GameEvent_Dota2()
+        public GameEvent_Dota2() : base()
         {
-            _game_state = new GameState_Dota2();
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -48,6 +47,11 @@ namespace Aurora.Profiles.Dota_2
 
                 UpdateLights(frame);
             }
+        }
+
+        public override void ResetGameState()
+        {
+            _game_state = new GameState_Dota2();
         }
 
         public override bool IsEnabled()

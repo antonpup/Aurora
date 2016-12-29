@@ -10,9 +10,8 @@ namespace Aurora.Profiles.Payday_2
 {
     public class GameEvent_PD2 : LightEvent
     {
-        public GameEvent_PD2()
+        public GameEvent_PD2() : base()
         {
-            _game_state = new GameState_PD2();
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -53,6 +52,11 @@ namespace Aurora.Profiles.Payday_2
                     Global.logger.LogLine(gs.ToString(), Logging_Level.None);
                 }
             }
+        }
+
+        public override void ResetGameState()
+        {
+            _game_state = new GameState_PD2();
         }
 
         public override bool IsEnabled()

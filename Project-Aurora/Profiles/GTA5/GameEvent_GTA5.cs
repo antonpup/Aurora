@@ -10,9 +10,9 @@ namespace Aurora.Profiles.GTA5
 {
     public class GameEvent_GTA5 : LightEvent
     {
-        public GameEvent_GTA5()
+        public GameEvent_GTA5() : base()
         {
-            _game_state = new GameState_GTA5();
+            
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -44,6 +44,11 @@ namespace Aurora.Profiles.GTA5
 
                 UpdateLights(frame);
             }
+        }
+
+        public override void ResetGameState()
+        {
+            _game_state = new GameState_GTA5();
         }
 
         public override bool IsEnabled()

@@ -8,7 +8,12 @@ namespace Aurora.Profiles
     public class LightEvent
     {
         public ProfileManager Profile { get; set; }
-        internal IGameState _game_state = new GameState();
+        internal IGameState _game_state;
+
+        public LightEvent()
+        {
+            this.ResetGameState();
+        }
 
         /// <summary>
         /// Adds new layers to the passed EffectFrame instance based on GameState information.
@@ -36,6 +41,11 @@ namespace Aurora.Profiles
         public virtual bool IsEnabled()
         {
             return false;
+        }
+
+        public virtual void ResetGameState()
+        {
+            _game_state = new GameState();
         }
     }
 }
