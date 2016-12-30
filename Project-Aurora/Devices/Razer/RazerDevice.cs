@@ -526,6 +526,9 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.G5):
                     return Key.Macro5;
 
+                case (DeviceKeys.LOGO):
+                    return Key.Logo;
+
                 default:
                     return Key.Invalid;
             }
