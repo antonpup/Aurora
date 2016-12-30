@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Drawing;
 
 namespace Aurora.Profiles
 {
@@ -11,7 +12,7 @@ namespace Aurora.Profiles
         private Provider_Wrapper _Provider;
         private string _Command;
         private Command_Wrapper _Command_Data;
-        private byte[] _Bitmap;
+        private int[] _Bitmap;
         private Extra_Keys_Wrapper _Extra_Keys;
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace Aurora.Profiles
         /// The bitmap sent from the wrapper
         /// </summary>
         [GameStateIgnoreAttribute]
-        public byte[] Sent_Bitmap
+        public int[] Sent_Bitmap
         {
             get
             {
@@ -83,9 +84,9 @@ namespace Aurora.Profiles
                     Newtonsoft.Json.Linq.JToken value;
 
                     if (_ParsedData.TryGetValue("bitmap", out value))
-                        _Bitmap = value.ToObject<byte[]>();
+                        _Bitmap = value.ToObject<int[]>();
                     else
-                        _Bitmap = new byte[] { };
+                        _Bitmap = new int[] { };
                 }
 
                 return _Bitmap;
@@ -204,79 +205,56 @@ namespace Aurora.Profiles
     /// </summary>
     public class Extra_Keys_Wrapper : Node<Extra_Keys_Wrapper>
     {
-        [Range(0, 3)]
-        public int[] peripheral;
-        [Range(0, 3)]
-        public int[] logo;
-        [Range(0, 3)]
-        public int[] badge;
-        [Range(0, 3)]
-        public int[] G1;
-        [Range(0, 3)]
-        public int[] G2;
-        [Range(0, 3)]
-        public int[] G3;
-        [Range(0, 3)]
-        public int[] G4;
-        [Range(0, 3)]
-        public int[] G5;
-        [Range(0, 3)]
-        public int[] G6;
-        [Range(0, 3)]
-        public int[] G7;
-        [Range(0, 3)]
-        public int[] G8;
-        [Range(0, 3)]
-        public int[] G9;
-        [Range(0, 3)]
-        public int[] G10;
-        [Range(0, 3)]
-        public int[] G11;
-        [Range(0, 3)]
-        public int[] G12;
-        [Range(0, 3)]
-        public int[] G13;
-        [Range(0, 3)]
-        public int[] G14;
-        [Range(0, 3)]
-        public int[] G15;
-        [Range(0, 3)]
-        public int[] G16;
-        [Range(0, 3)]
-        public int[] G17;
-        [Range(0, 3)]
-        public int[] G18;
-        [Range(0, 3)]
-        public int[] G19;
-        [Range(0, 3)]
-        public int[] G20;
+        public Color peripheral;
+        public Color logo;
+        public Color badge;
+        public Color G1;
+        public Color G2;
+        public Color G3;
+        public Color G4;
+        public Color G5;
+        public Color G6;
+        public Color G7;
+        public Color G8;
+        public Color G9;
+        public Color G10;
+        public Color G11;
+        public Color G12;
+        public Color G13;
+        public Color G14;
+        public Color G15;
+        public Color G16;
+        public Color G17;
+        public Color G18;
+        public Color G19;
+        public Color G20;
 
         internal Extra_Keys_Wrapper(string JSON)
             : base(JSON)
         {
-            peripheral = GetArray<int>("peripheral");
-            logo = GetArray<int>("logo");
-            badge = GetArray<int>("badge");
-            G1 = GetArray<int>("G1");
-            G2 = GetArray<int>("G2");
-            G3 = GetArray<int>("G3");
-            G4 = GetArray<int>("G4");
-            G5 = GetArray<int>("G5");
-            G6 = GetArray<int>("G6");
-            G7 = GetArray<int>("G7");
-            G8 = GetArray<int>("G8");
-            G9 = GetArray<int>("G9");
-            G10 = GetArray<int>("G10");
-            G11 = GetArray<int>("G11");
-            G12 = GetArray<int>("G12");
-            G13 = GetArray<int>("G13");
-            G14 = GetArray<int>("G14");
-            G15 = GetArray<int>("G15");
-            G16 = GetArray<int>("G16");
-            G17 = GetArray<int>("G17");
-            G18 = GetArray<int>("G18");
-            G19 = GetArray<int>("G19");
-            G20 = GetArray<int>("G20");
+            peripheral = Utils.ColorUtils.GetColorFromInt(GetInt("peripheral"));
+            logo = Utils.ColorUtils.GetColorFromInt( GetInt("logo"));
+            badge = Utils.ColorUtils.GetColorFromInt( GetInt("badge"));
+            G1 = Utils.ColorUtils.GetColorFromInt( GetInt("G1"));
+            G2 = Utils.ColorUtils.GetColorFromInt( GetInt("G2"));
+            G3 = Utils.ColorUtils.GetColorFromInt( GetInt("G3"));
+            G4 = Utils.ColorUtils.GetColorFromInt( GetInt("G4"));
+            G5 = Utils.ColorUtils.GetColorFromInt( GetInt("G5"));
+            G6 = Utils.ColorUtils.GetColorFromInt( GetInt("G6"));
+            G7 = Utils.ColorUtils.GetColorFromInt( GetInt("G7"));
+            G8 = Utils.ColorUtils.GetColorFromInt( GetInt("G8"));
+            G9 = Utils.ColorUtils.GetColorFromInt( GetInt("G9"));
+            G10 = Utils.ColorUtils.GetColorFromInt( GetInt("G10"));
+            G11 = Utils.ColorUtils.GetColorFromInt( GetInt("G11"));
+            G12 = Utils.ColorUtils.GetColorFromInt( GetInt("G12"));
+            G13 = Utils.ColorUtils.GetColorFromInt( GetInt("G13"));
+            G14 = Utils.ColorUtils.GetColorFromInt( GetInt("G14"));
+            G15 = Utils.ColorUtils.GetColorFromInt( GetInt("G15"));
+            G16 = Utils.ColorUtils.GetColorFromInt( GetInt("G16"));
+            G17 = Utils.ColorUtils.GetColorFromInt( GetInt("G17"));
+            G18 = Utils.ColorUtils.GetColorFromInt( GetInt("G18"));
+            G19 = Utils.ColorUtils.GetColorFromInt( GetInt("G19"));
+            G20 = Utils.ColorUtils.GetColorFromInt( GetInt("G20"));
         }
     }
 

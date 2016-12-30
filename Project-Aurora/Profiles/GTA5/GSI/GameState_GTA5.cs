@@ -144,12 +144,7 @@ namespace Aurora.Profiles.GTA5.GSI
 
 
             //Get Current State
-            Color state_color = JSonToColor(
-                RoundTo5(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 3]),
-                RoundTo5(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 2]),
-                RoundTo5(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 1]),
-                RoundTo5(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC])
-                );
+            Color state_color = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC / 4]);
 
             if(state_color == Color.FromArgb(255, 175, 80, 0))
                 CurrentState = PlayerState.PlayingSP_Trevor;
@@ -179,20 +174,9 @@ namespace Aurora.Profiles.GTA5.GSI
             }
 
 
-            LeftSirenColor = JSonToColor(
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 3],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 2],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 1],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1]
-                );
+            LeftSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 / 4]);
 
-            RightSirenColor = JSonToColor(
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 3],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 2],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 1],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12]
-                );
-
+            RightSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 / 4]);
 
             HasCops = LeftSirenColor != RightSirenColor;
         }

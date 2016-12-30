@@ -8,14 +8,14 @@ namespace Aurora.Profiles.Aurora_Wrapper
 {
     public class GameEvent_Aurora_Wrapper : LightEvent
     {
-        internal byte[] bitmap = new byte[LedCSharp.LogitechGSDK.LOGI_LED_BITMAP_SIZE];
-        internal int[] logo = new int[4];
-        internal int[] peripheral = new int[4];
-        internal int[] g1 = new int[4];
-        internal int[] g2 = new int[4];
-        internal int[] g3 = new int[4];
-        internal int[] g4 = new int[4];
-        internal int[] g5 = new int[4];
+        internal int[] bitmap = new int[126];
+        internal Color logo = Color.Empty;
+        internal Color peripheral = Color.Empty;
+        internal Color g1 = Color.Empty;
+        internal Color g2 = Color.Empty;
+        internal Color g3 = Color.Empty;
+        internal Color g4 = Color.Empty;
+        internal Color g5 = Color.Empty;
         internal Color last_fill_color = Color.Black;
         internal Dictionary<Devices.DeviceKeys, KeyEffect> key_effects = new Dictionary<Devices.DeviceKeys, KeyEffect>();
         internal EntireEffect current_effect = null;
@@ -68,34 +68,27 @@ namespace Aurora.Profiles.Aurora_Wrapper
             Devices.DeviceKeys[] allkeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
             foreach (var key in allkeys)
             {
-                if (key == Devices.DeviceKeys.LOGO && logo.Length == 4)
-                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(logo[3], logo[2], logo[1], logo[0])));
-                else if (key == Devices.DeviceKeys.Peripheral && peripheral.Length == 4)
-                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(peripheral[3], peripheral[2], peripheral[1], peripheral[0])));
-                else if (key == Devices.DeviceKeys.G1 && g1.Length == 4)
-                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g1[3], g1[2], g1[1], g1[0])));
-                else if (key == Devices.DeviceKeys.G2 && g2.Length == 4)
-                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g2[3], g2[2], g2[1], g2[0])));
-                else if (key == Devices.DeviceKeys.G3 && g3.Length == 4)
-                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g3[3], g3[2], g3[1], g3[0])));
-                else if (key == Devices.DeviceKeys.G4 && g4.Length == 4)
-                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g4[3], g4[2], g4[1], g4[0])));
-                else if (key == Devices.DeviceKeys.G5 && g5.Length == 4)
-                    bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(g5[3], g5[2], g5[1], g5[0])));
+                if (key == Devices.DeviceKeys.LOGO)
+                    bitmap_layer.Set(key, GetBoostedColor(logo));
+                else if (key == Devices.DeviceKeys.Peripheral)
+                    bitmap_layer.Set(key, GetBoostedColor(peripheral));
+                else if (key == Devices.DeviceKeys.G1)
+                    bitmap_layer.Set(key, GetBoostedColor(g1));
+                else if (key == Devices.DeviceKeys.G2)
+                    bitmap_layer.Set(key, GetBoostedColor(g2));
+                else if (key == Devices.DeviceKeys.G3)
+                    bitmap_layer.Set(key, GetBoostedColor(g3));
+                else if (key == Devices.DeviceKeys.G4)
+                    bitmap_layer.Set(key, GetBoostedColor(g4));
+                else if (key == Devices.DeviceKeys.G5)
+                    bitmap_layer.Set(key, GetBoostedColor(g5));
                 else
                 {
                     Devices.Logitech.Logitech_keyboardBitmapKeys logi_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap(key);
 
-                    if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN)
+                    if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0)
                     {
-                        int a, r, g, b;
-
-                        b = bitmap[(int)logi_key];
-                        g = bitmap[(int)logi_key + 1];
-                        r = bitmap[(int)logi_key + 2];
-                        a = bitmap[(int)logi_key + 3];
-
-                        bitmap_layer.Set(key, GetBoostedColor(Color.FromArgb(a, r, g, b)));
+                        bitmap_layer.Set(key, GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4])));
                     }
                 }
             }
@@ -158,21 +151,13 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
                 GameState_Wrapper ngw_state = (new_game_state as GameState_Wrapper);
 
-                if (ngw_state.Sent_Bitmap.Length > 0)
                     bitmap = ngw_state.Sent_Bitmap;
-                if (ngw_state.Extra_Keys.logo.Length > 0)
                     logo = ngw_state.Extra_Keys.logo;
-                if (ngw_state.Extra_Keys.G1.Length > 0)
                     g1 = ngw_state.Extra_Keys.G1;
-                if (ngw_state.Extra_Keys.G2.Length > 0)
                     g2 = ngw_state.Extra_Keys.G2;
-                if (ngw_state.Extra_Keys.G3.Length > 0)
                     g3 = ngw_state.Extra_Keys.G3;
-                if (ngw_state.Extra_Keys.G4.Length > 0)
                     g4 = ngw_state.Extra_Keys.G4;
-                if (ngw_state.Extra_Keys.G5.Length > 0)
                     g5 = ngw_state.Extra_Keys.G5;
-                if (ngw_state.Extra_Keys.peripheral.Length > 0)
                     peripheral = ngw_state.Extra_Keys.peripheral;
 
                 if (ngw_state.Command.Equals("SetLighting"))
@@ -279,29 +264,13 @@ namespace Aurora.Profiles.Aurora_Wrapper
                     {
                         last_fill_color = newfill;
 
-                        for (int i = 0; i < bitmap.Length; i += 4)
+                        for (int i = 0; i < bitmap.Length; i++)
                         {
-                            bitmap[i] = (byte)ngw_state.Command_Data.blue_start;
-                            bitmap[i + 1] = (byte)ngw_state.Command_Data.green_start;
-                            bitmap[i + 2] = (byte)ngw_state.Command_Data.red_start;
-                            bitmap[i + 3] = (byte)255;
+                            bitmap[i] = (int)(((int)ngw_state.Command_Data.red_start << 16) | ((int)ngw_state.Command_Data.green_start << 8) | ((int)ngw_state.Command_Data.blue_start));
                         }
 
-                        if (logo.Length == 4)
-                        {
-                            logo[0] = (byte)ngw_state.Command_Data.blue_start;
-                            logo[1] = (byte)ngw_state.Command_Data.green_start;
-                            logo[2] = (byte)ngw_state.Command_Data.red_start;
-                            logo[3] = (byte)255;
-                        }
-
-                        if (peripheral.Length == 4)
-                        {
-                            peripheral[0] = (byte)ngw_state.Command_Data.blue_start;
-                            peripheral[1] = (byte)ngw_state.Command_Data.green_start;
-                            peripheral[2] = (byte)ngw_state.Command_Data.red_start;
-                            peripheral[3] = (byte)255;
-                        }
+                        logo = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
+                        peripheral = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
                     }
                 }
                 else if (ngw_state.Command.Equals("LFX_SetLightActionColor") || ngw_state.Command.Equals("LFX_ActionColor"))

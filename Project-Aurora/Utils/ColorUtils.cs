@@ -253,6 +253,20 @@ namespace Aurora.Utils
             return Color.FromArgb((int)(Alpha / numPixels), (int)(Red / numPixels), (int)(Green / numPixels), (int)(Blue / numPixels));
         }
 
+        public static Color GetColorFromInt(int interger)
+        {
+            if (interger < 0)
+                interger = 0;
+            else if (interger > 16777215)
+                interger = 16777215;
+
+            int R = interger >> 16;
+            int G = (interger >> 8) & 255;
+            int B = interger & 255;
+
+            return Color.FromArgb(R, G, B);
+        }
+
         /// <summary>
         /// Returns a Luma coefficient for brightness of a color
         /// </summary>
