@@ -103,11 +103,7 @@ namespace Aurora.Settings
             {
                 Type setting_type = Profiles[profile_name].GetType();
 
-                Settings = (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(Profiles[profile_name], setting_type, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }),
-                    setting_type,
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All }
-                    ); //I know this is bad. You can laugh at me for this one. :(
+                Settings = CloneSettings(Profiles[profile_name]);
 
                 if (ProfileChanged != null)
                     ProfileChanged(this, new EventArgs());
@@ -126,11 +122,7 @@ namespace Aurora.Settings
                     return;
 
 
-                Profiles[profile_name] = (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(Settings, SettingsType, new JsonSerializerSettings { }),
-                    SettingsType,
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }
-                    ); //I know this is bad. You can laugh at me for this one. :(
+                Profiles[profile_name] = CloneSettings(Settings);
             }
             else
             {
@@ -138,6 +130,15 @@ namespace Aurora.Settings
             }
 
             SaveProfiles();
+        }
+
+        protected ProfileSettings CloneSettings(ProfileSettings settings)
+        {
+            return (ProfileSettings)JsonConvert.DeserializeObject(
+                    JsonConvert.SerializeObject(settings, SettingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }),
+                    SettingsType,
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All }
+                    ); //I know this is bad. You can laugh at me for this one. :(
         }
 
         private string GetValidFilename(string filename)
