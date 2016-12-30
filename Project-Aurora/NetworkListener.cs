@@ -59,7 +59,7 @@ namespace Aurora
         /// <summary>
         /// Returns whether or not the wrapper is connected through IPC
         /// </summary>
-        public bool IsWrapperConnected { get { return wrapper_connected; }  }
+        public bool IsWrapperConnected { get { return wrapper_connected; } }
 
         /// <summary>
         /// Returns the process of the wrapped connection
@@ -180,6 +180,19 @@ namespace Aurora
                 hander.Invoke(CurrentGameState);
         }
 
+        private void HandleNewIPCGameState(string gs_data)
+        {
+            GameState_Wrapper new_state = new GameState_Wrapper(gs_data); //GameState_Wrapper 
+
+            wrapper_connected = true;
+            wrapped_process = new_state.Provider.Name.ToLowerInvariant();
+
+            if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
+                CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
+            else
+                CurrentGameState = new_state;
+        }
+
         private void IPCServerThread()
         {
             PipeSecurity pipeSa = new PipeSecurity();
@@ -215,15 +228,9 @@ namespace Aurora
                             {
                                 //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
 
-                                GameState_Wrapper new_state = new GameState_Wrapper(temp); //GameState_Wrapper
-
-                                wrapper_connected = true;
-                                wrapped_process = new_state.Provider.Name.ToLowerInvariant();
-
-                                if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
-                                    CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(temp);
-                                else
-                                    CurrentGameState = new_state;
+                                //Begin handling the game state outside this loop
+                                var task = new System.Threading.Tasks.Task(() => HandleNewIPCGameState(temp));
+                                task.Start();
                             }
                         }
                     }
