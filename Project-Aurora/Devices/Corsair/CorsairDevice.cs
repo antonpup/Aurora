@@ -438,9 +438,15 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.TAB):
                     return CorsairLedId.Tab;
                 case (DeviceKeys.Q):
-                    return CorsairLedId.Q;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.A;
+                    else
+                        return CorsairLedId.Q;
                 case (DeviceKeys.W):
-                    return CorsairLedId.W;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.Z;
+                    else
+                        return CorsairLedId.W;
                 case (DeviceKeys.E):
                     return CorsairLedId.E;
                 case (DeviceKeys.R):
@@ -448,7 +454,12 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.T):
                     return CorsairLedId.T;
                 case (DeviceKeys.Y):
-                    return CorsairLedId.Y;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return CorsairLedId.Z;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                        return CorsairLedId.Z;
+                    else
+                        return CorsairLedId.Y;
                 case (DeviceKeys.U):
                     return CorsairLedId.U;
                 case (DeviceKeys.I):
@@ -480,7 +491,10 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.CAPS_LOCK):
                     return CorsairLedId.CapsLock;
                 case (DeviceKeys.A):
-                    return CorsairLedId.A;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.Q;
+                    else
+                        return CorsairLedId.A;
                 case (DeviceKeys.S):
                     return CorsairLedId.S;
                 case (DeviceKeys.D):
@@ -516,7 +530,14 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.BACKSLASH_UK):
                     return CorsairLedId.NonUsBackslash;
                 case (DeviceKeys.Z):
-                    return CorsairLedId.Z;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return CorsairLedId.Y;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.W;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                        return CorsairLedId.Y;
+                    else
+                        return CorsairLedId.Z;
                 case (DeviceKeys.X):
                     return CorsairLedId.X;
                 case (DeviceKeys.C):

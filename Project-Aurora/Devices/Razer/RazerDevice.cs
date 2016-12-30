@@ -313,9 +313,15 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.TAB):
                     return Key.Tab;
                 case (DeviceKeys.Q):
-                    return Key.Q;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.A;
+                    else
+                        return Key.Q;
                 case (DeviceKeys.W):
-                    return Key.W;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.Z;
+                    else
+                        return Key.W;
                 case (DeviceKeys.E):
                     return Key.E;
                 case (DeviceKeys.R):
@@ -323,7 +329,12 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.T):
                     return Key.T;
                 case (DeviceKeys.Y):
-                    return Key.Y;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Key.Z;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                        return Key.Z;
+                    else
+                        return Key.Y;
                 case (DeviceKeys.U):
                     return Key.U;
                 case (DeviceKeys.I):
@@ -355,7 +366,10 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.CAPS_LOCK):
                     return Key.CapsLock;
                 case (DeviceKeys.A):
-                    return Key.A;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.Q;
+                    else
+                        return Key.A;
                 case (DeviceKeys.S):
                     return Key.S;
                 case (DeviceKeys.D):
@@ -391,7 +405,14 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.BACKSLASH_UK):
                     return Key.EurBackslash;
                 case (DeviceKeys.Z):
-                    return Key.Z;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Key.Y;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.W;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                        return Key.Y;
+                    else
+                        return Key.Z;
                 case (DeviceKeys.X):
                     return Key.X;
                 case (DeviceKeys.C):
