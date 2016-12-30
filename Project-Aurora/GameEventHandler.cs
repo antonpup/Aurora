@@ -95,12 +95,16 @@ namespace Aurora
                 update_timer = new System.Threading.Timer(g => {
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
-                    update_timer_Tick(g, null);
+                    try
+                    {
+                        Update();
+                    }
+                    catch(Exception exc) {
+                        Global.logger.LogLine("GameEventHandler.Update() Exception, " + exc, Logging_Level.Error);
+                    }
+
                     watch.Stop();
-                    int time = (int)watch.ElapsedMilliseconds;
-                    int refresh_time = Math.Max(timer_interval - time, 0);
-                    //Global.logger.LogLine($"Update took {time}ms, updating again in {refresh_time}ms");
-                    update_timer?.Change(refresh_time, Timeout.Infinite);
+                    update_timer?.Change(Math.Max(timer_interval - (int)watch.ElapsedMilliseconds, 0), Timeout.Infinite);
                 }, null, 0, System.Threading.Timeout.Infinite);
 
                 /*update_timer = new Timer(33);
@@ -164,7 +168,7 @@ namespace Aurora
             }
         }
 
-        private void update_timer_Tick(object sender, EventArgs e)
+        private void Update()
         {
             if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
             {

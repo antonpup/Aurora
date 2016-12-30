@@ -81,11 +81,7 @@ namespace Aurora.Profiles
                 }
                 if (!PropertyLookup.ContainsKey(prop.Name))
                 {
-                    Tuple<Func<T, object>, Action<T, object>> t = new Tuple<Func<T, object>, Action<T, object>>(getp, setp);
-                    lock (PropertyLookup)
-                    {
-                        PropertyLookup.Add(prop.Name, t);
-                    }
+                    PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>>(getp, setp));
                 }
 
             }
