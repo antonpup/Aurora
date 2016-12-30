@@ -749,11 +749,16 @@ namespace Aurora
             }
         }
 
+        public void ShowWindow()
+        {
+            this.WindowStyle = WindowStyle.SingleBorderWindow;
+            this.Show();
+        }
+
         private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
         {
             this.ShowInTaskbar = true;
-            this.WindowStyle = WindowStyle.SingleBorderWindow;
-            this.Show();
+            this.ShowWindow();
         }
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)

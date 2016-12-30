@@ -6,6 +6,8 @@ using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
+using System.Linq;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Forms;
@@ -114,17 +116,31 @@ namespace Aurora
             log4net.Config.BasicConfigurator.Configure();
 
             AppDomain currentDomain = AppDomain.CurrentDomain;
-            if (System.Diagnostics.Process.GetCurrentProcess().ProcessName.Equals("devenv.exe"))
+            if (!Global.isDebug)
                 currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             //Make sure there is only one instance of Aurora
-            if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
+            Process[] processes;
+            if ((processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName)).Length > 1)
             {
-                Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
-                System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
+                try
+                {
+                    NamedPipeClientStream client = new NamedPipeClientStream(".", "aurora\\interface", PipeDirection.Out);
+                    client.Connect(30);
+                    if (!client.IsConnected)
+                        throw new Exception();
+                    byte[] command = System.Text.Encoding.ASCII.GetBytes("restore");
+                    client.Write(command, 0, command.Length);
+                    client.Close();
+                }
+                catch
+                {
+                    Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
+                    System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
+                }
                 Environment.Exit(0);
             }
-            
+
 
             if (isDelayed)
                 System.Threading.Thread.Sleep((int)delayTime);

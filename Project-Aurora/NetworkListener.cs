@@ -15,6 +15,7 @@ namespace Aurora
 {
     public delegate void NewGameStateHandler(IGameState gamestate);
     public delegate void WrapperConnectionClosedHandler(string process);
+    public delegate void CommandRecievedHandler(string command, string args);
 
     public class NetworkListener
     {
@@ -56,6 +57,8 @@ namespace Aurora
 
         public event WrapperConnectionClosedHandler WrapperConnectionClosed = delegate { };
 
+        public event CommandRecievedHandler CommandRecieved = delegate { };
+
         /// <summary>
         /// Returns whether or not the wrapper is connected through IPC
         /// </summary>
@@ -66,11 +69,16 @@ namespace Aurora
         /// </summary>
         public string WrappedProcess { get { return wrapped_process; } }
 
+        public NetworkListener()
+        {
+            CommandRecieved += NetworkListener_CommandRecieved;
+        }
+
         /// <summary>
         /// A GameStateListener that listens for connections on http://localhost:port/
         /// </summary>
         /// <param name="Port"></param>
-        public NetworkListener(int Port)
+        public NetworkListener(int Port) : this()
         {
             connection_port = Port;
             net_Listener = new HttpListener();
@@ -82,7 +90,7 @@ namespace Aurora
         /// A GameStateListener that listens for connections to the specified URI
         /// </summary>
         /// <param name="URI">The URI to listen to</param>
-        public NetworkListener(string URI)
+        public NetworkListener(string URI) : this()
         {
             if (!URI.EndsWith("/"))
                 URI += "/";
@@ -97,6 +105,7 @@ namespace Aurora
 
             net_Listener = new HttpListener();
             net_Listener.Prefixes.Add(URI);
+
         }
 
         /// <summary>
@@ -122,6 +131,8 @@ namespace Aurora
 
                 Thread ServerThread = new Thread(IPCServerThread);
                 ServerThread.Start();
+                Thread CommandThread = new Thread(AuroraCommandsServerIPC);
+                CommandThread.Start();
                 return true;
             }
 
@@ -249,6 +260,62 @@ namespace Aurora
                     wrapped_process = "";
                     Global.logger.LogLine("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);
                 }
+            }
+        }
+
+        private void AuroraCommandsServerIPC()
+        {
+            PipeSecurity pipeSa = new PipeSecurity();
+            pipeSa.SetAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+                            PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow));
+            while (true)
+            {
+                try
+                {
+                    using (NamedPipeServerStream pipeStream = new NamedPipeServerStream(
+                    "Aurora\\interface",
+                    PipeDirection.In,
+                    NamedPipeServerStream.MaxAllowedServerInstances,
+                    PipeTransmissionMode.Message,
+                    PipeOptions.None,
+                    5 * 1024,
+                    5 * 1024,
+                    pipeSa,
+                    HandleInheritability.None
+                    ))
+                    {
+                        Global.logger.LogLine(String.Format("[AuroraCommandsServerIPC] Pipe created {0}", pipeStream.GetHashCode()));
+
+                        pipeStream.WaitForConnection();
+                        Global.logger.LogLine("[AuroraCommandsServerIPC] Pipe connection established");
+
+                        using (StreamReader sr = new StreamReader(pipeStream))
+                        {
+                            string temp;
+                            while ((temp = sr.ReadLine()) != null)
+                            {
+                                string[] split = temp.Contains(':') ? temp.Split(':') : new[] { temp };
+                                CommandRecieved.Invoke(split[0], split.Length > 1 ? split[1] : "");
+                            }
+                        }
+                    }
+
+                    Global.logger.LogLine("[AuroraCommandsServerIPC] Pipe connection lost");
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine("[AuroraCommandsServerIPC] Named Pipe Exception, " + exc, Logging_Level.Error);
+                }
+            }
+        }
+
+        private void NetworkListener_CommandRecieved(string command, string args)
+        {
+            switch(command)
+            {
+                case "restore":
+                    Program.MainWindow.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());
+                    break;
             }
         }
     }
