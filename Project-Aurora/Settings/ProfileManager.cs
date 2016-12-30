@@ -57,7 +57,7 @@ namespace Aurora.Settings
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
             EffectScripts = new Dictionary<string, dynamic>();
-            if(game_event._game_state != null)
+            if (game_event._game_state != null)
             {
                 ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(game_event._game_state.GetType());
             }
@@ -189,7 +189,8 @@ namespace Aurora.Settings
                             lyr.AnythingChanged += this.SaveProfilesEvent;
                         }
 
-                        prof.Layers.CollectionChanged += (s, e) => {
+                        prof.Layers.CollectionChanged += (s, e) =>
+                        {
                             if (e.NewItems != null)
                             {
                                 foreach (Layer lyr in e.NewItems)
@@ -201,7 +202,7 @@ namespace Aurora.Settings
                             }
                             this.SaveProfiles();
                         };
-                        
+
                         return prof;
                     }
                 }
@@ -234,33 +235,32 @@ namespace Aurora.Settings
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
         {
-            lock (this.Settings.ScriptSettings)
-            {
-                foreach (KeyValuePair<string, ScriptSettings> scr in this.Settings.ScriptSettings.Where(s => s.Value.Enabled))
-                {
-                    try
-                    {
-                        dynamic script = this.EffectScripts[scr.Key];
-                        dynamic script_layers = script.UpdateLights(scr.Value, state);
-                        if (layers != null)
-                        {
-                            if (script_layers is EffectLayer)
-                                layers.Enqueue(script_layers as EffectLayer);
-                            else if (script_layers is EffectLayer[])
-                            {
-                                foreach (var layer in (script_layers as EffectLayer[]))
-                                    layers.Enqueue(layer);
-                            }
-                        }
+            var _scripts = new Dictionary<string, ScriptSettings>(this.Settings.ScriptSettings).Where(s => s.Value.Enabled);
 
-                    }
-                    catch (Exception exc)
+            foreach (KeyValuePair<string, ScriptSettings> scr in _scripts)
+            {
+                try
+                {
+                    dynamic script = this.EffectScripts[scr.Key];
+                    dynamic script_layers = script.UpdateLights(scr.Value, state);
+                    if (layers != null)
                     {
-                        Global.logger.LogLine(string.Format("Script disabled! Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
-                        scr.Value.Enabled = false;
-                        scr.Value.ExceptionHit = true;
-                        scr.Value.Exception = exc;
+                        if (script_layers is EffectLayer)
+                            layers.Enqueue(script_layers as EffectLayer);
+                        else if (script_layers is EffectLayer[])
+                        {
+                            foreach (var layer in (script_layers as EffectLayer[]))
+                                layers.Enqueue(layer);
+                        }
                     }
+
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine(string.Format("Script disabled! Effect script with key {0} encountered an error. Exception: {1}", scr.Key, exc), Logging_Level.External);
+                    scr.Value.Enabled = false;
+                    scr.Value.ExceptionHit = true;
+                    scr.Value.Exception = exc;
                 }
             }
         }
