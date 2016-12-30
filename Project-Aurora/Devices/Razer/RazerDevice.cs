@@ -269,7 +269,12 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.PAUSE_BREAK):
                     return Key.Pause;
                 case (DeviceKeys.TILDE):
-                    return Key.OemTilde;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemApostrophe;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Key.OemSemicolon;
+                    else
+                        return Key.OemTilde;
                 case (DeviceKeys.ONE):
                     return Key.D1;
                 case (DeviceKeys.TWO):
@@ -344,11 +349,26 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.P):
                     return Key.P;
                 case (DeviceKeys.OPEN_BRACKET):
-                    return Key.OemLeftBracket;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemMinus;
+                    else
+                        return Key.OemLeftBracket;
                 case (DeviceKeys.CLOSE_BRACKET):
-                    return Key.OemRightBracket;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemLeftBracket;
+                    else
+                        return Key.OemRightBracket;
                 case (DeviceKeys.BACKSLASH):
-                    return Key.OemBackslash;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.intl)
+                        return Key.EurBackslash;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.ru)
+                        return Key.EurBackslash;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.EurBackslash;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Key.OemTilde;
+                    else
+                        return Key.OemBackslash;
                 case (DeviceKeys.DELETE):
                     return Key.Delete;
                 case (DeviceKeys.END):
@@ -387,9 +407,17 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.L):
                     return Key.L;
                 case (DeviceKeys.SEMICOLON):
-                    return Key.OemSemicolon;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemRightBracket;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Key.OemLeftBracket;
+                    else
+                        return Key.OemSemicolon;
                 case (DeviceKeys.APOSTROPHE):
-                    return Key.OemApostrophe;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemTilde;
+                    else
+                        return Key.OemApostrophe;
                 case (DeviceKeys.HASHTAG):
                     return Key.EurPound;
                 case (DeviceKeys.ENTER):
@@ -424,12 +452,26 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.N):
                     return Key.N;
                 case (DeviceKeys.M):
-                    return Key.M;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemSemicolon;
+                    else
+                        return Key.M;
                 case (DeviceKeys.COMMA):
-                    return Key.OemComma;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.M;
+                    else
+                        return Key.OemComma;
                 case (DeviceKeys.PERIOD):
-                    return Key.OemPeriod;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemComma;
+                    else
+                        return Key.OemPeriod;
                 case (DeviceKeys.FORWARD_SLASH):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemPeriod;
+                    else
+                        return Key.OemSlash;
+                case (DeviceKeys.OEM8):
                     return Key.OemSlash;
                 case (DeviceKeys.RIGHT_SHIFT):
                     return Key.RightShift;
