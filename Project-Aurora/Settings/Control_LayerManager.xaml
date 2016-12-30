@@ -32,7 +32,7 @@
                     </Grid>
                 </RadioButton>
             </Grid>
-            <ListView x:Name="lstLayers" Margin="0,0,0,0" SelectionMode="Single" PreviewMouseMove="stckLayer_PreviewMouseMove" PreviewMouseUp="lstLayers_PreviewMouseUp" MouseLeave="lstLayers_PreviewMouseUp" HorizontalContentAlignment="Stretch" SelectionChanged="lstLayers_SelectionChanged" KeyDown="lstLayers_KeyDown" DockPanel.Dock="Bottom">
+            <ListView x:Name="lstLayers" Margin="0,0,0,0" SelectionMode="Single" PreviewMouseMove="stckLayer_PreviewMouseMove" PreviewMouseUp="lstLayers_PreviewMouseUp" MouseLeave="lstLayers_PreviewMouseUp" HorizontalContentAlignment="Stretch" SelectionChanged="lstLayers_SelectionChanged" DockPanel.Dock="Bottom">
                 <ListView.ItemTemplate>
                     <HierarchicalDataTemplate>
                         <DockPanel AllowDrop="True" PreviewMouseLeftButtonDown="stckLayer_PreviewMouseLeftButtonDown" Drop="stckLayer_Drop" HorizontalAlignment="Stretch">
