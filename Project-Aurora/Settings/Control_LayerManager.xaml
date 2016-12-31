@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings"
              xmlns:Utils="clr-namespace:Aurora.Utils"
-             mc:Ignorable="d" d:DesignWidth="180" MinWidth="180" MinHeight="180" KeyDown="lstLayers_KeyDown">
+             mc:Ignorable="d" d:DesignWidth="200" MinWidth="200" MinHeight="180" KeyDown="lstLayers_KeyDown">
     <UserControl.Resources>
         <ResourceDictionary>
             <Utils:TextCharacterLimitConv x:Key="TextCharacterLimitConv" MaxLength="24"/>
@@ -13,10 +13,20 @@
     </UserControl.Resources>
     <Grid>
         <Border Background="#A5000000" CornerRadius="8" />
-        <Button x:Name="btnProfileOverview" Content="Show Profile Overview/Options" Margin="0,4,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfileOverview_Click"/>
+        <Button x:Name="btnProfileOverview" Content="Show Profile Overview/Options" Margin="0,4,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfileOverview_Click" ToolTip="Go back to profile overview page"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="6,31,0,0"/>
-        <Button x:Name="btnAddLayer" Content="Add" Margin="0,29,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="26" Click="add_layer_button_Click"/>
-        <Button x:Name="btnRemoveLayer" Content="Remove" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,29,4,0" Click="btnRemoveLayer_Click" IsEnabled="False"/>
+        <Button x:Name="btnAddLayer" Margin="0,29,81,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="add_layer_button_Click" ToolTip="Add a new layer" Height="24">
+            <DockPanel Margin="2,0">
+                <Image Source="/Aurora;component/Resources/AddProfile_Icon.png" Width="18" Height="18"/>
+                <TextBlock>Add</TextBlock>
+            </DockPanel>
+        </Button>
+        <Button x:Name="btnRemoveLayer" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,29,5,0" Click="btnRemoveLayer_Click" IsEnabled="False" ToolTip="Remove selected layer" Height="24">
+            <DockPanel Margin="2,0">
+                <Image Source="/Aurora;component/Resources/RemoveProfile_Icon.png" Width="18" Height="18"></Image>
+                <TextBlock>Remove</TextBlock>
+            </DockPanel>
+        </Button>
         <DockPanel Margin="0,56,0,0">
             <Grid x:Name="grid_timeselection" Height="23" VerticalAlignment="Top" DockPanel.Dock="Top" Visibility="Collapsed">
                 <RadioButton x:Name="radiobtn_daytime" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Daytime" Checked="radiobtn_daytime_Checked">
@@ -37,7 +47,7 @@
                     <HierarchicalDataTemplate>
                         <DockPanel AllowDrop="True" PreviewMouseLeftButtonDown="stckLayer_PreviewMouseLeftButtonDown" Drop="stckLayer_Drop" HorizontalAlignment="Stretch">
                             <CheckBox IsChecked="{Binding Path=Enabled, Mode=TwoWay}" />
-                            <Image Source="/Aurora;component/Resources/Layers_Drag.png" Cursor="SizeNS" Width="16" Height="16" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" />
+                            <Image Source="/Aurora;component/Resources/Layers_Drag.png" Cursor="SizeNS" Width="16" Height="16" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" ToolTip="Drag to rearrange layers" />
                             <TextBlock Text="{Binding Path=Name, Converter={StaticResource ResourceKey=TextCharacterLimitConv}}"/>
                         </DockPanel>
                     </HierarchicalDataTemplate>
