@@ -37,6 +37,7 @@
                     <HierarchicalDataTemplate>
                         <DockPanel AllowDrop="True" PreviewMouseLeftButtonDown="stckLayer_PreviewMouseLeftButtonDown" Drop="stckLayer_Drop" HorizontalAlignment="Stretch">
                             <CheckBox IsChecked="{Binding Path=Enabled, Mode=TwoWay}" />
+                            <Image Source="/Aurora;component/Resources/Layers_Drag.png" Cursor="SizeNS" Width="16" Height="16" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" />
                             <TextBlock Text="{Binding Path=Name, Converter={StaticResource ResourceKey=TextCharacterLimitConv}}"/>
                         </DockPanel>
                     </HierarchicalDataTemplate>
