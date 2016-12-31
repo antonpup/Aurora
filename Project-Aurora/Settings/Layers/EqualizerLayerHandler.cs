@@ -95,6 +95,9 @@ namespace Aurora.Settings.Layers
 
     public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerProperties>
     {
+        MMDeviceEnumerator audio_device_enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+        MMDevice default_device = null;
+
         float[] freqs = { 60, 170, 310, 600, 1000, 2000, 3000, 4000, 5000 };
 
         private List<float> flux_array = new List<float>();
@@ -117,15 +120,6 @@ namespace Aurora.Settings.Layers
 
             sampleAggregator.FftCalculated += new EventHandler<FftEventArgs>(FftCalculated);
             sampleAggregator.PerformFFT = true;
-
-            // Here you decide what you want to use as the waveIn.
-            // There are many options in NAudio and you can use other streams/files.
-            // Note that the code varies for each different source.
-            waveIn = new WasapiLoopbackCapture();
-
-            waveIn.DataAvailable += OnDataAvailable;
-
-            waveIn.StartRecording();
         }
 
         protected override UserControl CreateControl()
@@ -133,8 +127,35 @@ namespace Aurora.Settings.Layers
             return new Control_EqualizerLayer(this);
         }
 
+        private void UpdateAudioCapture()
+        {
+            if (waveIn != null)
+            {
+                waveIn.StopRecording();
+                waveIn.Dispose();
+            }
+
+            default_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+
+            // Here you decide what you want to use as the waveIn.
+            // There are many options in NAudio and you can use other streams/files.
+            // Note that the code varies for each different source.
+            waveIn = new WasapiLoopbackCapture(default_device);
+
+            waveIn.DataAvailable += OnDataAvailable;
+
+            waveIn.StartRecording();
+        }
+
         public override EffectLayer Render(IGameState gamestate)
         {
+            MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+
+            if (default_device == null || default_device.ID != current_device.ID)
+            {
+                UpdateAudioCapture();
+            }
+
             double[] freq_results = new double[freqs.Length];
 
             if (previous_freq_results == null)
