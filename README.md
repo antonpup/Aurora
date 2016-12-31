@@ -27,7 +27,7 @@ private final static int USED_PORT = 8032; //Port to be used
 5. Build the java project on your Pi by going into "AuroraPiLighting" directory and running "mvn clean install".
 6. Afterwards go into newly created "target" directory and run "java -jar AuroraPiLighting-full.jar". Raspberry Pi portion is now complete.
 
-7. On your PC, copy file "Project-Aurora/Scripts/Devices/rpi_script.cs" to "*Aurora install location*/Scripts/Devices/rpi_script.cs"
+7. On your PC, copy file "Scripts/Devices/rpi_script.cs" to "*Aurora install location*/Scripts/Devices/rpi_script.cs"
 8. Open the "rpi_script.cs" file to configure the script. Adjust following lines:
 ``` C#
 //!!!!!!!!!! SCRIPT SETTINGS !!!!!!!!!!//

@@ -1,9 +1,0 @@
-{
-  "replace_RWin_with_FN": true,
-  "keys_to_remove": [ ],
-  "keys_to_set_as_new_line": [ ],
-  "included_features": [
-    "corsair_strafe_left_features.json",
-    "corsair_strafe_right_features.json"
-  ]
-}
