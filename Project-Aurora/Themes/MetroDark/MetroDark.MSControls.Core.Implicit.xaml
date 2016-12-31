@@ -521,7 +521,7 @@
           <Grid>
             <Rectangle Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" StrokeThickness="{TemplateBinding BorderThickness}" />
             <StackPanel Orientation="Horizontal" d:LayoutOverrides="Width, Height">
-              <ContentPresenter Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" />
+              <ContentPresenter Margin="3, 3, 3, 3" Content="{TemplateBinding Content}" />
             </StackPanel>
           </Grid>
         </ControlTemplate>
