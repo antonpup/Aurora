@@ -696,9 +696,9 @@ void _LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercent
 
 
 			contents += "\"bitmap\": [";
-			for (int bitm_pos = 0; bitm_pos < LOGI_LED_BITMAP_SIZE; bitm_pos++)
+			for (int bitm_pos = 0; bitm_pos < LOGI_LED_BITMAP_SIZE; bitm_pos += 4)
 			{
-				contents += std::to_string((short)current_bitmap[bitm_pos]);
+				contents += std::to_string((int)(((int)current_bitmap[bitm_pos + 2] << 16) | ((int)current_bitmap[bitm_pos + 1] << 8) | ((int)current_bitmap[bitm_pos])));
 
 				if (bitm_pos + 1 < LOGI_LED_BITMAP_SIZE)
 					contents += ',';
