@@ -54,6 +54,9 @@
 
         <TextBlock HorizontalAlignment="Left" Margin="302,4,0,0" TextWrapping="Wrap" Text="Max amplitude (Power bars only): " VerticalAlignment="Top"/>
         <xctk:IntegerUpDown x:Name="updown_max_amplitude_value" HorizontalAlignment="Left" Height="24" Margin="487,0,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="120" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged"/>
+        <CheckBox x:Name="chkbox_dimbgonsound" Content="Dim background on sound" HorizontalAlignment="Left" Margin="302,27,0,0" VerticalAlignment="Top" Checked="chkbox_dimbgonsound_Checked" Unchecked="chkbox_dimbgonsound_Checked"/>
+        <TextBlock HorizontalAlignment="Left" Margin="302,50,0,0" TextWrapping="Wrap" Text="Dim Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="Clr_dim_color" Margin="363,48,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="174" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />
 
     </Grid>
 </UserControl>

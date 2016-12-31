@@ -71,6 +71,16 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public float MaxAmplitude { get { return Logic._MaxAmplitude ?? _MaxAmplitude ?? 20.0f; } }
 
+        public bool? _DimBackgroundOnSound { get; set; }
+
+        [JsonIgnore]
+        public bool DimBackgroundOnSound { get { return Logic._DimBackgroundOnSound ?? _DimBackgroundOnSound ?? false; } }
+
+        public Color? _DimColor { get; set; }
+
+        [JsonIgnore]
+        public Color DimColor { get { return Logic._DimColor ?? _DimColor ?? Color.Empty; } }
+
         public EqualizerLayerHandlerProperties() : base()
         {
 
@@ -90,6 +100,8 @@ namespace Aurora.Settings.Layers
             _EQType = EqualizerType.PowerBars;
             _ViewType = EqualizerPresentationType.SolidColor;
             _MaxAmplitude = 20.0f;
+            _DimBackgroundOnSound = false;
+            _DimColor = Color.FromArgb(169, 0, 0, 0);
         }
     }
 
@@ -166,6 +178,22 @@ namespace Aurora.Settings.Layers
             Complex[] _local_fft_previous = new List<Complex>(_ffts_prev).ToArray();
 
             EffectLayer equalizer_layer = new EffectLayer();
+
+            if(Properties.DimBackgroundOnSound)
+            {
+                bool hasSound = false;
+                foreach(var bin in _local_fft)
+                {
+                    if(bin.X > 0.0001 || bin.X < -0.0001)
+                    {
+                        hasSound = true;
+                        break;
+                    }
+                }
+
+                if(hasSound)
+                    equalizer_layer.Fill(Properties.DimColor);
+            }
 
             using (Graphics g = equalizer_layer.GetGraphics())
             {
