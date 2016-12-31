@@ -184,7 +184,7 @@ namespace Aurora.Settings.Layers
                 bool hasSound = false;
                 foreach(var bin in _local_fft)
                 {
-                    if(bin.X > 0.0001 || bin.X < -0.0001)
+                    if(bin.X > 0.0005 || bin.X < -0.0005)
                     {
                         hasSound = true;
                         break;
@@ -206,9 +206,9 @@ namespace Aurora.Settings.Layers
                         {
                             float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
 
-                            Color col = GetColor(fft_val, x, Effects.canvas_width);
+                            Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
 
-                            g.DrawLine(new Pen(col), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val * 500.0f);
+                            g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val * 500.0f);
                         }
                         break;
                     case EqualizerType.Waveform_Bottom:
@@ -216,9 +216,9 @@ namespace Aurora.Settings.Layers
                         {
                             float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount ].X : 0.0f;
 
-                            Color col = GetColor(fft_val, x, Effects.canvas_width);
+                            Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
 
-                            g.DrawLine(new Pen(col), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val) * 1000.0f);
+                            g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val) * 1000.0f);
                         }
                         break;
                     case EqualizerType.PowerBars:
@@ -279,9 +279,9 @@ namespace Aurora.Settings.Layers
 
                             previous_freq_results[f_x] = fft_val;
 
-                            Color col = GetColor(-(f_x % 2), f_x, freq_results.Length - 1);
+                            Brush brush = GetBrush(-(f_x % 2), f_x, freq_results.Length - 1);
 
-                            g.FillRectangle(new SolidBrush(col), x, y - height, width, height);
+                            g.FillRectangle(brush, x, y - height, width, height);
                         }
 
                         break;
@@ -325,21 +325,21 @@ namespace Aurora.Settings.Layers
             return (int)(freq / (44000 / _ffts.Length));
         }
 
-        private Color GetColor(float value, float position, float max_position)
+        private Brush GetBrush(float value, float position, float max_position)
         {
             if (Properties.ViewType == EqualizerPresentationType.AlternatingColor)
             {
                 if (value >= 0)
-                    return Properties.PrimaryColor;
+                    return new SolidBrush( Properties.PrimaryColor );
                 else
-                    return Properties.SecondaryColor;
+                    return new SolidBrush( Properties.SecondaryColor );
             }
             else if (Properties.ViewType == EqualizerPresentationType.Gradient)
-                return Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position);
+                return new SolidBrush( Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position) );
             else if (Properties.ViewType == EqualizerPresentationType.GradientColorShift)
-                return Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000);
+                return new SolidBrush( Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000) );
             else
-                return Properties.PrimaryColor;
+                return new SolidBrush( Properties.PrimaryColor );
         }
     }
 
