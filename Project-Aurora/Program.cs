@@ -38,10 +38,10 @@ namespace Aurora
         public static InputEventsSubscriptions input_subscriptions = new InputEventsSubscriptions();
         public static GameEventHandler geh;
         public static NetworkListener net_listener;
-        public static Configuration Configuration = new Configuration();
-        public static DeviceManager dev_manager = new DeviceManager();
+        public static Configuration Configuration;
+        public static DeviceManager dev_manager;
         public static KeyboardLayoutManager kbLayout;
-        public static Effects effengine = new Effects();
+        public static Effects effengine;
         public static KeyRecorder key_recorder = new KeyRecorder();
 
         /// <summary>
@@ -148,14 +148,16 @@ namespace Aurora
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
             //Load config
+            Global.logger.LogLine("Loading Configuration", Logging_Level.Info);
             try
             {
+                Global.Configuration = new Configuration();
                 Global.Configuration = ConfigManager.Load();
             }
             catch (Exception e)
             {
                 Global.logger.LogLine("Exception during ConfigManager.Load(). Error: " + e, Logging_Level.Error);
-                System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message, "Aurora - Error");
+                System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
 
                 Global.Configuration = new Configuration();
             }
@@ -180,11 +182,15 @@ namespace Aurora
                 }
             }
 
+            Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
+            Global.dev_manager = new DeviceManager();
             Global.dev_manager.Initialize();
+
+            Global.logger.LogLine("Loading Effects Engine", Logging_Level.Info);
+            Global.effengine = new Effects();
 
             Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
             Global.kbLayout = new KeyboardLayoutManager();
-
             Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
 
             Global.logger.LogLine("Input Hooking", Logging_Level.Info);
