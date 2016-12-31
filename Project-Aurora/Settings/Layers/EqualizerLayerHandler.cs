@@ -161,18 +161,22 @@ namespace Aurora.Settings.Layers
             if (previous_freq_results == null)
                 previous_freq_results = new float[freqs.Length];
 
+            //Maintain local copies of fft, to prevent data overwrite
+            Complex[] _local_fft = new List<Complex>(_ffts).ToArray();
+            Complex[] _local_fft_previous = new List<Complex>(_ffts_prev).ToArray();
+
             EffectLayer equalizer_layer = new EffectLayer();
 
             using (Graphics g = equalizer_layer.GetGraphics())
             {
-                int wave_step_amount = _ffts.Length / Effects.canvas_width;
+                int wave_step_amount = _local_fft.Length / Effects.canvas_width;
 
                 switch (Properties.EQType)
                 {
                     case EqualizerType.Waveform:
                         for (int x = 0; x < Effects.canvas_width; x++)
                         {
-                            float fft_val = _ffts.Length > x * wave_step_amount ? _ffts[x * wave_step_amount].X : 0.0f;
+                            float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
 
                             Color col = GetColor(fft_val, x, Effects.canvas_width);
 
@@ -182,7 +186,7 @@ namespace Aurora.Settings.Layers
                     case EqualizerType.Waveform_Bottom:
                         for (int x = 0; x < Effects.canvas_width; x++) 
                         {
-                            float fft_val = _ffts.Length > x * wave_step_amount ? _ffts[x * wave_step_amount ].X : 0.0f;
+                            float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount ].X : 0.0f;
 
                             Color col = GetColor(fft_val, x, Effects.canvas_width);
 
@@ -192,7 +196,7 @@ namespace Aurora.Settings.Layers
                     case EqualizerType.PowerBars:
 
                         //Perform FFT again to get frequencies
-                        FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _ffts);
+                        FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _local_fft);
 
                         while (flux_array.Count < freqs.Length)
                         {
@@ -213,8 +217,8 @@ namespace Aurora.Settings.Layers
 
                             for (int j = startF; j <= endF; j++)
                             {
-                                float curr_fft = (float)Math.Sqrt(_ffts[j].X * _ffts[j].X + _ffts[j].Y * _ffts[j].Y);
-                                float prev_fft = (float)Math.Sqrt(_ffts_prev[j].X * _ffts_prev[j].X + _ffts_prev[j].Y * _ffts_prev[j].Y);
+                                float curr_fft = (float)Math.Sqrt(_local_fft[j].X * _local_fft[j].X + _local_fft[j].Y * _local_fft[j].Y);
+                                float prev_fft = (float)Math.Sqrt(_local_fft_previous[j].X * _local_fft_previous[j].X + _local_fft_previous[j].Y * _local_fft_previous[j].Y);
 
                                 float value = curr_fft - prev_fft;
                                 float flux_calc = (value + Math.Abs(value)) / 2;
