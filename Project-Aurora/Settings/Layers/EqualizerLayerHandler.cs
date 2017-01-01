@@ -41,7 +41,10 @@ namespace Aurora.Settings.Layers
         Gradient,
 
         [Description("Gradient Color Shift")]
-        GradientColorShift
+        GradientColorShift,
+
+        [Description("Gradient (Vertical)")]
+        GradientVertical
     }
 
     public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerLayerHandlerProperties>
@@ -338,6 +341,14 @@ namespace Aurora.Settings.Layers
                 return new SolidBrush( Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position) );
             else if (Properties.ViewType == EqualizerPresentationType.GradientColorShift)
                 return new SolidBrush( Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000) );
+            else if(Properties.ViewType == EqualizerPresentationType.GradientVertical)
+            {
+                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
+                e_brush.start = new PointF(0, Effects.canvas_height);
+                e_brush.end = new PointF(0, 0);
+
+                return e_brush.GetDrawingBrush();
+            }
             else
                 return new SolidBrush( Properties.PrimaryColor );
         }
