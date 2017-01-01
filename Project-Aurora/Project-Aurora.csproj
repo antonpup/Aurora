@@ -1285,6 +1285,8 @@
     <Resource Include="Resources\Daytime_Icon.png" />
     <Resource Include="Resources\Nighttime_Icon.png" />
     <Resource Include="Resources\Layers_Drag.png" />
+    <Resource Include="Resources\Layers_Add.png" />
+    <Resource Include="Resources\Layers_Remove.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
