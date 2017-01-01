@@ -486,7 +486,7 @@ namespace Aurora.Settings
             if (IsLoaded && sender is CheckBox)
             {
                 if ((sender as CheckBox).IsChecked.Value)
-                    runRegistryPath.SetValue("Aurora", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\" -silent -delay 5000");
+                    runRegistryPath.SetValue("Aurora", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\" -silent");
                 else
                     runRegistryPath.DeleteValue("Aurora");
             }
