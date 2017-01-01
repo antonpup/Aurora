@@ -18,6 +18,24 @@ namespace Aurora.Settings
         public KeyRecorder()
         {
             Reset();
+
+            Global.input_subscriptions.KeyUp += Input_subscriptions_KeyUp;
+        }
+
+        private void Input_subscriptions_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (IsRecording())
+            {
+                DeviceKeys key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+
+                if(key != DeviceKeys.NONE)
+                {
+                    if (HasRecorded(key))
+                        RemoveKey(key);
+                    else
+                        AddKey(key);
+                }
+            }
         }
 
         public void AddKey(DeviceKeys key)

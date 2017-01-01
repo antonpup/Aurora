@@ -92,15 +92,20 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void ability1_keys_callback(DeviceKeys[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability1_keys_callback;
-            ability_key1_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-            if (resulting_keys.Length > 0)
-            {
-                if (IsLoaded)
-                    (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[0] = resulting_keys[0];
+            Dispatcher.Invoke(() =>
+                {
+                    ability_key1_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-                UIUtils.SetSingleKey(this.ability_key1_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 0);
-            }
+                    if (resulting_keys.Length > 0)
+                    {
+                        if (IsLoaded)
+                            (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[0] = resulting_keys[0];
+
+                        UIUtils.SetSingleKey(this.ability_key1_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 0);
+                    }
+                });
+
             Global.key_recorder.Reset();
         }
 
@@ -112,15 +117,20 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void ability2_keys_callback(DeviceKeys[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability2_keys_callback;
-            ability_key2_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-            if (resulting_keys.Length > 0)
-            {
-                if (IsLoaded)
-                    (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[1] = resulting_keys[0];
+            Dispatcher.Invoke(() =>
+                {
+                    ability_key2_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-                UIUtils.SetSingleKey(this.ability_key2_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 1);
-            }
+                    if (resulting_keys.Length > 0)
+                    {
+                        if (IsLoaded)
+                            (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[1] = resulting_keys[0];
+
+                        UIUtils.SetSingleKey(this.ability_key2_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 1);
+                    }
+                });
+
             Global.key_recorder.Reset();
         }
 
@@ -132,15 +142,20 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void ability3_keys_callback(DeviceKeys[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability3_keys_callback;
-            ability_key3_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-            if (resulting_keys.Length > 0)
-            {
-                if (IsLoaded)
-                    (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[2] = resulting_keys[0];
+            Dispatcher.Invoke(() =>
+                {
+                    ability_key3_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-                UIUtils.SetSingleKey(this.ability_key3_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 2);
-            }
+                    if (resulting_keys.Length > 0)
+                    {
+                        if (IsLoaded)
+                            (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[2] = resulting_keys[0];
+
+                        UIUtils.SetSingleKey(this.ability_key3_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 2);
+                    }
+                });
+
             Global.key_recorder.Reset();
         }
 
@@ -152,15 +167,20 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void ability4_keys_callback(DeviceKeys[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability4_keys_callback;
-            ability_key4_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-            if (resulting_keys.Length > 0)
-            {
-                if (IsLoaded)
-                    (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[3] = resulting_keys[0];
+            Dispatcher.Invoke(() =>
+                {
+                    ability_key4_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-                UIUtils.SetSingleKey(this.ability_key4_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 3);
-            }
+                    if (resulting_keys.Length > 0)
+                    {
+                        if (IsLoaded)
+                            (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[3] = resulting_keys[0];
+
+                        UIUtils.SetSingleKey(this.ability_key4_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 3);
+                    }
+                });
+
             Global.key_recorder.Reset();
         }
 
@@ -172,15 +192,20 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void ability5_keys_callback(DeviceKeys[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability5_keys_callback;
-            ability_key5_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-            if (resulting_keys.Length > 0)
-            {
-                if (IsLoaded)
-                    (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[4] = resulting_keys[0];
+            Dispatcher.Invoke(() =>
+                {
+                    ability_key5_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-                UIUtils.SetSingleKey(this.ability_key5_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 4);
-            }
+                    if (resulting_keys.Length > 0)
+                    {
+                        if (IsLoaded)
+                            (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[4] = resulting_keys[0];
+
+                        UIUtils.SetSingleKey(this.ability_key5_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 4);
+                    }
+                });
+
             Global.key_recorder.Reset();
         }
 
@@ -192,15 +217,20 @@ namespace Aurora.Profiles.Dota_2.Layers
         private void ability6_keys_callback(DeviceKeys[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability6_keys_callback;
-            ability_key6_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-            if (resulting_keys.Length > 0)
-            {
-                if (IsLoaded)
-                    (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[5] = resulting_keys[0];
+            Dispatcher.Invoke(() =>
+                {
+                    ability_key6_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
-                UIUtils.SetSingleKey(this.ability_key6_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 5);
-            }
+                    if (resulting_keys.Length > 0)
+                    {
+                        if (IsLoaded)
+                            (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys[5] = resulting_keys[0];
+
+                        UIUtils.SetSingleKey(this.ability_key6_textblock, (this.DataContext as Dota2AbilityLayerHandler).Properties._AbilityKeys, 5);
+                    }
+                });
+
             Global.key_recorder.Reset();
         }
 
