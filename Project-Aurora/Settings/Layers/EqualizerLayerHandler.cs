@@ -37,11 +37,14 @@ namespace Aurora.Settings.Layers
         [Description("Alternating Colors")]
         AlternatingColor,
 
-        [Description("Gradient")]
-        Gradient,
+        [Description("Gradient Notched Color")]
+        GradientNotched,
 
         [Description("Gradient Color Shift")]
         GradientColorShift,
+
+        [Description("Gradient (Horizontal)")]
+        GradientHorizontal,
 
         [Description("Gradient (Vertical)")]
         GradientVertical
@@ -333,15 +336,23 @@ namespace Aurora.Settings.Layers
             if (Properties.ViewType == EqualizerPresentationType.AlternatingColor)
             {
                 if (value >= 0)
-                    return new SolidBrush( Properties.PrimaryColor );
+                    return new SolidBrush(Properties.PrimaryColor);
                 else
-                    return new SolidBrush( Properties.SecondaryColor );
+                    return new SolidBrush(Properties.SecondaryColor);
             }
-            else if (Properties.ViewType == EqualizerPresentationType.Gradient)
-                return new SolidBrush( Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position) );
+            else if (Properties.ViewType == EqualizerPresentationType.GradientNotched)
+                return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position));
+            else if (Properties.ViewType == EqualizerPresentationType.GradientHorizontal)
+            {
+                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
+                e_brush.start = new PointF(0, 0);
+                e_brush.end = new PointF(Effects.canvas_width, 0);
+
+                return e_brush.GetDrawingBrush();
+            }
             else if (Properties.ViewType == EqualizerPresentationType.GradientColorShift)
-                return new SolidBrush( Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000) );
-            else if(Properties.ViewType == EqualizerPresentationType.GradientVertical)
+                return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000));
+            else if (Properties.ViewType == EqualizerPresentationType.GradientVertical)
             {
                 EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
                 e_brush.start = new PointF(0, Effects.canvas_height);
@@ -350,7 +361,7 @@ namespace Aurora.Settings.Layers
                 return e_brush.GetDrawingBrush();
             }
             else
-                return new SolidBrush( Properties.PrimaryColor );
+                return new SolidBrush(Properties.PrimaryColor);
         }
     }
 
