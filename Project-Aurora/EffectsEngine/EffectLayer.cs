@@ -798,15 +798,15 @@ namespace Aurora.EffectsEngine
                         {
                             double percent = (double)progress - i;
                             SetOneKey(current_key,
-                                Utils.ColorUtils.MultiplyColorByScalar(spectrum.GetColorAt((float)i / (float)keys.Count(), 1.0f, flash_amount), percent)
+                                Utils.ColorUtils.MultiplyColorByScalar(spectrum.GetColorAt((float)i / (float)(keys.Count()-1), 1.0f, flash_amount), percent)
                                 );
                         }
                         else if (i < (int)progress)
-                            SetOneKey(current_key,spectrum.GetColorAt((float)i / (float)keys.Count(), 1.0f, flash_amount));
+                            SetOneKey(current_key,spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
                         break;
                     default:
                         if (i < (int)progress)
-                            SetOneKey(current_key,spectrum.GetColorAt((float)i / (float)keys.Count(), 1.0f, flash_amount));
+                            SetOneKey(current_key,spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
                         break;
                 }
             }
