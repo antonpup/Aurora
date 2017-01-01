@@ -103,6 +103,9 @@ namespace Aurora.Settings
                     case LayerType.Blinking:
                         _Layer.Handler = new BlinkingLayerHandler();
                         break;
+                    case LayerType.Image:
+                        _Layer.Handler = new ImageLayerHandler();
+                        break;
                     case LayerType.LockColor:
                         _Layer.Handler = new LockColourLayerHandler();
                         break;

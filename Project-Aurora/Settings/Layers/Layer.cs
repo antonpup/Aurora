@@ -40,6 +40,9 @@ namespace Aurora.Settings.Layers
         [Description("Blinking Layer")]
         Blinking = 121,
 
+        [Description("Image Layer")]
+        Image = 122,
+
         [Description("Percent Effect Layer")]
         Percent = 200,
 

@@ -743,6 +743,9 @@
     <Compile Include="Settings\Layers\Control_GradientLayer.xaml.cs">
       <DependentUpon>Control_GradientLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_ImageLayer.xaml.cs">
+      <DependentUpon>Control_ImageLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_SolidFillLayer.xaml.cs">
       <DependentUpon>Control_SolidFillLayer.xaml</DependentUpon>
     </Compile>
@@ -759,6 +762,7 @@
     <Compile Include="Settings\Layers\PercentLayerHandler.cs" />
     <Compile Include="Settings\Layers\ShortcutAssistantLayerHandler.cs" />
     <Compile Include="Settings\Layers\GradientLayerHandler.cs" />
+    <Compile Include="Settings\Layers\ImageLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
@@ -1112,6 +1116,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_GradientLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_ImageLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
