@@ -35,7 +35,7 @@
                         <TextBlock Margin="23,0,-3,0">Daytime</TextBlock>
                     </Grid>
                 </RadioButton>
-                <RadioButton x:Name="radiobtn_nighttime" HorizontalAlignment="Left" Margin="91,0,0,0" VerticalAlignment="Top" ToolTip="Daytime" Checked="radiobtn_nighttime_Checked">
+                <RadioButton x:Name="radiobtn_nighttime" HorizontalAlignment="Left" Margin="91,0,0,0" VerticalAlignment="Top" ToolTip="Nighttime" Checked="radiobtn_nighttime_Checked">
                     <Grid>
                         <Image Source="/Aurora;component/Resources/Nighttime_Icon.png" HorizontalAlignment="Left" Margin="0,0,0,0" />
                         <TextBlock Margin="20,0,0,0">Nighttime</TextBlock>
