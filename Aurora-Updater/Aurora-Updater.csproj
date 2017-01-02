@@ -141,7 +141,7 @@
     <Folder Include="UpdateInfoNodes\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Aurora_updater.ico" />
+    <Resource Include="Resources\Aurora_updater.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

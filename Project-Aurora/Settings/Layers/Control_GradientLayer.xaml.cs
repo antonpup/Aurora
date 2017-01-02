@@ -115,7 +115,7 @@ namespace Aurora.Settings.Layers
                 float outval;
                 if (float.TryParse((sender as IntegerUpDown).Text, out outval))
                 {
-                    (sender as IntegerUpDown).Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                    (sender as IntegerUpDown).Background = new SolidColorBrush(Color.FromArgb(255, 24, 24, 24));
 
                     (this.DataContext as GradientLayerHandler).Properties._GradientConfig.angle = outval;
                 }

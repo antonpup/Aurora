@@ -620,8 +620,8 @@ namespace Aurora.Settings
                                 {
                                     if (key.tag == DeviceKeys.NONE)
                                     {
-                                        outline_width = key.width + 2*key.margin_left;
-                                        outline_width_bits = key.width_bits + 2*key.margin_left_bits;
+                                        outline_width = key.width + 2 * key.margin_left;
+                                        outline_width_bits = key.width_bits + 2 * key.margin_left_bits;
                                     }
                                 }
 
@@ -840,12 +840,48 @@ namespace Aurora.Settings
             {
                 //No items, display error
                 Label error_message = new Label();
-                error_message.Content = new TextBlock()
+
+                DockPanel info_panel = new DockPanel();
+
+                TextBlock info_message = new TextBlock()
                 {
                     Text = "No keyboard selected\r\nPlease select your keyboard in the settings",
                     TextAlignment = TextAlignment.Center,
-                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0))
+                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)),
                 };
+
+                DockPanel.SetDock(info_message, Dock.Top);
+                info_panel.Children.Add(info_message);
+
+                DockPanel info_instruction = new DockPanel();
+
+                info_instruction.Children.Add(new TextBlock()
+                {
+                    Text = "Press (",
+                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)),
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+
+                info_instruction.Children.Add(new System.Windows.Controls.Image()
+                {
+                    Source = new BitmapImage(new Uri(@"Resources/settings_icon.png", UriKind.Relative)),
+                    Stretch = Stretch.Uniform,
+                    Height = 40.0,
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+
+                info_instruction.Children.Add(new TextBlock()
+                {
+                    Text = ") and go into \"Devices & Wrappers\" tab",
+                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)),
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+
+                DockPanel.SetDock(info_instruction, Dock.Bottom);
+                info_panel.Children.Add(info_instruction);
+
+                error_message.Content = info_panel;
+
                 error_message.FontSize = 16.0;
                 error_message.FontWeight = FontWeights.Bold;
                 error_message.HorizontalContentAlignment = HorizontalAlignment.Center;
