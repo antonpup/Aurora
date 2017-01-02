@@ -1440,14 +1440,14 @@
     "enabled": true
   },
   {
-    "visualName": "ALT",
+    "visualName": "ALT Gr",
     "tag": 98,
     "line_break": false,
     "margin_left": 5.0,
     "margin_top": 0.0,
     "width": 41.0,
     "height": 30.0,
-    "font_size": 12.0,
+    "font_size": 9.0,
     "width_bits": 4,
     "height_bits": 3,
     "margin_left_bits": 0,
