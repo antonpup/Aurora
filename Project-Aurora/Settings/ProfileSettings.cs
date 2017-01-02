@@ -23,7 +23,7 @@ namespace Aurora.Settings
         #region Private Properties
         private KeySequence _Keys;
 
-        private bool _Enabled = true;
+        private bool _Enabled = false;
 
         private bool _ExceptionHit = false;
 
