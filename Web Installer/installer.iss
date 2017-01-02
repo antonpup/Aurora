@@ -15,7 +15,7 @@ OutputBaseFilename=Aurora-web-setup
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayIcon={app}\Aurora.exe
-SetupIconFile=Aurora.ico
+SetupIconFile=Aurora_updater.ico
 WizardImageFile=Aurora-wizard.bmp
 
 #include <idp.iss>
