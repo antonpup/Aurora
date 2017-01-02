@@ -126,10 +126,10 @@ namespace Aurora.Settings
 
             if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
             {
-                ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Add(lyr);
+                ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Insert(0, lyr);
             }
             else
-                this.FocusedProfile?.Settings?.Layers.Add(lyr);
+                this.FocusedProfile?.Settings?.Layers.Insert(0, lyr);
 
             this.lstLayers.SelectedItem = lyr;
         }
@@ -264,9 +264,9 @@ namespace Aurora.Settings
                         lyr.SetProfile(FocusedProfile);
 
                         if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
-                            ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Add(lyr);
+                            ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Insert(0, lyr);
                         else
-                            FocusedProfile.Settings.Layers.Add(lyr);
+                            FocusedProfile.Settings.Layers.Insert(0, lyr);
 
                     }
                 }
