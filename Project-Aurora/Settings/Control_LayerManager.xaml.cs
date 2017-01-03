@@ -114,7 +114,8 @@ namespace Aurora.Settings
 
                 }
             }
-            this.FocusedProfile?.SaveProfiles();
+            else if (e.RemovedItems.Count > 0)
+                this.FocusedProfile?.SaveProfiles();
         }
 
         private void add_layer_button_Click(object sender, RoutedEventArgs e)
@@ -235,8 +236,11 @@ namespace Aurora.Settings
 
         private void lstLayers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is ListView)
-                this.btnRemoveLayer.IsEnabled = (sender as ListView).HasItems && (sender as ListView).SelectedIndex > -1;
+            if (sender is ListBox)
+            {
+                ListBox lst = (ListBox)sender;
+                this.btnRemoveLayer.IsEnabled = lst.HasItems && lst.SelectedIndex > -1;
+            }
         }
 
         private void btnProfileOverview_Click(object sender, RoutedEventArgs e)
@@ -292,6 +296,21 @@ namespace Aurora.Settings
             if (FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager)
                 this.lstLayers.ItemsSource = ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime;
 
+        }
+
+        private void UserControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            this.lstLayers.UpdateReordering(e);
+        }
+
+        private void UserControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            this.lstLayers.StopReordering();
+        }
+
+        private void UserControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            this.lstLayers.StopReordering();
         }
     }
 }

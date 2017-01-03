@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings"
+             xmlns:AControls="clr-namespace:Aurora.Controls"
              xmlns:Utils="clr-namespace:Aurora.Utils"
-             mc:Ignorable="d" d:DesignWidth="200" MinWidth="200" MinHeight="180" KeyDown="lstLayers_KeyDown">
+             mc:Ignorable="d" d:DesignWidth="200" MinWidth="200" MinHeight="180" KeyDown="lstLayers_KeyDown" MouseMove="UserControl_MouseMove" MouseLeave="UserControl_MouseLeave" MouseLeftButtonUp="UserControl_MouseLeftButtonUp">
     <UserControl.Resources>
         <ResourceDictionary>
             <Utils:TextCharacterLimitConv x:Key="TextCharacterLimitConv" MaxLength="24"/>
@@ -42,17 +43,19 @@
                     </Grid>
                 </RadioButton>
             </Grid>
-            <ListView x:Name="lstLayers" Margin="0,0,0,0" SelectionMode="Single" PreviewMouseMove="stckLayer_PreviewMouseMove" PreviewMouseUp="lstLayers_PreviewMouseUp" MouseLeave="lstLayers_PreviewMouseUp" HorizontalContentAlignment="Stretch" SelectionChanged="lstLayers_SelectionChanged" DockPanel.Dock="Bottom">
-                <ListView.ItemTemplate>
+            <AControls:ArrangeListBox x:Name="lstLayers" Margin="0,0,0,0" SelectionMode="Single"  DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="lstLayers_SelectionChanged">
+                <!--PreviewMouseMove="stckLayer_PreviewMouseMove" PreviewMouseUp="lstLayers_PreviewMouseUp" MouseLeave="lstLayers_PreviewMouseUp" HorizontalContentAlignment="Stretch"-->
+                <AControls:ArrangeListBox.ItemTemplate>
                     <HierarchicalDataTemplate>
-                        <DockPanel AllowDrop="True" PreviewMouseLeftButtonDown="stckLayer_PreviewMouseLeftButtonDown" Drop="stckLayer_Drop" HorizontalAlignment="Stretch">
+                        <DockPanel  HorizontalAlignment="Stretch" Width="192" >
+                            <!--AllowDrop="True" PreviewMouseLeftButtonDown="stckLayer_PreviewMouseLeftButtonDown" Drop="stckLayer_Drop"-->
                             <CheckBox IsChecked="{Binding Path=Enabled, Mode=TwoWay}" />
-                            <Image Source="/Aurora;component/Resources/Layers_Drag.png" Cursor="SizeNS" Width="16" Height="16" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" ToolTip="Drag to rearrange layers" />
+                            <Image Source="/Aurora;component/Resources/Layers_Drag.png" Cursor="SizeNS" Width="16" Height="16" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" ToolTip="Drag to rearrange layers"/>
                             <TextBlock Text="{Binding Path=Name, Converter={StaticResource ResourceKey=TextCharacterLimitConv}}"/>
                         </DockPanel>
                     </HierarchicalDataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </AControls:ArrangeListBox.ItemTemplate>
+            </AControls:ArrangeListBox>
         </DockPanel>
     </Grid>
 </UserControl>
