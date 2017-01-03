@@ -89,7 +89,7 @@ namespace Aurora.Controls
             StartDragging(e);
         }
 
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             StopDragging();
         }
