@@ -87,6 +87,11 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public Color DimColor { get { return Logic._DimColor ?? _DimColor ?? Color.Empty; } }
 
+        public SortedSet<float> _Frequencies { get; set; }
+
+        [JsonIgnore]
+        public SortedSet<float> Frequencies { get { return Logic._Frequencies ?? _Frequencies ?? new SortedSet<float>(); } }
+
         public EqualizerLayerHandlerProperties() : base()
         {
 
@@ -108,6 +113,7 @@ namespace Aurora.Settings.Layers
             _MaxAmplitude = 20.0f;
             _DimBackgroundOnSound = false;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
+            _Frequencies = new SortedSet<float>() { 60, 170, 310, 600, 1000, 2000, 3000, 4000, 5000 };
         }
     }
 
@@ -115,8 +121,6 @@ namespace Aurora.Settings.Layers
     {
         MMDeviceEnumerator audio_device_enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
         MMDevice default_device = null;
-
-        float[] freqs = { 60, 170, 310, 600, 1000, 2000, 3000, 4000, 5000 };
 
         private List<float> flux_array = new List<float>();
 
@@ -174,9 +178,11 @@ namespace Aurora.Settings.Layers
                 UpdateAudioCapture();
             }
 
+            float[] freqs = Properties.Frequencies.ToArray(); //Defined Frequencies
+
             double[] freq_results = new double[freqs.Length];
 
-            if (previous_freq_results == null)
+            if (previous_freq_results == null || previous_freq_results.Length < freqs.Length)
                 previous_freq_results = new float[freqs.Length];
 
             //Maintain local copies of fft, to prevent data overwrite

@@ -60,6 +60,7 @@ namespace Aurora.Settings.Layers
                 this.updown_max_amplitude_value.Value = (int)(this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude;
                 this.chkbox_dimbgonsound.IsChecked = (this.DataContext as EqualizerLayerHandler).Properties._DimBackgroundOnSound;
                 this.Clr_dim_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._DimColor ?? System.Drawing.Color.Empty);
+                this.lstbx_frequencies.ItemsSource = (this.DataContext as EqualizerLayerHandler).Properties._Frequencies;
 
                 settingsset = true;
             }
@@ -156,6 +157,35 @@ namespace Aurora.Settings.Layers
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
+        }
+
+        private void btn_AddFreq_Click(object sender, RoutedEventArgs e)
+        {
+            float value;
+
+            if(float.TryParse(this.txtBox_newFreqValue.Text, out value))
+            {
+                if(value >= 0.0f && value <= 16000.0f)
+                {
+                    (this.DataContext as EqualizerLayerHandler).Properties._Frequencies.Add(value);
+
+                    this.lstbx_frequencies.Items.Refresh();
+                }
+                else
+                    MessageBox.Show("Frequency must be in-between 0 Hz and 16000 Hz");
+            }
+            else
+                MessageBox.Show("Entered value is not a number!");
+        }
+
+        private void btn_DeleteFreq_Click(object sender, RoutedEventArgs e)
+        {
+            if(this.lstbx_frequencies.SelectedItem != null)
+            {
+                (this.DataContext as EqualizerLayerHandler).Properties._Frequencies.Remove((float)this.lstbx_frequencies.SelectedItem);
+
+                this.lstbx_frequencies.Items.Refresh();
+            }
         }
     }
 }
