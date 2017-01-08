@@ -14,7 +14,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.CSGO.Control_CSGO"
              mc:Ignorable="d"
-             d:DesignHeight="300" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -38,10 +38,12 @@
         <TabControl>
             <TabItem Header="Overview for CS:GO">
                 <Grid>
-                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="In order for CS:GO support to work, you have to apply Aurora's GSI (Game State Integration) config file to CS;GO. Aurora attempts to automatically install the config file on first launch (It will fail to do so if the game was not installed on first launch of Aurora, in which case you need to install the GSI config file). If you wish to uninstall the GSI config file, you can press &quot;Unpatch Aurora GSI&quot;. Uninstalling the GSI config file will prevent the game from sending information, such as HP and ammo,"/><Run Text=" to Aurora. If you wish to re-install the GSI config file at a later time, you can press &quot;Patch Aurora GSI&quot;."/></TextBlock>
-                    <Button x:Name="patch_button" Content="Patch Aurora GSI" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
-                    <Button x:Name="unpatch_button" Content="Unpatch Aurora GSI" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
-                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with CS:GO" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                    <StackPanel>
+                        <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with CS:GO" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for CS:GO support to work, you have to apply Aurora's GSI (Game State Integration) config file to CS;GO. Aurora attempts to automatically install the config file on first launch (It will fail to do so if the game was not installed on first launch of Aurora, in which case you need to install the GSI config file). If you wish to uninstall the GSI config file, you can press &quot;Unpatch Aurora GSI&quot;. Uninstalling the GSI config file will prevent the game from sending information, such as HP and ammo,"/><Run Text=" to Aurora. If you wish to re-install the GSI config file at a later time, you can press &quot;Patch Aurora GSI&quot;."/></TextBlock>
+                        <Button x:Name="patch_button" Content="Patch Aurora GSI" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
+                        <Button x:Name="unpatch_button" Content="Unpatch Aurora GSI" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                    </StackPanel>
                     <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                     <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
                 </Grid>
@@ -72,93 +74,9 @@
                     <Button x:Name="preview_kills_reset" Content="Reset Kills" HorizontalAlignment="Left" Margin="612,57,0,0" VerticalAlignment="Top" Width="75" Click="preview_kills_reset_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Background">
-                <Grid>
-                    <CheckBox x:Name="background_enabled" Content="Enable background color on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="background_enabled_Checked" Unchecked="background_enabled_Checked"/>
-                    <xctk:ColorPicker x:Name="t_colorpicker" Margin="92,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="162" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="t_colorpicker_SelectedColorChanged" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Terrorist Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="ct_colorpicker" Margin="140,59,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" ColorMode="ColorCanvas" SelectedColorChanged="ct_colorpicker_SelectedColorChanged" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Counter-Terrorist Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="ambient_colorpicker" Margin="95,88,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ambient_colorpicker_SelectedColorChanged" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,91,0,0" TextWrapping="Wrap" Text="Ambient Color:" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="background_peripheral_use" Content="Use background color with other peripheral devices" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Checked="background_peripheral_use_Checked" Unchecked="background_peripheral_use_Checked"/>
-                    <CheckBox x:Name="background_dim_enabled" Content="Dim background after time" HorizontalAlignment="Left" Margin="259,10,0,0" VerticalAlignment="Top" Checked="background_dim_enabled_Checked" Unchecked="background_dim_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="259,33,0,0" TextWrapping="Wrap" Text="Dim delay:" VerticalAlignment="Top"/>
-                    <Slider x:Name="background_dim_aftertime" HorizontalAlignment="Left" Margin="320,33,0,0" VerticalAlignment="Top" Width="130" Maximum="120" Value="5" ValueChanged="background_dim_aftertime_ValueChanged"/>
-                    <TextBlock x:Name="background_dim_value" HorizontalAlignment="Left" Margin="455,33,0,0" TextWrapping="Wrap" Text="5s" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Player Health/Ammo">
-                <Grid>
-                    <CheckBox x:Name="health_enabled" Content="Enable health effects on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Checked="health_enabled_Checked" Unchecked="health_enabled_Checked"/>
-                    <xctk:ColorPicker x:Name="health_healthy_colorpicker" Margin="90,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" SelectedColorChanged="health_healthy_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Healthy Color:" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-                    <xctk:ColorPicker x:Name="health_hurt_colorpicker" Margin="73,59,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="180" SelectedColorChanged="health_hurt_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Hurt Color:" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-                    <ComboBox x:Name="health_effect_type" HorizontalAlignment="Left" Margin="77,88,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="health_effect_type_SelectionChanged" ItemsSource="{Binding Source={StaticResource PercentEffectType}}" ItemTemplate="{Binding Source={StaticResource PercentEffectTypeTemplate}}" />
-
-                    <TextBlock HorizontalAlignment="Left" Margin="10,91,0,0" TextWrapping="Wrap" Text="Effect Type:" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-
-                    <CheckBox x:Name="ammo_enabled" Content="Enable ammo effects on keyboard" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Checked="ammo_enabled_Checked" Unchecked="ammo_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,164,0,0" TextWrapping="Wrap" Text="Has Ammo Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="ammo_hasammo_colorpicker" Margin="108,161,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColorChanged="ammo_hasammo_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,193,0,0" TextWrapping="Wrap" Text="No Ammo Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="ammo_noammo_colorpicker" Margin="104,190,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="149" SelectedColorChanged="ammo_noammo_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,222,0,0" TextWrapping="Wrap" Text="Effect Type:" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ammo_effect_type" HorizontalAlignment="Left" Margin="77,219,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="ammo_effect_type_SelectionChanged" ItemsSource="{Binding Source={StaticResource PercentEffectType}}" ItemTemplate="{Binding Source={StaticResource PercentEffectTypeTemplate}}" />
-                    <Controls:KeySequence x:Name="hp_keysequence" HorizontalAlignment="Left" Margin="283,10,0,0" VerticalAlignment="Top" Title="Assigned Keys (Health)" RecordingTag="CSGO - Health Keys" SequenceUpdated="hp_keysequence_SequenceUpdated" MaxWidth="230" MaxHeight="121" />
-                    <Controls:KeySequence x:Name="ammo_keysequence" HorizontalAlignment="Left" Margin="283,141,0,0" VerticalAlignment="Top" Title="Assigned Keys (Ammo)" RecordingTag="CSGO - Ammo Keys" SequenceUpdated="ammo_keysequence_SequenceUpdated" MaxWidth="230" MaxHeight="121" />
-                </Grid>
-            </TabItem>
-            <TabItem Header="Bomb Event">
-                <Grid>
-                    <CheckBox x:Name="bomb_enabled" Content="Enable bomb effects on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="bomb_enabled_Checked" Unchecked="bomb_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Bomb Flash Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="bomb_flash_color_colorpicker" Margin="111,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" SelectedColorChanged="bomb_flash_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Bomb Primed Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="bomb_primed_color_colorpicker" Margin="122,59,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="152" SelectedColorChanged="bomb_primed_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <CheckBox x:Name="bomb_display_winner" Content="Display winning team color" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" Checked="bomb_display_winner_Checked" Unchecked="bomb_display_winner_Checked"/>
-                    <CheckBox x:Name="bomb_gradual_effect" Content="Use gradual lighting" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Checked="bomb_gradual_effect_Checked" Unchecked="bomb_gradual_effect_Checked"/>
-                    <CheckBox x:Name="bomb_peripheral_use" Content="Use bomb effect with other peripheral devices" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Checked="bomb_peripheral_use_Checked" Unchecked="bomb_peripheral_use_Checked"/>
-                    <Controls:KeySequence x:Name="bomb_keysequence" HorizontalAlignment="Left" Margin="279,10,0,0" VerticalAlignment="Top" Title="Assigned Keys (Bomb Event)" RecordingTag="CSGO - Bomb Keys" SequenceUpdated="bomb_keysequence_SequenceUpdated" MaxWidth="230" MaxHeight="121"/>
-
-                </Grid>
-            </TabItem>
-            <TabItem Header="Kills Indicator">
-                <Grid>
-                    <CheckBox x:Name="kills_enabled" Content="Enable kills indicator on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="kills_enabled_Checked" Unchecked="kills_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Regular Kill Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="kills_regular_color_colorpicker" Margin="111,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="142" SelectedColorChanged="kills_regular_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Headshot Kill Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="kills_headshot_color_colorpicker" Margin="122,59,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="131" SelectedColorChanged="kills_headshot_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <Controls:KeySequence x:Name="kills_keysequence" HorizontalAlignment="Left" Margin="258,10,0,0" VerticalAlignment="Top" Title="Assigned Keys (Kills)" RecordingTag="CSGO - Kill Indicator Keys" SequenceUpdated="kills_keysequence_SequenceUpdated" MaxWidth="230" MaxHeight="121"/>
-
-                </Grid>
-            </TabItem>
-            <TabItem Header="Burning/Flashbang Event">
-                <Grid>
-                    <CheckBox x:Name="flashbang_enabled" Content="Enable flashbang effect on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Unchecked="flashbang_enabled_Checked" Checked="flashbang_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Flashbang Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="flashbang_color_colorpicker" Margin="103,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="165" SelectedColorChanged="flashbang_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <CheckBox x:Name="flashbang_peripheral_use" Content="Use flashbang effect with other peripheral devices" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top" Checked="flashbang_peripheral_use_Checked" Unchecked="flashbang_peripheral_use_Checked"/>
-                    <CheckBox x:Name="burning_enabled" Content="Enable burning effect on keyboard" HorizontalAlignment="Left" Margin="299,10,0,0" VerticalAlignment="Top" Unchecked="burning_enabled_Checked" Checked="burning_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="299,33,0,0" TextWrapping="Wrap" Text="Burning Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="burning_color_colorpicker" Margin="380,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" SelectedColorChanged="burning_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <CheckBox x:Name="burning_animation" Content="Animate the burning effect" HorizontalAlignment="Left" Margin="299,58,0,0" VerticalAlignment="Top" Checked="burning_animation_Checked" Unchecked="burning_animation_Checked"/>
-                    <CheckBox x:Name="burning_peripheral_use" Content="Use burning effect with other peripheral devices" HorizontalAlignment="Left" Margin="299,78,0,0" VerticalAlignment="Top" Checked="burning_peripheral_use_Checked" Unchecked="burning_peripheral_use_Checked"/>
-                </Grid>
-            </TabItem>
             <TabItem Header="Color Zones">
                 <Grid>
-                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated" Margin="10,10,0,0"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Typing Keys">
-                <Grid>
-                    <CheckBox x:Name="typing_enabled" Content="Enable typing keys on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Unchecked="typing_enabled_Checked" Checked="typing_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Typing Keys Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="typing_color_colorpicker" Margin="112,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="165" SelectedColorChanged="typing_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <Controls:KeySequence x:Name="typing_keysequence" HorizontalAlignment="Left" Margin="282,10,0,0" VerticalAlignment="Top" Title="Assigned Keys (Typing)" RecordingTag="CSGO - Typing Keys" SequenceUpdated="typing_keysequence_SequenceUpdated" MaxWidth="230" MaxHeight="121"/>
+                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
                 </Grid>
             </TabItem>
         </TabControl>

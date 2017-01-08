@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Aurora.Profiles.RocketLeague"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.Profiles.RocketLeague.Control_RocketLeague"
              mc:Ignorable="d" 
-             d:DesignHeight="261.972" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Unloaded="UserControl_Unloaded" Loaded="UserControl_Loaded">
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
     <Grid>
         <TabControl>
             <TabItem Header="Overview for Rocket League">
@@ -19,56 +19,20 @@
             </TabItem>
             <TabItem Header="Preview">
                 <Grid>
-                    <Slider x:Name="preview_boost_amount" HorizontalAlignment="Left" Margin="102,14,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_boost_amount_ValueChanged"/>
-                    <TextBlock x:Name="preview_boost_amount_label" HorizontalAlignment="Left" Margin="227,15,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="preview_team1_score" HorizontalAlignment="Left" Height="24" Margin="98,42,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_team1_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100"/>
-                    <xctk:IntegerUpDown x:Name="preview_team2_score" HorizontalAlignment="Left" Height="24" Margin="98,73,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_team2_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100"/>
-                    <Label Content="Boost amount:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Team 1 Score:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Team 2 Score:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Background">
-                <Grid>
-                    <CheckBox x:Name="bg_enabled" Content="Enable background effects" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="bg_enabled_Checked" Unchecked="bg_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Ambient Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="bg_ambient_colorpicker" HorizontalAlignment="Left" Height="24" Margin="95,30,0,0" VerticalAlignment="Top" Width="100" SelectedColorChanged="bg_ambient_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas"/>
-                    <CheckBox x:Name="bg_use_team_colors" Content="Use Team Colors as background" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Checked="bg_use_team_colors_Checked" Unchecked="bg_use_team_colors_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,83,0,0" TextWrapping="Wrap" Text="Team 1 Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="bg_team1_colorpicker" HorizontalAlignment="Left" Height="24" Margin="87,79,0,0" VerticalAlignment="Top" Width="108" SelectedColorChanged="bg_team1_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,112,0,0" TextWrapping="Wrap" Text="Team 2 Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="bg_team2_colorpicker" HorizontalAlignment="Left" Height="24" Margin="87,108,0,0" VerticalAlignment="Top" Width="108" SelectedColorChanged="bg_team2_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" RenderTransformOrigin="0.472,0.625"/>
-                    <CheckBox x:Name="bg_show_team_score_split" Content="Show team score split in the background" HorizontalAlignment="Left" Margin="10,137,0,0" VerticalAlignment="Top" Checked="bg_show_team_score_split_Checked" Unchecked="bg_show_team_score_split_Checked"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Boost Indicator">
-                <Grid>
-                    <CheckBox x:Name="boost_enabled" Content="Enable boost indicator" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="boost_enabled_Checked" Unchecked="boost_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Low Level Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="boost_low_colorpicker" HorizontalAlignment="Left" Height="24" Margin="101,30,0,0" VerticalAlignment="Top" Width="100" ColorMode="ColorCanvas" SelectedColorChanged="boost_low_colorpicker_SelectedColorChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Medium Level Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="boost_med_colorpicker" HorizontalAlignment="Left" Height="24" Margin="124,59,0,0" VerticalAlignment="Top" Width="77" ColorMode="ColorCanvas" SelectedColorChanged="boost_med_colorpicker_SelectedColorChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,91,0,0" TextWrapping="Wrap" Text="High Level Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="boost_high_colorpicker" HorizontalAlignment="Left" Height="24" Margin="105,88,0,0" VerticalAlignment="Top" Width="96" ColorMode="ColorCanvas" SelectedColorChanged="boost_high_colorpicker_SelectedColorChanged"/>
-                    <Controls:KeySequence x:Name="boost_ks" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Height="35" Title="Boost Effect Keys" RecordingTag="Rocket League - Boost Keys" SequenceUpdated="boost_ks_SequenceUpdated"/>
-                    <CheckBox x:Name="boost_peripheral_use_enabled" Content="Show boost amount on peripheral devices" HorizontalAlignment="Left" Margin="10,243,0,0" VerticalAlignment="Top" Checked="boost_peripheral_use_enabled_Checked" Unchecked="boost_peripheral_use_enabled_Checked"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Speed Indicator" Visibility="Collapsed">
-                <Grid>
-                    <CheckBox x:Name="speed_enabled" Content="Enable Speed Indicator" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Unchecked="speed_enabled_Checked" Checked="speed_enabled_Checked"/>
-                    <xctk:ColorPicker x:Name="speed_low_colorpicker" HorizontalAlignment="Left" Height="24" Margin="107,30,0,0" VerticalAlignment="Top" Width="100" ColorMode="ColorCanvas" SelectedColorChanged="speed_low_colorpicker_SelectedColorChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,63,0,0" TextWrapping="Wrap" Text="Medium Speed Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="speed_med_colorpicker" HorizontalAlignment="Left" Height="24" Margin="130,59,0,0" VerticalAlignment="Top" Width="77" ColorMode="ColorCanvas" SelectedColorChanged="speed_med_colorpicker_SelectedColorChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,92,0,0" TextWrapping="Wrap" Text="High Speed Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="speed_high_colorpicker" HorizontalAlignment="Left" Height="24" Margin="111,88,0,0" VerticalAlignment="Top" Width="96" ColorMode="ColorCanvas" SelectedColorChanged="speed_high_colorpicker_SelectedColorChanged"/>
-                    <Controls:KeySequence x:Name="speed_ks" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Height="145" Title="Speed Indicator Keys" RecordingTag="Rocket League - Speed Keys" SequenceUpdated="speed_ks_SequenceUpdated" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,34,0,0" TextWrapping="Wrap" Text="Low Speed Color:" VerticalAlignment="Top"/>
+                    <Label Content="Team:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="preview_team" HorizontalAlignment="Left" Margin="55,13,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="preview_team_SelectionChanged" SelectedIndex="0"/>
+                    <Slider x:Name="preview_boost_amount" HorizontalAlignment="Left" Margin="102,45,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_boost_amount_ValueChanged"/>
+                    <TextBlock x:Name="preview_boost_amount_label" HorizontalAlignment="Left" Margin="227,46,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="preview_team1_score" HorizontalAlignment="Left" Height="24" Margin="98,73,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_team1_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100"/>
+                    <xctk:IntegerUpDown x:Name="preview_team2_score" HorizontalAlignment="Left" Height="24" Margin="98,104,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_team2_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100"/>
+                    <Label Content="Boost amount:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Team 1 Score:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Team 2 Score:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Color Zones">
                 <Grid>
-                    <Controls:ColorZones x:Name="colorzones" HorizontalAlignment="Left" VerticalAlignment="Top" ColorZonesListUpdated="colorzones_ColorZonesListUpdated" Margin="10,10,0,0" Height="252"/>
+                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
                 </Grid>
             </TabItem>
         </TabControl>

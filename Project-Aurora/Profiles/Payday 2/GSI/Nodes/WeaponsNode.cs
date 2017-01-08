@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
-    public class WeaponsNode : Node
+    public class WeaponsNode : Node<WeaponsNode>
     {
         private List<WeaponNode> _Weapons = new List<WeaponNode>();
+        private WeaponNode _ActiveWeapon = new WeaponNode("");
+
 
         public int Count { get { return _Weapons.Count; } }
         public WeaponNode SelectedWeapon
@@ -15,10 +17,10 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
                 foreach (WeaponNode weapon in _Weapons)
                 {
                     if (weapon.IsSelected)
-                        return weapon;
+                        _ActiveWeapon = weapon;
                 }
 
-                return new WeaponNode("");
+                return _ActiveWeapon;
             }
         }
 

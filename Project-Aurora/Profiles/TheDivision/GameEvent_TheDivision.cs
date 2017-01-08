@@ -1,4 +1,7 @@
-﻿using Aurora.Profiles.Aurora_Wrapper;
+﻿using Aurora.EffectsEngine;
+using Aurora.Profiles.Aurora_Wrapper;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Aurora.Profiles.TheDivision
 {
@@ -6,12 +9,11 @@ namespace Aurora.Profiles.TheDivision
     {
         public GameEvent_TheDivision()
         {
-            profilename = "The Division";
         }
 
         public override bool IsEnabled()
         {
-            return (Global.Configuration.ApplicationProfiles[profilename].Settings as TheDivisionSettings).isEnabled;
+            return this.Profile.Settings.isEnabled;
         }
     }
 }

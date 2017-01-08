@@ -65,13 +65,13 @@
     <Compile Include="Implementation\GradientStopSlider.cs" />
     <Compile Include="Implementation\HueSelector.cs" />
     <Compile Include="Implementation\SaturationBrightnessSelector.cs" />
-    <Compile Include="Implementation\SpinEventArgs .cs" />
+    <Compile Include="Implementation\SpinEventArgs.cs" />
     <Compile Include="Implementation\Spinner.cs" />
     <Compile Include="Utils\TextBoxBehavior.cs" />
     <Compile Include="Implementation\UpDownBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ColorHelper.cs" />
-    <Compile Include="Utils\InputValidationErrorEventArgs .cs" />
+    <Compile Include="Utils\InputValidationErrorEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\Generic.xaml">

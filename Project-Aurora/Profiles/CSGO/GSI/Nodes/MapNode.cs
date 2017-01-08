@@ -5,37 +5,37 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing information about the map
     /// </summary>
-    public class MapNode : Node
+    public class MapNode : Node<MapNode>
     {
         /// <summary>
         /// Current gamemode
         /// </summary>
-        public readonly MapMode Mode;
+        public MapMode Mode;
 
         /// <summary>
         /// Name of the current map
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Current phase of the map
         /// </summary>
-        public readonly MapPhase Phase;
+        public MapPhase Phase;
 
         /// <summary>
         /// Current round
         /// </summary>
-        public readonly int Round;
+        public int Round;
 
         /// <summary>
         /// Counter-Terrorist team information
         /// </summary>
-        public readonly MapTeamNode TeamCT;
+        public MapTeamNode TeamCT;
 
         /// <summary>
         /// Terrorist team information
         /// </summary>
-        public readonly MapTeamNode TeamT;
+        public MapTeamNode TeamT;
 
         internal MapNode(string JSON)
             : base(JSON)

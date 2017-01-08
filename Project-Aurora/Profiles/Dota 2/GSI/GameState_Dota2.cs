@@ -6,7 +6,7 @@ namespace Aurora.Profiles.Dota_2.GSI
     /// <summary>
     /// A class representing various information retaining to Game State Integration of Dota 2
     /// </summary>
-    public class GameState_Dota2 : GameState
+    public class GameState_Dota2 : GameState<GameState_Dota2>
     {
         private Auth_Dota2 auth;
         private Provider_Dota2 provider;
@@ -21,30 +21,23 @@ namespace Aurora.Profiles.Dota_2.GSI
         /// <summary>
         /// Creates a default GameState_Dota2 instance.
         /// </summary>
-        public GameState_Dota2()
+        public GameState_Dota2() : base()
         {
-            json = "{}";
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
 
         /// <summary>
         /// Creates a GameState instance based on the passed json data.
         /// </summary>
         /// <param name="json_data">The passed json data</param>
-        public GameState_Dota2(string json_data)
+        public GameState_Dota2(string json_data) : base(json_data)
         {
-            if (String.IsNullOrWhiteSpace(json_data))
-                json_data = "{}";
-
-            json = json_data;
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);
         }
 
         /// <summary>
         /// A copy constructor, creates a GameState_Dota2 instance based on the data from the passed GameState instance.
         /// </summary>
         /// <param name="other_state">The passed GameState</param>
-        public GameState_Dota2(GameState other_state) : base(other_state)
+        public GameState_Dota2(IGameState other_state) : base(other_state)
         {
         }
 
@@ -121,6 +114,7 @@ namespace Aurora.Profiles.Dota_2.GSI
         /// <summary>
         /// Information about the local player's hero abilities
         /// </summary>
+        [Range(0, 5)]
         public Abilities_Dota2 Abilities
         {
             get

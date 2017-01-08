@@ -14,11 +14,11 @@ namespace Aurora.Profiles.LeagueOfLegends
     {
         private ProfileManager profile_manager;
 
-        public Control_LoL()
+        public Control_LoL(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["League of Legends"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -85,12 +85,10 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, "league of legends.exe");
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
     }
 }

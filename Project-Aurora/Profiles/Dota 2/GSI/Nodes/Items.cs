@@ -6,7 +6,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
     /// <summary>
     /// Class representing item information
     /// </summary>
-    public class Items_Dota2 : Node
+    public class Items_Dota2 : Node<Items_Dota2>
     {
         private List<Item> inventory = new List<Item>();
         private List<Item> stash = new List<Item>();
@@ -14,12 +14,30 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// <summary>
         /// Number of items in the inventory
         /// </summary>
-        public int CountInventory { get { return inventory.Count; } }
+        public int InventoryCount { get { return inventory.Count; } }
+
+        /// <summary>
+        /// Gets the array of the inventory items
+        /// </summary>
+        [Range(0, 5)]
+        public Item[] InventoryItems
+        {
+            get { return inventory.ToArray(); }
+        }
 
         /// <summary>
         /// Number of items in the stash
         /// </summary>
-        public int CountStash { get { return stash.Count; } }
+        public int StashCount { get { return stash.Count; } }
+
+        /// <summary>
+        /// Gets the array of the stash items
+        /// </summary>
+        [Range(0, 5)]
+        public Item[] StashItems
+        {
+            get { return stash.ToArray(); }
+        }
 
         internal Items_Dota2(string json_data) : base(json_data)
         {
@@ -38,6 +56,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="index">The index</param>
         /// <returns></returns>
+        [GameStateIgnore]
         public Item GetInventoryAt(int index)
         {
             if (index > inventory.Count - 1)
@@ -51,6 +70,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="index">The index</param>
         /// <returns></returns>
+        [GameStateIgnore]
         public Item GetStashAt(int index)
         {
             if (index > stash.Count - 1)
@@ -96,6 +116,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="itemname">The item name</param>
         /// <returns>The first index at which item is found, -1 if not found.</returns>
+        [GameStateIgnore]
         public int InventoryIndexOf(string itemname)
         {
             for (int x = 0; x < this.inventory.Count; x++)
@@ -112,6 +133,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="itemname">The item name</param>
         /// <returns>The first index at which item is found, -1 if not found.</returns>
+        [GameStateIgnore]
         public int StashIndexOf(string itemname)
         {
             for (int x = 0; x < this.stash.Count; x++)

@@ -6,6 +6,8 @@ using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
+using System.Linq;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Forms;
@@ -36,16 +38,18 @@ namespace Aurora
         public static InputEventsSubscriptions input_subscriptions = new InputEventsSubscriptions();
         public static GameEventHandler geh;
         public static NetworkListener net_listener;
-        public static Configuration Configuration = new Configuration();
-        public static DeviceManager dev_manager = new DeviceManager();
+        public static Configuration Configuration;
+        public static DeviceManager dev_manager;
         public static KeyboardLayoutManager kbLayout;
-        public static Effects effengine = new Effects();
+        public static Effects effengine;
         public static KeyRecorder key_recorder = new KeyRecorder();
 
         /// <summary>
         /// Currently held down modifer key
         /// </summary>
         public static Keys held_modified = Keys.None;
+
+        public static object Clipboard { get; set; }
     }
 
     static class Program
@@ -109,17 +113,34 @@ namespace Aurora
                 }
             }
 
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            log4net.Config.BasicConfigurator.Configure();
 
-            /*
-            if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            if (!Global.isDebug)
+                currentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            //Make sure there is only one instance of Aurora
+            Process[] processes;
+            if ((processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName)).Length > 1)
             {
-                Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
-                System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
+                try
+                {
+                    NamedPipeClientStream client = new NamedPipeClientStream(".", "aurora\\interface", PipeDirection.Out);
+                    client.Connect(30);
+                    if (!client.IsConnected)
+                        throw new Exception();
+                    byte[] command = System.Text.Encoding.ASCII.GetBytes("restore");
+                    client.Write(command, 0, command.Length);
+                    client.Close();
+                }
+                catch
+                {
+                    Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
+                    System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
+                }
                 Environment.Exit(0);
             }
-            */
+
 
             if (isDelayed)
                 System.Threading.Thread.Sleep((int)delayTime);
@@ -127,14 +148,16 @@ namespace Aurora
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
             //Load config
+            Global.logger.LogLine("Loading Configuration", Logging_Level.Info);
             try
             {
+                Global.Configuration = new Configuration();
                 Global.Configuration = ConfigManager.Load();
             }
             catch (Exception e)
             {
                 Global.logger.LogLine("Exception during ConfigManager.Load(). Error: " + e, Logging_Level.Error);
-                System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message, "Aurora - Error");
+                System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
 
                 Global.Configuration = new Configuration();
             }
@@ -150,7 +173,6 @@ namespace Aurora
                         ProcessStartInfo updaterProc = new ProcessStartInfo();
                         updaterProc.FileName = updater_path;
                         updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
-                        updaterProc.Verb = "runas";
                         Process.Start(updaterProc);
                     }
                     catch(Exception exc)
@@ -160,12 +182,16 @@ namespace Aurora
                 }
             }
 
+            Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
+            Global.dev_manager = new DeviceManager();
             Global.dev_manager.Initialize();
+
+            Global.logger.LogLine("Loading Effects Engine", Logging_Level.Info);
+            Global.effengine = new Effects();
 
             Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
             Global.kbLayout = new KeyboardLayoutManager();
-
-            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand);
+            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
 
             Global.logger.LogLine("Input Hooking", Logging_Level.Info);
             Global.input_subscriptions.KeyDown += InputHookKeyDown;
@@ -184,6 +210,7 @@ namespace Aurora
             {
                 Global.net_listener = new NetworkListener(9088);
                 Global.net_listener.NewGameState += new NewGameStateHandler(Global.geh.GameStateUpdate);
+                Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.geh.ResetGameState);
             }
             catch (Exception exc)
             {
@@ -206,13 +233,9 @@ namespace Aurora
             Global.logger.LogLine("Loaded WinApp", Logging_Level.None);
 
             Global.logger.LogLine("Loading ResourceDictionaries...", Logging_Level.None);
-            ResourceDictionary resourceDictionaryCore = new ResourceDictionary();
-            resourceDictionaryCore.Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative);
-            ResourceDictionary resourceDictionaryToolkit = new ResourceDictionary();
-            resourceDictionaryToolkit.Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative);
 
-            WinApp.Resources.MergedDictionaries.Add(resourceDictionaryCore);
-            WinApp.Resources.MergedDictionaries.Add(resourceDictionaryToolkit);
+            WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
+            WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
 
             Global.logger.LogLine("Loaded ResourceDictionaries", Logging_Level.None);
 
@@ -292,9 +315,7 @@ namespace Aurora
                 logitech_path = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
 
                 if (!Directory.Exists(Path.GetDirectoryName(logitech_path)))
-                {
                     Directory.CreateDirectory(Path.GetDirectoryName(logitech_path));
-                }
 
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
 
@@ -331,9 +352,7 @@ namespace Aurora
                 logitech_path_64 = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x64\LogitechLed.dll";
 
                 if (!Directory.Exists(Path.GetDirectoryName(logitech_path_64)))
-                {
                     Directory.CreateDirectory(Path.GetDirectoryName(logitech_path_64));
-                }
 
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
 

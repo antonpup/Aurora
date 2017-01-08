@@ -5,22 +5,22 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about the level
     /// </summary>
-    public class LevelNode : Node
+    public class LevelNode : Node<LevelNode>
     {
         /// <summary>
         /// Level ID
         /// </summary>
-        public readonly string LevelID;
+        public string LevelID;
 
         /// <summary>
         /// Level phase
         /// </summary>
-        public readonly LevelPhase Phase;
+        public LevelPhase Phase;
 
         /// <summary>
         /// Counter for point of no return
         /// </summary>
-        public readonly int NoReturnTime;
+        public int NoReturnTime;
 
         internal LevelNode(string JSON) : base(JSON)
         {

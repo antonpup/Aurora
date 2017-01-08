@@ -51,6 +51,10 @@ namespace Aurora.Settings
         StarFall = 5,
         [Description("Rain Fall")]
         RainFall = 6,
+        [Description("Blackout")]
+        Blackout = 7,
+        [Description("Matrix")]
+        Matrix = 8
     }
 
     /// <summary>
@@ -125,8 +129,6 @@ namespace Aurora.Settings
 
     public enum MouseOrientationType
     {
-        [Description("None")]
-        None = 0,
         [Description("Right Handed")]
         RightHanded = 1,
         [Description("Left Handed")]
@@ -135,14 +137,59 @@ namespace Aurora.Settings
 
     public enum PreferredKeyboard
     {
-        [Description("Automatic Detection")]
+        [Description("None")]
         None = 0,
+        /*
         [Description("Logitech")]
         Logitech = 1,
         [Description("Corsair")]
         Corsair = 2,
         [Description("Razer")]
-        Razer = 3
+        Razer = 3,
+        
+        [Description("Clevo")]
+        Clevo = 4,
+        [Description("Cooler Master")]
+        CoolerMaster = 5,
+        */
+
+        //Logitech range is 100-199
+        [Description("Logitech - G910")]
+        Logitech_G910 = 100,
+        [Description("Logitech - G410")]
+        Logitech_G410 = 101,
+        [Description("Logitech - G810")]
+        Logitech_G810 = 102,
+
+        //Corsair range is 200-299
+        [Description("Corsair - K95")]
+        Corsair_K95 = 200,
+        [Description("Corsair - K70")]
+        Corsair_K70 = 201,
+        [Description("Corsair - K65")]
+        Corsair_K65 = 202,
+        [Description("Corsair - STRAFE")]
+        Corsair_STRAFE = 203,
+
+        //Razer range is 300-399
+        [Description("Razer - Blackwidow")]
+        Razer_Blackwidow = 300,
+        [Description("Razer - Blackwidow X")]
+        Razer_Blackwidow_X = 301,
+        [Description("Razer - Blackwidow Tournament Edition")]
+        Razer_Blackwidow_TE = 302,
+
+        //Clevo range is 400-499
+
+        //Cooler Master range is 500-599
+        [Description("Masterkeys Pro L")]
+        Masterkeys_Pro_L = 500,
+        [Description("Masterkeys Pro S")]
+        Masterkeys_Pro_S = 501,
+
+        //Roccat range is 600-699
+        //[Description("Roccat Ryos")]
+        //Roccat_Ryos = 600
     }
 
     public enum PreferredKeyboardLocalization
@@ -161,9 +208,58 @@ namespace Aurora.Settings
         fr = 5,
         [Description("Deutsch")]
         de = 6,
-        [Description("Japanese (Logitech Only)")]
+        [Description("Japanese")]
         jpn = 7
 
+    }
+
+    public enum PreferredMouse
+    {
+        [Description("None")]
+        None = 0,
+
+        //Logitech range is 100-199
+        [Description("Logitech - G900")]
+        Logitech_G900 = 100,
+
+        //Corsair range is 200-299
+        [Description("Corsair - Sabre")]
+        Corsair_Sabre = 200,
+        [Description("Corsair - M65")]
+        Corsair_M65 = 201,
+        [Description("Corsair - Katar")]
+        Corsair_Katar = 202,
+
+        //Razer range is 300-399
+
+        //Clevo range is 400-499
+        [Description("Clevo - Touchpad")]
+        Clevo_Touchpad = 400
+
+        //Cooler Master range is 500-599
+    }
+
+    public enum KeycapType
+    {
+        [Description("Default")]
+        Default = 0,
+        [Description("Default (with Backglow)")]
+        Default_backglow = 1,
+        [Description("Default (Backglow only)")]
+        Default_backglow_only = 2,
+        [Description("Colorized")]
+        Colorized = 3,
+        [Description("Colorized (blank)")]
+        Colorized_blank = 4
+    }
+
+    public enum ApplicationDetectionMode
+    {
+        [Description("Windows Events (Default)")]
+        WindowsEvents = 0,
+
+        [Description("Foreground App Scan")]
+        ForegroroundApp = 1
     }
 
     public class Configuration
@@ -179,7 +275,6 @@ namespace Aurora.Settings
         public bool use_volume_as_brightness;
         public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
-        public bool logitech_enhance_brightness;
         public float global_brightness;
         public float keyboard_brightness_modifier;
         public float peripheral_brightness_modifier;
@@ -190,7 +285,13 @@ namespace Aurora.Settings
         public MouseOrientationType mouse_orientation;
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
+        public PreferredMouse mouse_preference;
+        public KeycapType virtualkeyboard_keycap_type;
+        public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
+        public bool devices_disable_keyboard;
+        public bool devices_disable_mouse;
+        public bool devices_disable_headset;
 
         [JsonIgnoreAttribute]
         public Dictionary<string, GenericApplicationProfileManager> additional_profiles;
@@ -222,6 +323,11 @@ namespace Aurora.Settings
         [JsonIgnoreAttribute]
         public ProfileManager desktop_profile = new Profiles.Desktop.DesktopProfileManager();
 
+        // AtmoOrb Settings
+        public bool atmoorb_enabled;
+        public bool atmoorb_use_smoothing;
+        public string atmoorb_ids;
+
         [JsonIgnoreAttribute]
         public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
         {
@@ -244,12 +350,16 @@ namespace Aurora.Settings
             { "XCOM", new Profiles.XCOM.XCOMProfileManager() },
             { "Evolve", new Profiles.Evolve.EvolveProfileManager() },
             { "MetroLL", new Profiles.Metro_Last_Light.MetroLLProfileManager() },
-            { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() }
+            { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() },
+            { "WormsWMD", new Profiles.WormsWMD.WormsWMDProfileManager() },
+            { "BnS", new Profiles.Blade_and_Soul.BnSProfileManager() }
         };
 
         //Overlay Settings
         public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
+
+        public List<string> ProfileOrder { get; set; }
 
         public Configuration()
         {
@@ -264,7 +374,6 @@ namespace Aurora.Settings
             use_volume_as_brightness = false;
             allow_wrappers_in_background = true;
             allow_all_logitech_bitmaps = true;
-            logitech_enhance_brightness = true;
             global_brightness = 1.0f;
             keyboard_brightness_modifier = 1.0f;
             peripheral_brightness_modifier = 1.0f;
@@ -275,8 +384,15 @@ namespace Aurora.Settings
             mouse_orientation = MouseOrientationType.RightHanded;
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
+            mouse_preference = PreferredMouse.None;
+            virtualkeyboard_keycap_type = KeycapType.Default;
+            detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
             additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
+            devices_disable_keyboard = false;
+            devices_disable_mouse = false;
+            devices_disable_headset = false;
+
 
             //Blackout and Night theme
             time_based_dimming_enabled = false;
@@ -304,6 +420,13 @@ namespace Aurora.Settings
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
+
+            ProfileOrder = new List<string>(ApplicationProfiles.Keys);
+
+            // AtmoOrb Settings
+            atmoorb_enabled = false;
+            atmoorb_use_smoothing = true;
+            atmoorb_ids = "1";
         }
     }
 
@@ -333,7 +456,11 @@ namespace Aurora.Settings
             config.desktop_profile.LoadProfiles();
 
             foreach (var kvp in config.ApplicationProfiles)
+            {
                 kvp.Value.LoadProfiles();
+                if (!config.ProfileOrder.Contains(kvp.Key))
+                    config.ProfileOrder.Add(kvp.Key);
+            }
 
 
             if (Directory.Exists(AdditionalProfilesPath))

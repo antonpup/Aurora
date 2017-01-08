@@ -28,9 +28,13 @@ namespace Aurora.Devices
 
         public DeviceManager()
         {
-            devices.Add(new Devices.Logitech.LogitechDevice());
-            devices.Add(new Devices.Corsair.CorsairDevice());
-            devices.Add(new Devices.Razer.RazerDevice());
+            devices.Add(new Devices.Logitech.LogitechDevice());         // Logitech Device
+            devices.Add(new Devices.Corsair.CorsairDevice());           // Corsair Device
+            devices.Add(new Devices.Razer.RazerDevice());               // Razer Device
+            //devices.Add(new Devices.Roccat.RoccatDevice());             // Roccat Device
+            devices.Add(new Devices.Clevo.ClevoDevice());               // Clevo Device
+            devices.Add(new Devices.CoolerMaster.CoolerMasterDevice()); //CoolerMaster Device
+            devices.Add(new Devices.AtmoOrbDevice.AtmoOrbDevice());     // AtmoOrb Ambilight Device
 
             string devices_scripts_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Scripts", "Devices");
 
@@ -87,6 +91,9 @@ namespace Aurora.Devices
         {
             foreach (Device device in devices)
             {
+                if (device.IsInitialized())
+                    continue;
+
                 if (device.Initialize())
                     anyInitialized = true;
 
@@ -95,12 +102,15 @@ namespace Aurora.Devices
 
             NewDevicesInitialized?.Invoke(this, new EventArgs());
 
-            if (!retryActivated)
+            if ((Global.Configuration.desktop_profile.Settings as Profiles.Desktop.DesktopSettings).isEnabled)
             {
-                Thread retryThread = new Thread(RetryInitialize);
-                retryThread.Start();
+                if (!retryActivated)
+                {
+                    Thread retryThread = new Thread(RetryInitialize);
+                    retryThread.Start();
 
-                retryActivated = true;
+                    retryActivated = true;
+                }
             }
         }
 
@@ -108,6 +118,9 @@ namespace Aurora.Devices
         {
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
+                if (!(Global.Configuration.desktop_profile.Settings as Profiles.Desktop.DesktopSettings).isEnabled)
+                    break;
+
                 Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);
 
                 foreach (Device device in devices)
@@ -127,6 +140,12 @@ namespace Aurora.Devices
 
                 Thread.Sleep(retryInterval);
             }
+        }
+
+        public void InitializeOnce()
+        {
+            if(!anyInitialized)
+                Initialize();
         }
 
         public bool AnyInitialized()
@@ -159,6 +178,8 @@ namespace Aurora.Devices
                     Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was shutdown", Logging_Level.Info);
                 }
             }
+
+            anyInitialized = false;
         }
 
         public void ResetDevices()
@@ -172,16 +193,15 @@ namespace Aurora.Devices
             }
         }
 
-        public bool UpdateDevices(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
+        public bool UpdateDevices(DeviceColorComposition composition, bool forced = false)
         {
             bool anyUpdated = false;
-            Dictionary<DeviceKeys, Color> _keyColors = new Dictionary<DeviceKeys, Color>(keyColors);
 
             foreach (Device device in devices)
             {
                 if (device.IsInitialized())
                 {
-                    if (device.UpdateDevice(_keyColors, forced))
+                    if (device.UpdateDevice(composition, forced))
                         anyUpdated = true;
                 }
             }
@@ -196,7 +216,7 @@ namespace Aurora.Devices
             foreach (Device device in devices)
                 devices_info += device.GetDeviceDetails() + "\r\n";
 
-            if(retryAttemptsLeft > 0)
+            if (retryAttemptsLeft > 0)
                 devices_info += "Retries: " + retryAttemptsLeft + "\r\n";
 
             return devices_info;

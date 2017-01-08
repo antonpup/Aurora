@@ -59,5 +59,15 @@ namespace Aurora_Updater.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Aurora_updater {
+            get {
+                object obj = ResourceManager.GetObject("Aurora_updater", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

@@ -90,57 +90,57 @@
     /// <summary>
     /// Class representing information about the map
     /// </summary>
-    public class Map_Dota2 : Node
+    public class Map_Dota2 : Node<Map_Dota2>
     {
         /// <summary>
         /// Name of the current map
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Match ID of the current game
         /// </summary>
-        public readonly long MatchID;
+        public long MatchID;
 
         /// <summary>
         /// Game time
         /// </summary>
-        public readonly int GameTime;
+        public int GameTime;
 
         /// <summary>
         /// Clock time (time shown at the top of the game hud)
         /// </summary>
-        public readonly int ClockTime;
+        public int ClockTime;
 
         /// <summary>
         /// A boolean representing whether it is daytime
         /// </summary>
-        public readonly bool IsDaytime;
+        public bool IsDaytime;
 
         /// <summary>
         /// A boolean representing whether Nightstalker forced night time
         /// </summary>
-        public readonly bool IsNightstalker_Night;
+        public bool IsNightstalker_Night;
 
         /// <summary>
         /// Current game state
         /// </summary>
-        public readonly DOTA_GameState GameState;
+        public DOTA_GameState GameState;
 
         /// <summary>
         /// The winning team
         /// </summary>
-        public readonly PlayerTeam Win_team;
+        public PlayerTeam Win_team;
 
         /// <summary>
         /// The name of the custom game
         /// </summary>
-        public readonly string CustomGameName;
+        public string CustomGameName;
 
         /// <summary>
         /// The cooldown on ward purchases
         /// </summary>
-        public readonly int Ward_Purchase_Cooldown;
+        public int Ward_Purchase_Cooldown;
 
         internal Map_Dota2(string json_data) : base(json_data)
         {

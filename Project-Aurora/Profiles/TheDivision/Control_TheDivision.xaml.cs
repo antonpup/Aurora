@@ -12,11 +12,11 @@ namespace Aurora.Profiles.TheDivision
     {
         private ProfileManager profile_manager;
 
-        public Control_TheDivision()
+        public Control_TheDivision(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["The Division"];
+            profile_manager = profile;
 
             SetSettings();
         }
@@ -39,12 +39,10 @@ namespace Aurora.Profiles.TheDivision
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, "thedivision.exe");
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)

@@ -75,7 +75,14 @@ namespace Aurora
             systeminfo_sb.AppendFormat("User Name: {0}\r\n", Environment.UserName);
 
             systeminfo_sb.AppendFormat("SystemPageSize: {0}\r\n", Environment.SystemPageSize);
-            systeminfo_sb.AppendFormat("Version: {0}\r\n", Environment.Version);
+            systeminfo_sb.AppendFormat("Environment Version: {0}\r\n", Environment.Version);
+
+            System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+            System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
+            systeminfo_sb.AppendFormat("Is Elevated: {0}\r\n", principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator));
+            systeminfo_sb.AppendFormat("Aurora Assembly Version: {0}\r\n", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+            systeminfo_sb.AppendFormat("Aurora File Version: {0}\r\n", System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion);
+
             systeminfo_sb.Append("========================================\r\n");
 
             LogLine(systeminfo_sb.ToString(), Logging_Level.None, false);

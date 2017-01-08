@@ -24,82 +24,82 @@
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class Player_Dota2 : Node
+    public class Player_Dota2 : Node<Player_Dota2>
     {
         /// <summary>
         /// Player's steam ID
         /// </summary>
-        public readonly string SteamID;
+        public string SteamID;
 
         /// <summary>
         /// Player's name
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Player's current activity state
         /// </summary>
-        public readonly PlayerActivity Activity;
+        public PlayerActivity Activity;
 
         /// <summary>
         /// Player's amount of kills
         /// </summary>
-        public readonly int Kills;
+        public int Kills;
 
         /// <summary>
         /// Player's amount of deaths
         /// </summary>
-        public readonly int Deaths;
+        public int Deaths;
 
         /// <summary>
         /// Player's amount of assists
         /// </summary>
-        public readonly int Assists;
+        public int Assists;
 
         /// <summary>
         /// Player's amount of last hits
         /// </summary>
-        public readonly int LastHits;
+        public int LastHits;
 
         /// <summary>
         /// Player's amount of denies
         /// </summary>
-        public readonly int Denies;
+        public int Denies;
 
         /// <summary>
         /// Player's killstreak
         /// </summary>
-        public readonly int KillStreak;
+        public int KillStreak;
 
         /// <summary>
         /// Player's team
         /// </summary>
-        public readonly PlayerTeam Team;
+        public PlayerTeam Team;
 
         /// <summary>
         /// Player's amount of gold
         /// </summary>
-        public readonly int Gold;
+        public int Gold;
 
         /// <summary>
         /// Player's amount of reliable gold
         /// </summary>
-        public readonly int GoldReliable;
+        public int GoldReliable;
 
         /// <summary>
         /// Player's amount of unreliable gold
         /// </summary>
-        public readonly int GoldUnreliable;
+        public int GoldUnreliable;
 
         /// <summary>
         /// PLayer's gold per minute
         /// </summary>
-        public readonly int GoldPerMinute;
+        public int GoldPerMinute;
 
         /// <summary>
         /// Player's experience per minute
         /// </summary>
-        public readonly int ExperiencePerMinute;
+        public int ExperiencePerMinute;
 
         internal Player_Dota2(string json_data) : base(json_data)
         {

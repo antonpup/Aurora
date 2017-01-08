@@ -5,32 +5,32 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing various player statistics
     /// </summary>
-    public class MatchStatsNode : Node
+    public class MatchStatsNode : Node<MatchStatsNode>
     {
         /// <summary>
         /// Amount of kills
         /// </summary>
-        public readonly int Kills;
+        public int Kills;
 
         /// <summary>
         /// Amount of assists
         /// </summary>
-        public readonly int Assists;
+        public int Assists;
 
         /// <summary>
         /// Amount of deaths
         /// </summary>
-        public readonly int Deaths;
+        public int Deaths;
 
         /// <summary>
         /// Amount of MVPs
         /// </summary>
-        public readonly int MVPs;
+        public int MVPs;
 
         /// <summary>
         /// The score
         /// </summary>
-        public readonly int Score;
+        public int Score;
 
         internal MatchStatsNode(string JSON)
             : base(JSON)

@@ -283,6 +283,16 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap keycap_backglow {
+            get {
+                object obj = ResourceManager.GetObject("keycap_backglow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap LastBullet_Logo {
             get {
                 object obj = ResourceManager.GetObject("LastBullet_Logo", resourceCulture);
@@ -336,6 +346,16 @@ namespace Aurora.Properties {
         internal static System.Drawing.Bitmap LogitechInstall_Step5 {
             get {
                 object obj = ResourceManager.GetObject("LogitechInstall_Step5", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Not_Visible {
+            get {
+                object obj = ResourceManager.GetObject("Not_Visible", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -426,6 +446,26 @@ namespace Aurora.Properties {
         internal static System.Drawing.Bitmap unknown_app_icon {
             get {
                 object obj = ResourceManager.GetObject("unknown_app_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Visible {
+            get {
+                object obj = ResourceManager.GetObject("Visible", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap worms_wmd {
+            get {
+                object obj = ResourceManager.GetObject("worms_wmd", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

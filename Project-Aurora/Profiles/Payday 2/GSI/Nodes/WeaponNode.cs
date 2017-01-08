@@ -1,14 +1,14 @@
 ﻿namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
-    public class WeaponNode : Node
+    public class WeaponNode : Node<WeaponNode>
     {
-        public readonly WeaponType Type;
-        public readonly string ID;
-        public readonly int Max;
-        public readonly int Current_Clip;
-        public readonly int Current_Left;
-        public readonly int Max_Clip;
-        public readonly bool IsSelected;
+        public WeaponType Type;
+        public string ID;
+        public int Max;
+        public int Current_Clip;
+        public int Current_Left;
+        public int Max_Clip;
+        public bool IsSelected;
 
         internal WeaponNode(string JSON) : base(JSON)
         {

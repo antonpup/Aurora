@@ -3,42 +3,46 @@
     /// <summary>
     /// Class representing ability information
     /// </summary>
-    public class Ability : Node
+    public class Ability : Node<Ability>
     {
         /// <summary>
         /// Ability name
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Ability level
         /// </summary>
-        public readonly int Level;
+        public int Level;
 
         /// <summary>
         /// A boolean representing whether the ability can be casted
         /// </summary>
-        public readonly bool CanCast;
+        public bool CanCast;
 
         /// <summary>
-        /// A boolean representing whether the ability is passives
+        /// A boolean representing whether the ability is passive
         /// </summary>
-        public readonly bool IsPassive;
+        public bool IsPassive;
 
         /// <summary>
         /// A boolean representing whether the ability is active
         /// </summary>
-        public readonly bool IsActive;
+        public bool IsActive;
 
         /// <summary>
         /// Ability cooldown
         /// </summary>
-        public readonly int Cooldown;
+        public int Cooldown;
 
         /// <summary>
         /// A boolean representing whether the ability is an ultimate
         /// </summary>
-        public readonly bool IsUltimate;
+        public bool IsUltimate;
+
+        public Ability() : this("")
+        {
+        }
 
         internal Ability(string json_data) : base(json_data)
         {

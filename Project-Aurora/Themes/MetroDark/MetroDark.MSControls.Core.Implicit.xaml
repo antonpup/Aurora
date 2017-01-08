@@ -521,7 +521,7 @@
           <Grid>
             <Rectangle Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" StrokeThickness="{TemplateBinding BorderThickness}" />
             <StackPanel Orientation="Horizontal" d:LayoutOverrides="Width, Height">
-              <ContentPresenter Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" />
+              <ContentPresenter Margin="3, 3, 3, 3" Content="{TemplateBinding Content}" />
             </StackPanel>
           </Grid>
         </ControlTemplate>
@@ -915,6 +915,8 @@
   <Style BasedOn="{StaticResource TextBoxStyle}" TargetType="{x:Type TextBox}" />
   <Style BasedOn="{StaticResource ListBoxStyle}" TargetType="{x:Type ListBox}" />
   <Style BasedOn="{StaticResource ListBoxItemStyle}" TargetType="{x:Type ListBoxItem}" />
+  <Style BasedOn="{StaticResource ListViewStyle}" TargetType="{x:Type ListView}" />
+
   <Style BasedOn="{StaticResource CheckBoxStyle}" TargetType="CheckBox">
     <!-- Adding setter for VerticalContentAlignment to target default behavior of MS check box. -->
     <Setter Property="VerticalContentAlignment" Value="Top" />

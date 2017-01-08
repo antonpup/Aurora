@@ -9,7 +9,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class PlayerNode : Node
+    public class PlayerNode : Node<PlayerNode>
     {
         internal string _SteamID;
 
@@ -21,37 +21,37 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// <summary>
         /// Player's name
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Player's team
         /// </summary>
-        public readonly PlayerTeam Team;
+        public PlayerTeam Team;
 
         /// <summary>
         /// Player's clan tag
         /// </summary>
-        public readonly string Clan;
+        public string Clan;
 
         /// <summary>
         /// Player's current activity state
         /// </summary>
-        public readonly PlayerActivity Activity;
+        public PlayerActivity Activity;
 
         /// <summary>
         /// Player's current weapons
         /// </summary>
-        public readonly WeaponsNode Weapons;
+        public WeaponsNode Weapons;
 
         /// <summary>
         /// Player's match statistics
         /// </summary>
-        public readonly MatchStatsNode MatchStats;
+        public MatchStatsNode MatchStats;
 
         /// <summary>
         /// Player's state information
         /// </summary>
-        public readonly PlayerStateNode State;
+        public PlayerStateNode State;
 
         internal PlayerNode(string JSON)
             : base(JSON)

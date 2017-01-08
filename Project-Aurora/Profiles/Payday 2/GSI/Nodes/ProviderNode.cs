@@ -3,37 +3,37 @@
     /// <summary>
     /// Information about the provider of this GameState
     /// </summary>
-    public class ProviderNode : Node
+    public class ProviderNode : Node<ProviderNode>
     {
         /// <summary>
         /// Game name
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Game's Steam AppID
         /// </summary>
-        public readonly int AppID;
+        public int AppID;
 
         /// <summary>
         /// Game's version
         /// </summary>
-        public readonly int Version;
+        public int Version;
 
         /// <summary>
         /// Local player's Steam ID
         /// </summary>
-        public readonly string SteamID;
+        public string SteamID;
 
         /// <summary>
         /// Current timestamp
         /// </summary>
-        public readonly float TimeStamp;
+        public float TimeStamp;
 
         /// <summary>
         /// Index ID of the local player
         /// </summary>
-        public readonly int LocalID;
+        public int LocalID;
 
         internal ProviderNode(string JSON)
             : base(JSON)

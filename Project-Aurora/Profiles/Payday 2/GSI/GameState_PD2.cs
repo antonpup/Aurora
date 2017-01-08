@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles.Payday_2.GSI.Nodes;
+using Aurora.Settings;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -7,7 +8,7 @@ namespace Aurora.Profiles.Payday_2.GSI
     /// <summary>
     /// A class representing various information retaining to Payday 2
     /// </summary>
-    public class GameState_PD2 : GameState
+    public class GameState_PD2 : GameState<GameState_PD2>
     {
         private ProviderNode _Provider;
         private LobbyNode _Lobby;
@@ -24,9 +25,7 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Provider == null)
-                {
                     _Provider = new ProviderNode(_ParsedData["provider"]?.ToString() ?? "");
-                }
 
                 return _Provider;
             }
@@ -40,9 +39,7 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Lobby == null)
-                {
                     _Lobby = new LobbyNode(_ParsedData["lobby"]?.ToString() ?? "");
-                }
 
                 return _Lobby;
             }
@@ -56,25 +53,36 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Level == null)
-                {
                     _Level = new LevelNode(_ParsedData["level"]?.ToString() ?? "");
-                }
 
                 return _Level;
             }
         }
 
         /// <summary>
+        /// Information about the local player
+        /// </summary>
+        public PlayerNode LocalPlayer
+        {
+            get
+            {
+                if (_Players == null)
+                    _Players = new PlayersNode(_ParsedData["players"]?.ToString() ?? "");
+
+                return _Players.LocalPlayer;
+            }
+        }
+
+        /// <summary>
         /// Information about players in the lobby
         /// </summary>
+        [Range(0, 3)]
         public PlayersNode Players
         {
             get
             {
                 if (_Players == null)
-                {
                     _Players = new PlayersNode(_ParsedData["players"]?.ToString() ?? "");
-                }
 
                 return _Players;
             }
@@ -88,9 +96,7 @@ namespace Aurora.Profiles.Payday_2.GSI
             get
             {
                 if (_Game == null)
-                {
                     _Game = new GameNode(_ParsedData["game"]?.ToString() ?? "");
-                }
 
                 return _Game;
             }
@@ -138,7 +144,7 @@ namespace Aurora.Profiles.Payday_2.GSI
         /// A copy constructor, creates a GameState_CSGO instance based on the data from the passed GameState instance.
         /// </summary>
         /// <param name="other_state">The passed GameState</param>
-        public GameState_PD2(GameState other_state) : base(other_state)
+        public GameState_PD2(IGameState other_state) : base(other_state)
         {
         }
     }

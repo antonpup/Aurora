@@ -12,7 +12,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Profiles.Desktop.Control_Desktop"
              mc:Ignorable="d"
-             d:DesignHeight="261.972" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="261.972" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -56,71 +56,15 @@
         <TabControl>
             <TabItem Header="Overview for Desktop">
                 <Grid>
-                    <TextBlock Margin="10,10,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="This is a profile for Desktop effects. This profile will be active during non-gaming profiles."/><LineBreak/><Run/><LineBreak/><Run Text="This profile includes CPU and RAM usage indicators, a shortcuts assistant, color zones, and interactive effects."/></TextBlock>
+                    <CheckBox x:Name="profile_enabled" Content="Enable Aurora to provide lighting effects for desktop" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="This is a profile for Desktop effects. This profile will be active during non-gaming profiles."/><LineBreak/><Run/><LineBreak/><Run Text="This profile includes CPU and RAM usage indicators, a shortcuts assistant, color zones, and interactive effects."/></TextBlock>
                     <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                     <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="CPU/RAM usage">
-                <Grid>
-                    <CheckBox x:Name="cpu_usage_enabled" Content="Display CPU usage on keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Checked="cpu_usage_enabled_Checked" Unchecked="cpu_usage_enabled_Checked"/>
-                    <xctk:ColorPicker x:Name="cpu_usage_used_colorpicker" Margin="76,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" SelectedColorChanged="cpu_usage_used_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Used Color:" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-                    <xctk:ColorPicker x:Name="cpu_usage_free_colorpicker" Margin="72,59,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="181" SelectedColorChanged="cpu_usage_free_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Free Color:" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-                    <CheckBox x:Name="cpu_usage_free_transparent" Content="Use transparent color for free color" HorizontalAlignment="Left" Margin="30,88,0,0" VerticalAlignment="Top" Checked="cpu_usage_free_transparent_Checked" Unchecked="cpu_usage_free_transparent_Checked"/>
-                    <ComboBox x:Name="cpu_usage_effect_type" HorizontalAlignment="Left" Margin="77,108,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="cpu_usage_effect_type_SelectionChanged" ItemsSource="{Binding Source={StaticResource PercentEffectType}}" ItemTemplate="{Binding Source={StaticResource PercentEffectTypeTemplate}}" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,111,0,0" TextWrapping="Wrap" Text="Effect Type:" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="ram_usage_enabled" Content="Display RAM usage on keyboard" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top" Checked="ram_usage_enabled_Checked" Unchecked="ram_usage_enabled_Checked"/>
-                    <xctk:ColorPicker x:Name="ram_usage_used_colorpicker" Margin="76,155,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" SelectedColorChanged="ram_usage_used_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,158,0,0" TextWrapping="Wrap" Text="Used Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="ram_usage_free_colorpicker" Margin="72,184,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="181" SelectedColorChanged="ram_usage_free_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,187,0,0" TextWrapping="Wrap" Text="Free Color:" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="ram_usage_free_transparent" Content="Use transparent color for free color" HorizontalAlignment="Left" Margin="30,213,0,0" VerticalAlignment="Top" Checked="ram_usage_free_transparent_Checked" Unchecked="ram_usage_free_transparent_Checked"/>
-                    <ComboBox x:Name="ram_usage_effect_type" HorizontalAlignment="Left" Margin="77,233,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="ram_usage_effect_type_SelectionChanged" ItemsSource="{Binding Source={StaticResource PercentEffectType}}" ItemTemplate="{Binding Source={StaticResource PercentEffectTypeTemplate}}"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,236,0,0" TextWrapping="Wrap" Text="Effect Type:" VerticalAlignment="Top"/>
-                    <Controls:KeySequence x:Name="ks_cpu" HorizontalAlignment="Left" Margin="283,10,0,0" VerticalAlignment="Top" Title="Assigned Keys (CPU)" RecordingTag="CPU Keys" SequenceUpdated="ks_cpu_SequenceUpdated" MaxWidth="230" MaxHeight="121"/>
-                    <Controls:KeySequence x:Name="ks_ram" HorizontalAlignment="Left" Margin="283,141,0,0" VerticalAlignment="Top" Title="Assigned Keys (RAM)" RecordingTag="RAM Keys" SequenceUpdated="ks_ram_SequenceUpdated" MaxWidth="230" MaxHeight="121"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Shortcuts Assistant">
-                <Grid>
-                    <CheckBox x:Name="sc_assistant_enabled" Content="Allow Shortcuts Assistant to illuminate shortcut keys when Ctrl or Win or Alt key is held down" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Unchecked="sc_assistant_enabled_Checked" Checked="sc_assistant_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,50,0,0" TextWrapping="Wrap" Text="Ctrl Keys Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="sc_assistant_ctrl_color" Margin="95,47,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" SelectedColorChanged="sc_assistant_ctrl_color_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <Controls:KeySequence x:Name="sc_assistant_ctrl_keys" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Title="Shortcut Assistant Ctrl Keys" RecordingTag="Shortcut Assistant Ctrl Keys" MaxWidth="264" MaxHeight="203" Width="264" Height="186" SequenceUpdated="sc_assistant_ctrl_keys_SequenceUpdated" MinWidth="264" MinHeight="186"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="279,50,0,0" TextWrapping="Wrap" Text="Win Keys Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="sc_assistant_win_color" Margin="367,47,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="174" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="sc_assistant_win_color_SelectedColorChanged" />
-                    <Controls:KeySequence x:Name="sc_assistant_win_keys" HorizontalAlignment="Left" Margin="279,76,0,-69" VerticalAlignment="Top" Title="Shortcut Assistant Win Keys" RecordingTag="Shortcut Assistant Win Keys" MaxWidth="264" MaxHeight="203" Width="264" Height="186" MinWidth="264" MinHeight="186" SequenceUpdated="sc_assistant_win_keys_SequenceUpdated"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="548,50,0,0" TextWrapping="Wrap" Text="Alt Keys Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="sc_assistant_alt_color" Margin="633,47,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="sc_assistant_alt_color_SelectedColorChanged" />
-                    <Controls:KeySequence x:Name="sc_assistant_alt_keys" HorizontalAlignment="Left" Margin="548,76,0,-69" VerticalAlignment="Top" Title="Shortcut Assistant Alt Keys" RecordingTag="Shortcut Assistant Alt Keys" MaxWidth="264" MaxHeight="203" Width="264" Height="186" SequenceUpdated="sc_assistant_alt_keys_SequenceUpdated" MinWidth="264" MinHeight="186"/>
-                    <CheckBox x:Name="sc_assistant_dim_background" Content="Dim the background keys to emphasize the shortcut keys" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Unchecked="sc_assistant_dim_background_Checked" Checked="sc_assistant_dim_background_Checked"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Color Zones">
                 <Grid>
                     <Controls:ColorZones x:Name="desktop_cz" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" ColorZonesListUpdated="desktop_cz_ColorZonesListUpdated" Margin="10,10,0,0"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Interactive Effects">
-                <Grid>
-                    <CheckBox x:Name="interactive_effects_usage_enabled" Content="Show interactive effects on the keyboard" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Checked="interactive_effects_usage_enabled_Checked" Unchecked="interactive_effects_usage_enabled_Checked"/>
-                    <ComboBox x:Name="interactive_effects_type" HorizontalAlignment="Left" Margin="137,30,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource InteractiveEffects}}" ItemTemplate="{Binding Source={StaticResource InteractiveEffectsTemplate}}" SelectionChanged="interactive_effects_type_SelectionChanged"/>
-                    <xctk:ColorPicker x:Name="interactive_effects_primary_color_colorpicker" Margin="90,57,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="interactive_effects_primary_color_colorpicker_SelectedColorChanged" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,60,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="interactive_effects_random_primary_color_enabled" Content="Use a random primary color (Selected color will be used as base color)" HorizontalAlignment="Left" Margin="10,86,0,0" VerticalAlignment="Top" Checked="interactive_effects_random_primary_color_enabled_Checked" Unchecked="interactive_effects_random_primary_color_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,32,0,0" TextWrapping="Wrap" Text="Interactive Effect Type: " VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="interactive_effects_secondary_color_colorpicker" Margin="105,106,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" SelectedColorChanged="interactive_effects_secondary_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,109,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="interactive_effects_random_secondary_color_enabled" Content="Use a random secondary color (Selected color will be used as base color)" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top" Checked="interactive_effects_random_secondary_color_enabled_Checked" Unchecked="interactive_effects_random_secondary_color_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,157,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
-                    <Slider x:Name="interactive_effects_speed_slider" HorizontalAlignment="Left" Margin="90,157,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" ValueChanged="interactive_effects_speed_slider_ValueChanged" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="20"/>
-                    <TextBlock x:Name="interactive_effects_speed_label" HorizontalAlignment="Left" Margin="235,157,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,178,0,0" TextWrapping="Wrap" Text="Effect Width: " VerticalAlignment="Top"/>
-                    <Slider x:Name="interactive_effects_width_slider" HorizontalAlignment="Left" Margin="90,178,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="1" SelectionStart="6" IsSnapToTickEnabled="True" Maximum="12" ValueChanged="interactive_effects_width_slider_ValueChanged"/>
-                    <TextBlock x:Name="interactive_effects_width_label" HorizontalAlignment="Left" Margin="235,178,0,0" TextWrapping="Wrap" Text="1 px" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="interactive_effects_mouse_interaction_enable" Content="Enable mouse clicking to trigger interative effects" HorizontalAlignment="Left" Margin="10,201,0,0" VerticalAlignment="Top" Unchecked="interactive_effects_mouse_interaction_enable_Checked" Checked="interactive_effects_mouse_interaction_enable_Checked"/>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -15,11 +15,11 @@ namespace Aurora.Profiles.Evolve
     {
         private ProfileManager profile_manager;
 
-        public Control_Evolve()
+        public Control_Evolve(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Evolve"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -69,12 +69,10 @@ namespace Aurora.Profiles.Evolve
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
     }
 }

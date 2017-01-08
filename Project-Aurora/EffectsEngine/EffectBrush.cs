@@ -39,7 +39,19 @@ namespace Aurora.EffectsEngine
 
             start = new System.Drawing.PointF(0, 0);
             end = new System.Drawing.PointF(1, 0);
-            center = new System.Drawing.PointF(0.5f, 0.5f);
+            center = new System.Drawing.PointF(0.0f, 0.0f);
+        }
+
+        public EffectBrush(ColorSpectrum spectrum)
+        {
+            type = BrushType.Linear;
+
+            foreach(var color in spectrum.GetSpectrumColors())
+                color_gradients.Add(color.Key, color.Value);
+
+            start = new System.Drawing.PointF(0, 0);
+            end = new System.Drawing.PointF(1, 0);
+            center = new System.Drawing.PointF(0.0f, 0.0f);
         }
 
         public EffectBrush(System.Drawing.Brush brush)
@@ -61,6 +73,7 @@ namespace Aurora.EffectsEngine
 
                 start = lgb.Rectangle.Location;
                 end = new System.Drawing.PointF(lgb.Rectangle.Width, lgb.Rectangle.Height);
+                center = new System.Drawing.PointF(0.0f, 0.0f);
 
                 switch (lgb.WrapMode)
                 {
@@ -111,13 +124,13 @@ namespace Aurora.EffectsEngine
 
                 System.Drawing.Drawing2D.PathGradientBrush pgb = (brush as System.Drawing.Drawing2D.PathGradientBrush);
 
+                start = pgb.Rectangle.Location;
+                end = new System.Drawing.PointF(pgb.Rectangle.Width, pgb.Rectangle.Height);
                 center = new System.Drawing.PointF(
                     pgb.CenterPoint.X,
                     pgb.CenterPoint.Y
                     );
 
-                start = pgb.Rectangle.Location;
-                end = new System.Drawing.PointF(pgb.Rectangle.Width, pgb.Rectangle.Height);
 
                 switch (pgb.WrapMode)
                 {
@@ -221,6 +234,7 @@ namespace Aurora.EffectsEngine
 
                 start = new System.Drawing.PointF((float)lgb.StartPoint.X, (float)lgb.StartPoint.Y);
                 end = new System.Drawing.PointF((float)lgb.EndPoint.X, (float)lgb.EndPoint.Y);
+                center = new System.Drawing.PointF(0.0f, 0.0f);
 
                 switch (lgb.SpreadMethod)
                 {
@@ -250,13 +264,12 @@ namespace Aurora.EffectsEngine
 
                 System.Windows.Media.RadialGradientBrush rgb = (brush as System.Windows.Media.RadialGradientBrush);
 
+                start = new System.Drawing.PointF(0, 0);
+                end = new System.Drawing.PointF((float)rgb.RadiusX * 2.0f, (float)rgb.RadiusY * 2.0f);
                 center = new System.Drawing.PointF(
                     (float)rgb.Center.X,
                     (float)rgb.Center.Y
                     );
-
-                start = new System.Drawing.PointF(0, 0);
-                end = new System.Drawing.PointF((float)rgb.RadiusX * 2.0f, (float)rgb.RadiusY * 2.0f);
 
                 switch (rgb.SpreadMethod)
                 {
@@ -316,6 +329,18 @@ namespace Aurora.EffectsEngine
                 if (!color_gradients.ContainsKey(1.0f))
                     color_gradients.Add(1.0f, System.Drawing.Color.Transparent);
             }
+        }
+
+        public EffectBrush SetBrushType(BrushType type)
+        {
+            this.type = type;
+            return this;
+        }
+
+        public EffectBrush SetWrap(BrushWrap wrap)
+        {
+            this.wrap = wrap;
+            return this;
         }
 
         public System.Drawing.Brush GetDrawingBrush()
@@ -516,6 +541,23 @@ namespace Aurora.EffectsEngine
             }
 
             return _mediabrush;
+        }
+
+        public ColorSpectrum GetColorSpectrum()
+        {
+            ColorSpectrum spectrum = new ColorSpectrum();
+
+            if(type == BrushType.Solid)
+            {
+                spectrum = new ColorSpectrum(color_gradients[0.0f]);
+            }
+            else if(type == BrushType.Linear)
+            {
+                foreach (var color in color_gradients)
+                    spectrum.SetColorAt(color.Key, color.Value);
+            }
+
+            return spectrum;
         }
     }
 }

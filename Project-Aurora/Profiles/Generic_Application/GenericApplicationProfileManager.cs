@@ -13,22 +13,13 @@ namespace Aurora.Profiles.Generic_Application
     public class GenericApplicationProfileManager : ProfileManager
     {
         public GenericApplicationProfileManager(string process_name)
-            : base("Generic Application", process_name, process_name, new GenericApplicationSettings(), new Event_GenericApplication(process_name))
+            : base("Generic Application", process_name, process_name, typeof(GenericApplicationSettings), typeof(Control_GenericApplication), new Event_GenericApplication())
         {
         }
 
         public override string GetProfileFolderPath()
         {
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles", InternalName);
-            return path;
-        }
-
-        public override UserControl GetUserControl()
-        {
-            if (Control == null)
-                Control = new Control_GenericApplication(ProcessNames[0]);
-
-            return Control;
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles", InternalName);
         }
 
         public override ImageSource GetIcon()
@@ -52,26 +43,6 @@ namespace Aurora.Profiles.Generic_Application
             }
 
             return Icon;
-        }
-
-        internal override ProfileSettings LoadProfile(string path)
-        {
-            try
-            {
-                if (File.Exists(path))
-                {
-                    string profile_content = File.ReadAllText(path, Encoding.UTF8);
-
-                    if (!String.IsNullOrWhiteSpace(profile_content))
-                        return JsonConvert.DeserializeObject<GenericApplicationSettings>(profile_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
-            }
-
-            return null;
         }
 
         public override void LoadProfiles()
@@ -102,44 +73,6 @@ namespace Aurora.Profiles.Generic_Application
             else
             {
                 Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Name), Logging_Level.Info, false);
-            }
-        }
-
-        internal override void SaveProfile(string path, ProfileSettings profile)
-        {
-            try
-            {
-                string content = JsonConvert.SerializeObject(profile, Formatting.Indented);
-
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
-                File.WriteAllText(path, content, Encoding.UTF8);
-
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
-            }
-        }
-
-        public override void SaveProfiles()
-        {
-            try
-            {
-                string profiles_path = GetProfileFolderPath();
-
-                if (!Directory.Exists(profiles_path))
-                    Directory.CreateDirectory(profiles_path);
-
-                SaveProfile(Path.Combine(profiles_path, "default.json"), Settings);
-
-                foreach (KeyValuePair<string, ProfileSettings> kvp in Profiles)
-                {
-                    SaveProfile(Path.Combine(profiles_path, kvp.Key + ".json"), kvp.Value);
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine("Exception during SaveProfiles, " + exc, Logging_Level.Error);
             }
         }
     }

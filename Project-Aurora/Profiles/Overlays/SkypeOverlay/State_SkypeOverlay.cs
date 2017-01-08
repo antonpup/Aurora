@@ -40,15 +40,15 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
             _ParsedData = JObject.Parse(JSONstring);
         }
 
-        public State_SkypeOverlay(GameState other_state) : base(other_state)
+        public State_SkypeOverlay(IGameState other_state) : base(other_state)
         {
         }
     }
 
-    public class Skype_Integration : Node
+    public class Skype_Integration : Node<Skype_Integration>
     {
-        public readonly int MissedMessagesCount;
-        public readonly bool IsCalled;
+        public int MissedMessagesCount;
+        public bool IsCalled;
 
         internal Skype_Integration(string JSON) : base(JSON)
         {

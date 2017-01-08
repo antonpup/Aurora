@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Drawing;
 
 namespace Aurora.Profiles
 {
@@ -11,12 +12,13 @@ namespace Aurora.Profiles
         private Provider_Wrapper _Provider;
         private string _Command;
         private Command_Wrapper _Command_Data;
-        private byte[] _Bitmap;
+        private int[] _Bitmap;
         private Extra_Keys_Wrapper _Extra_Keys;
 
         /// <summary>
         /// Information about the provider of this GameState
         /// </summary>
+        [GameStateIgnoreAttribute]
         public Provider_Wrapper Provider
         {
             get
@@ -33,6 +35,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// The sent wrapper command
         /// </summary>
+        [GameStateIgnoreAttribute]
         public string Command
         {
             get
@@ -54,6 +57,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Data related to the passed command
         /// </summary>
+        [GameStateIgnoreAttribute]
         public Command_Wrapper Command_Data
         {
             get
@@ -70,7 +74,8 @@ namespace Aurora.Profiles
         /// <summary>
         /// The bitmap sent from the wrapper
         /// </summary>
-        public byte[] Sent_Bitmap
+        [GameStateIgnoreAttribute]
+        public int[] Sent_Bitmap
         {
             get
             {
@@ -79,9 +84,9 @@ namespace Aurora.Profiles
                     Newtonsoft.Json.Linq.JToken value;
 
                     if (_ParsedData.TryGetValue("bitmap", out value))
-                        _Bitmap = value.ToObject<byte[]>();
+                        _Bitmap = value.ToObject<int[]>();
                     else
-                        _Bitmap = new byte[] { };
+                        _Bitmap = new int[] { };
                 }
 
                 return _Bitmap;
@@ -91,6 +96,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Lighting information for extra keys that are not part of the bitmap
         /// </summary>
+        [GameStateIgnoreAttribute]
         public Extra_Keys_Wrapper Extra_Keys
         {
             get
@@ -138,12 +144,12 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class representing provider information for the wrapper
     /// </summary>
-    public class Provider_Wrapper : Node
+    public class Provider_Wrapper : Node<Provider_Wrapper>
     {
         /// <summary>
         /// Name of the program
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// AppID of the program (for wrappers, always 0)
@@ -161,20 +167,20 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class for additional wrapper command data such as effects and colors
     /// </summary>
-    public class Command_Wrapper : Node
+    public class Command_Wrapper : Node<Command_Wrapper>
     {
-        public readonly int red_start;
-        public readonly int green_start;
-        public readonly int blue_start;
-        public readonly int red_end;
-        public readonly int green_end;
-        public readonly int blue_end;
-        public readonly int duration;
-        public readonly int interval;
-        public readonly string effect_type;
-        public readonly string effect_config;
-        public readonly int key;
-        public readonly int custom_mode;
+        public int red_start;
+        public int green_start;
+        public int blue_start;
+        public int red_end;
+        public int green_end;
+        public int blue_end;
+        public int duration;
+        public int interval;
+        public string effect_type;
+        public string effect_config;
+        public int key;
+        public int custom_mode;
 
         internal Command_Wrapper(string JSON)
             : base(JSON)
@@ -188,7 +194,7 @@ namespace Aurora.Profiles
             duration = GetInt("duration");
             interval = GetInt("interval");
             effect_type = GetString("effect_type");
-            effect_type = GetString("effect_config");
+            effect_config = GetString("effect_config");
             key = GetInt("key");
             custom_mode = GetInt("custom_mode");
         }
@@ -197,58 +203,58 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class for additional wrapper keys
     /// </summary>
-    public class Extra_Keys_Wrapper : Node
+    public class Extra_Keys_Wrapper : Node<Extra_Keys_Wrapper>
     {
-        public readonly int[] peripheral;
-        public readonly int[] logo;
-        public readonly int[] badge;
-        public readonly int[] G1;
-        public readonly int[] G2;
-        public readonly int[] G3;
-        public readonly int[] G4;
-        public readonly int[] G5;
-        public readonly int[] G6;
-        public readonly int[] G7;
-        public readonly int[] G8;
-        public readonly int[] G9;
-        public readonly int[] G10;
-        public readonly int[] G11;
-        public readonly int[] G12;
-        public readonly int[] G13;
-        public readonly int[] G14;
-        public readonly int[] G15;
-        public readonly int[] G16;
-        public readonly int[] G17;
-        public readonly int[] G18;
-        public readonly int[] G19;
-        public readonly int[] G20;
+        public Color peripheral;
+        public Color logo;
+        public Color badge;
+        public Color G1;
+        public Color G2;
+        public Color G3;
+        public Color G4;
+        public Color G5;
+        public Color G6;
+        public Color G7;
+        public Color G8;
+        public Color G9;
+        public Color G10;
+        public Color G11;
+        public Color G12;
+        public Color G13;
+        public Color G14;
+        public Color G15;
+        public Color G16;
+        public Color G17;
+        public Color G18;
+        public Color G19;
+        public Color G20;
 
         internal Extra_Keys_Wrapper(string JSON)
             : base(JSON)
         {
-            peripheral = GetArray<int>("peripheral");
-            logo = GetArray<int>("logo");
-            badge = GetArray<int>("badge");
-            G1 = GetArray<int>("G1");
-            G2 = GetArray<int>("G2");
-            G3 = GetArray<int>("G3");
-            G4 = GetArray<int>("G4");
-            G5 = GetArray<int>("G5");
-            G6 = GetArray<int>("G6");
-            G7 = GetArray<int>("G7");
-            G8 = GetArray<int>("G8");
-            G9 = GetArray<int>("G9");
-            G10 = GetArray<int>("G10");
-            G11 = GetArray<int>("G11");
-            G12 = GetArray<int>("G12");
-            G13 = GetArray<int>("G13");
-            G14 = GetArray<int>("G14");
-            G15 = GetArray<int>("G15");
-            G16 = GetArray<int>("G16");
-            G17 = GetArray<int>("G17");
-            G18 = GetArray<int>("G18");
-            G19 = GetArray<int>("G19");
-            G20 = GetArray<int>("G20");
+            peripheral = Utils.ColorUtils.GetColorFromInt(GetInt("peripheral"));
+            logo = Utils.ColorUtils.GetColorFromInt( GetInt("logo"));
+            badge = Utils.ColorUtils.GetColorFromInt( GetInt("badge"));
+            G1 = Utils.ColorUtils.GetColorFromInt( GetInt("G1"));
+            G2 = Utils.ColorUtils.GetColorFromInt( GetInt("G2"));
+            G3 = Utils.ColorUtils.GetColorFromInt( GetInt("G3"));
+            G4 = Utils.ColorUtils.GetColorFromInt( GetInt("G4"));
+            G5 = Utils.ColorUtils.GetColorFromInt( GetInt("G5"));
+            G6 = Utils.ColorUtils.GetColorFromInt( GetInt("G6"));
+            G7 = Utils.ColorUtils.GetColorFromInt( GetInt("G7"));
+            G8 = Utils.ColorUtils.GetColorFromInt( GetInt("G8"));
+            G9 = Utils.ColorUtils.GetColorFromInt( GetInt("G9"));
+            G10 = Utils.ColorUtils.GetColorFromInt( GetInt("G10"));
+            G11 = Utils.ColorUtils.GetColorFromInt( GetInt("G11"));
+            G12 = Utils.ColorUtils.GetColorFromInt( GetInt("G12"));
+            G13 = Utils.ColorUtils.GetColorFromInt( GetInt("G13"));
+            G14 = Utils.ColorUtils.GetColorFromInt( GetInt("G14"));
+            G15 = Utils.ColorUtils.GetColorFromInt( GetInt("G15"));
+            G16 = Utils.ColorUtils.GetColorFromInt( GetInt("G16"));
+            G17 = Utils.ColorUtils.GetColorFromInt( GetInt("G17"));
+            G18 = Utils.ColorUtils.GetColorFromInt( GetInt("G18"));
+            G19 = Utils.ColorUtils.GetColorFromInt( GetInt("G19"));
+            G20 = Utils.ColorUtils.GetColorFromInt( GetInt("G20"));
         }
     }
 

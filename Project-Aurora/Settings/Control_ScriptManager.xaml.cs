@@ -13,13 +13,13 @@ namespace Aurora.Settings
     public partial class Control_ScriptManager : UserControl
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public static readonly DependencyProperty ProfileManagerProperty = DependencyProperty.Register("ProfileManager", typeof(Settings.ProfileManager), typeof(Control_ScriptManager));
+        public static readonly DependencyProperty ProfileManagerProperty = DependencyProperty.Register("ProfileManager", typeof(ProfileManager), typeof(Control_ScriptManager));
 
-        public Settings.ProfileManager ProfileManager
+        public ProfileManager ProfileManager
         {
             get
             {
-                return (Settings.ProfileManager)GetValue(ProfileManagerProperty);
+                return (ProfileManager)GetValue(ProfileManagerProperty);
             }
             set
             {

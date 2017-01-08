@@ -3,112 +3,112 @@
     /// <summary>
     /// Class representing hero information
     /// </summary>
-    public class Hero_Dota2 : Node
+    public class Hero_Dota2 : Node<Hero_Dota2>
     {
         /// <summary>
         /// Hero ID
         /// </summary>
-        public readonly int ID;
+        public int ID;
 
         /// <summary>
         /// Hero name
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Hero level
         /// </summary>
-        public readonly int Level;
+        public int Level;
 
         /// <summary>
         /// A boolean representing whether the hero is alive
         /// </summary>
-        public readonly bool IsAlive;
+        public bool IsAlive;
 
         /// <summary>
         /// Amount of seconds until the hero respawns
         /// </summary>
-        public readonly int SecondsToRespawn;
+        public int SecondsToRespawn;
 
         /// <summary>
         /// The buyback cost
         /// </summary>
-        public readonly int BuybackCost;
+        public int BuybackCost;
 
         /// <summary>
         /// The buyback cooldown
         /// </summary>
-        public readonly int BuybackCooldown;
+        public int BuybackCooldown;
 
         /// <summary>
         /// Hero health
         /// </summary>
-        public readonly int Health;
+        public int Health;
 
         /// <summary>
         /// Hero max health
         /// </summary>
-        public readonly int MaxHealth;
+        public int MaxHealth;
 
         /// <summary>
         /// Hero health percentage
         /// </summary>
-        public readonly int HealthPercent;
+        public int HealthPercent;
 
         /// <summary>
         /// Hero mana
         /// </summary>
-        public readonly int Mana;
+        public int Mana;
 
         /// <summary>
         /// Hero max mana
         /// </summary>
-        public readonly int MaxMana;
+        public int MaxMana;
 
         /// <summary>
         /// Hero mana percent
         /// </summary>
-        public readonly int ManaPercent;
+        public int ManaPercent;
 
         /// <summary>
         /// A boolean representing whether the hero is silenced
         /// </summary>
-        public readonly bool IsSilenced;
+        public bool IsSilenced;
 
         /// <summary>
         /// A boolean representing whether the hero is stunned
         /// </summary>
-        public readonly bool IsStunned;
+        public bool IsStunned;
 
         /// <summary>
         /// A boolean representing whether the hero is disarmed
         /// </summary>
-        public readonly bool IsDisarmed;
+        public bool IsDisarmed;
 
         /// <summary>
         /// A boolean representing whether the hero is magic immune
         /// </summary>
-        public readonly bool IsMagicImmune;
+        public bool IsMagicImmune;
 
         /// <summary>
         /// A boolean representing whether the hero is hexed
         /// </summary>
-        public readonly bool IsHexed;
+        public bool IsHexed;
 
         /// <summary>
         /// A boolean representing whether the hero is muteds
         /// </summary>
-        public readonly bool IsMuted;
+        public bool IsMuted;
 
         /// <summary>
         /// A boolean representing whether the hero is broken
         /// </summary>
-        public readonly bool IsBreak;
+        public bool IsBreak;
 
         /// <summary>
         /// A boolean representing whether the hero is debuffed
         /// </summary>
-        public readonly bool HasDebuff;
+        public bool HasDebuff;
 
         internal Hero_Dota2(string json_data) : base(json_data)
         {

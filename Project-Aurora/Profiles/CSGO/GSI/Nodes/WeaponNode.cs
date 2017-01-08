@@ -12,42 +12,42 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// A class representing weapon information
     /// </summary>
-    public class WeaponNode : Node
+    public class WeaponNode : Node<WeaponNode>
     {
         /// <summary>
         /// Weapon's name
         /// </summary>
-        public readonly string Name;
+        public string Name;
 
         /// <summary>
         /// Weapon's skin name
         /// </summary>
-        public readonly string Paintkit;
+        public string Paintkit;
 
         /// <summary>
         /// Weapon type
         /// </summary>
-        public readonly WeaponType Type;
+        public WeaponType Type;
 
         /// <summary>
         /// Curren amount of ammo in the clip
         /// </summary>
-        public readonly int AmmoClip;
+        public int AmmoClip;
 
         /// <summary>
         /// The maximum amount of ammo in the clip
         /// </summary>
-        public readonly int AmmoClipMax;
+        public int AmmoClipMax;
 
         /// <summary>
         /// The amount of ammo in reserve
         /// </summary>
-        public readonly int AmmoReserve;
+        public int AmmoReserve;
 
         /// <summary>
         /// Weapon's state
         /// </summary>
-        public readonly WeaponState State;
+        public WeaponState State;
 
         internal WeaponNode(string JSON)
             : base(JSON)

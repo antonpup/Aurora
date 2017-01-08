@@ -3,52 +3,52 @@
     /// <summary>
     /// Information about the game lobby
     /// </summary>
-    public class LobbyNode : Node
+    public class LobbyNode : Node<LobbyNode>
     {
         /// <summary>
         /// Lobby difficulty
         /// </summary>
-        public readonly LobbyDifficulty Difficulty;
+        public LobbyDifficulty Difficulty;
 
         /// <summary>
         /// Lobby visibility permissions
         /// </summary>
-        public readonly LobbyPermissions Permissions;
+        public LobbyPermissions Permissions;
 
         /// <summary>
         /// A boolean representing if team AI is enabled
         /// </summary>
-        public readonly bool IsTeamAIEnabled;
+        public bool IsTeamAIEnabled;
 
         /// <summary>
         /// Required level to join this lobby
         /// </summary>
-        public readonly int RequiredLevel;
+        public int RequiredLevel;
 
         /// <summary>
         /// A boolean representing if dropping in is enabled
         /// </summary>
-        public readonly bool DropInEnabled;
+        public bool DropInEnabled;
 
         /// <summary>
         /// Lobby kick option
         /// </summary>
-        public readonly LobbyKickSetting KickSetting;
+        public LobbyKickSetting KickSetting;
 
         /// <summary>
         /// Lobby job plan
         /// </summary>
-        public readonly LobbyJobPlan JobPlan;
+        public LobbyJobPlan JobPlan;
 
         /// <summary>
         /// A boolean representing if cheaters are automatically kicked
         /// </summary>
-        public readonly bool CheaterAutoKick;
+        public bool CheaterAutoKick;
 
         /// <summary>
         /// A boolean representing if lobby is singleplayer
         /// </summary>
-        public readonly bool IsSingleplayer;
+        public bool IsSingleplayer;
 
         internal LobbyNode(string JSON) : base(JSON)
         {

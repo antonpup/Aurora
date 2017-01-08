@@ -6,6 +6,7 @@ using CUE.NET.Devices.Keyboard;
 using CUE.NET.Devices.Keyboard.Enums;
 using CUE.NET.Devices.Mouse;
 using CUE.NET.Devices.Mouse.Enums;
+using CUE.NET.Devices.Mousemat;
 using CUE.NET.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Aurora.Devices.Corsair
     {
         private String devicename = "Corsair";
         private bool isInitialized = false;
+        private bool wasInitializedOnce = false;
 
         private bool keyboard_updated = false;
         private bool peripheral_updated = false;
@@ -25,10 +27,9 @@ namespace Aurora.Devices.Corsair
         CorsairKeyboard keyboard;
         CorsairMouse mouse;
         CorsairHeadset headset;
+        CorsairMousemat mousemat;
 
-        private Dictionary<CorsairKeyboardKeyId, Color> saved_keys = new Dictionary<CorsairKeyboardKeyId, Color>();
-        private Dictionary<CorsairMouseLedId, Color> saved_mouse = new Dictionary<CorsairMouseLedId, Color>();
-        private Dictionary<CorsairHeadsetLedId, Color> saved_headset = new Dictionary<CorsairHeadsetLedId, Color>();
+        private readonly object action_lock = new object();
 
         //Previous data
         private Color previous_peripheral_Color = Color.Black;
@@ -42,7 +43,7 @@ namespace Aurora.Devices.Corsair
         {
             if (isInitialized)
             {
-                return devicename + ": " + (keyboard != null ? keyboard.DeviceInfo.Model + " " : "") + (mouse != null ? mouse.DeviceInfo.Model + " " : "") + (headset != null ? headset.DeviceInfo.Model + " " : "");
+                return devicename + ": " + (keyboard != null ? keyboard.DeviceInfo.Model + " " : "") + (mouse != null ? mouse.DeviceInfo.Model + " " : "") + (headset != null ? headset.DeviceInfo.Model + " " : "") + (mousemat != null ? mousemat.DeviceInfo.Model + " " : "");
             }
             else
             {
@@ -52,130 +53,91 @@ namespace Aurora.Devices.Corsair
 
         public bool Initialize()
         {
-            if (!isInitialized)
+            lock (action_lock)
             {
-                try
+                if (!isInitialized)
                 {
-                    CueSDK.Initialize(true);
-                    Global.logger.LogLine("Corsair device, Initialized with " + CueSDK.LoadedArchitecture + "-SDK", Logging_Level.Info);
-
-                    keyboard = CueSDK.KeyboardSDK;
-                    mouse = CueSDK.MouseSDK;
-                    headset = CueSDK.HeadsetSDK;
-
-                    if (keyboard == null && mouse == null && headset == null)
-                        throw new WrapperException("No devices found");
-                    else
+                    try
                     {
-                        if (Global.Configuration.corsair_first_time)
+                        if (wasInitializedOnce)
+                            CueSDK.Reinitialize(true);
+                        else
+                            CueSDK.Initialize(true);
+
+                        Global.logger.LogLine("Corsair device, Initialized with " + CueSDK.LoadedArchitecture + "-SDK", Logging_Level.Info);
+
+                        keyboard = CueSDK.KeyboardSDK;
+                        mouse = CueSDK.MouseSDK;
+                        headset = CueSDK.HeadsetSDK;
+                        mousemat = CueSDK.MousematSDK;
+
+
+                        if (keyboard == null && mouse == null && headset == null && mousemat == null)
+                            throw new WrapperException("No devices found");
+                        else
                         {
-                            CorsairInstallInstructions instructions = new CorsairInstallInstructions();
-                            instructions.ShowDialog();
+                            if (Global.Configuration.corsair_first_time)
+                            {
+                                CorsairInstallInstructions instructions = new CorsairInstallInstructions();
+                                instructions.ShowDialog();
 
-                            Global.Configuration.corsair_first_time = false;
-                            Settings.ConfigManager.Save(Global.Configuration);
+                                Global.Configuration.corsair_first_time = false;
+                                Settings.ConfigManager.Save(Global.Configuration);
+                            }
+
+                            //SaveLeds();
+                            isInitialized = true;
+                            wasInitializedOnce = true;
+                            return true;
                         }
-
-                        SaveLeds();
-                        isInitialized = true;
-                        return true;
                     }
-                }
-                catch (CUEException ex)
-                {
-                    Global.logger.LogLine("Corsair device, CUE Exception! ErrorCode: " + Enum.GetName(typeof(CorsairError), ex.Error), Logging_Level.Error);
-                }
-                catch (WrapperException ex)
-                {
-                    Global.logger.LogLine("Corsair device, Wrapper Exception! Message:" + ex.Message, Logging_Level.Error);
-                }
-                catch (Exception ex)
-                {
-                    Global.logger.LogLine("Corsair device, Exception! Message:" + ex, Logging_Level.Error);
-                }
+                    catch (CUEException ex)
+                    {
+                        Global.logger.LogLine("Corsair device, CUE Exception! ErrorCode: " + Enum.GetName(typeof(CorsairError), ex.Error), Logging_Level.Error);
+                    }
+                    catch (WrapperException ex)
+                    {
+                        Global.logger.LogLine("Corsair device, Wrapper Exception! Message:" + ex.Message, Logging_Level.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        Global.logger.LogLine("Corsair device, Exception! Message:" + ex, Logging_Level.Error);
+                    }
 
-                isInitialized = false;
-                return false;
-            }
-
-            return isInitialized;
-        }
-
-        private void SaveLeds()
-        {
-            Global.logger.LogLine("Corsair starting saving leds", Logging_Level.Info);
-
-            if (keyboard != null)
-            {
-                CorsairKeyboardKeyId[] allkeys = Enum.GetValues(typeof(CorsairKeyboardKeyId)).Cast<CorsairKeyboardKeyId>().ToArray();
-                foreach (CorsairKeyboardKeyId key in allkeys)
-                {
-                    if (key != CorsairKeyboardKeyId.Invalid && keyboard[key] != null)
-                        saved_keys.Add(key, keyboard[key].Led.Color);
-                }
-            }
-
-            if (mouse != null)
-            {
-                CorsairMouseLedId[] allbuttons = Enum.GetValues(typeof(CorsairMouseLedId)).Cast<CorsairMouseLedId>().ToArray();
-                foreach (CorsairMouseLedId key in allbuttons)
-                {
-                    if (key != CorsairMouseLedId.Invalid && mouse[key] != null)
-                        saved_mouse.Add(key, mouse[key].Color);
-                }
-            }
-
-            if (headset != null)
-            {
-                CorsairHeadsetLedId[] allbuttons = Enum.GetValues(typeof(CorsairHeadsetLedId)).Cast<CorsairHeadsetLedId>().ToArray();
-                foreach (CorsairHeadsetLedId key in allbuttons)
-                {
-                    if (key != CorsairHeadsetLedId.Invalid && headset[key] != null)
-                        saved_headset.Add(key, headset[key].Color);
+                    isInitialized = false;
+                    return false;
                 }
 
+                return isInitialized;
             }
-
-            Global.logger.LogLine("Corsair saved leds", Logging_Level.Info);
-        }
-
-        private void RestoreLeds()
-        {
-            Global.logger.LogLine("Corsair starting restoring leds", Logging_Level.Info);
-
-            if (keyboard != null)
-            {
-                foreach (var key in saved_keys)
-                    keyboard[key.Key].Led.Color = key.Value;
-                keyboard.Update();
-            }
-
-            if (mouse != null)
-            {
-                foreach (var key in saved_mouse)
-                    mouse[key.Key].Color = key.Value;
-                mouse.Update();
-            }
-
-            if (headset != null)
-            {
-                foreach (var key in saved_headset)
-                    headset[key.Key].Color = key.Value;
-                headset.Update();
-            }
-
-            Global.logger.LogLine("Corsair restored leds", Logging_Level.Info);
         }
 
         public void Shutdown()
         {
+            lock (action_lock)
+            {
+                try
+                {
+                    if (isInitialized)
+                    {
+                        this.Reset();
+                        CueSDK.Reinitialize(false);
+                        isInitialized = false;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine("Corsair device, Exception during Shutdown. Message: " + exc, Logging_Level.Error);
+                    isInitialized = false;
+                }
+            }
         }
 
         public void Reset()
         {
             if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
             {
-                RestoreLeds();
+                //RestoreLeds();
 
                 keyboard_updated = false;
                 peripheral_updated = false;
@@ -199,19 +161,28 @@ namespace Aurora.Devices.Corsair
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
         {
-            CorsairKeyboardKeyId keyindex = CorsairKeyboardKeyId.Invalid;
+            CorsairLedId keyindex = CorsairLedId.Invalid;
 
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    CorsairKeyboardKeyId localKey = ToCorsair(key.Key);
+                    CorsairLedId localKey = ToCorsair(key.Key);
 
-                    if (localKey == CorsairKeyboardKeyId.Invalid && key.Key == DeviceKeys.Peripheral)
+                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo || localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
                     {
+                        SendColorToMouse(CorsairLedId.B1, (Color)(key.Value));
                         SendColorToPeripheral((Color)(key.Value), forced);
                     }
-                    else if (localKey != CorsairKeyboardKeyId.Invalid)
+                    else if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_FrontLight)
+                    {
+                        SendColorToMouse(CorsairLedId.B2, (Color)(key.Value));
+                    }
+                    else if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_ScrollWheel)
+                    {
+                        SendColorToMouse(CorsairLedId.B3, (Color)(key.Value));
+                    }
+                    else if (localKey != CorsairLedId.Invalid)
                     {
                         SetOneKey(localKey, (Color)(key.Value));
                     }
@@ -230,22 +201,27 @@ namespace Aurora.Devices.Corsair
             }
         }
 
+        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        {
+            return UpdateDevice(colorComposition.keyColors, forced);
+        }
+
         private void SendColorsToKeyboard(bool forced = false)
         {
-            if (keyboard != null)
+            if (keyboard != null && !Global.Configuration.devices_disable_keyboard)
             {
                 keyboard.Update(true);
                 keyboard_updated = true;
             }
         }
 
-        private void SetOneKey(CorsairKeyboardKeyId localKey, Color color)
+        private void SetOneKey(CorsairLedId localKey, Color color)
         {
             //Apply and strip Alpha
             color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
-            if (keyboard != null && keyboard[localKey] != null && keyboard[localKey].Led != null)
-                keyboard[localKey].Led.Color = color;
+            if (keyboard != null && keyboard[localKey] != null)
+                keyboard[localKey].Color = color;
         }
 
         private void SendColorToPeripheral(Color color, bool forced = false)
@@ -257,28 +233,64 @@ namespace Aurora.Devices.Corsair
                     //Apply and strip Alpha
                     color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
-                    if (mouse != null)
+                    if (mouse != null && !Global.Configuration.devices_disable_mouse)
                     {
-                        if (mouse[CorsairMouseLedId.B1] != null)
-                            mouse[CorsairMouseLedId.B1].Color = color;
-                        if (mouse[CorsairMouseLedId.B2] != null)
-                            mouse[CorsairMouseLedId.B2].Color = color;
-                        if (mouse[CorsairMouseLedId.B3] != null)
-                            mouse[CorsairMouseLedId.B3].Color = color;
-                        if (mouse[CorsairMouseLedId.B4] != null)
-                            mouse[CorsairMouseLedId.B4].Color = color;
+                        if (mouse[CorsairLedId.B1] != null)
+                            mouse[CorsairLedId.B1].Color = color;
+                        if (mouse[CorsairLedId.B2] != null)
+                            mouse[CorsairLedId.B2].Color = color;
+                        if (mouse[CorsairLedId.B3] != null)
+                            mouse[CorsairLedId.B3].Color = color;
+                        if (mouse[CorsairLedId.B4] != null)
+                            mouse[CorsairLedId.B4].Color = color;
 
                         mouse.Update(true);
                     }
 
-                    if (headset != null)
+                    if (headset != null && !Global.Configuration.devices_disable_headset)
                     {
-                        if (headset[CorsairHeadsetLedId.LeftLogo] != null)
-                            headset[CorsairHeadsetLedId.LeftLogo].Color = color;
-                        if (headset[CorsairHeadsetLedId.RightLogo] != null)
-                            headset[CorsairHeadsetLedId.RightLogo].Color = color;
+                        if (headset[CorsairLedId.LeftLogo] != null)
+                            headset[CorsairLedId.LeftLogo].Color = color;
+                        if (headset[CorsairLedId.RightLogo] != null)
+                            headset[CorsairLedId.RightLogo].Color = color;
 
                         headset.Update(true);
+                    }
+
+                    if (mousemat != null && !Global.Configuration.devices_disable_mouse)
+                    {
+                        if (mousemat[CorsairLedId.Zone1] != null)
+                            mousemat[CorsairLedId.Zone1].Color = color;
+                        if (mousemat[CorsairLedId.Zone2] != null)
+                            mousemat[CorsairLedId.Zone2].Color = color;
+                        if (mousemat[CorsairLedId.Zone3] != null)
+                            mousemat[CorsairLedId.Zone3].Color = color;
+                        if (mousemat[CorsairLedId.Zone4] != null)
+                            mousemat[CorsairLedId.Zone4].Color = color;
+                        if (mousemat[CorsairLedId.Zone5] != null)
+                            mousemat[CorsairLedId.Zone5].Color = color;
+                        if (mousemat[CorsairLedId.Zone6] != null)
+                            mousemat[CorsairLedId.Zone6].Color = color;
+                        if (mousemat[CorsairLedId.Zone7] != null)
+                            mousemat[CorsairLedId.Zone7].Color = color;
+                        if (mousemat[CorsairLedId.Zone8] != null)
+                            mousemat[CorsairLedId.Zone8].Color = color;
+                        if (mousemat[CorsairLedId.Zone9] != null)
+                            mousemat[CorsairLedId.Zone9].Color = color;
+                        if (mousemat[CorsairLedId.Zone10] != null)
+                            mousemat[CorsairLedId.Zone10].Color = color;
+                        if (mousemat[CorsairLedId.Zone11] != null)
+                            mousemat[CorsairLedId.Zone11].Color = color;
+                        if (mousemat[CorsairLedId.Zone12] != null)
+                            mousemat[CorsairLedId.Zone12].Color = color;
+                        if (mousemat[CorsairLedId.Zone13] != null)
+                            mousemat[CorsairLedId.Zone13].Color = color;
+                        if (mousemat[CorsairLedId.Zone14] != null)
+                            mousemat[CorsairLedId.Zone14].Color = color;
+                        if (mousemat[CorsairLedId.Zone15] != null)
+                            mousemat[CorsairLedId.Zone15].Color = color;
+
+                        mousemat.Update(true);
                     }
 
                     previous_peripheral_Color = color;
@@ -294,272 +306,379 @@ namespace Aurora.Devices.Corsair
             }
         }
 
-        private CorsairKeyboardKeyId ToCorsair(DeviceKeys key)
+        private void SendColorToMouse(CorsairLedId ledid, Color color, bool forced = false)
+        {
+            if (Global.Configuration.devices_disable_mouse)
+                return;
+
+            if (Global.Configuration.allow_peripheral_devices)
+            {
+                //Apply and strip Alpha
+                color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+
+                if (mouse != null)
+                {
+                    if (mouse[ledid] != null)
+                        mouse[ledid].Color = color;
+
+                    mouse.Update(true);
+                }
+
+                peripheral_updated = true;
+            }
+            else
+            {
+                if (peripheral_updated)
+                {
+                    peripheral_updated = false;
+                }
+            }
+        }
+
+        private CorsairLedId ToCorsair(DeviceKeys key)
         {
             switch (key)
             {
                 case (DeviceKeys.LOGO):
-                    return CorsairKeyboardKeyId.CLK_Logo;
+                    return CorsairLedId.Logo;
                 case (DeviceKeys.BRIGHTNESS_SWITCH):
-                    return CorsairKeyboardKeyId.Brightness;
+                    return CorsairLedId.Brightness;
                 case (DeviceKeys.LOCK_SWITCH):
-                    return CorsairKeyboardKeyId.WinLock;
+                    return CorsairLedId.WinLock;
+
+                case (DeviceKeys.VOLUME_MUTE):
+                    return CorsairLedId.Mute;
+                case (DeviceKeys.VOLUME_UP):
+                    return CorsairLedId.VolumeUp;
+                case (DeviceKeys.VOLUME_DOWN):
+                    return CorsairLedId.VolumeDown;
+                case (DeviceKeys.MEDIA_STOP):
+                    return CorsairLedId.Stop;
+                case (DeviceKeys.MEDIA_PLAY_PAUSE):
+                    return CorsairLedId.PlayPause;
+                case (DeviceKeys.MEDIA_PREVIOUS):
+                    return CorsairLedId.ScanPreviousTrack;
+                case (DeviceKeys.MEDIA_NEXT):
+                    return CorsairLedId.ScanNextTrack;
 
                 case (DeviceKeys.ESC):
-                    return CorsairKeyboardKeyId.Escape;
+                    return CorsairLedId.Escape;
                 case (DeviceKeys.F1):
-                    return CorsairKeyboardKeyId.F1;
+                    return CorsairLedId.F1;
                 case (DeviceKeys.F2):
-                    return CorsairKeyboardKeyId.F2;
+                    return CorsairLedId.F2;
                 case (DeviceKeys.F3):
-                    return CorsairKeyboardKeyId.F3;
+                    return CorsairLedId.F3;
                 case (DeviceKeys.F4):
-                    return CorsairKeyboardKeyId.F4;
+                    return CorsairLedId.F4;
                 case (DeviceKeys.F5):
-                    return CorsairKeyboardKeyId.F5;
+                    return CorsairLedId.F5;
                 case (DeviceKeys.F6):
-                    return CorsairKeyboardKeyId.F6;
+                    return CorsairLedId.F6;
                 case (DeviceKeys.F7):
-                    return CorsairKeyboardKeyId.F7;
+                    return CorsairLedId.F7;
                 case (DeviceKeys.F8):
-                    return CorsairKeyboardKeyId.F8;
+                    return CorsairLedId.F8;
                 case (DeviceKeys.F9):
-                    return CorsairKeyboardKeyId.F9;
+                    return CorsairLedId.F9;
                 case (DeviceKeys.F10):
-                    return CorsairKeyboardKeyId.F10;
+                    return CorsairLedId.F10;
                 case (DeviceKeys.F11):
-                    return CorsairKeyboardKeyId.F11;
+                    return CorsairLedId.F11;
                 case (DeviceKeys.F12):
-                    return CorsairKeyboardKeyId.F12;
+                    return CorsairLedId.F12;
                 case (DeviceKeys.PRINT_SCREEN):
-                    return CorsairKeyboardKeyId.PrintScreen;
+                    return CorsairLedId.PrintScreen;
                 case (DeviceKeys.SCROLL_LOCK):
-                    return CorsairKeyboardKeyId.ScrollLock;
+                    return CorsairLedId.ScrollLock;
                 case (DeviceKeys.PAUSE_BREAK):
-                    return CorsairKeyboardKeyId.PauseBreak;
+                    return CorsairLedId.PauseBreak;
                 case (DeviceKeys.TILDE):
-                    return CorsairKeyboardKeyId.GraveAccentAndTilde;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.ApostropheAndDoubleQuote;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return CorsairLedId.SemicolonAndColon;
+                    else
+                        return CorsairLedId.GraveAccentAndTilde;
                 case (DeviceKeys.ONE):
-                    return CorsairKeyboardKeyId.D1;
+                    return CorsairLedId.D1;
                 case (DeviceKeys.TWO):
-                    return CorsairKeyboardKeyId.D2;
+                    return CorsairLedId.D2;
                 case (DeviceKeys.THREE):
-                    return CorsairKeyboardKeyId.D3;
+                    return CorsairLedId.D3;
                 case (DeviceKeys.FOUR):
-                    return CorsairKeyboardKeyId.D4;
+                    return CorsairLedId.D4;
                 case (DeviceKeys.FIVE):
-                    return CorsairKeyboardKeyId.D5;
+                    return CorsairLedId.D5;
                 case (DeviceKeys.SIX):
-                    return CorsairKeyboardKeyId.D6;
+                    return CorsairLedId.D6;
                 case (DeviceKeys.SEVEN):
-                    return CorsairKeyboardKeyId.D7;
+                    return CorsairLedId.D7;
                 case (DeviceKeys.EIGHT):
-                    return CorsairKeyboardKeyId.D8;
+                    return CorsairLedId.D8;
                 case (DeviceKeys.NINE):
-                    return CorsairKeyboardKeyId.D9;
+                    return CorsairLedId.D9;
                 case (DeviceKeys.ZERO):
-                    return CorsairKeyboardKeyId.D0;
+                    return CorsairLedId.D0;
                 case (DeviceKeys.MINUS):
-                    return CorsairKeyboardKeyId.MinusAndUnderscore;
+                    return CorsairLedId.MinusAndUnderscore;
                 case (DeviceKeys.EQUALS):
-                    return CorsairKeyboardKeyId.EqualsAndPlus;
+                    return CorsairLedId.EqualsAndPlus;
                 case (DeviceKeys.BACKSPACE):
-                    return CorsairKeyboardKeyId.Backspace;
+                    return CorsairLedId.Backspace;
                 case (DeviceKeys.INSERT):
-                    return CorsairKeyboardKeyId.Insert;
+                    return CorsairLedId.Insert;
                 case (DeviceKeys.HOME):
-                    return CorsairKeyboardKeyId.Home;
+                    return CorsairLedId.Home;
                 case (DeviceKeys.PAGE_UP):
-                    return CorsairKeyboardKeyId.PageUp;
+                    return CorsairLedId.PageUp;
                 case (DeviceKeys.NUM_LOCK):
-                    return CorsairKeyboardKeyId.NumLock;
+                    return CorsairLedId.NumLock;
                 case (DeviceKeys.NUM_SLASH):
-                    return CorsairKeyboardKeyId.KeypadSlash;
+                    return CorsairLedId.KeypadSlash;
                 case (DeviceKeys.NUM_ASTERISK):
-                    return CorsairKeyboardKeyId.KeypadAsterisk;
+                    return CorsairLedId.KeypadAsterisk;
                 case (DeviceKeys.NUM_MINUS):
-                    return CorsairKeyboardKeyId.KeypadMinus;
+                    return CorsairLedId.KeypadMinus;
                 case (DeviceKeys.TAB):
-                    return CorsairKeyboardKeyId.Tab;
+                    return CorsairLedId.Tab;
                 case (DeviceKeys.Q):
-                    return CorsairKeyboardKeyId.Q;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.A;
+                    else
+                        return CorsairLedId.Q;
                 case (DeviceKeys.W):
-                    return CorsairKeyboardKeyId.W;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.Z;
+                    else
+                        return CorsairLedId.W;
                 case (DeviceKeys.E):
-                    return CorsairKeyboardKeyId.E;
+                    return CorsairLedId.E;
                 case (DeviceKeys.R):
-                    return CorsairKeyboardKeyId.R;
+                    return CorsairLedId.R;
                 case (DeviceKeys.T):
-                    return CorsairKeyboardKeyId.T;
+                    return CorsairLedId.T;
                 case (DeviceKeys.Y):
-                    return CorsairKeyboardKeyId.Y;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return CorsairLedId.Z;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                        return CorsairLedId.Z;
+                    else
+                        return CorsairLedId.Y;
                 case (DeviceKeys.U):
-                    return CorsairKeyboardKeyId.U;
+                    return CorsairLedId.U;
                 case (DeviceKeys.I):
-                    return CorsairKeyboardKeyId.I;
+                    return CorsairLedId.I;
                 case (DeviceKeys.O):
-                    return CorsairKeyboardKeyId.O;
+                    return CorsairLedId.O;
                 case (DeviceKeys.P):
-                    return CorsairKeyboardKeyId.P;
+                    return CorsairLedId.P;
                 case (DeviceKeys.OPEN_BRACKET):
-                    return CorsairKeyboardKeyId.BracketLeft;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.MinusAndUnderscore;
+                    else
+                        return CorsairLedId.BracketLeft;
                 case (DeviceKeys.CLOSE_BRACKET):
-                    return CorsairKeyboardKeyId.BracketRight;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.BracketLeft;
+                    else
+                        return CorsairLedId.BracketRight;
                 case (DeviceKeys.BACKSLASH):
-                    return CorsairKeyboardKeyId.Backslash;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.intl)
+                        return CorsairLedId.NonUsTilde;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.ru)
+                        return CorsairLedId.NonUsTilde;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.NonUsTilde;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return CorsairLedId.GraveAccentAndTilde;
+                    else
+                        return CorsairLedId.Backslash;
                 case (DeviceKeys.DELETE):
-                    return CorsairKeyboardKeyId.Delete;
+                    return CorsairLedId.Delete;
                 case (DeviceKeys.END):
-                    return CorsairKeyboardKeyId.End;
+                    return CorsairLedId.End;
                 case (DeviceKeys.PAGE_DOWN):
-                    return CorsairKeyboardKeyId.PageDown;
+                    return CorsairLedId.PageDown;
                 case (DeviceKeys.NUM_SEVEN):
-                    return CorsairKeyboardKeyId.Keypad7;
+                    return CorsairLedId.Keypad7;
                 case (DeviceKeys.NUM_EIGHT):
-                    return CorsairKeyboardKeyId.Keypad8;
+                    return CorsairLedId.Keypad8;
                 case (DeviceKeys.NUM_NINE):
-                    return CorsairKeyboardKeyId.Keypad9;
+                    return CorsairLedId.Keypad9;
                 case (DeviceKeys.NUM_PLUS):
-                    return CorsairKeyboardKeyId.KeypadPlus;
+                    return CorsairLedId.KeypadPlus;
                 case (DeviceKeys.CAPS_LOCK):
-                    return CorsairKeyboardKeyId.CapsLock;
+                    return CorsairLedId.CapsLock;
                 case (DeviceKeys.A):
-                    return CorsairKeyboardKeyId.A;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.Q;
+                    else
+                        return CorsairLedId.A;
                 case (DeviceKeys.S):
-                    return CorsairKeyboardKeyId.S;
+                    return CorsairLedId.S;
                 case (DeviceKeys.D):
-                    return CorsairKeyboardKeyId.D;
+                    return CorsairLedId.D;
                 case (DeviceKeys.F):
-                    return CorsairKeyboardKeyId.F;
+                    return CorsairLedId.F;
                 case (DeviceKeys.G):
-                    return CorsairKeyboardKeyId.G;
+                    return CorsairLedId.G;
                 case (DeviceKeys.H):
-                    return CorsairKeyboardKeyId.H;
+                    return CorsairLedId.H;
                 case (DeviceKeys.J):
-                    return CorsairKeyboardKeyId.J;
+                    return CorsairLedId.J;
                 case (DeviceKeys.K):
-                    return CorsairKeyboardKeyId.K;
+                    return CorsairLedId.K;
                 case (DeviceKeys.L):
-                    return CorsairKeyboardKeyId.L;
+                    return CorsairLedId.L;
                 case (DeviceKeys.SEMICOLON):
-                    return CorsairKeyboardKeyId.SemicolonAndColon;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.BracketRight;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return CorsairLedId.BracketLeft;
+                    else
+                        return CorsairLedId.SemicolonAndColon;
                 case (DeviceKeys.APOSTROPHE):
-                    return CorsairKeyboardKeyId.ApostropheAndDoubleQuote;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return  CorsairLedId.GraveAccentAndTilde;
+                    else
+                        return  CorsairLedId.ApostropheAndDoubleQuote;
                 case (DeviceKeys.HASHTAG):
-                    return CorsairKeyboardKeyId.NonUsTilde;
+                    return CorsairLedId.NonUsTilde;
                 case (DeviceKeys.ENTER):
-                    return CorsairKeyboardKeyId.Enter;
+                    return CorsairLedId.Enter;
                 case (DeviceKeys.NUM_FOUR):
-                    return CorsairKeyboardKeyId.Keypad4;
+                    return CorsairLedId.Keypad4;
                 case (DeviceKeys.NUM_FIVE):
-                    return CorsairKeyboardKeyId.Keypad5;
+                    return CorsairLedId.Keypad5;
                 case (DeviceKeys.NUM_SIX):
-                    return CorsairKeyboardKeyId.Keypad6;
+                    return CorsairLedId.Keypad6;
                 case (DeviceKeys.LEFT_SHIFT):
-                    return CorsairKeyboardKeyId.LeftShift;
+                    return CorsairLedId.LeftShift;
                 case (DeviceKeys.BACKSLASH_UK):
-                    return CorsairKeyboardKeyId.NonUsBackslash;
+                    return CorsairLedId.NonUsBackslash;
                 case (DeviceKeys.Z):
-                    return CorsairKeyboardKeyId.Z;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return CorsairLedId.Y;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.W;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                        return CorsairLedId.Y;
+                    else
+                        return CorsairLedId.Z;
                 case (DeviceKeys.X):
-                    return CorsairKeyboardKeyId.X;
+                    return CorsairLedId.X;
                 case (DeviceKeys.C):
-                    return CorsairKeyboardKeyId.C;
+                    return CorsairLedId.C;
                 case (DeviceKeys.V):
-                    return CorsairKeyboardKeyId.V;
+                    return CorsairLedId.V;
                 case (DeviceKeys.B):
-                    return CorsairKeyboardKeyId.B;
+                    return CorsairLedId.B;
                 case (DeviceKeys.N):
-                    return CorsairKeyboardKeyId.N;
+                    return CorsairLedId.N;
                 case (DeviceKeys.M):
-                    return CorsairKeyboardKeyId.M;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.SemicolonAndColon;
+                    else
+                        return CorsairLedId.M;
                 case (DeviceKeys.COMMA):
-                    return CorsairKeyboardKeyId.CommaAndLessThan;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.M;
+                    else
+                        return CorsairLedId.CommaAndLessThan;
                 case (DeviceKeys.PERIOD):
-                    return CorsairKeyboardKeyId.PeriodAndBiggerThan;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.CommaAndLessThan;
+                    else
+                        return CorsairLedId.PeriodAndBiggerThan;
                 case (DeviceKeys.FORWARD_SLASH):
-                    return CorsairKeyboardKeyId.SlashAndQuestionMark;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return CorsairLedId.PeriodAndBiggerThan;
+                    else
+                        return CorsairLedId.SlashAndQuestionMark;
+                case (DeviceKeys.OEM8):
+                    return CorsairLedId.SlashAndQuestionMark;
                 case (DeviceKeys.RIGHT_SHIFT):
-                    return CorsairKeyboardKeyId.RightShift;
+                    return CorsairLedId.RightShift;
                 case (DeviceKeys.ARROW_UP):
-                    return CorsairKeyboardKeyId.UpArrow;
+                    return CorsairLedId.UpArrow;
                 case (DeviceKeys.NUM_ONE):
-                    return CorsairKeyboardKeyId.Keypad1;
+                    return CorsairLedId.Keypad1;
                 case (DeviceKeys.NUM_TWO):
-                    return CorsairKeyboardKeyId.Keypad2;
+                    return CorsairLedId.Keypad2;
                 case (DeviceKeys.NUM_THREE):
-                    return CorsairKeyboardKeyId.Keypad3;
+                    return CorsairLedId.Keypad3;
                 case (DeviceKeys.NUM_ENTER):
-                    return CorsairKeyboardKeyId.KeypadEnter;
+                    return CorsairLedId.KeypadEnter;
                 case (DeviceKeys.LEFT_CONTROL):
-                    return CorsairKeyboardKeyId.LeftCtrl;
+                    return CorsairLedId.LeftCtrl;
                 case (DeviceKeys.LEFT_WINDOWS):
-                    return CorsairKeyboardKeyId.LeftGui;
+                    return CorsairLedId.LeftGui;
                 case (DeviceKeys.LEFT_ALT):
-                    return CorsairKeyboardKeyId.LeftAlt;
+                    return CorsairLedId.LeftAlt;
                 case (DeviceKeys.SPACE):
-                    return CorsairKeyboardKeyId.Space;
+                    return CorsairLedId.Space;
                 case (DeviceKeys.RIGHT_ALT):
-                    return CorsairKeyboardKeyId.RightAlt;
+                    return CorsairLedId.RightAlt;
                 case (DeviceKeys.RIGHT_WINDOWS):
-                    return CorsairKeyboardKeyId.RightGui;
+                    return CorsairLedId.RightGui;
                 case (DeviceKeys.APPLICATION_SELECT):
-                    return CorsairKeyboardKeyId.Application;
+                    return CorsairLedId.Application;
                 case (DeviceKeys.RIGHT_CONTROL):
-                    return CorsairKeyboardKeyId.RightCtrl;
+                    return CorsairLedId.RightCtrl;
                 case (DeviceKeys.ARROW_LEFT):
-                    return CorsairKeyboardKeyId.LeftArrow;
+                    return CorsairLedId.LeftArrow;
                 case (DeviceKeys.ARROW_DOWN):
-                    return CorsairKeyboardKeyId.DownArrow;
+                    return CorsairLedId.DownArrow;
                 case (DeviceKeys.ARROW_RIGHT):
-                    return CorsairKeyboardKeyId.RightArrow;
+                    return CorsairLedId.RightArrow;
                 case (DeviceKeys.NUM_ZERO):
-                    return CorsairKeyboardKeyId.Keypad0;
+                    return CorsairLedId.Keypad0;
                 case (DeviceKeys.NUM_PERIOD):
-                    return CorsairKeyboardKeyId.KeypadPeriodAndDelete;
+                    return CorsairLedId.KeypadPeriodAndDelete;
 
                 case (DeviceKeys.FN_Key):
-                    return CorsairKeyboardKeyId.Fn;
+                    return CorsairLedId.Fn;
 
                 case (DeviceKeys.G1):
-                    return CorsairKeyboardKeyId.G1;
+                    return CorsairLedId.G1;
                 case (DeviceKeys.G2):
-                    return CorsairKeyboardKeyId.G2;
+                    return CorsairLedId.G2;
                 case (DeviceKeys.G3):
-                    return CorsairKeyboardKeyId.G3;
+                    return CorsairLedId.G3;
                 case (DeviceKeys.G4):
-                    return CorsairKeyboardKeyId.G4;
+                    return CorsairLedId.G4;
                 case (DeviceKeys.G5):
-                    return CorsairKeyboardKeyId.G5;
+                    return CorsairLedId.G5;
                 case (DeviceKeys.G6):
-                    return CorsairKeyboardKeyId.G6;
+                    return CorsairLedId.G6;
                 case (DeviceKeys.G7):
-                    return CorsairKeyboardKeyId.G7;
+                    return CorsairLedId.G7;
                 case (DeviceKeys.G8):
-                    return CorsairKeyboardKeyId.G8;
+                    return CorsairLedId.G8;
                 case (DeviceKeys.G9):
-                    return CorsairKeyboardKeyId.G9;
+                    return CorsairLedId.G9;
                 case (DeviceKeys.G10):
-                    return CorsairKeyboardKeyId.G10;
+                    return CorsairLedId.G10;
                 case (DeviceKeys.G11):
-                    return CorsairKeyboardKeyId.G11;
+                    return CorsairLedId.G11;
                 case (DeviceKeys.G12):
-                    return CorsairKeyboardKeyId.G12;
+                    return CorsairLedId.G12;
                 case (DeviceKeys.G13):
-                    return CorsairKeyboardKeyId.G13;
+                    return CorsairLedId.G13;
                 case (DeviceKeys.G14):
-                    return CorsairKeyboardKeyId.G14;
+                    return CorsairLedId.G14;
                 case (DeviceKeys.G15):
-                    return CorsairKeyboardKeyId.G15;
+                    return CorsairLedId.G15;
                 case (DeviceKeys.G16):
-                    return CorsairKeyboardKeyId.G16;
+                    return CorsairLedId.G16;
                 case (DeviceKeys.G17):
-                    return CorsairKeyboardKeyId.G17;
+                    return CorsairLedId.G17;
                 case (DeviceKeys.G18):
-                    return CorsairKeyboardKeyId.G18;
+                    return CorsairLedId.G18;
 
                 default:
-                    return CorsairKeyboardKeyId.Invalid;
+                    return CorsairLedId.Invalid;
             }
         }
 

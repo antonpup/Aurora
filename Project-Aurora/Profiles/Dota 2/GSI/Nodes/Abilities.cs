@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Aurora.Profiles.Dota_2.GSI.Nodes
@@ -6,14 +8,14 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
     /// <summary>
     /// Class representing hero abilities
     /// </summary>
-    public class Abilities_Dota2 : Node
+    public class Abilities_Dota2 : Node<Abilities_Dota2>, IEnumerable<Ability>
     {
         private List<Ability> abilities = new List<Ability>();
 
         /// <summary>
         /// The attributes a hero has to spend on abilities
         /// </summary>
-        public readonly Attributes Attributes;
+        public Attributes Attributes;
 
         private string json;
 
@@ -55,6 +57,16 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         public override string ToString()
         {
             return json;
+        }
+
+        public IEnumerator<Ability> GetEnumerator()
+        {
+            return abilities.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return abilities.GetEnumerator();
         }
     }
 }

@@ -19,6 +19,8 @@ namespace Aurora.Devices.Razer
         IMousepad mousepad = null;
         IKeypad keypad = null;
 
+        private readonly object action_lock = new object();
+
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
 
         public string GetDeviceName()
@@ -40,67 +42,87 @@ namespace Aurora.Devices.Razer
 
         public bool Initialize()
         {
-            if (!isInitialized)
+            lock (action_lock)
             {
-                try
+                if (!IsInitialized())
                 {
-                    if (!Chroma.IsSdkAvailable())
+                    try
                     {
-                        Global.logger.LogLine("No Chroma SDK available", Logging_Level.Info);
-                        throw new Exception("No Chroma SDK available");
-                        //return false;
-                    }
-
-                    Chroma.Instance.Initialize();
-
-                    Global.logger.LogLine("Razer device, Initialized", Logging_Level.Info);
-
-                    keyboard = Chroma.Instance.Keyboard;
-                    mouse = Chroma.Instance.Mouse;
-                    headset = Chroma.Instance.Headset;
-                    mousepad = Chroma.Instance.Mousepad;
-                    keypad = Chroma.Instance.Keypad;
-
-                    if (keyboard == null &&
-                        mouse == null &&
-                        headset == null &&
-                        mousepad == null &&
-                        keypad == null
-                        )
-                    {
-                        throw new Exception("No devices connected");
-                    }
-                    else
-                    {
-                        if (Global.Configuration.razer_first_time)
+                        if (!Chroma.SdkAvailable)
                         {
-                            RazerInstallInstructions instructions = new RazerInstallInstructions();
-                            instructions.ShowDialog();
-
-                            Global.Configuration.razer_first_time = false;
-                            Settings.ConfigManager.Save(Global.Configuration);
+                            Global.logger.LogLine("No Chroma SDK available", Logging_Level.Info);
+                            throw new Exception("No Chroma SDK available");
+                            //return false;
                         }
 
-                        isInitialized = true;
-                        return true;
+                        Chroma.Instance.Initialize();
+
+                        Global.logger.LogLine("Razer device, Initialized", Logging_Level.Info);
+
+                        keyboard = Chroma.Instance.Keyboard;
+                        mouse = Chroma.Instance.Mouse;
+                        headset = Chroma.Instance.Headset;
+                        mousepad = Chroma.Instance.Mousepad;
+                        keypad = Chroma.Instance.Keypad;
+
+                        if (keyboard == null &&
+                            mouse == null &&
+                            headset == null &&
+                            mousepad == null &&
+                            keypad == null
+                            )
+                        {
+                            throw new Exception("No devices connected");
+                        }
+                        else
+                        {
+                            if (Global.Configuration.razer_first_time)
+                            {
+                                RazerInstallInstructions instructions = new RazerInstallInstructions();
+                                instructions.ShowDialog();
+
+                                Global.Configuration.razer_first_time = false;
+                                Settings.ConfigManager.Save(Global.Configuration);
+                            }
+
+                            isInitialized = true;
+                            return true;
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Global.logger.LogLine("Razer device, Exception! Message:" + ex, Logging_Level.Error);
-                }
+                    catch (Exception ex)
+                    {
+                        Global.logger.LogLine("Razer device, Exception! Message:" + ex, Logging_Level.Error);
+                    }
 
 
-                isInitialized = false;
-                return false;
+                    isInitialized = false;
+                    return false;
+                }
+
+                return isInitialized;
             }
-
-            return isInitialized;
-
         }
 
         public void Shutdown()
         {
+            Global.logger.LogLine("Razer device, Shutdown attempt", Logging_Level.Info);
+
+            lock (action_lock)
+            {
+                try
+                {
+                    if (IsInitialized())
+                    {
+                        //Chroma.Instance.Uninitialize();
+                        isInitialized = false;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine("Razer device, Exception during Shutdown. Message: " + exc, Logging_Level.Error);
+                    isInitialized = false;
+                }
+            }
         }
 
         public void Reset()
@@ -119,7 +141,7 @@ namespace Aurora.Devices.Razer
 
         public bool IsInitialized()
         {
-            return isInitialized;
+            return isInitialized && Chroma.Instance.Initialized;
         }
 
         public bool IsConnected()
@@ -137,7 +159,7 @@ namespace Aurora.Devices.Razer
                 {
                     Key localKey = ToRazer(key.Key);
 
-                    if (localKey == Key.Invalid && key.Key == DeviceKeys.Peripheral)
+                    if (localKey == Key.Invalid && key.Key == DeviceKeys.Peripheral_Logo || localKey == Key.Invalid && key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(key.Value, forced);
                     }
@@ -160,9 +182,14 @@ namespace Aurora.Devices.Razer
             }
         }
 
+        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        {
+            return UpdateDevice(colorComposition.keyColors, forced);
+        }
+
         private void SendColorsToKeyboard(bool forced = false)
         {
-            if (keyboard != null)
+            if (keyboard != null && !Global.Configuration.devices_disable_keyboard)
             {
                 keyboard_updated = true;
             }
@@ -170,8 +197,8 @@ namespace Aurora.Devices.Razer
 
         private void SetOneKey(Key localKey, System.Drawing.Color color)
         {
-            if (keyboard != null && keyboard[localKey] != null)
-                keyboard.SetKey(localKey, color);
+            if (keyboard != null && keyboard[localKey] != null && !Global.Configuration.devices_disable_keyboard)
+                keyboard.SetKey(localKey, new Color(color.R, color.G, color.B));
         }
 
         private void SendColorToPeripheral(System.Drawing.Color color, bool forced = false)
@@ -180,17 +207,17 @@ namespace Aurora.Devices.Razer
             {
                 if (Global.Configuration.allow_peripheral_devices)
                 {
-                    if (mouse != null)
-                        mouse.SetAll(color);
+                    if (mouse != null && !Global.Configuration.devices_disable_mouse)
+                        mouse.SetAll(new Color(color.R, color.G, color.B));
 
-                    if (mousepad != null)
-                        mousepad.SetAll(color);
+                    if (mousepad != null && !Global.Configuration.devices_disable_mouse)
+                        mousepad.SetAll(new Color(color.R, color.G, color.B));
 
-                    if (headset != null)
-                        headset.SetAll(color);
+                    if (headset != null && !Global.Configuration.devices_disable_headset)
+                        headset.SetAll(new Color(color.R, color.G, color.B));
 
-                    if (keypad != null)
-                        keypad.SetAll(color);
+                    if (keypad != null && !Global.Configuration.devices_disable_keyboard)
+                        keypad.SetAll(new Color(color.R, color.G, color.B));
 
                     previous_peripheral_Color = color;
                     peripheral_updated = true;
@@ -242,7 +269,12 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.PAUSE_BREAK):
                     return Key.Pause;
                 case (DeviceKeys.TILDE):
-                    return Key.OemTilde;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemApostrophe;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Key.OemSemicolon;
+                    else
+                        return Key.OemTilde;
                 case (DeviceKeys.ONE):
                     return Key.D1;
                 case (DeviceKeys.TWO):
@@ -286,9 +318,15 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.TAB):
                     return Key.Tab;
                 case (DeviceKeys.Q):
-                    return Key.Q;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.A;
+                    else
+                        return Key.Q;
                 case (DeviceKeys.W):
-                    return Key.W;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.Z;
+                    else
+                        return Key.W;
                 case (DeviceKeys.E):
                     return Key.E;
                 case (DeviceKeys.R):
@@ -306,11 +344,26 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.P):
                     return Key.P;
                 case (DeviceKeys.OPEN_BRACKET):
-                    return Key.OemLeftBracket;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemMinus;
+                    else
+                        return Key.OemLeftBracket;
                 case (DeviceKeys.CLOSE_BRACKET):
-                    return Key.OemRightBracket;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemLeftBracket;
+                    else
+                        return Key.OemRightBracket;
                 case (DeviceKeys.BACKSLASH):
-                    return Key.OemBackslash;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.intl)
+                        return Key.EurBackslash;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.ru)
+                        return Key.EurBackslash;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.EurBackslash;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Key.OemTilde;
+                    else
+                        return Key.OemBackslash;
                 case (DeviceKeys.DELETE):
                     return Key.Delete;
                 case (DeviceKeys.END):
@@ -328,7 +381,10 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.CAPS_LOCK):
                     return Key.CapsLock;
                 case (DeviceKeys.A):
-                    return Key.A;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.Q;
+                    else
+                        return Key.A;
                 case (DeviceKeys.S):
                     return Key.S;
                 case (DeviceKeys.D):
@@ -346,9 +402,17 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.L):
                     return Key.L;
                 case (DeviceKeys.SEMICOLON):
-                    return Key.OemSemicolon;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemRightBracket;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return Key.OemLeftBracket;
+                    else
+                        return Key.OemSemicolon;
                 case (DeviceKeys.APOSTROPHE):
-                    return Key.OemApostrophe;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemTilde;
+                    else
+                        return Key.OemApostrophe;
                 case (DeviceKeys.HASHTAG):
                     return Key.EurPound;
                 case (DeviceKeys.ENTER):
@@ -364,7 +428,10 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.BACKSLASH_UK):
                     return Key.EurBackslash;
                 case (DeviceKeys.Z):
-                    return Key.Z;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.W;
+                    else
+                        return Key.Z;
                 case (DeviceKeys.X):
                     return Key.X;
                 case (DeviceKeys.C):
@@ -376,12 +443,26 @@ namespace Aurora.Devices.Razer
                 case (DeviceKeys.N):
                     return Key.N;
                 case (DeviceKeys.M):
-                    return Key.M;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemSemicolon;
+                    else
+                        return Key.M;
                 case (DeviceKeys.COMMA):
-                    return Key.OemComma;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.M;
+                    else
+                        return Key.OemComma;
                 case (DeviceKeys.PERIOD):
-                    return Key.OemPeriod;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemComma;
+                    else
+                        return Key.OemPeriod;
                 case (DeviceKeys.FORWARD_SLASH):
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
+                        return Key.OemPeriod;
+                    else
+                        return Key.OemSlash;
+                case (DeviceKeys.OEM8):
                     return Key.OemSlash;
                 case (DeviceKeys.RIGHT_SHIFT):
                     return Key.RightShift;
@@ -435,6 +516,9 @@ namespace Aurora.Devices.Razer
                     return Key.Macro4;
                 case (DeviceKeys.G5):
                     return Key.Macro5;
+
+                case (DeviceKeys.LOGO):
+                    return Key.Logo;
 
                 default:
                     return Key.Invalid;

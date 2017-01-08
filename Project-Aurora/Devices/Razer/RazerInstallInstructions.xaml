@@ -10,7 +10,7 @@
             <ColumnDefinition Width="25*"/>
             <ColumnDefinition Width="49*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="step1_text" HorizontalAlignment="Left" Margin="22,10,0,0" TextWrapping="Wrap" Text="Open Razer Synapse and go into Chorma Apps" VerticalAlignment="Top" Width="202"/>
+        <TextBlock x:Name="step1_text" HorizontalAlignment="Left" Margin="22,10,0,0" TextWrapping="Wrap" Text="Open Razer Synapse and go into Chroma Apps" VerticalAlignment="Top" Width="202"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="●" VerticalAlignment="Top" Height="16" Width="7"/>
         <TextBlock x:Name="step2_text" HorizontalAlignment="Left" Margin="22,47,0,0" TextWrapping="Wrap" Text="Enable SDK" VerticalAlignment="Top" Width="202" IsEnabled="False"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,47,0,0" TextWrapping="Wrap" Text="●" VerticalAlignment="Top" Height="16" Width="7"/>

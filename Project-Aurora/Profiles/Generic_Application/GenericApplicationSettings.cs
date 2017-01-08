@@ -1,6 +1,8 @@
 ﻿using Aurora.Settings;
+using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,6 +14,14 @@ namespace Aurora.Profiles.Generic_Application
     {
         //Generic
         public string ApplicationName;
+
+        [Newtonsoft.Json.JsonIgnore]
+        public bool _simulateNighttime = false;
+
+        [Newtonsoft.Json.JsonIgnore]
+        public bool _simulateDaytime = false;
+
+        public ObservableCollection<Layer> Layers_NightTime { get; set; }
 
         //Effects
         //// Lighting Areas
@@ -31,6 +41,8 @@ namespace Aurora.Profiles.Generic_Application
             ApplicationName = "New Application Profile";
             isEnabled = true;
 
+            Layers_NightTime = new ObservableCollection<Layer>();
+
             //Effects
             //// Lighting Areas
             lighting_areas_day = new List<ColorZone>();
@@ -49,6 +61,8 @@ namespace Aurora.Profiles.Generic_Application
             //Generic
             ApplicationName = appname;
             isEnabled = true;
+
+            Layers_NightTime = new ObservableCollection<Layer>();
 
             //Effects
             //// Lighting Areas

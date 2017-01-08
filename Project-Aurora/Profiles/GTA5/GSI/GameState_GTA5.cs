@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace Aurora.Profiles.GTA5.GSI
@@ -19,12 +20,6 @@ namespace Aurora.Profiles.GTA5.GSI
         /// </summary>
         [Description("Menu")]
         Menu,
-
-        /// <summary>
-        /// Player is in singleplayer
-        /// </summary>
-        [Description("Singleplayer")]
-        PlayingSP,
 
         /// <summary>
         /// Player is playing as Trevor
@@ -49,12 +44,6 @@ namespace Aurora.Profiles.GTA5.GSI
         /// </summary>
         [Description("Singleplayer - Chop")]
         PlayingSP_Chop,
-
-        /// <summary>
-        /// Player is playing multiplayer
-        /// </summary>
-        [Description("Multiplayer")]
-        PlayingMP,
 
         /// <summary>
         /// Player is playing a multiplayer mission
@@ -104,66 +93,32 @@ namespace Aurora.Profiles.GTA5.GSI
     /// </summary>
     public class GameState_GTA5 : GameState_Wrapper
     {
-        private PlayerState _CurrentState;
-        private bool _HasCops;
-        private Color _StateColor;
-        private Color _LeftSirenColor;
-        private Color _RightSirenColor;
 
         /// <summary>
         /// Current game state
         /// </summary>
-        public PlayerState CurrentState
-        {
-            get
-            {
-                return _CurrentState;
-            }
-        }
+        public PlayerState CurrentState;
 
         /// <summary>
         /// A boolean representing if the player is wanted
         /// </summary>
-        public bool HasCops
-        {
-            get
-            {
-                return _HasCops;
-            }
-        }
+        public bool HasCops;
 
         /// <summary>
         /// The current background color
         /// </summary>
-        public Color StateColor
-        {
-            get
-            {
-                return _StateColor;
-            }
-        }
+        public Color? StateColor = null;
+
 
         /// <summary>
         /// The current left siren color (Keys F1 - F6)
         /// </summary>
-        public Color LeftSirenColor
-        {
-            get
-            {
-                return _LeftSirenColor;
-            }
-        }
+        public Color LeftSirenColor;
 
         /// <summary>
         /// The current left siren color (Keys F7 - F12)
         /// </summary>
-        public Color RightSirenColor
-        {
-            get
-            {
-                return _RightSirenColor;
-            }
-        }
+        public Color RightSirenColor;
 
         /// <summary>
         /// Creates a default GameState_GTA5 instance.
@@ -172,6 +127,11 @@ namespace Aurora.Profiles.GTA5.GSI
         {
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
+        }
+        
+        private byte RoundTo5(byte no)
+        {
+            return (byte)(Math.Round((double)no / 5) * 5);
         }
 
         /// <summary>
@@ -182,60 +142,43 @@ namespace Aurora.Profiles.GTA5.GSI
         {
             Provider.AppID = 271590;
 
-            //Get Current State
-            Color state_color = JSonToColor(
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 3],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 2],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC + 1],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC]
-                );
 
-            if(state_color == Color.FromArgb(255, 175, 79, 0))
-                _CurrentState = PlayerState.PlayingSP_Trevor;
-            else if (state_color == Color.FromArgb(255, 48, 255, 255))
-                _CurrentState = PlayerState.PlayingSP_Michael;
-            else if (state_color == Color.FromArgb(255, 48, 255, 0))
-                _CurrentState = PlayerState.PlayingSP_Franklin;
-            else if (state_color == Color.FromArgb(255, 127, 0, 0))
-                _CurrentState = PlayerState.PlayingSP_Chop;
-            else if (state_color == Color.FromArgb(255, 0, 68, 226))
-                _CurrentState = PlayerState.PlayingMP;
+            //Get Current State
+            Color state_color = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC / 4]);
+
+            if(state_color == Color.FromArgb(255, 175, 80, 0))
+                CurrentState = PlayerState.PlayingSP_Trevor;
+            else if (state_color == Color.FromArgb(255, 50, 255, 255))
+                CurrentState = PlayerState.PlayingSP_Michael;
+            else if (state_color == Color.FromArgb(255, 50, 255, 0))
+                CurrentState = PlayerState.PlayingSP_Franklin;
+            else if (state_color == Color.FromArgb(255, 125, 0, 0))
+                CurrentState = PlayerState.PlayingSP_Chop;
             else if (state_color == Color.FromArgb(255, 255, 170, 0))
-                _CurrentState = PlayerState.PlayingRace_Gold;
-            else if (state_color == Color.FromArgb(255, 191, 191, 191))
-                _CurrentState = PlayerState.PlayingRace_Silver;
-            else if (state_color == Color.FromArgb(255, 255, 51, 0))
-                _CurrentState = PlayerState.PlayingRace_Bronze;
-            else if (state_color == Color.FromArgb(255, 193, 79, 79))
-                _CurrentState = PlayerState.PlayingMP_Mission;
-            else if (state_color == Color.FromArgb(255, 255, 122, 196))
-                _CurrentState = PlayerState.PlayingMP_HeistFinale;
-            else if (state_color == Color.FromArgb(255, 142, 127, 153))
-                _CurrentState = PlayerState.PlayingMP_Spectator;
+                CurrentState = PlayerState.PlayingRace_Gold;
+            else if (state_color == Color.FromArgb(255, 190, 190, 190))
+                CurrentState = PlayerState.PlayingRace_Silver;
+            else if (state_color == Color.FromArgb(255, 255, 50, 0))
+                CurrentState = PlayerState.PlayingRace_Bronze;
+            else if (state_color == Color.FromArgb(255, 195, 80, 80))
+                CurrentState = PlayerState.PlayingMP_Mission;
+            else if (state_color == Color.FromArgb(255, 255, 120, 195) || state_color == Color.FromArgb(255, 155, 110, 175))
+                CurrentState = PlayerState.PlayingMP_HeistFinale;
+            else if (state_color == Color.FromArgb(255, 140, 125, 155))
+                CurrentState = PlayerState.PlayingMP_Spectator;
             else
             {
-                _CurrentState = PlayerState.Undefined;
+                CurrentState = PlayerState.Undefined;
+                StateColor = state_color;
                 Global.logger.LogLine("Undefined color - " + state_color);
             }
 
-            _StateColor = state_color;
 
-            _LeftSirenColor = JSonToColor(
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 3],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 2],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 + 1],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1]
-                );
+            LeftSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F1 / 4]);
 
-            _RightSirenColor = JSonToColor(
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 3],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 2],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 + 1],
-                Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12]
-                );
+            RightSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 / 4]);
 
-
-            _HasCops = _LeftSirenColor != _RightSirenColor;
+            HasCops = LeftSirenColor != RightSirenColor;
         }
 
         /// <summary>

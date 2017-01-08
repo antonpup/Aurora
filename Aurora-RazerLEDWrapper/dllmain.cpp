@@ -501,10 +501,7 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 			current_bitmap[bitm_pos + 3] = effect.bitmap[bitm_pos + 3];
 		}
 
-		ss << (short)current_bitmap[bitm_pos] << ',';
-		ss << (short)current_bitmap[bitm_pos + 1] << ',';
-		ss << (short)current_bitmap[bitm_pos + 2] << ',';
-		ss << (short)current_bitmap[bitm_pos + 3];
+		ss << (int)(((int)current_bitmap[bitm_pos + 2] << 16) | ((int)current_bitmap[bitm_pos + 1] << 8) | ((int)current_bitmap[bitm_pos]));
 
 		if (bitm_pos + 4 < LOGI_LED_BITMAP_SIZE)
 			ss << ',';
@@ -512,7 +509,7 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 	ss << "],";
 
 	ss << "\"extra_keys\": {";
-	ss << "\"logo\": [";
+	ss << "\"logo\": ";
 	if (effect.logo[3] != NULL)
 	{
 		current_logo[0] = effect.logo[0];
@@ -521,13 +518,10 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 		current_logo[3] = effect.logo[3];
 	}
 
-	ss << (short)current_logo[0] << ',';
-	ss << (short)current_logo[1] << ',';
-	ss << (short)current_logo[2] << ',';
-	ss << (short)current_logo[3];
+	ss << (int)(((int)current_logo[2] << 16) | ((int)current_logo[1] << 8) | ((int)current_logo[0]));
 
-	ss << "],";
-	ss << "\"G1\": [";
+	ss << ",";
+	ss << "\"G1\": ";
 	if (effect.g1[3] != NULL)
 	{
 		current_g1[0] = effect.g1[0];
@@ -536,13 +530,10 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 		current_g1[3] = effect.g1[3];
 	}
 
-	ss << (short)current_g1[0] << ',';
-	ss << (short)current_g1[1] << ',';
-	ss << (short)current_g1[2] << ',';
-	ss << (short)current_g1[3];
+	ss << (int)(((int)current_g1[2] << 16) | ((int)current_g1[1] << 8) | ((int)current_g1[0]));
 
-	ss << "],";
-	ss << "\"G2\": [";
+	ss << ",";
+	ss << "\"G2\": ";
 	if (effect.g2[3] != NULL)
 	{
 		current_g2[0] = effect.g2[0];
@@ -551,13 +542,10 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 		current_g2[3] = effect.g2[3];
 	}
 
-	ss << (short)current_g2[0] << ',';
-	ss << (short)current_g2[1] << ',';
-	ss << (short)current_g2[2] << ',';
-	ss << (short)current_g2[3];
+	ss << (int)(((int)current_g2[2] << 16) | ((int)current_g2[1] << 8) | ((int)current_g2[0]));
 
-	ss << "],";
-	ss << "\"G3\": [";
+	ss << ",";
+	ss << "\"G3\": ";
 	if (effect.g3[3] != NULL)
 	{
 		current_g3[0] = effect.g3[0];
@@ -566,13 +554,10 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 		current_g3[3] = effect.g3[3];
 	}
 
-	ss << (short)current_g3[0] << ',';
-	ss << (short)current_g3[1] << ',';
-	ss << (short)current_g3[2] << ',';
-	ss << (short)current_g3[3];
+	ss << (int)(((int)current_g3[2] << 16) | ((int)current_g3[1] << 8) | ((int)current_g3[0]));
 
-	ss << "],";
-	ss << "\"G4\": [";
+	ss << ",";
+	ss << "\"G4\": ";
 	if (effect.g4[3] != NULL)
 	{
 		current_g4[0] = effect.g4[0];
@@ -581,13 +566,10 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 		current_g4[3] = effect.g4[3];
 	}
 
-	ss << (short)current_g4[0] << ',';
-	ss << (short)current_g4[1] << ',';
-	ss << (short)current_g4[2] << ',';
-	ss << (short)current_g4[3];
+	ss << (int)(((int)current_g4[2] << 16) | ((int)current_g4[1] << 8) | ((int)current_g4[0]));
 
-	ss << "],";
-	ss << "\"G5\": [";
+	ss << ",";
+	ss << "\"G5\": ";
 	if (effect.g5[3] != NULL)
 	{
 		current_g5[0] = effect.g5[0];
@@ -596,13 +578,10 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 		current_g5[3] = effect.g5[3];
 	}
 
-	ss << (short)current_g5[0] << ',';
-	ss << (short)current_g5[1] << ',';
-	ss << (short)current_g5[2] << ',';
-	ss << (short)current_g5[3];
+	ss << (int)(((int)current_g5[2] << 16) | ((int)current_g5[1] << 8) | ((int)current_g5[0]));
 
-	ss << "],";
-	ss << "\"peripheral\": [";
+	ss << ",";
+	ss << "\"peripheral\": ";
 	if (effect.peripheral[3] != NULL)
 	{
 		current_peripheral[0] = effect.peripheral[0];
@@ -611,11 +590,9 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 		current_peripheral[3] = effect.peripheral[3];
 	}
 
-	ss << (short)current_peripheral[0] << ',';
-	ss << (short)current_peripheral[1] << ',';
-	ss << (short)current_peripheral[2] << ',';
-	ss << (short)current_peripheral[3];
-	ss << "]";
+	ss << (int)(((int)current_peripheral[2] << 16) | ((int)current_peripheral[1] << 8) | ((int)current_peripheral[0]));
+
+	ss << "";
 	ss << '}';
 
 

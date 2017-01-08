@@ -8,16 +8,91 @@ using System.Timers;
 
 namespace Aurora
 {
-    public struct Bitmaping
+    public class BitmapRectangle
     {
-        public int topleft_x, topleft_y, bottomright_x, bottomright_y;
+        private bool _isvalid = false;
+        public bool IsValid { get { return _isvalid; } }
 
-        public Bitmaping(int tlx, int tly, int brx, int bry)
+        private Rectangle _rectangle;
+        public Rectangle Rectangle { get { return _rectangle; } }
+
+        public bool IsEmpty
         {
-            topleft_x = tlx;
-            topleft_y = tly;
-            bottomright_x = brx;
-            bottomright_y = bry;
+            get
+            {
+                if (_rectangle.IsEmpty || _rectangle.Height == 0 || _rectangle.Width == 0 || !_isvalid)
+                    return true;
+
+                return false;
+            }
+        }
+
+        public int Bottom { get { return _rectangle.Bottom; } }
+        public int Top { get { return _rectangle.Top; } }
+        public int Left { get { return _rectangle.Left; } }
+        public int Right { get { return _rectangle.Right; } }
+        public int Height { get { return _rectangle.Height; } }
+        public int Width { get { return _rectangle.Width; } }
+        public int Area { get { return _rectangle.Width * _rectangle.Height; } }
+
+        public PointF TopLeft
+        {
+            get
+            {
+                return new PointF(Top, Left);
+            }
+        }
+        public PointF TopRight
+        {
+            get
+            {
+                return new PointF(Top, Right);
+            }
+        }
+        public PointF BottomLeft
+        {
+            get
+            {
+                return new PointF(Bottom, Left);
+            }
+        }
+        public PointF BottomRight
+        {
+            get
+            {
+                return new PointF(Bottom, Right);
+            }
+        }
+        public PointF Center
+        {
+            get
+            {
+                return new PointF(_rectangle.Left + _rectangle.Width / 2.0f, _rectangle.Top + _rectangle.Height / 2.0f);
+            }
+        }
+
+        public BitmapRectangle()
+        {
+
+        }
+
+        public BitmapRectangle(int X, int Y, int Width, int Height)
+        {
+            _rectangle = new Rectangle(X, Y, Width, Height);
+            _isvalid = true;
+        }
+
+        public BitmapRectangle(Rectangle region)
+        {
+            _rectangle = new Rectangle(region.Location, region.Size);
+            _isvalid = true;
+        }
+
+        public static explicit operator BitmapRectangle(Rectangle region)
+        {
+            BitmapRectangle d = new BitmapRectangle(region);
+
+            return d;
         }
 
         public override bool Equals(object obj)
@@ -25,36 +100,20 @@ namespace Aurora
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Bitmaping)obj);
+            return Equals((BitmapRectangle)obj);
         }
 
-        public bool Equals(Bitmaping p)
+        public bool Equals(BitmapRectangle p)
         {
             if (ReferenceEquals(null, p)) return false;
             if (ReferenceEquals(this, p)) return true;
 
-            return topleft_x == p.topleft_x &&
-                    topleft_y == p.topleft_y &&
-                    bottomright_x == p.bottomright_x &&
-                    bottomright_y == p.bottomright_y;
+            return Rectangle.Equals(p.Rectangle);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hash = 17;
-                hash = hash * 23 + topleft_x.GetHashCode();
-                hash = hash * 23 + topleft_y.GetHashCode();
-                hash = hash * 23 + bottomright_x.GetHashCode();
-                hash = hash * 23 + bottomright_y.GetHashCode();
-                return hash;
-            }
-        }
-
-        public EffectsEngine.Functions.EffectPoint GetCenter()
-        {
-            return new EffectsEngine.Functions.EffectPoint(topleft_x + ((bottomright_x - topleft_x) / 2.0f), topleft_y + ((bottomright_y - topleft_y) / 2.0f));
+            return Rectangle.GetHashCode();
         }
     }
 
@@ -72,6 +131,13 @@ namespace Aurora
         Timer recordTimer = new Timer(1000D / 15D); // 30fps
         int pushedframes = 0;
         Timer fpsDebugTimer = new Timer(1000D);
+
+        private static Devices.DeviceKeys[] possible_peripheral_keys = {
+                    Devices.DeviceKeys.Peripheral,
+                    Devices.DeviceKeys.Peripheral_FrontLight,
+                    Devices.DeviceKeys.Peripheral_ScrollWheel,
+                    Devices.DeviceKeys.Peripheral_Logo
+                };
 
 
         private static object bitmap_lock = new object();
@@ -126,7 +192,7 @@ namespace Aurora
             }
         }
 
-        private static Dictionary<Devices.DeviceKeys, Bitmaping> bitmap_map = new Dictionary<Devices.DeviceKeys, Bitmaping>();
+        private static Dictionary<Devices.DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<Devices.DeviceKeys, BitmapRectangle>();
 
         private static Dictionary<Devices.DeviceKeys, Color> keyColors = new Dictionary<Devices.DeviceKeys, Color>();
 
@@ -187,19 +253,19 @@ namespace Aurora
 
         public void SetCanvasSize(int width, int height)
         {
-            canvas_width = width;
-            canvas_height = height;
+            canvas_width = width == 0 ? 1 : width;
+            canvas_height = height == 0 ? 1 : height;
         }
 
-        public static Bitmaping GetBitmappingFromDeviceKey(DeviceKeys key)
+        public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKeys key)
         {
             if (bitmap_map.ContainsKey(key))
                 return bitmap_map[key];
             else
-                return new Bitmaping(0, 0, 0, 0);
+                return new BitmapRectangle();
         }
 
-        public void SetBitmapping(Dictionary<DeviceKeys, Bitmaping> bitmap_map)
+        public void SetBitmapping(Dictionary<DeviceKeys, BitmapRectangle> bitmap_map)
         {
             Effects.bitmap_map = bitmap_map;
         }
@@ -216,19 +282,23 @@ namespace Aurora
                 EffectLayer[] layers_array = frame.GetLayers().ToArray();
 
                 foreach (EffectLayer layer in layers_array)
-                {
                     background += layer;
-                }
 
                 foreach (EffectLayer layer in over_layers_array)
-                {
                     background += layer;
-                }
 
                 //Apply Brightness
-                Color peri_col = background.Get(DeviceKeys.Peripheral);
+                Dictionary<DeviceKeys, Color> peripehralColors = new Dictionary<DeviceKeys, Color>();
 
-                background.Set(DeviceKeys.Peripheral, Utils.ColorUtils.BlendColors(peri_col, Color.Black, (1.0f - Global.Configuration.peripheral_brightness_modifier)));
+                foreach (Devices.DeviceKeys key in possible_peripheral_keys)
+                {
+                    if(!peripehralColors.ContainsKey(key))
+                        peripehralColors.Add(key, background.Get(key));
+                }
+
+                foreach (Devices.DeviceKeys key in possible_peripheral_keys)
+                    background.Set(key, Utils.ColorUtils.BlendColors(peripehralColors[key], Color.Black, (1.0f - Global.Configuration.peripheral_brightness_modifier)));
+
                 background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.keyboard_brightness_modifier)), Color.Black));
 
                 if (Global.Configuration.use_volume_as_brightness)
@@ -238,14 +308,19 @@ namespace Aurora
                 Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
 
                 foreach (Devices.DeviceKeys key in allKeys)
-                {
                     keyColors[key] = background.Get(key);
-                }
 
                 Effects.keyColors = new Dictionary<DeviceKeys, Color>(keyColors);
 
                 pushedframes++;
-                Global.dev_manager.UpdateDevices(keyColors);
+
+                DeviceColorComposition dcc = new DeviceColorComposition()
+                {
+                    keyColors = new Dictionary<DeviceKeys, Color>(keyColors),
+                    keyBitmap = background.GetBitmap()
+                };
+
+                Global.dev_manager.UpdateDevices(dcc);
 
                 var hander = NewLayerRender;
 

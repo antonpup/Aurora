@@ -9,7 +9,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing information about player's weapons
     /// </summary>
-    public class WeaponsNode : Node
+    public class WeaponsNode : Node<WeaponsNode>
     {
         private List<WeaponNode> _Weapons = new List<WeaponNode>();
 
@@ -17,6 +17,8 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// The number of weapons a player has in their inventory
         /// </summary>
         public int Count { get { return _Weapons.Count; } }
+
+        private WeaponNode _ActiveWeaponDummy = new WeaponNode("");
 
         /// <summary>
         /// Player's currently active weapon
@@ -31,7 +33,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
                         return w;
                 }
 
-                return new WeaponNode("");
+                return _ActiveWeaponDummy;
             }
         }
 

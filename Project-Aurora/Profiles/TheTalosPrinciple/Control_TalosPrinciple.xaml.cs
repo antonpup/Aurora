@@ -14,11 +14,11 @@ namespace Aurora.Profiles.TheTalosPrinciple
     {
         private ProfileManager profile_manager;
 
-        public Control_TalosPrinciple()
+        public Control_TalosPrinciple(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Talos"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -82,12 +82,10 @@ namespace Aurora.Profiles.TheTalosPrinciple
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, "talos.exe");
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallWrapper(string installpath = "")

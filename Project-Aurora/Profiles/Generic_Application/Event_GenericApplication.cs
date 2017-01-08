@@ -4,20 +4,26 @@ using System.Linq;
 using Aurora.EffectsEngine;
 using Aurora.Settings;
 using System.Windows.Forms;
+using System.Collections.ObjectModel;
+using Aurora.Settings.Layers;
 
 namespace Aurora.Profiles.Generic_Application
 {
     public class Event_GenericApplication : LightEvent
     {
-        public Event_GenericApplication(string profilename)
+        public Event_GenericApplication()
         {
-            this.profilename = profilename;
+        }
+
+        private bool HasProfile()
+        {
+            return Global.Configuration.additional_profiles.ContainsKey(this.Profile.ProcessNames[0]);
         }
 
         public override bool IsEnabled()
         {
-            if (Global.Configuration.additional_profiles.ContainsKey(profilename))
-                return (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).isEnabled;
+            if (HasProfile())
+                return this.Profile.Settings.isEnabled;
             else
                 return false;
         }
@@ -26,63 +32,41 @@ namespace Aurora.Profiles.Generic_Application
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            EffectLayer cz_layer = new EffectLayer("Color Zones");
+            GenericApplicationSettings settings = (GenericApplicationSettings)this.Profile.Settings;
 
-            ColorZone[] zones = { };
-
-            if (Global.Configuration.additional_profiles.ContainsKey(profilename))
-            {
-                if (!(Global.Configuration.nighttime_enabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute))
-                    )
-                {
-                    zones = (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).lighting_areas_day.ToArray();
-                }
-                else
-                {
-                    zones = (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).lighting_areas_night.ToArray();
-                }
-            }
-
-            cz_layer.DrawColorZones(zones.ToArray());
-            layers.Enqueue(cz_layer);
+            ObservableCollection<Layer> timeLayers = settings.Layers;
 
             //Scripts
-            Global.Configuration.additional_profiles[profilename].UpdateEffectScripts(layers);
+            this.Profile.UpdateEffectScripts(layers);
 
-            EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
-            if (Global.Configuration.additional_profiles.ContainsKey(profilename) && (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).shortcuts_assistant_enabled)
+            if (HasProfile())
             {
-                if (Global.held_modified == Keys.LControlKey || Global.held_modified == Keys.RControlKey)
+                if ((Global.Configuration.nighttime_enabled &&
+                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute)) ||
+                    settings._simulateNighttime
+                    )
                 {
-                    if (Global.held_modified == Keys.LControlKey)
-                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_CONTROL, (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).ctrl_key_color);
-                    else
-                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_CONTROL, (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).ctrl_key_color);
-                    sc_assistant_layer.Set((Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).ctrl_key_sequence, (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).ctrl_key_color);
-                }
-                else if (Global.held_modified == Keys.LMenu || Global.held_modified == Keys.RMenu)
-                {
-                    if (Global.held_modified == Keys.LMenu)
-                        sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_ALT, (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).alt_key_color);
-                    else
-                        sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_ALT, (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).alt_key_color);
-                    sc_assistant_layer.Set((Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).alt_key_sequence, (Global.Configuration.additional_profiles[profilename].Settings as GenericApplicationSettings).alt_key_color);
+                    timeLayers = settings.Layers_NightTime;
                 }
             }
-            layers.Enqueue(sc_assistant_layer);
+
+            foreach (var layer in timeLayers.Reverse().ToArray())
+            {
+                if (layer.Enabled && layer.LogicPass)
+                    layers.Enqueue(layer.Render(_game_state));
+            }
 
             frame.AddLayers(layers.ToArray());
         }
 
-        public void UpdateLights(EffectFrame frame, string profilename)
+        public void UpdateLights(EffectFrame frame, ProfileManager profile)
         {
-            this.profilename = profilename;
+            this.Profile = profile;
 
             UpdateLights(frame);
         }
 
-        public override void UpdateLights(EffectFrame frame, GameState new_game_state)
+        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
         {
             throw new NotImplementedException();
         }

@@ -14,11 +14,11 @@ namespace Aurora.Profiles.ShadowOfMordor
     {
         private ProfileManager profile_manager;
 
-        public Control_ShadowOfMordor()
+        public Control_ShadowOfMordor(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["ShadowOfMordor"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -82,12 +82,10 @@ namespace Aurora.Profiles.ShadowOfMordor
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, "shadowofmordor.exe");
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallWrapper(string installpath = "")

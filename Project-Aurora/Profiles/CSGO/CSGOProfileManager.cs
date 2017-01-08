@@ -1,4 +1,5 @@
 ﻿using Aurora.Settings;
+using Aurora.Settings.Layers;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -12,44 +13,16 @@ namespace Aurora.Profiles.CSGO
     public class CSGOProfileManager : ProfileManager
     {
         public CSGOProfileManager()
-            : base("CS:GO", "csgo", "csgo.exe", new CSGOSettings(), new GameEvent_CSGO())
+            : base("CS:GO", "csgo", "csgo.exe", typeof(CSGOSettings), typeof(Control_CSGO), new GameEvent_CSGO())
         {
-        }
+            AvailableLayers.Add(LayerType.CSGOBackground);
+            AvailableLayers.Add(LayerType.CSGOBomb);
+            AvailableLayers.Add(LayerType.CSGOKillsIndicator);
+            AvailableLayers.Add(LayerType.CSGOBurning);
+            AvailableLayers.Add(LayerType.CSGOFlashbang);
+            AvailableLayers.Add(LayerType.CSGOTyping);
 
-        public override UserControl GetUserControl()
-        {
-            if (Control == null)
-                Control = new Control_CSGO();
-
-            return Control;
-        }
-
-        public override ImageSource GetIcon()
-        {
-            if (Icon == null)
-                Icon = new BitmapImage(new Uri(@"Resources/csgo_64x64.png", UriKind.Relative));
-
-            return Icon;
-        }
-
-        internal override ProfileSettings LoadProfile(string path)
-        {
-            try
-            {
-                if (File.Exists(path))
-                {
-                    string profile_content = File.ReadAllText(path, Encoding.UTF8);
-
-                    if (!String.IsNullOrWhiteSpace(profile_content))
-                        return JsonConvert.DeserializeObject<CSGOSettings>(profile_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
-            }
-
-            return null;
+            IconURI = "Resources/csgo_64x64.png";
         }
     }
 }

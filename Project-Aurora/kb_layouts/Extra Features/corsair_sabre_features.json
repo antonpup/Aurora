@@ -1,0 +1,65 @@
+{
+  "group_tag": "mouse",
+  "origin_region": 4,
+  "grouped_keys": [
+  {
+      "tag": -1,
+      "margin_left": 10.0,
+      "margin_top": -232.0,
+      "width": 158.0,
+      "height": 232.0,
+      "margin_left_bits": 1,
+      "margin_top_bits": -19,
+      "width_bits": 13,
+      "height_bits": 19,
+      "image": "Sabre_outline.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Logo",
+      "tag": 160,
+      "margin_left": 78.0,
+      "margin_top": -64.0,
+      "width": 29.0,
+      "height": 28.0,
+      "width_bits": 2,
+      "height_bits": 2,
+      "margin_left_bits": 6,
+      "margin_top_bits": -5,
+      "image": "Corsair_logo.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Scroll Wheel",
+      "tag": 161,
+      "margin_left": 85.0,
+      "margin_top": -196.0,
+      "width": 20.0,
+      "height": 37.0,
+      "width_bits": 2,
+      "height_bits": 3,
+      "margin_left_bits": 7,
+      "margin_top_bits": -16,
+      "image": "Sabre_scrollwheel.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Front Lights",
+      "tag": 162,
+      "margin_left": 41.0,
+      "margin_top": -232.0,
+      "width": 41.0,
+      "height": 32.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -19,
+      "image": "Sabre_front_lights.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+  ]
+}

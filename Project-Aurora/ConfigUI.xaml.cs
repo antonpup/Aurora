@@ -15,6 +15,7 @@ using Aurora.Settings;
 using Aurora.Controls;
 using Aurora.Profiles.Generic_Application;
 using System.IO;
+using Aurora.Settings.Keycaps;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
@@ -22,7 +23,9 @@ namespace Aurora
     partial class ConfigUI : Window
     {
         Settings.Control_Settings settings_control = new Settings.Control_Settings();
-        Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
+        //Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
+
+        Control_LayerControlPresenter layercontrol_presenter = new Control_LayerControlPresenter();
 
         EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
 
@@ -46,10 +49,41 @@ namespace Aurora
         private readonly double virtual_keyboard_width;
         private readonly double virtual_keyboard_height;
 
-        private readonly double max_width;
-        private readonly double max_height;
+        private readonly double width;
+        private readonly double height;
+
+        public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ProfileManager), typeof(ConfigUI), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
+
+        public ProfileManager FocusedProfile
+        {
+            get { return (ProfileManager)GetValue(FocusedProfileProperty); }
+            set
+            {
+                SetValue(FocusedProfileProperty, value);
+
+                if (value == null || value is Profiles.Desktop.DesktopProfileManager)
+                    Global.geh.SetPreview(PreviewType.Desktop);
+                else if (value is Profiles.Generic_Application.GenericApplicationProfileManager)
+                    Global.geh.SetPreview(PreviewType.GenericApplication, value.ProcessNames[0]);
+                else
+                    Global.geh.SetPreview(PreviewType.Predefined, value.ProcessNames[0]);
+
+            }
+        }
 
         LayerEditor layer_editor = new LayerEditor();
+
+        private bool _ShowHidden = false;
+
+        public bool ShowHidden
+        {
+            get { return _ShowHidden; }
+            set
+            {
+                _ShowHidden = value;
+                this.ShowHiddenChanged(value);
+            }
+        }
 
         public ConfigUI()
         {
@@ -58,12 +92,29 @@ namespace Aurora
             virtual_keyboard_height = this.keyboard_grid.Height;
             virtual_keyboard_width = this.keyboard_grid.Width;
 
-            max_width = MaxWidth;
-            max_height = MaxHeight;
+            width = Width;
+            height = Height;
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
+            ctrlLayerManager.NewLayer += Layer_manager_NewLayer;
+            ctrlLayerManager.ProfileOverviewRequest += CtrlLayerManager_ProfileOverviewRequest;
+
             GenerateProfileStack();
+            settings_control.DataContext = this;
+        }
+
+        private void CtrlLayerManager_ProfileOverviewRequest(UserControl profile_control)
+        {
+            if (this.content_grid.Content != profile_control)
+                this.content_grid.Content = profile_control;
+        }
+
+        private void Layer_manager_NewLayer(Settings.Layers.Layer layer)
+        {
+            layercontrol_presenter.Layer = layer;
+
+            this.content_grid.Content = layercontrol_presenter;
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
@@ -75,14 +126,17 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            this.MaxWidth = max_width + (virtial_kb.Width - virtual_keyboard_width);
-            this.Width = this.MaxWidth;
+            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            this.MaxHeight = max_height + (virtial_kb.Height - virtual_keyboard_height);
-            this.Height = this.MaxHeight;
+            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
+
+            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
+            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
+            keyboard_viewbox.UpdateLayout();
+
             this.UpdateLayout();
         }
 
@@ -98,8 +152,7 @@ namespace Aurora
             }
 
             this.keyboard_record_message.Visibility = Visibility.Hidden;
-            this.content_grid.Children.Clear();
-            this.content_grid.Children.Add(desktop_control);
+
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
@@ -110,17 +163,22 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            this.MaxWidth = max_width + (virtial_kb.Width - virtual_keyboard_width);
-            this.Width = this.MaxWidth;
+            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            this.MaxHeight = max_height + (virtial_kb.Height - virtual_keyboard_height);
-            this.Height = this.MaxHeight;
+            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
+
+            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
+            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
+            keyboard_viewbox.UpdateLayout();
+
             this.UpdateLayout();
 
             Global.input_subscriptions.Initialize();
+
+            this.ProfileImage_MouseDown(this.profiles_stack.Children[0], null);
         }
 
         public static bool ApplicationIsActivated()
@@ -164,40 +222,10 @@ namespace Aurora
                             Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights = new Dictionary<Devices.DeviceKeys, System.Drawing.Color>();
 
                             if (Global.geh.GetPreview() != PreviewType.None)
-                                keylights = Global.effengine.GetKeyboardLights();
-
-                            Border[] keys = virtial_kb.Children.OfType<Border>().ToArray();
-
-
-                            foreach (var child in keys)
                             {
-                                if (child is Border &&
-                                    (child as Border).Child is TextBlock &&
-                                    ((child as Border).Child as TextBlock).Tag is Devices.DeviceKeys
-                                    )
-                                {
-                                    if (keylights.ContainsKey((Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag))
-                                    {
-                                        ((child as Border).Child as TextBlock).Foreground = new SolidColorBrush(Utils.ColorUtils.DrawingColorToMediaColor(keylights[(Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag]));
-                                    }
-
-                                    if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)((child as Border).Child as TextBlock).Tag))
-                                        (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
-                                    else
-                                    {
-                                        if ((child as Border).IsEnabled)
-                                        {
-                                            (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)30, (byte)30, (byte)30));
-                                        }
-                                        else
-                                        {
-                                            (child as Border).Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
-                                            (child as Border).BorderThickness = new Thickness(0);
-                                        }
-                                    }
-                                }
-
-                            }//);
+                                keylights = Global.effengine.GetKeyboardLights();
+                                Global.kbLayout.SetKeyboardColors(keylights);
+                            }
 
                             if (Global.key_recorder.IsRecording())
                                 this.keyboard_record_message.Visibility = System.Windows.Visibility.Visible;
@@ -309,7 +337,15 @@ namespace Aurora
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            Global.geh.SetPreview(saved_preview, saved_preview_key);
+            if(saved_preview == PreviewType.None && FocusedProfile != null)
+            {
+                if (FocusedProfile is ProfileManager)
+                    Global.geh.SetPreview(PreviewType.Predefined, saved_preview_key);
+                else if(FocusedProfile is GenericApplicationProfileManager)
+                    Global.geh.SetPreview(PreviewType.GenericApplication, saved_preview_key);
+            }
+            else
+                Global.geh.SetPreview(saved_preview, saved_preview_key);
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
@@ -319,33 +355,45 @@ namespace Aurora
             Global.geh.SetPreview(PreviewType.None);
         }
 
+        private Image profile_add;
+
+        private Image profile_hidden;
+
+        private BitmapImage _visible = new BitmapImage(new Uri(@"Resources/Visible.png", UriKind.Relative));
+        private BitmapImage _not_visible = new BitmapImage(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
+
         private void GenerateProfileStack()
         {
             selected_item = null;
             this.profiles_stack.Children.Clear();
 
-            Image profile_desktop = new Image();
-            profile_desktop.Tag = desktop_control;
-            profile_desktop.Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative));
-            profile_desktop.ToolTip = "Desktop Settings";
-            profile_desktop.Margin = new Thickness(0, 5, 0, 0);
+            Image profile_desktop = new Image
+            {
+                Tag = Global.Configuration.desktop_profile,
+                Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative)),
+                ToolTip = "Desktop Settings",
+                Margin = new Thickness(0, 5, 0, 0)
+            };
             profile_desktop.MouseDown += ProfileImage_MouseDown;
             this.profiles_stack.Children.Add(profile_desktop);
 
             //Included Game Profiles
-            foreach (KeyValuePair<string, ProfileManager> kvp in Global.Configuration.ApplicationProfiles)
+            foreach (string profile_k in Global.Configuration.ProfileOrder)
             {
-                ProfileManager profile = kvp.Value;
+                ProfileManager profile = Global.Configuration.ApplicationProfiles[profile_k];
                 ImageSource icon = profile.GetIcon();
                 UserControl control = profile.GetUserControl();
 
                 if (icon != null && control != null)
                 {
-                    Image profile_image = new Image();
-                    profile_image.Tag = control;
-                    profile_image.Source = icon;
-                    profile_image.ToolTip = profile.Name + " Settings";
-                    profile_image.Margin = new Thickness(0, 5, 0, 0);
+                    Image profile_image = new Image
+                    {
+                        Tag = profile,
+                        Source = icon,
+                        ToolTip = profile.Name + " Settings",
+                        Margin = new Thickness(0, 5, 0, 0),
+                        Visibility = profile.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
+                    };
                     profile_image.MouseDown += ProfileImage_MouseDown;
                     this.profiles_stack.Children.Add(profile_image);
                 }
@@ -360,30 +408,39 @@ namespace Aurora
 
                 if (icon != null && control != null)
                 {
-                    Image profile_image = new Image();
-                    profile_image.Tag = control;
-                    profile_image.Source = icon;
-                    profile_image.ToolTip = (profile.Settings as GenericApplicationSettings).ApplicationName + " Settings";
-                    profile_image.Margin = new Thickness(0, 5, 0, 0);
+                    GenericApplicationSettings settings = (profile.Settings as GenericApplicationSettings);
+                    Image profile_image = new Image
+                    {
+                        Tag = profile,
+                        Source = icon,
+                        ToolTip = settings.ApplicationName + " Settings",
+                        Margin = new Thickness(0, 5, 0, 0)
+                    };
                     profile_image.MouseDown += ProfileImage_MouseDown;
 
-                    Image profile_remove = new Image();
-                    profile_remove.Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative));
-                    profile_remove.ToolTip = "Remove " + (profile.Settings as GenericApplicationSettings).ApplicationName + " Profile";
-                    profile_remove.HorizontalAlignment = HorizontalAlignment.Right;
-                    profile_remove.VerticalAlignment = VerticalAlignment.Bottom;
-                    profile_remove.Height = 16;
-                    profile_remove.Width = 16;
-                    profile_remove.Visibility = Visibility.Hidden;
+                    Image profile_remove = new Image
+                    {
+                        Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative)),
+                        ToolTip = $"Remove {settings.ApplicationName} Profile",
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Height = 16,
+                        Width = 16,
+                        Visibility = Visibility.Hidden,
+                        Tag = kvp.Key
+                    };
                     profile_remove.MouseDown += RemoveProfile_MouseDown;
-                    profile_remove.Tag = kvp.Key;
 
-                    Grid profile_grid = new Grid();
-                    profile_grid.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-                    profile_grid.Margin = new Thickness(0, 5, 0, 0);
-                    profile_grid.Tag = profile_remove;
+                    Grid profile_grid = new Grid
+                    {
+                        Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                        Margin = new Thickness(0, 5, 0, 0),
+                        Tag = profile_remove
+                    };
+
                     profile_grid.MouseEnter += Profile_grid_MouseEnter;
                     profile_grid.MouseLeave += Profile_grid_MouseLeave;
+
                     profile_grid.Children.Add(profile_image);
                     profile_grid.Children.Add(profile_remove);
 
@@ -392,12 +449,96 @@ namespace Aurora
             }
 
             //Add new profiles button
-            Image profile_add = new Image();
-            profile_add.Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative));
-            profile_add.ToolTip = "Add a new Lighting Profile";
-            profile_add.Margin = new Thickness(0, 5, 0, 0);
+            profile_add = new Image
+            {
+                Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative)),
+                ToolTip = "Add a new Lighting Profile",
+                Margin = new Thickness(0, 5, 0, 0)
+            };
             profile_add.MouseDown += AddProfile_MouseDown;
             this.profiles_stack.Children.Add(profile_add);
+
+            //Show hidden profiles button
+            profile_hidden = new Image
+            {
+                Source = _not_visible,
+                ToolTip = "Toggle Hidden profiles' visibility",
+                Margin = new Thickness(0, 5, 0, 0)
+            };
+            profile_hidden.MouseDown += HiddenProfile_MouseDown;
+            this.profiles_stack.Children.Add(profile_hidden);
+        }
+
+        private void HiddenProfile_MouseDown(object sender, EventArgs e)
+        {
+            this.ShowHidden = !this.ShowHidden;
+        }
+
+        protected void ShowHiddenChanged(bool value)
+        {
+            profile_hidden.Source = value ? _visible : _not_visible;
+
+            foreach (FrameworkElement ctrl in profiles_stack.Children)
+            {
+                Image img = ctrl as Image ?? (ctrl is Grid ? ((Grid)ctrl).Children[0] as Image : null);
+                if (img != null)
+                {
+                    ProfileManager profile = img.Tag as ProfileManager;
+                    if (profile != null)
+                    {
+                        img.Visibility = profile.Settings.Hidden && !value ? Visibility.Collapsed : Visibility.Visible;
+                        img.Opacity = profile.Settings.Hidden ? 0.5 : 1;
+                    }
+                }
+            }
+
+            //profile_add.Visibility = value ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void mbtnHidden_Checked(object sender, RoutedEventArgs e)
+        {
+            MenuItem btn = sender as MenuItem;
+            Image img = this.cmenuProfiles.PlacementTarget as Image;
+
+            if (img != null)
+            {
+                img.Opacity = btn.IsChecked ? 0.5 : 1;
+
+                if (!this.ShowHidden && btn.IsChecked)
+                    img.Visibility = Visibility.Collapsed;
+
+                (img.Tag as ProfileManager)?.SaveProfiles();
+            }
+        }
+
+        private void cmenuProfiles_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (!(((ContextMenu)e.Source).PlacementTarget is Image))
+                e.Handled = true;
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu context = (ContextMenu)e.OriginalSource;
+
+            if (!(context.PlacementTarget is Image))
+                return;
+
+            Image img = (Image)context.PlacementTarget;
+            ProfileManager profile = img.Tag as ProfileManager;
+            context.DataContext = profile;
+            /*
+            this.mbtnEnabled.IsChecked = profile.Settings.isEnabled;
+            this.mbtnHidden.IsChecked = profile.Settings.Hidden;*/
+
+        }
+
+        private void ProfileImage_Edit_MouseUp(object sender, MouseEventArgs e)
+        {
+            Image img = sender as Image;
+            ProfileManager profile = img.Tag as ProfileManager;
+            profile.Settings.Hidden = !profile.Settings.Hidden;
+            img.Opacity = profile.Settings.Hidden ? 0.5 : 1;
         }
 
         private void Profile_grid_MouseLeave(object sender, MouseEventArgs e)
@@ -418,23 +559,50 @@ namespace Aurora
 
         private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is UserControl)
+
+            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is ProfileManager)
             {
-                UserControl tagged_control = (sender as Image).Tag as UserControl;
+                if (e == null || e.LeftButton == MouseButtonState.Pressed)
+                {
+                    this.FocusedProfile = (sender as Image).Tag as ProfileManager;
 
-                this.content_grid.Children.Clear();
-                this.content_grid.Children.Add(tagged_control);
+                    var bitmap = (BitmapSource)(sender as Image).Source;
+                    var color = Utils.ColorUtils.GetAverageColor(bitmap);
 
-                var bitmap = (BitmapSource)(sender as Image).Source;
-                var color = GetAverageColor(bitmap);
+                    current_color = new EffectColor(color);
+                    current_color *= 0.85f;
 
-                current_color = new EffectColor(color);
-                current_color *= 0.85f;
+                    transitionamount = 0.0f;
 
-                transitionamount = 0.0f;
-
-                UpdateProfileStackBackground(sender as FrameworkElement);
+                    UpdateProfileStackBackground(sender as FrameworkElement);
+                }
+                else if (e.RightButton == MouseButtonState.Pressed)
+                {
+                    this.cmenuProfiles.PlacementTarget = (Image)sender;
+                    this.cmenuProfiles.IsOpen = true;
+                }
             }
+        }
+
+        private static void FocusedProfileChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
+        {
+            ConfigUI th = source as ConfigUI;
+            ProfileManager value = e.NewValue as ProfileManager;
+
+            th.ctrlLayerManager.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
+
+            if (value == null)
+                return;
+
+            /*th.content_grid.Children.Clear();
+            UIElement element = value.GetUserControl();
+            //th.content_grid.DataContext = element;
+            th.content_grid.MinHeight = ((UserControl)element).MinHeight;
+            th.content_grid.Children.Add(element);
+            th.content_grid.UpdateLayout();*/
+            th.content_grid.Content = value.GetUserControl();
+            th.content_grid.UpdateLayout();
+
         }
 
         private void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
@@ -496,8 +664,8 @@ namespace Aurora
                     GenerateProfileStack();
                 }
 
-                this.content_grid.Children.Clear();
-                this.content_grid.Children.Add(new Profiles.Generic_Application.Control_GenericApplication(filename));
+
+                this.content_grid.Content = Global.Configuration.additional_profiles[filename].Control;
 
                 current_color = desktop_color_scheme;
                 transitionamount = 0.0f;
@@ -506,8 +674,8 @@ namespace Aurora
 
         private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.content_grid.Children.Clear();
-            this.content_grid.Children.Add(settings_control);
+            this.FocusedProfile = null;
+            this.content_grid.Content = settings_control;
 
             current_color = desktop_color_scheme;
             transitionamount = 0.0f;
@@ -581,51 +749,29 @@ namespace Aurora
             }
         }
 
-        public Color GetAverageColor(BitmapSource bitmap)
+        public void ShowWindow()
         {
-            var format = bitmap.Format;
-
-            if (format != PixelFormats.Bgr24 &&
-                format != PixelFormats.Bgr32 &&
-                format != PixelFormats.Bgra32 &&
-                format != PixelFormats.Pbgra32)
-            {
-                throw new InvalidOperationException("BitmapSource must have Bgr24, Bgr32, Bgra32 or Pbgra32 format");
-            }
-
-            var width = bitmap.PixelWidth;
-            var height = bitmap.PixelHeight;
-            var numPixels = width * height;
-            var bytesPerPixel = format.BitsPerPixel / 8;
-            var pixelBuffer = new byte[numPixels * bytesPerPixel];
-
-            bitmap.CopyPixels(pixelBuffer, width * bytesPerPixel, 0);
-
-            long blue = 0;
-            long green = 0;
-            long red = 0;
-
-            for (int i = 0; i < pixelBuffer.Length; i += bytesPerPixel)
-            {
-                blue += pixelBuffer[i];
-                green += pixelBuffer[i + 1];
-                red += pixelBuffer[i + 2];
-            }
-
-            return Color.FromRgb((byte)(red / numPixels), (byte)(green / numPixels), (byte)(blue / numPixels));
+            this.WindowStyle = WindowStyle.SingleBorderWindow;
+            this.Show();
         }
 
         private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
         {
             this.ShowInTaskbar = true;
-            this.WindowStyle = WindowStyle.SingleBorderWindow;
-            this.Show();
+            this.ShowWindow();
         }
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             UpdateProfileStackBackground(selected_item);
         }
+
+        private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateProfileStackBackground(selected_item);
+        }
+
+
     }
 }
 

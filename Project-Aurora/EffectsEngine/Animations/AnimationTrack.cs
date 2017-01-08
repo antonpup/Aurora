@@ -17,9 +17,11 @@ namespace Aurora.EffectsEngine.Animations
             _shift = shift;
         }
 
-        public void SetName(string name)
+        public AnimationTrack SetName(string name)
         {
             _track_name = name;
+
+            return this;
         }
 
         public string GetName()
@@ -27,9 +29,11 @@ namespace Aurora.EffectsEngine.Animations
             return _track_name;
         }
 
-        public void SetShift(float shift)
+        public AnimationTrack SetShift(float shift)
         {
             _shift = shift;
+
+            return this;
         }
 
         public float GetShift()
@@ -37,18 +41,38 @@ namespace Aurora.EffectsEngine.Animations
             return _shift;
         }
 
-        public void SetFrame(float time, AnimationFrame animframe)
+        private float NormalizeTime(float time)
+        {
+            //Shift
+            return time - _shift;
+        }
+
+        public bool ContainsAnimationAt(float time)
+        {
+            time = NormalizeTime(time);
+
+            if (time > _animationDuration || _animations.Count == 0)
+                return false;
+            else
+                return true;
+        }
+
+        public AnimationTrack SetFrame(float time, AnimationFrame animframe)
         {
             if (time > _animationDuration)
                 _animationDuration = time;
 
             _animations[time] = animframe;
+
+            return this;
         }
 
         public AnimationFrame GetFrame(float time)
         {
-            //Shift
-            time -= _shift;
+            if(!ContainsAnimationAt(time))
+                return new AnimationFrame();
+
+            time = NormalizeTime(time);
 
             if (time > _animationDuration || _animations.Count == 0)
                 return new AnimationFrame();
@@ -58,20 +82,14 @@ namespace Aurora.EffectsEngine.Animations
 
             foreach (KeyValuePair<float, AnimationFrame> kvp in _animations)
             {
-                if (kvp.Key  == time)
-                {
+                if (kvp.Key == time)
                     return kvp.Value;
-                }
 
                 if (kvp.Key > time && kvp.Key < closest_higher)
-                {
                     closest_higher = kvp.Key;
-                }
 
                 if (kvp.Key < time && kvp.Key > closest_lower)
-                {
                     closest_lower = kvp.Key;
-                }
             }
 
             return _animations[closest_lower].BlendWith(_animations[closest_higher], ((double)(time - closest_lower) / (double)(closest_higher - closest_lower)));

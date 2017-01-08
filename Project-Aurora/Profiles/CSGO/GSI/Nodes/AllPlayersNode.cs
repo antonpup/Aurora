@@ -7,7 +7,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// A class representing player information for all players
     /// </summary>
-    public class AllPlayersNode : Node
+    public class AllPlayersNode : Node<AllPlayersNode>
     {
         private readonly List<PlayerNode> _Players = new List<PlayerNode>();
         
@@ -77,6 +77,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// Retrieves the enumerator for all players list
         /// </summary>
         /// <returns>The enumerator</returns>
+        [GameStateIgnoreAttribute]
         public IEnumerator<PlayerNode> GetEnumerator()
         {
             return _Players.GetEnumerator();
@@ -87,6 +88,8 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// </summary>
         /// <param name="Team">The team to lookup</param>
         /// <returns>A list of players</returns>
+        //[Range(0, 16)]
+        [GameStateIgnoreAttribute]
         public List<PlayerNode> GetTeam(PlayerTeam Team)
         {
             return _Players.FindAll(x => x.Team == Team);

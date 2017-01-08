@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Aurora.Utils
 {
@@ -102,6 +104,36 @@ namespace Aurora.Utils
 
                 return isremoved;
             }
+        }
+    }
+
+    public class TextCharacterLimitConv : IValueConverter
+    {
+        public int MaxLength { get; set; }
+
+        public string ShortenSignify { get; set; }
+
+        public TextCharacterLimitConv()
+        {
+            MaxLength = 12;
+            ShortenSignify = "...";
+        }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string)
+            {
+                string val = value as string;
+                if ((val.Length + ShortenSignify.Length) > MaxLength)
+                {
+                    return String.Format("{0}{1}", val.Substring(0, MaxLength - ShortenSignify.Length), ShortenSignify);
+                }                    
+            }
+            return value;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
         }
     }
 }

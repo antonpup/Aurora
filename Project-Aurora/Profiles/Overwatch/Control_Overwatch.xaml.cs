@@ -12,17 +12,18 @@ namespace Aurora.Profiles.Overwatch
     {
         private ProfileManager profile_manager;
 
-        public Control_Overwatch()
+        public Control_Overwatch(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Overwatch"];
+            profile_manager = profile;
 
             SetSettings();
         }
 
         private void SetSettings()
         {
+            this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
             this.game_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).isEnabled;
@@ -54,12 +55,10 @@ namespace Aurora.Profiles.Overwatch
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, "overwatch.exe");
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)

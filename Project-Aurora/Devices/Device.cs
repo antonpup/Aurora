@@ -11,8 +11,9 @@ namespace Aurora.Devices
     {
         /// <summary>
         /// Peripheral Device
+        /// <note type="note">Setting this key will make entire peripheral device one color</note>
         /// </summary>
-        [Description("Peripheral Device")]
+        [Description("All Peripheral Devices")]
         Peripheral = 0,
 
         /// <summary>
@@ -203,6 +204,12 @@ namespace Aurora.Devices
         EQUALS = 29,
 
         /// <summary>
+        /// OEM 6 key
+        /// </summary>
+        [Description("OEM 6")]
+        OEM6 = 169,
+
+        /// <summary>
         /// Backspace key
         /// </summary>
         [Description("Backspace")]
@@ -318,10 +325,22 @@ namespace Aurora.Devices
         P = 48,
 
         /// <summary>
+        /// OEM 1 key
+        /// </summary>
+        [Description("OEM 1")]
+        OEM1 = 170,
+
+        /// <summary>
         /// Open Bracket key
         /// </summary>
         [Description("{")]
         OPEN_BRACKET = 49,
+
+        /// <summary>
+        /// OEM Plus key
+        /// </summary>
+        [Description("OEM Plus")]
+        OEMPlus = 171,
 
         /// <summary>
         /// Close Bracket key
@@ -439,10 +458,10 @@ namespace Aurora.Devices
         L = 68,
 
         /// <summary>
-        /// Ö (Deutsch) key
+        /// OEM Tilde key
         /// </summary>
-        [Description("Ö")]
-        DEU_O = 157,
+        [Description("OEM Tilde")]
+        OEMTilde = 157,
 
         /// <summary>
         /// Semicolon key
@@ -981,11 +1000,74 @@ namespace Aurora.Devices
         ADDITIONALLIGHT10 = 151,
 
         /// <summary>
+        /// Peripheral Logo
+        /// </summary>
+        [Description("Peripheral Logo")]
+        Peripheral_Logo = 160,
+
+        /// <summary>
+        /// Peripheral Scroll Wheel
+        /// </summary>
+        [Description("Peripheral Scroll Wheel")]
+        Peripheral_ScrollWheel = 161,
+
+        /// <summary>
+        /// Peripheral Front-facing lights
+        /// </summary>
+        [Description("Peripheral Front Lights")]
+        Peripheral_FrontLight = 162,
+
+        /// <summary>
+        /// Profile key 1
+        /// </summary>
+        [Description("Profile Key 1")]
+        Profile_Key1 = 163,
+
+        /// <summary>
+        /// Profile key 2
+        /// </summary>
+        [Description("Profile Key 2")]
+        Profile_Key2 = 164,
+
+        /// <summary>
+        /// Profile key 3
+        /// </summary>
+        [Description("Profile Key 3")]
+        Profile_Key3 = 165,
+
+        /// <summary>
+        /// Profile key 4
+        /// </summary>
+        [Description("Profile Key 4")]
+        Profile_Key4 = 166,
+
+        /// <summary>
+        /// Profile key 5
+        /// </summary>
+        [Description("Profile Key 5")]
+        Profile_Key5 = 167,
+
+        /// <summary>
+        /// Profile key 6
+        /// </summary>
+        [Description("Profile Key 6")]
+        Profile_Key6 = 168,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]
         NONE = -1,
     };
+
+    /// <summary>
+    /// Struct representing color settings being sent to devices
+    /// </summary>
+    public struct DeviceColorComposition
+    {
+        public Dictionary<DeviceKeys, Color> keyColors;
+        public Bitmap keyBitmap;
+    }
 
     /// <summary>
     /// An interface for a device class.
@@ -1057,5 +1139,13 @@ namespace Aurora.Devices
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
         bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false);
+
+        /// <summary>
+        /// Updates the device with a specified color composition.
+        /// </summary>
+        /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>
+        /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
+        /// <returns></returns>
+        bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false);
     }
 }

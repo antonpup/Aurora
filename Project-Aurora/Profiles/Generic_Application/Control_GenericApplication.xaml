@@ -10,7 +10,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.Generic_Application.Control_GenericApplication"
              mc:Ignorable="d" 
-             d:DesignHeight="300" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850" >
     <UserControl.Resources>
         <ResourceDictionary>
             <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
@@ -29,27 +29,7 @@
                     <CheckBox x:Name="profile_enabled" Content="Enable Aurora to provide lighting effects with this profile" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="profile_enabled_Checked" Unchecked="profile_enabled_Checked"/>
                     <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                     <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Shortcuts Assistant">
-                <Grid>
-                    <CheckBox x:Name="sc_assistant_enabled" Content="Allow Shortcuts Assistant to illuminate shortcut keys when Ctrl or Alt key is held down" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Unchecked="sc_assistant_enabled_Checked" Checked="sc_assistant_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="12,33,0,0" TextWrapping="Wrap" Text="Ctrl Keys Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="sc_assistant_ctrl_color" Margin="97,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" SelectedColorChanged="sc_assistant_ctrl_color_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="False" />
-                    <Controls:KeySequence x:Name="sc_assistant_ctrl_keys" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Title="Shortcut Assistant Ctrl Keys" RecordingTag="Shortcut Assistant Ctrl Keys" MaxWidth="264" MaxHeight="203" Width="264" Height="203" SequenceUpdated="sc_assistant_ctrl_keys_SequenceUpdated" MinWidth="264" MinHeight="203"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="281,33,0,0" TextWrapping="Wrap" Text="Alt Keys Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="sc_assistant_alt_color" Margin="366,30,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177" ColorMode="ColorCanvas" UsingAlphaChannel="False" SelectedColorChanged="sc_assistant_alt_color_SelectedColorChanged" />
-                    <Controls:KeySequence x:Name="sc_assistant_alt_keys" HorizontalAlignment="Left" Margin="279,59,0,0" VerticalAlignment="Top" Title="Shortcut Assistant Alt Keys" RecordingTag="Shortcut Assistant Alt Keys" MaxWidth="264" MaxHeight="203" Width="264" Height="203" SequenceUpdated="sc_assistant_alt_keys_SequenceUpdated" MinWidth="264" MinHeight="203"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Color Zones (Daytime)">
-                <Grid>
-                    <Controls:ColorZones x:Name="cz_day" HorizontalAlignment="Left" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_day_ColorZonesListUpdated" Margin="10,10,0,0"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Color Zones (Nighttime)">
-                <Grid>
-                    <Controls:ColorZones x:Name="cz_night" HorizontalAlignment="Left" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_night_ColorZonesListUpdated" Margin="10,10,0,0"/>
+                    <CheckBox x:Name="profile_nighttime_check" Content="Preview profile during nighttime setting" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Checked="profile_nighttime_check_Checked" Unchecked="profile_nighttime_check_Checked"/>
                 </Grid>
             </TabItem>
         </TabControl>

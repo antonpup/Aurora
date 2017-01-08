@@ -14,11 +14,11 @@ namespace Aurora.Profiles.Serious_Sam_3
     {
         private ProfileManager profile_manager;
 
-        public Control_SSam3()
+        public Control_SSam3(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["SSam3"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -82,12 +82,10 @@ namespace Aurora.Profiles.Serious_Sam_3
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallWrapper(string installpath = "")

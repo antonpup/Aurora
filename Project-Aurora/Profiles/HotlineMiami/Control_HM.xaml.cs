@@ -14,11 +14,11 @@ namespace Aurora.Profiles.HotlineMiami
     {
         private ProfileManager profile_manager;
 
-        public Control_HM()
+        public Control_HM(ProfileManager profile)
         {
             InitializeComponent();
 
-            profile_manager = Global.Configuration.ApplicationProfiles["Hotline"];
+            profile_manager = profile;
 
             SetSettings();
 
@@ -96,12 +96,10 @@ namespace Aurora.Profiles.HotlineMiami
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Predefined, profile_manager.ProcessNames[0]);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.Desktop);
         }
 
         private bool InstallWrapper(string installpath = "")

@@ -219,6 +219,8 @@ Project-Aurora.VC.opendb
 Project-Aurora/documentation/Aurora.XML
 Project-Aurora.VC.VC.opendb
 Project-Aurora.VC.opendb
+Project-Aurora.VC.db
+Web Installer/output/*
 
 # NuGet Packages
 *.nupkg
@@ -230,4 +232,3 @@ Project-Aurora.VC.opendb
 #!**/packages/repositories.config
 # NuGet v3's project.json files produces more ignoreable files
 *.nuget.props
-*.nuget.targets

@@ -55,7 +55,7 @@
 
   <!--Theme Accent colors -->
   <Color x:Key="Color_023">#FF0086AF</Color>
-  <Color x:Key="Color_024">#FF00AADE</Color>
+  <Color x:Key="Color_024">#FF0089B3</Color>
   <Color x:Key="Color_025">#FF80D5EF</Color>
   <Color x:Key="Color_026">#FFB2E1EF</Color>
   <Color x:Key="Color_027">#2600AADE</Color>

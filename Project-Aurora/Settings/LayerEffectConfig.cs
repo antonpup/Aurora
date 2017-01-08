@@ -25,9 +25,6 @@ namespace Aurora.Settings
         public float angle;
         public AnimationType animation_type;
         public bool animation_reverse;
-        public bool animation_fade;
-        public bool respect_cz_dimensions;
-        public bool retain_square_ratio;
         public EffectBrush brush;
 
         [JsonIgnoreAttribute]
@@ -35,15 +32,22 @@ namespace Aurora.Settings
         [JsonIgnoreAttribute]
         public long last_effect_call = 0L;
 
-        public LayerEffectConfig()
+        public LayerEffectConfig() : this(Color.Red, Color.Blue)
         {
-            primary = Color.Red;
-            secondary = Color.Blue;
+        }
+
+        public LayerEffectConfig(Color color) : this(color, color)
+        {
+        }
+
+        public LayerEffectConfig(Color primary_color, Color secondary_color)
+        {
+            primary = primary_color;
+            secondary = secondary_color;
             speed = 1.0f;
             angle = 0.0f;
             animation_type = AnimationType.Translate_XY;
             animation_reverse = false;
-            respect_cz_dimensions = true;
             brush = new EffectBrush(
                 new System.Drawing.Drawing2D.LinearGradientBrush(
                     new PointF(0, 0),
@@ -51,7 +55,42 @@ namespace Aurora.Settings
                     primary,
                     secondary
                     )
+                {
+                    InterpolationColors = new System.Drawing.Drawing2D.ColorBlend(2)
+                    {
+                        Colors = new Color[] { primary, secondary },
+                        Positions = new float[] { 0.0f, 1.0f }
+                    }
+                }
                 );
+        }
+
+        public LayerEffectConfig SetAnimationSpeed(float speed)
+        {
+            this.speed = speed;
+
+            return this;
+        }
+
+        public LayerEffectConfig SetAnimationAngle(float angle)
+        {
+            this.angle = angle;
+
+            return this;
+        }
+
+        public LayerEffectConfig SetAnimationType(AnimationType type)
+        {
+            animation_type = type;
+
+            return this;
+        }
+
+        public LayerEffectConfig SetAnimationDirection(bool reverse)
+        {
+            animation_reverse = reverse;
+
+            return this;
         }
 
         public LayerEffectConfig(LayerEffectConfig otherConfig)

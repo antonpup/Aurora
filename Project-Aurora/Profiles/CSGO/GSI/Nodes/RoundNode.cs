@@ -5,22 +5,22 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing information about the round
     /// </summary>
-    public class RoundNode : Node
+    public class RoundNode : Node<RoundNode>
     {
         /// <summary>
         /// Current round phase
         /// </summary>
-        public readonly RoundPhase Phase;
+        public RoundPhase Phase;
 
         /// <summary>
         /// Current bomb state
         /// </summary>
-        public readonly BombState Bomb;
+        public BombState Bomb;
 
         /// <summary>
         /// Round winning team
         /// </summary>
-        public readonly RoundWinTeam WinTeam;
+        public RoundWinTeam WinTeam;
 
         internal RoundNode(string JSON)
             : base(JSON)
