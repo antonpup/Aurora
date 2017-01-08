@@ -116,7 +116,7 @@ namespace Aurora_Updater
 
         public bool retrieveUpdate(UpdateType type)
         {
-            string url = @"http://aurora.lastbullet.net/files/" + (type == UpdateType.Major ? responce.Major.File : responce.Minor.File);
+            string url = @"http://aurora.modworkshop.net/files/" + (type == UpdateType.Major ? responce.Major.File : responce.Minor.File);
             updatestate = UpdateStatus.InProgress;
             try
             {
