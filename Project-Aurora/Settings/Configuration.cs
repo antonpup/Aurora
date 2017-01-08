@@ -53,6 +53,8 @@ namespace Aurora.Settings
         RainFall = 6,
         [Description("Blackout")]
         Blackout = 7,
+        [Description("Matrix")]
+        Matrix = 8
     }
 
     /// <summary>

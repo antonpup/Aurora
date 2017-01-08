@@ -1,4 +1,5 @@
 ﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine.Animations;
 using Aurora.Settings;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Aurora.Profiles.Desktop
         private Devices.DeviceKeys[] allKeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
         private Dictionary<Devices.DeviceKeys, float> stars = new Dictionary<Devices.DeviceKeys, float>();
         private Dictionary<Devices.DeviceKeys, float> raindrops = new Dictionary<Devices.DeviceKeys, float>();
+        private AnimationMix matrix_lines = new AnimationMix().SetAutoRemove(true); //This will be an infinite Mix
         long nextstarset = 0L;
 
         private float getDeltaTime()
@@ -149,6 +151,51 @@ namespace Aurora.Profiles.Desktop
                     layer = new EffectLayer("Idle - Blackout");
 
                     layer.Fill(Color.Black);
+
+                    layers.Enqueue(layer);
+                    break;
+                case IdleEffects.Matrix:
+                    layer = new EffectLayer("Idle - Matrix");
+
+                    if (nextstarset < currenttime)
+                    {
+                        Color darker_primary = Utils.ColorUtils.MultiplyColorByScalar(Global.Configuration.idle_effect_primary_color, 0.50);
+
+                        for (int x = 0; x < Global.Configuration.idle_amount; x++)
+                        {
+                            int width_start = randomizer.Next(Effects.canvas_width);
+                            float delay = randomizer.Next(550) / 100.0f;
+                            int random_id = randomizer.Next(125536789);
+
+                            //Create animation
+                            AnimationTrack matrix_line =
+                                new AnimationTrack("Matrix Line (Head) " + random_id, 0.0f).SetFrame(
+                                    0.0f * 1.0f / (0.05f * Global.Configuration.idle_speed), new AnimationLine(width_start, -3, width_start, 0, Global.Configuration.idle_effect_primary_color, 3)).SetFrame(
+                                    0.5f * 1.0f / (0.05f * Global.Configuration.idle_speed), new AnimationLine(width_start, Effects.canvas_height, width_start, Effects.canvas_height + 3, Global.Configuration.idle_effect_primary_color, 3)).SetShift(
+                                    (currenttime % 1000000L) / 1000.0f + delay
+                                    );
+
+                            AnimationTrack matrix_line_trail =
+                                new AnimationTrack("Matrix Line (Trail) " + random_id, 0.0f).SetFrame(
+                                    0.0f * 1.0f / (0.05f * Global.Configuration.idle_speed), new AnimationLine(width_start, -12, width_start, -3, darker_primary, 3)).SetFrame(
+                                    0.5f * 1.0f / (0.05f * Global.Configuration.idle_speed), new AnimationLine(width_start, Effects.canvas_height - 12, width_start, Effects.canvas_height, darker_primary, 3)).SetFrame(
+                                    0.75f * 1.0f / (0.05f * Global.Configuration.idle_speed), new AnimationLine(width_start, Effects.canvas_height, width_start, Effects.canvas_height, darker_primary, 3)).SetShift(
+                                    (currenttime % 1000000L) / 1000.0f + delay
+                                    );
+
+                            matrix_lines.AddTrack(matrix_line);
+                            matrix_lines.AddTrack(matrix_line_trail);
+                        }
+
+                        nextstarset = currenttime + (long)(1000L * Global.Configuration.idle_frequency);
+                    }
+
+                    layer.Fill(Global.Configuration.idle_effect_secondary_color);
+
+                    using (Graphics g = layer.GetGraphics())
+                    {
+                        matrix_lines.Draw(g, (currenttime % 1000000L) / 1000.0f);
+                    }
 
                     layers.Enqueue(layer);
                     break;
