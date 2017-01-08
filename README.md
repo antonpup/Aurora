@@ -23,7 +23,7 @@ Recommended:
 
 ## Run this program in the background at windows start
 You can set Aurora to run on Windows Startup. Go into Settings and check "Start with Windows".
-![Aurora Settings](https://puu.sh/sZA0V/10c9adf163.png)
+![Aurora Settings](https://puu.sh/tfKss/22603982e9.png)
 
 ## Natively Supported Games
 * Dota 2
@@ -83,13 +83,13 @@ Robot Roller-Derby Disco Dodgeball Demo
 
 
 ## Screenshots
-![Desktop Settings](https://puu.sh/sZzxe/fb5101bf4e.png)
-![Dota 2 Settings](https://puu.sh/sZzBn/e365e4da75.png)
-![CSGO Settings](https://puu.sh/sZzEA/496457da51.png)
-![GTA 5 Settings](https://puu.sh/sZzHe/50943d1455.png)
-![Rocket League Settings](https://puu.sh/sZzJs/45a609b843.png)
-![Payday 2 Settings](https://puu.sh/sZzRa/0ee4101856.png)
-![Skype Integration Settings](https://puu.sh/sZzWl/c0ca3573fd.png)
+![Desktop Settings](https://puu.sh/tfKzm/1ce3b0cd5c.png)
+![Dota 2 Settings](https://puu.sh/tfKNj/98229d2f69.png)
+![CSGO Settings](https://puu.sh/tfKRK/61f3bb3757.png)
+![GTA 5 Settings](https://puu.sh/tfKWL/d72e10b288.png)
+![Rocket League Settings](https://puu.sh/tfL4N/30f5b9cfea.png)
+![Payday 2 Settings](https://puu.sh/tfLcn/4978a48199.png)
+![Skype Integration Settings](https://puu.sh/tfLfu/57b1df348a.png)
 
 
 ## Indepth features
