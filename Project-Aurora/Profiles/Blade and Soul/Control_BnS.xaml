@@ -35,9 +35,21 @@
             <TabItem Header="Color Enhancing">
                 <Grid>
                     <CheckBox x:Name="ce_enabled" Content="Enable Color Enhancing" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="ce_enabled_Checked" Unchecked="ce_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Color Factor:" VerticalAlignment="Top"/>
-                    <Slider x:Name="ce_color_factor" HorizontalAlignment="Left" Margin="82,30,0,0" VerticalAlignment="Top" Width="200" Minimum="1" Maximum="255" Value="90" ValueChanged="ce_color_factor_ValueChanged"/>
-                    <TextBlock x:Name="ce_color_factor_label" HorizontalAlignment="Left" Margin="287,33,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top"/>
+                    <TextBlock Text="Color Enhancing Mode:" Margin="20,33,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <ComboBox x:Name="ce_mode" HorizontalAlignment="Left" Margin="149,30,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0" SelectionChanged="ce_mode_SelectionChanged">
+                        <ComboBoxItem Content="Linear"/>
+                        <ComboBoxItem Content="Simple" ToolTip="Simple multiplication with color restribution."/>
+                        <ComboBoxItem Content="Gamma" ToolTip="Using normal image gamma correction. It affects "/>
+                    </ComboBox>
+                    <TextBlock HorizontalAlignment="Left" Margin="20,57,0,0" TextWrapping="Wrap" Text="Color Factor:" VerticalAlignment="Top"/>
+                    <Slider x:Name="ce_color_factor" HorizontalAlignment="Left" Margin="101,57,0,0" VerticalAlignment="Top" Width="200" Minimum="1" Maximum="255" Value="90" ValueChanged="ce_color_factor_ValueChanged"/>
+                    <TextBlock x:Name="ce_color_factor_label" HorizontalAlignment="Left" Margin="306,57,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="20,80,0,0" TextWrapping="Wrap" Text="Simple Factor:" VerticalAlignment="Top"/>
+                    <Slider x:Name="ce_color_simple" HorizontalAlignment="Left" Margin="101,80,0,0" VerticalAlignment="Top" Width="200" Minimum="1.0" Maximum="2" Value="1.2" ValueChanged="ce_color_simple_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="0.05"/>
+                    <TextBlock x:Name="ce_color_simple_label" HorizontalAlignment="Left" Margin="306,80,0,0" TextWrapping="Wrap" Text="2.0" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="20,103,0,0" TextWrapping="Wrap" Text="Gamma Value:" VerticalAlignment="Top"/>
+                    <Slider x:Name="ce_color_gamma" HorizontalAlignment="Left" Margin="101,103,0,0" VerticalAlignment="Top" Width="200" Minimum="1.0" Maximum="4.0" Value="2.0" ValueChanged="ce_color_gamma_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="0.1"/>
+                    <TextBlock x:Name="ce_color_gamma_label" HorizontalAlignment="Left" Margin="306,103,0,0" TextWrapping="Wrap" Text="4.0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
         </TabControl>

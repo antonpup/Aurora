@@ -21,7 +21,6 @@ namespace Aurora.Profiles.WormsWMD
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             this.colorEnhance_Enabled = (this.Profile.Settings as WormsWMDSettings).colorEnhance_Enabled;
-            this.colorEnhance_initial_factor = (this.Profile.Settings as WormsWMDSettings).colorEnhance_initial_factor;
             this.colorEnhance_color_factor = (this.Profile.Settings as WormsWMDSettings).colorEnhance_color_factor;
         }
     }

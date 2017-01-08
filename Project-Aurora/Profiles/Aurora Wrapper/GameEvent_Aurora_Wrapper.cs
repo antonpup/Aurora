@@ -23,8 +23,10 @@ namespace Aurora.Profiles.Aurora_Wrapper
         internal Dictionary<Devices.DeviceKeys, Color> colors = new Dictionary<Devices.DeviceKeys, Color>();
 
         internal bool colorEnhance_Enabled = false;
-        internal float colorEnhance_initial_factor = 3.0f;
+        internal int colorEnhance_Mode = 0;
         internal int colorEnhance_color_factor = 90;
+        internal float colorEnhance_color_simple = 1.2f;
+        internal float colorEnhance_color_gamma = 2.5f;
 
         protected virtual void UpdateExtraLights(Queue<EffectLayer> layers)
         {
@@ -371,17 +373,45 @@ namespace Aurora.Profiles.Aurora_Wrapper
             if (!colorEnhance_Enabled)
                 return color;
 
+            switch (colorEnhance_Mode)
+            {
+                case 0:
+                    float boost_amount = 0.0f;
+                    boost_amount += (1.0f - (color.R / colorEnhance_color_factor));
+                    boost_amount += (1.0f - (color.G / colorEnhance_color_factor));
+                    boost_amount += (1.0f - (color.B / colorEnhance_color_factor));
+
+                    boost_amount = boost_amount <= 1.0f ? 1.0f : boost_amount;
+
+                    return Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
+
+                case 1:
+                    float redComp = color.R * colorEnhance_color_simple;
+                    float greenComp = color.G * colorEnhance_color_simple;
+                    float blueComp = color.B * colorEnhance_color_simple;
+
+                    float maxComp = Math.Max(Math.Max(redComp, greenComp), blueComp);
+                    if (maxComp < 256)
+                        return Color.FromArgb(color.A, (int)redComp, (int)greenComp, (int)blueComp);
+                    float sumComp = redComp + greenComp + blueComp;
+                    if (sumComp >= 768)
+                        return Color.FromArgb(color.A, 255, 255, 255);
+                    float x = (3 * 255.999f - sumComp) / (3 * maxComp - sumComp);
+                    float gray = 255.999f - x * maxComp;
+
+                    return Color.FromArgb(color.A, (int)(gray + x * redComp), (int)(gray + x * greenComp), (int)(gray + x * blueComp));
+
+                case 2:
+                    byte colorRed = (byte)Math.Min(255, (int)((255.0 * Math.Pow(color.R / 255.0, 1.0 / colorEnhance_color_gamma)) + 0.5));
+                    byte colorGreen = (byte)Math.Min(255, (int)((255.0 * Math.Pow(color.G / 255.0, 1.0 / colorEnhance_color_gamma)) + 0.5));
+                    byte colorBlue = (byte)Math.Min(255, (int)((255.0 * Math.Pow(color.B / 255.0, 1.0 / colorEnhance_color_gamma)) + 0.5));
+
+                    return Color.FromArgb(color.A, colorRed, colorGreen, colorBlue);
+                    
+                default:
+                    return color;
+            }
             // initial_factor * (1 - (x / color_factor))
-
-            float boost_amount = 0.0f;
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.R / colorEnhance_color_factor));
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.G / colorEnhance_color_factor));
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.B / colorEnhance_color_factor));
-            boost_amount /= colorEnhance_initial_factor;
-
-            boost_amount = boost_amount <= 1.0f ? 1.0f : boost_amount;
-
-            return Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
         }
     }
 
