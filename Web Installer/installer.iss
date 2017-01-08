@@ -4,9 +4,9 @@ AppName=Aurora
 AppVersion=1.0.0
 AppVerName=Aurora Web Installer 1.0.0
 AppPublisher=Anton Pupkov
-AppPublisherURL=http://www.project-aurora.com/
+AppPublisherURL=http://aurora.modworkshop.net/
 AppSupportURL=https://github.com/antonpup/Aurora/issues/
-AppUpdatesURL=http://www.project-aurora.com/
+AppUpdatesURL=http://aurora.modworkshop.net/
 DefaultDirName={pf64}\Aurora
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
@@ -50,7 +50,7 @@ end;
 
 procedure InitializeWizard();
 begin
-    idpAddFileSize('http://www.project-aurora.com//download-latest.php', ExpandConstant('{tmp}\binary.zip'), 7942524);
+    idpAddFileSize('http://aurora.modworkshop.net/download-latest.php', ExpandConstant('{tmp}\binary.zip'), 7942524);
 
     idpDownloadAfter(wpReady);
 end;
