@@ -186,6 +186,11 @@ namespace Aurora.Utils
         public AmbilightEffectsToStringVC() : base(AmbilightType.Default) { }
     }
 
+    public class AmbilightCaptureToStringVC : EnumToStringVC
+    {
+        public AmbilightCaptureToStringVC() : base(AmbilightCaptureType.Everything) { }
+    }
+
     public class EqualizerTypeToStringVC : EnumToStringVC
     {
         public EqualizerTypeToStringVC() : base(EqualizerType.PowerBars) { }
