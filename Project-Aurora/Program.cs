@@ -147,11 +147,13 @@ namespace Aurora
 
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
+            Global.dev_manager = new DeviceManager();
+            Global.effengine = new Effects();
+
             //Load config
             Global.logger.LogLine("Loading Configuration", Logging_Level.Info);
             try
             {
-                Global.Configuration = new Configuration();
                 Global.Configuration = ConfigManager.Load();
             }
             catch (Exception e)
@@ -183,11 +185,7 @@ namespace Aurora
             }
 
             Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
-            Global.dev_manager = new DeviceManager();
             Global.dev_manager.Initialize();
-
-            Global.logger.LogLine("Loading Effects Engine", Logging_Level.Info);
-            Global.effengine = new Effects();
 
             Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
             Global.kbLayout = new KeyboardLayoutManager();
