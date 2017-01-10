@@ -123,7 +123,7 @@
                     <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,149,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
                     <ListBox x:Name="excluded_listbox" HorizontalAlignment="Left" Height="171" Margin="579,91,0,0" VerticalAlignment="Top" Width="160"/>
                     <Label Content="Excluded Processes" HorizontalAlignment="Left" Margin="579,37,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="excluded_process_name" HorizontalAlignment="Left" Height="23" Margin="579,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160"/>
+                    <ComboBox x:Name="excluded_process_name" HorizontalAlignment="Left" Height="23" Margin="579,63,0,0" VerticalAlignment="Top" Width="160" IsEditable="True" DropDownOpened="excluded_process_name_DropDownOpened"/>
                     <Button x:Name="excluded_add" Content="Add Process" HorizontalAlignment="Left" Margin="744,63,0,0" VerticalAlignment="Top" Click="excluded_add_Click"/>
                     <Button x:Name="excluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="744,91,0,0" VerticalAlignment="Top" Click="excluded_remove_Click"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,75,0,0" TextWrapping="Wrap" Text="Keyboard brightness modifier: " VerticalAlignment="Top"/>
