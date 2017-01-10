@@ -15,7 +15,13 @@
 	103,
 	104
   ],
-  "keys_to_set_as_new_line": [],
+  "keys_to_set_as_new_line": [
+	13,
+	37,
+	58,
+	75,
+	93,
+  ],
   "included_features": [
   ]
 }
