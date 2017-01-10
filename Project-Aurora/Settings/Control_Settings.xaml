@@ -265,9 +265,9 @@
             <TabItem Header="About">
                 <Grid>
                     <Label Content="Aurora" HorizontalAlignment="Left" Margin="143,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
-                    <Label Content="by Antonpup" HorizontalAlignment="Left" Margin="271,12,0,0" VerticalAlignment="Top"/>
+                    <Label Content="by Antonpup &amp; simon-wh" HorizontalAlignment="Left" Margin="271,12,0,0" VerticalAlignment="Top"/>
                     <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/><LineBreak/><LineBreak/><Run Text="You can report problems and give suggestions to me via "/><Hyperlink NavigateUri="http://steamcommunity.com/id/pupant/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Steam"/></Hyperlink><LineBreak/><Run Text="or you can create an issue on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><Run Text="."/><LineBreak/><LineBreak/><Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><LineBreak/><Run Text="Game logos and other images are owned by their respective owners."/><LineBreak/><LineBreak/><Run Text="I can be contacted at iamnotaspy@lastbullet.net"/></TextBlock>
-                    <Label Content="beta v0.6.0" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
+                    <Label Content="beta v0.6.0b" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
                     <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
                 </Grid>
             </TabItem>
