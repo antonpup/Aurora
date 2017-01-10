@@ -174,11 +174,20 @@ namespace Aurora.Devices.CoolerMaster
                                     return true;
                                 }
                                 else
-                                { 
-                                    Global.logger.LogLine("Cooler Master device control could not be initialized", Logging_Level.Error);
+                                {
+                                    CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M_White);
+                                    if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
+                                    {
+                                        isInitialized = true;
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        Global.logger.LogLine("Cooler Master device control could not be initialized", Logging_Level.Error);
 
-                                    isInitialized = false;
-                                    return false;
+                                        isInitialized = false;
+                                        return false;
+                                    }
                                 }
                             }
                         }
