@@ -546,9 +546,9 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
-                else if (keyboard_preference == PreferredKeyboard.Mastrerkeys_Pro_L_White)
+                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L_White)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
-                else if (keyboard_preference == PreferredKeyboard.Mastrerkeys_Pro_M_White)
+                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M_White)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m_white.json");
                 //else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 //    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");

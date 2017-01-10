@@ -187,9 +187,9 @@ namespace Aurora.Settings
         [Description("Masterkeys Pro S")]
         Masterkeys_Pro_S = 501,
         [Description("Masterkeys Pro L White")]
-        Mastrerkeys_Pro_L_White = 502,
+        Masterkeys_Pro_L_White = 502,
         [Description("Masterkeys Pro M White")]
-        Mastrerkeys_Pro_M_White = 503
+        Masterkeys_Pro_M_White = 503,
 
 
         //Roccat range is 600-699
