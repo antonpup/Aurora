@@ -257,7 +257,7 @@ namespace Aurora.Settings
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
                 if (e.Key == Key.C)
-                    Global.Clipboard = ((Layer)this.lstLayers.SelectedItem).Clone();
+                    Global.Clipboard = (this.lstLayers.SelectedItem as Layer)?.Clone();
                 else if (e.Key == Key.V && Global.Clipboard is Layer)
                 {
                     Layer lyr = (Layer)Global.Clipboard;

@@ -51,17 +51,23 @@ namespace Aurora.Profiles.Generic_Application
 
             if (Directory.Exists(profiles_path))
             {
+                this.LoadScripts(profiles_path);
+
                 foreach (string profile in Directory.EnumerateFiles(profiles_path, "*.json", SearchOption.TopDirectoryOnly))
                 {
                     string profile_name = Path.GetFileNameWithoutExtension(profile);
+
+                    if (profile_name.Equals("app_info"))
+                        continue;
+
                     ProfileSettings profile_settings = LoadProfile(profile);
 
                     if (profile_settings != null)
                     {
+                        this.InitalizeScriptSettings(profile_settings);
+
                         if (profile_name.Equals("default"))
                             Settings = profile_settings;
-                        else if (profile_name.Equals("app_info"))
-                            continue;
                         else
                         {
                             if (!Profiles.ContainsKey(profile_name))

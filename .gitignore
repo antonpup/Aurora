@@ -86,6 +86,12 @@ ipch/
 *.sdf
 *.cachefile
 
+# Visual Studi C++ compile files
+*.exp
+*.iobj
+*.ipdb
+*.lib
+
 # Visual Studio profiler
 *.psess
 *.vsp
