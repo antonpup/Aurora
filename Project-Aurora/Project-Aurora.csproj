@@ -1198,6 +1198,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -1220,7 +1221,7 @@
     <Resource Include="Resources\gta5_64x64.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\x64\Aurora-LogiLEDWrapper.dll" />
+    <Resource Include="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\AddProfile_Icon.png" />
@@ -1308,7 +1309,7 @@
     <Resource Include="Resources\blacklight_64x64.png" />
     <Content Include="Resources\CorsairInstall\Step1.png" />
     <Content Include="Resources\CorsairInstall\Step2.png" />
-    <Resource Include="Resources\x64\Aurora-LightFXWrapper.dll" />
+    <Resource Include="Resources\Win64\Aurora-LightFXWrapper.dll" />
     <None Include="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -1336,7 +1337,7 @@
     <Resource Include="Resources\bns_48x48.png" />
     <Resource Include="Resources\keycap_backglow.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
-    <Resource Include="Resources\x64\Aurora-RazerLEDWrapper.dll" />
+    <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\FreeForm_Circle.png" />
     <Resource Include="Resources\FreeForm_CircleFilled.png" />
     <Resource Include="Resources\FreeForm_Line.png" />
