@@ -981,6 +981,8 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.RIGHT_ALT;
                 case (DeviceKeys.RIGHT_WINDOWS):
                     return Logitech_keyboardBitmapKeys.RIGHT_WINDOWS;
+                case (DeviceKeys.FN_Key):
+                    return Logitech_keyboardBitmapKeys.RIGHT_WINDOWS;
                 case (DeviceKeys.APPLICATION_SELECT):
                     return Logitech_keyboardBitmapKeys.APPLICATION_SELECT;
                 case (DeviceKeys.RIGHT_CONTROL):
