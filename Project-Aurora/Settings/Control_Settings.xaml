@@ -113,7 +113,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <TabControl>
+        <TabControl Margin="0,6,0,-6">
             <TabItem Header="General Settings">
                 <Grid>
                     <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
@@ -246,12 +246,14 @@
             <TabItem Header="AtmoOrb">
                 <Grid>
                     <Label x:Name="labelatmoorb_enabled" Content="Enable AtmoOrb" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <Label x:Name="labelatmoorb_IDs" Content="Orb IDs" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="labelatmoorb_IDs" Content="Orb IDs" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top"/>
                     <Label x:Name="labelatmoorb_use_smoothing" Content="Use smoothing" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="atmoorb_use_smoothing" Content="" HorizontalAlignment="Left" Margin="115,48,0,0" VerticalAlignment="Top" Checked="atmoorb_use_smoothing_Checked" Unchecked="atmoorb_use_smoothing_Unchecked"/>
                     <CheckBox x:Name="atmoorb_enabled" Content="" HorizontalAlignment="Left" Margin="115,16,0,0" VerticalAlignment="Top" Checked="atmoorb_enabled_Checked" Unchecked="atmoorb_enabled_Unchecked"/>
-                    <TextBox x:Name="atmoorb_IDs" HorizontalAlignment="Left" Height="23" Margin="122,77,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="142" TextChanged="atmoorb_IDs_TextChanged"/>
-                    <Label x:Name="hintatmoorb_IDs" Content="For multiple IDs separate with comma" HorizontalAlignment="Left" Margin="90,106,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
+                    <TextBox x:Name="atmoorb_IDs" HorizontalAlignment="Left" Height="23" Margin="117,109,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="142" TextChanged="atmoorb_IDs_TextChanged"/>
+                    <Label x:Name="hintatmoorb_IDs" Content="For multiple IDs separate with comma" HorizontalAlignment="Left" Margin="84,138,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
+                    <TextBox x:Name="atmoorb_send_delay" HorizontalAlignment="Left" Height="23" Margin="117,75,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="71" TextChanged="atmoorb_send_delay_TextChanged"/>
+                    <Label x:Name="labelatmoorb_send_delay" Content="Send delay (ms)" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Updates">

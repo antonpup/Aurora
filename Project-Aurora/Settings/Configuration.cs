@@ -327,6 +327,7 @@ namespace Aurora.Settings
         public bool atmoorb_enabled;
         public bool atmoorb_use_smoothing;
         public string atmoorb_ids;
+        public int atmoorb_send_delay;
 
         [JsonIgnoreAttribute]
         public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
@@ -427,8 +428,9 @@ namespace Aurora.Settings
             atmoorb_enabled = false;
             atmoorb_use_smoothing = true;
             atmoorb_ids = "1";
+            atmoorb_send_delay = 50;
         }
-    }
+  }
 
     public class ConfigManager
     {

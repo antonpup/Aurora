@@ -99,6 +99,8 @@ namespace Aurora.Settings
             this.atmoorb_enabled.IsChecked = Global.Configuration.atmoorb_enabled;
             this.atmoorb_use_smoothing.IsChecked = Global.Configuration.atmoorb_use_smoothing;
             this.atmoorb_IDs.Text = Global.Configuration.atmoorb_ids;
+            this.atmoorb_send_delay.Text = Global.Configuration.atmoorb_send_delay.ToString();
+
             Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
         }
 
@@ -951,6 +953,20 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.atmoorb_ids = this.atmoorb_IDs.Text;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+
+        private void atmoorb_send_delay_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                int send_delay;
+                bool isValidInteger = int.TryParse(this.atmoorb_send_delay.Text, out send_delay);
+                if(isValidInteger)
+                    Global.Configuration.atmoorb_send_delay = send_delay;
+
                 ConfigManager.Save(Global.Configuration);
             }
         }
