@@ -104,7 +104,7 @@ namespace Aurora
                     }
 
                     watch.Stop();
-                    update_timer?.Change(Math.Max(timer_interval - (int)watch.ElapsedMilliseconds, 0), Timeout.Infinite);
+                    update_timer?.Change(Math.Max(timer_interval, 0), Timeout.Infinite);
                 }, null, 0, System.Threading.Timeout.Infinite);
 
                 /*update_timer = new Timer(33);
