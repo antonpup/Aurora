@@ -31,10 +31,10 @@ namespace Aurora.Profiles.Overwatch
             this.ce_mode.SelectedIndex = (profile_manager.Settings as OverwatchSettings).colorEnhance_Mode;
             this.ce_color_factor.Value = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_factor;
             this.ce_color_factor_label.Text = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_factor.ToString();
-            this.ce_color_simple.Value = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_simple;
-            this.ce_color_simple_label.Text = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_simple.ToString();
-            this.ce_color_gamma.Value = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_gamma;
-            this.ce_color_gamma_label.Text = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_gamma.ToString();
+            this.ce_color_hsv_sine.Value = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_hsv_sine;
+            this.ce_color_hsv_sine_label.Text = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_hsv_sine.ToString();
+            this.ce_color_hsv_gamma.Value = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_hsv_gamma;
+            this.ce_color_hsv_gamma_label.Text = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_hsv_gamma.ToString();
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -103,22 +103,22 @@ namespace Aurora.Profiles.Overwatch
             }
         }
         
-        private void ce_color_simple_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ce_color_hsv_sine_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as OverwatchSettings).colorEnhance_color_simple = (float)this.ce_color_simple.Value;
-                this.ce_color_simple_label.Text = ((float)this.ce_color_simple.Value).ToString();
+                (profile_manager.Settings as OverwatchSettings).colorEnhance_color_hsv_sine = (float)this.ce_color_hsv_sine.Value;
+                this.ce_color_hsv_sine_label.Text = ((float)this.ce_color_hsv_sine.Value).ToString();
                 profile_manager.SaveProfiles();
             }
         }
 
-        private void ce_color_gamma_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ce_color_hsv_gamma_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as OverwatchSettings).colorEnhance_color_gamma = (float)this.ce_color_gamma.Value;
-                this.ce_color_gamma_label.Text = ((float)this.ce_color_gamma.Value).ToString();
+                (profile_manager.Settings as OverwatchSettings).colorEnhance_color_hsv_gamma = (float)this.ce_color_hsv_gamma.Value;
+                this.ce_color_hsv_gamma_label.Text = ((float)this.ce_color_hsv_gamma.Value).ToString();
                 profile_manager.SaveProfiles();
             }
         }

@@ -23,8 +23,8 @@ namespace Aurora.Profiles.Overwatch
             this.colorEnhance_Enabled = (this.Profile.Settings as OverwatchSettings).colorEnhance_Enabled;
             this.colorEnhance_Mode = (this.Profile.Settings as OverwatchSettings).colorEnhance_Mode;
             this.colorEnhance_color_factor = (this.Profile.Settings as OverwatchSettings).colorEnhance_color_factor;
-            this.colorEnhance_color_simple = (this.Profile.Settings as OverwatchSettings).colorEnhance_color_simple;
-            this.colorEnhance_color_gamma = (this.Profile.Settings as OverwatchSettings).colorEnhance_color_gamma;
+            this.colorEnhance_color_hsv_sine = (this.Profile.Settings as OverwatchSettings).colorEnhance_color_hsv_sine;
+            this.colorEnhance_color_hsv_gamma = (this.Profile.Settings as OverwatchSettings).colorEnhance_color_hsv_gamma;
         }
     }
 }
