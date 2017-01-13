@@ -1,0 +1,28 @@
+{
+  "replace_RWin_with_FN": false,
+  "keys_to_remove": [
+    14,
+	15,
+	16,
+	31,
+	32,
+	33,
+	52,
+	53,
+	54,
+	89,
+	102,
+	103,
+	104
+  ],
+  "keys_to_set_as_new_line": [
+	13,
+	37,
+	58,
+	75,
+	93,
+  ],
+  "included_features": [
+  "masterkeys_pro_m_white_right_features.json"
+  ]
+}

@@ -27,10 +27,10 @@ namespace Aurora.Devices.CoolerMaster
                      {DeviceKeys.PRINT_SCREEN, new int [] {0, 15} },
                      {DeviceKeys.SCROLL_LOCK, new int [] {0, 16} },
                      {DeviceKeys.PAUSE_BREAK, new int [] {0, 17} },
-                     {DeviceKeys.Profile_Key1, new int [] {0, 17} },
-                     {DeviceKeys.Profile_Key2, new int [] {0, 17} },
-                     {DeviceKeys.Profile_Key3, new int [] {0, 17} },
-                     {DeviceKeys.Profile_Key4, new int [] {0, 17} },
+                     {DeviceKeys.Profile_Key1, new int [] {0, 18} },
+                     {DeviceKeys.Profile_Key2, new int [] {0, 19} },
+                     {DeviceKeys.Profile_Key3, new int [] {0, 20} },
+                     {DeviceKeys.Profile_Key4, new int [] {0, 21} },
                      {DeviceKeys.TILDE, new int [] {1, 0} },
                      {DeviceKeys.ONE, new int [] {1, 1} },
                      {DeviceKeys.TWO, new int [] {1, 2} },
@@ -86,9 +86,9 @@ namespace Aurora.Devices.CoolerMaster
                      {DeviceKeys.SEMICOLON, new int [] {3, 10} },
                      {DeviceKeys.APOSTROPHE, new int [] {3, 11} },
                      {DeviceKeys.ENTER, new int [] {3, 14} },
-                     {DeviceKeys.NUM_FOUR, new int [] {3, 19} },
-                     {DeviceKeys.NUM_FIVE, new int [] {3, 20} },
-                     {DeviceKeys.NUM_SIX, new int [] {3, 21} },
+                     {DeviceKeys.NUM_FOUR, new int [] {3, 18} },
+                     {DeviceKeys.NUM_FIVE, new int [] {3, 19} },
+                     {DeviceKeys.NUM_SIX, new int [] {3, 20} },
                      {DeviceKeys.LEFT_SHIFT, new int [] {4, 0} },
                      {DeviceKeys.Z, new int [] {4, 2} },
                      {DeviceKeys.X, new int [] {4, 3} },
@@ -167,10 +167,28 @@ namespace Aurora.Devices.CoolerMaster
                             }
                             else
                             {
-                                Global.logger.LogLine("Cooler Master device control could not be initialized", Logging_Level.Error);
+                                CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_L_White);
+                                if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
+                                {
+                                    isInitialized = true;
+                                    return true;
+                                }
+                                else
+                                {
+                                    CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M_White);
+                                    if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
+                                    {
+                                        isInitialized = true;
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        Global.logger.LogLine("Cooler Master device control could not be initialized", Logging_Level.Error);
 
-                                isInitialized = false;
-                                return false;
+                                        isInitialized = false;
+                                        return false;
+                                    }
+                                }
                             }
                         }
 
