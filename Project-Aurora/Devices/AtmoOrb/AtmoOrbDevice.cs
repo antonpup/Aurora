@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Aurora.Devices.AtmoOrbDevice
 {
@@ -13,6 +15,8 @@ namespace Aurora.Devices.AtmoOrbDevice
     private Socket socket;
     private IPEndPoint ipClientEndpoint;
     private bool isConnected;
+    private bool isConnecting;
+    private Stopwatch sw = new Stopwatch();
 
     public string GetDeviceDetails()
     {
@@ -29,6 +33,10 @@ namespace Aurora.Devices.AtmoOrbDevice
 
     public bool Initialize()
     {
+      // Only connect when user has AtmoOrb enabled, additional check to reduce unwanted network load
+      if (!Global.Configuration.atmoorb_enabled)
+        return false;
+
       if (!isConnected)
       {
         try
@@ -101,12 +109,20 @@ namespace Aurora.Devices.AtmoOrbDevice
       }
 
       isConnected = false;
+
+      if(sw.IsRunning)
+        sw.Stop();
+      sw = null;
     }
 
     public void Connect()
     {
       try
       {
+        if (isConnecting)
+          return;
+
+        isConnecting = true;
         var multiCastIp = IPAddress.Parse("239.15.18.2");
         var port = 49692;
 
@@ -118,21 +134,38 @@ namespace Aurora.Devices.AtmoOrbDevice
         socket.Connect(ipClientEndpoint);
 
         isConnected = true;
+        isConnecting = false;
       }
-      catch (Exception){
+      catch (Exception)
+      {
+        Thread.Sleep(2500);
+        isConnecting = false;
       }
     }
 
     public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
     {
-      Color averageColor = Utils.BitmapUtils.GetRegionColor(
-                        colorComposition.keyBitmap,
-                        new BitmapRectangle(0, 0, colorComposition.keyBitmap.Width, colorComposition.keyBitmap.Height)
-                        );
+      // Connect if needed
+      if (!isConnected)
+        Connect();
 
-      SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B);
+      // Reduce sending based on user config
+      if (!sw.IsRunning)
+        sw.Start();
+
+      if (sw.ElapsedMilliseconds > Global.Configuration.atmoorb_send_delay)
+      {
+        Color averageColor = Utils.BitmapUtils.GetRegionColor(
+          colorComposition.keyBitmap,
+          new BitmapRectangle(0, 0, colorComposition.keyBitmap.Width, colorComposition.keyBitmap.Height)
+        );
+
+        SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B);
+        sw.Restart();
+      }
       return true;
     }
+
     public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
     {
       throw new NotImplementedException();
