@@ -243,7 +243,7 @@ namespace Aurora
                 if (process_name.Equals("csgo.exe"))
                 {
                     //Update timer set to 100 ticks a second for CSGO for Smooth Bomb Effect
-                    timer_interval = 10; // in miliseconds
+                    timer_interval = 33; // in miliseconds
                 }
                 else
                 {

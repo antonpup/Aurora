@@ -74,11 +74,11 @@ namespace Aurora.Profiles.CSGO.Layers
 
     public class CSGOBombLayerHandler : LayerHandler<CSGOBombLayerHandlerProperties>
     {
-        private Stopwatch bombtimer = new Stopwatch();
-        private bool bombflash = false;
-        private int bombflashcount = 0;
-        private long bombflashtime = 0;
-        private long bombflashedat = 0;
+        private static Stopwatch bombtimer = new Stopwatch();
+        private static bool bombflash = false;
+        private static int bombflashcount = 0;
+        private static long bombflashtime = 0;
+        private static long bombflashedat = 0;
 
         public CSGOBombLayerHandler() : base()
         {
@@ -111,7 +111,6 @@ namespace Aurora.Profiles.CSGO.Layers
                     double bombflashamount = 1.0;
                     bool isCritical = false;
 
-
                     if (bombtimer.ElapsedMilliseconds < 38000)
                     {
 
@@ -122,8 +121,10 @@ namespace Aurora.Profiles.CSGO.Layers
                             bombflashtime = bombtimer.ElapsedMilliseconds + (1000 - (bombflashcount++ * 13));
                         }
 
-                        bombflashamount = Math.Pow(Math.Sin((bombtimer.ElapsedMilliseconds - bombflashedat) / 80.0 + 0.25), 2.0);
-
+                        if (bombtimer.ElapsedMilliseconds < bombflashedat || bombtimer.ElapsedMilliseconds > bombflashedat + 220)
+                            bombflashamount = 0.0;
+                        else
+                            bombflashamount = Math.Pow(Math.Sin((bombtimer.ElapsedMilliseconds - bombflashedat) / 80.0 + 0.25), 2.0);
                     }
                     else if (bombtimer.ElapsedMilliseconds >= 38000)
                     {
@@ -153,9 +154,7 @@ namespace Aurora.Profiles.CSGO.Layers
                     if (isCritical)
                         bombcolor = Utils.ColorUtils.MultiplyColorByScalar(Properties.PrimedColor, Math.Min(bombflashamount, 1.0));
                     else
-                    {
                         bombcolor = Utils.ColorUtils.MultiplyColorByScalar(Properties.FlashColor, Math.Min(bombflashamount, 1.0));
-                    }
 
                     bomb_effect_layer.Set(Properties.Sequence, bombcolor);
 
