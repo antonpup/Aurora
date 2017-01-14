@@ -33,6 +33,10 @@ namespace Aurora.Settings
         public bool? absolute_location = false;
         public String image = "";
 
+        public KeyboardKey() : this("", DeviceKeys.NONE)
+        {
+        }
+
         public KeyboardKey(String text, Devices.DeviceKeys tag, bool enabled = true, bool linebreak = false, double fontsize = 12, double margin_left = 7, double margin_top = 0, double width = 30, double height = 30, int width_bits = 2, int height_bits = 2, int margin_left_bits = 0, int margin_top_bits = 0)
         {
             this.visualName = text;
@@ -82,16 +86,19 @@ namespace Aurora.Settings
 
     public class VirtualGroupConfiguration
     {
-        public bool replace_RWin_with_FN = false;
-
         public Devices.DeviceKeys[] keys_to_remove = new Devices.DeviceKeys[] { };
 
-        public Devices.DeviceKeys[] keys_to_set_as_new_line = new Devices.DeviceKeys[] { };
+        public Dictionary<DeviceKeys, KeyboardKey> key_modifications = new Dictionary<DeviceKeys, KeyboardKey>();
 
         /// <summary>
         /// A list of paths for each included group json
         /// </summary>
         public string[] included_features = new string[] { };
+
+        public VirtualGroupConfiguration()
+        {
+
+        }
     }
 
     public class VirtualGroup
@@ -324,25 +331,13 @@ namespace Aurora.Settings
             grouped_keys.Clear();
         }
 
-        internal void AdjustFNKey()
-        {
-            var applicable_keys = grouped_keys.FindAll(key => key.tag == DeviceKeys.RIGHT_WINDOWS);
-
-            foreach (var key in applicable_keys)
-            {
-                key.tag = DeviceKeys.FN_Key;
-                key.visualName = "FN";
-            }
-        }
-
         internal void AdjustKeys(Dictionary<DeviceKeys, KeyboardKey> keys)
         {
             var applicable_keys = grouped_keys.FindAll(key => keys.ContainsKey( key.tag ));
 
             foreach (var key in applicable_keys)
             {
-                key.tag = DeviceKeys.FN_Key;
-                key.visualName = "FN";
+                key.UpdateFromOtherKey(keys[key.tag]);
             }
         }
 
@@ -412,21 +407,11 @@ namespace Aurora.Settings
             _region_bitmap.Height = height_bit_max;
 
         }
-
-        internal void SetNewLineKeys(DeviceKeys[] keys_to_set_as_new_line)
-        {
-            var applicable_keys = grouped_keys.FindAll(key => keys_to_set_as_new_line.Contains(key.tag));
-
-            foreach (var key in applicable_keys)
-                key.line_break = true;
-        }
     }
 
     public class KeyboardLayoutManager
     {
         private VirtualGroup virtual_keyboard_group;
-
-        //private List<KeyboardKey> keyboard = new List<KeyboardKey>();
 
         private Dictionary<Devices.DeviceKeys, IKeycap> _virtual_keyboard_map = new Dictionary<DeviceKeys, IKeycap>();
 
@@ -595,10 +580,7 @@ namespace Aurora.Settings
                     string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
                     VirtualGroupConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualGroupConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                    if (layoutConfig.replace_RWin_with_FN)
-                        virtual_keyboard_group.AdjustFNKey();
-
-                    virtual_keyboard_group.SetNewLineKeys(layoutConfig.keys_to_set_as_new_line);
+                    virtual_keyboard_group.AdjustKeys(layoutConfig.key_modifications);
                     virtual_keyboard_group.RemoveKeys(layoutConfig.keys_to_remove);
 
                     foreach (string feature in layoutConfig.included_features)

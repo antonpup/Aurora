@@ -1,7 +1,6 @@
 {
-  "replace_RWin_with_FN": false,
-  "keys_to_remove": [ ],
-  "keys_to_set_as_new_line": [ ],
+  "keys_to_remove": [],
+  "key_modifications": {},
   "included_features": [
     "corsair_k95_right_features.json"
   ]

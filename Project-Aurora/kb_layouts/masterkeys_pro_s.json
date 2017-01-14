@@ -1,5 +1,4 @@
 {
-  "replace_RWin_with_FN": false,
   "keys_to_remove": [
     34,
     35,
@@ -19,14 +18,97 @@
     105,
     106
   ],
-  "keys_to_set_as_new_line": [
-    16,
-    33,
-    54,
-    72,
-    89,
-    104
-  ],
-  "included_features": [
-  ]
+  "key_modifications": {
+    "16": {
+      "visualName": null,
+      "tag": 16,
+      "line_break": true,
+      "margin_left": null,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    },
+    "33": {
+      "visualName": null,
+      "tag": 33,
+      "line_break": true,
+      "margin_left": null,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    },
+    "54": {
+      "visualName": null,
+      "tag": 54,
+      "line_break": true,
+      "margin_left": null,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    },
+    "72": {
+      "visualName": null,
+      "tag": 72,
+      "line_break": true,
+      "margin_left": null,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    },
+    "89": {
+      "visualName": null,
+      "tag": 89,
+      "line_break": true,
+      "margin_left": null,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    },
+    "104": {
+      "visualName": null,
+      "tag": 104,
+      "line_break": true,
+      "margin_left": null,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    }
+  },
+  "included_features": []
 }
