@@ -73,8 +73,7 @@ namespace Aurora.Settings.Layers
                 current_primary_color = Properties.PrimaryColor;
 
             EffectLayer breathing_layer = new EffectLayer();
-            breathing_layer.Set(Properties.Sequence, current_primary_color);
-            breathing_layer.Set(Properties.Sequence, Color.FromArgb((byte)(current_sine * 255), current_secondary_color));
+            breathing_layer.Set(Properties.Sequence, Utils.ColorUtils.BlendColors(current_primary_color, current_secondary_color, current_sine));
 
             return breathing_layer;
         }
