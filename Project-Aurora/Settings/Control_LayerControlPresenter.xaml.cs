@@ -65,7 +65,21 @@ namespace Aurora.Settings
             {
                 LayerType enumVal = (LayerType)Enum.Parse(typeof(LayerType), ((sender as ComboBox).SelectedItem).ToString());
 
-                switch (enumVal)
+                ResetLayer(enumVal);
+            }
+        }
+
+        private void btnLogic_Click(object sender, RoutedEventArgs e)
+        {
+            Window_LayerLogicEditor logic_edit = new Window_LayerLogicEditor(this._Layer);
+            logic_edit.ShowDialog();
+        }
+
+        private void ResetLayer(LayerType type)
+        {
+            if (IsLoaded && !isSettingNewLayer)
+            {
+                switch (type)
                 {
                     case LayerType.Solid:
                         _Layer.Handler = new SolidColorLayerHandler();
@@ -173,10 +187,14 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnLogic_Click(object sender, RoutedEventArgs e)
+        private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            Window_LayerLogicEditor logic_edit = new Window_LayerLogicEditor(this._Layer);
-            logic_edit.ShowDialog();
+            if (IsLoaded && !isSettingNewLayer && sender is Button)
+            {
+                LayerType enumVal = (LayerType)Enum.Parse(typeof(LayerType), (cmbLayerType.SelectedItem).ToString());
+
+                ResetLayer(enumVal);
+            }
         }
     }
 }
