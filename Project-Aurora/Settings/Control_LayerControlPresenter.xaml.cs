@@ -41,6 +41,7 @@ namespace Aurora.Settings
         {
             Layer = layer;
             cmbLayerType.SelectedItem = Layer.Handler.Type;
+            grdLayerConfigs.Visibility = Visibility.Hidden;
         }
 
         private void SetLayer(Layer layer)
@@ -56,6 +57,8 @@ namespace Aurora.Settings
 
             cmbLayerType.SelectedItem = Layer.Handler.Type;
             ctrlLayerTypeConfig.Content = layer.Control;
+            chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
+            grdLayerConfigs.Visibility = Visibility.Hidden;
             isSettingNewLayer = false;
         }
 
@@ -183,6 +186,7 @@ namespace Aurora.Settings
                 }
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
+                chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
                 this._Layer.AssociatedProfile.SaveProfiles();
             }
         }
@@ -195,6 +199,23 @@ namespace Aurora.Settings
 
                 ResetLayer(enumVal);
             }
+        }
+
+        private void btnConfig_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && !isSettingNewLayer && sender is Button)
+            {
+                if(this.grdLayerConfigs.IsVisible)
+                    this.grdLayerConfigs.Visibility = Visibility.Hidden;
+                else
+                    this.grdLayerConfigs.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void chkLayerSmoothing_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && !isSettingNewLayer && sender is CheckBox)
+                Layer.Handler.EnableSmoothing = (sender as CheckBox).IsChecked.Value;
         }
     }
 }

@@ -30,5 +30,11 @@
         <UserControl x:Name="ctrlLayerTypeConfig" Margin="10,64,10,10"/>
         <Button x:Name="btnLogic" Content="View Layer Logic" HorizontalAlignment="Left" Margin="283,10,0,0" VerticalAlignment="Top" Click="btnLogic_Click" Visibility="Hidden"/>
         <Button x:Name="btnReset" Content="Reset Layer" HorizontalAlignment="Left" Margin="283,39,0,0" VerticalAlignment="Top" Width="75" Click="btnReset_Click"/>
+        <Grid x:Name="grdLayerConfigs" Margin="0,4,4,0" HorizontalAlignment="Right" Width="576" Height="188" VerticalAlignment="Top" Background="#FF323232">
+            <CheckBox x:Name="chkLayerSmoothing" Content="Enable Smoothing for this layer" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="chkLayerSmoothing_Checked" Unchecked="chkLayerSmoothing_Checked"/>
+        </Grid>
+        <Button x:Name="btnConfig" HorizontalAlignment="Right" Margin="0,9,10,0" VerticalAlignment="Top" Click="btnConfig_Click" ToolTip="Toggles the visibility of additional layer configurations">
+            <Image Source="/Aurora;component/Resources/LayerConfig_icon.png" Width="23" Height="23" Margin="2"/>
+        </Button>
     </Grid>
 </UserControl>

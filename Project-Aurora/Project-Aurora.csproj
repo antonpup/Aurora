@@ -1306,6 +1306,7 @@
     <Resource Include="Resources\Layers_Drag.png" />
     <Resource Include="Resources\Layers_Add.png" />
     <Resource Include="Resources\Layers_Remove.png" />
+    <Resource Include="Resources\LayerConfig_icon.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

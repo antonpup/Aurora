@@ -272,7 +272,7 @@ namespace Aurora.Settings.Layers
             {
                 logic.Check(gs, this._Handler);   
             }
-            return this._Handler.Render(gs);
+            return this._Handler.PostRenderFX(this._Handler.Render(gs));
         }
 
         public void SetProfile(ProfileManager profile)
