@@ -133,14 +133,12 @@ namespace Aurora.Settings.Layers
             switch (Properties.AmbilightCaptureType)
             {
                 case AmbilightCaptureType.MainMonitor:
-
                     if(screen_image != null)
                     {
                         var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-
                         RectangleF prim_scr_region = new RectangleF(
-                                Screen.PrimaryScreen.Bounds.X * image_scale_x,
-                                Screen.PrimaryScreen.Bounds.Y * image_scale_y,
+                                (Screen.PrimaryScreen.Bounds.X - SystemInformation.VirtualScreen.X) * image_scale_x,
+                                (Screen.PrimaryScreen.Bounds.Y - SystemInformation.VirtualScreen.Y) * image_scale_y,
                                 Screen.PrimaryScreen.Bounds.Width * image_scale_x,
                                 Screen.PrimaryScreen.Bounds.Height * image_scale_y);
 
@@ -166,8 +164,8 @@ namespace Aurora.Settings.Layers
                         var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
 
                         RectangleF scr_region = new RectangleF(
-                                app_rect.left * image_scale_x,
-                                app_rect.top * image_scale_y,
+                                (app_rect.left - SystemInformation.VirtualScreen.X) * image_scale_x,
+                                (app_rect.top - SystemInformation.VirtualScreen.Y) * image_scale_y,
                                 (app_rect.right - app_rect.left) * image_scale_x,
                                 (app_rect.bottom - app_rect.top) * image_scale_y);
 
@@ -188,32 +186,31 @@ namespace Aurora.Settings.Layers
                     if (!String.IsNullOrWhiteSpace(Properties.SpecificProcess))
                     {
                         var processes = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(Properties.SpecificProcess));
-
-                        if(processes.Length > 0)
+                        foreach (Process p in processes)
                         {
-                            User32.GetWindowRect(processes[0].MainWindowHandle, ref app_rect);
-
-                            if (screen_image != null)
+                            if (p.MainWindowHandle != IntPtr.Zero)
                             {
-                                var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                                User32.GetWindowRect(p.MainWindowHandle, ref app_rect);
 
-                                RectangleF scr_region = new RectangleF(
-                                        app_rect.left * image_scale_x,
-                                        app_rect.top * image_scale_y,
-                                        (app_rect.right - app_rect.left) * image_scale_x,
-                                        (app_rect.bottom - app_rect.top) * image_scale_y);
+                                if (screen_image != null)
+                                {
+                                    var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
 
-                                using (var graphics = Graphics.FromImage(newImage))
-                                    graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
+                                    RectangleF scr_region = new RectangleF(
+                                            (app_rect.left - SystemInformation.VirtualScreen.X) * image_scale_x,
+                                            (app_rect.top - SystemInformation.VirtualScreen.Y) * image_scale_y,
+                                            (app_rect.right - app_rect.left) * image_scale_x,
+                                            (app_rect.bottom - app_rect.top) * image_scale_y);
 
-                                screen_image = newImage;
-                                average_color = GetAverageColor(newImage);
+                                    using (var graphics = Graphics.FromImage(newImage))
+                                        graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
+
+                                    screen_image = newImage;
+                                    average_color = GetAverageColor(newImage);
+                                }
+
+                                break;
                             }
-                        }
-                        else
-                        {
-                            screen_image = null;
-                            average_color = Color.Empty;
                         }
                     }
                     else
