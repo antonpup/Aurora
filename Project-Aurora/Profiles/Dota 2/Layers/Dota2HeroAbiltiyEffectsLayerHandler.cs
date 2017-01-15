@@ -1,4 +1,4 @@
-﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
@@ -64,6 +64,8 @@ namespace Aurora.Profiles.Dota_2.Layers
             lina_dragon_slave,
             lina_light_strike_array,
             lina_laguna_blade,
+            morphling_waveform,
+            morphling_adaptive_strike,
             nevermore_shadowraze,
             nevermore_requiem,
             rattletrap_rocket_flare,
@@ -81,6 +83,8 @@ namespace Aurora.Profiles.Dota_2.Layers
         private AnimationTrack lina_dragon_slave_track;
         private AnimationTrack lina_light_strike_array_track;
         private AnimationTrack lina_laguna_blade_track;
+        private AnimationTrack morphling_waveform_track;
+        private AnimationMix morphling_adaptive_strike_mix;
         private AnimationTrack abaddon_death_coil_track;
         private AnimationTrack nevermore_shadowraze_track;
         private AnimationTrack nevermore_requiem_track;
@@ -176,6 +180,20 @@ namespace Aurora.Profiles.Dota_2.Layers
                                 currentabilityeffect = Dota2AbilityEffects.riki_smoke_screen;
                                 abilityeffect_time = 6.5f;
                                 abiltiyeffect_keyframe = 0.0f;
+                            }
+                            else if (ability.Name.Equals("morphling_waveform"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.morphling_waveform;
+                                abilityeffect_time = 2.0f;
+                                abiltiyeffect_keyframe = 0.0f;
+
+                            }
+                            else if (ability.Name.Equals("morphling_adaptive_strike"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.morphling_adaptive_strike;
+                                abilityeffect_time = 1.0f;
+                                abiltiyeffect_keyframe = 0.0f;
+
                             }
                             else if (ability.Name.Equals("lina_dragon_slave"))
                             {
@@ -582,6 +600,16 @@ namespace Aurora.Profiles.Dota_2.Layers
                     riki_smoke_screen_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
                     abiltiyeffect_keyframe += getDeltaTime();
                 }
+                else if (currentabilityeffect == Dota2AbilityEffects.morphling_waveform)
+                {
+                    morphling_waveform_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abiltiyeffect_keyframe += getDeltaTime();
+                }
+                else if (currentabilityeffect == Dota2AbilityEffects.morphling_adaptive_strike)
+                {
+                    morphling_adaptive_strike_mix.Draw(ability_effects_layer.GetGraphics(), abiltiyeffect_keyframe);
+                    abiltiyeffect_keyframe += getDeltaTime();
+                }
                 else if (currentabilityeffect == Dota2AbilityEffects.lina_dragon_slave)
                 {
                     lina_dragon_slave_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
@@ -596,54 +624,6 @@ namespace Aurora.Profiles.Dota_2.Layers
                 {
                     lina_laguna_blade_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
                     abiltiyeffect_keyframe += getDeltaTime();
-
-                    //Kept to remember the times without AnimationTracks. The pain was real.
-                    /*
-                    if (abiltiyeffect_keyframe == 0.0f)
-                    {
-                        laguna_point1 = new EffectPoint(mid_x, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                        laguna_point2 = new EffectPoint(mid_x + 3.0f, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                        laguna_point3 = new EffectPoint(mid_x + 6.0f, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                        laguna_point4 = new EffectPoint(mid_x + 9.0f, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                    }
-
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
-
-                    float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
-
-                    ColorSpectrum lina_blade_spectrum_step1 = new ColorSpectrum(
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(255, 255, 255), alpha_percent)
-                        );
-                    ColorSpectrum lina_blade_spectrum_step2 = new ColorSpectrum(
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(255, 255, 255), alpha_percent),
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(170, 170, 255), alpha_percent)
-                        );
-                    ColorSpectrum lina_blade_spectrum_step3 = new ColorSpectrum(
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(170, 170, 255), alpha_percent),
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(85, 85, 255), alpha_percent)
-                        );
-                    ColorSpectrum lina_blade_spectrum_step4 = new ColorSpectrum(
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(85, 85, 255), alpha_percent),
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 0, 255), alpha_percent)
-                        );
-
-
-                    EffectFunction linefunc1 = new EffectLine(new EffectPoint(0, mid_y), laguna_point1, true);
-                    EffectColorFunction line1 = new EffectColorFunction(linefunc1, lina_blade_spectrum_step1, 2);
-                    ability_effects_layer.AddPostFunction(line1);
-
-                    EffectFunction linefunc2 = new EffectLine(laguna_point1, laguna_point2, true);
-                    EffectColorFunction line2 = new EffectColorFunction(linefunc2, lina_blade_spectrum_step2, 3);
-                    ability_effects_layer.AddPostFunction(line2);
-
-                    EffectFunction linefunc3 = new EffectLine(laguna_point2, laguna_point3, true);
-                    EffectColorFunction line3 = new EffectColorFunction(linefunc3, lina_blade_spectrum_step3, 3);
-                    ability_effects_layer.AddPostFunction(line3);
-
-                    EffectFunction linefunc4 = new EffectLine(laguna_point3, laguna_point4, true);
-                    EffectColorFunction line4 = new EffectColorFunction(linefunc4, lina_blade_spectrum_step4, 5);
-                    ability_effects_layer.AddPostFunction(line4);
-                    */
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.abaddon_death_coil)
                 {
@@ -918,6 +898,58 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 80, 0))
                 );
 
+            /* Morphling 
+            - Waveform Y
+            - Adaptive Strike Y
+            - Agility Morph N
+            - Strength Morph N
+            - Replicate N
+            */
+            //Waveform
+            morphling_waveform_track = new AnimationTrack("Morphling Waveform", 1.00f);
+            morphling_waveform_track.SetFrame(0.0f,
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(0, 200, 100))
+                );
+            morphling_waveform_track.SetFrame(0.75f,
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(0, 200, 100))
+                );
+            morphling_waveform_track.SetFrame(1.00f,
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 0, 200, 100))
+                );
+
+            //Adaptive Strike - Mix
+            morphling_adaptive_strike_mix = new AnimationMix();
+            AnimationTrack morphling_adaptive_strike_path = new AnimationTrack("Morphling Adaptive Strike - Projectile Path", 0.5f);
+            morphling_adaptive_strike_path.SetFrame(0.0f,
+                new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(0, Effects.canvas_height_center), Color.FromArgb(0, 200, 100), 3)
+                );
+            morphling_adaptive_strike_path.SetFrame(0.25f,
+                new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(0, 200, 100), 3)
+                );
+            morphling_adaptive_strike_path.SetFrame(0.5f,
+                new AnimationLine(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(0, 0, 200, 100), 3)
+                );
+            morphling_adaptive_strike_mix.AddTrack(morphling_adaptive_strike_path);
+            AnimationTrack morphling_adaptive_strike_projectile = new AnimationTrack("Morphling Adaptive Strike - Projectile", 0.25f, 0.25f);
+            morphling_adaptive_strike_projectile.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 240, 210))
+                );
+            morphling_adaptive_strike_projectile.SetFrame(0.25f,
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 0, 240, 210))
+                );
+            morphling_adaptive_strike_mix.AddTrack(morphling_adaptive_strike_projectile);
+
+
+            /* Shadow Feind 
+            - Shadow Raze Y
+            - Shadow Raze Y
+            - Shadow Raze Y
+            - Necro Mastery N
+            - Presence of the Dark Lord N
+            - Requiem of Souls Y
+            */
+
+            //Shadow Raze
             nevermore_shadowraze_track = new AnimationTrack("Shadow Fiend Raze", 0.7f);
             nevermore_shadowraze_track.SetFrame(0.0f,
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 0, 0))
@@ -929,6 +961,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 0, 0))
                 );
 
+            //Requiem of Souls
             nevermore_requiem_track = new AnimationTrack("Shadow Field Requiem", 2.0f);
             nevermore_requiem_track.SetFrame(0.0f,
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 0, 0))
