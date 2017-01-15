@@ -51,6 +51,7 @@ namespace Aurora.Settings.Layers
                 this.interactive_effects_speed_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectSpeed;
                 this.interactive_effects_width_label.Text = (this.DataContext as InteractiveLayerHandler).Properties._EffectWidth + " px";
                 this.interactive_effects_width_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectWidth;
+                this.KeySequence_keys.Sequence = (this.DataContext as InteractiveLayerHandler).Properties._Sequence;
 
                 this.interactive_effects_mouse_interaction_enable.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._TriggerOnMouseClick;
 

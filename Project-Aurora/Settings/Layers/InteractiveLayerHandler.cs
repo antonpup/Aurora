@@ -305,11 +305,14 @@ namespace Aurora.Settings.Layers
             }
             else if (Properties.InteractiveEffect == InteractiveEffects.KeyPress)
             {
-                ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
-                spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
-                spec.SetColorAt(0.80f, secondary_c);
+                if (Properties.Sequence.keys.Contains(key))
+                {
+                    ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
+                    spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
+                    spec.SetColorAt(0.80f, secondary_c);
 
-                return new input_item(key, 0.0f, spec);
+                    return new input_item(key, 0.0f, spec);
+                }
             }
             else if (Properties.InteractiveEffect == InteractiveEffects.ArrowFlow)
             {
