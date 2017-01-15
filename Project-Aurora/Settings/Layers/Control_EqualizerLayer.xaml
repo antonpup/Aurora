@@ -52,8 +52,8 @@
         <Button x:Name="Button_SetGradientRainbow" Content="Set to Rainbow" HorizontalAlignment="Left" Margin="0,195,0,0" VerticalAlignment="Top" Click="Button_SetGradientRainbow_Click"/>
         <Button x:Name="Button_SetGradientRainbowLoop" Content="Set to Rainbow (Seamless)" Margin="91,195,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Click="Button_SetGradientRainbowLoop_Click"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="302,4,0,0" TextWrapping="Wrap" Text="Max amplitude (Power bars only): " VerticalAlignment="Top"/>
-        <xctk:IntegerUpDown x:Name="updown_max_amplitude_value" HorizontalAlignment="Left" Height="24" Margin="487,0,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="120" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged"/>
+        <TextBlock HorizontalAlignment="Left" Margin="302,4,0,0" TextWrapping="Wrap" Text="Max amplitude:" VerticalAlignment="Top"/>
+        <xctk:IntegerUpDown x:Name="updown_max_amplitude_value" HorizontalAlignment="Left" Height="24" Margin="389,0,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="120" Minimum="1" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged"/>
         <CheckBox x:Name="chkbox_dimbgonsound" Content="Dim background on sound" HorizontalAlignment="Left" Margin="302,27,0,0" VerticalAlignment="Top" Checked="chkbox_dimbgonsound_Checked" Unchecked="chkbox_dimbgonsound_Checked"/>
         <TextBlock HorizontalAlignment="Left" Margin="302,50,0,0" TextWrapping="Wrap" Text="Dim Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="Clr_dim_color" Margin="363,48,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="174" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />
@@ -73,5 +73,6 @@
         <Button x:Name="btn_AddFreq" Content="Add Frequency" HorizontalAlignment="Left" Margin="407,128,0,0" VerticalAlignment="Top" Width="100" Click="btn_AddFreq_Click"/>
         <Button x:Name="btn_DeleteFreq" Content="Delete Frequency" HorizontalAlignment="Left" Margin="407,155,0,0" VerticalAlignment="Top" Width="100" Click="btn_DeleteFreq_Click"/>
         <TextBlock HorizontalAlignment="Left" Margin="411,182,0,0" TextWrapping="Wrap" Text="Note: There must be at least 2 frequencies to sample between" VerticalAlignment="Top" Height="46" Width="116"/>
+        <Button x:Name="btn_ShowPreviewWindow" Content="Show Preview Window" HorizontalAlignment="Left" Margin="462,0,0,0" VerticalAlignment="Top" Click="btn_ShowPreviewWindow_Click"/>
     </Grid>
 </UserControl>

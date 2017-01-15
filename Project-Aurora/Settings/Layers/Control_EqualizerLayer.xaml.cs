@@ -1,6 +1,7 @@
 ﻿using Aurora.EffectsEngine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,10 @@ namespace Aurora.Settings.Layers
     public partial class Control_EqualizerLayer : UserControl
     {
         private bool settingsset = false;
+
+        private Window preview_window = null;
+        private Image preview_image = new Image();
+        private static bool preview_window_open;
 
         public Control_EqualizerLayer()
         {
@@ -46,7 +51,7 @@ namespace Aurora.Settings.Layers
                 this.eq_view_type.SelectedItem = (this.DataContext as EqualizerLayerHandler).Properties._ViewType;
                 this.Clr_primary_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
                 this.Clr_secondary_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._SecondaryColor ?? System.Drawing.Color.Empty);
-                
+
                 Brush brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient.GetMediaBrush();
                 try
                 {
@@ -163,9 +168,9 @@ namespace Aurora.Settings.Layers
         {
             float value;
 
-            if(float.TryParse(this.txtBox_newFreqValue.Text, out value))
+            if (float.TryParse(this.txtBox_newFreqValue.Text, out value))
             {
-                if(value >= 0.0f && value <= 16000.0f)
+                if (value >= 0.0f && value <= 16000.0f)
                 {
                     (this.DataContext as EqualizerLayerHandler).Properties._Frequencies.Add(value);
 
@@ -180,11 +185,85 @@ namespace Aurora.Settings.Layers
 
         private void btn_DeleteFreq_Click(object sender, RoutedEventArgs e)
         {
-            if(this.lstbx_frequencies.SelectedItem != null)
+            if (this.lstbx_frequencies.SelectedItem != null)
             {
                 (this.DataContext as EqualizerLayerHandler).Properties._Frequencies.Remove((float)this.lstbx_frequencies.SelectedItem);
 
                 this.lstbx_frequencies.Items.Refresh();
+            }
+        }
+
+        private void btn_ShowPreviewWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if(preview_window == null)
+            {
+                if(preview_window_open == true)
+                {
+                    MessageBox.Show("Equalizer preview already open for another layer.\r\nPlease close it.");
+                    return;
+                }
+
+                preview_window = new Window();
+                preview_window.Closed += Preview_window_Closed;
+                preview_window.ResizeMode = ResizeMode.NoResize;
+                preview_window.SizeToContent = SizeToContent.WidthAndHeight;
+
+                preview_window.Title = "Equalizer preview";
+                preview_window.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                (this.DataContext as EqualizerLayerHandler).NewLayerRender += Control_EqualizerLayer_NewLayerRender;
+
+                preview_image.SnapsToDevicePixels = true;
+                preview_image.HorizontalAlignment = HorizontalAlignment.Stretch;
+                preview_image.VerticalAlignment = VerticalAlignment.Stretch;
+                preview_image.MinWidth = Effects.canvas_width;
+                preview_image.MinHeight = Effects.canvas_height;
+                preview_image.Width = Effects.canvas_width * 4;
+                preview_image.Height = Effects.canvas_height * 4;
+
+                preview_window.Content = preview_image;
+
+                preview_window.UpdateLayout();
+                preview_window.Show();
+            }
+            else
+            {
+                preview_window.BringIntoView();
+            }
+
+            preview_window_open = true;
+        }
+
+        private void Preview_window_Closed(object sender, EventArgs e)
+        {
+            preview_window = null;
+            (this.DataContext as EqualizerLayerHandler).NewLayerRender -= Control_EqualizerLayer_NewLayerRender;
+            preview_window_open = false;
+        }
+
+        private void Control_EqualizerLayer_NewLayerRender(System.Drawing.Bitmap bitmap)
+        {
+            try
+            {
+                Dispatcher.Invoke(
+                    () =>
+                    {
+                        using (MemoryStream memory = new MemoryStream())
+                        {
+                            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                            memory.Position = 0;
+                            BitmapImage bitmapimage = new BitmapImage();
+                            bitmapimage.BeginInit();
+                            bitmapimage.StreamSource = memory;
+                            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmapimage.EndInit();
+
+                            preview_image.Source = bitmapimage;
+                        }
+                    });
+            }
+            catch (Exception ex)
+            {
+                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
             }
         }
     }

@@ -12,13 +12,16 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings.Layers
 {
     public enum EqualizerType
     {
-        [Description("Power Spectrum")]
+        [Description("Power Bars")]
         PowerBars,
 
         [Description("Waveform")]
@@ -119,6 +122,8 @@ namespace Aurora.Settings.Layers
 
     public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerProperties>
     {
+        public event NewLayerRendered NewLayerRender = delegate { };
+
         MMDeviceEnumerator audio_device_enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
         MMDevice default_device = null;
 
@@ -220,7 +225,7 @@ namespace Aurora.Settings.Layers
 
                             Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
 
-                            g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val * 500.0f);
+                            g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val / Properties.MaxAmplitude * 500.0f);
                         }
                         break;
                     case EqualizerType.Waveform_Bottom:
@@ -230,7 +235,7 @@ namespace Aurora.Settings.Layers
 
                             Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
 
-                            g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val) * 1000.0f);
+                            g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val / Properties.MaxAmplitude) * 1000.0f);
                         }
                         break;
                     case EqualizerType.PowerBars:
@@ -299,6 +304,10 @@ namespace Aurora.Settings.Layers
                         break;
                 }
             }
+
+            var hander = NewLayerRender;
+            if (hander != null)
+                hander.Invoke(equalizer_layer.GetBitmap());
 
             return equalizer_layer;
         }
