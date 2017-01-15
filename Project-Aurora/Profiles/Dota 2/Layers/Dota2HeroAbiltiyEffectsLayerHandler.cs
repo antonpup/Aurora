@@ -709,7 +709,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                         abiltiyeffect_keyframe += getDeltaTime();
                         break;
                     default:
-
+                        if (Global.isDebug) System.Diagnostics.Debug.WriteLine("Unknown Ability: " + ability.Name);
                         break;
                 }
             }
@@ -724,6 +724,109 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public void UpdateAnimations()
         {
+            /* Anti Mage 
+            - Mana Break N
+            - Blink Y
+            - Spell Shield N
+            - Mana Void Y
+            */
+            antimage_blink_track = new AnimationTrack("Anti-mage Blink", 0.5f);
+            antimage_blink_track.SetFrame(0.0f, new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(128, 0, 255), 3));
+            antimage_blink_track.SetFrame(0.5f, new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(128, 0, 255), 3));
+
+            antimage_mana_void_track = new AnimationTrack("Anti-mage Void", 0.5f);
+            antimage_mana_void_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(0, 0, 255)));
+            antimage_mana_void_track.SetFrame(0.425f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(0, 0, 255)));
+            antimage_mana_void_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 0, 0, 255)));
+
+            antimage_mana_void_core_track = new AnimationTrack("Anti-mage Void Core", 0.5f);
+            antimage_mana_void_core_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 255, 255)));
+            antimage_mana_void_core_track.SetFrame(0.425f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 255, 255)));
+            antimage_mana_void_core_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 255, 255)));
+
+            /* Ancient Aparition 
+            - Cold Feet N
+            - Ice Vortex Y
+            - Chilling Touch N
+            - Ice Blast Y
+            */
+            ancient_apparition_ice_blast_track = new AnimationTrack("AA Ice Blast", 1.0f);
+            ancient_apparition_ice_blast_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(200, 200, 255)));
+            ancient_apparition_ice_blast_track.SetFrame(0.85f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(200, 200, 255)));
+            ancient_apparition_ice_blast_track.SetFrame(1.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 200, 200, 255)));
+
+            /* Axe 
+            - Berserkers Call Y
+            - Battle Hunger N
+            - Counter Helix N
+            - Culling Blade N
+            */
+            axe_berserkers_call_track = new AnimationTrack("Axe Berserker", 0.7f);
+            axe_berserkers_call_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0)));
+            axe_berserkers_call_track.SetFrame(0.595f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(255, 50, 0)));
+            axe_berserkers_call_track.SetFrame(0.7f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0)));
+
+            /* Beastmaster 
+            - Wild Axes N
+            - Call of the Wild N
+            - Call of the Wild N
+            - Primal Roar Y
+            */
+            beastmaster_primal_roar_track = new AnimationTrack("BM Primal Roar", 1.0f);
+            beastmaster_primal_roar_track.SetFrame(0.0f, new AnimationFilledCircle(0, Effects.canvas_height_center, 0, Color.FromArgb(255, 200, 100)));
+            beastmaster_primal_roar_track.SetFrame(0.75f, new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 200, 100)));
+            beastmaster_primal_roar_track.SetFrame(1.0f, new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 200, 100)));
+
+            /* Beastmaster 
+            - Thunder Clap Y
+            - Drunken Haze N
+            - Drunken Brawler N
+            - Primal Split N
+            */
+            brewmaster_thunder_clap_track = new AnimationTrack("Brewmaster Thunder Clap", 1.5f);
+            brewmaster_thunder_clap_track.SetFrame(0.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(170, 90, 0)));
+            brewmaster_thunder_clap_track.SetFrame(0.75f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(170, 90, 0)));
+            brewmaster_thunder_clap_track.SetFrame(1.5f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 170, 90, 0)));
+
+            /* Centaur Warrunner 
+            - Hoof Stomp Y
+            - Double Edge N
+            - Return N
+            - Stampeder N
+            */
+            centaur_hoof_stomp_track = new AnimationTrack("Centaur Stomp", 1.0f);
+            centaur_hoof_stomp_track.SetFrame(0.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0)));
+            centaur_hoof_stomp_track.SetFrame(0.5f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(255, 50, 0)));
+            centaur_hoof_stomp_track.SetFrame(1.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0)));
+
+            /* Chaos Knight 
+            - Chaos Bolt Y
+            - Reality Rift N
+            - Chaos Strike N
+            - Phantasm N
+            */
+            chaos_knight_chaos_bolt_mix = new AnimationMix();
+            AnimationTrack chaos_knight_chaos_bolt_projectile_path = new AnimationTrack("Chaos Knight Bolt - Projectile Path", 0.5f);
+            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.0f,new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(0, Effects.canvas_height_center), Color.FromArgb(255, 70, 0), 3));
+            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.25f,new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(255, 70, 0), 3));
+            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.5f,new AnimationLine(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(0, 255, 70, 0), 3));
+            chaos_knight_chaos_bolt_mix.AddTrack(chaos_knight_chaos_bolt_projectile_path);
+            AnimationTrack chaos_knight_chaos_bolt_projectile = new AnimationTrack("Chaos Knight Bolt - Projectile", 0.25f, 0.25f);
+            chaos_knight_chaos_bolt_projectile.SetFrame(0.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(175, 0, 0)));
+            chaos_knight_chaos_bolt_projectile.SetFrame(0.25f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 175, 0, 0)));
+            chaos_knight_chaos_bolt_mix.AddTrack(chaos_knight_chaos_bolt_projectile);
+
+            /* Clockwerk 
+            - Battery Assault N
+            - Power Cogs N
+            - Rocket FLare Y
+            - Hookshot N
+            */
+            rattletrap_rocket_flare_track = new AnimationTrack("Clockwork Rocket Flare", 0.5f);
+            rattletrap_rocket_flare_track.SetFrame(0.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 80, 0)));
+            rattletrap_rocket_flare_track.SetFrame(0.25f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 80, 0)));
+            rattletrap_rocket_flare_track.SetFrame(0.5f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 80, 0)));
+
             /* Crystal Maiden 
             - Crystal Nova Y
             - Frostbite N
@@ -734,6 +837,29 @@ namespace Aurora.Profiles.Dota_2.Layers
             crystal_maiden_crystal_nova_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_height / 2.0f, Color.FromArgb(0, 200, 255)));
             crystal_maiden_crystal_nova_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(0, 200, 255)));
             crystal_maiden_crystal_nova_track.SetFrame(1.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 200, 255)));
+
+            /* Dragon Knight 
+            - Breathe Fire Y
+            - Dragon Tail N
+            - Dragon Blood N
+            - Elder Dragon Form N
+            */
+            dragon_knight_breathe_fire_track = new AnimationTrack("Dragon Knight Breathe", 1.25f);
+            dragon_knight_breathe_fire_track.SetFrame(0.0f,new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0)));
+            dragon_knight_breathe_fire_track.SetFrame(0.9375f,new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0)));
+            dragon_knight_breathe_fire_track.SetFrame(1.25f,new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0)));
+
+            /* Elder Titan 
+            - Echo Stomp N
+            - Astral Spirit N
+            - Return Astral Spirit N
+            - Natural Order N
+            - Earth Splitter Y
+            */
+            elder_titan_earth_splitter_track = new AnimationTrack("Elder Titan Earth Splitter", 1.0f, 3.0f);
+            elder_titan_earth_splitter_track.SetFrame(0.0f,new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 220)));
+            elder_titan_earth_splitter_track.SetFrame(1.0f,new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 255, 220)));
+
 
             /* Lina 
             - Dragon Slave Y
@@ -835,95 +961,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             zuus_lightning_bolt_shade_track.SetFrame(0.0f, new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20));
             zuus_lightning_bolt_shade_track.SetFrame(0.425f, new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20));
             zuus_lightning_bolt_shade_track.SetFrame(0.5f, new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 20));
-
-            /* Anti Mage 
-            - Mana Break N
-            - Blink Y
-            - Spell Shield N
-            - Mana Void Y
-            */
-            antimage_blink_track = new AnimationTrack("Anti-mage Blink", 0.5f);
-            antimage_blink_track.SetFrame(0.0f, new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(128, 0, 255), 3));
-            antimage_blink_track.SetFrame(0.5f, new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(128, 0, 255), 3));
-
-            antimage_mana_void_track = new AnimationTrack("Anti-mage Void", 0.5f);
-            antimage_mana_void_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(0, 0, 255)));
-            antimage_mana_void_track.SetFrame(0.425f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(0, 0, 255)));
-            antimage_mana_void_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 0, 0, 255)));
-
-            antimage_mana_void_core_track = new AnimationTrack("Anti-mage Void Core", 0.5f);
-            antimage_mana_void_core_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 255, 255)));
-            antimage_mana_void_core_track.SetFrame(0.425f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 255, 255)));
-            antimage_mana_void_core_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 255, 255)));
-
-            /* Ancient Aparition 
-            - Cold Feet N
-            - Ice Vortex Y
-            - Chilling Touch N
-            - Ice Blast Y
-            */
-            ancient_apparition_ice_blast_track = new AnimationTrack("AA Ice Blast", 1.0f);
-            ancient_apparition_ice_blast_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(200, 200, 255)));
-            ancient_apparition_ice_blast_track.SetFrame(0.85f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(200, 200, 255)));
-            ancient_apparition_ice_blast_track.SetFrame(1.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 200, 200, 255)));
-
-            /* Axe 
-            - Berserkers Call Y
-            - Battle Hunger N
-            - Counter Helix N
-            - Culling Blade N
-            */
-            axe_berserkers_call_track = new AnimationTrack("Axe Berserker", 0.7f);
-            axe_berserkers_call_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0)));
-            axe_berserkers_call_track.SetFrame(0.595f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(255, 50, 0)));
-            axe_berserkers_call_track.SetFrame(0.7f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0)));
-
-            /* Beastmaster 
-            - Wild Axes N
-            - Call of the Wild N
-            - Call of the Wild N
-            - Primal Roar Y
-            */
-            beastmaster_primal_roar_track = new AnimationTrack("BM Primal Roar", 1.0f);
-            beastmaster_primal_roar_track.SetFrame(0.0f, new AnimationFilledCircle(0, Effects.canvas_height_center, 0, Color.FromArgb(255, 200, 100)));
-            beastmaster_primal_roar_track.SetFrame(0.75f, new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 200, 100)));
-            beastmaster_primal_roar_track.SetFrame(1.0f, new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 200, 100)));
-
-            brewmaster_thunder_clap_track = new AnimationTrack("Brewmaster Thunder Clap", 1.5f);
-            brewmaster_thunder_clap_track.SetFrame(0.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(170, 90, 0)));
-            brewmaster_thunder_clap_track.SetFrame(0.75f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(170, 90, 0)));
-            brewmaster_thunder_clap_track.SetFrame(1.5f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 170, 90, 0)));
-
-            centaur_hoof_stomp_track = new AnimationTrack("Centaur Stomp", 1.0f);
-            centaur_hoof_stomp_track.SetFrame(0.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0)));
-            centaur_hoof_stomp_track.SetFrame(0.5f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(255, 50, 0)));
-            centaur_hoof_stomp_track.SetFrame(1.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0)));
-
-            chaos_knight_chaos_bolt_mix = new AnimationMix();
-            AnimationTrack chaos_knight_chaos_bolt_projectile_path = new AnimationTrack("Chaos Knight Bolt - Projectile Path", 0.5f);
-            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.0f,new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(0, Effects.canvas_height_center), Color.FromArgb(255, 70, 0), 3));
-            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.25f,new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(255, 70, 0), 3));
-            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.5f,new AnimationLine(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(0, 255, 70, 0), 3));
-            chaos_knight_chaos_bolt_mix.AddTrack(chaos_knight_chaos_bolt_projectile_path);
-
-            AnimationTrack chaos_knight_chaos_bolt_projectile = new AnimationTrack("Chaos Knight Bolt - Projectile", 0.25f, 0.25f);
-            chaos_knight_chaos_bolt_projectile.SetFrame(0.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(175, 0, 0)));
-            chaos_knight_chaos_bolt_projectile.SetFrame(0.25f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 175, 0, 0)));
-            chaos_knight_chaos_bolt_mix.AddTrack(chaos_knight_chaos_bolt_projectile);
-
-            rattletrap_rocket_flare_track = new AnimationTrack("Clockwork Rocket Flare", 0.5f);
-            rattletrap_rocket_flare_track.SetFrame(0.0f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 80, 0)));
-            rattletrap_rocket_flare_track.SetFrame(0.25f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 80, 0)));
-            rattletrap_rocket_flare_track.SetFrame(0.5f,new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 80, 0)));
-
-            dragon_knight_breathe_fire_track = new AnimationTrack("Dragon Knight Breathe", 1.25f);
-            dragon_knight_breathe_fire_track.SetFrame(0.0f,new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0)));
-            dragon_knight_breathe_fire_track.SetFrame(0.9375f,new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0)));
-            dragon_knight_breathe_fire_track.SetFrame(1.25f,new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0)));
-
-            elder_titan_earth_splitter_track = new AnimationTrack("Elder Titan Earth Splitter", 1.0f, 3.0f);
-            elder_titan_earth_splitter_track.SetFrame(0.0f,new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 220)));
-            elder_titan_earth_splitter_track.SetFrame(1.0f,new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 255, 220)));
 
             kunkka_torrent_mix = new AnimationMix();
             AnimationTrack kunkka_torrent_bg_track = new AnimationTrack("Kunka Torrent BG", 4.0f);
