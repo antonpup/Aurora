@@ -23,8 +23,10 @@ namespace Aurora.Profiles.Aurora_Wrapper
         internal Dictionary<Devices.DeviceKeys, Color> colors = new Dictionary<Devices.DeviceKeys, Color>();
 
         internal bool colorEnhance_Enabled = false;
-        internal float colorEnhance_initial_factor = 3.0f;
+        internal int colorEnhance_Mode = 0;
         internal int colorEnhance_color_factor = 90;
+        internal float colorEnhance_color_hsv_sine = 0.1f;
+        internal float colorEnhance_color_hsv_gamma = 2.5f;
 
         protected virtual void UpdateExtraLights(Queue<EffectLayer> layers)
         {
@@ -366,22 +368,112 @@ namespace Aurora.Profiles.Aurora_Wrapper
             return Global.Configuration.allow_all_logitech_bitmaps;
         }
 
+        public float[] RgbToHsv(Color colorRgb)
+        {
+            float R = colorRgb.R / 255.0f;
+            float G = colorRgb.G / 255.0f;
+            float B = colorRgb.B / 255.0f;
+
+            float M = Math.Max(Math.Max(R, G), B);
+            float m = Math.Min(Math.Min(R, G), B);
+            float C = M - m;
+
+            float H = 0.0f;
+            if (M == R)
+                H = (G - B) / C % 6;
+            else if (M == G)
+                H = (B - R) / C + 2;
+            else if (M == B)
+                H = (R - G) / C + 4;
+            H *= 60.0f;
+
+            float V = M;
+            float S = 0;
+            if (V != 0)
+                S = C / V;
+
+            return new float[] { H, S, V };
+        }
+
+        public Color HsvToRgb(float[] colorHsv)
+        {
+            double H = colorHsv[0] / 60.0;
+            float S = colorHsv[1];
+            float V = colorHsv[2];
+
+            float C = V * S;
+
+            float[] rgb = new float[] { 0, 0, 0 };
+
+            float X = (float)(C * (1 - Math.Abs(H % 2 - 1)));
+            Console.WriteLine("C> " + C);
+            Console.WriteLine("X> " + X);
+
+            int i = (int)Math.Floor(H);
+            switch (i)
+            {
+                case 0:
+                case 6:
+                    rgb = new float[] { C, X, 0 };
+                    break;
+                case 1:
+                    rgb = new float[] { X, C, 0 };
+                    break;
+                case 2:
+                    rgb = new float[] { 0, C, X };
+                    break;
+                case 3:
+                    rgb = new float[] { 0, X, C };
+                    break;
+                case 4:
+                    rgb = new float[] { X, 0, C };
+                    break;
+                case 5:
+                case -1:
+                    rgb = new float[] { C, 0, X };
+                    break;
+            }
+            float m = V - C;
+
+            return Color.FromArgb(Clamp((int)((rgb[0] + m) * 255 + 0.5f)), Clamp((int)((rgb[1] + m) * 255 + 0.5f)), Clamp((int)((rgb[2] + m) * 255 + 0.5f)));
+        }
+
+        private int Clamp(int n)
+        {
+            if (n <= 0)
+                return 0;
+            if (n >= 255)
+                return 255;
+            return n;
+        }
+
         private Color GetBoostedColor(Color color)
         {
             if (!colorEnhance_Enabled)
                 return color;
 
-            // initial_factor * (1 - (x / color_factor))
+            switch (colorEnhance_Mode)
+            {
+                case 0:
+                    float boost_amount = 0.0f;
+                    boost_amount += (1.0f - (color.R / colorEnhance_color_factor));
+                    boost_amount += (1.0f - (color.G / colorEnhance_color_factor));
+                    boost_amount += (1.0f - (color.B / colorEnhance_color_factor));
 
-            float boost_amount = 0.0f;
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.R / colorEnhance_color_factor));
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.G / colorEnhance_color_factor));
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.B / colorEnhance_color_factor));
-            boost_amount /= colorEnhance_initial_factor;
+                    boost_amount = boost_amount <= 1.0f ? 1.0f : boost_amount;
 
-            boost_amount = boost_amount <= 1.0f ? 1.0f : boost_amount;
+                    return Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
 
-            return Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
+                case 1:
+                    float[] colorHsv = RgbToHsv(color);
+                    float X = colorEnhance_color_hsv_sine;
+                    float Y = 1.0f / colorEnhance_color_hsv_gamma;
+                    colorHsv[2] = (float)Math.Min(1, (double)(Math.Pow(X * Math.Sin(2 * Math.PI * colorHsv[2]) + colorHsv[2], Y)));
+                    return HsvToRgb(colorHsv);
+
+                default:
+                    return color;
+            }
         }
     }
 

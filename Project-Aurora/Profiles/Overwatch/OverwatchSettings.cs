@@ -7,8 +7,10 @@ namespace Aurora.Profiles.Overwatch
         //Effects
         //// Color Enhancing
         public bool colorEnhance_Enabled;
-        public float colorEnhance_initial_factor;
+        public int colorEnhance_Mode;
         public int colorEnhance_color_factor;
+        public float colorEnhance_color_hsv_sine;
+        public float colorEnhance_color_hsv_gamma;
 
         public OverwatchSettings()
         {
@@ -18,8 +20,10 @@ namespace Aurora.Profiles.Overwatch
             //Effects
             //// Color Enhancing
             colorEnhance_Enabled = true;
-            colorEnhance_initial_factor = 3.0f;
+            colorEnhance_Mode = 0;
             colorEnhance_color_factor = 90;
+            colorEnhance_color_hsv_sine = 0.1f;
+            colorEnhance_color_hsv_gamma = 2.5f;
         }
     }
 }
