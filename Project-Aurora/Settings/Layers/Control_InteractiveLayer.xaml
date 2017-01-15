@@ -39,6 +39,6 @@
         <Slider x:Name="interactive_effects_width_slider" HorizontalAlignment="Left" Margin="80,146,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="1" SelectionStart="6" IsSnapToTickEnabled="True" Maximum="12" ValueChanged="interactive_effects_width_slider_ValueChanged"/>
         <TextBlock x:Name="interactive_effects_width_label" HorizontalAlignment="Left" Margin="225,146,0,0" TextWrapping="Wrap" Text="1 px" VerticalAlignment="Top"/>
         <CheckBox x:Name="interactive_effects_mouse_interaction_enable" Content="Enable mouse clicking to trigger interactive effects" HorizontalAlignment="Left" Margin="0,169,0,0" VerticalAlignment="Top" Unchecked="interactive_effects_mouse_interaction_enable_Checked" Checked="interactive_effects_mouse_interaction_enable_Checked"/>
-        <Controls:KeySequence x:Name="KeySequence_keys" Margin="354,0,0,0" RecordingTag="InteractiveLayer" Title="Affected Keys (Key Fade only)" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
+        <Controls:KeySequence x:Name="KeySequence_keys" Margin="354,0,0,0" RecordingTag="Interactive Layer (Excluded Keys)" Title="Excluded Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
     </Grid>
 </UserControl>

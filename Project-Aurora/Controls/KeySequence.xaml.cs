@@ -96,6 +96,25 @@ namespace Aurora.Controls
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public static readonly DependencyProperty FreestyleEnabledProperty = DependencyProperty.Register("FreestyleEnabled", typeof(bool), typeof(UserControl));
+
+        public bool FreestyleEnabled
+        {
+            get
+            {
+                return (bool)GetValue(FreestyleEnabledProperty);
+            }
+            set
+            {
+                SetValue(FreestyleEnabledProperty, value);
+
+                this.sequence_freestyle_checkbox.IsEnabled = value;
+                this.sequence_freestyle_checkbox.ToolTip = (value ? null : "Freestyle has been disabled.");
+                    
+            }
+        }
+
         public event EventHandler SequenceUpdated;
 
         public KeySequence()
@@ -254,7 +273,7 @@ namespace Aurora.Controls
                 this.sequence_up.IsEnabled = (bool)e.NewValue;
                 this.sequence_down.IsEnabled = (bool)e.NewValue;
                 this.sequence_remove.IsEnabled = (bool)e.NewValue;
-                this.sequence_freestyle_checkbox.IsEnabled = (bool)e.NewValue;
+                this.sequence_freestyle_checkbox.IsEnabled = (bool)e.NewValue && FreestyleEnabled;
 
                 if ((bool)e.NewValue)
                     sequence_updateToLayerEditor();
