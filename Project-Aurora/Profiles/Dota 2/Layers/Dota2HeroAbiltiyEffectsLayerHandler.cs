@@ -184,8 +184,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                                             new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
                                             new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
                                             new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5),
-                                            })
-   );
+                                            }));
                                     abaddon_death_coil_track.SetFrame(0.45f,
                                         new AnimationLines(
                                             new AnimationLine[] {
@@ -193,8 +192,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                                             new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
                                             new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
                                             new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5),
-                                            })
-   );
+                                            }));
                                     abaddon_death_coil_track.SetFrame(0.5f,
                                         new AnimationLines(
                                             new AnimationLine[] {
@@ -202,8 +200,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                                             new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 0, 160, 210), 3),
                                             new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 0, 160, 210), 3),
                                             new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 0, 160, 210), 5),
-                                            })
-   );
+                                            }));
                                     currentabilityeffect = Dota2AbilityEffects.abaddon_death_coil;
                                     abilityeffect_time = 0.5f;
                                     abiltiyeffect_keyframe = 0.0f;
@@ -364,8 +361,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                                             new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
                                             new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
                                             new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
-                                            })
-   );
+                                            }));
                                     lina_laguna_blade_track.SetFrame(0.45f,
                                         new AnimationLines(
                                             new AnimationLine[] {
@@ -373,8 +369,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                                             new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
                                             new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
                                             new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
-                                            })
-   );
+                                            }));
                                     lina_laguna_blade_track.SetFrame(0.5f,
                                         new AnimationLines(
                                             new AnimationLine[] {
@@ -382,8 +377,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                                             new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(0, 255, 255, 255), Color.FromArgb(0, 170, 170, 255), 3),
                                             new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(0, 170, 170, 255), Color.FromArgb(0, 85, 85, 255), 3),
                                             new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(0, 85, 85, 255), Color.FromArgb(0, 0, 0, 255), 5),
-                                            })
-   );
+                                            }));
                                     currentabilityeffect = Dota2AbilityEffects.lina_laguna_blade;
                                     abilityeffect_time = 0.5f;
                                     abiltiyeffect_keyframe = 0.0f;
