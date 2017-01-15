@@ -323,7 +323,6 @@ namespace Aurora
                 Global.dev_manager.UpdateDevices(dcc);
 
                 var hander = NewLayerRender;
-
                 if (hander != null)
                     hander.Invoke(background.GetBitmap());
 

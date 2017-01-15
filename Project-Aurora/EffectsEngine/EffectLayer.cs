@@ -798,15 +798,15 @@ namespace Aurora.EffectsEngine
                         {
                             double percent = (double)progress - i;
                             SetOneKey(current_key,
-                                Utils.ColorUtils.MultiplyColorByScalar(spectrum.GetColorAt((float)i / (float)(keys.Count()-1), 1.0f, flash_amount), percent)
+                                Utils.ColorUtils.MultiplyColorByScalar(spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount), percent)
                                 );
                         }
                         else if (i < (int)progress)
-                            SetOneKey(current_key,spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
+                            SetOneKey(current_key, spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
                         break;
                     default:
                         if (i < (int)progress)
-                            SetOneKey(current_key,spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
+                            SetOneKey(current_key, spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
                         break;
                 }
             }
@@ -1046,6 +1046,61 @@ namespace Aurora.EffectsEngine
                     }
                 }
             }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Excludes provided sequence from the layer (Applies a mask)
+        /// </summary>
+        /// <param name="sequence">The mask to be applied</param>
+        /// <returns>Itself</returns>
+        public EffectLayer Exclude(KeySequence sequence)
+        {
+            //Create draw alpha mask
+            EffectLayer _alpha_mask = new EffectLayer(this.name + " - Alpha Mask", Color.Transparent);
+            _alpha_mask.Set(sequence, Color.Black);
+
+            //Apply alpha mask
+            BitmapData srcData_alpha = _alpha_mask.colormap.LockBits(
+                new Rectangle(0, 0, _alpha_mask.colormap.Width, _alpha_mask.colormap.Height),
+                ImageLockMode.ReadWrite,
+                PixelFormat.Format32bppArgb);
+
+            int alpha_mask_stride = srcData_alpha.Stride;
+            IntPtr alpha_mask_Scan0 = srcData_alpha.Scan0;
+
+            
+            BitmapData srcData = colormap.LockBits(
+                new Rectangle(0, 0, colormap.Width, colormap.Height),
+                ImageLockMode.ReadWrite,
+                PixelFormat.Format32bppArgb);
+
+            int stride = srcData.Stride;
+
+            IntPtr Scan0 = srcData.Scan0;
+
+            int width = colormap.Width;
+            int height = colormap.Height;
+
+            unsafe
+            {
+                byte* p_alpha = (byte*)(void*)alpha_mask_Scan0;
+                byte* p = (byte*)(void*)Scan0;
+
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        byte mask_alpha = p_alpha[(y * alpha_mask_stride) + x * 4 + 3];
+                        if (mask_alpha != 0)
+                            p[(y * stride) + x * 4 + 3] = (byte)(255 - mask_alpha);
+                    }
+                }
+            }
+
+            _alpha_mask.colormap.UnlockBits(srcData_alpha);
+            colormap.UnlockBits(srcData);
 
             return this;
         }

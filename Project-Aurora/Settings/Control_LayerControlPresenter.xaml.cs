@@ -42,6 +42,8 @@ namespace Aurora.Settings
             Layer = layer;
             cmbLayerType.SelectedItem = Layer.Handler.Type;
             grdLayerConfigs.Visibility = Visibility.Hidden;
+            grd_LayerControl.IsHitTestVisible = true;
+            grd_LayerControl.Effect = null;
         }
 
         private void SetLayer(Layer layer)
@@ -58,7 +60,11 @@ namespace Aurora.Settings
             cmbLayerType.SelectedItem = Layer.Handler.Type;
             ctrlLayerTypeConfig.Content = layer.Control;
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
+            chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
+            keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
             grdLayerConfigs.Visibility = Visibility.Hidden;
+            grd_LayerControl.IsHitTestVisible = true;
+            grd_LayerControl.Effect = null;
             isSettingNewLayer = false;
         }
 
@@ -186,7 +192,9 @@ namespace Aurora.Settings
                 }
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
-                chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
+                chkLayerSmoothing.IsChecked = _Layer.Handler.EnableSmoothing;
+                chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
+                keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
                 this._Layer.AssociatedProfile.SaveProfiles();
             }
         }
@@ -206,9 +214,17 @@ namespace Aurora.Settings
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
                 if(this.grdLayerConfigs.IsVisible)
+                {
                     this.grdLayerConfigs.Visibility = Visibility.Hidden;
+                    grd_LayerControl.IsHitTestVisible = true;
+                    grd_LayerControl.Effect = null;
+                }
                 else
+                {
                     this.grdLayerConfigs.Visibility = Visibility.Visible;
+                    grd_LayerControl.IsHitTestVisible = false;
+                    grd_LayerControl.Effect = new System.Windows.Media.Effects.BlurEffect();
+                }
             }
         }
 
@@ -216,6 +232,20 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is CheckBox)
                 Layer.Handler.EnableSmoothing = (sender as CheckBox).IsChecked.Value;
+        }
+
+        private void chk_ExcludeMask_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && !isSettingNewLayer && sender is CheckBox)
+                Layer.Handler.EnableExclusionMask = (sender as CheckBox).IsChecked.Value;
+
+            keyseq_ExcludeMask.IsEnabled = Layer.Handler.EnableExclusionMask;
+        }
+
+        private void keyseq_ExcludeMask_SequenceUpdated(object sender, EventArgs e)
+        {
+            if (IsLoaded && !isSettingNewLayer && sender is Aurora.Controls.KeySequence)
+                Layer.Handler.ExclusionMask = (sender as Aurora.Controls.KeySequence).Sequence;
         }
     }
 }

@@ -98,6 +98,10 @@ namespace Aurora.Settings.Layers
 
         bool EnableSmoothing { get; set; }
 
+        bool EnableExclusionMask { get; set; }
+
+        KeySequence ExclusionMask { get; set; }
+
         EffectLayer Render(IGameState gamestate);
 
         EffectLayer PostRenderFX(EffectLayer layer_render);
@@ -144,6 +148,10 @@ namespace Aurora.Settings.Layers
 
         public bool EnableSmoothing { get; set; }
 
+        public bool EnableExclusionMask { get; set; }
+
+        public KeySequence ExclusionMask { get; set; }
+
         //public Color PrimaryColor { get; set; }
 
         [JsonIgnore]
@@ -156,7 +164,7 @@ namespace Aurora.Settings.Layers
         {
             //Properties = new LayerHandlerProperties();
             //ScriptProperties = new LayerHandlerProperties();
-
+            ExclusionMask = new KeySequence();
         }
 
         public LayerHandler(LayerHandler other) : base()
@@ -184,6 +192,11 @@ namespace Aurora.Settings.Layers
                 _PreviousSecondRender = _PreviousRender;
                 _PreviousRender = rendered_layer;
             }
+
+
+            //Last PostFX is exclusion
+            if (EnableExclusionMask)
+                returnLayer.Exclude(ExclusionMask);
 
             return returnLayer;
         }

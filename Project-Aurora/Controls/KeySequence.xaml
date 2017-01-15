@@ -9,7 +9,7 @@
              xmlns:EnumPercentEffectType="clr-namespace:Aurora"
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
-             mc:Ignorable="d" MinWidth="230" MinHeight="121" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" IsEnabledChanged="UserControl_IsEnabledChanged">
+             mc:Ignorable="d" MinWidth="230" MinHeight="121" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" IsEnabledChanged="UserControl_IsEnabledChanged" IsVisibleChanged="UserControl_IsVisibleChanged">
     <UserControl.Resources>
         <ResourceDictionary>
             <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
