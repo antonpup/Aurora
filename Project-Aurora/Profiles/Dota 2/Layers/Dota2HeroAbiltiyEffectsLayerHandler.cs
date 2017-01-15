@@ -169,232 +169,201 @@ namespace Aurora.Profiles.Dota_2.Layers
                              * Enum assignment
                              * Keyframe
                              */
-                            if (ability.Name.Equals("razor_plasma_field"))
+                            switch(ability.Name)
                             {
-                                currentabilityeffect = Dota2AbilityEffects.razor_plasma_field;
-                                abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("crystal_maiden_crystal_nova"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.crystal_maiden_crystal_nova;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("riki_smoke_screen"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.riki_smoke_screen;
-                                abilityeffect_time = 6.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("morphling_waveform"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.morphling_waveform;
-                                abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                case "antimage_blink":
+                                    currentabilityeffect = Dota2AbilityEffects.antimage_blink;
+                                    abilityeffect_time = 0.5f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case :
 
-                            }
-                            else if (ability.Name.Equals("morphling_adaptive_strike"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.morphling_adaptive_strike;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-
-                            }
-                            else if (ability.Name.Equals("lina_dragon_slave"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.lina_dragon_slave;
-                                abilityeffect_time = 1.25f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("lina_light_strike_array"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.lina_light_strike_array;
-                                abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("lina_laguna_blade"))
-                            {
-                                lina_laguna_blade_track = new AnimationTrack("Lina Laguna Blade", 0.5f);
-
-                                PointF laguna_point1 = new PointF(0, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF laguna_point2 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF laguna_point3 = new PointF(Effects.canvas_width_center + 6.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF laguna_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-
-                                lina_laguna_blade_track.SetFrame(0.0f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
-                                        }
-                                        )
-                                    );
-
-                                lina_laguna_blade_track.SetFrame(0.45f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
-                                        }
-                                        )
-                                    );
-
-                                lina_laguna_blade_track.SetFrame(0.5f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(0, 255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(0, 255, 255, 255), Color.FromArgb(0, 170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(0, 170, 170, 255), Color.FromArgb(0, 85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(0, 85, 85, 255), Color.FromArgb(0, 0, 0, 255), 5),
-                                        }
-                                        )
-                                    );
-
-                                currentabilityeffect = Dota2AbilityEffects.lina_laguna_blade;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("abaddon_death_coil"))
-                            {
-                                abaddon_death_coil_track = new AnimationTrack("Abaddon Dealth Coil", 0.5f);
-
-                                PointF death_coil_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF death_coil_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF death_coil_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF death_coil_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-
-                                abaddon_death_coil_track.SetFrame(0.0f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
+                                    break;
+                                case "abaddon_death_coil":
+                                    abaddon_death_coil_track = new AnimationTrack("Abaddon Dealth Coil", 0.5f);
+                                    PointF death_coil_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF death_coil_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF death_coil_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF death_coil_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    abaddon_death_coil_track.SetFrame(0.0f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
                                             new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 160, 210), 2),
                                             new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
                                             new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
                                             new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5),
-                                        }
-                                        )
-                                    );
-
-                                abaddon_death_coil_track.SetFrame(0.45f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
+                                            })
+                                        );
+                                    abaddon_death_coil_track.SetFrame(0.45f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
                                             new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 160, 210), 2),
                                             new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
                                             new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
                                             new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5),
-                                        }
-                                        )
-                                    );
-
-                                abaddon_death_coil_track.SetFrame(0.5f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
+                                            })
+                                        );
+                                    abaddon_death_coil_track.SetFrame(0.5f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
                                             new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 0, 160, 210), 2),
                                             new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 0, 160, 210), 3),
                                             new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 0, 160, 210), 3),
                                             new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 0, 160, 210), 5),
-                                        }
-                                        )
-                                    );
-
-                                currentabilityeffect = Dota2AbilityEffects.abaddon_death_coil;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("abaddon_borrowed_time"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.abaddon_borrowed_time;
-
-                                if (ability.Level == 1)
-                                    abilityeffect_time = 4.0f;
-                                else if (ability.Level == 2)
-                                    abilityeffect_time = 5.0f;
-                                else if (ability.Level == 3)
-                                    abilityeffect_time = 6.0f;
-                                else
-                                    abilityeffect_time = 6.0f;
-
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("nevermore_shadowraze1") || ability.Name.Equals("nevermore_shadowraze2") || ability.Name.Equals("nevermore_shadowraze3"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.nevermore_shadowraze;
-                                abilityeffect_time = 0.7f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("nevermore_requiem"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.nevermore_requiem;
-                                abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("zuus_arc_lightning"))
-                            {
-                                zuus_arc_lightning_track = new AnimationTrack("Zeus Arc Lightning", 0.5f);
-
-                                PointF zuus_lightning_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF zuus_lightning_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF zuus_lightning_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF zuus_lightning_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-
-                                zuus_arc_lightning_track.SetFrame(0.0f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
+                                            })
+                                        );
+                                    currentabilityeffect = Dota2AbilityEffects.abaddon_death_coil;
+                                    abilityeffect_time = 0.5f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "abaddon_borrowed_time":
+                                    currentabilityeffect = Dota2AbilityEffects.abaddon_borrowed_time;
+                                    if (ability.Level == 1)
+                                        abilityeffect_time = 4.0f;
+                                    else if (ability.Level == 2)
+                                        abilityeffect_time = 5.0f;
+                                    else if (ability.Level == 3)
+                                        abilityeffect_time = 6.0f;
+                                    else
+                                        abilityeffect_time = 6.0f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "crystal_maiden_crystal_nova":
+                                    currentabilityeffect = Dota2AbilityEffects.crystal_maiden_crystal_nova;
+                                    abilityeffect_time = 1.0f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "lina_dragon_slave":
+                                    currentabilityeffect = Dota2AbilityEffects.lina_dragon_slave;
+                                    abilityeffect_time = 1.25f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "lina_light_strike_array":
+                                    currentabilityeffect = Dota2AbilityEffects.lina_light_strike_array;
+                                    abilityeffect_time = 2.0f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "lina_laguna_blade":
+                                    lina_laguna_blade_track = new AnimationTrack("Lina Laguna Blade", 0.5f);
+                                    PointF laguna_point1 = new PointF(0, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF laguna_point2 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF laguna_point3 = new PointF(Effects.canvas_width_center + 6.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF laguna_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    lina_laguna_blade_track.SetFrame(0.0f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
+                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
+                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
+                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
+                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
+                                            })
+                                        );
+                                    lina_laguna_blade_track.SetFrame(0.45f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
+                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
+                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
+                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
+                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
+                                            })
+                                        );
+                                    lina_laguna_blade_track.SetFrame(0.5f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
+                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(0, 255, 255, 255), 2),
+                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(0, 255, 255, 255), Color.FromArgb(0, 170, 170, 255), 3),
+                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(0, 170, 170, 255), Color.FromArgb(0, 85, 85, 255), 3),
+                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(0, 85, 85, 255), Color.FromArgb(0, 0, 0, 255), 5),
+                                            })
+                                        );
+                                    currentabilityeffect = Dota2AbilityEffects.lina_laguna_blade;
+                                    abilityeffect_time = 0.5f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "morphling_waveform":
+                                    currentabilityeffect = Dota2AbilityEffects.morphling_waveform;
+                                    abilityeffect_time = 2.0f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "morphling_adaptive_strike":
+                                    currentabilityeffect = Dota2AbilityEffects.morphling_adaptive_strike;
+                                    abilityeffect_time = 1.0f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "razor_plasma_field":
+                                    currentabilityeffect = Dota2AbilityEffects.razor_plasma_field;
+                                    abilityeffect_time = 2.0f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "riki_smoke_screen":
+                                    currentabilityeffect = Dota2AbilityEffects.riki_smoke_screen;
+                                    abilityeffect_time = 6.5f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "nevermore_shadowraze1":
+                                case "nevermore_shadowraze2":
+                                case "nevermore_shadowraze3":
+                                    currentabilityeffect = Dota2AbilityEffects.nevermore_shadowraze;
+                                    abilityeffect_time = 0.7f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "nevermore_requiem":
+                                    currentabilityeffect = Dota2AbilityEffects.nevermore_requiem;
+                                    abilityeffect_time = 2.0f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "zuus_arc_lightning":
+                                    zuus_arc_lightning_track = new AnimationTrack("Zeus Arc Lightning", 0.5f);
+                                    PointF zuus_lightning_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF zuus_lightning_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF zuus_lightning_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    PointF zuus_lightning_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                                    zuus_arc_lightning_track.SetFrame(0.0f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
                                             new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 205, 255), 2),
                                             new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 205, 255), 3),
                                             new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 205, 255) , 3),
                                             new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 205, 255), 5),
-                                        }
-                                        )
-                                    );
-
-                                zuus_arc_lightning_track.SetFrame(0.45f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
+                                            })
+                                        );
+                                    zuus_arc_lightning_track.SetFrame(0.45f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
                                             new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 205, 255), 2),
                                             new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 205, 255), 3),
                                             new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 205, 255) , 3),
                                             new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 205, 255), 5),
-                                        }
-                                        )
-                                    );
-
-                                zuus_arc_lightning_track.SetFrame(0.5f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
+                                            })
+                                        );
+                                    zuus_arc_lightning_track.SetFrame(0.5f,
+                                        new AnimationLines(
+                                            new AnimationLine[] {
                                             new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 0, 205, 255), 2),
                                             new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 0, 205, 255), 3),
                                             new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 0, 205, 255), 3),
                                             new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 0, 205, 255), 5),
-                                        }
-                                        )
-                                    );
+                                            })
+                                        );
+                                    currentabilityeffect = Dota2AbilityEffects.zuus_arc_lightning;
+                                    abilityeffect_time = 0.5f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "zuus_lightning_bolt":
+                                    currentabilityeffect = Dota2AbilityEffects.zuus_lightning_bolt;
+                                    abilityeffect_time = 0.5f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                                case "zuus_thundergods_wrath":
+                                    currentabilityeffect = Dota2AbilityEffects.zuus_thundergods_wrath;
+                                    abilityeffect_time = 0.25f;
+                                    abiltiyeffect_keyframe = 0.0f;
+                                    break;
+                            }
 
-                                currentabilityeffect = Dota2AbilityEffects.zuus_arc_lightning;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("zuus_lightning_bolt"))
+                            if (ability.Name.Equals(""))
                             {
-                                currentabilityeffect = Dota2AbilityEffects.zuus_lightning_bolt;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("zuus_thundergods_wrath"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.zuus_thundergods_wrath;
-                                abilityeffect_time = 0.25f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("antimage_blink"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.antimage_blink;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                
                             }
                             else if (ability.Name.Equals("antimage_mana_void"))
                             {
