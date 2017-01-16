@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Aurora.Settings;
 
 namespace Aurora.Devices.Corsair
 {
@@ -30,6 +31,9 @@ namespace Aurora.Devices.Corsair
         CorsairMousemat mousemat;
 
         private readonly object action_lock = new object();
+
+        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private long lastUpdateTime = 0;
 
         //Previous data
         private Color previous_peripheral_Color = Color.Black;
@@ -203,7 +207,14 @@ namespace Aurora.Devices.Corsair
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
         {
-            return UpdateDevice(colorComposition.keyColors, forced);
+            watch.Restart();
+
+            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return update_result;
         }
 
         private void SendColorsToKeyboard(bool forced = false)
@@ -690,6 +701,16 @@ namespace Aurora.Devices.Corsair
         public bool IsPeripheralConnected()
         {
             return mouse != null;
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
         }
     }
 }

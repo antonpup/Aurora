@@ -237,6 +237,15 @@
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_DeviceItem.xaml.cs">
+      <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_DeviceManager.xaml.cs">
+      <DependentUpon>Control_DeviceManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_VariableRegistryItem.xaml.cs">
+      <DependentUpon>Control_VariableRegistryItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\EditorResources\MoveThumb.cs" />
     <Compile Include="Controls\EditorResources\ResizeThumb.cs" />
     <Compile Include="Controls\EditorResources\RotateThumb.cs" />
@@ -775,6 +784,7 @@
     <Compile Include="Settings\Layers\ImageLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
+    <Compile Include="Settings\VariableRegistry.cs" />
     <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
       <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
     </Compile>
@@ -802,6 +812,9 @@
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
     <Compile Include="Settings\ProfileSettings.cs" />
+    <Compile Include="Settings\Window_VariableRegistryEditor.xaml.cs">
+      <DependentUpon>Window_VariableRegistryEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\GameStateUtils.cs" />
@@ -846,6 +859,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ColorZones.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_DeviceItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_DeviceManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_VariableRegistryItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1162,6 +1187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_DefaultLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Window_VariableRegistryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

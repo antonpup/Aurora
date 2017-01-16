@@ -297,6 +297,7 @@ namespace Aurora.Settings
         public bool devices_disable_keyboard;
         public bool devices_disable_mouse;
         public bool devices_disable_headset;
+        public HashSet<Type> devices_disabled;
 
         [JsonIgnoreAttribute]
         public Dictionary<string, GenericApplicationProfileManager> additional_profiles;
@@ -328,11 +329,7 @@ namespace Aurora.Settings
         [JsonIgnoreAttribute]
         public ProfileManager desktop_profile = new Profiles.Desktop.DesktopProfileManager();
 
-        // AtmoOrb Settings
-        public bool atmoorb_enabled;
-        public bool atmoorb_use_smoothing;
-        public string atmoorb_ids;
-        public int atmoorb_send_delay;
+        public VariableRegistry VarRegistry;
 
         [JsonIgnoreAttribute]
         public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
@@ -398,7 +395,7 @@ namespace Aurora.Settings
             devices_disable_keyboard = false;
             devices_disable_mouse = false;
             devices_disable_headset = false;
-
+            devices_disabled = new HashSet<Type>();
 
             //Blackout and Night theme
             time_based_dimming_enabled = false;
@@ -429,11 +426,7 @@ namespace Aurora.Settings
 
             ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
-            // AtmoOrb Settings
-            atmoorb_enabled = false;
-            atmoorb_use_smoothing = true;
-            atmoorb_ids = "1";
-            atmoorb_send_delay = 50;
+            VarRegistry = new VariableRegistry();
         }
   }
 
@@ -458,7 +451,7 @@ namespace Aurora.Settings
             if (String.IsNullOrWhiteSpace(content))
                 return CreateDefaultConfigurationFile();
 
-            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
 
             config.desktop_profile.LoadProfiles();
 
@@ -496,7 +489,7 @@ namespace Aurora.Settings
                 _last_save_time = current_time;
 
             var configPath = ConfigPath + ConfigExtension;
-            string content = JsonConvert.SerializeObject(configuration, Formatting.Indented);
+            string content = JsonConvert.SerializeObject(configuration, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
@@ -513,7 +506,7 @@ namespace Aurora.Settings
         private static Configuration CreateDefaultConfigurationFile()
         {
             Configuration config = new Configuration();
-            var configData = JsonConvert.SerializeObject(config, Formatting.Indented);
+            var configData = JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
             var configPath = ConfigPath + ConfigExtension;
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));

@@ -12,6 +12,7 @@ using Roccat_Talk.RyosTalkFX;
 using Roccat_Talk.TalkFX;
 using System;
 using System.Collections.Generic;
+using Aurora.Settings;
 
 namespace Aurora.Devices.Roccat
 {
@@ -23,6 +24,9 @@ namespace Aurora.Devices.Roccat
         private TalkFxConnection talkFX = null;
         private RyosTalkFXConnection RyosTalkFX = null;
         private bool RyosInitialized = false;
+
+        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private long lastUpdateTime = 0;
 
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
 
@@ -149,6 +153,8 @@ namespace Aurora.Devices.Roccat
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
         {
+            watch.Restart();
+
             System.Drawing.Color averageColor = Utils.BitmapUtils.GetRegionColor(
                     colorComposition.keyBitmap,
                     new BitmapRectangle(0, 0, colorComposition.keyBitmap.Width, colorComposition.keyBitmap.Height)
@@ -158,7 +164,12 @@ namespace Aurora.Devices.Roccat
             talkFX.SetLedRgb(Zone.Ambient, KeyEffect.On, Speed.Normal, ConvertToRoccatColor(averageColor));
 
 
-            return UpdateDevice(colorComposition.keyColors, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return update_result;
         }
 
         private void SendColorToPeripheral(System.Drawing.Color color)
@@ -412,6 +423,16 @@ namespace Aurora.Devices.Roccat
                 default:
                     return new Roccat_Talk.RyosTalkFX.Key(255);
             }
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
         }
     }
 }

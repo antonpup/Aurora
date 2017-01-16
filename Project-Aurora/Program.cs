@@ -185,6 +185,7 @@ namespace Aurora
             }
 
             Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
+            Global.dev_manager.RegisterVariables();
             Global.dev_manager.Initialize();
 
             Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);

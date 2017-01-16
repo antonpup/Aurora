@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Aurora.Settings;
 
 namespace Aurora.Devices.Logitech
 {
@@ -153,6 +154,9 @@ namespace Aurora.Devices.Logitech
         private bool peripheral_updated = false;
 
         private readonly object action_lock = new object();
+
+        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private long lastUpdateTime = 0;
 
         //Keyboard stuff
         private Logitech_keyboardBitmapKeys[] allKeys = Enum.GetValues(typeof(Logitech_keyboardBitmapKeys)).Cast<Logitech_keyboardBitmapKeys>().ToArray();
@@ -474,7 +478,14 @@ namespace Aurora.Devices.Logitech
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
         {
-            return UpdateDevice(colorComposition.keyColors, forced);
+            watch.Restart();
+
+            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return update_result;
         }
 
         public static DeviceKeys ToDeviceKey(keyboardNames key)
@@ -1231,6 +1242,16 @@ namespace Aurora.Devices.Logitech
         public bool IsPeripheralConnected()
         {
             return isInitialized;
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
         }
     }
 }

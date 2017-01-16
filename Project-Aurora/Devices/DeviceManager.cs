@@ -11,6 +11,8 @@ namespace Aurora.Devices
     {
         private List<Device> devices = new List<Device>();
 
+        public Device[] Devices { get { return devices.ToArray(); } }
+
         private bool anyInitialized = false;
         private bool retryActivated = false;
         private const int retryInterval = 5000;
@@ -87,11 +89,18 @@ namespace Aurora.Devices
             }
         }
 
+        public void RegisterVariables()
+        {
+            //Register any variables
+            foreach (var device in devices)
+                Global.Configuration.VarRegistry.Combine(device.GetRegisteredVariables());
+        }
+
         public void Initialize()
         {
             foreach (Device device in devices)
             {
-                if (device.IsInitialized())
+                if (device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.GetType()))
                     continue;
 
                 if (device.Initialize())
@@ -125,7 +134,7 @@ namespace Aurora.Devices
 
                 foreach (Device device in devices)
                 {
-                    if (device.IsInitialized())
+                    if (device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.GetType()))
                         continue;
 
                     if (device.Initialize())
@@ -201,6 +210,13 @@ namespace Aurora.Devices
             {
                 if (device.IsInitialized())
                 {
+                    if (Global.Configuration.devices_disabled.Contains(device.GetType()))
+                    {
+                        //Initialized when it's supposed to be disabled? SMACK IT!
+                        device.Shutdown();
+                        continue;
+                    }
+
                     if (device.UpdateDevice(composition, forced))
                         anyUpdated = true;
                 }

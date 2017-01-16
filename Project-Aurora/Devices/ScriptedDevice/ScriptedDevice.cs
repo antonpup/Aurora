@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Aurora.Settings;
 
 namespace Aurora.Devices.ScriptedDevice
 {
@@ -11,6 +12,9 @@ namespace Aurora.Devices.ScriptedDevice
 
         private string devicename = "";
         private bool isInitialized = false;
+
+        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private long lastUpdateTime = 0;
 
         public ScriptedDevice(dynamic script)
         {
@@ -120,6 +124,7 @@ namespace Aurora.Devices.ScriptedDevice
                 {
                     this.Reset();
                     script.Shutdown();
+                    isInitialized = false;
                 }
                 catch (Exception exc)
                 {
@@ -155,7 +160,27 @@ namespace Aurora.Devices.ScriptedDevice
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
         {
-            return UpdateDevice(colorComposition.keyColors, forced);
+            watch.Restart();
+
+            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return update_result;
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            if(script.GetType().GetMethod("GetRegisteredVariables") != null)
+                return script.GetRegisteredVariables();
+            else
+                return new VariableRegistry();
         }
     }
 }

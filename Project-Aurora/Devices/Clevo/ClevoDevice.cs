@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Aurora.Settings;
 
 namespace Aurora.Devices.Clevo
 {
@@ -11,6 +12,9 @@ namespace Aurora.Devices.Clevo
         // Generic Variables
         private string devicename = "Clevo Keyboard";
         private bool isInitialized = false;
+
+        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private long lastUpdateTime = 0;
 
         // Settings
         // TODO: Theese settings could be implemented with posibility of configuration from the Aurora GUI (Or external JSON, INI, Settings, etc)
@@ -141,6 +145,8 @@ namespace Aurora.Devices.Clevo
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
         {
+            watch.Restart();
+            bool update_result = false;
 
             Dictionary<DeviceKeys, Color> keyColors = colorComposition.keyColors;
             try
@@ -213,14 +219,20 @@ namespace Aurora.Devices.Clevo
                 }
 
                 SendColorsToKeyboard(forced);
-                return true;
+                update_result = true;
             }
             catch (Exception exception)
             {
                 Global.logger.LogLine("Clevo device, error when updating device. Error: " + exception, Logging_Level.Error, true);
                 Console.WriteLine(exception);
-                return false;
+                update_result = false;
             }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return update_result;
+
         }
 
         private void SendColorsToKeyboard(bool forced = false)
@@ -261,6 +273,16 @@ namespace Aurora.Devices.Clevo
         public bool IsPeripheralConnected()
         {
             return isInitialized;
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
         }
     }
 }

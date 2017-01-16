@@ -2,6 +2,7 @@
 using Corale.Colore.Razer.Keyboard;
 using System;
 using System.Collections.Generic;
+using Aurora.Settings;
 
 namespace Aurora.Devices.Razer
 {
@@ -20,6 +21,9 @@ namespace Aurora.Devices.Razer
         IKeypad keypad = null;
 
         private readonly object action_lock = new object();
+
+        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private long lastUpdateTime = 0;
 
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
 
@@ -184,7 +188,14 @@ namespace Aurora.Devices.Razer
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
         {
-            return UpdateDevice(colorComposition.keyColors, forced);
+            watch.Restart();
+
+            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return update_result;
         }
 
         private void SendColorsToKeyboard(bool forced = false)
@@ -533,6 +544,16 @@ namespace Aurora.Devices.Razer
         public bool IsPeripheralConnected()
         {
             return (mouse != null || headset != null || mousepad != null);
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
         }
     }
 }

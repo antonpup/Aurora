@@ -1075,6 +1075,12 @@ namespace Aurora.Devices
     public interface Device
     {
         /// <summary>
+        /// Gets registered variables by this device.
+        /// </summary>
+        /// <returns>Registered Variables</returns>
+        Settings.VariableRegistry GetRegisteredVariables();
+
+        /// <summary>
         /// Gets the device name.
         /// </summary>
         /// <returns>Device name</returns>
@@ -1085,6 +1091,12 @@ namespace Aurora.Devices
         /// </summary>
         /// <returns>Details about the device instance</returns>
         string GetDeviceDetails();
+
+        /// <summary>
+        /// Gets the device update performance.
+        /// </summary>
+        /// <returns>Details about device's update performance</returns>
+        string GetDeviceUpdatePerformance();
 
         /// <summary>
         /// Attempts to initialize the device instance.

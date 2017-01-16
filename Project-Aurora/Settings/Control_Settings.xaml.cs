@@ -95,34 +95,6 @@ namespace Aurora.Settings
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
-
-            this.atmoorb_enabled.IsChecked = Global.Configuration.atmoorb_enabled;
-            this.atmoorb_use_smoothing.IsChecked = Global.Configuration.atmoorb_use_smoothing;
-            this.atmoorb_IDs.Text = Global.Configuration.atmoorb_ids;
-            this.atmoorb_send_delay.Text = Global.Configuration.atmoorb_send_delay.ToString();
-
-            Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
-        }
-
-        private void Dev_manager_NewDevicesInitialized(object sender, EventArgs e)
-        {
-            try
-            {
-                Dispatcher.Invoke(
-                            () =>
-                            {
-                                this.about_connected_devices.Text = "Connected Devices\r\n" + Global.dev_manager.GetDevices();
-                                this.about_connected_devices.UpdateLayout();
-
-                                if (Global.Configuration.keyboard_brand == PreferredKeyboard.None && Global.kbLayout.Loaded_Localization == PreferredKeyboardLocalization.None)
-                                    Global.kbLayout.LoadBrand();
-
-                            });
-            }
-            catch (Exception ex)
-            {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
-            }
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -156,7 +128,6 @@ namespace Aurora.Settings
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            this.about_connected_devices.Text = "Connected Devices\r\n" + Global.dev_manager.GetDevices();
             Global.effengine.NewLayerRender += OnLayerRendered;
         }
 
@@ -908,66 +879,6 @@ namespace Aurora.Settings
             {
                 Global.logger.LogLine("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
-            }
-        }
-
-        private void atmoorb_enabled_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_enabled = (this.atmoorb_enabled.IsChecked.HasValue) ? this.atmoorb_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-            }
-        }
-        private void atmoorb_enabled_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_enabled = (this.atmoorb_enabled.IsChecked.HasValue) ? this.atmoorb_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-
-        private void atmoorb_use_smoothing_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_use_smoothing = (this.atmoorb_use_smoothing.IsChecked.HasValue) ? this.atmoorb_use_smoothing.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void atmoorb_use_smoothing_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_use_smoothing = (this.atmoorb_use_smoothing.IsChecked.HasValue) ? this.atmoorb_use_smoothing.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void atmoorb_IDs_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_ids = this.atmoorb_IDs.Text;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-
-        private void atmoorb_send_delay_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                int send_delay;
-                bool isValidInteger = int.TryParse(this.atmoorb_send_delay.Text, out send_delay);
-                if(isValidInteger)
-                    Global.Configuration.atmoorb_send_delay = send_delay;
-
-                ConfigManager.Save(Global.Configuration);
             }
         }
 

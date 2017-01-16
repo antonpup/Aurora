@@ -1,4 +1,5 @@
-﻿using CoolerMaster;
+﻿using Aurora.Settings;
+using CoolerMaster;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -132,6 +133,8 @@ namespace Aurora.Devices.CoolerMaster
 
         private readonly object action_lock = new object();
 
+        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private long lastUpdateTime = 0;
 
         //Keyboard stuff
         private CoolerMasterSDK.COLOR_MATRIX color_matrix = new CoolerMasterSDK.COLOR_MATRIX();
@@ -306,7 +309,14 @@ namespace Aurora.Devices.CoolerMaster
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
         {
-            return UpdateDevice(colorComposition.keyColors, forced);
+            watch.Restart();
+
+            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return update_result;
         }
 
         public bool IsKeyboardConnected()
@@ -317,6 +327,16 @@ namespace Aurora.Devices.CoolerMaster
         public bool IsPeripheralConnected()
         {
             return isInitialized;
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
         }
     }
 }
