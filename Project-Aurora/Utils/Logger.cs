@@ -42,8 +42,9 @@ namespace Aurora
     public class Logger
     {
         private bool retrieved_unique_logfile = false;
+        private bool retrieved_unique_logdir = false;
         private string logfile = "log.txt";
-        private string logdir = "logs/";
+        private string logdir = "Aurora/Logs/";
         private Queue<string> message_queue = new Queue<string>();
 
         public Logger()
@@ -95,12 +96,27 @@ namespace Aurora
         public string GetPath()
         {
             if (!retrieved_unique_logfile)
-                logfile = System.IO.Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), logdir, System.DateTime.Now.ToString("yyyy_dd_MM") + ".log");
+                logfile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("yyyy_dd_MM") + ".log");
 
             if (!System.IO.File.Exists(logdir))
                 System.IO.Directory.CreateDirectory(logdir);
 
             return logfile;
+        }
+
+        /// <summary>
+        /// Gets the path to the Logs directory
+        /// </summary>
+        /// <returns>The path to the Logs directory</returns>
+        public string GetLogsDirectory()
+        {
+            if (!retrieved_unique_logdir)
+                logdir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), logdir);
+
+            if (!System.IO.File.Exists(logdir))
+                System.IO.Directory.CreateDirectory(logdir);
+
+            return logdir;
         }
 
         /// <summary>

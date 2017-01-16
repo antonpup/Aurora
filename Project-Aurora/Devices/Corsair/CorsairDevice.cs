@@ -101,11 +101,11 @@ namespace Aurora.Devices.Corsair
                     }
                     catch (WrapperException ex)
                     {
-                        Global.logger.LogLine("Corsair device, Wrapper Exception! Message:" + ex.Message, Logging_Level.Error);
+                        Global.logger.LogLine("Corsair device, Wrapper Exception! Message: " + ex.Message, Logging_Level.Error);
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.LogLine("Corsair device, Exception! Message:" + ex, Logging_Level.Error);
+                        Global.logger.LogLine("Corsair device, Exception! Message: " + ex, Logging_Level.Error);
                     }
 
                     isInitialized = false;

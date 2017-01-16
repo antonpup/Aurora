@@ -21,6 +21,10 @@ namespace Aurora.Settings
     {
         private RegistryKey runRegistryPath = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
+        private Window winBitmapView = null;
+        private Image imgBitmap = new Image();
+        private static bool bitmapViewOpen;
+
         public Control_Settings()
         {
             InitializeComponent();
@@ -917,6 +921,84 @@ namespace Aurora.Settings
             }
 
             excluded_process_name.ItemsSource = processes.ToArray();
+        }
+
+        private void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (winBitmapView == null)
+            {
+                if (bitmapViewOpen == true)
+                {
+                    System.Windows.MessageBox.Show("Keyboard Bitmap View already open.\r\nPlease close it.");
+                    return;
+                }
+
+                winBitmapView = new Window();
+                winBitmapView.Closed += WinBitmapView_Closed;
+                winBitmapView.ResizeMode = ResizeMode.NoResize;
+                winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
+
+                winBitmapView.Title = "Keyboard Bitmap View";
+                winBitmapView.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                Global.effengine.NewLayerRender += Effengine_NewLayerRender;
+
+                imgBitmap.SnapsToDevicePixels = true;
+                imgBitmap.HorizontalAlignment = HorizontalAlignment.Stretch;
+                imgBitmap.VerticalAlignment = VerticalAlignment.Stretch;
+                imgBitmap.MinWidth = Effects.canvas_width;
+                imgBitmap.MinHeight = Effects.canvas_height;
+                imgBitmap.Width = Effects.canvas_width * 4;
+                imgBitmap.Height = Effects.canvas_height * 4;
+
+                winBitmapView.Content = imgBitmap;
+
+                winBitmapView.UpdateLayout();
+                winBitmapView.Show();
+            }
+            else
+            {
+                winBitmapView.BringIntoView();
+            }
+        }
+
+        private void Effengine_NewLayerRender(System.Drawing.Bitmap bitmap)
+        {
+            try
+            {
+                Dispatcher.Invoke(
+                    () =>
+                    {
+                        using (MemoryStream memory = new MemoryStream())
+                        {
+                            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                            memory.Position = 0;
+                            BitmapImage bitmapimage = new BitmapImage();
+                            bitmapimage.BeginInit();
+                            bitmapimage.StreamSource = memory;
+                            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmapimage.EndInit();
+
+                            imgBitmap.Source = bitmapimage;
+                        }
+                    });
+            }
+            catch (Exception ex)
+            {
+                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+            }
+        }
+
+        private void WinBitmapView_Closed(object sender, EventArgs e)
+        {
+            winBitmapView = null;
+            Global.effengine.NewLayerRender -= Effengine_NewLayerRender;
+            bitmapViewOpen = false;
+        }
+
+        private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button)
+                System.Diagnostics.Process.Start(Global.logger.GetLogsDirectory());
         }
     }
 }
