@@ -102,6 +102,8 @@ namespace Aurora.Settings.Layers
 
         KeySequence ExclusionMask { get; set; }
 
+        float Opacity { get; set; }
+
         EffectLayer Render(IGameState gamestate);
 
         EffectLayer PostRenderFX(EffectLayer layer_render);
@@ -152,6 +154,8 @@ namespace Aurora.Settings.Layers
 
         public KeySequence ExclusionMask { get; set; }
 
+        public float Opacity { get; set; }
+
         //public Color PrimaryColor { get; set; }
 
         [JsonIgnore]
@@ -165,6 +169,7 @@ namespace Aurora.Settings.Layers
             //Properties = new LayerHandlerProperties();
             //ScriptProperties = new LayerHandlerProperties();
             ExclusionMask = new KeySequence();
+            Opacity = 1.0f;
         }
 
         public LayerHandler(LayerHandler other) : base()
@@ -197,6 +202,8 @@ namespace Aurora.Settings.Layers
             //Last PostFX is exclusion
             if (EnableExclusionMask)
                 returnLayer.Exclude(ExclusionMask);
+
+            returnLayer *= Opacity;
 
             return returnLayer;
         }

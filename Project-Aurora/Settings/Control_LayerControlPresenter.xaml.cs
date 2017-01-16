@@ -62,6 +62,9 @@ namespace Aurora.Settings
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
             chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
             keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
+            sldr_Opacity.Value = (int)(Layer.Handler.Opacity * 100.0f);
+            lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
+
             grdLayerConfigs.Visibility = Visibility.Hidden;
             grd_LayerControl.IsHitTestVisible = true;
             grd_LayerControl.Effect = null;
@@ -195,6 +198,8 @@ namespace Aurora.Settings
                 chkLayerSmoothing.IsChecked = _Layer.Handler.EnableSmoothing;
                 chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
                 keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
+                sldr_Opacity.Value = (int)(Layer.Handler.Opacity * 100.0f);
+                lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
                 this._Layer.AssociatedProfile.SaveProfiles();
             }
         }
@@ -246,6 +251,15 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Aurora.Controls.KeySequence)
                 Layer.Handler.ExclusionMask = (sender as Aurora.Controls.KeySequence).Sequence;
+        }
+
+        private void sldr_Opacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (IsLoaded && !isSettingNewLayer && sender is Slider)
+            {
+                Layer.Handler.Opacity = (float)((sender as Slider).Value) / 100.0f;
+                this.lbl_Opacity_Text.Text = $"{(int)((sender as Slider).Value)} %";
+            }
         }
     }
 }

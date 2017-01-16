@@ -8,8 +8,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="203.81" d:DesignWidth="200" Background="Black" SizeToContent="WidthAndHeight" MinWidth="200" MinHeight="200" MaxHeight="600" MaxWidth="800">
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="stack_Options" Margin="10" MaxWidth="800" MaxHeight="600" />
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10" MaxWidth="800" MaxHeight="600" >
+            <StackPanel x:Name="stack_Options" />
         </ScrollViewer>
     </Grid>
 </Window>

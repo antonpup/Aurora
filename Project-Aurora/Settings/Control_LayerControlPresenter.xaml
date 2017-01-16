@@ -37,6 +37,10 @@
             <CheckBox x:Name="chkLayerSmoothing" Content="Enable smoothing for this layer" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="chkLayerSmoothing_Checked" Unchecked="chkLayerSmoothing_Checked"/>
             <CheckBox x:Name="chk_ExcludeMask" Content="Enable Key/Region exclusion" HorizontalAlignment="Left" Margin="213,10,0,0" VerticalAlignment="Top" Checked="chk_ExcludeMask_Checked" Unchecked="chk_ExcludeMask_Checked"/>
             <Controls:KeySequence x:Name="keyseq_ExcludeMask" HorizontalAlignment="Left" Margin="213,30,0,10" RecordingTag="ExclusionMask" Title="Excluded Keys/Region" SequenceUpdated="keyseq_ExcludeMask_SequenceUpdated"/>
+            <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Opacity: " VerticalAlignment="Top"/>
+            <Slider x:Name="sldr_Opacity" HorizontalAlignment="Left" Margin="61,30,0,0" VerticalAlignment="Top" Width="100" Minimum="0" SmallChange="1" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="1" Maximum="100" Value="100" ValueChanged="sldr_Opacity_ValueChanged" />
+            <TextBlock x:Name="lbl_Opacity_Text" HorizontalAlignment="Left" Margin="166,30,0,0" TextWrapping="Wrap" Text="100 %" VerticalAlignment="Top"/>
+
         </Grid>
         <Button x:Name="btnConfig" HorizontalAlignment="Right" Margin="0,9,10,0" VerticalAlignment="Top" Click="btnConfig_Click" ToolTip="Toggles the visibility of additional layer configurations">
             <Image Source="/Aurora;component/Resources/LayerConfig_icon.png" Width="23" Height="23" Margin="2"/>
