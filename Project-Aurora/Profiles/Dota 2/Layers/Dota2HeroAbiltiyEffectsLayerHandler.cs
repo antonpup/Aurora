@@ -164,58 +164,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                         if (!ability.CanCast && abilities[ability_id].CanCast)
                         {
                             //Casted ability
-                            /* Each ability needs:
-                             * Duration
-                             * Enum assignment
-                             * Keyframe
-                             */
-                            
-                            abilityProps[ability.Name]() || defaultProps();
-                            
-                            Dictionary<String, Func<void>> abilityProps = new Dictionary<String, Func<void>>{
-                                {"abaddon_death_coil", deathCoilProps},
-                                {"abaddon_borrowed_time", borrowedTimeProps},
-                                {"ancient_apparition_ice_vortex", iceVortexProps},
-                                {"ancient_apparition_ice_blast", iceBlastProps},
-                                {"antimage_blink", blinkProps},
-                                {"antimage_mana_void", manaVoidProps},
-                                {"alchemist_acid_spray", acidSprayProps}, 
-                                {"axe_berserkers_call", berserkersCallProps},
-                                {"beastmaster_primal_roar", primalRoarProps},
-                                {"brewmaster_thunder_clap", thunderClapProps},
-                                {"centaur_hoof_stomp", hoofStompProps},
-                                {"chaos_knight_chaos_bolt", chaosBoltProps},
-                                {"rattletrap_rocket_flare", rocketFlareProps},
-                                {"crystal_maiden_crystal_nova", crystalNovaProps},
-                                {"doom_bringer_scorched_earth", scorchedEarthProps},
-                                {"dragon_knight_breathe_fire", breatheFireProps},
-                                {"earthshaker_fissure", fissureProps},
-                                {"earthshaker_echo_slam", echoSlamProps},
-                                {"elder_titan_earth_splitter", earthSplitterProps},
-                                {"kunkka_torrent", torrentProps},
-                                {"kunkka_ghostship", ghostshipProps},
-                                {"legion_commander_overwhelming_odds", overwhelmingOddsProps},
-                                {"life_stealer_rage", rageProps},
-                                {"lina_dragon_slave", dragonSlaveProps},
-                                {"lina_light_strike_array", lightStrikeArrayProps},
-                                {"lina_laguna_blade", lagunaBladeProps},
-                                {"morphling_waveform", waveformProps},
-                                {"morphling_adaptive_strike", adaptiveStrikeProps},
-                                {"magnataur_shockwave", shockwaveProps},
-                                {"omniknight_purification", purificationProps},
-                                {"omniknight_repel", repelProps},
-                                {"razor_plasma_field", plasmaFieldProps},
-                                {"riki_smoke_screen", smokeScreenProps},
-                                {"sandking_epicenter", epicenterProps},
-                                {"slardar_slithereen_crush", slithereenCrushProps},
-                                {"nevermore_shadowraze1", shadowrazeProps},
-                                {"nevermore_shadowraze2", shadowrazeProps},
-                                {"nevermore_shadowraze2", shadowrazeProps},
-                                {"nevermore_requiem", requiemOfSoulsProps},
-                                {"zuus_arc_lightning", arcLightningProps},
-                                {"zuus_lightning_bolt", lightningBoltProps},
-                                {"zuus_thundergods_wrath", thundergodsWrathProps}
-                            }
+                            currentabilityeffect = abilityProps[ability.Name](ability);
                         }
                     }
                 }
@@ -465,9 +414,6 @@ namespace Aurora.Profiles.Dota_2.Layers
                     case Dota2AbilityEffects.slardar_slithereen_crush:
                         slardar_slithereen_crush_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
                         abiltiyeffect_keyframe += getDeltaTime();
-                        break;
-                    default:
-                        if (Global.isDebug) System.Diagnostics.Debug.WriteLine("Unknown Ability: " + ability.Name);
                         break;
                 }
             }
@@ -1020,13 +966,13 @@ namespace Aurora.Profiles.Dota_2.Layers
             zuus_lightning_bolt_shade_track.SetFrame(0.425f, new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20));
             zuus_lightning_bolt_shade_track.SetFrame(0.5f, new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 20));
         }
-        private void deathCoilProps() {
-            currentabilityeffect = Dota2AbilityEffects.abaddon_death_coil;
+
+        private static Dota2AbilityEffects deathCoilProps(Ability ability) {
             abilityeffect_time = 0.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.abaddon_death_coil;
         }
-        private void borrowedTimeProps() {
-            currentabilityeffect = Dota2AbilityEffects.abaddon_borrowed_time;
+        private static Dota2AbilityEffects borrowedTimeProps(Ability ability) {
             if (ability.Level == 1)
                 abilityeffect_time = 4.0f;
             else if (ability.Level == 2)
@@ -1036,69 +982,69 @@ namespace Aurora.Profiles.Dota_2.Layers
             else
                 abilityeffect_time = 6.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.abaddon_borrowed_time;
         }
-        private void iceVortexProps() {
-            currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_vortex;
+        private static Dota2AbilityEffects iceVortexProps(Ability ability) {
             abilityeffect_time = 0.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.ancient_apparition_ice_vortex;
         }
-        private void iceBlastProps() {
-            currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_blast;
+        private static Dota2AbilityEffects iceBlastProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.ancient_apparition_ice_blast;
         }
-        private void blinkProps() {
-            currentabilityeffect = Dota2AbilityEffects.antimage_blink;
+        private static Dota2AbilityEffects blinkProps(Ability ability) {
             abilityeffect_time = 0.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.antimage_blink;
         }
-        private void manaVoidProps() {
-            currentabilityeffect = Dota2AbilityEffects.antimage_mana_void;
+        private static Dota2AbilityEffects manaVoidProps(Ability ability) {
             abilityeffect_time = 0.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.antimage_mana_void;
         }
-        private void acidSprayProps() {
-            currentabilityeffect = Dota2AbilityEffects.alchemist_acid_spray;
+        private static Dota2AbilityEffects acidSprayProps(Ability ability) {
             abilityeffect_time = 16.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.alchemist_acid_spray;
         }
-        private void berserkersCallProps() {
-            currentabilityeffect = Dota2AbilityEffects.axe_berserkers_call;
+        private static Dota2AbilityEffects berserkersCallProps(Ability ability) {
             abilityeffect_time = 0.7f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.axe_berserkers_call;
         }
-        private void primalRoarProps() {
-            currentabilityeffect = Dota2AbilityEffects.beastmaster_primal_roar;
+        private static Dota2AbilityEffects primalRoarProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.beastmaster_primal_roar;
         }
-        private void thunderClapProps() {
-            currentabilityeffect = Dota2AbilityEffects.brewmaster_thunder_clap;
+        private static Dota2AbilityEffects thunderClapProps(Ability ability) {
             abilityeffect_time = 1.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.brewmaster_thunder_clap;
         }
-        private void hoofStompProps() {
-            currentabilityeffect = Dota2AbilityEffects.centaur_hoof_stomp;
+        private static Dota2AbilityEffects hoofStompProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.centaur_hoof_stomp;
         }
-        private void chaosBoltProps() {
-            currentabilityeffect = Dota2AbilityEffects.chaos_knight_chaos_bolt;
+        private static Dota2AbilityEffects chaosBoltProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.chaos_knight_chaos_bolt;
         }
-        private void rocketFlareProps() {
-            currentabilityeffect = Dota2AbilityEffects.rattletrap_rocket_flare;
+        private static Dota2AbilityEffects rocketFlareProps(Ability ability) {
             abilityeffect_time = 0.5f;
-            abiltiyeffect_keyframe = 0.0f;  
+            abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.rattletrap_rocket_flare;
         }
-        private void crystalNovaProps() {
-            currentabilityeffect = Dota2AbilityEffects.crystal_maiden_crystal_nova;
+        private static Dota2AbilityEffects crystalNovaProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.crystal_maiden_crystal_nova;
         }
-        private void scorchedEarthProps() {
-            currentabilityeffect = Dota2AbilityEffects.doom_bringer_scorched_earth;
+        private static Dota2AbilityEffects scorchedEarthProps(Ability ability) {
             if (ability.Level == 2)
                 abilityeffect_time = 12.0f;
             else if (ability.Level == 3)
@@ -1108,44 +1054,44 @@ namespace Aurora.Profiles.Dota_2.Layers
             else
                 abilityeffect_time = 10.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.doom_bringer_scorched_earth;
         }
-        private void breatheFireProps() {
-            currentabilityeffect = Dota2AbilityEffects.dragon_knight_breathe_fire;
+        private static Dota2AbilityEffects breatheFireProps(Ability ability) {
             abilityeffect_time = 1.25f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.dragon_knight_breathe_fire;
         }
-        private void fissureProps() {
-            currentabilityeffect = Dota2AbilityEffects.earthshaker_fissure;
+        private static Dota2AbilityEffects fissureProps(Ability ability) {
             abilityeffect_time = 0.25f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.earthshaker_fissure;
         }
-        private void echoSlamProps() {
-            currentabilityeffect = Dota2AbilityEffects.earthshaker_echo_slam;
+        private static Dota2AbilityEffects echoSlamProps(Ability ability) {
             abilityeffect_time = 0.25f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.earthshaker_echo_slam;
         }
-        private void earthSplitterProps() {
-            currentabilityeffect = Dota2AbilityEffects.elder_titan_earth_splitter;
+        private static Dota2AbilityEffects earthSplitterProps(Ability ability) {
             abilityeffect_time = 4.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.elder_titan_earth_splitter;
         }
-        private void torrentProps() {
-            currentabilityeffect = Dota2AbilityEffects.kunkka_torrent;
+        private static Dota2AbilityEffects torrentProps(Ability ability) {
             abilityeffect_time = 4.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.kunkka_torrent;
         }
-        private void ghostshipProps() {
-            currentabilityeffect = Dota2AbilityEffects.kunkka_ghostship;
+        private static Dota2AbilityEffects ghostshipProps(Ability ability) {
             abilityeffect_time = 2.7f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.kunkka_ghostship;
         }
-        private void overwhelmingOddsProps() {
-            currentabilityeffect = Dota2AbilityEffects.legion_commander_overwhelming_odds;
+        private static Dota2AbilityEffects overwhelmingOddsProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.legion_commander_overwhelming_odds;
         }
-        private void rageProps() {
-            currentabilityeffect = Dota2AbilityEffects.life_stealer_rage;
+        private static Dota2AbilityEffects rageProps(Ability ability) {
             if (ability.Level == 1)
                 abilityeffect_time = 3.0f;
             else if (ability.Level == 2)
@@ -1155,44 +1101,44 @@ namespace Aurora.Profiles.Dota_2.Layers
             if (ability.Level == 4)
                 abilityeffect_time = 6.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.life_stealer_rage;
         }
-        private void dragonSlaveProps() {
-            currentabilityeffect = Dota2AbilityEffects.lina_dragon_slave;
+        private static Dota2AbilityEffects dragonSlaveProps(Ability ability) {
             abilityeffect_time = 1.25f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.lina_dragon_slave;
         }
-        private void lightStrikeArrayProps() {
-            currentabilityeffect = Dota2AbilityEffects.lina_light_strike_array;
+        private static Dota2AbilityEffects lightStrikeArrayProps(Ability ability) {
             abilityeffect_time = 2.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.lina_light_strike_array;
         }
-        private void lagunaBladeProps() {
-            currentabilityeffect = Dota2AbilityEffects.lina_laguna_blade;
+        private static Dota2AbilityEffects lagunaBladeProps(Ability ability) {
             abilityeffect_time = 0.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.lina_laguna_blade;
         }
-        private void waveformProps() {
-            currentabilityeffect = Dota2AbilityEffects.morphling_waveform;
+        private static Dota2AbilityEffects waveformProps(Ability ability) {
             abilityeffect_time = 2.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.morphling_waveform;
         }
-        private void adaptiveStrikeProps() {
-            currentabilityeffect = Dota2AbilityEffects.morphling_adaptive_strike;
+        private static Dota2AbilityEffects adaptiveStrikeProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.morphling_adaptive_strike;
         }
-        private void shockwaveProps() {
-            currentabilityeffect = Dota2AbilityEffects.magnataur_shockwave;
+        private static Dota2AbilityEffects shockwaveProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.magnataur_shockwave;
         }
-        private void purificationProps() {
-            currentabilityeffect = Dota2AbilityEffects.omniknight_purification;
+        private static Dota2AbilityEffects purificationProps(Ability ability) {
             abilityeffect_time = 1.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.omniknight_purification;
         }
-        private void repelProps() {
-            currentabilityeffect = Dota2AbilityEffects.omniknight_repel;
+        private static Dota2AbilityEffects repelProps(Ability ability) {
             if (ability.Level == 1)
                 abilityeffect_time = 6.0f;
             else if (ability.Level == 2)
@@ -1202,54 +1148,101 @@ namespace Aurora.Profiles.Dota_2.Layers
             if (ability.Level == 4)
                 abilityeffect_time = 12.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.omniknight_repel;
         }
-        private void plasmaFieldProps() {
-            currentabilityeffect = Dota2AbilityEffects.razor_plasma_field;
+        private static Dota2AbilityEffects plasmaFieldProps(Ability ability) {
             abilityeffect_time = 2.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.razor_plasma_field;
         }
-        private void smokeScreenProps() {
-            currentabilityeffect = Dota2AbilityEffects.riki_smoke_screen;
+        private static Dota2AbilityEffects smokeScreenProps(Ability ability) {
             abilityeffect_time = 6.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.riki_smoke_screen;
         }
-        private void epicenterProps() {
-            currentabilityeffect = Dota2AbilityEffects.sandking_epicenter;
+        private static Dota2AbilityEffects epicenterProps(Ability ability) {
             abilityeffect_time = 5.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.sandking_epicenter;
         }
-        private void slithereenCrushProps() {
-            currentabilityeffect = Dota2AbilityEffects.slardar_slithereen_crush;
+        private static Dota2AbilityEffects slithereenCrushProps(Ability ability) {
             abilityeffect_time = 0.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.slardar_slithereen_crush;
         }
-        private void shadowrazeProps() {
-            currentabilityeffect = Dota2AbilityEffects.nevermore_shadowraze;
+        private static Dota2AbilityEffects shadowrazeProps(Ability ability) {
             abilityeffect_time = 0.7f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.nevermore_shadowraze;
         }
-        private void requiemOfSoulsProps() {
-            currentabilityeffect = Dota2AbilityEffects.nevermore_requiem;
+        private static Dota2AbilityEffects requiemOfSoulsProps(Ability ability) {
             abilityeffect_time = 2.0f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.nevermore_requiem;
         }
-        private void arcLightningProps() {
-            currentabilityeffect = Dota2AbilityEffects.zuus_arc_lightning;
+        private static Dota2AbilityEffects arcLightningProps(Ability ability) {
             abilityeffect_time = 0.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.zuus_arc_lightning;
         }
-        private void lightningBoltProps() {
-            currentabilityeffect = Dota2AbilityEffects.zuus_lightning_bolt;
+        private static Dota2AbilityEffects lightningBoltProps(Ability ability) {
             abilityeffect_time = 0.5f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.zuus_lightning_bolt;
         }
-        private void thundergodsWrathProps() {
-            currentabilityeffect = Dota2AbilityEffects.zuus_thundergods_wrath;
+        private static Dota2AbilityEffects thundergodsWrathProps(Ability ability) {
             abilityeffect_time = 0.25f;
             abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.zuus_thundergods_wrath;
         }
-        private void defaultProps() {
+        private static Dota2AbilityEffects defaultProps(Ability ability) {
             if (Global.isDebug) System.Diagnostics.Debug.WriteLine("Unknown Ability: " + ability.Name);
+            return Dota2AbilityEffects.None;
         }
+
+        Dictionary<String, Func<Ability, Dota2AbilityEffects>> abilityProps = new Dictionary<String, Func<Ability, Dota2AbilityEffects>>{
+                                {"abaddon_death_coil", deathCoilProps},
+                                {"abaddon_borrowed_time", borrowedTimeProps},
+                                {"ancient_apparition_ice_vortex", iceVortexProps},
+                                {"ancient_apparition_ice_blast", iceBlastProps},
+                                {"antimage_blink", blinkProps},
+                                {"antimage_mana_void", manaVoidProps},
+                                {"alchemist_acid_spray", acidSprayProps},
+                                {"axe_berserkers_call", berserkersCallProps},
+                                {"beastmaster_primal_roar", primalRoarProps},
+                                {"brewmaster_thunder_clap", thunderClapProps},
+                                {"centaur_hoof_stomp", hoofStompProps},
+                                {"chaos_knight_chaos_bolt", chaosBoltProps},
+                                {"rattletrap_rocket_flare", rocketFlareProps},
+                                {"crystal_maiden_crystal_nova", crystalNovaProps},
+                                {"doom_bringer_scorched_earth", scorchedEarthProps},
+                                {"dragon_knight_breathe_fire", breatheFireProps},
+                                {"earthshaker_fissure", fissureProps},
+                                {"earthshaker_echo_slam", echoSlamProps},
+                                {"elder_titan_earth_splitter", earthSplitterProps},
+                                {"kunkka_torrent", torrentProps},
+                                {"kunkka_ghostship", ghostshipProps},
+                                {"legion_commander_overwhelming_odds", overwhelmingOddsProps},
+                                {"life_stealer_rage", rageProps},
+                                {"lina_dragon_slave", dragonSlaveProps},
+                                {"lina_light_strike_array", lightStrikeArrayProps},
+                                {"lina_laguna_blade", lagunaBladeProps},
+                                {"morphling_waveform", waveformProps},
+                                {"morphling_adaptive_strike", adaptiveStrikeProps},
+                                {"magnataur_shockwave", shockwaveProps},
+                                {"omniknight_purification", purificationProps},
+                                {"omniknight_repel", repelProps},
+                                {"razor_plasma_field", plasmaFieldProps},
+                                {"riki_smoke_screen", smokeScreenProps},
+                                {"sandking_epicenter", epicenterProps},
+                                {"slardar_slithereen_crush", slithereenCrushProps},
+                                {"nevermore_shadowraze1", shadowrazeProps},
+                                {"nevermore_shadowraze2", shadowrazeProps},
+                                {"nevermore_shadowraze3", shadowrazeProps},
+                                {"nevermore_requiem", requiemOfSoulsProps},
+                                {"zuus_arc_lightning", arcLightningProps},
+                                {"zuus_lightning_bolt", lightningBoltProps},
+                                {"zuus_thundergods_wrath", thundergodsWrathProps}
+                            };
     }
 }
