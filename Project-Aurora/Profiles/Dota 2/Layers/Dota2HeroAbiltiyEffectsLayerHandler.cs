@@ -139,6 +139,200 @@ namespace Aurora.Profiles.Dota_2.Layers
             return new Control_Dota2HeroAbilityEffectsLayer(this);
         }
 
+        private void deathCoilProps() {
+            currentabilityeffect = Dota2AbilityEffects.abaddon_death_coil;
+            abilityeffect_time = 0.5f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void borrowedTimeProps() {
+            currentabilityeffect = Dota2AbilityEffects.abaddon_borrowed_time;
+            if (ability.Level == 1)
+                abilityeffect_time = 4.0f;
+            else if (ability.Level == 2)
+                abilityeffect_time = 5.0f;
+            else if (ability.Level == 3)
+                abilityeffect_time = 6.0f;
+            else
+                abilityeffect_time = 6.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void iceVortexProps() {
+            currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_vortex;
+            abilityeffect_time = 0.5f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void iceBlastProps() {
+            currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_blast;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void blinkProps() {
+            currentabilityeffect = Dota2AbilityEffects.antimage_blink;
+            abilityeffect_time = 0.5f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void manaVoidProps() {
+            currentabilityeffect = Dota2AbilityEffects.antimage_mana_void;
+            abilityeffect_time = 0.5f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void acidSprayProps() {
+            currentabilityeffect = Dota2AbilityEffects.alchemist_acid_spray;
+            abilityeffect_time = 16.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void berserkersCallProps() {
+            currentabilityeffect = Dota2AbilityEffects.axe_berserkers_call;
+            abilityeffect_time = 0.7f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void primalRoarProps() {
+            currentabilityeffect = Dota2AbilityEffects.beastmaster_primal_roar;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void thunderClapProps() {
+            currentabilityeffect = Dota2AbilityEffects.brewmaster_thunder_clap;
+            abilityeffect_time = 1.5f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void hoofStompProps() {
+            currentabilityeffect = Dota2AbilityEffects.centaur_hoof_stomp;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void chaosBoltProps() {
+            currentabilityeffect = Dota2AbilityEffects.chaos_knight_chaos_bolt;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void rocketFlareProps() {
+            currentabilityeffect = Dota2AbilityEffects.rattletrap_rocket_flare;
+            abilityeffect_time = 0.5f;
+            abiltiyeffect_keyframe = 0.0f;  
+        }
+        private void crystalNovaProps() {
+            currentabilityeffect = Dota2AbilityEffects.crystal_maiden_crystal_nova;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void scorchedEarthProps() {
+            currentabilityeffect = Dota2AbilityEffects.doom_bringer_scorched_earth;
+            if (ability.Level == 2)
+                abilityeffect_time = 12.0f;
+            else if (ability.Level == 3)
+                abilityeffect_time = 14.0f;
+            else if (ability.Level == 4)
+                abilityeffect_time = 16.0f;
+            else
+                abilityeffect_time = 10.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void breatheFireProps() {
+            currentabilityeffect = Dota2AbilityEffects.dragon_knight_breathe_fire;
+            abilityeffect_time = 1.25f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void fissureProps() {
+            currentabilityeffect = Dota2AbilityEffects.earthshaker_fissure;
+            abilityeffect_time = 0.25f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void echoSlamProps() {
+            currentabilityeffect = Dota2AbilityEffects.earthshaker_echo_slam;
+            abilityeffect_time = 0.25f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void earthSplitterProps() {
+            currentabilityeffect = Dota2AbilityEffects.elder_titan_earth_splitter;
+            abilityeffect_time = 4.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void torrentProps() {
+            currentabilityeffect = Dota2AbilityEffects.kunkka_torrent;
+            abilityeffect_time = 4.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void ghostshipProps() {
+            currentabilityeffect = Dota2AbilityEffects.kunkka_ghostship;
+            abilityeffect_time = 2.7f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void overwhelmingOddsProps() {
+            currentabilityeffect = Dota2AbilityEffects.legion_commander_overwhelming_odds;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void rageProps() {
+            currentabilityeffect = Dota2AbilityEffects.life_stealer_rage;
+            if (ability.Level == 1)
+                abilityeffect_time = 3.0f;
+            else if (ability.Level == 2)
+                abilityeffect_time = 4.0f;
+            else if (ability.Level == 3)
+                abilityeffect_time = 5.0f;
+            if (ability.Level == 4)
+                abilityeffect_time = 6.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void dragonSlaveProps() {
+            currentabilityeffect = Dota2AbilityEffects.lina_dragon_slave;
+            abilityeffect_time = 1.25f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void lightStrikeArrayProps() {
+            currentabilityeffect = Dota2AbilityEffects.lina_light_strike_array;
+            abilityeffect_time = 2.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void lagunaBladeProps() {
+            currentabilityeffect = Dota2AbilityEffects.lina_laguna_blade;
+            abilityeffect_time = 0.5f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void waveformProps() {
+            currentabilityeffect = Dota2AbilityEffects.morphling_waveform;
+            abilityeffect_time = 2.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void adaptiveStrikeProps() {
+            currentabilityeffect = Dota2AbilityEffects.morphling_adaptive_strike;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void shockwaveProps() {
+            currentabilityeffect = Dota2AbilityEffects.magnataur_shockwave;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void purificationProps() {
+            currentabilityeffect = Dota2AbilityEffects.omniknight_purification;
+            abilityeffect_time = 1.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void repelProps() {
+            currentabilityeffect = Dota2AbilityEffects.omniknight_repel;
+            if (ability.Level == 1)
+                abilityeffect_time = 6.0f;
+            else if (ability.Level == 2)
+                abilityeffect_time = 8.0f;
+            else if (ability.Level == 3)
+                abilityeffect_time = 10.0f;
+            if (ability.Level == 4)
+                abilityeffect_time = 12.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void plasmaFieldProps() {
+            currentabilityeffect = Dota2AbilityEffects.razor_plasma_field;
+            abilityeffect_time = 2.0f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        private void smokeScreenProps() {
+            currentabilityeffect = Dota2AbilityEffects.riki_smoke_screen;
+            abilityeffect_time = 6.5f;
+            abiltiyeffect_keyframe = 0.0f;
+        }
+        
         public override EffectLayer Render(IGameState state)
         {
             previoustime = currenttime;
@@ -169,261 +363,44 @@ namespace Aurora.Profiles.Dota_2.Layers
                              * Enum assignment
                              * Keyframe
                              */
-                            switch(ability.Name)
-                            {
-                                case "abaddon_death_coil":
-                                    abaddon_death_coil_track = new AnimationTrack("Abaddon Dealth Coil", 0.5f);
-                                    PointF death_coil_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF death_coil_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF death_coil_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF death_coil_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    abaddon_death_coil_track.SetFrame(0.0f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 160, 210), 2),
-                                            new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5),
-                                            }));
-                                    abaddon_death_coil_track.SetFrame(0.45f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 160, 210), 2),
-                                            new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5),
-                                            }));
-                                    abaddon_death_coil_track.SetFrame(0.5f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 0, 160, 210), 2),
-                                            new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 0, 160, 210), 5),
-                                            }));
-                                    currentabilityeffect = Dota2AbilityEffects.abaddon_death_coil;
-                                    abilityeffect_time = 0.5f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "abaddon_borrowed_time":
-                                    currentabilityeffect = Dota2AbilityEffects.abaddon_borrowed_time;
-                                    if (ability.Level == 1)
-                                        abilityeffect_time = 4.0f;
-                                    else if (ability.Level == 2)
-                                        abilityeffect_time = 5.0f;
-                                    else if (ability.Level == 3)
-                                        abilityeffect_time = 6.0f;
-                                    else
-                                        abilityeffect_time = 6.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "ancient_apparition_ice_vortex" :
-                                    currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_vortex;
-                                    abilityeffect_time = 0.5f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "ancient_apparition_ice_blast":
-                                    currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_blast;
-                                    abilityeffect_time = 1.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "antimage_blink":
-                                    currentabilityeffect = Dota2AbilityEffects.antimage_blink;
-                                    abilityeffect_time = 0.5f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "antimage_mana_void":
-                                    currentabilityeffect = Dota2AbilityEffects.antimage_mana_void;
-                                    abilityeffect_time = 0.5f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "alchemist_acid_spray":
-                                    currentabilityeffect = Dota2AbilityEffects.alchemist_acid_spray;
-                                    abilityeffect_time = 16.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "axe_berserkers_call":
-                                    currentabilityeffect = Dota2AbilityEffects.axe_berserkers_call;
-                                    abilityeffect_time = 0.7f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    beak;
-                                case "beastmaster_primal_roar"
-                                        currentabilityeffect = Dota2AbilityEffects.beastmaster_primal_roar;
-                                        abilityeffect_time = 1.0f;
-                                        abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "brewmaster_thunder_clap":
-                                    currentabilityeffect = Dota2AbilityEffects.brewmaster_thunder_clap;
-                                    abilityeffect_time = 1.5f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "centaur_hoof_stomp":
-                                    currentabilityeffect = Dota2AbilityEffects.centaur_hoof_stomp;
-                                    abilityeffect_time = 1.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                break "chaos_knight_chaos_bolt":
-                                    currentabilityeffect = Dota2AbilityEffects.chaos_knight_chaos_bolt;
-                                    abilityeffect_time = 1.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                //clockwerk
-                                case "rattletrap_rocket_flare":
-                                    currentabilityeffect = Dota2AbilityEffects.rattletrap_rocket_flare;
-                                    abilityeffect_time = 0.5f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "crystal_maiden_crystal_nova":
-                                    currentabilityeffect = Dota2AbilityEffects.crystal_maiden_crystal_nova;
-                                    abilityeffect_time = 1.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "doom_bringer_scorched_earth":
-                                    currentabilityeffect = Dota2AbilityEffects.doom_bringer_scorched_earth;
+                            
+                            abilityProps[ability.Name]();
+                            
+                            Dictionary<String, Func<void>> abilityProps = new Dictionary<String, Func<void>>{
+                                {"abaddon_death_coil", deathCoilProps},
+                                {"abaddon_borrowed_time", borrowedTimeProps},
+                                {"ancient_apparition_ice_vortex", iceVortexProps},
+                                {"ancient_apparition_ice_blast", iceBlastProps},
+                                {"antimage_blink", blinkProps},
+                                {"antimage_mana_void", manaVoidProps},
+                                {"alchemist_acid_spray", acidSprayProps}, 
+                                {"axe_berserkers_call", berserkersCallProps},
+                                {"beastmaster_primal_roar", primalRoarProps},
+                                {"brewmaster_thunder_clap", thunderClapProps},
+                                {"centaur_hoof_stomp", hoofStompProps},
+                                {"chaos_knight_chaos_bolt", chaosBoltProps},
+                                {"rattletrap_rocket_flare", rocketFlareProps},
+                                {"crystal_maiden_crystal_nova", crystalNovaProps},
+                                {"doom_bringer_scorched_earth", scorchedEarthProps},
+                                {"dragon_knight_breathe_fire", breatheFireProps},
+                                {"earthshaker_fissure", fissureProps},
+                                {"earthshaker_echo_slam", echoSlamProps},
+                                {"elder_titan_earth_splitter", earthSplitterProps},
+                                {"kunkka_torrent", torrentProps},
+                                {"kunkka_ghostship", ghostshipProps},
+                                {"legion_commander_overwhelming_odds", overwhelmingOddsProps},
+                                {"life_stealer_rage", rageProps},
+                                {"lina_dragon_slave", dragonSlaveProps},
+                                {"lina_light_strike_array", lightStrikeArrayProps},
+                                {"lina_laguna_blade", lagunaBladeProps},
+                                {"morphling_waveform", waveformProps},
+                                {"morphling_adaptive_strike", adaptiveStrikeProps},
+                                {"magnataur_shockwave", shockwaveProps},
+                                {"omniknight_purification", purificationProps},
+                                {"omniknight_repel", repelProps},
+                                {"razor_plasma_field", plasmaFieldProps},
+                                {"riki_smoke_screen", smokeScreenProps},
 
-                                    if (ability.Level == 2)
-                                        abilityeffect_time = 12.0f;
-                                    else if (ability.Level == 3)
-                                        abilityeffect_time = 14.0f;
-                                    else if (ability.Level == 4)
-                                        abilityeffect_time = 16.0f;
-                                    else
-                                        abilityeffect_time = 10.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "dragon_knight_breathe_fire":
-                                    currentabilityeffect = Dota2AbilityEffects.dragon_knight_breathe_fire;
-                                    abilityeffect_time = 1.25f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "earthshaker_fissure":
-                                    currentabilityeffect = Dota2AbilityEffects.earthshaker_fissure;
-                                    abilityeffect_time = 0.25f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "earthshaker_echo_slam":
-                                    currentabilityeffect = Dota2AbilityEffects.earthshaker_echo_slam;
-                                    abilityeffect_time = 0.25f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "elder_titan_earth_splitter":
-                                    currentabilityeffect = Dota2AbilityEffects.elder_titan_earth_splitter;
-                                    abilityeffect_time = 4.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "kunkka_torrent":
-                                    currentabilityeffect = Dota2AbilityEffects.kunkka_torrent;
-                                    abilityeffect_time = 4.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "kunkka_ghostship":
-                                    currentabilityeffect = Dota2AbilityEffects.kunkka_ghostship;
-                                    abilityeffect_time = 2.7f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "legion_commander_overwhelming_odds":
-                                    currentabilityeffect = Dota2AbilityEffects.legion_commander_overwhelming_odds;
-                                    abilityeffect_time = 1.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "life_stealer_rage":
-                                    currentabilityeffect = Dota2AbilityEffects.life_stealer_rage;
-                                    if (ability.Level == 1)
-                                        abilityeffect_time = 3.0f;
-                                    else if (ability.Level == 2)
-                                        abilityeffect_time = 4.0f;
-                                    else if (ability.Level == 3)
-                                        abilityeffect_time = 5.0f;
-                                    if (ability.Level == 4)
-                                        abilityeffect_time = 6.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "lina_dragon_slave":
-                                    currentabilityeffect = Dota2AbilityEffects.lina_dragon_slave;
-                                    abilityeffect_time = 1.25f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "lina_light_strike_array":
-                                    currentabilityeffect = Dota2AbilityEffects.lina_light_strike_array;
-                                    abilityeffect_time = 2.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "lina_laguna_blade":
-                                    lina_laguna_blade_track = new AnimationTrack("Lina Laguna Blade", 0.5f);
-                                    PointF laguna_point1 = new PointF(0, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF laguna_point2 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF laguna_point3 = new PointF(Effects.canvas_width_center + 6.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF laguna_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    lina_laguna_blade_track.SetFrame(0.0f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
-                                            }));
-                                    lina_laguna_blade_track.SetFrame(0.45f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
-                                            }));
-                                    lina_laguna_blade_track.SetFrame(0.5f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(0, 255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(0, 255, 255, 255), Color.FromArgb(0, 170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(0, 170, 170, 255), Color.FromArgb(0, 85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(0, 85, 85, 255), Color.FromArgb(0, 0, 0, 255), 5),
-                                            }));
-                                    currentabilityeffect = Dota2AbilityEffects.lina_laguna_blade;
-                                    abilityeffect_time = 0.5f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "morphling_waveform":
-                                    currentabilityeffect = Dota2AbilityEffects.morphling_waveform;
-                                    abilityeffect_time = 2.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "morphling_adaptive_strike":
-                                    currentabilityeffect = Dota2AbilityEffects.morphling_adaptive_strike;
-                                    abilityeffect_time = 1.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "magnataur_shockwave":
-                                    currentabilityeffect = Dota2AbilityEffects.magnataur_shockwave;
-                                    abilityeffect_time = 1.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "omniknight_purification":
-                                    currentabilityeffect = Dota2AbilityEffects.omniknight_purification;
-                                    abilityeffect_time = 1.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "omniknight_repel":
-                                    currentabilityeffect = Dota2AbilityEffects.omniknight_repel;
-                                    if (ability.Level == 1)
-                                        abilityeffect_time = 6.0f;
-                                    else if (ability.Level == 2)
-                                        abilityeffect_time = 8.0f;
-                                    else if (ability.Level == 3)
-                                        abilityeffect_time = 10.0f;
-                                    if (ability.Level == 4)
-                                        abilityeffect_time = 12.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "razor_plasma_field":
-                                    currentabilityeffect = Dota2AbilityEffects.razor_plasma_field;
-                                    abilityeffect_time = 2.0f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
-                                case "riki_smoke_screen":
-                                    currentabilityeffect = Dota2AbilityEffects.riki_smoke_screen;
-                                    abilityeffect_time = 6.5f;
-                                    abiltiyeffect_keyframe = 0.0f;
-                                    break;
                                 case "sandking_epicenter":
                                     currentabilityeffect = Dota2AbilityEffects.sandking_epicenter;
                                     abilityeffect_time = 5.0f;
@@ -448,35 +425,6 @@ namespace Aurora.Profiles.Dota_2.Layers
                                     abiltiyeffect_keyframe = 0.0f;
                                     break;
                                 case "zuus_arc_lightning":
-                                    zuus_arc_lightning_track = new AnimationTrack("Zeus Arc Lightning", 0.5f);
-                                    PointF zuus_lightning_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF zuus_lightning_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF zuus_lightning_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    PointF zuus_lightning_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                    zuus_arc_lightning_track.SetFrame(0.0f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 205, 255), 2),
-                                            new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 205, 255), 3),
-                                            new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 205, 255) , 3),
-                                            new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 205, 255), 5),
-                                            }));
-                                    zuus_arc_lightning_track.SetFrame(0.45f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 205, 255), 2),
-                                            new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 205, 255), 3),
-                                            new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 205, 255) , 3),
-                                            new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 205, 255), 5),
-                                            }));
-                                    zuus_arc_lightning_track.SetFrame(0.5f,
-                                        new AnimationLines(
-                                            new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 0, 205, 255), 2),
-                                            new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 0, 205, 255), 3),
-                                            new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 0, 205, 255), 3),
-                                            new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 0, 205, 255), 5),
-                                            }));
                                     currentabilityeffect = Dota2AbilityEffects.zuus_arc_lightning;
                                     abilityeffect_time = 0.5f;
                                     abiltiyeffect_keyframe = 0.0f;
@@ -762,6 +710,39 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public void UpdateAnimations()
         {
+            /* Abaddon 
+            - Death Coil Y
+            - Aphotic Shield N
+            - Curse of Avernus N
+            - Borrowed Time Y
+            */
+            abaddon_death_coil_track = new AnimationTrack("Abaddon Dealth Coil", 0.5f);
+            PointF death_coil_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF death_coil_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF death_coil_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF death_coil_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            abaddon_death_coil_track.SetFrame(0.0f,
+                new AnimationLines(
+                    new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 160, 210), 2),
+                    new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
+                    new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
+                    new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5)}));
+            abaddon_death_coil_track.SetFrame(0.45f,
+                new AnimationLines(
+                    new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 160, 210), 2),
+                    new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
+                    new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
+                    new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5)}));
+            abaddon_death_coil_track.SetFrame(0.5f,
+                new AnimationLines(
+                    new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 0, 160, 210), 2),
+                    new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 0, 160, 210), 3),
+                    new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 0, 160, 210), 3),
+                    new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 0, 160, 210), 5)}));
+
             /* Anti Mage 
             - Mana Break N
             - Blink Y
@@ -965,17 +946,44 @@ namespace Aurora.Profiles.Dota_2.Layers
             - Fiery Soul N
             - Laguna Blade Y
             */
+            //Dragon Slave
             lina_dragon_slave_track = new AnimationTrack("Lina Dragon Slave", 1.25f);
             lina_dragon_slave_track.SetFrame(0.0f, new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0)));
             lina_dragon_slave_track.SetFrame(0.9375f, new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0)));
             lina_dragon_slave_track.SetFrame(1.25f, new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0)));
 
+            //Light Strike Array
             lina_light_strike_array_track = new AnimationTrack("Lina Light Strike", 2.0f);
             lina_light_strike_array_track.SetFrame(0.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 80, 0)));
             lina_light_strike_array_track.SetFrame(0.49f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 80, 0)));
             lina_light_strike_array_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(255, 80, 0)));
             lina_light_strike_array_track.SetFrame(1.25f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 80, 0)));
             lina_light_strike_array_track.SetFrame(2.0f, new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 80, 0)));
+
+            //Laguna Blade
+            lina_laguna_blade_track = new AnimationTrack("Lina Laguna Blade", 0.5f);
+            PointF laguna_point1 = new PointF(0, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF laguna_point2 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF laguna_point3 = new PointF(Effects.canvas_width_center + 6.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF laguna_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            lina_laguna_blade_track.SetFrame(0.0f,
+                new AnimationLines( new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
+                    new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
+                    new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
+                    new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5)}));
+            lina_laguna_blade_track.SetFrame(0.45f,
+                new AnimationLines( new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
+                    new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
+                    new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
+                    new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5)}));
+            lina_laguna_blade_track.SetFrame(0.5f, new AnimationLines(
+                    new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(0, 255, 255, 255), 2),
+                    new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(0, 255, 255, 255), Color.FromArgb(0, 170, 170, 255), 3),
+                    new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(0, 170, 170, 255), Color.FromArgb(0, 85, 85, 255), 3),
+                    new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(0, 85, 85, 255), Color.FromArgb(0, 0, 0, 255), 5)}));
 
             /* Magnus
             * Shockwave Y
@@ -1205,6 +1213,31 @@ namespace Aurora.Profiles.Dota_2.Layers
             - Static Field N
             - Thundergod's Wrath Y
             */
+            //Arc Lightning
+            zuus_arc_lightning_track = new AnimationTrack("Zeus Arc Lightning", 0.5f);
+            PointF zuus_lightning_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF zuus_lightning_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF zuus_lightning_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            PointF zuus_lightning_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+            zuus_arc_lightning_track.SetFrame(0.0f, new AnimationLines(
+                    new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 205, 255), 2),
+                    new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 205, 255), 3),
+                    new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 205, 255) , 3),
+                    new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 205, 255), 5)}));
+            zuus_arc_lightning_track.SetFrame(0.45f,
+                new AnimationLines( new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 205, 255), 2),
+                    new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 205, 255), 3),
+                    new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 205, 255) , 3),
+                    new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 205, 255), 5)}));
+            zuus_arc_lightning_track.SetFrame(0.5f,
+                new AnimationLines( new AnimationLine[] {
+                    new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 0, 205, 255), 2),
+                    new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 0, 205, 255), 3),
+                    new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 0, 205, 255), 3),
+                    new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 0, 205, 255), 5)}));
+
             //Lightning Bolt
             zuus_lightning_bolt_track = new AnimationTrack("Zeus Lighting Bolt", 0.5f);
             zuus_lightning_bolt_track.SetFrame(0.0f, new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15));
