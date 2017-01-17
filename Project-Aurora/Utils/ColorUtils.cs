@@ -267,6 +267,11 @@ namespace Aurora.Utils
             return Color.FromArgb(R, G, B);
         }
 
+        public static int GetIntFromColor(Color color)
+        {
+            return (color.R << 16) | (color.G << 8) | (color.B);
+        }
+
         /// <summary>
         /// Returns a Luma coefficient for brightness of a color
         /// </summary>
