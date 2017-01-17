@@ -56,7 +56,7 @@ namespace Aurora.Settings
 
         public KeyboardKey UpdateFromOtherKey(KeyboardKey otherKey)
         {
-            if(otherKey != null)
+            if (otherKey != null)
             {
                 if (otherKey.visualName != null) this.visualName = otherKey.visualName;
                 this.tag = otherKey.tag;
@@ -333,7 +333,7 @@ namespace Aurora.Settings
 
         internal void AdjustKeys(Dictionary<DeviceKeys, KeyboardKey> keys)
         {
-            var applicable_keys = grouped_keys.FindAll(key => keys.ContainsKey( key.tag ));
+            var applicable_keys = grouped_keys.FindAll(key => keys.ContainsKey(key.tag));
 
             foreach (var key in applicable_keys)
             {
@@ -600,6 +600,9 @@ namespace Aurora.Settings
 
                     switch (mouse_preference)
                     {
+                        case PreferredMouse.Generic_Peripheral:
+                            mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
+                            break;
                         case PreferredMouse.Logitech_G900:
                             mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
                             break;

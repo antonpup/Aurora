@@ -223,6 +223,9 @@ namespace Aurora.Settings
         [Description("None")]
         None = 0,
 
+        [Description("Generic Peripheral")]
+        Generic_Peripheral = 1,
+
         //Logitech range is 100-199
         [Description("Logitech - G900")]
         Logitech_G900 = 100,
