@@ -120,8 +120,7 @@ namespace Aurora.Profiles.Desktop
                         _SecondaryColor = Color.FromArgb(255, 0, 0),
                         _RandomSecondaryColor = true,
                         _EffectSpeed = 5.0f,
-                        _EffectWidth = 2,
-                        _TriggerOnMouseClick = false
+                        _EffectWidth = 2
                     }
                 }
                 )

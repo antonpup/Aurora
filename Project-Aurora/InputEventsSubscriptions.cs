@@ -27,11 +27,6 @@ namespace Aurora
         /// </summary>
         public event KeyEventHandler KeyUp;
 
-        /// <summary>
-        /// Event for a mouse button pressed
-        /// </summary>
-        public event MouseEventHandler MouseClick;
-
         public bool Initialize()
         {
             try
@@ -41,7 +36,6 @@ namespace Aurora
                 input_hook.KeyDown += Input_hook_KeyDown;
                 input_hook.KeyPress += Input_hook_KeyPress;
                 input_hook.KeyUp += Input_hook_KeyUp;
-                input_hook.MouseClick += Input_hook_MouseClick;
             }
             catch (Exception exc)
             {
@@ -50,13 +44,6 @@ namespace Aurora
             }
 
             return true;
-        }
-
-        private void Input_hook_MouseClick(object sender, MouseEventArgs e)
-        {
-            Task.Factory.StartNew(
-                () => { MouseClick?.Invoke(sender, e); }
-            );
         }
 
         private void Input_hook_KeyUp(object sender, KeyEventArgs e)

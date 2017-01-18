@@ -71,11 +71,6 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public InteractiveEffects InteractiveEffect { get { return Logic._InteractiveEffect ?? _InteractiveEffect ?? InteractiveEffects.None; } }
 
-        public bool? _TriggerOnMouseClick { get; set; }
-
-        [JsonIgnore]
-        public bool TriggerOnMouseClick { get { return Logic._TriggerOnMouseClick ?? _TriggerOnMouseClick ?? false; } }
-
         public int? _EffectWidth { get; set; }
 
         [JsonIgnore]
@@ -92,7 +87,6 @@ namespace Aurora.Settings.Layers
             this._RandomSecondaryColor = false;
             this._EffectSpeed = 1.0f;
             this._InteractiveEffect = InteractiveEffects.None;
-            this._TriggerOnMouseClick = false;
             this._EffectWidth = 2;
         }
     }
@@ -116,38 +110,11 @@ namespace Aurora.Settings.Layers
 
             Global.input_subscriptions.KeyDown += Input_subscriptions_KeyDown;
             Global.input_subscriptions.KeyUp += Input_subscriptions_KeyUp;
-            Global.input_subscriptions.MouseClick += Input_subscriptions_MouseClick;
         }
 
         protected override System.Windows.Controls.UserControl CreateControl()
         {
             return new Control_InteractiveLayer(this);
-        }
-
-        private void Input_subscriptions_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            if (!Properties.TriggerOnMouseClick)
-                return;
-
-            Devices.DeviceKeys[] possible_peripheral_keys = {
-                Devices.DeviceKeys.Peripheral,
-                Devices.DeviceKeys.Peripheral_FrontLight,
-                Devices.DeviceKeys.Peripheral_ScrollWheel,
-                Devices.DeviceKeys.Peripheral_Logo
-            };
-
-            foreach(Devices.DeviceKeys key in possible_peripheral_keys)
-            {
-                if (key != Devices.DeviceKeys.NONE && !Properties.Sequence.keys.Contains(key))
-                {
-                    PointF pt = Effects.GetBitmappingFromDeviceKey(key).Center;
-                    if (pt != new PointF(0, 0))
-                    {
-                        _input_list.Add(CreateInputItem(key, pt));
-                        break;
-                    }
-                }
-            }
         }
 
         private void Input_subscriptions_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
