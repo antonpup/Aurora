@@ -32,11 +32,13 @@ namespace Aurora.Profiles.Dota_2.Layers
         enum Dota2ItemEffects
         {
             None,
-            dagon
+            dagon,
+            ethereal_blade
         }
 
-        private AnimationTrack dagon_track;
-        
+        private AnimationTrack dagon5_track;
+        private AnimationTrack eblade_track;
+
         private long previoustime = 0;
         private long currenttime = 0;
 
@@ -110,7 +112,11 @@ namespace Aurora.Profiles.Dota_2.Layers
                 switch (currentitemeffect)
                 {
                     case Dota2ItemEffects.dagon:
-                        dagon_track.GetFrame(itemeffect_keyframe).Draw(item_effects_layer.GetGraphics());
+                        dagon5_track.GetFrame(itemeffect_keyframe).Draw(item_effects_layer.GetGraphics());
+                        itemeffect_keyframe += getDeltaTime();
+                        break;
+                    case Dota2ItemEffects.ethereal_blade:
+                        eblade_track.GetFrame(itemeffect_keyframe).Draw(item_effects_layer.GetGraphics());
                         itemeffect_keyframe += getDeltaTime();
                         break;
                 }
@@ -126,11 +132,18 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public void UpdateAnimations()
         {
-            // Dagon 5
-            dagon_track = new AnimationTrack("Dagon 5", 0.5f);
-            dagon_track.SetFrame(0.0f, new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 0, 0)));
-            dagon_track.SetFrame(0.3f, new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.9f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 0, 0)));
-            dagon_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 0, 0)));
+            // Dagon
+            dagon5_track = new AnimationTrack("Dagon 5", 0.5f);
+            dagon5_track.SetFrame(0.0f, new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 0, 0)));
+            dagon5_track.SetFrame(0.3f, new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.9f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 0, 0)));
+            dagon5_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 0, 0)));
+            
+            // Ethereal Blade
+            eblade_track = new AnimationTrack("Ethereal Blade", 0.8f);
+            eblade_track.SetFrame(0.0f, new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 50)));
+            eblade_track.SetFrame(0.5f, new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.9f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 50)));
+            eblade_track.SetFrame(0.8f, new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 255, 50)));
+
         }
 
         private static Dota2ItemEffects dagonProps(Item item)
@@ -139,7 +152,13 @@ namespace Aurora.Profiles.Dota_2.Layers
             itemeffect_keyframe = 0.0f;
             return Dota2ItemEffects.dagon;
         }
-        
+        private static Dota2ItemEffects ebladeProps(Item item)
+        {
+            itemeffect_time = 0.8f;
+            itemeffect_keyframe = 0.0f;
+            return Dota2ItemEffects.ethereal_blade;
+        }
+
         private static Dota2ItemEffects defaultProps(Item item)
         {
             if (Global.isDebug) System.Diagnostics.Debug.WriteLine("Unknown Item: " + item.Name);
@@ -147,7 +166,12 @@ namespace Aurora.Profiles.Dota_2.Layers
         }
 
         Dictionary<String, Func<Item, Dota2ItemEffects>> itemProps = new Dictionary<String, Func<Item, Dota2ItemEffects>>{
-            {"item_dagon_5", dagonProps}
+            {"item_dagon_1", dagonProps},
+            {"item_dagon_2", dagonProps},
+            {"item_dagon_3", dagonProps},
+            {"item_dagon_4", dagonProps},
+            {"item_dagon_5", dagonProps},
+            {"item_ethereal_blade", ebladeProps}
         };
     }
 }
