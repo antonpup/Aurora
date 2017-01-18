@@ -132,6 +132,7 @@ Dota 2 features
 * Health and Mana indicators
 * Ability and Item indicators
 * Hero ability effects
+* Item effects
 * Layering system
 * Rearrange and add general layers
 
