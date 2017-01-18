@@ -59,6 +59,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             omniknight_purification,
             omniknight_repel,
             sandking_epicenter,
+            enigma_black_hole,
             slardar_slithereen_crush,
 
             lina_dragon_slave,
@@ -111,6 +112,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         private AnimationTrack omniknight_purification_track;
         private AnimationTrack omniknight_repel_track;
         private AnimationMix sandking_epicenter_mix;
+        private AnimationTrack enigma_black_hole_track;
         private AnimationTrack slardar_slithereen_crush_track;
 
         private long previoustime = 0;
@@ -193,6 +195,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 {
                     case Dota2AbilityEffects.razor_plasma_field:
                         razor_plasma_field_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                        abiltiyeffect_keyframe += getDeltaTime();
+                        break;
+                    case Dota2AbilityEffects.enigma_black_hole:
+                        enigma_black_hole_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
                         abiltiyeffect_keyframe += getDeltaTime();
                         break;
                     case Dota2AbilityEffects.crystal_maiden_crystal_nova:
@@ -599,6 +605,16 @@ namespace Aurora.Profiles.Dota_2.Layers
             elder_titan_earth_splitter_track.SetFrame(0.0f,new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 220)));
             elder_titan_earth_splitter_track.SetFrame(1.0f,new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 255, 220)));
 
+            /* Enigma
+            * Malefice N
+            * Demonic Conversion N
+            * Midnight Pulse N
+            * Black Hole Y
+            */
+            enigma_black_hole_track = new AnimationTrack("Enigma Black Hole", 4.0f);
+            enigma_black_hole_track.SetFrame(0.0f, new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(180, 45, 255), 10));
+            enigma_black_hole_track.SetFrame(4.0f, new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(180, 45, 255), 10));
+
             /* Kunkka
             * Torrent Y
             * X Marks the Spot N
@@ -814,64 +830,34 @@ namespace Aurora.Profiles.Dota_2.Layers
             AnimationTrack sandking_epicenter_wave1 = new AnimationTrack("Sandsking Epicenter Wave1", 0.5f, 2.0f);
             sandking_epicenter_wave1.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave1.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave2 = new AnimationTrack("Sandsking Epicenter Wave2", 0.5f, 2.16f);
+            AnimationTrack sandking_epicenter_wave2 = new AnimationTrack("Sandsking Epicenter Wave2", 0.5f, 2.32f);
             sandking_epicenter_wave2.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave2.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave3 = new AnimationTrack("Sandsking Epicenter Wave3", 0.5f, 2.32f);
+            AnimationTrack sandking_epicenter_wave3 = new AnimationTrack("Sandsking Epicenter Wave3", 0.5f, 2.64f);
             sandking_epicenter_wave3.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave3.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave4 = new AnimationTrack("Sandsking Epicenter Wave4", 0.5f, 2.48f);
+            AnimationTrack sandking_epicenter_wave4 = new AnimationTrack("Sandsking Epicenter Wave4", 0.5f, 2.96f);
             sandking_epicenter_wave4.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave4.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave5 = new AnimationTrack("Sandsking Epicenter Wave5", 0.5f, 2.64f);
+            AnimationTrack sandking_epicenter_wave5 = new AnimationTrack("Sandsking Epicenter Wave5", 0.5f, 3.28f);
             sandking_epicenter_wave5.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave5.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave6 = new AnimationTrack("Sandsking Epicenter Wave6", 0.5f, 2.8f);
+            AnimationTrack sandking_epicenter_wave6 = new AnimationTrack("Sandsking Epicenter Wave6", 0.5f, 3.6f);
             sandking_epicenter_wave6.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave6.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave7 = new AnimationTrack("Sandsking Epicenter Wave7", 0.5f, 2.96f);
+            AnimationTrack sandking_epicenter_wave7 = new AnimationTrack("Sandsking Epicenter Wave7", 0.5f, 3.88f);
             sandking_epicenter_wave7.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave7.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave8 = new AnimationTrack("Sandsking Epicenter Wave8", 0.5f, 3.12f);
+            AnimationTrack sandking_epicenter_wave8 = new AnimationTrack("Sandsking Epicenter Wave8", 0.5f, 4.2f);
             sandking_epicenter_wave8.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave8.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave9 = new AnimationTrack("Sandsking Epicenter Wave9", 0.5f, 3.28f);
+            AnimationTrack sandking_epicenter_wave9 = new AnimationTrack("Sandsking Epicenter Wave9", 0.5f, 4.62f);
             sandking_epicenter_wave9.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave9.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave10 = new AnimationTrack("Sandsking Epicenter Wave10", 0.5f, 3.44f);
+            AnimationTrack sandking_epicenter_wave10 = new AnimationTrack("Sandsking Epicenter Wave10", 0.5f, 5.0f);
             sandking_epicenter_wave10.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
             sandking_epicenter_wave10.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave11 = new AnimationTrack("Sandsking Epicenter Wave11", 0.5f, 3.6f);
-            sandking_epicenter_wave11.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave11.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave12 = new AnimationTrack("Sandsking Epicenter Wave12", 0.5f, 3.76f);
-            sandking_epicenter_wave12.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave12.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave13 = new AnimationTrack("Sandsking Epicenter Wave13", 0.5f, 3.92f);
-            sandking_epicenter_wave13.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave13.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave14 = new AnimationTrack("Sandsking Epicenter Wave14", 0.5f, 4.08f);
-            sandking_epicenter_wave14.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave14.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave15 = new AnimationTrack("Sandsking Epicenter Wave15", 0.5f, 4.24f);
-            sandking_epicenter_wave15.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave15.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave16 = new AnimationTrack("Sandsking Epicenter Wave16", 0.5f, 4.4f);
-            sandking_epicenter_wave16.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave16.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave17 = new AnimationTrack("Sandsking Epicenter Wave17", 0.5f, 4.56f);
-            sandking_epicenter_wave17.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave17.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave18 = new AnimationTrack("Sandsking Epicenter Wave18", 0.5f, 4.72f);
-            sandking_epicenter_wave18.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave18.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave19 = new AnimationTrack("Sandsking Epicenter Wave19", 0.5f, 4.88f);
-            sandking_epicenter_wave19.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave19.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-            AnimationTrack sandking_epicenter_wave20 = new AnimationTrack("Sandsking Epicenter Wave20", 0.5f, 5f);
-            sandking_epicenter_wave20.SetFrame(0.0f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4));
-            sandking_epicenter_wave20.SetFrame(0.5f,new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4));
-
+            
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave0);
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave1);
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave2);
@@ -883,16 +869,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave8);
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave9);
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave10);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave11);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave12);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave13);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave14);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave15);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave16);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave17);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave18);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave19);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave20);
 
             /* Shadow Feind 
             - Shadow Raze Y
@@ -1076,6 +1052,12 @@ namespace Aurora.Profiles.Dota_2.Layers
             abiltiyeffect_keyframe = 0.0f;
             return Dota2AbilityEffects.elder_titan_earth_splitter;
         }
+        private static Dota2AbilityEffects blackHoleProps(Ability ability)
+        {
+            abilityeffect_time = 4.0f;
+            abiltiyeffect_keyframe = 0.0f;
+            return Dota2AbilityEffects.enigma_black_hole;
+        }
         private static Dota2AbilityEffects torrentProps(Ability ability) {
             abilityeffect_time = 4.0f;
             abiltiyeffect_keyframe = 0.0f;
@@ -1220,6 +1202,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                                 {"earthshaker_fissure", fissureProps},
                                 {"earthshaker_echo_slam", echoSlamProps},
                                 {"elder_titan_earth_splitter", earthSplitterProps},
+                                {"enigma_black_hole", blackHoleProps},
                                 {"kunkka_torrent", torrentProps},
                                 {"kunkka_ghostship", ghostshipProps},
                                 {"legion_commander_overwhelming_odds", overwhelmingOddsProps},
