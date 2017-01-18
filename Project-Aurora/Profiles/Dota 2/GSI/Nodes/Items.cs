@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Aurora.Profiles.Dota_2.GSI.Nodes
@@ -6,8 +8,9 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
     /// <summary>
     /// Class representing item information
     /// </summary>
-    public class Items_Dota2 : Node<Items_Dota2>
+    public class Items_Dota2 : Node<Items_Dota2>, IEnumerable<Item>
     {
+        private List<Item> items = new List<Item>();
         private List<Item> inventory = new List<Item>();
         private List<Item> stash = new List<Item>();
 
@@ -48,6 +51,21 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
                     this.inventory.Add(new Item(_ParsedData[item_slot].ToString()));
                 else
                     this.stash.Add(new Item(_ParsedData[item_slot].ToString()));
+            }
+        }
+
+        /// <summary>
+        /// Gets the inventory item at a specified index
+        /// </summary>
+        /// <param name="index">The index</param>
+        /// <returns></returns>
+        public Item this[int index]
+        {
+            get
+            {
+                if (index > inventory.Count - 1)
+                    return new Item("");
+                return inventory[index];
             }
         }
 
@@ -143,6 +161,16 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
             }
 
             return -1;
+        }
+
+        public IEnumerator<Item> GetEnumerator()
+        {
+            return items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return items.GetEnumerator();
         }
     }
 }

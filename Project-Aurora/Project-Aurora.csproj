@@ -329,6 +329,10 @@
     <Compile Include="Profiles\Dota 2\Layers\Control_Dota2AbilityLayer.xaml.cs">
       <DependentUpon>Control_Dota2AbilityLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2ItemEffectsLayer.xaml.cs">
+      <DependentUpon>Control_Dota2ItemEffectsLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Dota 2\Layers\Dota2ItemEffectsLayerHandler.cs" />
     <Compile Include="Profiles\GTA5\Layers\Control_GTA5PoliceSirenLayer.xaml.cs">
       <DependentUpon>Control_GTA5PoliceSirenLayer.xaml</DependentUpon>
     </Compile>
@@ -935,6 +939,10 @@
     <Page Include="Profiles\Dota 2\Layers\Control_Dota2AbilityLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Dota 2\Layers\Control_Dota2ItemEffectsLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\GTA5\Layers\Control_GTA5PoliceSirenLayer.xaml">
       <Generator>MSBuild:Compile</Generator>

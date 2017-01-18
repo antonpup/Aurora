@@ -70,7 +70,7 @@ namespace Aurora.Settings.Layers
         [Description("Dota 2 Respawn Layer")]
         Dota2Respawn = 801,
 
-        [Description("Dota 2 Abilies Layer")]
+        [Description("Dota 2 Abilities Layer")]
         Dota2Abilities = 802,
 
         [Description("Dota 2 Items Layer")]
@@ -81,6 +81,9 @@ namespace Aurora.Settings.Layers
 
         [Description("Dota 2 Killstreak Layer")]
         Dota2Killstreak = 805,
+
+        [Description("Dota 2 Item Effects Layer")]
+        Dota2ItemEffects = 806,
 
         [Description("CSGO Background Layer")]
         CSGOBackground = 850,

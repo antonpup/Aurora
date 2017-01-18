@@ -65,7 +65,7 @@ namespace Aurora.Profiles.Dota_2
                 this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
                 this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
             }
-
+            
             this.cz.ColorZonesList = (profile_manager.Settings as Dota2Settings).lighting_areas;
         }
 
