@@ -133,7 +133,8 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
                 GameState_Wrapper ngw_state = (new_game_state as GameState_Wrapper);
 
-                bitmap = ngw_state.Sent_Bitmap;
+                if(ngw_state.Sent_Bitmap.Length != 0)
+                    bitmap = ngw_state.Sent_Bitmap;
 
                 SetExtraKey(Devices.DeviceKeys.LOGO, ngw_state.Extra_Keys.logo);
                 SetExtraKey(Devices.DeviceKeys.LOGO2, ngw_state.Extra_Keys.badge);
@@ -180,7 +181,6 @@ namespace Aurora.Profiles.Aurora_Wrapper
                     if (bitmap_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN)
                     {
                         bitmap[(int)bitmap_key / 4] = (int)(((int)ngw_state.Command_Data.red_start << 16) | ((int)ngw_state.Command_Data.green_start << 8) | ((int)ngw_state.Command_Data.blue_start));
-
                     }
                 }
                 else if (ngw_state.Command.Equals("FlashSingleKey"))

@@ -196,15 +196,23 @@ namespace Aurora
 
         private void HandleNewIPCGameState(string gs_data)
         {
+            //Global.logger.LogLine("Received gs!");
+            //Global.logger.LogLine(gs_data);
+
             GameState_Wrapper new_state = new GameState_Wrapper(gs_data); //GameState_Wrapper 
 
             wrapper_connected = true;
             wrapped_process = new_state.Provider.Name.ToLowerInvariant();
 
-            if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
-                CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
-            else
-                CurrentGameState = new_state;
+            var task = new System.Threading.Tasks.Task(() =>
+                {
+                    if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
+                        CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
+                    else
+                        CurrentGameState = new_state;
+                }
+            );
+            task.Start();
         }
 
         private void IPCServerThread()
@@ -243,8 +251,10 @@ namespace Aurora
                                 //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
 
                                 //Begin handling the game state outside this loop
-                                var task = new System.Threading.Tasks.Task(() => HandleNewIPCGameState(temp));
-                                task.Start();
+                                HandleNewIPCGameState(temp);
+
+                                //var task = new System.Threading.Tasks.Task(() => HandleNewIPCGameState(temp));
+                                //task.Start();
                             }
                         }
                     }
