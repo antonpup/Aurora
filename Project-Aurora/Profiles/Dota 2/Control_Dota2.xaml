@@ -45,18 +45,18 @@
             </TabItem>
             <TabItem Header="Preview">
                 <Grid>
-                    <Label Content="Team:" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="preview_team" HorizontalAlignment="Left" Margin="55,12,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="preview_team_SelectionChanged" SelectedIndex="0"/>
-                    <Label Content="Health:" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top"/>
-                    <Slider x:Name="preview_health_slider" HorizontalAlignment="Left" Margin="62,46,0,0" VerticalAlignment="Top" Width="114" Maximum="100" SmallChange="1" ValueChanged="preview_health_slider_ValueChanged"/>
-                    <Label x:Name="preview_health_amount" Content="0%" HorizontalAlignment="Left" Margin="181,42,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Mana:" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
-                    <Slider x:Name="preview_mana_slider" HorizontalAlignment="Left" Margin="62,77,0,0" VerticalAlignment="Top" Width="114" Maximum="100" SmallChange="1" ValueChanged="preview_mana_slider_ValueChanged"/>
-                    <Label x:Name="preview_mana_amount" Content="0%" HorizontalAlignment="Left" Margin="181,73,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="preview_killplayer" Content="Suicide" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top" Width="75" Click="preview_killplayer_Click"/>
-                    <Label x:Name="preview_respawn_time" Content="Seconds to respawn: 0" HorizontalAlignment="Left" Margin="90,101,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="preview_addkill" Content="Add Kill" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top" Width="75" Click="preview_addkill_Click"/>
-                    <Label x:Name="preview_killstreak_label" Content="Killstreak: 0" HorizontalAlignment="Left" Margin="90,132,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Team:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="preview_team" HorizontalAlignment="Left" Margin="55,13,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="preview_team_SelectionChanged" SelectedIndex="0"/>
+                    <Label Content="Health:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_health_slider" HorizontalAlignment="Left" Margin="62,45,0,0" VerticalAlignment="Top" Width="114" Maximum="100" SmallChange="1" ValueChanged="preview_health_slider_ValueChanged"/>
+                    <Label x:Name="preview_health_amount" Content="0%" HorizontalAlignment="Left" Margin="181,41,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Mana:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_mana_slider" HorizontalAlignment="Left" Margin="62,76,0,0" VerticalAlignment="Top" Width="114" Maximum="100" SmallChange="1" ValueChanged="preview_mana_slider_ValueChanged"/>
+                    <Label x:Name="preview_mana_amount" Content="0%" HorizontalAlignment="Left" Margin="181,72,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="preview_killplayer" Content="Suicide" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="75" Click="preview_killplayer_Click"/>
+                    <Label x:Name="preview_respawn_time" Content="Seconds to respawn: 0" HorizontalAlignment="Left" Margin="90,100,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="preview_addkill" Content="Add Kill" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" Width="75" Click="preview_addkill_Click"/>
+                    <Label x:Name="preview_killstreak_label" Content="Killstreak: 0" HorizontalAlignment="Left" Margin="90,131,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Color Zones">
