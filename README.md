@@ -1,10 +1,13 @@
 # Aurora - Unified Lighting Effects
 ![Aurora Logo](https://dl.dropboxusercontent.com/u/30675690/Aurora/aurora_logo_256x256.png)
 
-[Link to Aurora's webpage, includes some demos and changelogs](http://aurora.modworkshop.net/)
+[Link to Aurora's webpage, includes some demos and changelogs](http://project-aurora.com/)
+
+[![Latest Version](https://img.shields.io/github/release/antonpup/aurora.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Total Downloads](https://img.shields.io/github/downloads/antonpup/aurora/total.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Build status](https://ci.appveyor.com/api/projects/status/jh44k7r5ewelxiss?svg=true)](https://ci.appveyor.com/project/antonpup/aurora) ![Build status](https://img.shields.io/badge/language-C%23-178600.svg)
 
 
-Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, The Division, League of Legends, Hotline Miami, The Talos Principle, Battlefield 3, Blacklight: Retribution, Magic: The Gathering - Duels of the Planeswalkers 2012, Middle-earth: Shadow of Mordor, Serious Sam 3, Robot Roller-Derby Disco Dodgeball, XCOM: Enemy Unknown, Evolve Stage 2, Metro: Last Light, Guild Wars 2, Worms W.M.D, and Blade and Soul.
+
+Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games.
 
 #Requirements
 Recommended:
