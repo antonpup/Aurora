@@ -61,6 +61,11 @@ namespace Aurora.EffectsEngine.Animations
                 return null;
         }
 
+        public Dictionary<string, AnimationTrack> GetTracks()
+        {
+            return new Dictionary<string, AnimationTrack>(_tracks);
+        }
+
         public void Draw(Graphics g, float time)
         {
             Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);

@@ -8,7 +8,7 @@
              d:DesignHeight="414" d:DesignWidth="535">
     <Grid>
         <DockPanel LastChildFill="False">
-            <local:Control_AnimationMixPresenter DockPanel.Dock="Bottom" />
+            <local:Control_AnimationMixPresenter x:Name="animMixer" DockPanel.Dock="Bottom" MaxHeight="300" />
             <GroupBox x:Name="groupBox" Header="Properties Go Here" DockPanel.Dock="Right"/>
             <Canvas x:Name="cnvsAnimationView" DockPanel.Dock="Top"/>
         </DockPanel>

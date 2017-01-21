@@ -95,6 +95,11 @@ namespace Aurora.EffectsEngine.Animations
             return _animations[closest_lower].BlendWith(_animations[closest_higher], ((double)(time - closest_lower) / (double)(closest_higher - closest_lower)));
         }
 
+        public Dictionary<float, AnimationFrame> GetAnimations()
+        {
+            return new Dictionary<float, AnimationFrame>(_animations);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

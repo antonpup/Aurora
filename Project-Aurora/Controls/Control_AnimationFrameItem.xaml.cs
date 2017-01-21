@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Aurora.EffectsEngine.Animations;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +29,21 @@ namespace Aurora.Controls
         public event DragAdjust RightSplitterDrag;
 
         public event DragAdjust ContentSplitterDrag;
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public static readonly DependencyProperty ContextFrameProperty = DependencyProperty.Register("ContextFrame", typeof(AnimationFrame), typeof(Control_AnimationFrameItem));
+
+        public AnimationFrame ContextFrame
+        {
+            get
+            {
+                return (AnimationFrame)GetValue(ContextFrameProperty);
+            }
+            set
+            {
+                SetValue(ContextFrameProperty, value);
+            }
+        }
 
         public Control_AnimationFrameItem()
         {

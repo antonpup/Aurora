@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Aurora.EffectsEngine.Animations;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +22,23 @@ namespace Aurora.Controls
     /// </summary>
     public partial class Control_AnimationEditor : UserControl
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public static readonly DependencyProperty AnimationMixProperty = DependencyProperty.Register("AnimationMix", typeof(AnimationMix), typeof(Control_AnimationEditor));
+
+        public AnimationMix AnimationMix
+        {
+            get
+            {
+                return (AnimationMix)GetValue(AnimationMixProperty);
+            }
+            set
+            {
+                SetValue(AnimationMixProperty, value);
+
+                animMixer.ContextMix = value;
+            }
+        }
+
         public Control_AnimationEditor()
         {
             InitializeComponent();

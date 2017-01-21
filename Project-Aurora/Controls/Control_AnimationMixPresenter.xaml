@@ -9,11 +9,14 @@
     <Grid>
         <Button x:Name="btnAddTrack" Content="Add Track" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="10,0,0,0"/>
         <ScrollViewer Margin="0,27,0,0" HorizontalScrollBarVisibility="Visible">
-            <StackPanel>
-                <local:Control_AnimationTrackPresenter />
-                <Separator/>
-                <local:Control_AnimationTrackPresenter />
-            </StackPanel>
+            <Grid>
+                <local:Control_Ruler Margin="100,0,0,0" />
+                <StackPanel x:Name="stkPanelTracks" Margin="0,27,0,0">
+                    <local:Control_AnimationTrackPresenter />
+                    <Separator/>
+                    <local:Control_AnimationTrackPresenter />
+                </StackPanel>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,12 +21,30 @@ namespace Aurora.Controls
     /// </summary>
     public partial class Control_Ruler : UserControl
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public static readonly DependencyProperty MarkSizeProperty = DependencyProperty.Register("MarkSize", typeof(double), typeof(Control_Ruler));
+
+        public double MarkSize
+        {
+            get
+            {
+                return (double)GetValue(MarkSizeProperty);
+            }
+            set
+            {
+                SetValue(MarkSizeProperty, value);
+
+                GenerateRulerMarks(ActualWidth, true);
+            }
+        }
+
         private double _calculatedWidth = 0.0;
-        private double _sizeOfOneMark = 50.0;
 
         public Control_Ruler()
         {
             InitializeComponent();
+
+            SetValue(MarkSizeProperty, 50.0);
 
             GenerateRulerMarks(ActualWidth);
         }
@@ -35,35 +54,34 @@ namespace Aurora.Controls
             GenerateRulerMarks(e.NewSize.Width);
         }
 
-        private void GenerateRulerMarks(double width)
+        private void GenerateRulerMarks(double width, bool forceRedraw = false)
         {
             if (_calculatedWidth < width)
             {
-                int _existingMarks = (int)(_calculatedWidth / _sizeOfOneMark);
-                int _newSizeMarks = (int)(width / _sizeOfOneMark);
+                int _existingMarks = (int)(_calculatedWidth / MarkSize);
+                int _newSizeMarks = (int)(width / MarkSize);
 
-                //if (_newSizeMarks > _existingMarks)
-                //{
-                    for (int tickMark = _existingMarks; tickMark < _newSizeMarks; tickMark++)
-                    {
-                        //Don't render the 0th tick mark. It's redundant.
-                        if (tickMark > 0)
+                if (_newSizeMarks < _existingMarks || forceRedraw)
+                {
+                    gridRulerSpace.Children.Clear();
+                    _existingMarks = 0;
+                }
+
+                for (int tickMark = _existingMarks; tickMark <= _newSizeMarks; tickMark++)
+                {
+                    gridRulerSpace.Children.Add(
+                        new Rectangle()
                         {
-                            gridRulerSpace.Children.Add(
-                                new Rectangle()
-                                {
-                                    Margin = new Thickness(_sizeOfOneMark * (double)tickMark, 0, 0, 0),
-                                    HorizontalAlignment = HorizontalAlignment.Left,
-                                    VerticalAlignment = VerticalAlignment.Stretch,
-                                    Width = 1,
-                                    MaxWidth = 1,
-                                    MinWidth = 1,
-                                    Fill = new SolidColorBrush(Color.FromRgb(125, 125, 125))
-                                }
-                            );
+                            Margin = new Thickness(MarkSize * (double)tickMark, 0, 0, 0),
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            VerticalAlignment = VerticalAlignment.Stretch,
+                            Width = 1,
+                            MaxWidth = 1,
+                            MinWidth = 1,
+                            Fill = new SolidColorBrush(Color.FromRgb(125, 125, 125))
                         }
-                    }
-                //}
+                    );
+                }
 
                 _calculatedWidth = width;
 
