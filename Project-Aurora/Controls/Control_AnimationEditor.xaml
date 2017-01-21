@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Aurora.Controls.Control_AnimationEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="414" d:DesignWidth="535">
+    <Grid>
+        <DockPanel LastChildFill="False">
+            <local:Control_AnimationMixPresenter DockPanel.Dock="Bottom" />
+            <GroupBox x:Name="groupBox" Header="Properties Go Here" DockPanel.Dock="Right"/>
+            <Canvas x:Name="cnvsAnimationView" DockPanel.Dock="Top"/>
+        </DockPanel>
+
+    </Grid>
+</UserControl>

@@ -233,11 +233,26 @@
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_AnimationEditor.xaml.cs">
+      <DependentUpon>Control_AnimationEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_AnimationFrameItem.xaml.cs">
+      <DependentUpon>Control_AnimationFrameItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_AnimationMixPresenter.xaml.cs">
+      <DependentUpon>Control_AnimationMixPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_AnimationTrackPresenter.xaml.cs">
+      <DependentUpon>Control_AnimationTrackPresenter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_DeviceItem.xaml.cs">
       <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Control_DeviceManager.xaml.cs">
       <DependentUpon>Control_DeviceManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_Ruler.xaml.cs">
+      <DependentUpon>Control_Ruler.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Control_VariableRegistryItem.xaml.cs">
       <DependentUpon>Control_VariableRegistryItem.xaml</DependentUpon>
@@ -861,11 +876,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Control_AnimationEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_AnimationFrameItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_AnimationMixPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_AnimationTrackPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Control_DeviceItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_DeviceManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_Ruler.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
