@@ -39,14 +39,18 @@ namespace Aurora.Controls
             }
         }
 
-        private double ConvertToLocation(float time)
+        public delegate void AnimationTrackArgs(object sender, AnimationTrack track);
+
+        public event AnimationTrackArgs AnimationTrackUpdated;
+
+        private double ConvertToLocation(float time, float shift = 0.0f)
         {
-            return time * 50.0;
+            return (time + shift) * 50.0;
         }
 
-        private float ConvertToTime(double loc)
+        private float ConvertToTime(double loc, float shift = 0.0f)
         {
-            return (float)loc / 50.0f;
+            return (float)(loc / 50.0f) - shift;
         }
 
         public Control_AnimationTrackPresenter()
@@ -62,13 +66,19 @@ namespace Aurora.Controls
 
             foreach (var kvp in ContextTrack.GetAnimations())
             {
-                Control_AnimationFrameItem newFrame = new Control_AnimationFrameItem() { ContextFrame = kvp.Value, Margin = new Thickness(ConvertToLocation(kvp.Key), 0, 0, 0), HorizontalAlignment = HorizontalAlignment.Left, Width = 0 };
+                Control_AnimationFrameItem newFrame = new Control_AnimationFrameItem() { ContextFrame = kvp.Value, Margin = new Thickness(ConvertToLocation(kvp.Key, ContextTrack.GetShift()), 0, 0, 0), HorizontalAlignment = HorizontalAlignment.Left, Width = ConvertToLocation(kvp.Value.GetDuration()) };
                 newFrame.LeftSplitterDrag += Control_AnimationFrameItem_LeftSplitterDrag;
                 newFrame.RightSplitterDrag += Control_AnimationFrameItem_RightSplitterDrag;
                 newFrame.ContentSplitterDrag += Control_AnimationFrameItem_ContentSplitterDrag;
+                newFrame.CompletedDrag += Control_AnimationFrameItem_CompletedDrag;
 
                 gridTrackItems.Children.Add(newFrame);
             }
+        }
+
+        private void Control_AnimationFrameItem_CompletedDrag(object sender, double delta)
+        {
+            UpdateAnimationTrack();
         }
 
         private void Control_AnimationFrameItem_LeftSplitterDrag(object sender, double delta)
@@ -136,6 +146,25 @@ namespace Aurora.Controls
             return doesIntersect;
         }
 
+        private void UpdateAnimationTrack()
+        {
+            AnimationTrack newTrack = new AnimationTrack(ContextTrack.GetName(), 0.0f, ContextTrack.GetShift());
+
+            foreach (var child in gridTrackItems.Children)
+            {
+                if (child is Control_AnimationFrameItem)
+                {
+                    Control_AnimationFrameItem item = (child as Control_AnimationFrameItem);
+
+                    newTrack.SetFrame(ConvertToTime(item.Margin.Left, ContextTrack.GetShift()), item.ContextFrame.SetDuration(ConvertToTime(item.Width)));
+                }
+            }
+
+            ContextTrack = newTrack;
+
+            AnimationTrackUpdated?.Invoke(this, newTrack);
+        }
+
         private void gridTrackItems_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
@@ -144,7 +173,7 @@ namespace Aurora.Controls
 
                 Point mouseLoc = e.GetPosition(sender as Grid);
 
-                ContextTrack.SetFrame(ConvertToTime(mouseLoc.X), new AnimationFrame());
+                ContextTrack.SetFrame(ConvertToTime(mouseLoc.X, ContextTrack.GetShift()), new AnimationFrame());
 
                 UpdateControls();
             }

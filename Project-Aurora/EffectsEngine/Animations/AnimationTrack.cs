@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -69,7 +70,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationFrame GetFrame(float time)
         {
-            if(!ContainsAnimationAt(time))
+            if (!ContainsAnimationAt(time))
                 return new AnimationFrame();
 
             time = NormalizeTime(time);
@@ -77,7 +78,7 @@ namespace Aurora.EffectsEngine.Animations
             if (time > _animationDuration || _animations.Count == 0)
                 return new AnimationFrame();
 
-            float closest_lower = 0.0f;
+            float closest_lower = _animations.Keys.Min();
             float closest_higher = _animationDuration;
 
             foreach (KeyValuePair<float, AnimationFrame> kvp in _animations)
@@ -92,7 +93,13 @@ namespace Aurora.EffectsEngine.Animations
                     closest_lower = kvp.Key;
             }
 
-            return _animations[closest_lower].BlendWith(_animations[closest_higher], ((double)(time - closest_lower) / (double)(closest_higher - closest_lower)));
+            if (!_animations.ContainsKey(closest_lower))
+                return new AnimationFrame();
+
+            if (closest_lower + _animations[closest_lower]._duration > time)
+                return _animations[closest_lower];
+            else
+                return _animations[closest_lower].BlendWith(_animations[closest_higher], ((double)(time - closest_lower + _animations[closest_lower]._duration) / (double)(closest_higher - closest_lower + _animations[closest_lower]._duration)));
         }
 
         public Dictionary<float, AnimationFrame> GetAnimations()

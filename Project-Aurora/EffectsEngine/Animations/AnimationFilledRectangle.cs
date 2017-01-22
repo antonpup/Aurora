@@ -7,21 +7,23 @@ namespace Aurora.EffectsEngine.Animations
     {
         Rectangle _dimension_int;
 
-        public AnimationFilledRectangle(Rectangle dimension, Color color) : base(dimension, color)
+        public AnimationFilledRectangle(Rectangle dimension, Color color, float duration = 0.0f) : base(dimension, color, 1, duration)
         {
             _dimension_int = dimension;
         }
 
-        public AnimationFilledRectangle(PointF center, float rect_width, float rect_height, Color color)
+        public AnimationFilledRectangle(PointF center, float rect_width, float rect_height, Color color, float duration = 0.0f)
         {
             _dimension_int = new Rectangle((int)(center.X - rect_width * 0.5f), (int)(center.Y - rect_height * 0.5f), (int)rect_width, (int)rect_height);
             _color = color;
+            _duration = duration;
         }
 
-        public AnimationFilledRectangle(float x, float y, float rect_width, float rect_height, Color color)
+        public AnimationFilledRectangle(float x, float y, float rect_width, float rect_height, Color color, float duration = 0.0f)
         {
             _dimension_int = new Rectangle((int)(x - rect_width * 0.5f), (int)(y - rect_height * 0.5f), (int)rect_width, (int)rect_height);
             _color = color;
+            _duration = duration;
         }
 
         public override void Draw(Graphics g)
@@ -62,7 +64,8 @@ namespace Aurora.EffectsEngine.Animations
         {
             return _color.Equals(p._color) &&
                 _dimension_int.Equals(p._dimension_int) &&
-                _width.Equals(p._width);
+                _width.Equals(p._width) &&
+                _duration.Equals(p._duration);
         }
 
         public override int GetHashCode()
@@ -73,6 +76,7 @@ namespace Aurora.EffectsEngine.Animations
                 hash = hash * 23 + _color.GetHashCode();
                 hash = hash * 23 + _dimension_int.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
+                hash = hash * 23 + _duration.GetHashCode();
                 return hash;
             }
         }

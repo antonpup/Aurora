@@ -139,6 +139,8 @@ namespace Aurora
                     Devices.DeviceKeys.Peripheral_Logo
                 };
 
+        Bitmap _forcedFrame = null;
+
 
         private static object bitmap_lock = new object();
 
@@ -251,6 +253,11 @@ namespace Aurora
                 recordTimer.Stop();
         }
 
+        public void ForceImageRender(Bitmap forcedframe)
+        {
+            _forcedFrame = forcedframe;
+        }
+
         public void SetCanvasSize(int width, int height)
         {
             canvas_width = width == 0 ? 1 : width;
@@ -303,6 +310,16 @@ namespace Aurora
 
                 if (Global.Configuration.use_volume_as_brightness)
                     background *= Global.Configuration.global_brightness;
+
+                if (_forcedFrame != null)
+                {
+                    using (Graphics g = background.GetGraphics())
+                    {
+                        g.Clear(Color.Black);
+
+                        g.DrawImage(_forcedFrame, new Point(0, 0));
+                    }
+                }
 
                 Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>();
                 Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();

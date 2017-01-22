@@ -9,26 +9,42 @@ namespace Aurora.EffectsEngine.Animations
         internal int _width;
         internal Pen _pen = null;
         internal Brush _brush = null;
+        internal float _duration;
 
         public AnimationFrame()
         {
             _color = new Color();
             _dimension = new RectangleF();
             _width = 1;
+            _duration = 0.0f;
         }
 
-        public AnimationFrame(Rectangle dimension, Color color, int width = 1)
+        public AnimationFrame(Rectangle dimension, Color color, int width = 1, float duration = 0.0f)
         {
             _color = color;
             _dimension = dimension;
             _width = width;
+            _duration = duration;
         }
 
-        public AnimationFrame(RectangleF dimension, Color color, int width = 1)
+        public AnimationFrame(RectangleF dimension, Color color, int width = 1, float duration = 0.0f)
         {
             _color = color;
             _dimension = dimension;
             _width = width;
+            _duration = duration;
+        }
+
+        public AnimationFrame SetDuration(float duration)
+        {
+            _duration = duration;
+
+            return this;
+        }
+
+        public float GetDuration()
+        {
+            return _duration;
         }
 
         public virtual void Draw(Graphics g) { }
@@ -61,7 +77,8 @@ namespace Aurora.EffectsEngine.Animations
         {
             return _color.Equals(p._color) &&
                 _dimension.Equals(p._dimension) &&
-                _width.Equals(p._width);
+                _width.Equals(p._width) &&
+                _duration.Equals(p._duration);
         }
 
         public override int GetHashCode()
@@ -72,6 +89,7 @@ namespace Aurora.EffectsEngine.Animations
                 hash = hash * 23 + _color.GetHashCode();
                 hash = hash * 23 + _dimension.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
+                hash = hash * 23 + _duration.GetHashCode();
                 return hash;
             }
         }

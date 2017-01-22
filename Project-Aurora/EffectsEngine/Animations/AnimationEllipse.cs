@@ -6,26 +6,28 @@ namespace Aurora.EffectsEngine.Animations
     public class AnimationEllipse : AnimationFrame
     {
 
-        public AnimationEllipse(Rectangle dimension, Color color, int width = 1) : base(dimension, color, width)
+        public AnimationEllipse(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
         }
 
-        public AnimationEllipse(RectangleF dimension, Color color, int width = 1) : base(dimension, color, width)
+        public AnimationEllipse(RectangleF dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
         }
 
-        public AnimationEllipse(PointF center, float x_axis, float y_axis, Color color, int width = 1)
+        public AnimationEllipse(PointF center, float x_axis, float y_axis, Color color, int width = 1, float duration = 0.0f)
         {
             _dimension = new RectangleF(center.X - x_axis, center.Y - y_axis, 2.0f * x_axis, 2.0f * y_axis);
             _color = color;
             _width = width;
+            _duration = duration;
         }
 
-        public AnimationEllipse(float x, float y, float x_axis, float y_axis, Color color, int width = 1)
+        public AnimationEllipse(float x, float y, float x_axis, float y_axis, Color color, int width = 1, float duration = 0.0f)
         {
             _dimension = new RectangleF(x - x_axis, y - y_axis, 2.0f * x_axis, 2.0f * y_axis);
             _color = color;
             _width = width;
+            _duration = duration;
         }
 
         public override void Draw(Graphics g)
@@ -70,7 +72,8 @@ namespace Aurora.EffectsEngine.Animations
         {
             return _color.Equals(p._color) &&
                 _dimension.Equals(p._dimension) &&
-                _width.Equals(p._width);
+                _width.Equals(p._width) &&
+                _duration.Equals(p._duration);
         }
 
         public override int GetHashCode()
@@ -81,6 +84,7 @@ namespace Aurora.EffectsEngine.Animations
                 hash = hash * 23 + _color.GetHashCode();
                 hash = hash * 23 + _dimension.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
+                hash = hash * 23 + _duration.GetHashCode();
                 return hash;
             }
         }

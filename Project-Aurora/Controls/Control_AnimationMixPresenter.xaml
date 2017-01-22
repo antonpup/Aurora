@@ -16,7 +16,11 @@
                     <Separator/>
                     <local:Control_AnimationTrackPresenter />
                 </StackPanel>
+                <GridSplitter x:Name="grdsplitrScrubber" Background="Red" HorizontalAlignment="Left" Margin="100,0,0,0" Width="1" DragDelta="grdsplitrScrubber_DragDelta" BorderBrush="Red" Foreground="Red" OverridesDefaultStyle="True" Focusable="False" />
             </Grid>
         </ScrollViewer>
+        <Button x:Name="btnPlayStop" Content="Play/Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="90,0,0,0" Click="btnPlayStop_Click"/>
+        <TextBlock x:Name="txtblkCurrentTime" HorizontalAlignment="Left" Margin="170,2,0,0" TextWrapping="Wrap" Text="0.0 secs" VerticalAlignment="Top"/>
+        <CheckBox x:Name="chkbxDrawToDevices" Content="Display on Devices" HorizontalAlignment="Left" Margin="216,2,0,0" VerticalAlignment="Top" Checked="chkbxDrawToDevices_Checked" Unchecked="chkbxDrawToDevices_Checked"/>
     </Grid>
 </UserControl>

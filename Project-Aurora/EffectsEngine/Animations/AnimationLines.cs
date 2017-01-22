@@ -8,9 +8,10 @@ namespace Aurora.EffectsEngine.Animations
     {
         private List<AnimationLine> _lines;
 
-        public AnimationLines(AnimationLine[] lines)
+        public AnimationLines(AnimationLine[] lines, float duration = 0.0f)
         {
             _lines = new List<AnimationLine>(lines);
+            _duration = duration;
         }
 
         public override void Draw(Graphics g)
@@ -49,7 +50,8 @@ namespace Aurora.EffectsEngine.Animations
 
         public bool Equals(AnimationLines p)
         {
-            return _lines.Equals(p._lines);
+            return _lines.Equals(p._lines) &&
+                _duration.Equals(p._duration);
         }
 
         public override int GetHashCode()
@@ -58,6 +60,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 int hash = 17;
                 hash = hash * 23 + _lines.GetHashCode();
+                hash = hash * 23 + _duration.GetHashCode();
                 return hash;
             }
         }

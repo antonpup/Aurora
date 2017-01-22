@@ -11,7 +11,7 @@
             <TextBlock VerticalAlignment="Top" Text="TrackName" TextWrapping="Wrap" x:Name="txtblkTrackName" Margin="10,10,10,0"/>
         </Grid>
         <Grid x:Name="gridTrackItems"  IsHitTestVisible="True" >
-            <local:Control_AnimationFrameItem Width="15" HorizontalAlignment="Left"  LeftSplitterDrag="Control_AnimationFrameItem_LeftSplitterDrag" RightSplitterDrag="Control_AnimationFrameItem_RightSplitterDrag" ContentSplitterDrag="Control_AnimationFrameItem_ContentSplitterDrag" />
+            <local:Control_AnimationFrameItem Width="15" HorizontalAlignment="Left" LeftSplitterDrag="Control_AnimationFrameItem_LeftSplitterDrag" RightSplitterDrag="Control_AnimationFrameItem_RightSplitterDrag" ContentSplitterDrag="Control_AnimationFrameItem_ContentSplitterDrag" />
             <local:Control_AnimationFrameItem Width="67" HorizontalAlignment="Left" Margin="78,0,0,0" LeftSplitterDrag="Control_AnimationFrameItem_LeftSplitterDrag" RightSplitterDrag="Control_AnimationFrameItem_RightSplitterDrag" ContentSplitterDrag="Control_AnimationFrameItem_ContentSplitterDrag" />
         </Grid>
     </DockPanel>

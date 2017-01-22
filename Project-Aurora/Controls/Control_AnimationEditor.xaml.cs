@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,32 @@ namespace Aurora.Controls
         public Control_AnimationEditor()
         {
             InitializeComponent();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void animMixer_AnimationMixRendered(object sender)
+        {
+            try
+            {
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    (sender as Control_AnimationMixPresenter).RenderedBitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                    memory.Position = 0;
+                    BitmapImage bitmapimage = new BitmapImage();
+                    bitmapimage.BeginInit();
+                    bitmapimage.StreamSource = memory;
+                    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapimage.EndInit();
+
+                    keyboard_overlayPreview.Source = bitmapimage;
+                }
+            }
+            catch(Exception exc)
+            {
+            }
         }
     }
 }

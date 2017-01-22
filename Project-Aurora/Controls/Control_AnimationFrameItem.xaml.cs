@@ -30,6 +30,8 @@ namespace Aurora.Controls
 
         public event DragAdjust ContentSplitterDrag;
 
+        public event DragAdjust CompletedDrag;
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty ContextFrameProperty = DependencyProperty.Register("ContextFrame", typeof(AnimationFrame), typeof(Control_AnimationFrameItem));
 
@@ -63,6 +65,11 @@ namespace Aurora.Controls
         private void grdSplitterContent_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
             ContentSplitterDrag?.Invoke(this, e.HorizontalChange);
+        }
+
+        private void grdSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            CompletedDrag?.Invoke(this, 0.0);
         }
     }
 }

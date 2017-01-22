@@ -66,6 +66,21 @@ namespace Aurora.EffectsEngine.Animations
             return new Dictionary<string, AnimationTrack>(_tracks);
         }
 
+        public bool AnyActiveTracksAt(float time)
+        {
+            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
+
+            bool return_val = false;
+
+            foreach (KeyValuePair<string, AnimationTrack> track in _local)
+            {
+                if (track.Value.ContainsAnimationAt(time))
+                    return_val = true;
+            }
+
+            return return_val;
+        }
+
         public void Draw(Graphics g, float time)
         {
             Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);

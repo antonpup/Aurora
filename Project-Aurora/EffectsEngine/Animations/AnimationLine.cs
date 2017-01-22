@@ -10,58 +10,64 @@ namespace Aurora.EffectsEngine.Animations
         private PointF _end_point;
         private Color _end_color;
 
-        public AnimationLine(PointF start_point, PointF end_point, Color color, int width = 1)
+        public AnimationLine(PointF start_point, PointF end_point, Color color, int width = 1, float duration = 0.0f)
         {
             _start_point = start_point;
             _end_point = end_point;
             _color = color;
             _end_color = color;
             _width = width;
+            _duration = duration;
         }
 
-        public AnimationLine(Point start_point, Point end_point, Color color, int width = 1)
+        public AnimationLine(Point start_point, Point end_point, Color color, int width = 1, float duration = 0.0f)
         {
             _start_point = start_point;
             _end_point = end_point;
             _color = color;
             _end_color = color;
             _width = width;
+            _duration = duration;
         }
 
-        public AnimationLine(float start_x, float start_y, float end_x, float end_y, Color color, int width = 1)
+        public AnimationLine(float start_x, float start_y, float end_x, float end_y, Color color, int width = 1, float duration = 0.0f)
         {
             _start_point = new PointF(start_x, start_y);
             _end_point = new PointF(end_x, end_y); ;
             _color = color;
             _end_color = color;
             _width = width;
+            _duration = duration;
         }
 
-        public AnimationLine(PointF start_point, PointF end_point, Color start_color, Color end_color, int width = 1)
+        public AnimationLine(PointF start_point, PointF end_point, Color start_color, Color end_color, int width = 1, float duration = 0.0f)
         {
             _start_point = start_point;
             _end_point = end_point;
             _color = start_color;
             _end_color = end_color;
             _width = width;
+            _duration = duration;
         }
 
-        public AnimationLine(Point start_point, Point end_point, Color start_color, Color end_color, int width = 1)
+        public AnimationLine(Point start_point, Point end_point, Color start_color, Color end_color, int width = 1, float duration = 0.0f)
         {
             _start_point = start_point;
             _end_point = end_point;
             _color = start_color;
             _end_color = end_color;
             _width = width;
+            _duration = duration;
         }
 
-        public AnimationLine(float start_x, float start_y, float end_x, float end_y, Color start_color, Color end_color, int width = 1)
+        public AnimationLine(float start_x, float start_y, float end_x, float end_y, Color start_color, Color end_color, int width = 1, float duration = 0.0f)
         {
             _start_point = new PointF(start_x, start_y);
             _end_point = new PointF(end_x, end_y); ;
             _color = start_color;
             _end_color = end_color;
             _width = width;
+            _duration = duration;
         }
 
         public override void Draw(Graphics g)
@@ -127,6 +133,7 @@ namespace Aurora.EffectsEngine.Animations
                 hash = hash * 23 + _start_point.GetHashCode();
                 hash = hash * 23 + _end_point.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
+                hash = hash * 23 + _duration.GetHashCode();
                 return hash;
             }
         }
