@@ -5,18 +5,73 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationEllipse : AnimationFrame
     {
+        private float _radius_x = 0.0f;
+        private float _radius_y = 0.0f;
+        private PointF _center = new PointF();
+
+        public float RadiusHorizontal { get { return _radius_x; } }
+        public float RadiusVertical { get { return _radius_y; } }
+        public PointF Center { get { return _center; } }
+
+
+        public AnimationFrame SetRadiusHorizontal(float radius)
+        {
+            _radius_x = radius;
+            _dimension = new RectangleF(_center.X - _radius_x, _center.Y - _radius_y, 2.0f * _radius_x, 2.0f * _radius_y);
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationFrame SetRadiusVertical(float radius)
+        {
+            _radius_y = radius;
+            _dimension = new RectangleF(_center.X - _radius_x, _center.Y - _radius_y, 2.0f * _radius_x, 2.0f * _radius_y);
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationFrame SetCenter(PointF center)
+        {
+            _center = center;
+            _dimension = new RectangleF(_center.X - _radius_x, _center.Y - _radius_y, 2.0f * _radius_x, 2.0f * _radius_y);
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationEllipse()
+        {
+            _radius_x = 0;
+            _radius_y = 0;
+            _center = new PointF(0, 0);
+            _dimension = new RectangleF(_center.X - _radius_x, _center.Y - _radius_y, 2.0f * _radius_x, 2.0f * _radius_y);
+            _color = Utils.ColorUtils.GenerateRandomColor();
+            _width = 1;
+            _duration = 0.0f;
+        }
 
         public AnimationEllipse(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
+            _radius_x = dimension.Width / 2.0f;
+            _radius_y = dimension.Height / 2.0f;
+            _center = new PointF(dimension.X + _radius_x, dimension.Y + _radius_y);
         }
 
         public AnimationEllipse(RectangleF dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
+            _radius_x = dimension.Width / 2.0f;
+            _radius_y = dimension.Height / 2.0f;
+            _center = new PointF(dimension.X + _radius_x, dimension.Y + _radius_y);
         }
 
         public AnimationEllipse(PointF center, float x_axis, float y_axis, Color color, int width = 1, float duration = 0.0f)
         {
-            _dimension = new RectangleF(center.X - x_axis, center.Y - y_axis, 2.0f * x_axis, 2.0f * y_axis);
+            _radius_x = x_axis;
+            _radius_y = y_axis;
+            _center = new PointF(center.X + _radius_x, center.Y + _radius_y);
+            _dimension = new RectangleF(_center.X - _radius_x, _center.Y - _radius_y, 2.0f * _radius_x, 2.0f * _radius_y);
             _color = color;
             _width = width;
             _duration = duration;
@@ -24,22 +79,29 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationEllipse(float x, float y, float x_axis, float y_axis, Color color, int width = 1, float duration = 0.0f)
         {
-            _dimension = new RectangleF(x - x_axis, y - y_axis, 2.0f * x_axis, 2.0f * y_axis);
+            _radius_x = x_axis;
+            _radius_y = y_axis;
+            _center = new PointF(x + _radius_x, y + _radius_y);
+            _dimension = new RectangleF(_center.X - _radius_x, _center.Y - _radius_y, 2.0f * _radius_x, 2.0f * _radius_y);
             _color = color;
             _width = width;
             _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
-            if (_pen == null)
+            if (_pen == null || _invalidated)
             {
                 _pen = new Pen(_color);
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+                _invalidated = false;
             }
 
-            g.DrawEllipse(_pen, _dimension);
+            _pen.ScaleTransform(scale, scale);
+            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
+
+            g.DrawEllipse(_pen, _scaledDimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

@@ -10,6 +10,34 @@ namespace Aurora.EffectsEngine.Animations
         private PointF _end_point;
         private Color _end_color;
 
+        public PointF StartPoint { get { return _start_point; } }
+        public PointF EndPoint { get { return _end_point; } }
+        public Color EndColor { get { return _end_color; } }
+
+        public AnimationFrame SetStartPoint(PointF startPoint)
+        {
+            _start_point = startPoint;
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationFrame SetEndPoint(PointF endPoint)
+        {
+            _end_point = endPoint;
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationFrame SetEndColor(Color endColor)
+        {
+            _end_color = endColor;
+            _invalidated = true;
+
+            return this;
+        }
+
         public AnimationLine(PointF start_point, PointF end_point, Color color, int width = 1, float duration = 0.0f)
         {
             _start_point = start_point;
@@ -70,19 +98,25 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
             if (_start_point.Equals(_end_point))
                 return;
 
-            if (_pen == null)
+            if (_pen == null || _invalidated)
             {
                 _pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+
+                _invalidated = false;
             }
 
-            g.DrawLine(_pen, _start_point, _end_point);
+            _pen.ScaleTransform(scale, scale);
+            PointF _scaledStartPoint = new PointF(_start_point.X * scale, _start_point.Y * scale);
+            PointF _scaledEndPoint = new PointF(_end_point.X * scale, _end_point.Y * scale);
+
+            g.DrawLine(_pen, _scaledStartPoint, _scaledEndPoint);
 
         }
 

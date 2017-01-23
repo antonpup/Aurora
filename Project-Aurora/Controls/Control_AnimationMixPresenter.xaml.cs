@@ -43,11 +43,19 @@ namespace Aurora.Controls
                 {
                     Control_AnimationTrackPresenter newTrack = new Control_AnimationTrackPresenter() { ContextTrack = track.Value };
                     newTrack.AnimationTrackUpdated += NewTrack_AnimationTrackUpdated;
+                    newTrack.AnimationFrameItemSelected += NewTrack_AnimationFrameItemSelected;
 
                     stkPanelTracks.Children.Add(newTrack);
                     stkPanelTracks.Children.Add(new Separator());
                 }
             }
+        }
+
+        public event Control_AnimationFrameItem.AnimationFrameItemArgs AnimationFrameItemSelected;
+
+        private void NewTrack_AnimationFrameItemSelected(object sender, AnimationFrame track)
+        {
+            AnimationFrameItemSelected?.Invoke(sender, track);
         }
 
         private void NewTrack_AnimationTrackUpdated(object sender, AnimationTrack track)
@@ -66,7 +74,7 @@ namespace Aurora.Controls
 
             ContextMix = newTrackMix;
 
-            //AnimationTrackUpdated?.Invoke(this, newTrack);
+            UpdatePlaybackTime();
         }
 
         public delegate void AnimationMixRenderedDelegate(object sender);
@@ -74,6 +82,8 @@ namespace Aurora.Controls
         public event AnimationMixRenderedDelegate AnimationMixRendered;
 
         public Bitmap RenderedBitmap;
+
+        public float AnimationScale = 1.0f;
 
         private float _currentPlaybackTime = 0.0f;
 
@@ -100,7 +110,7 @@ namespace Aurora.Controls
                         _playbackTimer.Stop();
                     }
 
-                    grdsplitrScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100.0, 0, 0, 0);
+                    gridScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100.0, 0, 0, 0);
 
                     UpdatePlaybackTime();
                 });
@@ -116,17 +126,17 @@ namespace Aurora.Controls
 
         private void grdsplitrScrubber_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
-            double oldMargin = (sender as GridSplitter).Margin.Left;
+            double oldMargin = gridScrubber.Margin.Left;
             double newMargin = oldMargin + e.HorizontalChange;
 
             if (newMargin >= 100)
             {
-                (sender as GridSplitter).Margin = new Thickness(newMargin, 0, 0, 0);
+                gridScrubber.Margin = new Thickness(newMargin, 0, 0, 0);
                 _currentPlaybackTime = ConvertToTime(newMargin - 100);
             }
             else
             {
-                (sender as GridSplitter).Margin = new Thickness(100, 0, 0, 0);
+                gridScrubber.Margin = new Thickness(100, 0, 0, 0);
                 _currentPlaybackTime = ConvertToTime(0);
             }
 
@@ -140,12 +150,16 @@ namespace Aurora.Controls
 
             this.txtblkCurrentTime.Text = $"{seconds};{milliseconds}";
 
-            using (Graphics g = Graphics.FromImage(RenderedBitmap))
+            Bitmap newBitmap = new Bitmap((int)(Effects.canvas_width * AnimationScale), (int)(Effects.canvas_height * AnimationScale));
+
+            using (Graphics g = Graphics.FromImage(newBitmap))
             {
                 g.Clear(System.Drawing.Color.Black);
 
-                ContextMix.Draw(g, _currentPlaybackTime);
+                ContextMix.Draw(g, _currentPlaybackTime, AnimationScale);
             }
+
+            RenderedBitmap = newBitmap;
 
             if (chkbxDrawToDevices.IsChecked.Value)
                 Global.effengine.ForceImageRender(RenderedBitmap);

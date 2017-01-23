@@ -10,13 +10,16 @@
         <Button x:Name="btnAddTrack" Content="Add Track" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="10,0,0,0"/>
         <ScrollViewer Margin="0,27,0,0" HorizontalScrollBarVisibility="Visible">
             <Grid>
-                <local:Control_Ruler Margin="100,0,0,0" />
+                <local:Control_Ruler DisplayNumberCount="True" NumberCountSuffix="s" Margin="100,0,0,0" />
                 <StackPanel x:Name="stkPanelTracks" Margin="0,27,0,0">
                     <local:Control_AnimationTrackPresenter />
                     <Separator/>
                     <local:Control_AnimationTrackPresenter />
                 </StackPanel>
-                <GridSplitter x:Name="grdsplitrScrubber" Background="Red" HorizontalAlignment="Left" Margin="100,0,0,0" Width="1" DragDelta="grdsplitrScrubber_DragDelta" BorderBrush="Red" Foreground="Red" OverridesDefaultStyle="True" Focusable="False" />
+                <Grid x:Name="gridScrubber" HorizontalAlignment="Left" Margin="100,0,0,0" Width="1">
+                    <GridSplitter x:Name="grdsplitrScrubber" Background="Red" DragDelta="grdsplitrScrubber_DragDelta" BorderBrush="Red" Foreground="Red" OverridesDefaultStyle="True" Focusable="False" />
+                    <Image Source="/Aurora;component/Resources/AnimationEditor_ScrubberTop.png" Margin="-5,0" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                </Grid>
             </Grid>
         </ScrollViewer>
         <Button x:Name="btnPlayStop" Content="Play/Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="90,0,0,0" Click="btnPlayStop_Click"/>

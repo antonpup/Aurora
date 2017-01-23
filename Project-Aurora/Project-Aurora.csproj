@@ -254,6 +254,9 @@
     <Compile Include="Controls\Control_Ruler.xaml.cs">
       <DependentUpon>Control_Ruler.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_VariableIItem.xaml.cs">
+      <DependentUpon>Control_VariableIItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_VariableRegistryItem.xaml.cs">
       <DependentUpon>Control_VariableRegistryItem.xaml</DependentUpon>
     </Compile>
@@ -904,6 +907,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Control_VariableIItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Control_VariableRegistryItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1370,6 +1377,7 @@
     <Resource Include="Resources\Layers_Add.png" />
     <Resource Include="Resources\Layers_Remove.png" />
     <Resource Include="Resources\LayerConfig_icon.png" />
+    <Resource Include="Resources\AnimationEditor_ScrubberTop.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

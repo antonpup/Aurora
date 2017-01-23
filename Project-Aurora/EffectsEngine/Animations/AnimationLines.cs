@@ -14,10 +14,10 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
             foreach( AnimationLine line in _lines)
-                line.Draw(g);
+                line.Draw(g, scale);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

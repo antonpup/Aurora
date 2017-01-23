@@ -3,37 +3,35 @@ using System.Drawing;
 
 namespace Aurora.EffectsEngine.Animations
 {
-    public class AnimationFilledRectangle : AnimationFrame
+    public class AnimationFilledRectangle : AnimationRectangle
     {
-        Rectangle _dimension_int;
+        public AnimationFilledRectangle() : base()
+        {
+        }
 
         public AnimationFilledRectangle(Rectangle dimension, Color color, float duration = 0.0f) : base(dimension, color, 1, duration)
         {
-            _dimension_int = dimension;
         }
 
-        public AnimationFilledRectangle(PointF center, float rect_width, float rect_height, Color color, float duration = 0.0f)
+        public AnimationFilledRectangle(PointF center, float rect_width, float rect_height, Color color, float duration = 0.0f) : base(center, rect_width, rect_height, color, 1, duration)
         {
-            _dimension_int = new Rectangle((int)(center.X - rect_width * 0.5f), (int)(center.Y - rect_height * 0.5f), (int)rect_width, (int)rect_height);
-            _color = color;
-            _duration = duration;
         }
 
-        public AnimationFilledRectangle(float x, float y, float rect_width, float rect_height, Color color, float duration = 0.0f)
+        public AnimationFilledRectangle(float x, float y, float rect_width, float rect_height, Color color, float duration = 0.0f) : base(x, y, rect_width, rect_height, color, 1, duration)
         {
-            _dimension_int = new Rectangle((int)(x - rect_width * 0.5f), (int)(y - rect_height * 0.5f), (int)rect_width, (int)rect_height);
-            _color = color;
-            _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
-            if (_brush == null)
+            if (_brush == null || _invalidated)
             {
                 _brush = new SolidBrush(_color);
+                _invalidated = false;
             }
 
-            g.FillRectangle(_brush, _dimension_int);
+            Rectangle _scaledDimension = new Rectangle((int)(_dimension_int.X * scale), (int)(_dimension_int.Y * scale), (int)(_dimension_int.Width * scale), (int)(_dimension_int.Height * scale));
+
+            g.FillRectangle(_brush, _scaledDimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

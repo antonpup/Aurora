@@ -3,8 +3,12 @@ using System.Drawing;
 
 namespace Aurora.EffectsEngine.Animations
 {
-    public class AnimationFilledCircle : AnimationFrame
+    public class AnimationFilledCircle : AnimationCircle
     {
+
+        public AnimationFilledCircle() : base()
+        {
+        }
 
         public AnimationFilledCircle(Rectangle dimension, Color color, float duration = 0.0f) : base(dimension, color, 1, duration)
         {
@@ -14,30 +18,25 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public AnimationFilledCircle(PointF center, float radius, Color color, int width = 1, float duration = 0.0f)
+        public AnimationFilledCircle(PointF center, float radius, Color color, int width = 1, float duration = 0.0f) : base(center, radius, color, width, duration)
         {
-            _dimension = new RectangleF(center.X - radius, center.Y - radius, 2.0f * radius, 2.0f * radius);
-            _color = color;
-            _width = width;
-            _duration = duration;
         }
 
-        public AnimationFilledCircle(float x, float y, float radius, Color color, int width = 1, float duration = 0.0f)
+        public AnimationFilledCircle(float x, float y, float radius, Color color, int width = 1, float duration = 0.0f) : base(x, y, radius, color, width, duration)
         {
-            _dimension = new RectangleF(x - radius, y - radius, 2.0f * radius, 2.0f * radius);
-            _color = color;
-            _width = width;
-            _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
-            if (_brush == null)
+            if (_brush == null || _invalidated)
             {
                 _brush = new SolidBrush(_color);
+                _invalidated = false;
             }
 
-            g.FillEllipse(_brush, _dimension);
+            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
+
+            g.FillEllipse(_brush, _scaledDimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

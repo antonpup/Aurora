@@ -5,7 +5,25 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationRectangle : AnimationFrame
     {
-        Rectangle _dimension_int;
+        internal Rectangle _dimension_int;
+
+        public Rectangle Dimension_int { get { return _dimension_int; } }
+
+        public AnimationFrame SetDimensionInt(Rectangle dimension_int)
+        {
+            _dimension_int = dimension_int;
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationRectangle()
+        {
+            _dimension_int = new Rectangle((int)(0), (int)(0), (int)0, (int)0);
+            _color = Utils.ColorUtils.GenerateRandomColor();
+            _width = 1;
+            _duration = 0.0f;
+        }
 
         public AnimationRectangle(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
@@ -28,16 +46,21 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
-            if (_pen == null)
+            if (_pen == null || _invalidated)
             {
                 _pen = new Pen(_color);
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+
+                _invalidated = false;
             }
 
-            g.DrawRectangle(_pen, _dimension_int);
+            _pen.ScaleTransform(scale, scale);
+            Rectangle _scaledDimension = new Rectangle((int)(_dimension_int.X * scale), (int)(_dimension_int.Y * scale), (int)(_dimension_int.Width * scale), (int)(_dimension_int.Height * scale));
+
+            g.DrawRectangle(_pen, _scaledDimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

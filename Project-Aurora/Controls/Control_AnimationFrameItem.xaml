@@ -10,7 +10,7 @@
         <GridSplitter x:Name="grdSplitterLeft" HorizontalAlignment="Left" Width="5" DragDelta="grdSplitterLeft_DragDelta" DragCompleted="grdSplitter_DragCompleted" Margin="-5,0,0,0"/>
         <GridSplitter x:Name="grdSplitterRight" Width="5" DragDelta="grdSplitterRight_DragDelta" DragCompleted="grdSplitter_DragCompleted" Margin="0,0,-5,0"/>
         <GridSplitter x:Name="grdSplitterContent" DragDelta="grdSplitterContent_DragDelta" DragCompleted="grdSplitter_DragCompleted" HorizontalAlignment="Stretch" Background="{x:Null}" Cursor="SizeAll" Focusable="False" Foreground="{x:Null}"/>
-        <Rectangle Stroke="Black" IsHitTestVisible="False">
+        <Rectangle x:Name="rectDisplay" Stroke="Black" IsHitTestVisible="False">
             <Rectangle.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                     <GradientStop Color="#FF0017FF" Offset="0"/>
@@ -18,8 +18,5 @@
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <Canvas>
-            <TextBlock x:Name="txtblk_FrameType" HorizontalAlignment="Left"  Text="TextBlock" VerticalAlignment="Top" AutomationProperties.IsOffscreenBehavior="Onscreen" IsHitTestVisible="False" Canvas.Left="5" Canvas.Top="5"/>
-        </Canvas>
     </Grid>
 </UserControl>

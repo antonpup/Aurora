@@ -43,6 +43,10 @@ namespace Aurora.Controls
 
         public event AnimationTrackArgs AnimationTrackUpdated;
 
+        public event Control_AnimationFrameItem.AnimationFrameItemArgs AnimationFrameItemSelected;
+
+        private double _height = 100.0;
+
         private double ConvertToLocation(float time, float shift = 0.0f)
         {
             return (time + shift) * 50.0;
@@ -66,14 +70,28 @@ namespace Aurora.Controls
 
             foreach (var kvp in ContextTrack.GetAnimations())
             {
-                Control_AnimationFrameItem newFrame = new Control_AnimationFrameItem() { ContextFrame = kvp.Value, Margin = new Thickness(ConvertToLocation(kvp.Key, ContextTrack.GetShift()), 0, 0, 0), HorizontalAlignment = HorizontalAlignment.Left, Width = ConvertToLocation(kvp.Value.GetDuration()) };
+                Control_AnimationFrameItem newFrame = new Control_AnimationFrameItem() { ContextFrame = kvp.Value, Margin = new Thickness(ConvertToLocation(kvp.Key, ContextTrack.GetShift()), 0, 0, 0), HorizontalAlignment = HorizontalAlignment.Left, Width = ConvertToLocation(kvp.Value.Duration) };
                 newFrame.LeftSplitterDrag += Control_AnimationFrameItem_LeftSplitterDrag;
                 newFrame.RightSplitterDrag += Control_AnimationFrameItem_RightSplitterDrag;
                 newFrame.ContentSplitterDrag += Control_AnimationFrameItem_ContentSplitterDrag;
                 newFrame.CompletedDrag += Control_AnimationFrameItem_CompletedDrag;
+                newFrame.PreviewMouseDown += Control_AnimationFrameItem_PreviewMouseDown;
+                newFrame.AnimationFrameItemUpdated += Control_AnimationFrameItem_AnimationFrameItemUpdated;
 
                 gridTrackItems.Children.Add(newFrame);
             }
+        }
+
+        private void Control_AnimationFrameItem_AnimationFrameItemUpdated(object sender, AnimationFrame track)
+        {
+            UpdateAnimationTrack();
+            UpdateControls();
+        }
+
+        private void Control_AnimationFrameItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //Selected
+            AnimationFrameItemSelected?.Invoke(sender, (sender as Control_AnimationFrameItem).ContextFrame);
         }
 
         private void Control_AnimationFrameItem_CompletedDrag(object sender, double delta)
@@ -88,7 +106,7 @@ namespace Aurora.Controls
             double newMargin = oldMargin + delta;
             double newWidth = oldWidth - delta;
 
-            if (newWidth > 0 && !CheckControlOverlap(sender as Control_AnimationFrameItem, delta, -delta))
+            if (newWidth > 0 && newMargin > 0 && !CheckControlOverlap(sender as Control_AnimationFrameItem, delta, -delta))
             {
                 (sender as Control_AnimationFrameItem).Width = newWidth;
                 (sender as Control_AnimationFrameItem).Margin = new Thickness(newMargin, 0, 0, 0);
@@ -165,15 +183,26 @@ namespace Aurora.Controls
             AnimationTrackUpdated?.Invoke(this, newTrack);
         }
 
-        private void gridTrackItems_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Expander_Collapsed(object sender, RoutedEventArgs e)
+        {
+            _height = this.Height;
+            this.Height = 50;
+        }
+
+        private void Expander_Expanded(object sender, RoutedEventArgs e)
+        {
+            this.Height = _height;
+        }
+
+        private void gridTrackItems_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
             {
-                //Add new frame
-
                 Point mouseLoc = e.GetPosition(sender as Grid);
 
-                ContextTrack.SetFrame(ConvertToTime(mouseLoc.X, ContextTrack.GetShift()), new AnimationFrame());
+                float time = ConvertToTime(mouseLoc.X, ContextTrack.GetShift());
+
+                ContextTrack.SetFrame(time, ContextTrack.GetFrame(time));
 
                 UpdateControls();
             }

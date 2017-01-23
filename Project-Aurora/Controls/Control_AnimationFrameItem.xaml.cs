@@ -32,6 +32,10 @@ namespace Aurora.Controls
 
         public event DragAdjust CompletedDrag;
 
+        public delegate void AnimationFrameItemArgs(object sender, AnimationFrame track);
+
+        public event AnimationFrameItemArgs AnimationFrameItemUpdated;
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty ContextFrameProperty = DependencyProperty.Register("ContextFrame", typeof(AnimationFrame), typeof(Control_AnimationFrameItem));
 
@@ -44,6 +48,11 @@ namespace Aurora.Controls
             set
             {
                 SetValue(ContextFrameProperty, value);
+
+                if(value != null)
+                    rectDisplay.Fill = new LinearGradientBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color), Color.FromArgb(0, 0, 0, 0), new Point(0.5, 0), new Point(0.5, 1));
+
+                AnimationFrameItemUpdated?.Invoke(this, value);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Aurora.EffectsEngine.Animations
@@ -81,14 +82,24 @@ namespace Aurora.EffectsEngine.Animations
             return return_val;
         }
 
-        public void Draw(Graphics g, float time)
+        public void Draw(Graphics g, float time, float scale = 1.0f)
         {
             Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 
             foreach (KeyValuePair<string, AnimationTrack> track in _local)
             {
                 if (track.Value.ContainsAnimationAt(time))
-                    track.Value.GetFrame(time).Draw(g);
+                {
+                    try
+                    {
+                        track.Value.GetFrame(time).Draw(g, scale);
+                    }
+                    catch(Exception exc)
+                    {
+
+                    }
+
+                }
                 else
                 {
                     if (_automatically_remove_complete)

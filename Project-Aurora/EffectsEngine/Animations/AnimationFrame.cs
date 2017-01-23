@@ -7,9 +7,17 @@ namespace Aurora.EffectsEngine.Animations
         internal Color _color;
         internal RectangleF _dimension;
         internal int _width;
+        internal float _duration;
         internal Pen _pen = null;
         internal Brush _brush = null;
-        internal float _duration;
+        internal bool _invalidated = true;
+        internal bool _isIgnored = false;
+
+        public Color Color { get { return _color; } }
+        public RectangleF Dimension { get { return _dimension; } }
+        public int Width { get { return _width; } }
+        public float Duration { get { return _duration; } }
+        public bool IsIgnored { get { return _isIgnored; } }
 
         public AnimationFrame()
         {
@@ -35,6 +43,30 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
+        public AnimationFrame SetColor(Color color)
+        {
+            _color = color;
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationFrame SetDimension(RectangleF dimension)
+        {
+            _dimension = dimension;
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationFrame SetWidth(int width)
+        {
+            _width = width;
+            _invalidated = true;
+
+            return this;
+        }
+
         public AnimationFrame SetDuration(float duration)
         {
             _duration = duration;
@@ -42,12 +74,14 @@ namespace Aurora.EffectsEngine.Animations
             return this;
         }
 
-        public float GetDuration()
+        public AnimationFrame SetIgnore(bool state)
         {
-            return _duration;
+            _isIgnored = state;
+
+            return this;
         }
 
-        public virtual void Draw(Graphics g) { }
+        public virtual void Draw(Graphics g, float scale = 1.0f) { }
         public virtual AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
 

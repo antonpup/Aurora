@@ -38,6 +38,40 @@ namespace Aurora.Controls
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public static readonly DependencyProperty DisplayNumberCountProperty = DependencyProperty.Register("DisplayNumberCount", typeof(bool), typeof(Control_Ruler));
+
+        public bool DisplayNumberCount
+        {
+            get
+            {
+                return (bool)GetValue(DisplayNumberCountProperty);
+            }
+            set
+            {
+                SetValue(DisplayNumberCountProperty, value);
+
+                GenerateRulerMarks(ActualWidth, true);
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public static readonly DependencyProperty NumberCountSuffixProperty = DependencyProperty.Register("NumberCountSuffix", typeof(string), typeof(Control_Ruler));
+
+        public string NumberCountSuffix
+        {
+            get
+            {
+                return (string)GetValue(NumberCountSuffixProperty);
+            }
+            set
+            {
+                SetValue(NumberCountSuffixProperty, value);
+
+                GenerateRulerMarks(ActualWidth, true);
+            }
+        }
+
         private double _calculatedWidth = 0.0;
 
         public Control_Ruler()
@@ -81,6 +115,19 @@ namespace Aurora.Controls
                             Fill = new SolidColorBrush(Color.FromRgb(125, 125, 125))
                         }
                     );
+
+                    if (DisplayNumberCount && tickMark > 0)
+                    {
+                        gridRulerSpace.Children.Add(
+                        new TextBlock()
+                        {
+                            Margin = new Thickness((MarkSize * (double)tickMark) + 2, 0, 0, 0),
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            VerticalAlignment = VerticalAlignment.Top,
+                            Text = $"{tickMark} {NumberCountSuffix.TrimStart(' ')}"
+                        }
+                    );
+                    }
                 }
 
                 _calculatedWidth = width;

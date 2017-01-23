@@ -317,7 +317,7 @@ namespace Aurora
                     {
                         g.Clear(Color.Black);
 
-                        g.DrawImage(_forcedFrame, new Point(0, 0));
+                        g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
                     }
                 }
 

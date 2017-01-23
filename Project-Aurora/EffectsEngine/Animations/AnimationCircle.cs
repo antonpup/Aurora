@@ -5,18 +5,58 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationCircle : AnimationFrame
     {
+        internal float _radius = 0.0f;
+        internal PointF _center = new PointF();
+
+        public float Radius { get { return _radius; } }
+        public PointF Center { get { return _center; } }
+
+
+        public AnimationFrame SetRadius(float radius)
+        {
+            _radius = radius;
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationFrame SetCenter(PointF center)
+        {
+            _center = center;
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _invalidated = true;
+
+            return this;
+        }
+
+        public AnimationCircle()
+        {
+            _radius = 0;
+            _center = new PointF(0, 0);
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _color = Utils.ColorUtils.GenerateRandomColor();
+            _width = 1;
+            _duration = 0.0f;
+        }
 
         public AnimationCircle(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
+            _radius = dimension.Width / 2.0f;
+            _center = new PointF(dimension.X + _radius, dimension.Y + _radius);
         }
 
         public AnimationCircle(RectangleF dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
+            _radius = dimension.Width / 2.0f;
+            _center = new PointF(dimension.X + _radius, dimension.Y + _radius);
         }
 
         public AnimationCircle(PointF center, float radius, Color color, int width = 1, float duration = 0.0f)
         {
-            _dimension = new RectangleF(center.X - radius, center.Y - radius, 2.0f * radius, 2.0f * radius);
+            _radius = radius;
+            _center = center;
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
             _color = color;
             _width = width;
             _duration = duration;
@@ -24,22 +64,29 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationCircle(float x, float y, float radius, Color color, int width = 1, float duration = 0.0f)
         {
-            _dimension = new RectangleF(x - radius, y - radius, 2.0f * radius, 2.0f * radius);
+            _radius = radius;
+            _center = new PointF(x, y);
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
             _color = color;
             _width = width;
             _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
-            if(_pen == null)
+            if(_pen == null || _invalidated)
             {
                 _pen = new Pen(_color);
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+
+                _invalidated = false;
             }
 
-            g.DrawEllipse(_pen, _dimension);
+            _pen.ScaleTransform(scale, scale);
+            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
+
+            g.DrawEllipse(_pen, _scaledDimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
