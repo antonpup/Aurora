@@ -54,7 +54,7 @@
                     <TextBlock HorizontalAlignment="Left" Margin="20,103,0,0" TextWrapping="Wrap" Text="HSV Gamma Value:" VerticalAlignment="Top" ToolTip="Changes the factor for overall stronger colors. It cancels out the effect of the option above in the upper half of the brightness spectrum."/>
                     <Slider x:Name="ce_color_hsv_gamma" HorizontalAlignment="Left" Margin="126,103,0,0" VerticalAlignment="Top" Width="200" Minimum="1.0" Maximum="4.0" Value="1.5" ValueChanged="ce_color_hsv_gamma_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="0.05"/>
                     <TextBlock x:Name="ce_color_hsv_gamma_label" HorizontalAlignment="Left" Margin="335,103,0,0" TextWrapping="Wrap" Text="1.5" VerticalAlignment="Top"/>
-                    <TextBlock TextWrapping="Wrap" Text="HSV is an advanced algorithm to make to colors look brighter. It uses the following Formula to calculate" Margin="37,143,0,0" HorizontalAlignment="Left" Width="190" VerticalAlignment="Top"/>
+                    <TextBlock TextWrapping="Wrap" Text="HSV is an algorithm to brighten dark colors, while not affecting bright colors in an elegant way. To do this, it needs more calculations per color, therefore uses more CPU power. If you notice any delays, you should consider not using HSV." Margin="37,143,0,0" HorizontalAlignment="Left" Width="314" VerticalAlignment="Top" FontStyle="Italic"/>
                 </Grid>
             </TabItem>
         </TabControl>
