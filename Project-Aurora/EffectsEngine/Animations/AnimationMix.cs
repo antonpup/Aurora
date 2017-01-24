@@ -28,10 +28,13 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationMix AddTrack(AnimationTrack track)
         {
-            if (_tracks.ContainsKey(track.GetName()))
-                _tracks[track.GetName()] = track;
-            else
-                _tracks.Add(track.GetName(), track);
+            if(track != null)
+            {
+                if (_tracks.ContainsKey(track.GetName()))
+                    _tracks[track.GetName()] = track;
+                else
+                    _tracks.Add(track.GetName(), track);
+            }
 
             return this;
         }
@@ -96,7 +99,7 @@ namespace Aurora.EffectsEngine.Animations
                     }
                     catch(Exception exc)
                     {
-
+                        System.Console.WriteLine();
                     }
 
                 }
@@ -106,6 +109,13 @@ namespace Aurora.EffectsEngine.Animations
                         RemoveTrack(track.Key);
                 }
             }
+        }
+
+        public AnimationMix Clear()
+        {
+            _tracks.Clear();
+
+            return this;
         }
 
         public override bool Equals(object obj)

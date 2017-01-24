@@ -46,7 +46,7 @@ namespace Aurora.Controls
                     newTrack.AnimationFrameItemSelected += NewTrack_AnimationFrameItemSelected;
 
                     stkPanelTracks.Children.Add(newTrack);
-                    stkPanelTracks.Children.Add(new Separator());
+                    //stkPanelTracks.Children.Add(new Separator());
                 }
             }
         }
@@ -60,7 +60,10 @@ namespace Aurora.Controls
 
         private void NewTrack_AnimationTrackUpdated(object sender, AnimationTrack track)
         {
-            AnimationMix newTrackMix = new AnimationMix();
+            if(track == null)
+                stkPanelTracks.Children.Remove(sender as Control_AnimationTrackPresenter);
+
+            ContextMix.Clear();
 
             foreach (var child in stkPanelTracks.Children)
             {
@@ -68,11 +71,9 @@ namespace Aurora.Controls
                 {
                     Control_AnimationTrackPresenter item = (child as Control_AnimationTrackPresenter);
 
-                    newTrackMix.AddTrack(item.ContextTrack);
+                    ContextMix.AddTrack(item.ContextTrack);
                 }
             }
-
-            ContextMix = newTrackMix;
 
             UpdatePlaybackTime();
         }
@@ -181,6 +182,46 @@ namespace Aurora.Controls
         {
             if(!(sender as CheckBox).IsChecked.Value)
                 Global.effengine.ForceImageRender(null);
+        }
+
+        private void btnAddTrack_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).ContextMenu.IsEnabled = true;
+            (sender as Button).ContextMenu.PlacementTarget = (sender as Button);
+            (sender as Button).ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            (sender as Button).ContextMenu.IsOpen = true;
+        }
+
+        private void menuitemAddCircleTrack_Click(object sender, RoutedEventArgs e)
+        {
+            AnimationTrack newCircleTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            newCircleTrack.SetFrame(0.0f, new AnimationCircle());
+
+            ContextMix = ContextMix.AddTrack(newCircleTrack);
+        }
+
+        private void menuitemAddFilledCircleTrack_Click(object sender, RoutedEventArgs e)
+        {
+            AnimationTrack newFilledCircleTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            newFilledCircleTrack.SetFrame(0.0f, new AnimationFilledCircle());
+
+            ContextMix = ContextMix.AddTrack(newFilledCircleTrack);
+        }
+
+        private void menuitemAddRectangleTrack_Click(object sender, RoutedEventArgs e)
+        {
+            AnimationTrack newRectangleTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            newRectangleTrack.SetFrame(0.0f, new AnimationRectangle());
+
+            ContextMix = ContextMix.AddTrack(newRectangleTrack);
+        }
+
+        private void menuitemAddFilledRectangleTrack_Click(object sender, RoutedEventArgs e)
+        {
+            AnimationTrack newFilledRectangleTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            newFilledRectangleTrack.SetFrame(0.0f, new AnimationFilledRectangle());
+
+            ContextMix = ContextMix.AddTrack(newFilledRectangleTrack);
         }
     }
 }

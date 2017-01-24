@@ -5,12 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="295.862" MinHeight="50">
+             d:DesignHeight="100" d:DesignWidth="295.862" MinHeight="75" Margin="0,0,0,1">
     <DockPanel>
         <Grid HorizontalAlignment="Left" Width="100" Background="#FF5F5F5F">
             <TextBlock VerticalAlignment="Top" Text="TrackName" TextWrapping="Wrap" x:Name="txtblkTrackName" Margin="10,10,10,0"/>
-            <Expander Header="" HorizontalAlignment="Left" Margin="63,0,0,4" IsExpanded="True" Collapsed="Expander_Collapsed" Expanded="Expander_Expanded" Height="23" VerticalAlignment="Bottom" />
+            <GridSplitter x:Name="grdsplitHeightAdjust" HorizontalAlignment="Stretch" Height="2" VerticalAlignment="Bottom" HorizontalContentAlignment="Stretch" DragDelta="grdsplitHeightAdjust_DragDelta"/>
+            <Image x:Name="imgTrackType" HorizontalAlignment="Right" Height="25" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="25" />
+            <Button x:Name="btnRemoveTrack" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="25" Height="25" Click="btnRemoveTrack_Click">
+                <Image Source="/Aurora;component/Resources/RemoveProfile_Icon.png" />
+            </Button>
         </Grid>
+        <Separator DockPanel.Dock="Bottom" Height="1" VerticalAlignment="Bottom" />
         <Grid x:Name="gridTrackItems"  IsHitTestVisible="True" PreviewMouseLeftButtonDown="gridTrackItems_PreviewMouseLeftButtonDown" Background="#00000000" >
             <local:Control_AnimationFrameItem Width="15" HorizontalAlignment="Left" LeftSplitterDrag="Control_AnimationFrameItem_LeftSplitterDrag" RightSplitterDrag="Control_AnimationFrameItem_RightSplitterDrag" ContentSplitterDrag="Control_AnimationFrameItem_ContentSplitterDrag" />
             <local:Control_AnimationFrameItem Width="67" HorizontalAlignment="Left" Margin="78,0,0,0" LeftSplitterDrag="Control_AnimationFrameItem_LeftSplitterDrag" RightSplitterDrag="Control_AnimationFrameItem_RightSplitterDrag" ContentSplitterDrag="Control_AnimationFrameItem_ContentSplitterDrag" />

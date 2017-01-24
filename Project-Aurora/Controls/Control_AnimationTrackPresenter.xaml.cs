@@ -35,7 +35,10 @@ namespace Aurora.Controls
             {
                 SetValue(ContextTrackProperty, value);
 
-                UpdateControls();
+                if(value != null)
+                    UpdateControls();
+
+                AnimationTrackUpdated?.Invoke(this, ContextTrack);
             }
         }
 
@@ -66,6 +69,27 @@ namespace Aurora.Controls
         {
             txtblkTrackName.Text = ContextTrack.GetName();
 
+            if(ContextTrack.SupportedAnimationType == typeof(AnimationFilledCircle))
+            {
+                this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_CircleFilled.png", UriKind.Relative));
+                this.imgTrackType.ToolTip = "Filled Circle";
+            }
+            else if (ContextTrack.SupportedAnimationType == typeof(AnimationCircle))
+            {
+                this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_Circle.png", UriKind.Relative));
+                this.imgTrackType.ToolTip = "Circle";
+            }
+            else if (ContextTrack.SupportedAnimationType == typeof(AnimationFilledRectangle))
+            {
+                this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_RectangleFilled.png", UriKind.Relative));
+                this.imgTrackType.ToolTip = "Filled Rectangle";
+            }
+            else if (ContextTrack.SupportedAnimationType == typeof(AnimationRectangle))
+            {
+                this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_Rectangle.png", UriKind.Relative));
+                this.imgTrackType.ToolTip = "Rectangle";
+            }
+
             gridTrackItems.Children.Clear();
 
             foreach (var kvp in ContextTrack.GetAnimations())
@@ -82,10 +106,21 @@ namespace Aurora.Controls
             }
         }
 
-        private void Control_AnimationFrameItem_AnimationFrameItemUpdated(object sender, AnimationFrame track)
+        private void Control_AnimationFrameItem_AnimationFrameItemUpdated(object sender, AnimationFrame frame)
         {
-            UpdateAnimationTrack();
-            UpdateControls();
+            if(frame == null)
+            {
+                gridTrackItems.Children.Remove(sender as Control_AnimationFrameItem);
+
+                UpdateAnimationTrack();
+            }
+            else
+            {
+                AnimationTrackUpdated?.Invoke(this, ContextTrack);
+            }
+            
+            //UpdateAnimationTrack();
+            //UpdateControls();
         }
 
         private void Control_AnimationFrameItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -106,10 +141,14 @@ namespace Aurora.Controls
             double newMargin = oldMargin + delta;
             double newWidth = oldWidth - delta;
 
-            if (newWidth > 0 && newMargin > 0 && !CheckControlOverlap(sender as Control_AnimationFrameItem, delta, -delta))
+            if (newWidth >= 0 && newMargin >= 0 && !CheckControlOverlap(sender as Control_AnimationFrameItem, delta, -delta))
             {
                 (sender as Control_AnimationFrameItem).Width = newWidth;
                 (sender as Control_AnimationFrameItem).Margin = new Thickness(newMargin, 0, 0, 0);
+
+                (sender as Control_AnimationFrameItem).ContextFrame.SetDuration(ConvertToTime(newWidth));
+                ContextTrack.RemoveFrame(ConvertToTime(oldMargin, ContextTrack.GetShift()));
+                ContextTrack.SetFrame(ConvertToTime(newMargin, ContextTrack.GetShift()), (sender as Control_AnimationFrameItem).ContextFrame);
             }
         }
 
@@ -118,9 +157,15 @@ namespace Aurora.Controls
             double oldWidth = (sender as Control_AnimationFrameItem).Width;
             double newWidth = oldWidth + delta;
 
-            if(newWidth > 0 && !CheckControlOverlap(sender as Control_AnimationFrameItem, 0, delta))
+            if(newWidth >= 0 && !CheckControlOverlap(sender as Control_AnimationFrameItem, 0, delta))
             {
                 (sender as Control_AnimationFrameItem).Width = newWidth;
+
+                float time = ConvertToTime(((sender as Control_AnimationFrameItem).Margin.Left), ContextTrack.GetShift());
+
+                (sender as Control_AnimationFrameItem).ContextFrame.SetDuration(ConvertToTime(newWidth));
+                ContextTrack.RemoveFrame(ConvertToTime(time, ContextTrack.GetShift()));
+                ContextTrack.SetFrame(ConvertToTime(time, ContextTrack.GetShift()), (sender as Control_AnimationFrameItem).ContextFrame);
             }
         }
 
@@ -129,9 +174,13 @@ namespace Aurora.Controls
             double oldMargin = (sender as Control_AnimationFrameItem).Margin.Left;
             double newMargin = oldMargin + delta;
 
-            if (newMargin > 0 && !CheckControlOverlap(sender as Control_AnimationFrameItem, delta))
+            if (newMargin >= 0 && !CheckControlOverlap(sender as Control_AnimationFrameItem, delta))
             {
                 (sender as Control_AnimationFrameItem).Margin = new Thickness(newMargin, 0, 0, 0);
+
+                (sender as Control_AnimationFrameItem).ContextFrame.SetDuration(ConvertToTime((sender as Control_AnimationFrameItem).Width));
+                ContextTrack.RemoveFrame(ConvertToTime(oldMargin, ContextTrack.GetShift()));
+                ContextTrack.SetFrame(ConvertToTime(newMargin, ContextTrack.GetShift()), (sender as Control_AnimationFrameItem).ContextFrame);
             }
         }
 
@@ -166,7 +215,7 @@ namespace Aurora.Controls
 
         private void UpdateAnimationTrack()
         {
-            AnimationTrack newTrack = new AnimationTrack(ContextTrack.GetName(), 0.0f, ContextTrack.GetShift());
+            ContextTrack.Clear();
 
             foreach (var child in gridTrackItems.Children)
             {
@@ -174,13 +223,12 @@ namespace Aurora.Controls
                 {
                     Control_AnimationFrameItem item = (child as Control_AnimationFrameItem);
 
-                    newTrack.SetFrame(ConvertToTime(item.Margin.Left, ContextTrack.GetShift()), item.ContextFrame.SetDuration(ConvertToTime(item.Width)));
+                    if (item.ContextFrame != null)
+                        ContextTrack.SetFrame(ConvertToTime(item.Margin.Left, ContextTrack.GetShift()), item.ContextFrame);
                 }
             }
 
-            ContextTrack = newTrack;
-
-            AnimationTrackUpdated?.Invoke(this, newTrack);
+            AnimationTrackUpdated?.Invoke(this, ContextTrack);
         }
 
         private void Expander_Collapsed(object sender, RoutedEventArgs e)
@@ -206,6 +254,20 @@ namespace Aurora.Controls
 
                 UpdateControls();
             }
+        }
+
+        private void grdsplitHeightAdjust_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            double oldHeight = this.ActualHeight;
+            double newHeight = oldHeight + e.VerticalChange;
+
+            if (newHeight >= 75.0)
+                this.Height = newHeight;
+        }
+
+        private void btnRemoveTrack_Click(object sender, RoutedEventArgs e)
+        {
+            ContextTrack = null;
         }
     }
 }

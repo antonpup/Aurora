@@ -127,14 +127,19 @@ namespace Aurora.Controls
                 varItemDimensionRadius.VariableUpdated += VarItemDimensionRadius_VariableUpdated;
 
                 newPanel.Children.Add(varItemColor);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemWidth);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemCenterX);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemCenterY);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemDimensionRadius);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
             }
             else if (track is AnimationRectangle)
             {
-                AnimationCircle _frameTrack = (track as AnimationCircle);
+                AnimationRectangle _frameTrack = (track as AnimationRectangle);
 
                 Control_VariableItem varItemColor = new Control_VariableItem()
                 {
@@ -175,11 +180,17 @@ namespace Aurora.Controls
 
 
                 newPanel.Children.Add(varItemColor);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemWidth);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemPositionX);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemPositionY);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemDimensionWidth);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
                 newPanel.Children.Add(varItemDimensionHeight);
+                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
             }
 
             Button btnRemoveFrame = new Button()
@@ -191,6 +202,7 @@ namespace Aurora.Controls
 
             btnRemoveFrame.Click += BtnRemoveFrame_Click;
 
+            newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
             newPanel.Children.Add(btnRemoveFrame);
 
             grpbxProperties.Content = newPanel;
@@ -199,7 +211,7 @@ namespace Aurora.Controls
         private void BtnRemoveFrame_Click(object sender, RoutedEventArgs e)
         {
             if (_selectedFrameItem != null)
-                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationCircle).SetIgnore(true);
+                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = null;
 
             grpbxProperties.Content = null;
         }
@@ -225,25 +237,70 @@ namespace Aurora.Controls
         private void VarItemDimensionHeight_VariableUpdated(object sender, object newVariable)
         {
             if (_selectedFrameItem != null)
-                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.X, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Y, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Width, (float)newVariable));
+            {
+                if ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType() == typeof(AnimationRectangle))
+                {
+                    AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
+
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, frame.Dimension_int.Y, frame.Dimension_int.Width, (int)(float)newVariable));
+                }
+                else
+                {
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.X, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Y, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Width, (float)newVariable));
+                }
+            }
         }
 
         private void VarItemDimensionWidth_VariableUpdated(object sender, object newVariable)
         {
             if (_selectedFrameItem != null)
-                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.X, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Y, (float)newVariable, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Height));
+            {
+                if ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType() == typeof(AnimationRectangle))
+                {
+                    AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
+
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, frame.Dimension_int.Y, (int)(float)newVariable, frame.Dimension_int.Height));
+                }
+                else
+                {
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.X, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Y, (float)newVariable, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Height));
+
+                }
+            }
         }
 
         private void VarItemPositionY_VariableUpdated(object sender, object newVariable)
         {
             if (_selectedFrameItem != null)
-                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.X, (float)newVariable, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Width, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Height));
+            {
+                if ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType() == typeof(AnimationRectangle))
+                {
+                    AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
+
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, (int)(float)newVariable, frame.Dimension_int.Width, frame.Dimension_int.Height));
+                }
+                else
+                {
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.X, (float)newVariable, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Width, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Height));
+                }
+            }
         }
 
         private void VarItemPositionX_VariableUpdated(object sender, object newVariable)
         {
             if (_selectedFrameItem != null)
-                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((float)newVariable, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Y, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Width, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Height));
+            {
+                if ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType() == typeof(AnimationRectangle))
+                {
+                    AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
+
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle((int)(float)newVariable, frame.Dimension_int.Y, frame.Dimension_int.Width, frame.Dimension_int.Height));
+                }
+                else
+                {
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((float)newVariable, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Y, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Width, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Height));
+                }
+            }
         }
 
         private void VarItemWidth_VariableUpdated(object sender, object newVariable)
@@ -254,7 +311,7 @@ namespace Aurora.Controls
 
         private void VarItemColor_VariableUpdated(object sender, object newVariable)
         {
-            if(_selectedFrameItem != null)
+            if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetColor((System.Drawing.Color)newVariable);
         }
     }

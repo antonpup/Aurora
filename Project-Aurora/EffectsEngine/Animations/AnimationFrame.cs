@@ -11,13 +11,11 @@ namespace Aurora.EffectsEngine.Animations
         internal Pen _pen = null;
         internal Brush _brush = null;
         internal bool _invalidated = true;
-        internal bool _isIgnored = false;
 
         public Color Color { get { return _color; } }
         public RectangleF Dimension { get { return _dimension; } }
         public int Width { get { return _width; } }
         public float Duration { get { return _duration; } }
-        public bool IsIgnored { get { return _isIgnored; } }
 
         public AnimationFrame()
         {
@@ -71,12 +69,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             _duration = duration;
 
-            return this;
-        }
-
-        public AnimationFrame SetIgnore(bool state)
-        {
-            _isIgnored = state;
+            Global.logger.LogLine($"_duration={_duration}");
 
             return this;
         }

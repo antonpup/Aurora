@@ -68,13 +68,59 @@ namespace Aurora.EffectsEngine.Animations
             if (_animations.Count == 0)
                 _supported_animation_type = animframe.GetType();
 
-            if (_supported_animation_type == animframe.GetType() && !animframe.IsIgnored)
+            if (_supported_animation_type == animframe.GetType())
             {
-                if (time > _animationDuration)
-                    _animationDuration = time + animframe._duration;
+                if(_animations.Count > 0)
+                {
+                    Tuple<float, float> closeValues = GetCloseValues(time);
+
+                    if (closeValues.Item1 + _animations[closeValues.Item1]._duration > time && time > closeValues.Item1)
+                        _animations[closeValues.Item1].SetDuration(time - closeValues.Item1);
+                }
 
                 _animations[time] = animframe;
             }
+
+            UpdateDuration();
+
+            return this;
+        }
+
+        public AnimationTrack RemoveFrame(float time)
+        {
+            foreach (KeyValuePair<float, AnimationFrame> kvp in _animations)
+            {
+                if (kvp.Key == time)
+                {
+                    _animations.Remove(kvp.Key);
+                    break;
+                }
+            }
+
+            UpdateDuration();
+            return this;
+        }
+
+        public AnimationTrack RemoveFrame(AnimationFrame frame)
+        {
+            foreach (KeyValuePair<float, AnimationFrame> kvp in _animations)
+            {
+                if (kvp.Value.Equals(frame))
+                {
+                    _animations.Remove(kvp.Key);
+                    break;
+                }
+            }
+
+            UpdateDuration();
+            return this;
+        }
+
+        public AnimationTrack Clear()
+        {
+            _animations.Clear();
+
+            UpdateDuration();
             return this;
         }
 
@@ -88,13 +134,42 @@ namespace Aurora.EffectsEngine.Animations
             if (time > _animationDuration || _animations.Count == 0)
                 return (AnimationFrame)Activator.CreateInstance(SupportedAnimationType);
 
+            Tuple<float, float> closeValues = GetCloseValues(time);
+
+            if (!_animations.ContainsKey(closeValues.Item1) || closeValues.Item1 > time)
+                return (AnimationFrame)Activator.CreateInstance(SupportedAnimationType);
+
+            //The time value is exact
+            if (closeValues.Item1 == closeValues.Item2)
+                return _animations[time];
+            else
+            {
+                if (closeValues.Item1 + _animations[closeValues.Item1]._duration > time)
+                    return _animations[closeValues.Item1].BlendWith(_animations[closeValues.Item1], 0.0f);
+                else
+                {
+                    if (_animations.ContainsKey(closeValues.Item1) && _animations.ContainsKey(closeValues.Item2))
+                        return _animations[closeValues.Item1].BlendWith(_animations[closeValues.Item2], ((double)(time - (closeValues.Item1 + _animations[closeValues.Item1]._duration)) / (double)(closeValues.Item2 - (closeValues.Item1 + _animations[closeValues.Item1]._duration))));
+                    else
+                        return (AnimationFrame)Activator.CreateInstance(SupportedAnimationType);
+                }
+            }
+        }
+
+        public Dictionary<float, AnimationFrame> GetAnimations()
+        {
+            return new Dictionary<float, AnimationFrame>(_animations);
+        }
+
+        private Tuple<float, float> GetCloseValues(float time)
+        {
             float closest_lower = _animations.Keys.Min();
             float closest_higher = _animationDuration;
 
             foreach (KeyValuePair<float, AnimationFrame> kvp in _animations)
             {
                 if (kvp.Key == time)
-                    return kvp.Value;
+                    return new Tuple<float, float>(time, time);
 
                 if (kvp.Key > time && kvp.Key < closest_higher)
                     closest_higher = kvp.Key;
@@ -103,18 +178,18 @@ namespace Aurora.EffectsEngine.Animations
                     closest_lower = kvp.Key;
             }
 
-            if (!_animations.ContainsKey(closest_lower) || closest_lower > time)
-                return new AnimationFrame();
-
-            if (closest_lower + _animations[closest_lower]._duration > time)
-                return _animations[closest_lower].BlendWith(_animations[closest_lower], 0.0f);
-            else
-                return _animations[closest_lower].BlendWith(_animations[closest_higher], ((double)(time - (closest_lower + _animations[closest_lower]._duration)) / (double)(closest_higher - (closest_lower + _animations[closest_lower]._duration))));
+            return new Tuple<float, float>(closest_lower, closest_higher);
         }
 
-        public Dictionary<float, AnimationFrame> GetAnimations()
+        private void UpdateDuration()
         {
-            return new Dictionary<float, AnimationFrame>(_animations);
+            if(_animations.Count > 0)
+            {
+                float max = _animations.Keys.Max();
+                _animationDuration = max + _animations[max].Duration;
+            }
+            else
+                _animationDuration = 0;
         }
 
         public override bool Equals(object obj)
