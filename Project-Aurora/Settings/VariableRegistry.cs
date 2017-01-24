@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Aurora.Utils;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,45 +11,48 @@ namespace Aurora.Settings
 {
     public class VariableRegistryItem
     {
-        public object variable = null;
-        public object variable_default = null;
-        public object variable_max = null;
-        public object variable_min = null;
-        public string variable_title = "";
-        public string variable_remark = "";
+        public object Value = null;
+        private object @default = null;
+        public object Default { get { return @default?.TryClone(); } set { @default = value?.TryClone(); } }
+        public object Max = null;
+        public object Min = null;
+        public string Title = "";
+        public string Remark = "";
 
         public VariableRegistryItem()
         {
         }
 
-        public VariableRegistryItem(object variable, object variable_max = null, object variable_min = null, string variable_title = "", string variable_remark = "")
+        public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "")
         {
-            this.variable = variable;
-            this.variable_default = variable;
+            this.Value = defaultValue;
+            this.Default = defaultValue;
 
-            if (this.variable != null && variable_max != null && this.variable.GetType() == variable_max.GetType())
-                this.variable_max = variable_max;
+            if (this.Value != null && max != null && this.Value.GetType() == max.GetType())
+                this.Max = max;
 
-            if (this.variable != null && variable_min != null && this.variable.GetType() == variable_min.GetType())
-                this.variable_min = variable_min;
+            if (this.Value != null && min != null && this.Value.GetType() == min.GetType())
+                this.Min = min;
 
-            this.variable_title = variable_title;
-            this.variable_remark = variable_remark;
+            this.Title = title;
+            this.Remark = remark;
         }
 
         public void SetVariable(object newvalue)
         {
-            if (this.variable != null && newvalue != null && this.variable.GetType() == newvalue.GetType())
+            if (this.Value != null && newvalue != null && this.Value.GetType() == newvalue.GetType())
             {
-                this.variable = newvalue;
+                this.Value = newvalue;
             }
         }
     }
 
-    public class VariableRegistry
+    public class VariableRegistry //Might want to implement something like IEnumerable here
     {
         [JsonProperty("Variables")]
         private Dictionary<string, VariableRegistryItem> _variables;
+
+        public int Count { get { return _variables.Count; } }
 
         public VariableRegistry()
         {
@@ -65,10 +70,10 @@ namespace Aurora.Settings
             return _variables.Keys.ToArray();
         }
 
-        public void Register(string name, object default_variable, string title = "", object max_variable = null, object min_variable = null, string remark = "")
+        public void Register(string name, object defaultValue, string title = "", object max = null, object min = null, string remark = "")
         {
             if (!_variables.ContainsKey(name))
-                _variables.Add(name, new VariableRegistryItem(default_variable, max_variable, min_variable, title, remark));
+                _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark));
         }
 
         public void Register(string name, VariableRegistryItem varItem)
@@ -91,30 +96,32 @@ namespace Aurora.Settings
         public void ResetVariable(string name)
         {
             if (_variables.ContainsKey(name))
-                _variables[name].variable = _variables[name].variable_default;
+            {
+                _variables[name].Value = _variables[name].Default;
+            }
         }
 
         public T GetVariable<T>(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].variable != null && _variables[name].variable.GetType() == typeof(T))
-                return (T)_variables[name].variable;
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && _variables[name].Value.GetType() == typeof(T))
+                return (T)_variables[name].Value;
 
             return Activator.CreateInstance<T>();
         }
 
         public T GetVariableDefault<T>(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].variable_default != null && _variables[name].variable_default.GetType() == typeof(T))
-                return (T)_variables[name].variable_default;
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && _variables[name].Default.GetType() == typeof(T))
+                return (T)_variables[name].Default;
 
             return Activator.CreateInstance<T>();
         }
 
         public bool GetVariableMax<T>(string name, out T value)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].variable_max != null && _variables[name].variable_max.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && _variables[name].Max.GetType() == typeof(T))
             {
-                value = (T)_variables[name].variable_max;
+                value = (T)_variables[name].Max;
                 return true;
             }
 
@@ -124,9 +131,9 @@ namespace Aurora.Settings
 
         public bool GetVariableMin<T>(string name, out T value)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].variable_min != null && _variables[name].variable_min.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && _variables[name].Min.GetType() == typeof(T))
             {
-                value = (T)_variables[name].variable_min;
+                value = (T)_variables[name].Min;
                 return true;
             }
 
@@ -136,8 +143,8 @@ namespace Aurora.Settings
 
         public Type GetVariableType(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].variable != null)
-                return _variables[name].variable.GetType();
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null)
+                return _variables[name].Value.GetType();
 
             return typeof(object);
         }
@@ -145,7 +152,7 @@ namespace Aurora.Settings
         public string GetTitle(string name)
         {
             if (_variables.ContainsKey(name))
-                return _variables[name].variable_title;
+                return _variables[name].Title;
 
             return "";
         }
@@ -153,7 +160,7 @@ namespace Aurora.Settings
         public string GetRemark(string name)
         {
             if (_variables.ContainsKey(name))
-                return _variables[name].variable_remark;
+                return _variables[name].Remark;
 
             return "";
         }

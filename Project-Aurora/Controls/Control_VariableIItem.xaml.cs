@@ -193,9 +193,24 @@ namespace Aurora.Controls
 
                     grd_control.Children.Add(colorPickerMedia_control);
                 }
+                else if (var_type == typeof(Aurora.Settings.KeySequence))
+                {
+                    Aurora.Controls.KeySequence ctrl = new Aurora.Controls.KeySequence();
+                    ctrl.Sequence =(Aurora.Settings.KeySequence)VariableObject;
+                    ctrl.SequenceUpdated += keySequenceControlValueChanged;
+
+                    grd_control.Children.Add(ctrl);
+                }
             }
 
             grd_control.UpdateLayout();
+        }
+
+        private void keySequenceControlValueChanged(object sender, EventArgs e)
+        {
+            SetValue(VariableObjectProperty, ((Aurora.Controls.KeySequence)sender).Sequence);
+
+            VariableUpdated?.Invoke(this, VariableObject);
         }
 
         private void ColorPickerMedia_control_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

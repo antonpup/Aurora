@@ -10,8 +10,8 @@
         <DockPanel LastChildFill="True">
             <TextBlock x:Name="txtBlk_name" TextWrapping="Wrap" Text="Variable:" VerticalAlignment="Top" DockPanel.Dock="Left"/>
             <TextBlock x:Name="txtBlk_remark" TextWrapping="Wrap" Text="A Clever Remark" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" FontStyle="Italic"/>
-            <Button x:Name="btn_reset" Content="Reset" DockPanel.Dock="Right" Click="btn_reset_Click" />
-            <Grid x:Name="grd_control" Height="20" VerticalAlignment="Top" Margin="5,0" />
+            <Button x:Name="btn_reset" Content="Reset" DockPanel.Dock="Right" Click="btn_reset_Click" VerticalAlignment="Top" />
+            <Grid x:Name="grd_control" VerticalAlignment="Stretch" Margin="5,0" />
         </DockPanel>
     </Grid>
 </UserControl>

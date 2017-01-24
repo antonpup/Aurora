@@ -1,13 +1,15 @@
-﻿<Window x:Class="Aurora.Settings.Window_VariableRegistryEditor"
+﻿<UserControl x:Class="Aurora.Controls.Control_VariableRegistryEditor"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings"
-             xmlns:controls="clr-namespace:Aurora.Controls"
+             xmlns:Controls ="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Background="Black" SizeToContent="WidthAndHeight" MinWidth="200" MinHeight="200" MaxHeight="600" MaxWidth="800">
+             d:DesignHeight="203.81" d:DesignWidth="200" >
     <Grid>
-        <controls:Control_VariableRegistryEditor x:Name="VarRegistryEditor" Margin="10"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+            <StackPanel x:Name="stack_Options" />
+        </ScrollViewer>
     </Grid>
-</Window>
+</UserControl>

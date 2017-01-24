@@ -28,10 +28,8 @@ namespace Aurora.Settings.Layers
             InitializeComponent();
         }
 
-        public Control_PercentLayer(PercentLayerHandler datacontext)
+        public Control_PercentLayer(PercentLayerHandler datacontext) : this()
         {
-            InitializeComponent();
-
             this.DataContext = datacontext;
         }
 

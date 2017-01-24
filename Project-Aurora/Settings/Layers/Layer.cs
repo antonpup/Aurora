@@ -43,6 +43,9 @@ namespace Aurora.Settings.Layers
         [Description("Image Layer")]
         Image = 122,
 
+        [Description("Script Layer")]
+        Script = 123,
+
         [Description("Percent Effect Layer")]
         Percent = 200,
 

@@ -125,7 +125,7 @@ namespace Aurora.Controls
             Window_VariableRegistryEditor options_window = new Window_VariableRegistryEditor();
             options_window.Title = $"{Device.GetDeviceName()} - Options";
             options_window.SizeToContent = SizeToContent.WidthAndHeight;
-            options_window.RegisteredVariables = Device.GetRegisteredVariables();
+            options_window.VarRegistryEditor.RegisteredVariables = Device.GetRegisteredVariables();
 
             options_window.ShowDialog();
         }

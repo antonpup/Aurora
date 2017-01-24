@@ -25,7 +25,7 @@ namespace Aurora.Settings
     /// <summary>
     /// A class representing a series of DeviceKeys keys or a freeform region
     /// </summary>
-    public class KeySequence
+    public class KeySequence : ICloneable
     {
         /// <summary>
         /// An array of DeviceKeys keys to be used with KeySequenceType.Sequence type.
@@ -98,6 +98,11 @@ namespace Aurora.Settings
                 hash = hash * 23 + freeform.GetHashCode();
                 return hash;
             }
+        }
+
+        public object Clone()
+        {
+            return new KeySequence(this);
         }
     }
 }

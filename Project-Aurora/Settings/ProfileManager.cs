@@ -75,6 +75,7 @@ namespace Aurora.Settings
             AvailableLayers.Add(LayerType.Breathing);
             AvailableLayers.Add(LayerType.Blinking);
             AvailableLayers.Add(LayerType.Image);
+            AvailableLayers.Add(LayerType.Script);
             AvailableLayers.Add(LayerType.Percent);
             AvailableLayers.Add(LayerType.PercentGradient);
             AvailableLayers.Add(LayerType.Interactive);
@@ -185,6 +186,7 @@ namespace Aurora.Settings
                         foreach (Layer lyr in prof.Layers)
                         {
                             lyr.AnythingChanged += this.SaveProfilesEvent;
+                            lyr.SetProfile(this);
                         }
 
                         prof.Layers.CollectionChanged += (s, e) =>

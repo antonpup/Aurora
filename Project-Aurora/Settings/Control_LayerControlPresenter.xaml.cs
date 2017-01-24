@@ -132,6 +132,9 @@ namespace Aurora.Settings
                     case LayerType.Image:
                         _Layer.Handler = new ImageLayerHandler();
                         break;
+                    case LayerType.Script:
+                        _Layer.Handler = new ScriptLayerHandler();
+                        break;
                     case LayerType.LockColor:
                         _Layer.Handler = new LockColourLayerHandler();
                         break;

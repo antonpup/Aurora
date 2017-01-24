@@ -773,6 +773,9 @@
     <Compile Include="Settings\Layers\Control_PercentLayer.xaml.cs">
       <DependentUpon>Control_PercentLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_ScriptLayer.xaml.cs">
+      <DependentUpon>Control_ScriptLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml.cs">
       <DependentUpon>Control_ShortcutAssistantLayer.xaml</DependentUpon>
     </Compile>
@@ -796,6 +799,7 @@
     <Compile Include="Settings\Layers\LockColourLayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentGradientLayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentLayerHandler.cs" />
+    <Compile Include="Settings\Layers\ScriptLayerHandler.cs" />
     <Compile Include="Settings\Layers\ShortcutAssistantLayerHandler.cs" />
     <Compile Include="Settings\Layers\GradientLayerHandler.cs" />
     <Compile Include="Settings\Layers\ImageLayerHandler.cs" />
@@ -829,12 +833,16 @@
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
     <Compile Include="Settings\ProfileSettings.cs" />
+    <Compile Include="Controls\Control_VariableRegistryEditor.xaml.cs">
+      <DependentUpon>Control_VariableRegistryEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Window_VariableRegistryEditor.xaml.cs">
       <DependentUpon>Window_VariableRegistryEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\GameStateUtils.cs" />
+    <Compile Include="Utils\GenericUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />
@@ -1187,6 +1195,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Layers\Control_ScriptLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1228,6 +1240,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_DefaultLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_VariableRegistryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
