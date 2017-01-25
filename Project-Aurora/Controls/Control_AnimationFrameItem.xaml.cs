@@ -50,7 +50,11 @@ namespace Aurora.Controls
                 SetValue(ContextFrameProperty, value);
 
                 if(value != null)
+                {
                     rectDisplay.Fill = new LinearGradientBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color), Color.FromArgb(0, 0, 0, 0), new Point(0.5, 0), new Point(0.5, 1));
+                    grdSplitterLeft.Background = new SolidColorBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color));
+                    grdSplitterRight.Background = new SolidColorBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color));
+                }
 
                 AnimationFrameItemUpdated?.Invoke(this, value);
             }

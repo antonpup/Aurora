@@ -196,14 +196,31 @@ namespace Aurora.Controls
                 else if (var_type == typeof(Aurora.Settings.KeySequence))
                 {
                     Aurora.Controls.KeySequence ctrl = new Aurora.Controls.KeySequence();
-                    ctrl.Sequence =(Aurora.Settings.KeySequence)VariableObject;
+                    ctrl.Sequence = (Aurora.Settings.KeySequence)VariableObject;
                     ctrl.SequenceUpdated += keySequenceControlValueChanged;
 
                     grd_control.Children.Add(ctrl);
                 }
+                else if (var_type.IsEnum)
+                {
+                    ComboBox cmbbxEnum_control = new ComboBox();
+                    cmbbxEnum_control.ItemsSource = Enum.GetValues(var_type);
+                    cmbbxEnum_control.SelectedValue = (Enum)VariableObject;
+                    cmbbxEnum_control.SelectionChanged += CmbbxEnum_control_SelectionChanged;
+
+                    grd_control.Children.Add(cmbbxEnum_control);
+                }
+
             }
 
             grd_control.UpdateLayout();
+        }
+
+        private void CmbbxEnum_control_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SetValue(VariableObjectProperty, (sender as ComboBox).SelectedValue);
+
+            VariableUpdated?.Invoke(this, VariableObject);
         }
 
         private void keySequenceControlValueChanged(object sender, EventArgs e)

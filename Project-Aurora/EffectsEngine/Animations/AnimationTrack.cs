@@ -141,7 +141,7 @@ namespace Aurora.EffectsEngine.Animations
 
             //The time value is exact
             if (closeValues.Item1 == closeValues.Item2)
-                return _animations[time];
+                return _animations[closeValues.Item1].BlendWith(_animations[closeValues.Item1], 0.0f);
             else
             {
                 if (closeValues.Item1 + _animations[closeValues.Item1]._duration > time)

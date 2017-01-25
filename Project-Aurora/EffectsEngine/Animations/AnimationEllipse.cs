@@ -111,6 +111,8 @@ namespace Aurora.EffectsEngine.Animations
                 throw new FormatException("Cannot blend with another type");
             }
 
+            amount = GetTransitionValue(amount);
+
             RectangleF newrect = new RectangleF((float)(_dimension.X * (1.0 - amount) + otherAnim._dimension.X * (amount)),
                 (float)(_dimension.Y * (1.0 - amount) + otherAnim._dimension.Y * (amount)),
                 (float)(_dimension.Width * (1.0 - amount) + otherAnim._dimension.Width * (amount)),

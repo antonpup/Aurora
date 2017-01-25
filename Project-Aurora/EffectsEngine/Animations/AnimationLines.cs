@@ -32,6 +32,8 @@ namespace Aurora.EffectsEngine.Animations
                 throw new NotImplementedException();
             }
 
+            amount = GetTransitionValue(amount);
+
             List<AnimationLine> newlines = new List<AnimationLine>();
 
             for (int line_i = 0; line_i < this._lines.Count; line_i++)

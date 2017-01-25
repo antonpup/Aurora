@@ -237,6 +237,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 );
 
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave0);
+            
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave1);
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave2);
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave3);
@@ -257,6 +258,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave18);
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave19);
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave20);
+            
 
             Window win = new Window();
             win.Content = new Controls.Control_AnimationEditor() { AnimationMix = sandking_epicenter_mix };

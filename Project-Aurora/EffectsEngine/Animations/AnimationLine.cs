@@ -127,6 +127,8 @@ namespace Aurora.EffectsEngine.Animations
                 throw new FormatException("Cannot blend with another type");
             }
 
+            amount = GetTransitionValue(amount);
+
             PointF newstart = new PointF((float)(_start_point.X * (1.0 - amount) + (otherAnim as AnimationLine)._start_point.X * (amount)),
                 (float)(_start_point.Y * (1.0 - amount) + (otherAnim as AnimationLine)._start_point.Y * (amount))
                 );

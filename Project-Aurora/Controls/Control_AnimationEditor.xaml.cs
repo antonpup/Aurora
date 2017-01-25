@@ -84,114 +84,126 @@ namespace Aurora.Controls
             animMixer.AnimationScale = scale;
         }
 
-        private void animMixer_AnimationFrameItemSelected(object sender, AnimationFrame track)
+        private void animMixer_AnimationFrameItemSelected(object sender, AnimationFrame frame)
         {
             _selectedFrameItem = (Control_AnimationFrameItem)sender;
 
             StackPanel newPanel = new StackPanel();
 
+            double separatorHeight = 3;
+
             //Add default options
-            if (track is AnimationCircle)
+            if (frame is AnimationCircle)
             {
-                AnimationCircle _frameTrack = (track as AnimationCircle);
+                AnimationCircle _frameCircle = (frame as AnimationCircle);
 
                 Control_VariableItem varItemColor = new Control_VariableItem()
                 {
                     VariableTitle = "Color",
-                    VariableObject = _frameTrack.Color
+                    VariableObject = _frameCircle.Color
                 };
                 varItemColor.VariableUpdated += VarItemColor_VariableUpdated;
                 Control_VariableItem varItemWidth = new Control_VariableItem()
                 {
                     VariableTitle = "Width",
-                    VariableObject = _frameTrack.Width
+                    VariableObject = _frameCircle.Width
                 };
                 varItemWidth.VariableUpdated += VarItemWidth_VariableUpdated;
                 Control_VariableItem varItemCenterX = new Control_VariableItem()
                 {
                     VariableTitle = "Center X",
-                    VariableObject = _frameTrack.Center.X
+                    VariableObject = _frameCircle.Center.X
                 };
                 varItemCenterX.VariableUpdated += VarItemCenterX_VariableUpdated;
                 Control_VariableItem varItemCenterY = new Control_VariableItem()
                 {
                     VariableTitle = "Center Y",
-                    VariableObject = _frameTrack.Center.Y
+                    VariableObject = _frameCircle.Center.Y
                 };
                 varItemCenterY.VariableUpdated += VarItemCenterY_VariableUpdated;
                 Control_VariableItem varItemDimensionRadius = new Control_VariableItem()
                 {
                     VariableTitle = "Radius",
-                    VariableObject = _frameTrack.Radius
+                    VariableObject = _frameCircle.Radius
                 };
                 varItemDimensionRadius.VariableUpdated += VarItemDimensionRadius_VariableUpdated;
 
                 newPanel.Children.Add(varItemColor);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemWidth);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemCenterX);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemCenterY);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemDimensionRadius);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
             }
-            else if (track is AnimationRectangle)
+            else if (frame is AnimationRectangle)
             {
-                AnimationRectangle _frameTrack = (track as AnimationRectangle);
+                AnimationRectangle _frameRectangle = (frame as AnimationRectangle);
 
                 Control_VariableItem varItemColor = new Control_VariableItem()
                 {
                     VariableTitle = "Color",
-                    VariableObject = _frameTrack.Color
+                    VariableObject = _frameRectangle.Color
                 };
                 varItemColor.VariableUpdated += VarItemColor_VariableUpdated;
                 Control_VariableItem varItemWidth = new Control_VariableItem()
                 {
                     VariableTitle = "Width",
-                    VariableObject = _frameTrack.Width
+                    VariableObject = _frameRectangle.Width
                 };
                 varItemWidth.VariableUpdated += VarItemWidth_VariableUpdated;
                 Control_VariableItem varItemPositionX = new Control_VariableItem()
                 {
                     VariableTitle = "Position X",
-                    VariableObject = _frameTrack.Dimension.X
+                    VariableObject = _frameRectangle.Dimension.X
                 };
                 varItemPositionX.VariableUpdated += VarItemPositionX_VariableUpdated;
                 Control_VariableItem varItemPositionY = new Control_VariableItem()
                 {
                     VariableTitle = "Position Y",
-                    VariableObject = _frameTrack.Dimension.Y
+                    VariableObject = _frameRectangle.Dimension.Y
                 };
                 varItemPositionY.VariableUpdated += VarItemPositionY_VariableUpdated;
                 Control_VariableItem varItemDimensionWidth = new Control_VariableItem()
                 {
                     VariableTitle = "Width",
-                    VariableObject = _frameTrack.Dimension.Width
+                    VariableObject = _frameRectangle.Dimension.Width
                 };
                 varItemDimensionWidth.VariableUpdated += VarItemDimensionWidth_VariableUpdated;
                 Control_VariableItem varItemDimensionHeight = new Control_VariableItem()
                 {
                     VariableTitle = "Height",
-                    VariableObject = _frameTrack.Dimension.Height
+                    VariableObject = _frameRectangle.Dimension.Height
                 };
                 varItemDimensionHeight.VariableUpdated += VarItemDimensionHeight_VariableUpdated;
 
 
                 newPanel.Children.Add(varItemColor);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemWidth);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemPositionX);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemPositionY);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemDimensionWidth);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
                 newPanel.Children.Add(varItemDimensionHeight);
-                newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
             }
+
+            Control_VariableItem varItemTransitionType = new Control_VariableItem()
+            {
+                VariableTitle = "Transition Type",
+                VariableObject = frame.TransitionType
+            };
+            varItemTransitionType.VariableUpdated += VarItemTransitionType_VariableUpdated;
+
+            newPanel.Children.Add(varItemTransitionType);
+            newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
 
             Button btnRemoveFrame = new Button()
             {
@@ -202,10 +214,15 @@ namespace Aurora.Controls
 
             btnRemoveFrame.Click += BtnRemoveFrame_Click;
 
-            newPanel.Children.Add(new Separator() { Height = 5, Opacity = 0 });
             newPanel.Children.Add(btnRemoveFrame);
 
             grpbxProperties.Content = newPanel;
+        }
+
+        private void VarItemTransitionType_VariableUpdated(object sender, object newVariable)
+        {
+            if (_selectedFrameItem != null)
+                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationCircle).SetTransitionType((AnimationFrameTransitionType)newVariable);
         }
 
         private void BtnRemoveFrame_Click(object sender, RoutedEventArgs e)

@@ -1,7 +1,51 @@
-﻿using System.Drawing;
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
 
 namespace Aurora.EffectsEngine.Animations
 {
+    /// <summary>
+    /// Enum list for different frame transition types
+    /// </summary>
+    public enum AnimationFrameTransitionType
+    {
+        /// <summary>
+        /// None
+        /// </summary>
+        [Description("None")]
+        None = -1,
+
+        /// <summary>
+        /// Linear
+        /// </summary>
+        [Description("Linear")]
+        Linear = 0,
+
+        /// <summary>
+        /// Exponential
+        /// </summary>
+        [Description("Exponential")]
+        Exponential = 1,
+
+        /// <summary>
+        /// Squared
+        /// </summary>
+        [Description("Squared")]
+        Squared = 2,
+
+        /// <summary>
+        /// Cubed
+        /// </summary>
+        [Description("Cubed")]
+        Cubed = 3,
+
+        /// <summary>
+        /// Square Rooted
+        /// </summary>
+        [Description("Square Rooted")]
+        SquareRooted = 4,
+    }
+
     public class AnimationFrame
     {
         internal Color _color;
@@ -11,11 +55,13 @@ namespace Aurora.EffectsEngine.Animations
         internal Pen _pen = null;
         internal Brush _brush = null;
         internal bool _invalidated = true;
+        internal AnimationFrameTransitionType _transitionType = AnimationFrameTransitionType.Linear;
 
         public Color Color { get { return _color; } }
         public RectangleF Dimension { get { return _dimension; } }
         public int Width { get { return _width; } }
         public float Duration { get { return _duration; } }
+        public AnimationFrameTransitionType TransitionType { get { return _transitionType; } }
 
         public AnimationFrame()
         {
@@ -67,9 +113,18 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationFrame SetDuration(float duration)
         {
-            _duration = duration;
+            //Duration cannot be negative
+            if (duration < 0)
+                Global.logger.LogLine($"Negative duration!!! duration={duration}", Logging_Level.Warning);
+            else
+                _duration = duration;
 
-            Global.logger.LogLine($"_duration={_duration}");
+            return this;
+        }
+
+        public AnimationFrame SetTransitionType(AnimationFrameTransitionType type)
+        {
+            _transitionType = type;
 
             return this;
         }
@@ -77,6 +132,7 @@ namespace Aurora.EffectsEngine.Animations
         public virtual void Draw(Graphics g, float scale = 1.0f) { }
         public virtual AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
+            amount = GetTransitionValue(amount);
 
             RectangleF newrect = new RectangleF((float)(_dimension.X * (1.0 - amount) + otherAnim._dimension.X * (amount)),
                 (float)(_dimension.Y * (1.0 - amount) + otherAnim._dimension.Y * (amount)),
@@ -90,6 +146,30 @@ namespace Aurora.EffectsEngine.Animations
             newframe._color = Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount);
 
             return newframe;
+        }
+
+        internal double GetTransitionValue(double amount)
+        {
+            switch(_transitionType)
+            {
+                //A linear relationship between frames y = x
+                case AnimationFrameTransitionType.Linear:
+                    return amount;
+                //An exponential relationship between frames y = (e^x - 1)/(e - 1)
+                case AnimationFrameTransitionType.Exponential:
+                    return (Math.Exp(amount) - 1)/(Math.E - 1);
+                //A squared relationship between frames y = x^2
+                case AnimationFrameTransitionType.Squared:
+                    return Math.Pow(amount, 2.0);
+                //A cubed relationship between frames y = x^3
+                case AnimationFrameTransitionType.Cubed:
+                    return Math.Pow(amount, 3.0);
+                //A cubed relationship between frames y = x^0.5
+                case AnimationFrameTransitionType.SquareRooted:
+                    return Math.Pow(amount, 0.5);
+                default:
+                    return 0.0;
+            }
         }
 
         public override bool Equals(object obj)
