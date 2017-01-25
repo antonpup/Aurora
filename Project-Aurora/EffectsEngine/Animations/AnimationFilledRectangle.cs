@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -31,7 +32,15 @@ namespace Aurora.EffectsEngine.Animations
 
             Rectangle _scaledDimension = new Rectangle((int)(_dimension_int.X * scale), (int)(_dimension_int.Y * scale), (int)(_dimension_int.Width * scale), (int)(_dimension_int.Height * scale));
 
+            PointF rotatePoint = new PointF(_scaledDimension.X + (_scaledDimension.Width / 2.0f), _scaledDimension.Y + (_scaledDimension.Height / 2.0f));
+
+            Matrix rotationMatrix = new Matrix();
+            rotationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
+
+            Matrix originalMatrix = g.Transform;
+            g.Transform = rotationMatrix;
             g.FillRectangle(_brush, _scaledDimension);
+            g.Transform = originalMatrix;
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
@@ -49,7 +58,9 @@ namespace Aurora.EffectsEngine.Animations
                 (int)(_dimension_int.Height * (1.0 - amount) + (otherAnim as AnimationFilledRectangle)._dimension_int.Height * (amount))
                 );
 
-            return new AnimationFilledRectangle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount));
+            float newAngle = (float)((_angle * (1.0 - amount)) + (otherAnim._angle * (amount)));
+
+            return new AnimationFilledRectangle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount)).SetAngle(newAngle);
         }
 
         public override bool Equals(object obj)
@@ -65,7 +76,8 @@ namespace Aurora.EffectsEngine.Animations
             return _color.Equals(p._color) &&
                 _dimension_int.Equals(p._dimension_int) &&
                 _width.Equals(p._width) &&
-                _duration.Equals(p._duration);
+                _duration.Equals(p._duration) &&
+                _angle.Equals(p._angle);
         }
 
         public override int GetHashCode()
@@ -77,13 +89,14 @@ namespace Aurora.EffectsEngine.Animations
                 hash = hash * 23 + _dimension_int.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
                 hash = hash * 23 + _duration.GetHashCode();
+                hash = hash * 23 + _angle.GetHashCode();
                 return hash;
             }
         }
 
         public override string ToString()
         {
-            return "AnimationFilledRectangle [ Color: " + _color.ToString() + " Dimensions: " + _dimension_int.ToString() + "]";
+            return $"AnimationFilledRectangle [ Color: {_color.ToString()} Dimensions: {_dimension_int.ToString()} Duration: {_duration} Angle: {_angle} ]";
         }
     }
 }

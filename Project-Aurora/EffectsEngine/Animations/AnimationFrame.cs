@@ -44,6 +44,12 @@ namespace Aurora.EffectsEngine.Animations
         /// </summary>
         [Description("Square Rooted")]
         SquareRooted = 4,
+
+        /// <summary>
+        /// Square Rooted
+        /// </summary>
+        [Description("Sin Pulse")]
+        SinPulse = 5,
     }
 
     public class AnimationFrame
@@ -56,12 +62,14 @@ namespace Aurora.EffectsEngine.Animations
         internal Brush _brush = null;
         internal bool _invalidated = true;
         internal AnimationFrameTransitionType _transitionType = AnimationFrameTransitionType.Linear;
+        internal float _angle = 0.0f;
 
         public Color Color { get { return _color; } }
         public RectangleF Dimension { get { return _dimension; } }
         public int Width { get { return _width; } }
         public float Duration { get { return _duration; } }
         public AnimationFrameTransitionType TransitionType { get { return _transitionType; } }
+        public float Angle { get { return _angle; } }
 
         public AnimationFrame()
         {
@@ -129,6 +137,14 @@ namespace Aurora.EffectsEngine.Animations
             return this;
         }
 
+        public AnimationFrame SetAngle(float angle)
+        {
+            _angle = angle;
+            _invalidated = true;
+
+            return this;
+        }
+
         public virtual void Draw(Graphics g, float scale = 1.0f) { }
         public virtual AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
@@ -140,7 +156,6 @@ namespace Aurora.EffectsEngine.Animations
                 (float)(_dimension.Height * (1.0 - amount) + otherAnim._dimension.Height * (amount))
                 );
 
-
             AnimationFrame newframe = new AnimationFrame();
             newframe._dimension = newrect;
             newframe._color = Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount);
@@ -150,26 +165,45 @@ namespace Aurora.EffectsEngine.Animations
 
         internal double GetTransitionValue(double amount)
         {
-            switch(_transitionType)
+            double returnamount = 0.0;
+
+            switch (_transitionType)
             {
                 //A linear relationship between frames y = x
                 case AnimationFrameTransitionType.Linear:
-                    return amount;
+                    returnamount = amount;
+                    break;
                 //An exponential relationship between frames y = (e^x - 1)/(e - 1)
                 case AnimationFrameTransitionType.Exponential:
-                    return (Math.Exp(amount) - 1)/(Math.E - 1);
+                    returnamount = (Math.Exp(amount) - 1)/(Math.E - 1);
+                    break;
                 //A squared relationship between frames y = x^2
                 case AnimationFrameTransitionType.Squared:
-                    return Math.Pow(amount, 2.0);
+                    returnamount = Math.Pow(amount, 2.0);
+                    break;
                 //A cubed relationship between frames y = x^3
                 case AnimationFrameTransitionType.Cubed:
-                    return Math.Pow(amount, 3.0);
+                    returnamount = Math.Pow(amount, 3.0);
+                    break;
                 //A cubed relationship between frames y = x^0.5
                 case AnimationFrameTransitionType.SquareRooted:
-                    return Math.Pow(amount, 0.5);
+                    returnamount = Math.Pow(amount, 0.5);
+                    break;
+                //A cubed relationship between frames y = sin ^ 2(x * 1.5 * pi) * x
+                case AnimationFrameTransitionType.SinPulse:
+                    returnamount = Math.Pow(Math.Sin(amount * 1.5 * Math.PI), 2) * amount;
+                    break;
                 default:
-                    return 0.0;
+                    returnamount = 0.0;
+                    break;
             }
+
+            if (returnamount < 0.0)
+                returnamount = 0;
+            else if (returnamount > 1.0)
+                returnamount = 1.0;
+
+            return returnamount;
         }
 
         public override bool Equals(object obj)

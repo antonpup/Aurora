@@ -116,8 +116,13 @@ namespace Aurora.EffectsEngine.Animations
             PointF _scaledStartPoint = new PointF(_start_point.X * scale, _start_point.Y * scale);
             PointF _scaledEndPoint = new PointF(_end_point.X * scale, _end_point.Y * scale);
 
-            g.DrawLine(_pen, _scaledStartPoint, _scaledEndPoint);
+            Matrix rotationMatrix = new Matrix();
+            rotationMatrix.RotateAt(-_angle, _scaledStartPoint, MatrixOrder.Append);
 
+            Matrix originalMatrix = g.Transform;
+            g.Transform = rotationMatrix;
+            g.DrawLine(_pen, _scaledStartPoint, _scaledEndPoint);
+            g.Transform = originalMatrix;
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
@@ -138,8 +143,9 @@ namespace Aurora.EffectsEngine.Animations
                 );
 
             int newwidth = (int)Math.Round((_width * (1.0 - amount)) + (otherAnim._width * (amount)));
+            float newAngle = (float)((_angle * (1.0 - amount)) + (otherAnim._angle * (amount)));
 
-            return new AnimationLine(newstart, newend, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), Utils.ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth);
+            return new AnimationLine(newstart, newend, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), Utils.ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth).SetAngle(newAngle);
         }
 
         public override bool Equals(object obj)
@@ -156,7 +162,8 @@ namespace Aurora.EffectsEngine.Animations
                 _end_color.Equals(p._end_color) &&
                 _start_point.Equals(p._start_point) &&
                 _end_point.Equals(p._end_point) &&
-                _width.Equals(p._width);
+                _width.Equals(p._width) &&
+                _angle.Equals(p._angle);
         }
 
         public override int GetHashCode()
@@ -170,13 +177,14 @@ namespace Aurora.EffectsEngine.Animations
                 hash = hash * 23 + _end_point.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
                 hash = hash * 23 + _duration.GetHashCode();
+                hash = hash * 23 + _angle.GetHashCode();
                 return hash;
             }
         }
 
         public override string ToString()
         {
-            return "AnimationLine [ Start Color: " + _color.ToString() + " End Color: " + _color.ToString() + " Start Point: " + _start_point.ToString() + " End Point: " + _end_point.ToString() + " Width: " + _width + "]";
+            return $"AnimationLine [ Start Color: {_color.ToString()} End Color: { _color.ToString()} Start Point: {_start_point.ToString()} End Point: {_end_point.ToString()} Width: {_width} Duration: {_duration} Angle: {_angle} ]";
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -86,7 +87,13 @@ namespace Aurora.EffectsEngine.Animations
             _pen.ScaleTransform(scale, scale);
             RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
 
+            Matrix rotationMatrix = new Matrix();
+            rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);
+
+            Matrix originalMatrix = g.Transform;
+            g.Transform = rotationMatrix;
             g.DrawEllipse(_pen, _scaledDimension);
+            g.Transform = originalMatrix;
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
@@ -105,8 +112,9 @@ namespace Aurora.EffectsEngine.Animations
                 );
 
             int newwidth = (int)((_width * (1.0 - amount)) + (otherAnim._width * (amount)));
+            float newAngle = (float)((_angle * (1.0 - amount)) + (otherAnim._angle * (amount)));
 
-            return new AnimationCircle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), newwidth);
+            return new AnimationCircle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), newwidth).SetAngle(newAngle);
         }
 
         public override bool Equals(object obj)
@@ -122,7 +130,8 @@ namespace Aurora.EffectsEngine.Animations
             return _color.Equals(p._color) &&
                 _dimension.Equals(p._dimension) &&
                 _width.Equals(p._width) &&
-                _duration.Equals(p._duration);
+                _duration.Equals(p._duration) &&
+                _angle.Equals(p._angle);
         }
 
         public override int GetHashCode()
@@ -134,13 +143,14 @@ namespace Aurora.EffectsEngine.Animations
                 hash = hash * 23 + _dimension.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
                 hash = hash * 23 + _duration.GetHashCode();
+                hash = hash * 23 + _angle.GetHashCode();
                 return hash;
             }
         }
 
         public override string ToString()
         {
-            return "AnimationCircle [ Color: " + _color.ToString() + " Dimensions: " + _dimension.ToString() + " Width: " + _width + "]";
+            return $"AnimationCircle [ Color: {_color.ToString()} Dimensions: {_dimension.ToString()} Width: {_width} Duration: {_duration} Angle: {_angle} ]";
         }
     }
 }

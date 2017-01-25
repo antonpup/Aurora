@@ -72,22 +72,22 @@ namespace Aurora.Controls
             if(ContextTrack.SupportedAnimationType == typeof(AnimationFilledCircle))
             {
                 this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_CircleFilled.png", UriKind.Relative));
-                this.imgTrackType.ToolTip = "Filled Circle";
+                this.imgTrackType.ToolTip = "Filled Circle Track";
             }
             else if (ContextTrack.SupportedAnimationType == typeof(AnimationCircle))
             {
                 this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_Circle.png", UriKind.Relative));
-                this.imgTrackType.ToolTip = "Circle";
+                this.imgTrackType.ToolTip = "Circle Track";
             }
             else if (ContextTrack.SupportedAnimationType == typeof(AnimationFilledRectangle))
             {
                 this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_RectangleFilled.png", UriKind.Relative));
-                this.imgTrackType.ToolTip = "Filled Rectangle";
+                this.imgTrackType.ToolTip = "Filled Rectangle Track";
             }
             else if (ContextTrack.SupportedAnimationType == typeof(AnimationRectangle))
             {
                 this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_Rectangle.png", UriKind.Relative));
-                this.imgTrackType.ToolTip = "Rectangle";
+                this.imgTrackType.ToolTip = "Rectangle Track";
             }
 
             gridTrackItems.Children.Clear();

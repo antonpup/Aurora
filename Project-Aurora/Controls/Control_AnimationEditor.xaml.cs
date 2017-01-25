@@ -195,6 +195,16 @@ namespace Aurora.Controls
                 newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
             }
 
+            Control_VariableItem varItemAngle = new Control_VariableItem()
+            {
+                VariableTitle = "Angle",
+                VariableObject = frame.Angle
+            };
+            varItemAngle.VariableUpdated += VarItemAngle_VariableUpdated; ;
+
+            newPanel.Children.Add(varItemAngle);
+            newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
+
             Control_VariableItem varItemTransitionType = new Control_VariableItem()
             {
                 VariableTitle = "Transition Type",
@@ -219,10 +229,16 @@ namespace Aurora.Controls
             grpbxProperties.Content = newPanel;
         }
 
+        private void VarItemAngle_VariableUpdated(object sender, object newVariable)
+        {
+            if (_selectedFrameItem != null)
+                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationFrame).SetAngle((float)newVariable);
+        }
+
         private void VarItemTransitionType_VariableUpdated(object sender, object newVariable)
         {
             if (_selectedFrameItem != null)
-                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationCircle).SetTransitionType((AnimationFrameTransitionType)newVariable);
+                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationFrame).SetTransitionType((AnimationFrameTransitionType)newVariable);
         }
 
         private void BtnRemoveFrame_Click(object sender, RoutedEventArgs e)
@@ -255,7 +271,9 @@ namespace Aurora.Controls
         {
             if (_selectedFrameItem != null)
             {
-                if ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType() == typeof(AnimationRectangle))
+                Type FrameType = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType();
+
+                if (FrameType == typeof(AnimationRectangle) || FrameType == typeof(AnimationFilledRectangle))
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
@@ -272,7 +290,9 @@ namespace Aurora.Controls
         {
             if (_selectedFrameItem != null)
             {
-                if ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType() == typeof(AnimationRectangle))
+                Type FrameType = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType();
+
+                if (FrameType == typeof(AnimationRectangle) || FrameType == typeof(AnimationFilledRectangle))
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
@@ -281,7 +301,6 @@ namespace Aurora.Controls
                 else
                 {
                     (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetDimension(new System.Drawing.RectangleF((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.X, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Y, (float)newVariable, (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.Dimension.Height));
-
                 }
             }
         }
@@ -290,7 +309,9 @@ namespace Aurora.Controls
         {
             if (_selectedFrameItem != null)
             {
-                if ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType() == typeof(AnimationRectangle))
+                Type FrameType = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType();
+
+                if (FrameType == typeof(AnimationRectangle) || FrameType == typeof(AnimationFilledRectangle))
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
@@ -307,7 +328,9 @@ namespace Aurora.Controls
         {
             if (_selectedFrameItem != null)
             {
-                if ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType() == typeof(AnimationRectangle))
+                Type FrameType = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType();
+
+                if (FrameType == typeof(AnimationRectangle) || FrameType == typeof(AnimationFilledRectangle))
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
