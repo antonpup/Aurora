@@ -82,14 +82,14 @@ namespace Aurora.EffectsEngine.Animations
 
             amount = GetTransitionValue(amount);
 
-            Rectangle newrect = new Rectangle((int)(_dimension_int.X * (1.0 - amount) + (otherAnim as AnimationRectangle)._dimension_int.X * (amount)),
-                (int)(_dimension_int.Y * (1.0 - amount) + (otherAnim as AnimationRectangle)._dimension_int.Y * (amount)),
-                (int)(_dimension_int.Width * (1.0 - amount) + (otherAnim as AnimationRectangle)._dimension_int.Width * (amount)),
-                (int)(_dimension_int.Height * (1.0 - amount) + (otherAnim as AnimationRectangle)._dimension_int.Height * (amount))
+            Rectangle newrect = new Rectangle((int)CalculateNewValue(_dimension_int.X, (otherAnim as AnimationRectangle)._dimension_int.X, amount),
+                (int)CalculateNewValue(_dimension_int.Y, (otherAnim as AnimationRectangle)._dimension_int.Y, amount),
+                (int)CalculateNewValue(_dimension_int.Width, (otherAnim as AnimationRectangle)._dimension_int.Width, amount),
+                (int)CalculateNewValue(_dimension_int.Height, (otherAnim as AnimationRectangle)._dimension_int.Height, amount)
                 );
 
-            int newwidth = (int)((_width * (1.0 - amount)) + (otherAnim._width * (amount)));
-            float newAngle = (float)((_angle * (1.0 - amount)) + (otherAnim._angle * (amount)));
+            int newwidth = (int)CalculateNewValue(_width, otherAnim._width, amount);
+            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
 
             return new AnimationRectangle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), newwidth).SetAngle(newAngle);
         }

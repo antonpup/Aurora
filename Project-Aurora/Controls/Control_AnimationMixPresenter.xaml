@@ -9,11 +9,32 @@
     <Grid>
         <Button x:Name="btnAddTrack" Content="Add Track" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="10,0,0,0" ContextMenuService.IsEnabled="False" Click="btnAddTrack_Click">
             <Button.ContextMenu>
-                <ContextMenu >
-                    <MenuItem x:Name="menuitemAddCircleTrack" Header="Add Circle Track" Click="menuitemAddCircleTrack_Click"/>
-                    <MenuItem x:Name="menuitemAddFilledCircleTrack" Header="Add Filled Circle Track" Click="menuitemAddFilledCircleTrack_Click"/>
-                    <MenuItem x:Name="menuitemAddRectangleTrack" Header="Add Rectangle Track" Click="menuitemAddRectangleTrack_Click"/>
-                    <MenuItem x:Name="menuitemAddFilledRectangleTrack" Header="Add Filled Rectangle Track" Click="menuitemAddFilledRectangleTrack_Click"/>
+                <ContextMenu>
+                    <MenuItem x:Name="menuitemAddLineTrack" Header="Add Line Track" Click="menuitemAddLineTrack_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Aurora;component/Resources/FreeForm_Line.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="menuitemAddCircleTrack" Header="Add Circle Track" Click="menuitemAddCircleTrack_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Aurora;component/Resources/FreeForm_Circle.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="menuitemAddFilledCircleTrack" Header="Add Filled Circle Track" Click="menuitemAddFilledCircleTrack_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Aurora;component/Resources/FreeForm_CircleFilled.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="menuitemAddRectangleTrack" Header="Add Rectangle Track" Click="menuitemAddRectangleTrack_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Aurora;component/Resources/FreeForm_Rectangle.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="menuitemAddFilledRectangleTrack" Header="Add Filled Rectangle Track" Click="menuitemAddFilledRectangleTrack_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Aurora;component/Resources/FreeForm_RectangleFilled.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </Button.ContextMenu>
         </Button> 

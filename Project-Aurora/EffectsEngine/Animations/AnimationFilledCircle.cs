@@ -55,13 +55,13 @@ namespace Aurora.EffectsEngine.Animations
 
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)(_dimension.X * (1.0 - amount) + otherAnim._dimension.X * (amount)),
-                (float)(_dimension.Y * (1.0 - amount) + otherAnim._dimension.Y * (amount)),
-                (float)(_dimension.Width * (1.0 - amount) + otherAnim._dimension.Width * (amount)),
-                (float)(_dimension.Height * (1.0 - amount) + otherAnim._dimension.Height * (amount))
+            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
+                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
+                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
+                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
-            float newAngle = (float)((_angle * (1.0 - amount)) + (otherAnim._angle * (amount)));
+            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
 
             return new AnimationFilledCircle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount)).SetAngle(newAngle);
         }

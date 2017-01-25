@@ -223,5 +223,13 @@ namespace Aurora.Controls
 
             ContextMix = ContextMix.AddTrack(newFilledRectangleTrack);
         }
+
+        private void menuitemAddLineTrack_Click(object sender, RoutedEventArgs e)
+        {
+            AnimationTrack newLineTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            newLineTrack.SetFrame(0.0f, new AnimationLine());
+
+            ContextMix = ContextMix.AddTrack(newLineTrack);
+        }
     }
 }

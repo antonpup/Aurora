@@ -150,10 +150,10 @@ namespace Aurora.EffectsEngine.Animations
         {
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)(_dimension.X * (1.0 - amount) + otherAnim._dimension.X * (amount)),
-                (float)(_dimension.Y * (1.0 - amount) + otherAnim._dimension.Y * (amount)),
-                (float)(_dimension.Width * (1.0 - amount) + otherAnim._dimension.Width * (amount)),
-                (float)(_dimension.Height * (1.0 - amount) + otherAnim._dimension.Height * (amount))
+            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
+                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
+                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
+                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
             AnimationFrame newframe = new AnimationFrame();
@@ -204,6 +204,14 @@ namespace Aurora.EffectsEngine.Animations
                 returnamount = 1.0;
 
             return returnamount;
+        }
+
+        internal double CalculateNewValue(double first, double second, double amount)
+        {
+            if (first == second)
+                return first;
+            else
+                return (double)(first * (1.0 - amount) + second * (amount));
         }
 
         public override bool Equals(object obj)

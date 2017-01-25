@@ -89,6 +89,11 @@ namespace Aurora.Controls
                 this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_Rectangle.png", UriKind.Relative));
                 this.imgTrackType.ToolTip = "Rectangle Track";
             }
+            else if (ContextTrack.SupportedAnimationType == typeof(AnimationLine))
+            {
+                this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_Line.png", UriKind.Relative));
+                this.imgTrackType.ToolTip = "Line Track";
+            }
 
             gridTrackItems.Children.Clear();
 

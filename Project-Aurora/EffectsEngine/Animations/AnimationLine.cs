@@ -38,6 +38,16 @@ namespace Aurora.EffectsEngine.Animations
             return this;
         }
 
+        public AnimationLine()
+        {
+            _start_point = new PointF(0, 0);
+            _end_point = new PointF(0, 0);
+            _color = Utils.ColorUtils.GenerateRandomColor();
+            _end_color = Utils.ColorUtils.GenerateRandomColor();
+            _width = 1;
+            _duration = 0.0f;
+        }
+
         public AnimationLine(PointF start_point, PointF end_point, Color color, int width = 1, float duration = 0.0f)
         {
             _start_point = start_point;
@@ -103,9 +113,12 @@ namespace Aurora.EffectsEngine.Animations
             if (_start_point.Equals(_end_point))
                 return;
 
+            PointF _scaledStartPoint = new PointF(_start_point.X * scale, _start_point.Y * scale);
+            PointF _scaledEndPoint = new PointF(_end_point.X * scale, _end_point.Y * scale);
+
             if (_pen == null || _invalidated)
             {
-                _pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
+                _pen = new Pen(new LinearGradientBrush(_scaledStartPoint, _scaledEndPoint, _color, _end_color));
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
 
@@ -113,8 +126,6 @@ namespace Aurora.EffectsEngine.Animations
             }
 
             _pen.ScaleTransform(scale, scale);
-            PointF _scaledStartPoint = new PointF(_start_point.X * scale, _start_point.Y * scale);
-            PointF _scaledEndPoint = new PointF(_end_point.X * scale, _end_point.Y * scale);
 
             Matrix rotationMatrix = new Matrix();
             rotationMatrix.RotateAt(-_angle, _scaledStartPoint, MatrixOrder.Append);
@@ -134,16 +145,16 @@ namespace Aurora.EffectsEngine.Animations
 
             amount = GetTransitionValue(amount);
 
-            PointF newstart = new PointF((float)(_start_point.X * (1.0 - amount) + (otherAnim as AnimationLine)._start_point.X * (amount)),
-                (float)(_start_point.Y * (1.0 - amount) + (otherAnim as AnimationLine)._start_point.Y * (amount))
+            PointF newstart = new PointF((float)CalculateNewValue(_start_point.X, (otherAnim as AnimationLine)._start_point.X, amount),
+                (float)CalculateNewValue(_start_point.Y, (otherAnim as AnimationLine)._start_point.Y, amount)
                 );
 
-            PointF newend = new PointF((float)(_end_point.X * (1.0 - amount) + (otherAnim as AnimationLine)._end_point.X * (amount)),
-                (float)(_end_point.Y * (1.0 - amount) + (otherAnim as AnimationLine)._end_point.Y * (amount))
+            PointF newend = new PointF((float)CalculateNewValue(_end_point.X, (otherAnim as AnimationLine)._end_point.X, amount),
+                (float)CalculateNewValue(_end_point.Y, (otherAnim as AnimationLine)._end_point.Y, amount)
                 );
 
-            int newwidth = (int)Math.Round((_width * (1.0 - amount)) + (otherAnim._width * (amount)));
-            float newAngle = (float)((_angle * (1.0 - amount)) + (otherAnim._angle * (amount)));
+            int newwidth = (int)Math.Round(CalculateNewValue(_width, otherAnim._width, amount));
+            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
 
             return new AnimationLine(newstart, newend, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), Utils.ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth).SetAngle(newAngle);
         }

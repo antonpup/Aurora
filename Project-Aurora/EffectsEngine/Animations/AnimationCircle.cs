@@ -75,7 +75,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public override void Draw(Graphics g, float scale = 1.0f)
         {
-            if(_pen == null || _invalidated)
+            if (_pen == null || _invalidated)
             {
                 _pen = new Pen(_color);
                 _pen.Width = _width;
@@ -98,21 +98,21 @@ namespace Aurora.EffectsEngine.Animations
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
-            if(!(otherAnim is AnimationCircle))
+            if (!(otherAnim is AnimationCircle))
             {
                 throw new FormatException("Cannot blend with another type");
             }
 
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)(_dimension.X * (1.0 - amount) + otherAnim._dimension.X * (amount)),
-                (float)(_dimension.Y * (1.0 - amount) + otherAnim._dimension.Y * (amount)),
-                (float)(_dimension.Width * (1.0 - amount) + otherAnim._dimension.Width * (amount)),
-                (float)(_dimension.Height * (1.0 - amount) + otherAnim._dimension.Height * (amount))
+            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
+                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
+                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
+                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
-            int newwidth = (int)((_width * (1.0 - amount)) + (otherAnim._width * (amount)));
-            float newAngle = (float)((_angle * (1.0 - amount)) + (otherAnim._angle * (amount)));
+            int newwidth = (int)CalculateNewValue(_width, otherAnim._width, amount);
+            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
 
             return new AnimationCircle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), newwidth).SetAngle(newAngle);
         }
