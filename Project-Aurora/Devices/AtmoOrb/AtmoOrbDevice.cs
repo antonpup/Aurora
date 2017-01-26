@@ -190,10 +190,10 @@ namespace Aurora.Devices.AtmoOrbDevice
             List<string> orbIDs = new List<string>();
             try
             {
-                string orb_ids = Global.Configuration.VarRegistry.GetVariable<string>($"{devicename}_orb_ids");
+                string orb_ids = Global.Configuration.VarRegistry.GetVariable<string>($"{devicename}_orb_ids") ?? "";
                 orbIDs = orb_ids.Split(',').ToList();
             }
-            catch(Exception)
+            catch(Exception exc)
             {
                 orbIDs = new List<string>() { "1" };
             }

@@ -143,15 +143,36 @@ namespace Aurora.Controls
             else if (var_type == typeof(Aurora.Settings.KeySequence))
             {
                 Aurora.Controls.KeySequence ctrl = new Aurora.Controls.KeySequence();
+                ctrl.RecordingTag = var_title;
+
                 ctrl.Sequence = VarRegistry.GetVariable<Aurora.Settings.KeySequence>(VariableName);
                 ctrl.SequenceUpdated += keySequenceControlValueChanged;
 
                 grd_control.Children.Add(ctrl);
             }
+            else if (var_type == typeof(Aurora.Utils.RealColor))
+            {
+                ColorPicker ctrl = new ColorPicker();
+                ctrl.ColorMode = ColorMode.ColorCanvas;
+                Aurora.Utils.RealColor clr = VarRegistry.GetVariable<Aurora.Utils.RealColor>(VariableName);
+
+                ctrl.SelectedColor = clr.GetMediaColor();
+                ctrl.SelectedColorChanged += colorPickerControlValueChanged;
+                grd_control.Children.Add(ctrl);
+            }
             //else
-                //throw new Exception($"Type {var_type} is not supported!");
+            //throw new Exception($"Type {var_type} is not supported!");
 
             grd_control.UpdateLayout();
+        }
+
+        private void colorPickerControlValueChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            Type var_type = VarRegistry.GetVariableType(VariableName);
+            System.Windows.Media.Color ctrlClr = (System.Windows.Media.Color)((ColorPicker)sender).SelectedColor;
+            Aurora.Utils.RealColor clr = VarRegistry.GetVariable<Aurora.Utils.RealColor>(VariableName);
+            clr.SetMediaColor(ctrlClr);
+            VarRegistry.SetVariable(VariableName, clr);
         }
 
         private void keySequenceControlValueChanged(object sender, EventArgs e)

@@ -30,12 +30,13 @@ namespace Aurora.Settings
         public bool HasLayers { get; set; }
         public HashSet<LayerType> AvailableLayers { get; set; }
         public event EventHandler ProfileChanged;
+        public bool ScriptsLoaded { get; protected set; }
         #endregion
 
         #region Internal Properties
         internal ImageSource Icon { get; set; }
         internal UserControl Control { get; set; }
-        internal Dictionary<string, dynamic> EffectScripts { get; set; }
+        internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
 
         #region Private Fields/Properties
@@ -56,7 +57,7 @@ namespace Aurora.Settings
             game_event.Profile = this;
             Event = game_event;
             Profiles = new Dictionary<string, ProfileSettings>();
-            EffectScripts = new Dictionary<string, dynamic>();
+            EffectScripts = new Dictionary<string, IEffectScript>();
             if (game_event._game_state != null)
             {
                 ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(game_event._game_state.GetType());
@@ -210,12 +211,14 @@ namespace Aurora.Settings
             catch (Exception exc)
             {
                 Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
+                if (Global.isDebug)
+                    throw exc;
             }
 
             return null;
         }
 
-        public void RegisterEffect(string key, dynamic obj)
+        public void RegisterEffect(string key, IEffectScript obj)
         {
             if (this.EffectScripts.ContainsKey(key))
             {
@@ -223,19 +226,12 @@ namespace Aurora.Settings
                 return;
             }
 
-            if (obj.GetType().GetMethod("UpdateLights") != null || obj.UpdateLights != null)
-            {
-                this.EffectScripts.Add(key, obj);
-            }
-            else
-            {
-                Global.logger.LogLine(string.Format("Effect script with key {0} is missing a method definition for 'update'", key), Logging_Level.External);
-            }
+            this.EffectScripts.Add(key, obj);
         }
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
         {
-            var _scripts = new Dictionary<string, ScriptSettings>(this.Settings.ScriptSettings).Where(s => s.Value.Enabled);
+            /*var _scripts = new Dictionary<string, ScriptSettings>(this.Settings.ScriptSettings).Where(s => s.Value.Enabled);
 
             foreach (KeyValuePair<string, ScriptSettings> scr in _scripts)
             {
@@ -262,11 +258,16 @@ namespace Aurora.Settings
                     scr.Value.ExceptionHit = true;
                     scr.Value.Exception = exc;
                 }
-            }
+            }*/
         }
 
-        protected void LoadScripts(string profiles_path)
+        protected void LoadScripts(string profiles_path, bool force = false)
         {
+            if (!force && ScriptsLoaded)
+                return;
+
+            this.EffectScripts.Clear();
+
             string scripts_path = Path.Combine(profiles_path, Global.ScriptDirectory);
             if (!Directory.Exists(scripts_path))
                 Directory.CreateDirectory(scripts_path);
@@ -280,32 +281,40 @@ namespace Aurora.Settings
                     {
                         case ".py":
                             var scope = Global.PythonEngine.ExecuteFile(script);
-                            dynamic main_type;
-                            if (scope.TryGetVariable("main", out main_type))
+                            foreach (var v in scope.GetItems())
                             {
-                                dynamic obj = Global.PythonEngine.Operations.CreateInstance(main_type);
-                                if (obj.ID != null)
+                                if (v.Value is IronPython.Runtime.Types.PythonType)
                                 {
-                                    this.RegisterEffect(obj.ID, obj);
+                                    Type typ = ((IronPython.Runtime.Types.PythonType)v.Value).__clrtype__();
+                                    if (!typ.IsInterface && typeof(IEffectScript).IsAssignableFrom(typ))
+                                    {
+                                        IEffectScript obj = Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
+                                        if (obj != null)
+                                        {
+                                            this.RegisterEffect(obj.ID, obj);
+                                        }
+                                        else
+                                            Global.logger.LogLine(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, v.Key), Logging_Level.External);
+                                    }
                                 }
-                                else
-                                    Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable", script), Logging_Level.External);
                             }
-                            else
-                                Global.logger.LogLine(string.Format("Script \"{0}\" does not contain a public 'main' class", script), Logging_Level.External);
+
 
                             break;
                         case ".cs":
                             System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(script);
                             foreach (Type typ in script_assembly.ExportedTypes)
                             {
-                                dynamic obj = Activator.CreateInstance(typ);
-                                if (obj.ID != null)
+                                if (typeof(IEffectScript).IsAssignableFrom(typ))
                                 {
-                                    this.RegisterEffect(obj.ID, obj);
+                                    IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
+                                    if (obj.ID != null)
+                                    {
+                                        this.RegisterEffect(obj.ID, obj);
+                                    }
+                                    else
+                                        Global.logger.LogLine(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName), Logging_Level.External);
                                 }
-                                else
-                                    Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable for the effect {1}", script, typ.FullName), Logging_Level.External);
                             }
 
                             break;

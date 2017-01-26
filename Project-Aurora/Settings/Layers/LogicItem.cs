@@ -22,20 +22,7 @@ namespace Aurora.Settings.Layers
         }
     }*/
     
-    public class RealColor
-    {
-        public System.Drawing.Color Color { get; set; }
-
-        public RealColor()
-        {
-
-        }
-
-        public RealColor(System.Drawing.Color color)
-        {
-            this.Color = color;
-        }
-    }
+    
 
     public enum LogicOperator
     {
@@ -129,7 +116,7 @@ namespace Aurora.Settings.Layers
                         str = "_" + str;
                     object var = vars.Item2;
                     if (var is RealColor)
-                        var = ((RealColor)var).Color;
+                        var = ((RealColor)var).GetDrawingColor();
                     ((ILogic)handler.Properties).Logic.SetValueFromString(str, var);
                     //handler.Properties._PrimaryColor = (Color)Action.Item2;
                     break;

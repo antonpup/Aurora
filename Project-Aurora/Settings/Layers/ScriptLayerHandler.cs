@@ -42,12 +42,13 @@ namespace Aurora.Settings.Layers
 
     public class ScriptLayerHandler : LayerHandler<ScriptLayerHandlerProperties>, INotifyPropertyChanged
     {
-        private ProfileManager profileManager;
+        internal ProfileManager profileManager;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Exception scriptException = null;
 
+        [JsonIgnore]
         public Exception ScriptException { get { return scriptException; }
             private set
             {
@@ -71,7 +72,7 @@ namespace Aurora.Settings.Layers
             {
                 try
                 {
-                    dynamic script = this.profileManager.EffectScripts[this.Properties.Script];
+                    IEffectScript script = this.profileManager.EffectScripts[this.Properties.Script];
                     object script_layers = script.UpdateLights(Properties.ScriptProperties, gamestate);
                     if (script_layers is EffectLayer)
                         layer = (EffectLayer)script_layers;
@@ -100,13 +101,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsScriptValid)
             {
-                try
-                {
-                    dynamic script = profileManager.EffectScripts[this.Properties._Script];
-                    if (script.GetType().GetProperty("Properties") != null || script.Properties != null)
-                        return (VariableRegistry)script.Properties;
-                }
-                catch { }
+                return profileManager.EffectScripts[this.Properties._Script].Properties;
             }
 
             return null;
@@ -116,7 +111,7 @@ namespace Aurora.Settings.Layers
         {
             VariableRegistry varRegistry = GetScriptPropertyRegistry();
             if (varRegistry != null)
-                Properties.ScriptProperties.Combine(varRegistry);
+                Properties.ScriptProperties.Combine(varRegistry, true);
         }
 
         [JsonIgnore]
@@ -125,7 +120,7 @@ namespace Aurora.Settings.Layers
         public override void SetProfile(ProfileManager profile)
         {
             profileManager = profile;
-            (Control as Control_ScriptLayer).SetProfile(profile);
+            (_Control as Control_ScriptLayer)?.SetProfile(profile);
             this.OnScriptChanged();
         }
 

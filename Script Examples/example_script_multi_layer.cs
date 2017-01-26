@@ -2,18 +2,28 @@ using Aurora;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Devices;
+using Aurora.Utils;
 using Aurora.Settings;
 using System;
 using System.Drawing;
 using System.Collections.Generic;
 
-public class ExampleEffect
+public class ExampleEffect : IEffectScript
 {
-    public string ID = "ExampleCSScript (Multi-Layer)";
-
     public KeySequence DefaultKeys = new KeySequence();
     
-    public EffectLayer[] UpdateLights(ScriptSettings settings, IGameState state = null)
+    public string ID {get; private set;}
+
+	public VariableRegistry Properties {get; private set;}
+        
+    public ExampleEffect()
+    {
+        ID = "ExampleCSScript (Multi-Layer)";
+        Properties = new VariableRegistry();
+        //Create Properties
+    }
+    
+    public object UpdateLights(VariableRegistry settings, IGameState state = null)
     {
         Queue<EffectLayer> layers = new Queue<EffectLayer>();
         

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -6,6 +7,29 @@ using System.Windows.Data;
 
 namespace Aurora.Utils
 {
+    public static class ColorExt
+    {
+        public static System.Drawing.Color ToDrawingColor(this System.Windows.Media.Color self)
+        {
+            return ColorUtils.MediaColorToDrawingColor(self);
+        }
+
+        public static System.Windows.Media.Color ToMediaColor(this System.Drawing.Color self)
+        {
+            return ColorUtils.DrawingColorToMediaColor(self);
+        }
+
+        public static System.Windows.Media.Color Clone(this System.Windows.Media.Color self)
+        {
+            return ColorUtils.CloneMediaColor(self);
+        }
+
+        public static System.Drawing.Color Clone(this System.Drawing.Color clr)
+        {
+            return ColorUtils.CloneDrawingColor(clr);
+        }
+    }   
+
     /// <summary>
     /// Various color utilities
     /// </summary>
@@ -293,6 +317,16 @@ namespace Aurora.Utils
             //Source: http://stackoverflow.com/a/12043228
             return GetColorBrightness(color) < 40;
         }
+
+        public static System.Windows.Media.Color CloneMediaColor(System.Windows.Media.Color clr)
+        {
+            return System.Windows.Media.Color.FromArgb(clr.A, clr.R, clr.G, clr.B);
+        }
+
+        public static System.Drawing.Color CloneDrawingColor(System.Drawing.Color clr)
+        {
+            return System.Drawing.Color.FromArgb(clr.ToArgb());
+        }
     }
 
     public class ColorConverter : IValueConverter
@@ -326,6 +360,47 @@ namespace Aurora.Utils
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class RealColor
+    {
+        [JsonProperty]
+        private System.Drawing.Color Color { get; set; }
+
+        public RealColor()
+        {
+            Color = Color.Transparent;
+        }
+
+        public RealColor(System.Windows.Media.Color clr)
+        {
+            this.SetMediaColor(clr);
+        }
+
+        public RealColor(System.Drawing.Color color)
+        {
+            this.Color = color.Clone();
+        }
+
+        public System.Drawing.Color GetDrawingColor()
+        {
+            return Color.Clone();
+        }
+
+        public System.Windows.Media.Color GetMediaColor()
+        {
+            return Color.ToMediaColor();
+        }
+
+        public void SetDrawingColor(System.Drawing.Color clr)
+        {
+            this.Color = clr.Clone();
+        }
+
+        public void SetMediaColor(System.Windows.Media.Color clr)
+        {
+            this.Color = clr.ToDrawingColor();
         }
     }
 }

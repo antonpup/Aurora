@@ -30,12 +30,14 @@ namespace Aurora.Settings.Layers
         public Control_ScriptLayer(ScriptLayerHandler layerHandler) : this()
         {
             this.DataContext = layerHandler;
+            this.SetProfile(layerHandler.profileManager);
             this.UpdateScriptSettings();
         }
 
         public void SetProfile(ProfileManager profile)
         {
             this.cboScripts.ItemsSource = profile.EffectScripts.Keys;
+            this.cboScripts.IsEnabled = profile.EffectScripts.Keys.Count > 0;
             this.Profile = profile;
         }
 

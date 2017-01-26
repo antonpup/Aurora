@@ -45,6 +45,18 @@ namespace Aurora.Settings
                 this.Value = newvalue;
             }
         }
+
+        internal void Merge(VariableRegistryItem variableRegistryItem)
+        {
+            this.Default = variableRegistryItem.Default;
+            this.Title = variableRegistryItem.Title;
+            this.Remark = variableRegistryItem.Remark;
+            this.Min = variableRegistryItem.Min;
+            this.Max = variableRegistryItem.Max;
+
+            if (this.Value == null || variableRegistryItem.Default.GetType() != this.Value.GetType())
+                this.Value = variableRegistryItem.Default;
+        }
     }
 
     public class VariableRegistry //Might want to implement something like IEnumerable here
@@ -52,6 +64,7 @@ namespace Aurora.Settings
         [JsonProperty("Variables")]
         private Dictionary<string, VariableRegistryItem> _variables;
 
+        [JsonIgnore]
         public int Count { get { return _variables.Count; } }
 
         public VariableRegistry()
@@ -59,10 +72,30 @@ namespace Aurora.Settings
             _variables = new Dictionary<string, VariableRegistryItem>();
         }
 
-        public void Combine(VariableRegistry otherRegistry)
+        public void Combine(VariableRegistry otherRegistry, bool removeMissing = false)
         {
-            foreach(var variable in otherRegistry._variables)
-                Register(variable.Key, variable.Value);
+            //Below doesn't work for added variables
+            Dictionary<string, VariableRegistryItem> vars = new Dictionary<string, VariableRegistryItem>();
+
+            foreach (var variable in otherRegistry._variables)
+            {
+                if (removeMissing)
+                {
+                    VariableRegistryItem local = _variables.ContainsKey(variable.Key) ? _variables[variable.Key] : null;
+                    if (local != null)
+                        local.Merge(variable.Value);
+                    else
+                        local = variable.Value;
+
+                    vars.Add(variable.Key, local);
+                }
+                else
+                    Register(variable.Key, variable.Value);
+            }
+
+            if (removeMissing)
+                _variables = vars;
+            
         }
 
         public string[] GetRegisteredVariableKeys()
@@ -80,6 +113,8 @@ namespace Aurora.Settings
         {
             if (!_variables.ContainsKey(name))
                 _variables.Add(name, varItem);
+            else
+                _variables[name].Merge(varItem);
         }
 
         public bool SetVariable(string name, object variable)
@@ -106,7 +141,7 @@ namespace Aurora.Settings
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && _variables[name].Value.GetType() == typeof(T))
                 return (T)_variables[name].Value;
 
-            return Activator.CreateInstance<T>();
+            return default(T);
         }
 
         public T GetVariableDefault<T>(string name)
@@ -163,6 +198,12 @@ namespace Aurora.Settings
                 return _variables[name].Remark;
 
             return "";
+        }
+
+        public void RemoveVariable(string name)
+        {
+            if (_variables.ContainsKey(name))
+                _variables.Remove(name);
         }
     }
 }

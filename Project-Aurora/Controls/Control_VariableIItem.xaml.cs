@@ -198,7 +198,18 @@ namespace Aurora.Controls
                     Aurora.Controls.KeySequence ctrl = new Aurora.Controls.KeySequence();
                     ctrl.Sequence = (Aurora.Settings.KeySequence)VariableObject;
                     ctrl.SequenceUpdated += keySequenceControlValueChanged;
+                    ctrl.RecordingTag = VariableTitle;
 
+                    grd_control.Children.Add(ctrl);
+                }
+                else if (var_type == typeof(Aurora.Utils.RealColor))
+                {
+                    ColorPicker ctrl = new ColorPicker();
+                    ctrl.ColorMode = ColorMode.ColorCanvas;
+                    Aurora.Utils.RealColor clr = (Aurora.Utils.RealColor)VariableObject;
+
+                    ctrl.SelectedColor = clr.GetMediaColor();
+                    ctrl.SelectedColorChanged += colorPickerControlValueChanged;
                     grd_control.Children.Add(ctrl);
                 }
                 else if (var_type.IsEnum)
@@ -221,6 +232,15 @@ namespace Aurora.Controls
             SetValue(VariableObjectProperty, (sender as ComboBox).SelectedValue);
 
             VariableUpdated?.Invoke(this, VariableObject);
+        }
+
+        private void colorPickerControlValueChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            Type var_type = VariableObject.GetType();
+            System.Windows.Media.Color ctrlClr = (System.Windows.Media.Color)((ColorPicker)sender).SelectedColor;
+            Aurora.Utils.RealColor clr = (Aurora.Utils.RealColor)VariableObject;
+            clr.SetMediaColor(ctrlClr);
+            VariableObject = clr;
         }
 
         private void keySequenceControlValueChanged(object sender, EventArgs e)
