@@ -456,11 +456,8 @@ namespace Aurora.Settings
 
             Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
 
-            config.desktop_profile.LoadProfiles();
-
             foreach (var kvp in config.ApplicationProfiles)
             {
-                kvp.Value.LoadProfiles();
                 if (!config.ProfileOrder.Contains(kvp.Key))
                     config.ProfileOrder.Add(kvp.Key);
             }
