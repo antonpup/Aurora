@@ -105,6 +105,19 @@ namespace Aurora.Utils
                 return isremoved;
             }
         }
+
+        public static bool ListBoxReverseOrder(ListBox keys_keysequence)
+        {
+            int totalCount = keys_keysequence.Items.Count;
+            for (int i = totalCount - 1; i > 0; i--)
+            {
+                object obj = keys_keysequence.Items.GetItemAt(totalCount-1);
+                keys_keysequence.Items.RemoveAt(totalCount-1);
+                keys_keysequence.Items.Insert((totalCount - 1) - i, obj);
+            }
+
+            return true;
+        }
     }
 
     public class TextCharacterLimitConv : IValueConverter

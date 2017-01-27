@@ -226,15 +226,17 @@ namespace Aurora.Settings
             return null;
         }
 
-        public void RegisterEffect(string key, IEffectScript obj)
+        public bool RegisterEffect(string key, IEffectScript obj)
         {
             if (this.EffectScripts.ContainsKey(key))
             {
                 Global.logger.LogLine(string.Format("Effect script with key {0} already exists!", key), Logging_Level.External);
-                return;
+                return false;
             }
 
             this.EffectScripts.Add(key, obj);
+
+            return true;
         }
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
@@ -299,10 +301,11 @@ namespace Aurora.Settings
                                         IEffectScript obj = Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
                                         if (obj != null)
                                         {
-                                            this.RegisterEffect(obj.ID, obj);
+                                            if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
+                                                Global.logger.LogLine($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}", Logging_Level.External);
                                         }
                                         else
-                                            Global.logger.LogLine(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, v.Key), Logging_Level.External);
+                                            Global.logger.LogLine($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
                                     }
                                 }
                             }
@@ -311,16 +314,13 @@ namespace Aurora.Settings
                             break;
                         case ".cs":
                             System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(script);
+                            Type effectType = typeof(IEffectScript);
                             foreach (Type typ in script_assembly.ExportedTypes)
                             {
-                                if (typeof(IEffectScript).IsAssignableFrom(typ))
+                                if (effectType.IsAssignableFrom(typ))
                                 {
                                     IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
-                                    if (obj.ID != null)
-                                    {
-                                        this.RegisterEffect(obj.ID, obj);
-                                    }
-                                    else
+                                    if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
                                         Global.logger.LogLine(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName), Logging_Level.External);
                                 }
                             }

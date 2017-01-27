@@ -9,7 +9,7 @@
              xmlns:EnumPercentEffectType="clr-namespace:Aurora"
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
-             mc:Ignorable="d" MinWidth="230" MinHeight="121" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" IsEnabledChanged="UserControl_IsEnabledChanged" IsVisibleChanged="UserControl_IsVisibleChanged">
+             mc:Ignorable="d" MinWidth="230" MinHeight="111" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" IsEnabledChanged="UserControl_IsEnabledChanged" IsVisibleChanged="UserControl_IsVisibleChanged">
     <UserControl.Resources>
         <ResourceDictionary>
             <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
@@ -20,12 +20,23 @@
     </UserControl.Resources>
 
     <Grid>
-        <TextBlock x:Name="key_sequence_title" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Title}" Margin="0,2,0,0"/>
-        <ListBox x:Name="keys_keysequence" Margin="0,23,80,22" ItemTemplate="{Binding Source={StaticResource DeviceKeys}}" MinWidth="150" MinHeight="76" SelectionMode="Multiple" SelectionChanged="keys_keysequence_SelectionChanged"/>
-        <Button x:Name="sequence_up" Content="Move Up" Margin="0,76,0,0" VerticalAlignment="Top" Click="sequence_up_keys_Click" HorizontalAlignment="Right" Width="75"/>
-        <Button x:Name="sequence_down" Content="Move Down" HorizontalAlignment="Right" Margin="0,101,0,0" VerticalAlignment="Top" Width="75" Click="sequence_down_keys_Click"/>
-        <Button x:Name="sequence_remove" Content="Remove" Margin="0,50,0,0" VerticalAlignment="Top" Click="sequence_remove_keys_Click" HorizontalAlignment="Right" Width="75"/>
-        <Button x:Name="sequence_record" Content="Assign Keys" Margin="0,23,0,0" VerticalAlignment="Top" Click="sequence_record_keys_Click" HorizontalAlignment="Right" Width="75"/>
-        <CheckBox x:Name="sequence_freestyle_checkbox" Content="Use Freestyle instead" HorizontalAlignment="Left" Checked="sequence_freestyle_checkbox_Checked" Unchecked="sequence_freestyle_checkbox_Checked" Margin="0,0,0,2" Height="15" VerticalAlignment="Bottom"/>
+        <StackPanel VerticalAlignment="Stretch">
+            <Label x:Name="key_sequence_title" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Title}" Margin="0,0,0,0" Padding="0">
+                <Label.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                    </Style>
+                </Label.Resources>
+            </Label>
+            <Grid>
+                <ListBox x:Name="keys_keysequence" Margin="0,0,80,25" ItemTemplate="{Binding Source={StaticResource DeviceKeys}}" MinWidth="150"  SelectionMode="Multiple" SelectionChanged="keys_keysequence_SelectionChanged" VerticalAlignment="Stretch"/>
+                <Button x:Name="sequence_up" Margin="0,50,40,0" VerticalAlignment="Top" Click="sequence_up_keys_Click" HorizontalAlignment="Right" Width="35">&#x2191;</Button>
+                <Button x:Name="sequence_down" HorizontalAlignment="Right" Margin="0,50,0,0" VerticalAlignment="Top" Width="35" Click="sequence_down_keys_Click">&#x2193;</Button>
+                <Button x:Name="sequence_remove" Content="Remove" Margin="0,25,0,0" VerticalAlignment="Top" Click="sequence_remove_keys_Click" HorizontalAlignment="Right" Width="75"/>
+                <Button x:Name="sequence_record" Content="Assign Keys" VerticalAlignment="Top" Click="sequence_record_keys_Click" HorizontalAlignment="Right" Width="75"/>
+                <CheckBox x:Name="sequence_freestyle_checkbox" Content="Use Freestyle instead" HorizontalAlignment="Left" Checked="sequence_freestyle_checkbox_Checked" Unchecked="sequence_freestyle_checkbox_Checked" Margin="0,0,0,2" Height="15" VerticalAlignment="Bottom"/>
+                <Button x:Name="btnReverseOrder" Content="Reverse" HorizontalAlignment="Right" Margin="0,75,0,0" VerticalAlignment="Top" Width="75" Click="btnReverseOrder_Click"/>
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -153,6 +153,17 @@ namespace Aurora.Controls
             }
         }
 
+        private void btnReverseOrder_Click(object sender, RoutedEventArgs e)
+        {
+            if (Utils.UIUtils.ListBoxReverseOrder(this.keys_keysequence))
+            {
+                allowListRefresh = false;
+                List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
+                allowListRefresh = true;
+            }
+
+        }
+
         private void sequence_record_keys_Click(object sender, RoutedEventArgs e)
         {
             RecordKeySequence(RecordingTag, (sender as Button), this.keys_keysequence);
