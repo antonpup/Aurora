@@ -211,8 +211,16 @@ namespace Aurora.Settings
             catch (Exception exc)
             {
                 Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
-                if (Global.isDebug)
-                    throw exc;
+                if (Path.GetFileNameWithoutExtension(path).Equals("default"))
+                {
+                    string newPath = path + ".corrupted";
+                    File.Move(path, newPath);
+                    this.SaveProfile(path, Settings);
+                    MessageBox.Show($"Default profile for {this.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                //if (Global.isDebug)
+                    //throw exc;
             }
 
             return null;
