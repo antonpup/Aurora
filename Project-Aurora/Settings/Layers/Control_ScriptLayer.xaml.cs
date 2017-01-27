@@ -52,7 +52,8 @@ namespace Aurora.Settings.Layers
         {
             ScriptLayerHandler handler = (ScriptLayerHandler)this.DataContext;
             this.ScriptPropertiesEditor.RegisteredVariables = handler.GetScriptPropertyRegistry();
-            this.brdScriptPropertiesEditor.Visibility = this.ScriptPropertiesEditor.RegisteredVariables == null ? Visibility.Hidden : Visibility.Visible;
+            VariableRegistry varReg = this.ScriptPropertiesEditor.RegisteredVariables;
+            this.brdScriptPropertiesEditor.Visibility = varReg == null || varReg.Count == 0 ? Visibility.Hidden : Visibility.Visible;
             ScriptPropertiesEditor.VarRegistrySource = handler.IsScriptValid ? handler.Properties._ScriptProperties : null;
         }
     }
