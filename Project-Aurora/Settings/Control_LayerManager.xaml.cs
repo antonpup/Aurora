@@ -260,7 +260,7 @@ namespace Aurora.Settings
                     Global.Clipboard = (this.lstLayers.SelectedItem as Layer)?.Clone();
                 else if (e.Key == Key.V && Global.Clipboard is Layer)
                 {
-                    Layer lyr = (Layer)Global.Clipboard;
+                    Layer lyr = (Layer)((Layer)Global.Clipboard)?.Clone();
 
                     if (FocusedProfile.AvailableLayers.Contains(lyr.Handler.Type))
                     {
