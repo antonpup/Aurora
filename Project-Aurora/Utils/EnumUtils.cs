@@ -4,6 +4,7 @@ using Aurora.Profiles.Payday_2.GSI.Nodes;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -44,6 +45,8 @@ namespace Aurora.Utils
         protected Type EnumType;
         protected Enum DefaultEnum;
 
+        public Dictionary<int, string> CustomDesc { get; set; } = new Dictionary<int, string>();
+
         public EnumToStringVC() { }
 
         public EnumToStringVC(Enum val) {
@@ -55,7 +58,11 @@ namespace Aurora.Utils
         {
             if (EnumType == null)
                 return null;
-            
+
+            if (CustomDesc.ContainsKey((int)value))
+                return CustomDesc[(int)value];
+
+
             if (value == null || string.IsNullOrEmpty(value.ToString()) || (value.GetType() != EnumType && value.GetType() != typeof(string)))
                 return DefaultEnum.GetDescription();
             return (this.StringToEnum(EnumType, value.ToString())).GetDescription();
@@ -66,7 +73,7 @@ namespace Aurora.Utils
                 return null;
 
             if (value == null || string.IsNullOrEmpty(value.ToString()))
-                return (Enum)Enum.Parse(EnumType, DefaultEnum.ToString()); ;
+                return (Enum)Enum.Parse(EnumType, DefaultEnum.ToString());
             return this.StringToEnum(EnumType, value.ToString());
         }
     }
@@ -78,7 +85,11 @@ namespace Aurora.Utils
 
     public class KeysToStringVC : EnumToStringVC
     {
-        public KeysToStringVC() : base(System.Windows.Forms.Keys.None) { }
+        public KeysToStringVC() : base(System.Windows.Forms.Keys.None) {
+            CustomDesc.Add((int)System.Windows.Forms.Keys.LControlKey, "Control");
+            CustomDesc.Add((int)System.Windows.Forms.Keys.LMenu, "Alt");
+            CustomDesc.Add((int)System.Windows.Forms.Keys.LWin, "Win");
+        }
     }
 
     public class PercentEffectTypeToStringVC : EnumToStringVC

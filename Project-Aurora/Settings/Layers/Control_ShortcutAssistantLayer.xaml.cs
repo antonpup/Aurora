@@ -20,106 +20,34 @@ namespace Aurora.Settings.Layers
     /// </summary>
     public partial class Control_ShortcutAssistantLayer : UserControl
     {
-        private bool settingsset = false;
-
         public Control_ShortcutAssistantLayer()
         {
             InitializeComponent();
+            this.Loaded += (obj, e) => { this.SetSettings(); };
         }
 
-        public Control_ShortcutAssistantLayer(ShortcutAssistantLayerHandler datacontext)
+        public Control_ShortcutAssistantLayer(ShortcutAssistantLayerHandler datacontext) : this()
         {
-            InitializeComponent();
-
             this.DataContext = datacontext;
+            cmbModifier.ItemsSource = datacontext.Properties.DefaultKeys.Keys;
         }
 
         public void SetSettings()
         {
-            if (this.DataContext is ShortcutAssistantLayerHandler && !settingsset)
-            {
-                this.sc_assistant_dim_background.IsChecked = (this.DataContext as ShortcutAssistantLayerHandler).Properties._DimBackground;
-                this.sc_assistant_dim_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).Properties._DimColor ?? System.Drawing.Color.Empty);
-                this.sc_assistant_ctrl_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).Properties._CtrlKeyColor ?? System.Drawing.Color.Empty);
-                this.sc_assistant_ctrl_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).Properties._CtrlKeySequence;
-                this.sc_assistant_win_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).Properties._WindowsKeyColor ?? System.Drawing.Color.Empty);
-                this.sc_assistant_win_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).Properties._WindowsKeySequence;
-                this.sc_assistant_alt_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as ShortcutAssistantLayerHandler).Properties._AltKeyColor ?? System.Drawing.Color.Empty);
-                this.sc_assistant_alt_keys.Sequence = (this.DataContext as ShortcutAssistantLayerHandler).Properties._AltKeySequence;
-
-                settingsset = true;
-            }
+            this.keysMain.Sequence = ((ShortcutAssistantLayerHandler)this.DataContext).Properties._Sequence;
         }
 
-        private void sc_assistant_dim_background_Checked(object sender, RoutedEventArgs e)
+        private void keysMain_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler)
-            {
-                (this.DataContext as ShortcutAssistantLayerHandler).Properties._DimBackground = (this.sc_assistant_dim_background.IsChecked.HasValue) ? this.sc_assistant_dim_background.IsChecked.Value : false;
-            }
+            ((ShortcutAssistantLayerHandler)this.DataContext).Properties._Sequence = ((Controls.KeySequence)sender).Sequence;
         }
 
-        private void sc_assistant_dim_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void cmbModifier_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler && this.sc_assistant_dim_color.SelectedColor.HasValue)
-            {
-                (this.DataContext as ShortcutAssistantLayerHandler).Properties._DimColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_dim_color.SelectedColor.Value);
+            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0) {
+                ((ShortcutAssistantLayerHandler)this.DataContext).Properties.SetDefaultKeys();
+                this.SetSettings();
             }
-        }
-
-        private void sc_assistant_ctrl_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler && this.sc_assistant_ctrl_color.SelectedColor.HasValue)
-            {
-                (this.DataContext as ShortcutAssistantLayerHandler).Properties._CtrlKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_ctrl_color.SelectedColor.Value);
-            }
-        }
-
-        private void sc_assistant_ctrl_keys_SequenceUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler)
-            {
-                (this.DataContext as ShortcutAssistantLayerHandler).Properties._CtrlKeySequence = (sender as Controls.KeySequence).Sequence;
-            }
-        }
-
-        private void sc_assistant_win_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler && this.sc_assistant_win_color.SelectedColor.HasValue)
-            {
-                (this.DataContext as ShortcutAssistantLayerHandler).Properties._WindowsKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_win_color.SelectedColor.Value);
-            }
-        }
-
-        private void sc_assistant_win_keys_SequenceUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler)
-            {
-                (this.DataContext as ShortcutAssistantLayerHandler).Properties._WindowsKeySequence = (sender as Controls.KeySequence).Sequence;
-            }
-        }
-
-        private void sc_assistant_alt_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler && this.sc_assistant_alt_color.SelectedColor.HasValue)
-            {
-                (this.DataContext as ShortcutAssistantLayerHandler).Properties._AltKeyColor = Utils.ColorUtils.MediaColorToDrawingColor(this.sc_assistant_alt_color.SelectedColor.Value);
-            }
-        }
-
-        private void sc_assistant_alt_keys_SequenceUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is ShortcutAssistantLayerHandler)
-            {
-                (this.DataContext as ShortcutAssistantLayerHandler).Properties._AltKeySequence = (sender as Controls.KeySequence).Sequence;
-            }
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            SetSettings();
-
-            this.Loaded -= UserControl_Loaded;
         }
     }
 }

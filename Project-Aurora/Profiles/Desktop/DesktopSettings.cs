@@ -70,9 +70,17 @@ namespace Aurora.Profiles.Desktop
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {
-                new Settings.Layers.Layer("Shortcut Assistant", new Settings.Layers.ShortcutAssistantLayerHandler()
+                new Settings.Layers.Layer("Ctrl Shortcuts", new Settings.Layers.ShortcutAssistantLayerHandler()
                 {
-                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties()
+                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties(System.Windows.Forms.Keys.LControlKey)
+                }),
+                new Settings.Layers.Layer("Win Shortcuts", new Settings.Layers.ShortcutAssistantLayerHandler()
+                {
+                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties(System.Windows.Forms.Keys.LWin)
+                }),
+                new Settings.Layers.Layer("Alt Shortcuts", new Settings.Layers.ShortcutAssistantLayerHandler()
+                {
+                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties(System.Windows.Forms.Keys.LMenu)
                 }),
                 new Settings.Layers.Layer("CPU Usage", new Settings.Layers.PercentLayerHandler()
                 {

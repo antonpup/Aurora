@@ -24,17 +24,12 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public Color DimColor { get { return (Logic._DimColor ?? _DimColor) ?? Color.Empty; } }
 
-        public Color? _CtrlKeyColor { get; set; }
+        public Keys? _HeldKey { get; set; }
 
         [JsonIgnore]
-        public Color CtrlKeyColor { get { return (Logic._CtrlKeyColor ?? _CtrlKeyColor) ?? Color.Empty; } }
+        public Keys HeldKey { get { return Logic._HeldKey ?? _HeldKey ?? Keys.None;  } }
 
-        public KeySequence _CtrlKeySequence { get; set; }
-
-        [JsonIgnore]
-        public KeySequence CtrlKeySequence { get { return Logic._CtrlKeySequence ?? _CtrlKeySequence; } }
-
-        public Color? _WindowsKeyColor { get; set; }
+        /*public Color? _WindowsKeyColor { get; set; }
 
         [JsonIgnore]
         public Color WindowsKeyColor { get { return Logic._WindowsKeyColor ?? _WindowsKeyColor ?? Color.Empty; } }
@@ -52,19 +47,26 @@ namespace Aurora.Settings.Layers
         public KeySequence _AltKeySequence { get; set; }
 
         [JsonIgnore]
-        public KeySequence AltKeySequence { get { return Logic._AltKeySequence ?? _AltKeySequence; } }
+        public KeySequence AltKeySequence { get { return Logic._AltKeySequence ?? _AltKeySequence; } }*/
 
         public ShortcutAssistantLayerHandlerProperties() : base() { }
 
-        public ShortcutAssistantLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
+        public ShortcutAssistantLayerHandlerProperties(bool empty = false) : base(empty) { }
+
+        public ShortcutAssistantLayerHandlerProperties(System.Windows.Forms.Keys heldKey, bool empty = false) : this(empty)
+        {
+            this._HeldKey = heldKey;
+            this.SetDefaultKeys();
+        }
 
         public override void Default()
         {
             base.Default();
             _DimBackground = true;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
-            _CtrlKeyColor = Color.Red;
-            _WindowsKeyColor = Color.Blue;
+            _HeldKey = Keys.LControlKey;
+            this.SetDefaultKeys();
+            /*_WindowsKeyColor = Color.Blue;
             _AltKeyColor = Color.Yellow;
             _CtrlKeySequence = new KeySequence(new Devices.DeviceKeys[] {
                     Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.X, Devices.DeviceKeys.Y,
@@ -78,7 +80,42 @@ namespace Aurora.Settings.Layers
             _AltKeySequence = new KeySequence(new Devices.DeviceKeys[] {
                     Devices.DeviceKeys.F4, Devices.DeviceKeys.E, Devices.DeviceKeys.V, Devices.DeviceKeys.LEFT_CONTROL,
                     Devices.DeviceKeys.RIGHT_CONTROL, Devices.DeviceKeys.TAB
-            });
+            });*/
+        }
+
+        [JsonIgnore]
+        public Dictionary<Keys, KeySequence> DefaultKeys = new Dictionary<System.Windows.Forms.Keys, KeySequence>
+        {
+            { Keys.LControlKey, new KeySequence(new Devices.DeviceKeys[] {
+                    Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.X, Devices.DeviceKeys.Y,
+                    Devices.DeviceKeys.LEFT_ALT, Devices.DeviceKeys.RIGHT_ALT, Devices.DeviceKeys.A, Devices.DeviceKeys.Z
+            }) },
+            { Keys.LWin, new KeySequence(new Devices.DeviceKeys[] {
+                    Devices.DeviceKeys.R, Devices.DeviceKeys.E, Devices.DeviceKeys.M, Devices.DeviceKeys.D,
+                    Devices.DeviceKeys.ARROW_UP, Devices.DeviceKeys.ARROW_DOWN, Devices.DeviceKeys.ARROW_LEFT, Devices.DeviceKeys.ARROW_RIGHT,
+                    Devices.DeviceKeys.TAB
+            }) },
+            { Keys.LMenu, new KeySequence(new Devices.DeviceKeys[] {
+                    Devices.DeviceKeys.F4, Devices.DeviceKeys.E, Devices.DeviceKeys.V, Devices.DeviceKeys.LEFT_CONTROL,
+                    Devices.DeviceKeys.RIGHT_CONTROL, Devices.DeviceKeys.TAB
+            }) }
+        };
+
+        [JsonIgnore]
+        public Dictionary<System.Windows.Forms.Keys, Color> DefaultColours = new Dictionary<Keys, Color> {
+            {Keys.LControlKey, Color.Red },
+            {Keys.LMenu, Color.Yellow},
+            {Keys.LWin, Color.Blue }
+        };
+
+        internal void SetDefaultKeys()
+        {
+            Keys key = _HeldKey ?? Keys.None;
+            if (DefaultKeys.ContainsKey(key))
+                this._Sequence = new KeySequence(this.DefaultKeys[key]);
+
+            if (DefaultColours.ContainsKey(key))
+                this._PrimaryColor = DefaultColours[key];
         }
     }
 
@@ -97,18 +134,15 @@ namespace Aurora.Settings.Layers
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
-            if (Global.held_modified == Keys.LControlKey || Global.held_modified == Keys.RControlKey)
+            if (Global.held_modified.HasFlag(Properties.HeldKey))
             {
                 if (Properties.DimBackground)
                     sc_assistant_layer.Fill(Properties.DimColor);
 
-                if (Global.held_modified == Keys.LControlKey)
-                    sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_CONTROL, Properties.CtrlKeyColor);
-                else
-                    sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_CONTROL, Properties.CtrlKeyColor);
-                sc_assistant_layer.Set(Properties.CtrlKeySequence, Properties.CtrlKeyColor);
+                sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKey(Global.held_modified), Properties.PrimaryColor);
+                sc_assistant_layer.Set(Properties.Sequence, Properties.PrimaryColor);
             }
-            else if (Global.held_modified == Keys.LMenu || Global.held_modified == Keys.RMenu)
+            /*else if (Global.held_modified == Keys.LMenu || Global.held_modified == Keys.RMenu)
             {
                 if (Properties.DimBackground)
                     sc_assistant_layer.Fill(Properties.DimColor);
@@ -129,7 +163,7 @@ namespace Aurora.Settings.Layers
                 else
                     sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_WINDOWS, Properties.WindowsKeyColor);
                 sc_assistant_layer.Set(Properties.WindowsKeySequence, Properties.WindowsKeyColor);
-            }
+            }*/
 
             
             return sc_assistant_layer;

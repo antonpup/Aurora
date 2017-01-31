@@ -4,21 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             xmlns:utils="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <utils:ColorConverter x:Key="colorConverter"/>
+            <utils:KeysToStringVC x:Key="KeysToStringVC"/>
+            <DataTemplate x:Key="KeysTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource KeysToStringVC}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Ctrl Keys Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="sc_assistant_ctrl_color" Margin="85,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColorChanged="sc_assistant_ctrl_color_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
-        <Controls:KeySequence x:Name="sc_assistant_ctrl_keys" HorizontalAlignment="Left" Margin="0,58,0,0" Title="Shortcut Assistant Ctrl Keys" RecordingTag="Shortcut Assistant Ctrl Keys" SequenceUpdated="sc_assistant_ctrl_keys_SequenceUpdated" MinHeight="6"/>
-        <TextBlock HorizontalAlignment="Left" Margin="235,32,0,0" TextWrapping="Wrap" Text="Win Keys Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="sc_assistant_win_color" Margin="323,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="142" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="sc_assistant_win_color_SelectedColorChanged" />
-        <Controls:KeySequence x:Name="sc_assistant_win_keys" HorizontalAlignment="Left" Margin="235,58,0,0" Title="Shortcut Assistant Win Keys" RecordingTag="Shortcut Assistant Win Keys" SequenceUpdated="sc_assistant_win_keys_SequenceUpdated"/>
-        <TextBlock HorizontalAlignment="Left" Margin="470,32,0,0" TextWrapping="Wrap" Text="Alt Keys Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="sc_assistant_alt_color" Margin="555,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="sc_assistant_alt_color_SelectedColorChanged" />
-        <Controls:KeySequence x:Name="sc_assistant_alt_keys" HorizontalAlignment="Left" Margin="470,58,0,0" Title="Shortcut Assistant Alt Keys" RecordingTag="Shortcut Assistant Alt Keys" SequenceUpdated="sc_assistant_alt_keys_SequenceUpdated"/>
-        <CheckBox x:Name="sc_assistant_dim_background" Content="Dim the background keys to emphasize the shortcut keys" HorizontalAlignment="Left" VerticalAlignment="Top" Unchecked="sc_assistant_dim_background_Checked" Checked="sc_assistant_dim_background_Checked" Margin="0,3,0,0"/>
+        <TextBlock HorizontalAlignment="Left" Margin="235,34,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="clrPrimaryColor" Margin="315,31,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource colorConverter}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
+        <Controls:KeySequence x:Name="keysMain" HorizontalAlignment="Left" Margin="0,58,0,0" Title="Shortcut Assistant Main Keys" RecordingTag="Shortcut Assistant Main Keys" SequenceUpdated="keysMain_SequenceUpdated" MinHeight="6"/>
+        <CheckBox x:Name="chkDimBackground" Content="Dim the background keys to emphasize the shortcut keys" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._DimBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,0"/>
         <TextBlock HorizontalAlignment="Left" Margin="352,3,0,0" TextWrapping="Wrap" Text="Dimming Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="sc_assistant_dim_color" Margin="440,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColorChanged="sc_assistant_dim_color_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
+        <xctk:ColorPicker x:Name="clrDimBackground" Margin="440,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColor="{Binding Path=Properties._DimColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
+        <TextBlock Text="Modifier Key:" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,34,0,0"/>
+        <ComboBox x:Name="cmbModifier" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="75,31,0,0" Width="155" ItemTemplate="{StaticResource KeysTemplate}" SelectedItem="{Binding Path=Properties._HeldKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="cmbModifier_SelectionChanged"/>
     </Grid>
 </UserControl>
