@@ -59,7 +59,7 @@ namespace Aurora.Utils
             if (EnumType == null)
                 return null;
 
-            if (CustomDesc.ContainsKey((int)value))
+            if (CustomDesc.ContainsKey(value as int? ?? 0))
                 return CustomDesc[(int)value];
 
 
