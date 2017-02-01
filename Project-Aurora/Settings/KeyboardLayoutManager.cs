@@ -37,7 +37,7 @@ namespace Aurora.Settings
         {
         }
 
-        public KeyboardKey(String text, Devices.DeviceKeys tag, bool enabled = true, bool linebreak = false, double fontsize = 12, double margin_left = 7, double margin_top = 0, double width = 30, double height = 30, int width_bits = 2, int height_bits = 2, int margin_left_bits = 0, int margin_top_bits = 0)
+        public KeyboardKey(String text, Devices.DeviceKeys tag, bool? enabled = true, bool? linebreak = false, double? fontsize = 12, double? margin_left = 7, double? margin_top = 0, double? width = 30, double? height = 30, int? width_bits = 2, int? height_bits = 2, int? margin_left_bits = 0, int? margin_top_bits = 0)
         {
             this.visualName = text;
             this.tag = tag;
@@ -596,7 +596,25 @@ namespace Aurora.Settings
                         }
                     }
 
-                    string mouse_feature_path = "";
+                    //Extra fix for Master keys Pro M White foreign layouts
+                    if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M_White)
+                    {
+                        switch(_loaded_localization)
+                        {
+                            case PreferredKeyboardLocalization.intl:
+                            case PreferredKeyboardLocalization.de:
+                            case PreferredKeyboardLocalization.fr:
+                            case PreferredKeyboardLocalization.jpn:
+                            case PreferredKeyboardLocalization.ru:
+                            case PreferredKeyboardLocalization.uk:
+                                virtual_keyboard_group.AdjustKeys(new Dictionary<DeviceKeys, KeyboardKey>() { { DeviceKeys.NUM_SEVEN, new KeyboardKey(null, DeviceKeys.NUM_SEVEN, null, null, null, 60, null, null, null, null, null, 5, null) } });
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                        string mouse_feature_path = "";
 
                     switch (mouse_preference)
                     {
