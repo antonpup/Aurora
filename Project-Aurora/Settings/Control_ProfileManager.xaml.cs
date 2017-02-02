@@ -181,7 +181,7 @@ namespace Aurora.Settings
                                                 keyValue = (CUE.NET.Devices.Generic.Enums.CorsairLedId)Enum.Parse(typeof(CUE.NET.Devices.Generic.Enums.CorsairLedId), key.Value);
                                                 break;
                                         }
-                                         
+
                                         if (Enum.IsDefined(typeof(CUE.NET.Devices.Generic.Enums.CorsairLedId), keyValue) | keyValue.ToString().Contains(","))
                                         {
                                             Devices.DeviceKeys deviceKey = Utils.KeyUtils.ToDeviceKeys(keyValue);
@@ -214,6 +214,46 @@ namespace Aurora.Settings
                                                 _PrimaryColor = System.Drawing.ColorTranslator.FromHtml(lightingInfo.Element("ptr_wrapper").Element("data").Element("transitions").Element("value0").Element("color").Value)
                                             },
                                             Opacity = int.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("opacity").Value) / 255.0f
+                                        }
+                                    });
+                                }
+                                else if (layerPolyId != null && ("2147483679".Equals(layerPolyId.Value)))
+                                {
+                                    LayerEffectConfig newLayerConfig = new LayerEffectConfig(System.Drawing.Color.Transparent);
+
+                                    foreach (XElement transition in lightingInfo.Element("ptr_wrapper").Element("data").Element("transitions").Elements())
+                                    {
+                                        try
+                                        {
+                                            float time = float.Parse(transition.Element("time").Value);
+                                            System.Drawing.Color color = System.Drawing.ColorTranslator.FromHtml(transition.Element("color").Value);
+
+                                            if(newLayerConfig.brush.color_gradients.ContainsKey(time))
+                                                newLayerConfig.brush.color_gradients[time] = color;
+                                            else
+                                                newLayerConfig.brush.color_gradients.Add(time, color);
+                                        }
+                                        catch(Exception)
+                                        {
+
+                                        }
+                                    }
+
+
+
+                                    ProfileManager.Settings.Layers.Add(new Layers.Layer()
+                                    {
+                                        Name = layerName,
+                                        Enabled = layerEnabled,
+                                        Type = Layers.LayerType.GradientFill,
+                                        Handler = new Layers.GradientFillLayerHandler()
+                                        {
+                                            Properties = new Layers.GradientFillLayerHandlerProperties()
+                                            {
+                                                _Sequence = affected_keys,
+                                                _FillEntireKeyboard = false,
+                                                _GradientConfig = newLayerConfig
+                                            }
                                         }
                                     });
                                 }
