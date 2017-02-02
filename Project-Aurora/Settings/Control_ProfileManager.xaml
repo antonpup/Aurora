@@ -14,5 +14,6 @@
         <Button x:Name="view_folder_button" Content="View Profile Folder" HorizontalAlignment="Left" Margin="391,1,0,0" Click="view_folder_button_Click" Width="110" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="507,3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.49,0.531"><Hyperlink NavigateUri="http://lastbullet.net/mydownloads.php?action=browse_cat&amp;cid=299" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Download Profiles"/></Hyperlink></TextBlock>
         <Button x:Name="reset_profile_button" Content="Reset" HorizontalAlignment="Left" Margin="331,1,0,0" VerticalAlignment="Top" Width="50" Click="reset_profile_button_Click"/>
+        <Button x:Name="import_profile_button" Content="Import" HorizontalAlignment="Left" Margin="-55,1,0,0" VerticalAlignment="Top" Width="50" Click="import_profile_button_Click"/>
     </Grid>
 </UserControl>
