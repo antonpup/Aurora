@@ -144,7 +144,7 @@ namespace Aurora
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
-		[DllImport("Oleacc.dll")]
+        [DllImport("Oleacc.dll")]
         static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
         [DllImport("psapi.dll")]
         static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
@@ -159,7 +159,7 @@ namespace Aurora
                 windowHandle = GetForegroundWindow();
                 processhandle = GetProcessHandleFromHwnd(windowHandle);
 
-				StringBuilder sb = new StringBuilder(4048);
+                StringBuilder sb = new StringBuilder(4048);
                 GetModuleFileNameEx(processhandle, zeroHandle, sb, 4048);
                 //Global.logger.LogLine("Process changed: " + sb.ToString(), Logging_Level.Info);
 
