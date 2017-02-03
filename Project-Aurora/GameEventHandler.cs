@@ -142,8 +142,6 @@ namespace Aurora
         private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
         private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017;
 
-        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         [DllImport("Oleacc.dll")]
         static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
