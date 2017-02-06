@@ -764,6 +764,9 @@
     <Compile Include="Settings\Layers\Control_AmbilightLayer.xaml.cs">
       <DependentUpon>Control_AmbilightLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
+      <DependentUpon>Control_AnimationLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_InteractiveLayer.xaml.cs">
       <DependentUpon>Control_InteractiveLayer.xaml</DependentUpon>
     </Compile>
@@ -1181,6 +1184,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Layers\Control_AmbilightLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_AnimationLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

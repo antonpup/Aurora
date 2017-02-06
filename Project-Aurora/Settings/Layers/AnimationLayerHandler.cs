@@ -25,15 +25,15 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool ForceKeySequence { get { return Logic._forceKeySequence ?? _forceKeySequence ?? false; } }
 
-        public float? _AnimationDuration { get; set; }
-
-        [JsonIgnore]
-        public float AnimationDuration { get { return Logic._AnimationDuration ?? _AnimationDuration ?? 0.0f; } }
-
         public bool? _scaleToKeySequenceBounds { get; set; }
 
         [JsonIgnore]
         public bool ScaleToKeySequenceBounds { get { return Logic._scaleToKeySequenceBounds ?? _scaleToKeySequenceBounds ?? false; } }
+
+        public float? _AnimationDuration { get; set; }
+
+        [JsonIgnore]
+        public float AnimationDuration { get { return Logic._AnimationDuration ?? _AnimationDuration ?? 0.0f; } }
 
         public int? _AnimationRepeat { get; set; }
 
@@ -48,6 +48,10 @@ namespace Aurora.Settings.Layers
         {
             base.Default();
             this._AnimationMix = new AnimationMix();
+            this._forceKeySequence = false;
+            this._scaleToKeySequenceBounds = false;
+            this._AnimationDuration = 0.0f;
+            this._AnimationRepeat = 0;
         }
     }
 
@@ -71,7 +75,7 @@ namespace Aurora.Settings.Layers
 
         protected override UserControl CreateControl()
         {
-            return new Control_DefaultLayer();
+            return new Control_AnimationLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate)
