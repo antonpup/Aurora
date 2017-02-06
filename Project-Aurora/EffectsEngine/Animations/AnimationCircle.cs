@@ -6,7 +6,9 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationCircle : AnimationFrame
     {
+        [Newtonsoft.Json.JsonProperty]
         internal float _radius = 0.0f;
+        [Newtonsoft.Json.JsonProperty]
         internal PointF _center = new PointF();
 
         public float Radius { get { return _radius; } }

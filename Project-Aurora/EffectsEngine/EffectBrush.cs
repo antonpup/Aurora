@@ -22,24 +22,34 @@ namespace Aurora.EffectsEngine
 
         public BrushType type = BrushType.None;
         public BrushWrap wrap = BrushWrap.None;
-        public SortedDictionary<float, System.Drawing.Color> color_gradients = new SortedDictionary<float, System.Drawing.Color>();
+        public SortedDictionary<float, System.Drawing.Color> colorGradients = new SortedDictionary<float, System.Drawing.Color>();
         public System.Drawing.PointF start;
         public System.Drawing.PointF end;
         public System.Drawing.PointF center;
 
-        private System.Drawing.Brush _drawingbrush = null;
-        private System.Windows.Media.Brush _mediabrush = null;
+        private System.Drawing.Brush _drawingBrush = null;
+        private System.Windows.Media.Brush _mediaBrush = null;
 
         public EffectBrush()
         {
             type = BrushType.Solid;
 
-            color_gradients.Add(0.0f, System.Drawing.Color.Red);
-            color_gradients.Add(1.0f, System.Drawing.Color.Blue);
+            colorGradients.Add(0.0f, System.Drawing.Color.Red);
+            colorGradients.Add(1.0f, System.Drawing.Color.Blue);
 
             start = new System.Drawing.PointF(0, 0);
             end = new System.Drawing.PointF(1, 0);
             center = new System.Drawing.PointF(0.0f, 0.0f);
+        }
+
+        public EffectBrush(EffectBrush otherBrush)
+        {
+            this.type = otherBrush.type;
+            this.wrap = otherBrush.wrap;
+            this.colorGradients = otherBrush.colorGradients;
+            this.start = otherBrush.start;
+            this.end = otherBrush.end;
+            this.center = otherBrush.center;
         }
 
         public EffectBrush(ColorSpectrum spectrum)
@@ -47,7 +57,7 @@ namespace Aurora.EffectsEngine
             type = BrushType.Linear;
 
             foreach(var color in spectrum.GetSpectrumColors())
-                color_gradients.Add(color.Key, color.Value);
+                colorGradients.Add(color.Key, color.Value);
 
             start = new System.Drawing.PointF(0, 0);
             end = new System.Drawing.PointF(1, 0);
@@ -60,8 +70,8 @@ namespace Aurora.EffectsEngine
             {
                 type = BrushType.Solid;
 
-                color_gradients.Add(0.0f, (brush as System.Drawing.SolidBrush).Color);
-                color_gradients.Add(1.0f, (brush as System.Drawing.SolidBrush).Color);
+                colorGradients.Add(0.0f, (brush as System.Drawing.SolidBrush).Color);
+                colorGradients.Add(1.0f, (brush as System.Drawing.SolidBrush).Color);
 
                 wrap = BrushWrap.Repeat;
             }
@@ -94,8 +104,8 @@ namespace Aurora.EffectsEngine
                     {
                         for (int x = 0; x < lgb.InterpolationColors.Colors.Length; x++)
                         {
-                            if (!color_gradients.ContainsKey(lgb.InterpolationColors.Positions[x]) && (lgb.InterpolationColors.Positions[x] >= 0.0f && lgb.InterpolationColors.Positions[x] <= 1.0f))
-                                color_gradients.Add(
+                            if (!colorGradients.ContainsKey(lgb.InterpolationColors.Positions[x]) && (lgb.InterpolationColors.Positions[x] >= 0.0f && lgb.InterpolationColors.Positions[x] <= 1.0f))
+                                colorGradients.Add(
                                     lgb.InterpolationColors.Positions[x],
                                     lgb.InterpolationColors.Colors[x]
                                     );
@@ -104,14 +114,14 @@ namespace Aurora.EffectsEngine
                 }
                 catch (Exception exc)
                 {
-                    color_gradients.Clear();
+                    colorGradients.Clear();
 
                     for (int x = 0; x < lgb.LinearColors.Length; x++)
                     {
                         float pos = x / (float)(lgb.LinearColors.Length - 1);
 
-                        if (!color_gradients.ContainsKey(pos))
-                            color_gradients.Add(
+                        if (!colorGradients.ContainsKey(pos))
+                            colorGradients.Add(
                                 pos,
                                 lgb.LinearColors[x]
                                 );
@@ -151,8 +161,8 @@ namespace Aurora.EffectsEngine
                     {
                         for (int x = 0; x < pgb.InterpolationColors.Colors.Length; x++)
                         {
-                            if (!color_gradients.ContainsKey(pgb.InterpolationColors.Positions[x]) && (pgb.InterpolationColors.Positions[x] >= 0.0f && pgb.InterpolationColors.Positions[x] <= 1.0f))
-                                color_gradients.Add(
+                            if (!colorGradients.ContainsKey(pgb.InterpolationColors.Positions[x]) && (pgb.InterpolationColors.Positions[x] >= 0.0f && pgb.InterpolationColors.Positions[x] <= 1.0f))
+                                colorGradients.Add(
                                     pgb.InterpolationColors.Positions[x],
                                     pgb.InterpolationColors.Colors[x]
                                     );
@@ -161,14 +171,14 @@ namespace Aurora.EffectsEngine
                 }
                 catch (Exception exc)
                 {
-                    color_gradients.Clear();
+                    colorGradients.Clear();
 
                     for (int x = 0; x < pgb.SurroundColors.Length; x++)
                     {
                         float pos = x / (float)(pgb.SurroundColors.Length - 1);
 
-                        if (!color_gradients.ContainsKey(pos))
-                            color_gradients.Add(
+                        if (!colorGradients.ContainsKey(pos))
+                            colorGradients.Add(
                                 pos,
                                 pgb.SurroundColors[x]
                                 );
@@ -180,13 +190,13 @@ namespace Aurora.EffectsEngine
 
             }
 
-            if(color_gradients.Count > 0)
+            if(colorGradients.Count > 0)
             {
                 bool firstFound = false;
                 System.Drawing.Color first_color = new System.Drawing.Color();
                 System.Drawing.Color last_color = new System.Drawing.Color();
 
-                foreach(var kvp in color_gradients)
+                foreach(var kvp in colorGradients)
                 {
                     if(!firstFound)
                     {
@@ -197,19 +207,19 @@ namespace Aurora.EffectsEngine
                     last_color = kvp.Value;
                 }
 
-                if (!color_gradients.ContainsKey(0.0f))
-                    color_gradients.Add(0.0f, first_color);
+                if (!colorGradients.ContainsKey(0.0f))
+                    colorGradients.Add(0.0f, first_color);
 
-                if (!color_gradients.ContainsKey(1.0f))
-                    color_gradients.Add(1.0f, last_color);
+                if (!colorGradients.ContainsKey(1.0f))
+                    colorGradients.Add(1.0f, last_color);
             }
             else
             {
-                if (!color_gradients.ContainsKey(0.0f))
-                    color_gradients.Add(0.0f, System.Drawing.Color.Transparent);
+                if (!colorGradients.ContainsKey(0.0f))
+                    colorGradients.Add(0.0f, System.Drawing.Color.Transparent);
 
-                if (!color_gradients.ContainsKey(1.0f))
-                    color_gradients.Add(1.0f, System.Drawing.Color.Transparent);
+                if (!colorGradients.ContainsKey(1.0f))
+                    colorGradients.Add(1.0f, System.Drawing.Color.Transparent);
             }
 
             
@@ -223,8 +233,8 @@ namespace Aurora.EffectsEngine
 
                 wrap = BrushWrap.Repeat;
 
-                color_gradients.Add(0.0f, Utils.ColorUtils.MediaColorToDrawingColor((brush as System.Windows.Media.SolidColorBrush).Color));
-                color_gradients.Add(1.0f, Utils.ColorUtils.MediaColorToDrawingColor((brush as System.Windows.Media.SolidColorBrush).Color));
+                colorGradients.Add(0.0f, Utils.ColorUtils.MediaColorToDrawingColor((brush as System.Windows.Media.SolidColorBrush).Color));
+                colorGradients.Add(1.0f, Utils.ColorUtils.MediaColorToDrawingColor((brush as System.Windows.Media.SolidColorBrush).Color));
             }
             else if (brush is System.Windows.Media.LinearGradientBrush)
             {
@@ -251,8 +261,8 @@ namespace Aurora.EffectsEngine
 
                 foreach (var grad in lgb.GradientStops)
                 {
-                    if (!color_gradients.ContainsKey((float)grad.Offset) && ((float)grad.Offset >= 0.0f && (float)grad.Offset <= 1.0f))
-                        color_gradients.Add(
+                    if (!colorGradients.ContainsKey((float)grad.Offset) && ((float)grad.Offset >= 0.0f && (float)grad.Offset <= 1.0f))
+                        colorGradients.Add(
                             (float)grad.Offset,
                             Utils.ColorUtils.MediaColorToDrawingColor(grad.Color)
                             );
@@ -286,8 +296,8 @@ namespace Aurora.EffectsEngine
 
                 foreach (var grad in rgb.GradientStops)
                 {
-                    if (!color_gradients.ContainsKey((float)grad.Offset) && ((float)grad.Offset >= 0.0f && (float)grad.Offset <= 1.0f))
-                        color_gradients.Add(
+                    if (!colorGradients.ContainsKey((float)grad.Offset) && ((float)grad.Offset >= 0.0f && (float)grad.Offset <= 1.0f))
+                        colorGradients.Add(
                             (float)grad.Offset,
                             Utils.ColorUtils.MediaColorToDrawingColor(grad.Color)
                             );
@@ -298,13 +308,13 @@ namespace Aurora.EffectsEngine
 
             }
 
-            if (color_gradients.Count > 0)
+            if (colorGradients.Count > 0)
             {
                 bool firstFound = false;
                 System.Drawing.Color first_color = new System.Drawing.Color();
                 System.Drawing.Color last_color = new System.Drawing.Color();
 
-                foreach (var kvp in color_gradients)
+                foreach (var kvp in colorGradients)
                 {
                     if (!firstFound)
                     {
@@ -315,19 +325,19 @@ namespace Aurora.EffectsEngine
                     last_color = kvp.Value;
                 }
 
-                if (!color_gradients.ContainsKey(0.0f))
-                    color_gradients.Add(0.0f, first_color);
+                if (!colorGradients.ContainsKey(0.0f))
+                    colorGradients.Add(0.0f, first_color);
 
-                if (!color_gradients.ContainsKey(1.0f))
-                    color_gradients.Add(1.0f, last_color);
+                if (!colorGradients.ContainsKey(1.0f))
+                    colorGradients.Add(1.0f, last_color);
             }
             else
             {
-                if (!color_gradients.ContainsKey(0.0f))
-                    color_gradients.Add(0.0f, System.Drawing.Color.Transparent);
+                if (!colorGradients.ContainsKey(0.0f))
+                    colorGradients.Add(0.0f, System.Drawing.Color.Transparent);
 
-                if (!color_gradients.ContainsKey(1.0f))
-                    color_gradients.Add(1.0f, System.Drawing.Color.Transparent);
+                if (!colorGradients.ContainsKey(1.0f))
+                    colorGradients.Add(1.0f, System.Drawing.Color.Transparent);
             }
         }
 
@@ -349,7 +359,7 @@ namespace Aurora.EffectsEngine
             {
                 if (type == BrushType.Solid)
                 {
-                    _drawingbrush = new System.Drawing.SolidBrush(color_gradients[0.0f]);
+                    _drawingBrush = new System.Drawing.SolidBrush(colorGradients[0.0f]);
                 }
                 else if (type == BrushType.Linear)
                 {
@@ -363,7 +373,7 @@ namespace Aurora.EffectsEngine
                     List<System.Drawing.Color> brush_colors = new List<System.Drawing.Color>();
                     List<float> brush_positions = new List<float>();
 
-                    foreach (var kvp in color_gradients)
+                    foreach (var kvp in colorGradients)
                     {
                         brush_positions.Add(kvp.Key);
                         brush_colors.Add(kvp.Value);
@@ -387,7 +397,7 @@ namespace Aurora.EffectsEngine
                             break;
                     }
 
-                    _drawingbrush = brush;
+                    _drawingBrush = brush;
                 }
                 else if (type == BrushType.Radial)
                 {
@@ -421,7 +431,7 @@ namespace Aurora.EffectsEngine
                     List<System.Drawing.Color> brush_colors = new List<System.Drawing.Color>();
                     List<float> brush_positions = new List<float>();
 
-                    foreach (var kvp in color_gradients)
+                    foreach (var kvp in colorGradients)
                     {
                         brush_positions.Add(1.0f - kvp.Key);
                         brush_colors.Add(kvp.Value);
@@ -440,35 +450,35 @@ namespace Aurora.EffectsEngine
                     color_blend.Positions = brush_positions.ToArray();
                     brush.InterpolationColors = color_blend;
 
-                    _drawingbrush = brush;
+                    _drawingBrush = brush;
                 }
                 else
                 {
-                    _drawingbrush = new System.Drawing.SolidBrush(System.Drawing.Color.Transparent);
+                    _drawingBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Transparent);
                 }
             }
 
-            return _drawingbrush;
+            return _drawingBrush;
         }
 
         public System.Windows.Media.Brush GetMediaBrush()
         {
-            if (_mediabrush == null)
+            if (_mediaBrush == null)
             {
                 if (type == BrushType.Solid)
                 {
                     System.Windows.Media.SolidColorBrush brush = new System.Windows.Media.SolidColorBrush(
-                        Utils.ColorUtils.DrawingColorToMediaColor(color_gradients[0.0f])
+                        Utils.ColorUtils.DrawingColorToMediaColor(colorGradients[0.0f])
                         );
                     brush.Freeze();
 
-                    _mediabrush = brush;
+                    _mediaBrush = brush;
                 }
                 else if (type == BrushType.Linear)
                 {
                     System.Windows.Media.GradientStopCollection collection = new System.Windows.Media.GradientStopCollection();
 
-                    foreach (var kvp in color_gradients)
+                    foreach (var kvp in colorGradients)
                     {
                         collection.Add(
                             new System.Windows.Media.GradientStop(
@@ -494,13 +504,13 @@ namespace Aurora.EffectsEngine
                             break;
                     }
 
-                    _mediabrush = brush;
+                    _mediaBrush = brush;
                 }
                 else if (type == BrushType.Radial)
                 {
                     System.Windows.Media.GradientStopCollection collection = new System.Windows.Media.GradientStopCollection();
 
-                    foreach (var kvp in color_gradients)
+                    foreach (var kvp in colorGradients)
                     {
                         collection.Add(
                             new System.Windows.Media.GradientStop(
@@ -527,7 +537,7 @@ namespace Aurora.EffectsEngine
                             break;
                     }
 
-                    _mediabrush = brush;
+                    _mediaBrush = brush;
                 }
                 else
                 {
@@ -536,11 +546,11 @@ namespace Aurora.EffectsEngine
                         );
                     brush.Freeze();
 
-                    _mediabrush = brush;
+                    _mediaBrush = brush;
                 }
             }
 
-            return _mediabrush;
+            return _mediaBrush;
         }
 
         public ColorSpectrum GetColorSpectrum()
@@ -549,15 +559,85 @@ namespace Aurora.EffectsEngine
 
             if(type == BrushType.Solid)
             {
-                spectrum = new ColorSpectrum(color_gradients[0.0f]);
+                spectrum = new ColorSpectrum(colorGradients[0.0f]);
             }
-            else if(type == BrushType.Linear)
+            else
             {
-                foreach (var color in color_gradients)
+                foreach (var color in colorGradients)
                     spectrum.SetColorAt(color.Key, color.Value);
             }
 
             return spectrum;
+        }
+
+        /// <summary>
+        /// Blends two EffectBrushes together by a specified amount
+        /// </summary>
+        /// <param name="otherBrush">The foreground EffectBrush (When percent is at 1.0D, only this EffectBrush is shown)</param>
+        /// <param name="percent">The blending percent value</param>
+        /// <returns>The blended EffectBrush</returns>
+        public EffectBrush BlendEffectBrush(EffectBrush otherBrush, double percent)
+        {
+            if (percent <= 0.0)
+                return new EffectBrush(this);
+            else if (percent >= 1.0)
+                return new EffectBrush(otherBrush);
+
+            ColorSpectrum currentSpectrum = new ColorSpectrum(GetColorSpectrum());
+            ColorSpectrum newSpectrum = new ColorSpectrum(currentSpectrum).MultiplyByScalar(1.0 - percent);
+
+            foreach (var kvp in otherBrush.colorGradients)
+            {
+                System.Drawing.Color bgColor = currentSpectrum.GetColorAt(kvp.Key);
+                System.Drawing.Color fgColor = kvp.Value;
+
+                newSpectrum.SetColorAt(kvp.Key, Utils.ColorUtils.BlendColors(bgColor, fgColor, percent));
+            }
+
+            EffectBrush returnBrush = new EffectBrush(newSpectrum);
+            returnBrush.SetBrushType(type).SetWrap(wrap);
+
+            returnBrush.start = new System.Drawing.PointF((float)(start.X * (1.0 - percent) + otherBrush.start.X * (percent)), (float)(start.Y * (1.0 - percent) + otherBrush.start.Y * (percent)));
+            returnBrush.end = new System.Drawing.PointF((float)(end.X * (1.0 - percent) + otherBrush.end.X * (percent)), (float)(end.Y * (1.0 - percent) + otherBrush.end.Y * (percent)));
+            returnBrush.center = new System.Drawing.PointF((float)(center.X * (1.0 - percent) + otherBrush.center.X * (percent)), (float)(center.Y * (1.0 - percent) + otherBrush.center.Y * (percent)));
+
+            return returnBrush;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((EffectBrush)obj);
+        }
+
+        public bool Equals(EffectBrush p)
+        {
+            if (ReferenceEquals(null, p)) return false;
+            if (ReferenceEquals(this, p)) return true;
+
+            return (type == p.type &&
+                wrap == p.wrap &&
+                colorGradients.Equals(p.colorGradients) &&
+                start.Equals(p.start) &&
+                end.Equals(p.end) &&
+                center.Equals(p.center));
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + type.GetHashCode();
+                hash = hash * 23 + wrap.GetHashCode();
+                hash = hash * 23 + colorGradients.GetHashCode();
+                hash = hash * 23 + start.GetHashCode();
+                hash = hash * 23 + end.GetHashCode();
+                hash = hash * 23 + center.GetHashCode();
+                return hash;
+            }
         }
     }
 }

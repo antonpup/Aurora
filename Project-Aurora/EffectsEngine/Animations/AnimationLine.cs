@@ -6,8 +6,11 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationLine : AnimationFrame
     {
+        [Newtonsoft.Json.JsonProperty]
         private PointF _start_point;
+        [Newtonsoft.Json.JsonProperty]
         private PointF _end_point;
+        [Newtonsoft.Json.JsonProperty]
         private Color _end_color;
 
         public PointF StartPoint { get { return _start_point; } }

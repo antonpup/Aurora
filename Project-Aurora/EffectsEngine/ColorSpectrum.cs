@@ -267,5 +267,49 @@ namespace Aurora.EffectsEngine
         {
             return new Dictionary<float, Color>(colors);
         }
+
+        /// <summary>
+        /// Multiplies all colors in the spectrum by a scalar
+        /// </summary>
+        /// <returns></returns>
+        public ColorSpectrum MultiplyByScalar(double scalar)
+        {
+            Dictionary<float, Color> newcolors = new Dictionary<float, Color>();
+
+            foreach (KeyValuePair<float, Color> kvp in colors)
+                newcolors[kvp.Key] = Utils.ColorUtils.MultiplyColorByScalar(kvp.Value, scalar);
+
+            colors = newcolors;
+
+            return this;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ColorSpectrum)obj);
+        }
+
+        public bool Equals(ColorSpectrum p)
+        {
+            if (ReferenceEquals(null, p)) return false;
+            if (ReferenceEquals(this, p)) return true;
+
+            return (shift == p.shift &&
+                colors.Equals(p.colors));
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + shift.GetHashCode();
+                hash = hash * 23 + colors.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

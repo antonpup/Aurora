@@ -6,6 +6,7 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationLines : AnimationFrame
     {
+        [Newtonsoft.Json.JsonProperty]
         private List<AnimationLine> _lines;
 
         public AnimationLines(AnimationLine[] lines, float duration = 0.0f)

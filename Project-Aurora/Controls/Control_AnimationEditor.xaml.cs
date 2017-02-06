@@ -161,25 +161,25 @@ namespace Aurora.Controls
                 Control_VariableItem varItemPositionX = new Control_VariableItem()
                 {
                     VariableTitle = "Position X",
-                    VariableObject = _frameRectangle.Dimension_int.X
+                    VariableObject = _frameRectangle.Dimension.X
                 };
                 varItemPositionX.VariableUpdated += VarItemPositionX_VariableUpdated;
                 Control_VariableItem varItemPositionY = new Control_VariableItem()
                 {
                     VariableTitle = "Position Y",
-                    VariableObject = _frameRectangle.Dimension_int.Y
+                    VariableObject = _frameRectangle.Dimension.Y
                 };
                 varItemPositionY.VariableUpdated += VarItemPositionY_VariableUpdated;
                 Control_VariableItem varItemDimensionWidth = new Control_VariableItem()
                 {
                     VariableTitle = "Width",
-                    VariableObject = _frameRectangle.Dimension_int.Width
+                    VariableObject = _frameRectangle.Dimension.Width
                 };
                 varItemDimensionWidth.VariableUpdated += VarItemDimensionWidth_VariableUpdated;
                 Control_VariableItem varItemDimensionHeight = new Control_VariableItem()
                 {
                     VariableTitle = "Height",
-                    VariableObject = _frameRectangle.Dimension_int.Height
+                    VariableObject = _frameRectangle.Dimension.Height
                 };
                 varItemDimensionHeight.VariableUpdated += VarItemDimensionHeight_VariableUpdated;
 
@@ -378,7 +378,7 @@ namespace Aurora.Controls
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
-                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, frame.Dimension_int.Y, frame.Dimension_int.Width, (int)(float)newVariable));
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimension(new System.Drawing.RectangleF(frame.Dimension.X, frame.Dimension.Y, frame.Dimension.Width, (float)newVariable));
                 }
                 else
                 {
@@ -397,7 +397,7 @@ namespace Aurora.Controls
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
-                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, frame.Dimension_int.Y, (int)(float)newVariable, frame.Dimension_int.Height));
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimension(new System.Drawing.RectangleF(frame.Dimension.X, frame.Dimension.Y, (float)newVariable, frame.Dimension.Height));
                 }
                 else
                 {
@@ -416,7 +416,7 @@ namespace Aurora.Controls
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
-                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, (int)(float)newVariable, frame.Dimension_int.Width, frame.Dimension_int.Height));
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimension(new System.Drawing.RectangleF(frame.Dimension.X, (float)newVariable, frame.Dimension.Width, frame.Dimension.Height));
                 }
                 else
                 {
@@ -435,7 +435,7 @@ namespace Aurora.Controls
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
-                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle((int)(float)newVariable, frame.Dimension_int.Y, frame.Dimension_int.Width, frame.Dimension_int.Height));
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimension(new System.Drawing.RectangleF((float)newVariable, frame.Dimension.Y, frame.Dimension.Width, frame.Dimension.Height));
                 }
                 else
                 {

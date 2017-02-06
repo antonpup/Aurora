@@ -22,6 +22,9 @@ namespace Aurora.Settings.Layers
         [Description("Default Layer")]
         Default = 0,
 
+        [Description("Animation Layer")]
+        Animation = 10,
+
         [Description("Solid Color Layer")]
         Solid = 100,
 

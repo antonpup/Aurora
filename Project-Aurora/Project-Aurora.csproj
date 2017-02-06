@@ -292,8 +292,11 @@
     <Compile Include="Devices\Razer\RazerDevice.cs" />
     <Compile Include="Devices\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationGradientCircle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFilledGradientRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFrame.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationCircle.cs" />
@@ -794,6 +797,7 @@
     <Compile Include="Settings\Layers\DefaultLayerHandler.cs" />
     <Compile Include="Settings\Layers\EqualizerLayerHandler.cs" />
     <Compile Include="Settings\Layers\GradientFillLayerHandler.cs" />
+    <Compile Include="Settings\Layers\AnimationLayerHandler.cs" />
     <Compile Include="Settings\Layers\InteractiveLayerHandler.cs" />
     <Compile Include="Settings\Layers\LayerHandler.cs" />
     <Compile Include="Settings\Layers\LockColourLayerHandler.cs" />
