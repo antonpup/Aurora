@@ -48,6 +48,8 @@ namespace Aurora.Controls
                     stkPanelTracks.Children.Add(newTrack);
                     //stkPanelTracks.Children.Add(new Separator());
                 }
+
+                AnimationMixUpdated?.Invoke(this, ContextMix);
             }
         }
 
@@ -75,12 +77,18 @@ namespace Aurora.Controls
                 }
             }
 
+            AnimationMixUpdated?.Invoke(this, ContextMix);
+
             UpdatePlaybackTime();
         }
 
         public delegate void AnimationMixRenderedDelegate(object sender);
 
         public event AnimationMixRenderedDelegate AnimationMixRendered;
+
+        public delegate void AnimationMixArgs(object sender, AnimationMix mix);
+
+        public event AnimationMixArgs AnimationMixUpdated;
 
         public Bitmap RenderedBitmap;
 

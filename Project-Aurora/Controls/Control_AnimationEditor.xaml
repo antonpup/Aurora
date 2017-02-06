@@ -25,7 +25,7 @@
                     </Viewbox>
                 </DockPanel>
             </Grid>
-            <local:Control_AnimationMixPresenter x:Name="animMixer" DockPanel.Dock="Bottom" AnimationMixRendered="animMixer_AnimationMixRendered" AnimationFrameItemSelected="animMixer_AnimationFrameItemSelected" />
+            <local:Control_AnimationMixPresenter x:Name="animMixer" DockPanel.Dock="Bottom" AnimationMixRendered="animMixer_AnimationMixRendered" AnimationFrameItemSelected="animMixer_AnimationFrameItemSelected" AnimationMixUpdated="animMixer_AnimationMixUpdated" />
         </DockPanel>
     </Grid>
 </UserControl>

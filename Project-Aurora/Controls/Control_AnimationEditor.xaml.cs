@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static Aurora.Controls.Control_AnimationMixPresenter;
 
 namespace Aurora.Controls
 {
@@ -38,8 +39,12 @@ namespace Aurora.Controls
                 SetValue(AnimationMixProperty, value);
 
                 animMixer.ContextMix = value;
+
+                AnimationMixUpdated?.Invoke(this, value);
             }
         }
+
+        public event AnimationMixArgs AnimationMixUpdated;
 
         private UIElement _selectedFrameItem = null;
 
@@ -454,6 +459,13 @@ namespace Aurora.Controls
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetColor((System.Drawing.Color)newVariable);
+        }
+
+        private void animMixer_AnimationMixUpdated(object sender, AnimationMix mix)
+        {
+            SetValue(AnimationMixProperty, mix);
+
+            AnimationMixUpdated?.Invoke(this, mix);
         }
     }
 }
