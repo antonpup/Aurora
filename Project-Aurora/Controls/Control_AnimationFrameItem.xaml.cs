@@ -51,9 +51,23 @@ namespace Aurora.Controls
 
                 if(value != null)
                 {
-                    rectDisplay.Fill = new LinearGradientBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color), Color.FromArgb(0, 0, 0, 0), new Point(0.5, 0), new Point(0.5, 1));
-                    grdSplitterLeft.Background = new SolidColorBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color));
-                    grdSplitterRight.Background = new SolidColorBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color));
+                    Brush bgBrush = new LinearGradientBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color), Color.FromArgb(0, 0, 0, 0), new Point(0.5, 0), new Point(0.5, 1));
+                    Brush splitterBrush = new SolidColorBrush(Utils.ColorUtils.DrawingColorToMediaColor(value.Color));
+
+                    if (value is AnimationGradientCircle)
+                    {
+                        bgBrush = (value as AnimationGradientCircle).GradientBrush.GetMediaBrush();
+                        splitterBrush = (value as AnimationGradientCircle).GradientBrush.GetMediaBrush();
+                    }
+                    else if (value is AnimationFilledGradientRectangle)
+                    {
+                        bgBrush = (value as AnimationFilledGradientRectangle).GradientBrush.GetMediaBrush();
+                        splitterBrush = (value as AnimationFilledGradientRectangle).GradientBrush.GetMediaBrush();
+                    }
+
+                    rectDisplay.Fill = bgBrush;
+                    grdSplitterLeft.Background = splitterBrush;
+                    grdSplitterRight.Background = splitterBrush;
                 }
 
                 AnimationFrameItemUpdated?.Invoke(this, value);
