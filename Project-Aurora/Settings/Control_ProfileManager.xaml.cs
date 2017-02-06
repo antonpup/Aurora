@@ -275,7 +275,10 @@ namespace Aurora.Settings
                                                 float time = float.Parse(transition.Element("time").Value);
                                                 System.Drawing.Color color = System.Drawing.ColorTranslator.FromHtml(transition.Element("color").Value);
 
-                                                transitions.Add(time * (duration / 1000.0f), color);
+                                                if (transitions.ContainsKey(time * (duration / 1000.0f)))
+                                                    transitions.Add(time * (duration / 1000.0f) + 0.000001f, color);
+                                                else
+                                                    transitions.Add(time * (duration / 1000.0f), color);
                                             }
                                             catch (Exception)
                                             {
@@ -283,9 +286,12 @@ namespace Aurora.Settings
                                             }
                                         }
 
-                                        for (int x = 0; x + 1 < transitions.Count; x += 2)
+                                        for (int x = 0; x < transitions.Count; x += 2)
                                         {
-                                            float transitionDuration = transitions.Keys.ElementAt(x + 1) - transitions.Keys.ElementAt(x);
+                                            float transitionDuration = 0.0f;
+
+                                            if (x + 1 != transitions.Count)
+                                                transitionDuration = transitions.Keys.ElementAt(x + 1) - transitions.Keys.ElementAt(x);
 
                                             animTrack.SetFrame(transitions.Keys.ElementAt(x), new AnimationFill(transitions[transitions.Keys.ElementAt(x)], transitionDuration));
                                         }
