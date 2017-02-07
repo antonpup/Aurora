@@ -239,5 +239,10 @@ namespace Aurora.Controls
 
             ContextMix = ContextMix.AddTrack(newLineTrack);
         }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Global.effengine.ForceImageRender(null);
+        }
     }
 }
