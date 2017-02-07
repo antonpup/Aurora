@@ -21,6 +21,9 @@ namespace Aurora.Settings.Layers
     /// </summary>
     public partial class Control_AnimationLayer : UserControl
     {
+        private Window windowAnimationEditor = null;
+        private static bool windowAnimationEditorOpen;
+
         private bool settingsset = false;
 
         public Control_AnimationLayer()
@@ -51,13 +54,38 @@ namespace Aurora.Settings.Layers
 
         private void btnEditAnimation_Click(object sender, RoutedEventArgs e)
         {
-            Window win = new Window();
-            Controls.Control_AnimationEditor animEditor = new Controls.Control_AnimationEditor() { AnimationMix = (this.DataContext as AnimationLayerHandler).Properties._AnimationMix };
-            animEditor.AnimationMixUpdated += AnimEditor_AnimationMixUpdated;
+            if (windowAnimationEditor == null)
+            {
+                if (windowAnimationEditorOpen == true)
+                {
+                    MessageBox.Show("Animation Editor already open for another layer.\r\nPlease close it.");
+                    return;
+                }
 
-            win.Content = animEditor;
-            win.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-            win.Show();
+                windowAnimationEditor = new Window();
+                windowAnimationEditor.Closed += WindowAnimationEditor_Closed;
+
+                windowAnimationEditor.Title = "Animation Editor";
+
+                Controls.Control_AnimationEditor animEditor = new Controls.Control_AnimationEditor() { AnimationMix = (this.DataContext as AnimationLayerHandler).Properties._AnimationMix };
+                animEditor.AnimationMixUpdated += AnimEditor_AnimationMixUpdated;
+
+                windowAnimationEditor.Content = animEditor;
+                windowAnimationEditor.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                windowAnimationEditor.Show();
+            }
+            else
+            {
+                windowAnimationEditor.BringIntoView();
+            }
+
+            windowAnimationEditorOpen = true;
+        }
+
+        private void WindowAnimationEditor_Closed(object sender, EventArgs e)
+        {
+            windowAnimationEditor = null;
+            windowAnimationEditorOpen = false;
         }
 
         private void AnimEditor_AnimationMixUpdated(object sender, EffectsEngine.Animations.AnimationMix mix)

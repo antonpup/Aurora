@@ -164,7 +164,7 @@ namespace Aurora.Settings.Layers
                     new AnimationCircle(origin, Effects.canvas_width * 0.80f, secondary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(1.00f,
-                    new AnimationCircle(origin, Effects.canvas_width, Color.FromArgb(0, secondary_c), Properties.EffectWidth)
+                    new AnimationCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
                     );
                 anim_mix.AddTrack(wave);
             }
@@ -173,7 +173,7 @@ namespace Aurora.Settings.Layers
                 AnimationTrack rainbowWave = new AnimationTrack("Rainbow Wave", 1.0f);
 
                 rainbowWave.SetFrame(0.0f, new AnimationGradientCircle(origin, 0, new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
-                rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.canvas_width, new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
+                rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
 
                 anim_mix.AddTrack(rainbowWave);
             }
@@ -187,7 +187,7 @@ namespace Aurora.Settings.Layers
                     new AnimationFilledCircle(origin, Effects.canvas_width * 0.80f, secondary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(1.00f,
-                    new AnimationFilledCircle(origin, Effects.canvas_width, Color.FromArgb(0, secondary_c), Properties.EffectWidth)
+                    new AnimationFilledCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
                     );
                 anim_mix.AddTrack(wave);
             }

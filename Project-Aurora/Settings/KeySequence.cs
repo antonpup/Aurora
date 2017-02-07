@@ -75,7 +75,7 @@ namespace Aurora.Settings
             switch (type)
             {
                 case KeySequenceType.FreeForm:
-                    return new RectangleF(this.freeform.X, this.freeform.Y, this.freeform.Width, this.freeform.Height);
+                    return new RectangleF((this.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width, (this.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height, this.freeform.Width * Effects.editor_to_canvas_width, this.freeform.Height * Effects.editor_to_canvas_height);
                 default:
 
                     float left = 0.0f;
