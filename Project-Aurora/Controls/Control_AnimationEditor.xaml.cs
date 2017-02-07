@@ -51,10 +51,39 @@ namespace Aurora.Controls
         public Control_AnimationEditor()
         {
             InitializeComponent();
+
+            UpdateVirtualKeyboard();
+
+            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
+        }
+
+        private void KbLayout_KeyboardLayoutUpdated(object sender)
+        {
+            UpdateVirtualKeyboard();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void UpdateVirtualKeyboard()
+        {
+            Grid virtial_kb = Global.kbLayout.AbstractVirtualKeyboard;
+
+            keyboard_grid.Children.Clear();
+            keyboard_grid.Children.Add(virtial_kb);
+            keyboard_grid.Children.Add(new LayerEditor());
+
+            keyboard_grid.Width = virtial_kb.Width;
+            keyboard_grid.Height = virtial_kb.Height;
+
+            keyboard_grid.UpdateLayout();
+
+            viewbxAnimationView.MaxWidth = virtial_kb.Width + 50;
+            viewbxAnimationView.MaxHeight = virtial_kb.Height + 50;
+            viewbxAnimationView.UpdateLayout();
+
+            this.UpdateLayout();
         }
 
         private void animMixer_AnimationMixRendered(object sender)
@@ -72,6 +101,7 @@ namespace Aurora.Controls
                     bitmapimage.EndInit();
 
                     keyboard_overlayPreview.Source = bitmapimage;
+                    UpdateScale(keyboard_overlayPreview.ActualWidth);
                 }
             }
             catch (Exception exc)
@@ -81,12 +111,20 @@ namespace Aurora.Controls
 
         private void keyboard_overlayPreview_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            float scale = (float)(e.NewSize.Width / Effects.canvas_width);
+            UpdateScale(e.NewSize.Width);
+        }
+
+        private void UpdateScale(double width)
+        {
+            float scale = (float)(width / Effects.canvas_width);
 
             if (scale < 1.0f)
                 scale = 1.0f;
 
             animMixer.AnimationScale = scale;
+
+            rulerHorizontalPixels.MarkSize = scale;
+            rulerVerticalPixels.MarkSize = scale;
         }
 
         private void animMixer_AnimationFrameItemSelected(object sender, AnimationFrame frame)
@@ -466,6 +504,16 @@ namespace Aurora.Controls
             SetValue(AnimationMixProperty, mix);
 
             AnimationMixUpdated?.Invoke(this, mix);
+        }
+
+        private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Delete && _selectedFrameItem != null)
+            {
+                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = null;
+
+                grpbxProperties.Content = null;
+            }
         }
     }
 }

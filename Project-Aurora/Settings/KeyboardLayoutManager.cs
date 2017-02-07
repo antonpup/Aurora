@@ -411,17 +411,27 @@ namespace Aurora.Settings
 
     public class KeyboardLayoutManager
     {
-        private VirtualGroup virtual_keyboard_group;
+        private VirtualGroup virtualKeyboardGroup;
 
-        private Dictionary<Devices.DeviceKeys, IKeycap> _virtual_keyboard_map = new Dictionary<DeviceKeys, IKeycap>();
+        private Dictionary<Devices.DeviceKeys, IKeycap> _virtualKeyboardMap = new Dictionary<DeviceKeys, IKeycap>();
 
-        private Grid _virtual_keyboard = new Grid();
+        private bool _virtualKBInvalid = true;
+
+        private Grid _virtualKeyboard = new Grid();
 
         public Grid Virtual_keyboard
         {
             get
             {
-                return _virtual_keyboard;
+                return _virtualKeyboard;
+            }
+        }
+
+        public Grid AbstractVirtualKeyboard
+        {
+            get
+            {
+                return CreateUserControl(true);
             }
         }
 
@@ -430,6 +440,8 @@ namespace Aurora.Settings
         private double bitmap_one_pixel = 12.0; // 12 pixels = 1 byte
 
         private Dictionary<Devices.DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<Devices.DeviceKeys, BitmapRectangle>();
+
+        private bool _bitmapMapInvalid = true;
 
         public delegate void LayoutUpdatedEventHandler(object sender);
 
@@ -580,8 +592,8 @@ namespace Aurora.Settings
                     string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
                     VirtualGroupConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualGroupConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                    virtual_keyboard_group.AdjustKeys(layoutConfig.key_modifications);
-                    virtual_keyboard_group.RemoveKeys(layoutConfig.keys_to_remove);
+                    virtualKeyboardGroup.AdjustKeys(layoutConfig.key_modifications);
+                    virtualKeyboardGroup.RemoveKeys(layoutConfig.keys_to_remove);
 
                     foreach (string feature in layoutConfig.included_features)
                     {
@@ -592,7 +604,7 @@ namespace Aurora.Settings
                             string feature_content = File.ReadAllText(feature_path, Encoding.UTF8);
                             VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                            virtual_keyboard_group.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
+                            virtualKeyboardGroup.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
                         }
                     }
 
@@ -607,7 +619,7 @@ namespace Aurora.Settings
                             case PreferredKeyboardLocalization.jpn:
                             case PreferredKeyboardLocalization.ru:
                             case PreferredKeyboardLocalization.uk:
-                                virtual_keyboard_group.AdjustKeys(new Dictionary<DeviceKeys, KeyboardKey>() { { DeviceKeys.NUM_SEVEN, new KeyboardKey(null, DeviceKeys.NUM_SEVEN, null, null, null, 60, null, null, null, null, null, 5, null) } });
+                                virtualKeyboardGroup.AdjustKeys(new Dictionary<DeviceKeys, KeyboardKey>() { { DeviceKeys.NUM_SEVEN, new KeyboardKey(null, DeviceKeys.NUM_SEVEN, null, null, null, 60, null, null, null, null, null, 5, null) } });
                                 break;
                             default:
                                 break;
@@ -641,36 +653,36 @@ namespace Aurora.Settings
                     if (!string.IsNullOrWhiteSpace(mouse_feature_path))
                     {
                         string feature_content = File.ReadAllText(mouse_feature_path, Encoding.UTF8);
-                        VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                        VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
                         if (mouse_orientation == MouseOrientationType.LeftHanded)
                         {
-                            if (feature_config.origin_region == KeyboardRegion.TopRight)
-                                feature_config.origin_region = KeyboardRegion.TopLeft;
-                            else if (feature_config.origin_region == KeyboardRegion.BottomRight)
-                                feature_config.origin_region = KeyboardRegion.BottomLeft;
+                            if (featureConfig.origin_region == KeyboardRegion.TopRight)
+                                featureConfig.origin_region = KeyboardRegion.TopLeft;
+                            else if (featureConfig.origin_region == KeyboardRegion.BottomRight)
+                                featureConfig.origin_region = KeyboardRegion.BottomLeft;
 
-                            double outline_width = 0.0;
-                            int outline_width_bits = 0;
+                            double outlineWidth = 0.0;
+                            int outlineWidthBits = 0;
 
-                            foreach (var key in feature_config.grouped_keys)
+                            foreach (var key in featureConfig.grouped_keys)
                             {
-                                if (outline_width == 0.0 && outline_width_bits == 0) //We found outline (NOTE: Outline has to be first in the grouped keys)
+                                if (outlineWidth == 0.0 && outlineWidthBits == 0) //We found outline (NOTE: Outline has to be first in the grouped keys)
                                 {
                                     if (key.tag == DeviceKeys.NONE)
                                     {
-                                        outline_width = key.width.Value + 2 * key.margin_left.Value;
-                                        outline_width_bits = key.width_bits.Value + 2 * key.margin_left_bits.Value;
+                                        outlineWidth = key.width.Value + 2 * key.margin_left.Value;
+                                        outlineWidthBits = key.width_bits.Value + 2 * key.margin_left_bits.Value;
                                     }
                                 }
 
-                                key.margin_left -= outline_width;
-                                key.margin_left_bits -= outline_width_bits;
+                                key.margin_left -= outlineWidth;
+                                key.margin_left_bits -= outlineWidthBits;
                             }
 
                         }
 
-                        virtual_keyboard_group.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
+                        virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
                     }
 
                 }
@@ -681,6 +693,8 @@ namespace Aurora.Settings
             }
 
             //Perform end of load functions
+            _bitmapMapInvalid = true;
+            _virtualKBInvalid = true;
             CalculateBitmap();
             CreateUserControl();
 
@@ -699,46 +713,51 @@ namespace Aurora.Settings
 
         private void CalculateBitmap()
         {
-            int width_bit = 0;
-            int height_bit = 0;
-            int width_bit_max = 1;
-            int height_bit_max = 1;
-            bitmap_map.Clear();
-
-            foreach (KeyboardKey key in virtual_keyboard_group.grouped_keys)
+            if(_bitmapMapInvalid)
             {
-                int key_tly = key.margin_top_bits.Value + height_bit;
-                int key_tlx = key.margin_left_bits.Value + width_bit;
+                int width_bit = 0;
+                int height_bit = 0;
+                int width_bit_max = 1;
+                int height_bit_max = 1;
+                bitmap_map.Clear();
 
-                int key_bry = key_tly + key.height_bits.Value;
-                int key_brx = key_tlx + key.width_bits.Value;
-
-                if (key.absolute_location.Value)
-                    this.bitmap_map[key.tag] = new BitmapRectangle(key.margin_left_bits.Value, key.margin_top_bits.Value, key_brx - key_tlx, key_bry - key_tly);
-                else
-                    this.bitmap_map[key.tag] = new BitmapRectangle(key_tlx, key_tly, key_brx - key_tlx, key_bry - key_tly);
-
-                if (!key.absolute_location.Value)
+                foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
                 {
-                    if (width_bit_max < key_brx) width_bit_max = key_brx;
-                    if (height_bit_max < key_bry) height_bit_max = key_bry;
+                    int key_tly = key.margin_top_bits.Value + height_bit;
+                    int key_tlx = key.margin_left_bits.Value + width_bit;
 
+                    int key_bry = key_tly + key.height_bits.Value;
+                    int key_brx = key_tlx + key.width_bits.Value;
 
-                    if (key.line_break.Value)
-                    {
-                        height_bit += PixelToByte(37);
-                        width_bit = 0;
-                    }
+                    if (key.absolute_location.Value)
+                        this.bitmap_map[key.tag] = new BitmapRectangle(key.margin_left_bits.Value, key.margin_top_bits.Value, key_brx - key_tlx, key_bry - key_tly);
                     else
+                        this.bitmap_map[key.tag] = new BitmapRectangle(key_tlx, key_tly, key_brx - key_tlx, key_bry - key_tly);
+
+                    if (!key.absolute_location.Value)
                     {
-                        width_bit = key_brx;
-                        height_bit = key_tly;
+                        if (width_bit_max < key_brx) width_bit_max = key_brx;
+                        if (height_bit_max < key_bry) height_bit_max = key_bry;
+
+
+                        if (key.line_break.Value)
+                        {
+                            height_bit += PixelToByte(37);
+                            width_bit = 0;
+                        }
+                        else
+                        {
+                            width_bit = key_brx;
+                            height_bit = key_tly;
+                        }
                     }
                 }
-            }
 
-            Global.effengine.SetCanvasSize(virtual_keyboard_group.BitmapRegion.Width, virtual_keyboard_group.BitmapRegion.Height);
-            Global.effengine.SetBitmapping(this.bitmap_map);
+                _bitmapMapInvalid = false;
+
+                Global.effengine.SetCanvasSize(virtualKeyboardGroup.BitmapRegion.Width, virtualKeyboardGroup.BitmapRegion.Height);
+                Global.effengine.SetBitmapping(this.bitmap_map);
+            }
         }
 
         private void virtualkeyboard_key_selected(FrameworkElement key)
@@ -789,10 +808,12 @@ namespace Aurora.Settings
             }
         }
 
-        private void CreateUserControl()
+        private Grid CreateUserControl(bool abstractKeycaps = false)
         {
+            if(_virtualKBInvalid && !abstractKeycaps)
+                _virtualKeyboardMap.Clear();
+
             Grid new_virtual_keyboard = new Grid();
-            _virtual_keyboard_map.Clear();
 
             double layout_height = 0;
             double layout_width = 0;
@@ -804,7 +825,7 @@ namespace Aurora.Settings
 
             string images_path = Path.Combine(layoutsPath, "Extra Features", "images");
 
-            foreach (KeyboardKey key in virtual_keyboard_group.grouped_keys)
+            foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
             {
                 double keyMargin_Left = key.margin_left.Value;
                 double keyMargin_Top = key.margin_top.Value;
@@ -816,29 +837,35 @@ namespace Aurora.Settings
 
                 UserControl keycap;
 
-                switch (Global.Configuration.virtualkeyboard_keycap_type)
+                //Ghost keycap is used for abstract representation of keys
+                if(abstractKeycaps)
+                    keycap = new Control_GhostKeycap(key, image_path);
+                else
                 {
-                    case KeycapType.Default_backglow:
-                        keycap = new Control_DefaultKeycapBackglow(key, image_path);
-                        break;
-                    case KeycapType.Default_backglow_only:
-                        keycap = new Control_DefaultKeycapBackglowOnly(key, image_path);
-                        break;
-                    case KeycapType.Colorized:
-                        keycap = new Control_ColorizedKeycap(key, image_path);
-                        break;
-                    case KeycapType.Colorized_blank:
-                        keycap = new Control_ColorizedKeycapBlank(key, image_path);
-                        break;
-                    default:
-                        keycap = new Control_DefaultKeycap(key, image_path);
-                        break;
+                    switch (Global.Configuration.virtualkeyboard_keycap_type)
+                    {
+                        case KeycapType.Default_backglow:
+                            keycap = new Control_DefaultKeycapBackglow(key, image_path);
+                            break;
+                        case KeycapType.Default_backglow_only:
+                            keycap = new Control_DefaultKeycapBackglowOnly(key, image_path);
+                            break;
+                        case KeycapType.Colorized:
+                            keycap = new Control_ColorizedKeycap(key, image_path);
+                            break;
+                        case KeycapType.Colorized_blank:
+                            keycap = new Control_ColorizedKeycapBlank(key, image_path);
+                            break;
+                        default:
+                            keycap = new Control_DefaultKeycap(key, image_path);
+                            break;
+                    }
                 }
 
                 new_virtual_keyboard.Children.Add(keycap);
 
-                if (key.tag != DeviceKeys.NONE && !_virtual_keyboard_map.ContainsKey(key.tag) && keycap is IKeycap)
-                    _virtual_keyboard_map.Add(key.tag, keycap as IKeycap);
+                if (key.tag != DeviceKeys.NONE && !_virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)
+                    _virtualKeyboardMap.Add(key.tag, keycap as IKeycap);
 
                 if (key.absolute_location.Value)
                     keycap.Margin = new Thickness(key.margin_left.Value, key.margin_top.Value, 0, 0);
@@ -875,7 +902,7 @@ namespace Aurora.Settings
                 }
             }
 
-            if (virtual_keyboard_group.grouped_keys.Count == 0)
+            if (virtualKeyboardGroup.grouped_keys.Count == 0)
             {
                 //No items, display error
                 Label error_message = new Label();
@@ -935,19 +962,24 @@ namespace Aurora.Settings
             else
             {
                 //Update size
-                new_virtual_keyboard.Width = virtual_keyboard_group.Region.Width;
-                new_virtual_keyboard.Height = virtual_keyboard_group.Region.Height;
+                new_virtual_keyboard.Width = virtualKeyboardGroup.Region.Width;
+                new_virtual_keyboard.Height = virtualKeyboardGroup.Region.Height;
             }
 
-            _virtual_keyboard.Children.Clear();
-            _virtual_keyboard = new_virtual_keyboard;
+            if (_virtualKBInvalid && !abstractKeycaps)
+            {
+                _virtualKeyboard.Children.Clear();
+                _virtualKeyboard = new_virtual_keyboard;
 
-            Global.logger.LogLine("Baseline X = " + (float)baseline_x, Logging_Level.Info, false);
-            Global.logger.LogLine("Baseline Y = " + (float)baseline_y, Logging_Level.Info, false);
-            Effects.grid_baseline_x = (float)baseline_x;
-            Effects.grid_baseline_y = (float)baseline_y;
-            Effects.grid_height = (float)new_virtual_keyboard.Height;
-            Effects.grid_width = (float)new_virtual_keyboard.Width;
+                Effects.grid_baseline_x = (float)baseline_x;
+                Effects.grid_baseline_y = (float)baseline_y;
+                Effects.grid_height = (float)new_virtual_keyboard.Height;
+                Effects.grid_width = (float)new_virtual_keyboard.Width;
+
+                _virtualKBInvalid = false;
+            }
+
+            return new_virtual_keyboard;
         }
 
         private void LoadCulture(String culture)
@@ -961,7 +993,7 @@ namespace Aurora.Settings
             string content = File.ReadAllText(layoutPath, Encoding.UTF8);
             KeyboardKey[] keyboard = JsonConvert.DeserializeObject<KeyboardKey[]>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-            virtual_keyboard_group = new VirtualGroup(keyboard);
+            virtualKeyboardGroup = new VirtualGroup(keyboard);
 
             /*
             if (keyboard.Count > 0)
@@ -976,8 +1008,10 @@ namespace Aurora.Settings
 
         public void LoadNone()
         {
-            virtual_keyboard_group.Clear();
+            virtualKeyboardGroup.Clear();
 
+            _bitmapMapInvalid = true;
+            _virtualKBInvalid = true;
             CalculateBitmap();
             CreateUserControl();
 
@@ -1113,14 +1147,14 @@ namespace Aurora.Settings
             keyboard.Add(new KeyboardKey("0", Devices.DeviceKeys.NUM_ZERO, true, false, 12, 14, 0, 67));
             keyboard.Add(new KeyboardKey(".", Devices.DeviceKeys.NUM_PERIOD, true, true));
 
-            virtual_keyboard_group = new VirtualGroup(keyboard.ToArray());
+            virtualKeyboardGroup = new VirtualGroup(keyboard.ToArray());
 
             _loaded_localization = PreferredKeyboardLocalization.None;
         }
 
         public void SetKeyboardColors(Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights)
         {
-            foreach (var kvp in _virtual_keyboard_map)
+            foreach (var kvp in _virtualKeyboardMap)
             {
                 if (keylights.ContainsKey(kvp.Key))
                     kvp.Value.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(keylights[kvp.Key]));

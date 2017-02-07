@@ -730,6 +730,9 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Keycaps\Control_GhostKeycap.xaml.cs">
+      <DependentUpon>Control_GhostKeycap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml.cs">
       <DependentUpon>Control_ColorizedKeycapBlank.xaml</DependentUpon>
     </Compile>
@@ -1146,6 +1149,10 @@
     <Page Include="Settings\Control_LayerControlPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Keycaps\Control_GhostKeycap.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml">
       <Generator>MSBuild:Compile</Generator>
