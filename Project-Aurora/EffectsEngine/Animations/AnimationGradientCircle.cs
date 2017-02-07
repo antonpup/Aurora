@@ -76,18 +76,22 @@ namespace Aurora.EffectsEngine.Animations
                 newColorGradients.Add(0.0f, spectrum.GetColorAt((1 - 1 / _cutOffPoint)));
             }
 
+            _newbrush.SetBrushType(EffectBrush.BrushType.Radial);
             Brush brush = _newbrush.GetDrawingBrush();
 
-            (brush as PathGradientBrush).TranslateTransform(_scaledDimension.X, _scaledDimension.Y);
-            (brush as PathGradientBrush).ScaleTransform(_scaledDimension.Width - (2.0f), _scaledDimension.Height - (2.0f));
+            if(brush is PathGradientBrush)
+            {
+                (brush as PathGradientBrush).TranslateTransform(_scaledDimension.X, _scaledDimension.Y);
+                (brush as PathGradientBrush).ScaleTransform(_scaledDimension.Width - (2.0f), _scaledDimension.Height - (2.0f));
 
-            Matrix rotationMatrix = new Matrix();
-            rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);
+                Matrix rotationMatrix = new Matrix();
+                rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);
 
-            Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
-            g.FillEllipse(brush, _scaledDimension);
-            g.Transform = originalMatrix;
+                Matrix originalMatrix = g.Transform;
+                g.Transform = rotationMatrix;
+                g.FillEllipse(brush, _scaledDimension);
+                g.Transform = originalMatrix;
+            }
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
