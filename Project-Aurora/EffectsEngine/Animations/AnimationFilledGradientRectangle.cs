@@ -37,8 +37,8 @@ namespace Aurora.EffectsEngine.Animations
             PointF rotatePoint = new PointF(_scaledDimension.X + (_scaledDimension.Width / 2.0f), _scaledDimension.Y + (_scaledDimension.Height / 2.0f));
 
             EffectBrush _newbrush = new EffectBrush(_gradientBrush);
-            _newbrush.start = new PointF(_scaledDimension.X, _scaledDimension.Y);
-            _newbrush.end = new PointF(_scaledDimension.X + _scaledDimension.Width, _scaledDimension.Y + _scaledDimension.Height);
+            _newbrush.start = new PointF(_newbrush.start.X * scale, _newbrush.start.Y * scale);
+            _newbrush.end = new PointF(_newbrush.end.X * scale, _newbrush.end.Y * scale);
 
             Matrix rotationMatrix = new Matrix();
             rotationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);

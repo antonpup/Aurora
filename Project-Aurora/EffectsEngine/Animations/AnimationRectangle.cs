@@ -28,7 +28,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationRectangle(float x, float y, float rect_width, float rect_height, Color color, int width = 1, float duration = 0.0f)
         {
-            _dimension = new RectangleF(x - rect_width * 0.5f, y - rect_height * 0.5f, rect_width, rect_height);
+            _dimension = new RectangleF(x, y, rect_width, rect_height);
             _color = color;
             _width = width;
             _duration = duration;
