@@ -39,7 +39,7 @@ namespace Aurora.Controls
 
                 stkPanelTracks.Children.Clear();
 
-                foreach(var track in value.GetTracks())
+                foreach (var track in value.GetTracks())
                 {
                     Control_AnimationTrackPresenter newTrack = new Control_AnimationTrackPresenter() { ContextTrack = track.Value };
                     newTrack.AnimationTrackUpdated += NewTrack_AnimationTrackUpdated;
@@ -62,7 +62,7 @@ namespace Aurora.Controls
 
         private void NewTrack_AnimationTrackUpdated(object sender, AnimationTrack track)
         {
-            if(track == null)
+            if (track == null)
                 stkPanelTracks.Children.Remove(sender as Control_AnimationTrackPresenter);
 
             ContextMix.Clear();
@@ -188,7 +188,7 @@ namespace Aurora.Controls
 
         private void chkbxDrawToDevices_Checked(object sender, RoutedEventArgs e)
         {
-            if(!(sender as CheckBox).IsChecked.Value)
+            if (!(sender as CheckBox).IsChecked.Value)
                 Global.effengine.ForceImageRender(null);
         }
 
@@ -243,6 +243,38 @@ namespace Aurora.Controls
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             Global.effengine.ForceImageRender(null);
+        }
+
+        private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            float deltaT = 0.001f;
+
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                deltaT = 0.01f;
+
+            if (e.Key == Key.Left)
+            {
+                e.Handled = true;
+
+                if (_currentPlaybackTime - deltaT < 0)
+                    _currentPlaybackTime = 0.0f;
+                else
+                    _currentPlaybackTime -= deltaT;
+
+                gridScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100, 0, 0, 0);
+
+                UpdatePlaybackTime();
+            }
+            else if (e.Key == Key.Right)
+            {
+                e.Handled = true;
+
+                _currentPlaybackTime += deltaT;
+
+                gridScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100, 0, 0, 0);
+
+                UpdatePlaybackTime();
+            }
         }
     }
 }
