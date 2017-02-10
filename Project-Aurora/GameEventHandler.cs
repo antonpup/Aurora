@@ -160,14 +160,21 @@ namespace Aurora
 
                 StringBuilder sb = new StringBuilder(4048);
                 GetModuleFileNameEx(processhandle, zeroHandle, sb, 4048);
-                //Global.logger.LogLine("Process changed: " + sb.ToString(), Logging_Level.Info);
+                //Global.logger.LogLine("Current Foreground Window: " + sb.ToString(), Logging_Level.Info);
 
+                System.IO.Path.GetFileName(sb.ToString());
 
 
                return sb.ToString();
             }
+            catch (ArgumentException aex)
+            {
+                Global.logger.LogLine("Argument Exception: " + aex);
+                return "";
+            }
             catch (Exception exc)
             {
+                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc);
                 return "";
             }
         }
