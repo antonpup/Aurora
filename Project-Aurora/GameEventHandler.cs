@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 //using System.Timers;
@@ -141,29 +142,39 @@ namespace Aurora
         private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
         private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017;
 
-        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
+        [DllImport("Oleacc.dll")]
+        static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
+        [DllImport("psapi.dll")]
+        static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
+		
         private string GetActiveWindowsProcessname()
         {
             try
             {
-                IntPtr handle = IntPtr.Zero;
-                handle = GetForegroundWindow();
+                IntPtr windowHandle = IntPtr.Zero;
+                IntPtr processhandle = IntPtr.Zero;
+                IntPtr zeroHandle = IntPtr.Zero;
+                windowHandle = GetForegroundWindow();
+                processhandle = GetProcessHandleFromHwnd(windowHandle);
 
-                uint processId;
-                if (GetWindowThreadProcessId(handle, out processId) > 0)
-                {
-                    return Process.GetProcessById((int)processId).MainModule.FileName;
-                }
-                else
-                {
-                    return "";
-                }
+                StringBuilder sb = new StringBuilder(4048);
+                GetModuleFileNameEx(processhandle, zeroHandle, sb, 4048);
+                //Global.logger.LogLine("Current Foreground Window: " + sb.ToString(), Logging_Level.Info);
+
+                System.IO.Path.GetFileName(sb.ToString());
+
+
+               return sb.ToString();
+            }
+            catch (ArgumentException aex)
+            {
+                Global.logger.LogLine("Argument Exception: " + aex);
+                return "";
             }
             catch (Exception exc)
             {
-                //Console.WriteLine(exc);
+                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc);
                 return "";
             }
         }
