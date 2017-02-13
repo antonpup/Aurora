@@ -13,11 +13,6 @@ namespace Aurora.Profiles.Overwatch
         {
         }
 
-        public override bool IsEnabled()
-        {
-            return (this.Profile.Settings as OverwatchSettings).isEnabled;
-        }
-
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             this.colorEnhance_Enabled = (this.Profile.Settings as OverwatchSettings).colorEnhance_Enabled;

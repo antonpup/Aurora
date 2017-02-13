@@ -35,7 +35,7 @@ namespace Aurora.Profiles.LeagueOfLegends
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as LoLSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as LoLSettings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as LoLSettings).lighting_areas;
             this.cz_disable_on_dark.IsChecked = (profile_manager.Settings as LoLSettings).disable_cz_on_dark;
         }
@@ -60,7 +60,7 @@ namespace Aurora.Profiles.LeagueOfLegends
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as LoLSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as LoLSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

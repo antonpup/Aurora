@@ -41,7 +41,7 @@ namespace Aurora.Profiles.Payday_2.Layers
     {
         public PD2FlashbangLayerHandler() : base()
         {
-            _Type = LayerType.PD2Flashbang;
+            _ID = "PD2Flashbang";
         }
 
         protected override UserControl CreateControl()

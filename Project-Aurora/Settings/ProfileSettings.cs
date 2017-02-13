@@ -62,7 +62,7 @@ namespace Aurora.Settings
     public class ProfileSettings : Settings
     {
         #region Private Properties
-        private bool _isEnabled = true;
+        private bool isEnabled = true;
 
         private Dictionary<string, ScriptSettings> _ScriptSettings = new Dictionary<string, ScriptSettings>();
 
@@ -72,7 +72,7 @@ namespace Aurora.Settings
         #endregion
 
         #region Public Properties
-        public bool isEnabled { get { return _isEnabled; } set { _isEnabled = value; InvokePropertyChanged(); } }
+        public bool IsEnabled { get { return isEnabled; } set { isEnabled = value; InvokePropertyChanged(); } }
 
         public Dictionary<string, ScriptSettings> ScriptSettings { get { return _ScriptSettings; } set { _ScriptSettings = value; InvokePropertyChanged(); } }
 

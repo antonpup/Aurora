@@ -12,9 +12,9 @@ namespace Aurora.Profiles.TheTalosPrinciple
     public class TalosPrincipleProfileManager : ProfileManager
     {
         public TalosPrincipleProfileManager()
-            : base("The Talos Principle", "the_talos_principle", new string[] { "talos.exe", "talos_unrestricted.exe" }, typeof(TalosPrincipleSettings), typeof(Control_TalosPrinciple), new GameEvent_TalosPrinciple())
+            : base(new LightEventConfig { Name = "The Talos Principle", ID = "the_talos_principle", ProcessNames = new string[] { "talos.exe", "talos_unrestricted.exe" }, SettingsType = typeof(TalosPrincipleSettings), OverviewControlType = typeof(Control_TalosPrinciple), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_TalosPrinciple(), IconURI = "Resources/talosprinciple_64x64.png" })
         {
-            IconURI = "Resources/talosprinciple_64x64.png";
+           
         }
     }
 }

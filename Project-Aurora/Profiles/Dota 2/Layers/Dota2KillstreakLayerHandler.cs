@@ -104,7 +104,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public Dota2KillstreakLayerHandler() : base()
         {
-            _Type = LayerType.Dota2Killstreak;
+            _ID = "Dota2Killstreak";
         }
 
         protected override UserControl CreateControl()

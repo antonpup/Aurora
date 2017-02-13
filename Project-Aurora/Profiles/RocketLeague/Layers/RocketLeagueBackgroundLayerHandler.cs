@@ -57,7 +57,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
     {
         public RocketLeagueBackgroundLayerHandler() : base()
         {
-            _Type = LayerType.RocketLeagueBackground;
+            _ID = "RocketLeagueBackground";
         }
 
         protected override UserControl CreateControl()

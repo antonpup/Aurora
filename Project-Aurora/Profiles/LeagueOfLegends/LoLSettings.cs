@@ -13,7 +13,7 @@ namespace Aurora.Profiles.LeagueOfLegends
         public LoLSettings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
 
             //Effects
             //// Lighting Areas

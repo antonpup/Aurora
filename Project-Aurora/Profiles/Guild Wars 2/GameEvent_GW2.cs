@@ -11,11 +11,6 @@ namespace Aurora.Profiles.Guild_Wars_2
         {
         }
 
-        public override bool IsEnabled()
-        {
-            return this.Profile.Settings.isEnabled;
-        }
-
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones

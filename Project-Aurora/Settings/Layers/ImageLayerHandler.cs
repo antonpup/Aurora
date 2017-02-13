@@ -38,7 +38,7 @@ namespace Aurora.Settings.Layers
 
         public ImageLayerHandler()
         {
-            _Type = LayerType.Image;
+            _ID = "Image";
         }
 
         protected override UserControl CreateControl()

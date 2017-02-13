@@ -38,7 +38,7 @@ namespace Aurora.Profiles.GTA5
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as GTA5Settings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as GTA5Settings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as GTA5Settings).lighting_areas;
         }
 
@@ -46,7 +46,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                (profile_manager.Event._game_state as GameState_GTA5).CurrentState = (GTA5.GSI.PlayerState)Enum.Parse(typeof(GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString());
+                (profile_manager.Config.Event._game_state as GameState_GTA5).CurrentState = (GTA5.GSI.PlayerState)Enum.Parse(typeof(GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString());
             }
         }
 
@@ -54,13 +54,13 @@ namespace Aurora.Profiles.GTA5
         {
             if(frame % 2 == 0)
             {
-                (profile_manager.Event._game_state as GameState_GTA5).LeftSirenColor = System.Drawing.Color.Red;
-                (profile_manager.Event._game_state as GameState_GTA5).RightSirenColor = System.Drawing.Color.Blue;
+                (profile_manager.Config.Event._game_state as GameState_GTA5).LeftSirenColor = System.Drawing.Color.Red;
+                (profile_manager.Config.Event._game_state as GameState_GTA5).RightSirenColor = System.Drawing.Color.Blue;
             }
             else
             {
-                (profile_manager.Event._game_state as GameState_GTA5).LeftSirenColor = System.Drawing.Color.Blue;
-                (profile_manager.Event._game_state as GameState_GTA5).RightSirenColor = System.Drawing.Color.Red;
+                (profile_manager.Config.Event._game_state as GameState_GTA5).LeftSirenColor = System.Drawing.Color.Blue;
+                (profile_manager.Config.Event._game_state as GameState_GTA5).RightSirenColor = System.Drawing.Color.Red;
             }
 
             frame++;
@@ -74,13 +74,13 @@ namespace Aurora.Profiles.GTA5
                 if (value == 0)
                 {
                     preview_wantedlevel_timer.Stop();
-                    (profile_manager.Event._game_state as GameState_GTA5).HasCops = false;
+                    (profile_manager.Config.Event._game_state as GameState_GTA5).HasCops = false;
                 }
                 else
                 {
                     preview_wantedlevel_timer.Start();
                     preview_wantedlevel_timer.Interval = 600D - 50D * value;
-                    (profile_manager.Event._game_state as GameState_GTA5).HasCops = true;
+                    (profile_manager.Config.Event._game_state as GameState_GTA5).HasCops = true;
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as GTA5Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as GTA5Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

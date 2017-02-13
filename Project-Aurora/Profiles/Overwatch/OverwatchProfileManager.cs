@@ -13,9 +13,9 @@ namespace Aurora.Profiles.Overwatch
     public class OverwatchProfileManager : ProfileManager
     {
         public OverwatchProfileManager()
-            : base("Overwatch", "overwatch", "overwatch.exe", typeof(OverwatchSettings), typeof(Control_Overwatch), new GameEvent_Overwatch())
+            : base(new LightEventConfig { Name = "Overwatch", ID = "overwatch", ProcessNames = new[] { "overwatch.exe" }, SettingsType = typeof(OverwatchSettings), OverviewControlType = typeof(Control_Overwatch), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Overwatch(), IconURI = "Resources/overwatch_icon.png" })
         {
-            IconURI = "Resources/overwatch_icon.png";
+            
         }
     }
 }

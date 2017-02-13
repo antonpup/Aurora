@@ -12,9 +12,8 @@ namespace Aurora.Profiles.Blacklight
     public class BLightProfileManager : ProfileManager
     {
         public BLightProfileManager()
-            : base("Blacklight: Retribution", "BLight", "FoxGame-win32-Shipping.exe", typeof(BLightSettings), typeof(Control_BLight), new GameEvent_BLight())
+            : base(new LightEventConfig { Name = "Blacklight: Retribution", ID = "BLight", ProcessNames = new[] { "FoxGame-win32-Shipping.exe" }, SettingsType = typeof(BLightSettings), OverviewControlType = typeof(Control_BLight), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_BLight(), IconURI = "Resources/blacklight_64x64.png" })
         {
-            IconURI = "Resources/blacklight_64x64.png";
         }
     }
 }

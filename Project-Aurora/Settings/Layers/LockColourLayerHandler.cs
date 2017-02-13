@@ -43,7 +43,7 @@ namespace Aurora.Settings.Layers
     {
         public LockColourLayerHandler() : base()
         {
-            _Type = LayerType.LockColor;
+            _ID = "LockColor";
         }
 
         protected override System.Windows.Controls.UserControl CreateControl()

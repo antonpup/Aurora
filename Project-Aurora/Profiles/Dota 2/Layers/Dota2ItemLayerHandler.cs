@@ -339,7 +339,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public Dota2ItemLayerHandler() : base()
         {
-            _Type = LayerType.Dota2Items;
+            _ID = "Dota2Items";
         }
 
         protected override UserControl CreateControl()

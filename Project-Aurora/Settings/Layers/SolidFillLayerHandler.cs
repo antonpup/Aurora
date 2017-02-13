@@ -33,7 +33,7 @@ namespace Aurora.Settings.Layers
     {
         public SolidFillLayerHandler()
         {
-            _Type = LayerType.SolidFilled;
+            _ID = "SolidFilled";
         }
 
         protected override UserControl CreateControl()

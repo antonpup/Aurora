@@ -82,7 +82,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public CSGOBombLayerHandler() : base()
         {
-            _Type = LayerType.CSGOBomb;
+            _ID = "CSGOBomb";
         }
 
         protected override UserControl CreateControl()

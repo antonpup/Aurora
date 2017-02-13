@@ -16,7 +16,7 @@ namespace Aurora.Profiles.Guild_Wars_2
         public GW2Settings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
             first_time_installed = false;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()

@@ -35,7 +35,7 @@ namespace Aurora.Profiles.Blade_and_Soul
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as BnSSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as BnSSettings).IsEnabled;
             this.ce_enabled.IsChecked = (profile_manager.Settings as BnSSettings).colorEnhance_Enabled;
             this.ce_mode.SelectedIndex = (profile_manager.Settings as BnSSettings).colorEnhance_Mode;
             this.ce_color_factor.Value = (profile_manager.Settings as BnSSettings).colorEnhance_color_factor;
@@ -71,7 +71,7 @@ namespace Aurora.Profiles.Blade_and_Soul
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as BnSSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as BnSSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

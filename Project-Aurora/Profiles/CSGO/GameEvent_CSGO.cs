@@ -39,34 +39,17 @@ namespace Aurora.Profiles.CSGO
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
             if (new_game_state is GameState_CSGO)
             {
                 _game_state = new_game_state;
-
-                GameState_CSGO gs = (new_game_state as GameState_CSGO);
-
-                try
-                {
-                    UpdateLights(frame);
-                }
-                catch (Exception e)
-                {
-                    Global.logger.LogLine("Exception during OnNewGameState. Error: " + e, Logging_Level.Error);
-                    Global.logger.LogLine(gs.ToString(), Logging_Level.None);
-                }
             }
         }
 
         public override void ResetGameState()
         {
             _game_state = new GameState_CSGO();
-        }
-
-        public override bool IsEnabled()
-        {
-            return this.Profile.Settings.isEnabled;
         }
     }
 }

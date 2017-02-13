@@ -16,7 +16,7 @@ namespace Aurora.Profiles.Evolve
         public EvolveSettings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
             first_time_installed = false;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()

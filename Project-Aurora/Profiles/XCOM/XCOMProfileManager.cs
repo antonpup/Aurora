@@ -12,9 +12,8 @@ namespace Aurora.Profiles.XCOM
     public class XCOMProfileManager : ProfileManager
     {
         public XCOMProfileManager()
-            : base("XCOM: Enemy Unknown", "XCOM", "xcomgame.exe", typeof(XCOMSettings), typeof(Control_XCOM), new GameEvent_XCOM())
+            : base(new LightEventConfig { Name = "XCOM: Enemy Unknown", ID = "XCOM", ProcessNames = new[] { "xcomgame.exe" }, SettingsType = typeof(XCOMSettings), OverviewControlType = typeof(Control_XCOM), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_XCOM(), IconURI = "Resources/xcom_64x64.png" })
         {
-            IconURI = "Resources/xcom_64x64.png";
         }
     }
 }

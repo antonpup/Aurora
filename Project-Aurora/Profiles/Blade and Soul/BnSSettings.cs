@@ -16,7 +16,7 @@ namespace Aurora.Profiles.Blade_and_Soul
         public BnSSettings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
 
             //Effects
             //// Color Enhancing

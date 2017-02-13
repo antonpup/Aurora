@@ -56,7 +56,7 @@ namespace Aurora.Profiles.Dota_2.Layers
     {
         public Dota2RespawnLayerHandler() : base()
         {
-            _Type = LayerType.Dota2Respawn;
+            _ID = "Dota2Respawn";
         }
 
         protected override UserControl CreateControl()

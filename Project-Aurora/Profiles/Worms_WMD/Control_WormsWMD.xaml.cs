@@ -27,7 +27,7 @@ namespace Aurora.Profiles.WormsWMD
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as WormsWMDSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as WormsWMDSettings).IsEnabled;
             this.ce_enabled.IsChecked = (profile_manager.Settings as WormsWMDSettings).colorEnhance_Enabled;
             this.ce_mode.SelectedIndex = (profile_manager.Settings as WormsWMDSettings).colorEnhance_Mode;
             this.ce_color_factor.Value = (profile_manager.Settings as WormsWMDSettings).colorEnhance_color_factor;
@@ -122,7 +122,7 @@ namespace Aurora.Profiles.WormsWMD
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as WormsWMDSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as WormsWMDSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

@@ -35,7 +35,7 @@ namespace Aurora.Profiles.BF3
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as BF3Settings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as BF3Settings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as BF3Settings).lighting_areas;
         }
 
@@ -71,7 +71,7 @@ namespace Aurora.Profiles.BF3
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as BF3Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as BF3Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

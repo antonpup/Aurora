@@ -88,11 +88,9 @@ namespace Aurora.Settings.Layers
 
     public interface ILayerHandler
     {
-        UserControl Control
-        {
-            get;
-        }
-        LayerType Type { get; }
+        UserControl Control { get; }
+
+        string ID { get; }
 
         IStringProperty Properties { get; set; }
 
@@ -113,7 +111,8 @@ namespace Aurora.Settings.Layers
 
     public abstract class LayerHandler<TProperty> : ILayerHandler where TProperty : LayerHandlerProperties<TProperty>
     {
-        //public KeySequence AffectedSequence = new KeySequence();
+        [JsonIgnore]
+        public ProfileManager Profile { get; protected set; }
 
         [JsonIgnore]
         internal UserControl _Control;
@@ -128,12 +127,12 @@ namespace Aurora.Settings.Layers
         }
 
         [JsonIgnore]
-        internal LayerType _Type;
+        internal string _ID;
 
         [JsonIgnore]
-        public LayerType Type { get { return _Type; } }
+        public string ID { get { return _ID; } }
 
-        public TProperty Properties { get; set; } = (TProperty)Activator.CreateInstance(typeof(TProperty));
+        public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
 
         IStringProperty ILayerHandler.Properties
         {
@@ -210,7 +209,7 @@ namespace Aurora.Settings.Layers
 
         public virtual void SetProfile(ProfileManager profile)
         {
-
+            Profile = profile;
         }
 
         protected virtual UserControl CreateControl()

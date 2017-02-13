@@ -36,24 +36,17 @@ namespace Aurora.Profiles.GTA5
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
             if (new_game_state is GameState_GTA5)
             {
                 _game_state = new_game_state;
-
-                UpdateLights(frame);
             }
         }
 
         public override void ResetGameState()
         {
             _game_state = new GameState_GTA5();
-        }
-
-        public override bool IsEnabled()
-        {
-            return this.Profile.Settings.isEnabled;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Aurora.Profiles.Magic_Duels_2012
         public MagicDuels2012Settings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
             first_time_installed = false;
 
             //Effects

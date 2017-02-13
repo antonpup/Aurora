@@ -38,7 +38,7 @@ namespace Aurora.Profiles.RocketLeague
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as RocketLeagueSettings).lighting_areas;
 
             if (!this.preview_team.HasItems)
@@ -53,14 +53,14 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as RocketLeagueSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as RocketLeagueSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_RocketLeague).Player.Team = (PlayerTeam)this.preview_team.SelectedItem;
+            (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.Team = (PlayerTeam)this.preview_team.SelectedItem;
         }
 
         private void preview_boost_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -70,20 +70,20 @@ namespace Aurora.Profiles.RocketLeague
                 this.preview_boost_amount_label.Text = (int)((sender as Slider).Value)+"%";
 
                 if(IsLoaded)
-                    (profile_manager.Event._game_state as GameState_RocketLeague).Player.BoostAmount = (float)((sender as Slider).Value) / 100.0f;
+                    (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.BoostAmount = (float)((sender as Slider).Value) / 100.0f;
             }
         }
 
         private void preview_team1_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if(IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
-                (profile_manager.Event._game_state as GameState_RocketLeague).Match.OrangeTeam_Score = (sender as IntegerUpDown).Value.Value;
+                (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.OrangeTeam_Score = (sender as IntegerUpDown).Value.Value;
         }
 
         private void preview_team2_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
-                (profile_manager.Event._game_state as GameState_RocketLeague).Match.BlueTeam_Score = (sender as IntegerUpDown).Value.Value;
+                (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.BlueTeam_Score = (sender as IntegerUpDown).Value.Value;
         }
 
         private void cz_ColorZonesListUpdated(object sender, EventArgs e)

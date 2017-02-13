@@ -15,19 +15,6 @@ namespace Aurora.Profiles.Generic_Application
         {
         }
 
-        private bool HasProfile()
-        {
-            return Global.Configuration.additional_profiles.ContainsKey(this.Profile.ProcessNames[0]);
-        }
-
-        public override bool IsEnabled()
-        {
-            if (HasProfile())
-                return this.Profile.Settings.isEnabled;
-            else
-                return false;
-        }
-
         public override void UpdateLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
@@ -39,15 +26,12 @@ namespace Aurora.Profiles.Generic_Application
             //Scripts
             this.Profile.UpdateEffectScripts(layers);
 
-            if (HasProfile())
+            if ((Global.Configuration.nighttime_enabled &&
+                Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute)) ||
+                settings._simulateNighttime
+                )
             {
-                if ((Global.Configuration.nighttime_enabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute)) ||
-                    settings._simulateNighttime
-                    )
-                {
-                    timeLayers = settings.Layers_NightTime;
-                }
+                timeLayers = settings.Layers_NightTime;
             }
 
             foreach (var layer in timeLayers.Reverse().ToArray())
@@ -66,7 +50,7 @@ namespace Aurora.Profiles.Generic_Application
             UpdateLights(frame);
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
             throw new NotImplementedException();
         }

@@ -39,7 +39,7 @@ namespace Aurora.Profiles.Generic_Application
         {
             //Generic
             ApplicationName = "New Application Profile";
-            isEnabled = true;
+            IsEnabled = true;
 
             Layers_NightTime = new ObservableCollection<Layer>();
 
@@ -60,7 +60,7 @@ namespace Aurora.Profiles.Generic_Application
         {
             //Generic
             ApplicationName = appname;
-            isEnabled = true;
+            IsEnabled = true;
 
             Layers_NightTime = new ObservableCollection<Layer>();
 

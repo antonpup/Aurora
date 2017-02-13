@@ -72,7 +72,7 @@ namespace Aurora.Profiles.Dota_2
         {
             //General
             first_time_installed = false;
-            isEnabled = true;
+            IsEnabled = true;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {
@@ -126,7 +126,7 @@ namespace Aurora.Profiles.Dota_2
                 },
                 new Settings.Layers.Layer("Dota 2 Ability Keys", new Layers.Dota2AbilityLayerHandler()),
                 new Settings.Layers.Layer("Dota 2 Item Keys", new Layers.Dota2ItemLayerHandler()),
-                new Settings.Layers.Layer("Dota 2 Hero Ability Effects", new Layers.Dota2HeroAbiltiyEffectsLayerHandler()),
+                new Settings.Layers.Layer("Dota 2 Hero Ability Effects", new Layers.Dota2HeroAbilityEffectsLayerHandler()),
                 new Settings.Layers.Layer("Dota 2 Killstreaks", new Layers.Dota2KillstreakLayerHandler()),
                 new Settings.Layers.Layer("Dota 2 Background", new Layers.Dota2BackgroundLayerHandler())
             };

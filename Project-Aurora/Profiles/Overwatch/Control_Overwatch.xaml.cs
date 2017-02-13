@@ -26,7 +26,7 @@ namespace Aurora.Profiles.Overwatch
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).IsEnabled;
             this.ce_enabled.IsChecked = (profile_manager.Settings as OverwatchSettings).colorEnhance_Enabled;
             this.ce_mode.SelectedIndex = (profile_manager.Settings as OverwatchSettings).colorEnhance_Mode;
             this.ce_color_factor.Value = (profile_manager.Settings as OverwatchSettings).colorEnhance_color_factor;
@@ -70,7 +70,7 @@ namespace Aurora.Profiles.Overwatch
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as OverwatchSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as OverwatchSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

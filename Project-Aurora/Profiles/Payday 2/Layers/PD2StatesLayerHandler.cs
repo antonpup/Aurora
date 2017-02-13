@@ -62,7 +62,7 @@ namespace Aurora.Profiles.Payday_2.Layers
     {
         public PD2StatesLayerHandler() : base()
         {
-            _Type = LayerType.PD2States;
+            _ID = "PD2States";
         }
 
         protected override UserControl CreateControl()

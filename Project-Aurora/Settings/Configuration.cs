@@ -8,6 +8,7 @@ using System.Text;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.Overlays;
 using Aurora.Profiles.Overlays.SkypeOverlay;
+using Aurora.Profiles;
 
 namespace Aurora.Settings
 {
@@ -302,8 +303,8 @@ namespace Aurora.Settings
         public bool devices_disable_headset;
         public HashSet<Type> devices_disabled;
 
-        [JsonIgnoreAttribute]
-        public Dictionary<string, GenericApplicationProfileManager> additional_profiles;
+        //[JsonIgnoreAttribute]
+        //public Dictionary<string, GenericApplicationProfileManager> additional_profiles;
 
         //Blackout and Night theme
         public bool time_based_dimming_enabled;
@@ -329,12 +330,12 @@ namespace Aurora.Settings
         public float idle_frequency;
 
         //Game Settings
-        [JsonIgnoreAttribute]
-        public ProfileManager desktop_profile = new Profiles.Desktop.DesktopProfileManager();
+        /*[JsonIgnoreAttribute]
+        public ProfileManager desktop_profile = new Profiles.Desktop.DesktopProfileManager();*/
 
         public VariableRegistry VarRegistry;
 
-        [JsonIgnoreAttribute]
+        /*[JsonIgnoreAttribute]
         public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
         {
             { "Dota 2", new Profiles.Dota_2.Dota2ProfileManager() },
@@ -359,13 +360,13 @@ namespace Aurora.Settings
             { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() },
             { "WormsWMD", new Profiles.WormsWMD.WormsWMDProfileManager() },
             { "BnS", new Profiles.Blade_and_Soul.BnSProfileManager() }
-        };
+        };*/
 
         //Overlay Settings
         public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
 
-        public List<string> ProfileOrder { get; set; }
+        public List<string> ProfileOrder { get; set; } = new List<string>();
 
         public Configuration()
         {
@@ -394,7 +395,7 @@ namespace Aurora.Settings
             virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
-            additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
+            //additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
             devices_disable_keyboard = false;
             devices_disable_mouse = false;
             devices_disable_headset = false;
@@ -427,7 +428,7 @@ namespace Aurora.Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
 
-            ProfileOrder = new List<string>(ApplicationProfiles.Keys);
+            //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
             VarRegistry = new VariableRegistry();
         }
@@ -436,7 +437,6 @@ namespace Aurora.Settings
     public class ConfigManager
     {
         private static string ConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Config");
-        private static string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
         private const string ConfigExtension = ".json";
 
         private static long _last_save_time = 0L;
@@ -456,14 +456,14 @@ namespace Aurora.Settings
 
             Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
 
-            foreach (var kvp in config.ApplicationProfiles)
+            /*foreach (var kvp in config.ApplicationProfiles)
             {
                 if (!config.ProfileOrder.Contains(kvp.Key))
                     config.ProfileOrder.Add(kvp.Key);
-            }
+            }*/
 
 
-            if (Directory.Exists(AdditionalProfilesPath))
+            /*if (Directory.Exists(AdditionalProfilesPath))
             {
                 List<string> additionals = new List<string>(Directory.EnumerateDirectories(AdditionalProfilesPath));
                 foreach (var dir in additionals)
@@ -474,7 +474,7 @@ namespace Aurora.Settings
                         config.additional_profiles.Add(proccess_name, new GenericApplicationProfileManager(proccess_name));
                     }
                 }
-            }
+            }*/
 
             return config;
         }
@@ -494,13 +494,15 @@ namespace Aurora.Settings
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
 
-            configuration.desktop_profile.SaveProfiles();
+            Global.ProfilesManager.SaveAll();
+
+            /*configuration.desktop_profile.SaveProfiles();
 
             foreach (var kvp in configuration.ApplicationProfiles)
                 kvp.Value.SaveProfiles();
 
             foreach (var kvp in configuration.additional_profiles)
-                kvp.Value.SaveProfiles();
+                kvp.Value.SaveProfiles();*/
         }
 
         private static Configuration CreateDefaultConfigurationFile()

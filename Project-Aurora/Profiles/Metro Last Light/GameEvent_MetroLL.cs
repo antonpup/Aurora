@@ -11,11 +11,6 @@ namespace Aurora.Profiles.Metro_Last_Light
         {
         }
 
-        public override bool IsEnabled()
-        {
-            return (this.Profile?.Settings as MetroLLSettings).isEnabled;
-        }
-
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones

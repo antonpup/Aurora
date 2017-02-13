@@ -452,6 +452,7 @@
     <Compile Include="Profiles\Payday 2\Layers\PD2StatesLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\ProfilesManager.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
@@ -511,7 +512,6 @@
     <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\TheDivision\GameEvent_TheDivision.cs" />
     <Compile Include="Profiles\TheDivision\TheDivisionProfileManager.cs" />
     <Compile Include="Profiles\TheDivision\TheDivisionSettings.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
@@ -531,6 +531,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Control_ScriptManager.xaml.cs">
+      <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
+    <Compile Include="Utils\ProcessUtils.cs" />
+    <Compile Include="Utils\ActiveProcessMonitor.cs" />
     <None Include="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -677,7 +683,7 @@
     <Compile Include="EffectsEngine\EffectFrame.cs" />
     <Compile Include="EffectsEngine\EffectLayer.cs" />
     <Compile Include="EffectsEngine\Effects.cs" />
-    <Compile Include="GameEventHandler.cs" />
+    <Content Include="GameEventHandler.cs" />
     <Compile Include="Profiles\CSGO\Control_CSGO.xaml.cs">
       <DependentUpon>Control_CSGO.xaml</DependentUpon>
     </Compile>
@@ -727,6 +733,7 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\IInit.cs" />
     <Compile Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml.cs">
       <DependentUpon>Control_ColorizedKeycapBlank.xaml</DependentUpon>
     </Compile>
@@ -812,9 +819,6 @@
     </Compile>
     <Compile Include="Settings\Control_LayerManager.xaml.cs">
       <DependentUpon>Control_LayerManager.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Control_ScriptManager.xaml.cs">
-      <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Control_ProfileManager.xaml.cs">
       <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
@@ -1140,6 +1144,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Control_ScriptManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1227,10 +1235,6 @@
     <Page Include="Settings\Control_LayerManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Control_ScriptManager.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Control_ProfileManager.xaml">
       <SubType>Designer</SubType>

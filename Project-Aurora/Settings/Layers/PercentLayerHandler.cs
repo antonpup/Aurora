@@ -113,7 +113,7 @@ namespace Aurora.Settings.Layers
     {
         public PercentLayerHandler() : base()
         {
-            _Type = LayerType.Percent;
+            _ID = "Percent";
         }
 
         protected override UserControl CreateControl()

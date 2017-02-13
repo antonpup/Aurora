@@ -106,7 +106,7 @@ namespace Aurora.Settings.Layers
 
         public InteractiveLayerHandler()
         {
-            _Type = LayerType.Interactive;
+            _ID = "Interactive";
 
             Global.input_subscriptions.KeyDown += Input_subscriptions_KeyDown;
             Global.input_subscriptions.KeyUp += Input_subscriptions_KeyUp;

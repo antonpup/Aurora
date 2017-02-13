@@ -32,7 +32,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             InitializeComponent();
         }
 
-        public Control_Dota2HeroAbilityEffectsLayer(Dota2HeroAbiltiyEffectsLayerHandler datacontext)
+        public Control_Dota2HeroAbilityEffectsLayer(Dota2HeroAbilityEffectsLayerHandler datacontext)
         {
             InitializeComponent();
 
@@ -41,7 +41,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public void SetSettings()
         {
-            if (this.DataContext is Dota2HeroAbiltiyEffectsLayerHandler && !settingsset)
+            if (this.DataContext is Dota2HeroAbilityEffectsLayerHandler && !settingsset)
             {
                 //Settings are set here...
 

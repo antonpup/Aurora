@@ -57,7 +57,7 @@ namespace Aurora.Profiles.Dota_2
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as Dota2Settings).IsEnabled;
 
             if (!this.preview_team.HasItems)
             {
@@ -76,7 +76,7 @@ namespace Aurora.Profiles.Dota_2
                         {
                             if (this.respawn_time < 0)
                             {
-                                (profile_manager.Event._game_state as GameState_Dota2).Hero.IsAlive = true;
+                                (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.IsAlive = true;
 
                                 this.preview_killplayer.IsEnabled = true;
 
@@ -85,7 +85,7 @@ namespace Aurora.Profiles.Dota_2
                             else
                             {
                                 this.preview_respawn_time.Content = "Seconds to respawn: " + this.respawn_time;
-                                (profile_manager.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
+                                (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
 
                                 this.respawn_time--;
                             }
@@ -114,7 +114,7 @@ namespace Aurora.Profiles.Dota_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as Dota2Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as Dota2Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -123,7 +123,7 @@ namespace Aurora.Profiles.Dota_2
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_Dota2).Player.Team = (Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
+            (profile_manager.Config.Event._game_state as GameState_Dota2).Player.Team = (Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
         }
 
         private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -133,9 +133,9 @@ namespace Aurora.Profiles.Dota_2
             {
                 this.preview_health_amount.Content = hp_val + "%";
                 
-                (profile_manager.Event._game_state as GameState_Dota2).Hero.Health = hp_val;
-                (profile_manager.Event._game_state as GameState_Dota2).Hero.MaxHealth = 100;
-                (profile_manager.Event._game_state as GameState_Dota2).Hero.HealthPercent = hp_val;
+                (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.Health = hp_val;
+                (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.MaxHealth = 100;
+                (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.HealthPercent = hp_val;
                 
             }
         }
@@ -147,20 +147,20 @@ namespace Aurora.Profiles.Dota_2
             {
                 this.preview_mana_amount.Content = mana_val + "%";
 
-                (profile_manager.Event._game_state as GameState_Dota2).Hero.Mana = mana_val;
-                (profile_manager.Event._game_state as GameState_Dota2).Hero.MaxMana = 100;
-                (profile_manager.Event._game_state as GameState_Dota2).Hero.ManaPercent = mana_val;
+                (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.Mana = mana_val;
+                (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.MaxMana = 100;
+                (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.ManaPercent = mana_val;
             }
         }
 
         private void preview_killplayer_Click(object sender, RoutedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_Dota2).Hero.IsAlive = false;
+            (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.IsAlive = false;
 
             respawn_time = 15;
-            (profile_manager.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
+            (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.SecondsToRespawn = this.respawn_time;
             this.preview_killplayer.IsEnabled = false;
-            (profile_manager.Event._game_state as GameState_Dota2).Player.KillStreak = this.killstreak = 0;
+            (profile_manager.Config.Event._game_state as GameState_Dota2).Player.KillStreak = this.killstreak = 0;
             this.preview_killstreak_label.Content = "Killstreak: " + this.killstreak;
 
             preview_respawn_timer.Start();
@@ -168,8 +168,8 @@ namespace Aurora.Profiles.Dota_2
 
         private void preview_addkill_Click(object sender, RoutedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_Dota2).Player.KillStreak = killstreak++;
-            (profile_manager.Event._game_state as GameState_Dota2).Player.Kills++;
+            (profile_manager.Config.Event._game_state as GameState_Dota2).Player.KillStreak = killstreak++;
+            (profile_manager.Config.Event._game_state as GameState_Dota2).Player.Kills++;
             this.preview_killstreak_label.Content = "Killstreak: " + this.killstreak;
         }
 

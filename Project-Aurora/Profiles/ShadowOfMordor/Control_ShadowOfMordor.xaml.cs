@@ -42,7 +42,7 @@ namespace Aurora.Profiles.ShadowOfMordor
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as ShadowOfMordorSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as ShadowOfMordorSettings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as ShadowOfMordorSettings).lighting_areas;
         }
 
@@ -66,7 +66,7 @@ namespace Aurora.Profiles.ShadowOfMordor
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as ShadowOfMordorSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as ShadowOfMordorSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

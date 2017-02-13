@@ -35,13 +35,13 @@ namespace Aurora.Profiles.Generic_Application
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.profile_enabled.IsChecked = (profile_manager.Settings as GenericApplicationSettings).isEnabled;
+            this.profile_enabled.IsChecked = (profile_manager.Settings as GenericApplicationSettings).IsEnabled;
             this.app_name_textbox.Text = (profile_manager.Settings as GenericApplicationSettings).ApplicationName;
         }
         
         private bool HasProfile()
         {
-            return Global.Configuration.additional_profiles.ContainsKey(profile_manager.ProcessNames[0]);
+            return Global.ProfilesManager.Events.ContainsKey(profile_manager.Config.ProcessNames[0]);
         }
                
         private void app_name_textbox_TextChanged(object sender, TextChangedEventArgs e)
@@ -58,7 +58,7 @@ namespace Aurora.Profiles.Generic_Application
         {
             if (IsLoaded && HasProfile())
             {
-                (profile_manager.Settings as GenericApplicationSettings).isEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as GenericApplicationSettings).IsEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }

@@ -13,7 +13,7 @@ namespace Aurora.Settings.Layers
     {
         public DefaultLayerHandler()
         {
-            _Type = LayerType.Default;
+            _ID = "Default";
         }
 
         protected override UserControl CreateControl()

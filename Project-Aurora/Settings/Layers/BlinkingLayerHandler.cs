@@ -50,7 +50,7 @@ namespace Aurora.Settings.Layers
 
         public BlinkingLayerHandler()
         {
-            _Type = LayerType.Blinking;
+            _ID = "Blinking";
         }
 
         protected override UserControl CreateControl()

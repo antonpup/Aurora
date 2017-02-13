@@ -12,9 +12,9 @@ namespace Aurora.Profiles.HotlineMiami
     public class HMProfileManager : ProfileManager
     {
         public HMProfileManager()
-            : base("Hotline Miami", "hotline_miami", "hotlinegl.exe", typeof(HMSettings), typeof(Control_HM), new GameEvent_HM())
+            : base(new LightEventConfig { Name = "Hotline Miami", ID = "hotline_miami", ProcessNames = new[] { "hotlinegl.exe" }, SettingsType = typeof(HMSettings), OverviewControlType = typeof(Control_HM), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_HM(), IconURI = "Resources/hotline_32x32.png" })
         {
-            IconURI = "Resources/hotline_32x32.png";
+            
         }
     }
 }

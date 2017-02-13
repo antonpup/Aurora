@@ -25,7 +25,7 @@ namespace Aurora.Profiles.TheDivision
         {
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as TheDivisionSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as TheDivisionSettings).IsEnabled;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -49,7 +49,7 @@ namespace Aurora.Profiles.TheDivision
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as TheDivisionSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as TheDivisionSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

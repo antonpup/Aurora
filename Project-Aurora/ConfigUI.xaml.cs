@@ -16,6 +16,7 @@ using Aurora.Controls;
 using Aurora.Profiles.Generic_Application;
 using System.IO;
 using Aurora.Settings.Keycaps;
+using Aurora.Profiles;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
@@ -39,7 +40,6 @@ namespace Aurora
         private bool settingsloaded = false;
         private bool shownHiddenMessage = false;
 
-        private PreviewType saved_preview = PreviewType.Desktop;
         private string saved_preview_key = "";
 
         private Timer virtual_keyboard_timer;
@@ -61,13 +61,7 @@ namespace Aurora
             {
                 SetValue(FocusedProfileProperty, value);
 
-                if (value == null || value is Profiles.Desktop.DesktopProfileManager)
-                    Global.geh.SetPreview(PreviewType.Desktop);
-                else if (value is Profiles.Generic_Application.GenericApplicationProfileManager)
-                    Global.geh.SetPreview(PreviewType.GenericApplication, value.ProcessNames[0]);
-                else
-                    Global.geh.SetPreview(PreviewType.Predefined, value.ProcessNames[0]);
-
+                Global.ProfilesManager.PreviewProfileKey = value != null ? value.Config.ID : string.Empty;
             }
         }
 
@@ -221,7 +215,7 @@ namespace Aurora
 
                             Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights = new Dictionary<Devices.DeviceKeys, System.Drawing.Color>();
 
-                            if (Global.geh.GetPreview() != PreviewType.None)
+                            if (IsActive)
                             {
                                 keylights = Global.effengine.GetKeyboardLights();
                                 Global.kbLayout.SetKeyboardColors(keylights);
@@ -296,24 +290,7 @@ namespace Aurora
         {
             trayicon.Visibility = System.Windows.Visibility.Hidden;
             virtual_keyboard_timer.Stop();
-            Global.input_subscriptions.Dispose();
-            Global.geh.Destroy();
-            Global.net_listener.Stop();
-
-            try
-            {
-                foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
-                {
-                    proc.Kill();
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
-            }
-
-
-            Application.Current.Shutdown();
+            Program.Exit();
         }
 
         private void minimizeApp()
@@ -324,7 +301,7 @@ namespace Aurora
                 shownHiddenMessage = true;
             }
 
-            Global.geh.SetPreview(PreviewType.None);
+            Global.ProfilesManager.PreviewProfileKey = string.Empty;
 
             //Hide Window
             Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (System.Windows.Threading.DispatcherOperationCallback)delegate (object o)
@@ -337,22 +314,13 @@ namespace Aurora
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            if(saved_preview == PreviewType.None && FocusedProfile != null)
-            {
-                if (FocusedProfile is ProfileManager)
-                    Global.geh.SetPreview(PreviewType.Predefined, saved_preview_key);
-                else if(FocusedProfile is GenericApplicationProfileManager)
-                    Global.geh.SetPreview(PreviewType.GenericApplication, saved_preview_key);
-            }
-            else
-                Global.geh.SetPreview(saved_preview, saved_preview_key);
+            Global.ProfilesManager.PreviewProfileKey = saved_preview_key;
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
-            saved_preview = Global.geh.GetPreview();
-            saved_preview_key = Global.geh.GetPreviewProfileKey();
-            Global.geh.SetPreview(PreviewType.None);
+            saved_preview_key = Global.ProfilesManager.PreviewProfileKey;
+            Global.ProfilesManager.PreviewProfileKey = string.Empty;
         }
 
         private Image profile_add;
@@ -362,12 +330,12 @@ namespace Aurora
         private BitmapImage _visible = new BitmapImage(new Uri(@"Resources/Visible.png", UriKind.Relative));
         private BitmapImage _not_visible = new BitmapImage(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
 
-        private void GenerateProfileStack()
+        private void GenerateProfileStack(string focusedKey = null)
         {
             selected_item = null;
             this.profiles_stack.Children.Clear();
 
-            Image profile_desktop = new Image
+            /*Image profile_desktop = new Image
             {
                 Tag = Global.Configuration.desktop_profile,
                 Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative)),
@@ -375,76 +343,77 @@ namespace Aurora
                 Margin = new Thickness(0, 5, 0, 0)
             };
             profile_desktop.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_desktop);
+            this.profiles_stack.Children.Add(profile_desktop);*/
 
             //Included Game Profiles
             foreach (string profile_k in Global.Configuration.ProfileOrder)
             {
-                ProfileManager profile = Global.Configuration.ApplicationProfiles[profile_k];
+                ProfileManager profile = (ProfileManager)Global.ProfilesManager.Events[profile_k];
                 ImageSource icon = profile.GetIcon();
                 UserControl control = profile.GetUserControl();
-
                 if (icon != null && control != null)
                 {
-                    Image profile_image = new Image
+                    Image profile_image;
+                    if (profile is GenericApplicationProfileManager)
                     {
-                        Tag = profile,
-                        Source = icon,
-                        ToolTip = profile.Name + " Settings",
-                        Margin = new Thickness(0, 5, 0, 0),
-                        Visibility = profile.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
-                    };
-                    profile_image.MouseDown += ProfileImage_MouseDown;
-                    this.profiles_stack.Children.Add(profile_image);
-                }
-            }
+                        GenericApplicationSettings settings = (profile.Settings as GenericApplicationSettings);
+                        profile_image = new Image
+                        {
+                            Tag = profile,
+                            Source = icon,
+                            ToolTip = settings.ApplicationName + " Settings",
+                            Margin = new Thickness(0, 5, 0, 0)
+                        };
+                        profile_image.MouseDown += ProfileImage_MouseDown;
 
-            //Populate with added profiles
-            foreach (var kvp in Global.Configuration.additional_profiles)
-            {
-                ProfileManager profile = kvp.Value;
-                ImageSource icon = profile.GetIcon();
-                UserControl control = profile.GetUserControl();
+                        Image profile_remove = new Image
+                        {
+                            Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative)),
+                            ToolTip = $"Remove {settings.ApplicationName} Profile",
+                            HorizontalAlignment = HorizontalAlignment.Right,
+                            VerticalAlignment = VerticalAlignment.Bottom,
+                            Height = 16,
+                            Width = 16,
+                            Visibility = Visibility.Hidden,
+                            Tag = profile_k
+                        };
+                        profile_remove.MouseDown += RemoveProfile_MouseDown;
 
-                if (icon != null && control != null)
-                {
-                    GenericApplicationSettings settings = (profile.Settings as GenericApplicationSettings);
-                    Image profile_image = new Image
+                        Grid profile_grid = new Grid
+                        {
+                            Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                            Margin = new Thickness(0, 5, 0, 0),
+                            Tag = profile_remove
+                        };
+
+                        profile_grid.MouseEnter += Profile_grid_MouseEnter;
+                        profile_grid.MouseLeave += Profile_grid_MouseLeave;
+
+                        profile_grid.Children.Add(profile_image);
+                        profile_grid.Children.Add(profile_remove);
+
+                        this.profiles_stack.Children.Add(profile_grid);
+                    }
+                    else
                     {
-                        Tag = profile,
-                        Source = icon,
-                        ToolTip = settings.ApplicationName + " Settings",
-                        Margin = new Thickness(0, 5, 0, 0)
-                    };
-                    profile_image.MouseDown += ProfileImage_MouseDown;
 
-                    Image profile_remove = new Image
+                        profile_image = new Image
+                        {
+                            Tag = profile,
+                            Source = icon,
+                            ToolTip = profile.Config.Name + " Settings",
+                            Margin = new Thickness(0, 5, 0, 0),
+                            Visibility = profile.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
+                        };
+                        profile_image.MouseDown += ProfileImage_MouseDown;
+                        this.profiles_stack.Children.Add(profile_image);
+                    }
+
+                    if (profile.Config.ID.Equals(focusedKey))
                     {
-                        Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative)),
-                        ToolTip = $"Remove {settings.ApplicationName} Profile",
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Bottom,
-                        Height = 16,
-                        Width = 16,
-                        Visibility = Visibility.Hidden,
-                        Tag = kvp.Key
-                    };
-                    profile_remove.MouseDown += RemoveProfile_MouseDown;
-
-                    Grid profile_grid = new Grid
-                    {
-                        Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
-                        Margin = new Thickness(0, 5, 0, 0),
-                        Tag = profile_remove
-                    };
-
-                    profile_grid.MouseEnter += Profile_grid_MouseEnter;
-                    profile_grid.MouseLeave += Profile_grid_MouseLeave;
-
-                    profile_grid.Children.Add(profile_image);
-                    profile_grid.Children.Add(profile_remove);
-
-                    this.profiles_stack.Children.Add(profile_grid);
+                        this.FocusedProfile = profile;
+                        this.TransitionToProfile(profile_image);
+                    }
                 }
             }
 
@@ -557,24 +526,29 @@ namespace Aurora
             }
         }
 
+        private void TransitionToProfile(Image source)
+        {
+            var bitmap = (BitmapSource)source.Source;
+            var color = Utils.ColorUtils.GetAverageColor(bitmap);
+
+            current_color = new EffectColor(color);
+            current_color *= 0.85f;
+
+            transitionamount = 0.0f;
+
+            UpdateProfileStackBackground(source);
+        }
+
         private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
-            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is ProfileManager)
+            Image image = sender as Image;
+            if (image != null && image.Tag != null && image.Tag is ProfileManager)
             {
                 if (e == null || e.LeftButton == MouseButtonState.Pressed)
                 {
-                    this.FocusedProfile = (sender as Image).Tag as ProfileManager;
-
-                    var bitmap = (BitmapSource)(sender as Image).Source;
-                    var color = Utils.ColorUtils.GetAverageColor(bitmap);
-
-                    current_color = new EffectColor(color);
-                    current_color *= 0.85f;
-
-                    transitionamount = 0.0f;
-
-                    UpdateProfileStackBackground(sender as FrameworkElement);
+                    this.FocusedProfile = image.Tag as ProfileManager;
+                    this.TransitionToProfile(image);
+                    
                 }
                 else if (e.RightButton == MouseButtonState.Pressed)
                 {
@@ -611,16 +585,12 @@ namespace Aurora
             {
                 string name = (sender as Image).Tag as string;
 
-                if (Global.Configuration.additional_profiles.ContainsKey(name))
+                if (Global.ProfilesManager.Events.ContainsKey(name))
                 {
-                    if (System.Windows.MessageBox.Show("Are you sure you want to delete profile for " + (Global.Configuration.additional_profiles[name].Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if (System.Windows.MessageBox.Show("Are you sure you want to delete profile for " + (((ProfileManager)Global.ProfilesManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
-                        string path = Global.Configuration.additional_profiles[name].GetProfileFolderPath();
-                        if (Directory.Exists(path))
-                            Directory.Delete(path, true);
-
-                        Global.Configuration.additional_profiles.Remove(name);
-                        ConfigManager.Save(Global.Configuration);
+                        Global.ProfilesManager.RemoveGenericProfile(name);
+                        //ConfigManager.Save(Global.Configuration);
                         GenerateProfileStack();
                     }
                 }
@@ -640,7 +610,7 @@ namespace Aurora
             {
                 string filename = System.IO.Path.GetFileName(exe_filedlg.FileName.ToLowerInvariant());
 
-                if (Global.Configuration.additional_profiles.ContainsKey(filename))
+                if (Global.ProfilesManager.Events.ContainsKey(filename))
                 {
                     System.Windows.MessageBox.Show("Profile for this application already exists.");
                 }
@@ -659,16 +629,10 @@ namespace Aurora
                     }
                     ico.Dispose();
 
-                    Global.Configuration.additional_profiles.Add(filename, gen_app_pm);
+                    Global.ProfilesManager.RegisterEvent(gen_app_pm);
                     ConfigManager.Save(Global.Configuration);
-                    GenerateProfileStack();
+                    GenerateProfileStack(filename);
                 }
-
-
-                this.content_grid.Content = Global.Configuration.additional_profiles[filename].Control;
-
-                current_color = desktop_color_scheme;
-                transitionamount = 0.0f;
             }
         }
 

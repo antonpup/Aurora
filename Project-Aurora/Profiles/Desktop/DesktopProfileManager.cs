@@ -12,9 +12,8 @@ namespace Aurora.Profiles.Desktop
     public class DesktopProfileManager : ProfileManager
     {
         public DesktopProfileManager()
-            : base("Desktop", "desktop", "", typeof(DesktopSettings), typeof(Control_Desktop), new Event_Desktop())
+            : base(new LightEventConfig { Name = "Desktop", ID = "desktop", SettingsType = typeof(DesktopSettings), OverviewControlType = typeof(Control_Desktop), GameStateType = typeof(GameState), Event = new Event_Desktop(), IconURI= "Resources/desktop_icon.png" })
         {
-            IconURI = "Resources/desktop_icon.png";
         }
     }
 }

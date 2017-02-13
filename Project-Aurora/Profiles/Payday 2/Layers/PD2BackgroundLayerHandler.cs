@@ -107,7 +107,7 @@ namespace Aurora.Profiles.Payday_2.Layers
 
         public PD2BackgroundLayerHandler() : base()
         {
-            _Type = LayerType.PD2Background;
+            _ID = "PD2Background";
         }
 
         protected override UserControl CreateControl()

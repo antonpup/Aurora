@@ -73,9 +73,9 @@ namespace Aurora.Profiles.RocketLeague
             _game_state = new GameState_RocketLeague();
         }
 
-        public override bool IsEnabled()
+        public new bool IsEnabled
         {
-            return (this.Profile.Settings as RocketLeagueSettings).isEnabled && isInitialized;
+            get { return this.Profile.Settings.IsEnabled && isInitialized; }
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -116,9 +116,9 @@ namespace Aurora.Profiles.RocketLeague
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
-            UpdateLights(frame);
+            //UpdateLights(frame);
         }
     }
 }

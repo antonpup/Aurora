@@ -38,7 +38,7 @@ namespace Aurora.Profiles.Payday_2
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as PD2Settings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as PD2Settings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as PD2Settings).lighting_areas;
         }
 
@@ -46,7 +46,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as PD2Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as PD2Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -100,7 +100,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Event._game_state as GameState_PD2).Game.State = (GSI.Nodes.GameStates)Enum.Parse(typeof(GSI.Nodes.GameStates), this.preview_gamestate.SelectedIndex.ToString());
+                (profile_manager.Config.Event._game_state as GameState_PD2).Game.State = (GSI.Nodes.GameStates)Enum.Parse(typeof(GSI.Nodes.GameStates), this.preview_gamestate.SelectedIndex.ToString());
             }
         }
 
@@ -108,7 +108,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Event._game_state as GameState_PD2).Level.Phase = (GSI.Nodes.LevelPhase)Enum.Parse(typeof(GSI.Nodes.LevelPhase), this.preview_levelphase.SelectedIndex.ToString());
+                (profile_manager.Config.Event._game_state as GameState_PD2).Level.Phase = (GSI.Nodes.LevelPhase)Enum.Parse(typeof(GSI.Nodes.LevelPhase), this.preview_levelphase.SelectedIndex.ToString());
             }
         }
 
@@ -116,7 +116,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.State = (GSI.Nodes.PlayerState)Enum.Parse(typeof(GSI.Nodes.PlayerState), this.preview_playerstate.SelectedIndex.ToString());
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.State = (GSI.Nodes.PlayerState)Enum.Parse(typeof(GSI.Nodes.PlayerState), this.preview_playerstate.SelectedIndex.ToString());
             }
         }
 
@@ -126,8 +126,8 @@ namespace Aurora.Profiles.Payday_2
             if (this.preview_health_amount is Label)
             {
                 this.preview_health_amount.Content = hp_val + "%";
-                (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.Health.Current = hp_val;
-                (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.Health.Max = 100;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Health.Current = hp_val;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Health.Max = 100;
             }
         }
 
@@ -137,8 +137,8 @@ namespace Aurora.Profiles.Payday_2
             if (this.preview_ammo_amount is Label)
             {
                 this.preview_ammo_amount.Content = ammo_val + "%";
-                (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.Weapons.SelectedWeapon.Current_Clip = ammo_val;
-                (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.Weapons.SelectedWeapon.Max_Clip = 100;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Weapons.SelectedWeapon.Current_Clip = ammo_val;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Weapons.SelectedWeapon.Max_Clip = 100;
             }
         }
 
@@ -148,7 +148,7 @@ namespace Aurora.Profiles.Payday_2
             if (this.preview_suspicion_amount is Label)
             {
                 this.preview_suspicion_amount.Content = (int)susp_val + "%";
-                (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.SuspicionAmount = susp_val / 100.0f;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.SuspicionAmount = susp_val / 100.0f;
             }
         }
 
@@ -158,7 +158,7 @@ namespace Aurora.Profiles.Payday_2
             if (this.preview_flashbang_amount is Label)
             {
                 this.preview_flashbang_amount.Content = (int)flash_val + "%";
-                (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.FlashAmount = flash_val / 100.0f;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.FlashAmount = flash_val / 100.0f;
             }
         }
 
@@ -166,7 +166,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
-                (profile_manager.Event._game_state as GameState_PD2).Players.LocalPlayer.IsSwanSong = (sender as CheckBox).IsChecked.Value;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.IsSwanSong = (sender as CheckBox).IsChecked.Value;
             }
         }
 

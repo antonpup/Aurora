@@ -36,7 +36,7 @@ namespace Aurora.Profiles.Desktop
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.profile_enabled.IsChecked = (profile_manager.Settings as DesktopSettings).isEnabled;
+            this.profile_enabled.IsChecked = (profile_manager.Settings as DesktopSettings).IsEnabled;
 
             this.desktop_cz.ColorZonesList = (profile_manager.Settings as DesktopSettings).lighting_areas;
 
@@ -54,7 +54,7 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as DesktopSettings).isEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as DesktopSettings).IsEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

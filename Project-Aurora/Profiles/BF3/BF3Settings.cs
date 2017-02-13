@@ -13,7 +13,7 @@ namespace Aurora.Profiles.BF3
         public BF3Settings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {
