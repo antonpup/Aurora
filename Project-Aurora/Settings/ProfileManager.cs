@@ -105,25 +105,10 @@ namespace Aurora.Settings
             ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
         }
 
-            if (AvailableLayers == null)
-                AvailableLayers = new HashSet<LayerType>();
-
-            AvailableLayers.Add(LayerType.Default);
-            AvailableLayers.Add(LayerType.Solid);
-            AvailableLayers.Add(LayerType.SolidFilled);
-            AvailableLayers.Add(LayerType.Gradient);
-            AvailableLayers.Add(LayerType.GradientFill);
-            AvailableLayers.Add(LayerType.Breathing);
-            AvailableLayers.Add(LayerType.Blinking);
-            AvailableLayers.Add(LayerType.Image);
-            AvailableLayers.Add(LayerType.Script);
-            AvailableLayers.Add(LayerType.Percent);
-            AvailableLayers.Add(LayerType.PercentGradient);
-            AvailableLayers.Add(LayerType.Interactive);
-            AvailableLayers.Add(LayerType.ShortcutAssistant);
-            AvailableLayers.Add(LayerType.Equalizer);
-            AvailableLayers.Add(LayerType.Ambilight);
-            AvailableLayers.Add(LayerType.LockColor);
+        public bool Initialize()
+        {
+            if (Initialized)
+                return Initialized;
 
             LoadProfiles();
             Initialized = true;
@@ -500,8 +485,3 @@ namespace Aurora.Settings
         }
     }
 }
-
-        public bool Initialize()
-        {
-            if (Initialized)
-                return Initialized;

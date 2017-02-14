@@ -70,7 +70,7 @@ namespace Aurora.Settings.Layers
 
         public AnimationLayerHandler()
         {
-            _Type = LayerType.Animation;
+            _ID = "Animation";
         }
 
         protected override UserControl CreateControl()

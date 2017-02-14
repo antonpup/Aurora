@@ -249,7 +249,6 @@ namespace Aurora.Settings
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
-                                            Type = Layers.LayerType.Solid,
                                             Handler = new Layers.SolidColorLayerHandler()
                                             {
                                                 Properties = new Layers.LayerHandlerProperties()
@@ -300,7 +299,6 @@ namespace Aurora.Settings
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
-                                            Type = Layers.LayerType.Animation,
                                             Handler = new Layers.AnimationLayerHandler()
                                             {
                                                 Properties = new Layers.AnimationLayerHandlerProperties()
@@ -350,7 +348,6 @@ namespace Aurora.Settings
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
-                                            Type = Layers.LayerType.Animation,
                                             Handler = new Layers.AnimationLayerHandler()
                                             {
                                                 Properties = new Layers.AnimationLayerHandlerProperties()
@@ -497,7 +494,6 @@ namespace Aurora.Settings
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
-                                            Type = Layers.LayerType.Animation,
                                             Handler = new Layers.AnimationLayerHandler()
                                             {
                                                 Properties = new Layers.AnimationLayerHandlerProperties()
@@ -572,7 +568,6 @@ namespace Aurora.Settings
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
-                                            Type = Layers.LayerType.Animation,
                                             Handler = new Layers.AnimationLayerHandler()
                                             {
                                                 Properties = new Layers.AnimationLayerHandlerProperties()
