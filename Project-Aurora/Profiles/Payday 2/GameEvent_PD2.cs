@@ -35,33 +35,17 @@ namespace Aurora.Profiles.Payday_2
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
             if (new_game_state is GameState_PD2)
             {
                 _game_state = new_game_state;
-                GameState_PD2 gs = (new_game_state as GameState_PD2);
-
-                try
-                {
-                    UpdateLights(frame);
-                }
-                catch (Exception e)
-                {
-                    Global.logger.LogLine("Exception during OnNewGameState. Error: " + e, Logging_Level.Error);
-                    Global.logger.LogLine(gs.ToString(), Logging_Level.None);
-                }
             }
         }
 
         public override void ResetGameState()
         {
             _game_state = new GameState_PD2();
-        }
-
-        public override bool IsEnabled()
-        {
-            return this.Profile.Settings.isEnabled;
         }
     }
 }

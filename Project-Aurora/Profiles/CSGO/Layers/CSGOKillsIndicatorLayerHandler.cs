@@ -56,7 +56,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public CSGOKillIndicatorLayerHandler() : base()
         {
-            _Type = LayerType.CSGOKillsIndicator;
+            _ID = "CSGOKillsIndicator";
         }
 
         protected override UserControl CreateControl()

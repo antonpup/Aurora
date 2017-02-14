@@ -140,7 +140,7 @@ namespace Aurora.Settings.Layers
 
         public EqualizerLayerHandler()
         {
-            _Type = LayerType.Equalizer;
+            _ID = "Equalizer";
 
             _ffts = new Complex[fftLength];
             _ffts_prev = new Complex[fftLength];

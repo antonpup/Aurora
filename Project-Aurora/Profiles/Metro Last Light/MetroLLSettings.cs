@@ -16,7 +16,7 @@ namespace Aurora.Profiles.Metro_Last_Light
         public MetroLLSettings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
             first_time_installed = false;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()

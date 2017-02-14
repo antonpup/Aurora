@@ -66,7 +66,7 @@ namespace Aurora.Profiles.Desktop
 
         public DesktopSettings()
         {
-            isEnabled = true;
+            IsEnabled = true;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {

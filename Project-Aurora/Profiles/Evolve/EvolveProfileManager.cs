@@ -12,9 +12,9 @@ namespace Aurora.Profiles.Evolve
     public class EvolveProfileManager : ProfileManager
     {
         public EvolveProfileManager()
-            : base("Evolve Stage 2", "Evolve", "evolve.exe", typeof(EvolveSettings), typeof(Control_Evolve), new GameEvent_Evolve())
+            : base(new LightEventConfig { Name = "Evolve Stage 2", ID = "Evolve", ProcessNames = new[] { "evolve.exe" }, SettingsType = typeof(EvolveSettings), OverviewControlType = typeof(Control_Evolve), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Evolve(), IconURI = "Resources/evolve_48x48.png" })
         {
-            IconURI = "Resources/evolve_48x48.png";
+            
         }
     }
 }

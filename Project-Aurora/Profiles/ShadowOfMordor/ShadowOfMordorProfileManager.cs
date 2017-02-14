@@ -12,9 +12,9 @@ namespace Aurora.Profiles.ShadowOfMordor
     public class ShadowOfMordorProfileManager : ProfileManager
     {
         public ShadowOfMordorProfileManager()
-            : base("Middle-earth: Shadow of Mordor", "ShadowOfMordor", "shadowofmordor.exe", typeof(ShadowOfMordorSettings), typeof(Control_ShadowOfMordor), new GameEvent_ShadowOfMordor())
+            : base(new LightEventConfig { Name = "Middle-earth: Shadow of Mordor", ID = "ShadowOfMordor", ProcessNames = new[] { "shadowofmordor.exe" }, SettingsType = typeof(ShadowOfMordorSettings), OverviewControlType = typeof(Control_ShadowOfMordor), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_ShadowOfMordor(), IconURI = "Resources/shadow_of_mordor_64x64.png" })
         {
-            IconURI = "Resources/shadow_of_mordor_64x64.png";
+            
         }
     }
 }

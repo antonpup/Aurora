@@ -52,7 +52,7 @@ namespace Aurora.Profiles.Payday_2
         public PD2Settings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>
             {

@@ -11,7 +11,7 @@ namespace Aurora.Controls
     public partial class EffectSettingsWindow : Window
     {
         public LayerEffectConfig EffectConfig;
-        public PreviewType preview = PreviewType.GenericApplication;
+        //public PreviewType preview = PreviewType.GenericApplication;
         public string preview_key = "";
 
         public event EventHandler EffectConfigUpdated;
@@ -122,12 +122,12 @@ namespace Aurora.Controls
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            Global.geh.SetPreview(preview, preview_key);
+            Global.ProfilesManager.PreviewProfileKey = preview_key;
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
-            Global.geh.SetPreview(PreviewType.None);
+            Global.ProfilesManager.PreviewProfileKey = null;
         }
 
         private void effect_angle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

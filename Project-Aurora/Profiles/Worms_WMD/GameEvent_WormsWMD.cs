@@ -13,9 +13,9 @@ namespace Aurora.Profiles.WormsWMD
         {
         }
 
-        public override bool IsEnabled()
+        public new bool IsEnabled
         {
-            return this.Profile.Settings.isEnabled;
+            get { return this.Profile.Settings.IsEnabled; }
         }
 
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)

@@ -12,9 +12,9 @@ namespace Aurora.Profiles.LeagueOfLegends
     public class LoLProfileManager : ProfileManager
     {
         public LoLProfileManager()
-            : base("League of Legends", "league_of_legends", "league of legends.exe", typeof(LoLSettings), typeof(Control_LoL), new GameEvent_LoL())
+            : base(new LightEventConfig { Name = "League of Legends", ID = "league_of_legends", ProcessNames = new[] { "league of legends.exe" }, SettingsType = typeof(LoLSettings), OverviewControlType = typeof(Control_LoL), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_LoL(), IconURI = "Resources/leagueoflegends_48x48.png" })
         {
-            IconURI = "Resources/leagueoflegends_48x48.png";
+            
         }
     }
 }

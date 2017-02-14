@@ -39,24 +39,19 @@ namespace Aurora.Profiles.Dota_2
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
             if (new_game_state is GameState_Dota2)
             {
                 _game_state = new_game_state;
 
-                UpdateLights(frame);
+                //UpdateLights(frame);
             }
         }
 
         public override void ResetGameState()
         {
             _game_state = new GameState_Dota2();
-        }
-
-        public override bool IsEnabled()
-        {
-            return this.Profile.Settings.isEnabled;
         }
     }
 }

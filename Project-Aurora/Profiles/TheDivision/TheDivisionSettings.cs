@@ -7,7 +7,7 @@ namespace Aurora.Profiles.TheDivision
         public TheDivisionSettings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
         }
     }
 }

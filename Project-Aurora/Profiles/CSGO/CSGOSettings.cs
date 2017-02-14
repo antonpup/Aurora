@@ -75,7 +75,7 @@ namespace Aurora.Profiles.CSGO
         {
             //General
             first_time_installed = false;
-            isEnabled = true;
+            IsEnabled = true;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {

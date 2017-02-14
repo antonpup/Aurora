@@ -11,11 +11,6 @@ namespace Aurora.Profiles.XCOM
         {
         }
 
-        public override bool IsEnabled()
-        {
-            return (this.Profile.Settings as XCOMSettings).isEnabled;
-        }
-
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones

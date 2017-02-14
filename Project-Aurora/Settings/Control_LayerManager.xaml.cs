@@ -1,4 +1,5 @@
-﻿using Aurora.Settings.Layers;
+﻿using Aurora.Profiles;
+using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -262,7 +263,7 @@ namespace Aurora.Settings
                 {
                     Layer lyr = (Layer)((Layer)Global.Clipboard)?.Clone();
 
-                    if (FocusedProfile.AvailableLayers.Contains(lyr.Handler.Type))
+                    if (Global.ProfilesManager.DefaultLayerHandlers.Contains(lyr.Handler.ID) || FocusedProfile.Config.ExtraAvailableLayers.Contains(lyr.Handler.ID))
                     {
                         lyr.Name += " - Copy";
                         lyr.SetProfile(FocusedProfile);

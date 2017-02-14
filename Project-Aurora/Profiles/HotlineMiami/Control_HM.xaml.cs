@@ -42,7 +42,7 @@ namespace Aurora.Profiles.HotlineMiami
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as HMSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as HMSettings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as HMSettings).lighting_areas;
         }
 
@@ -80,7 +80,7 @@ namespace Aurora.Profiles.HotlineMiami
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as HMSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as HMSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

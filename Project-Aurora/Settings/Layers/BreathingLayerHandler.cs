@@ -50,7 +50,7 @@ namespace Aurora.Settings.Layers
 
         public BreathingLayerHandler()
         {
-            _Type = LayerType.Breathing;
+            _ID = "Breathing";
         }
 
         protected override UserControl CreateControl()

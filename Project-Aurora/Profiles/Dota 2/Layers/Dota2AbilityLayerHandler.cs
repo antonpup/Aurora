@@ -50,7 +50,7 @@ namespace Aurora.Profiles.Dota_2.Layers
     {
         public Dota2AbilityLayerHandler() : base()
         {
-            _Type = LayerType.Dota2Abilities;
+            _ID = "Dota2Abilities";
         }
 
         protected override UserControl CreateControl()

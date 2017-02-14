@@ -12,9 +12,9 @@ namespace Aurora.Profiles.Blade_and_Soul
     public class BnSProfileManager : ProfileManager
     {
         public BnSProfileManager()
-            : base("Blade and Soul", "BnS", "client.exe", typeof(BnSSettings), typeof(Control_BnS), new GameEvent_BnS())
+            : base(new LightEventConfig { Name = "Blade and Soul", ID = "BnS", ProcessNames = new[] { "client.exe" }, SettingsType = typeof(BnSSettings), OverviewControlType = typeof(Control_BnS), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_BnS(), IconURI = "Resources/bns_48x48.png" })
         {
-            IconURI = "Resources/bns_48x48.png";
+            
         }
     }
 }

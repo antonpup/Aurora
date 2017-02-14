@@ -77,7 +77,7 @@ namespace Aurora.Profiles.GTA5.Layers
 
         public GTA5PoliceSirenLayerHandler() : base()
         {
-            _Type = LayerType.GTA5PoliceSiren;
+            _ID = "GTA5PoliceSiren";
         }
 
         protected override UserControl CreateControl()

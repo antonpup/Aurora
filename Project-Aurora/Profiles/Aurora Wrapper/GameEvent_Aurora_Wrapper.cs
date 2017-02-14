@@ -119,10 +119,9 @@ namespace Aurora.Profiles.Aurora_Wrapper
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
             UpdateWrapperLights(new_game_state);
-            UpdateLights(frame);
         }
 
         internal virtual void UpdateWrapperLights(IGameState new_game_state)
@@ -376,9 +375,9 @@ namespace Aurora.Profiles.Aurora_Wrapper
             }
         }
 
-        public override bool IsEnabled()
+        public new bool IsEnabled
         {
-            return Global.Configuration.allow_all_logitech_bitmaps;
+            get { return Global.Configuration.allow_all_logitech_bitmaps; }
         }
 
         public float[] RgbToHsv(Color colorRgb)

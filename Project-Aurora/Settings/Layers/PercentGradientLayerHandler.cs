@@ -33,7 +33,7 @@ namespace Aurora.Settings.Layers
     { 
         public PercentGradientLayerHandler() : base()
         {
-            _Type = LayerType.PercentGradient;
+            _ID = "PercentGradient";
         }
 
         protected override UserControl CreateControl()

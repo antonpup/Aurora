@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Aurora.Profiles.Payday_2.Layers;
+using Aurora.Profiles;
 
 namespace Aurora.Settings
 {
@@ -40,7 +41,7 @@ namespace Aurora.Settings
         public Control_LayerControlPresenter(Layer layer) : this()
         {
             Layer = layer;
-            cmbLayerType.SelectedItem = Layer.Handler.Type;
+            cmbLayerType.SelectedItem = Layer.Handler.ID;
             grdLayerConfigs.Visibility = Visibility.Hidden;
             grd_LayerControl.IsHitTestVisible = true;
             grd_LayerControl.Effect = null;
@@ -54,10 +55,10 @@ namespace Aurora.Settings
 
             cmbLayerType.Items.Clear();
 
-            foreach(var layertype in layer.AssociatedProfile.AvailableLayers)
-                cmbLayerType.Items.Add(layertype);
+            foreach(var layertype in Global.ProfilesManager.DefaultLayerHandlers.Concat(layer.AssociatedProfile.Config.ExtraAvailableLayers))
+                cmbLayerType.Items.Add(Global.ProfilesManager.LayerHandlers[layertype]);
 
-            cmbLayerType.SelectedItem = Layer.Handler.Type;
+            cmbLayerType.SelectedItem = Global.ProfilesManager.LayerHandlers[Layer.Handler.ID];
             ctrlLayerTypeConfig.Content = layer.Control;
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
             chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
@@ -75,7 +76,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is ComboBox)
             {
-                LayerType enumVal = (LayerType)Enum.Parse(typeof(LayerType), ((sender as ComboBox).SelectedItem).ToString());
+                ProfilesManager.LayerHandlerEntry enumVal = (ProfilesManager.LayerHandlerEntry)((sender as ComboBox).SelectedItem);
 
                 ResetLayer(enumVal);
             }
@@ -87,11 +88,12 @@ namespace Aurora.Settings
             logic_edit.ShowDialog();
         }
 
-        private void ResetLayer(LayerType type)
+        private void ResetLayer(ProfilesManager.LayerHandlerEntry type)
         {
             if (IsLoaded && !isSettingNewLayer)
             {
-                switch (type)
+                _Layer.Handler = Global.ProfilesManager.GetLayerHandlerInstance(type);
+                /*switch (type)
                 {
                     case LayerType.Solid:
                         _Layer.Handler = new SolidColorLayerHandler();
@@ -153,8 +155,8 @@ namespace Aurora.Settings
                     case LayerType.Dota2Items:
                         _Layer.Handler = new Dota2ItemLayerHandler();
                         break;
-                    case LayerType.Dota2HeroAbiltiyEffects:
-                        _Layer.Handler = new Dota2HeroAbiltiyEffectsLayerHandler();
+                    case LayerType.Dota2HeroAbilityEffects:
+                        _Layer.Handler = new Dota2HeroAbilityEffectsLayerHandler();
                         break;
                     case LayerType.Dota2Killstreak:
                         _Layer.Handler = new Dota2KillstreakLayerHandler();
@@ -198,7 +200,7 @@ namespace Aurora.Settings
                     default:
                         _Layer.Handler = new DefaultLayerHandler();
                         break;
-                }
+                }*/
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
                 chkLayerSmoothing.IsChecked = _Layer.Handler.EnableSmoothing;
@@ -214,7 +216,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
-                LayerType enumVal = (LayerType)Enum.Parse(typeof(LayerType), (cmbLayerType.SelectedItem).ToString());
+                ProfilesManager.LayerHandlerEntry enumVal = (ProfilesManager.LayerHandlerEntry)(cmbLayerType.SelectedItem);
 
                 ResetLayer(enumVal);
             }

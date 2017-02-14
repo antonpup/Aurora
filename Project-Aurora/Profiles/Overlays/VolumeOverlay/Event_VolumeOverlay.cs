@@ -8,9 +8,9 @@ namespace Aurora.Profiles.Overlays
 {
     public class Event_VolumeOverlay : LightEvent
     {
-        public override bool IsEnabled()
+        public new bool IsEnabled
         {
-            return true;
+            get { return true; }
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -39,10 +39,10 @@ namespace Aurora.Profiles.Overlays
             }
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
             //No need to do anything... This doesn't have any gamestates.
-            UpdateLights(frame);
+            //UpdateLights(frame);
         }
     }
 }

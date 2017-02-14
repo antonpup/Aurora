@@ -15,7 +15,7 @@ namespace Aurora.Profiles.Overwatch
         public OverwatchSettings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
 
             //Effects
             //// Color Enhancing

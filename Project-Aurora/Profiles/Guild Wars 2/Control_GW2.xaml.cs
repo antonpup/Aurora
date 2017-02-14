@@ -35,7 +35,7 @@ namespace Aurora.Profiles.Guild_Wars_2
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as GW2Settings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as GW2Settings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as GW2Settings).lighting_areas;
         }
 
@@ -71,7 +71,7 @@ namespace Aurora.Profiles.Guild_Wars_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as GW2Settings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as GW2Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

@@ -47,7 +47,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public CSGOBurningLayerHandler() : base()
         {
-            _Type = LayerType.CSGOBurning;
+            _ID = "CSGOBurning";
         }
 
         protected override UserControl CreateControl()

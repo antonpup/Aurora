@@ -12,9 +12,9 @@ namespace Aurora.Profiles.BF3
     public class BF3ProfileManager : ProfileManager
     {
         public BF3ProfileManager()
-            : base("Battlefield 3", "bf3", "bf3.exe", typeof(BF3Settings), typeof(Control_BF3), new GameEvent_BF3())
+            : base(new LightEventConfig { Name="Battlefield 3", ID="bf3", ProcessNames = new[] { "bf3.exe" }, SettingsType = typeof(BF3Settings), OverviewControlType = typeof(Control_BF3), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_BF3(), IconURI = "Resources/bf3_64x64.png"
+    })
         {
-            IconURI = "Resources/bf3_64x64.png";
         }
     }
 }

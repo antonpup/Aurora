@@ -11,11 +11,6 @@ namespace Aurora.Profiles.Blade_and_Soul
         {
         }
 
-        public override bool IsEnabled()
-        {
-            return this.Profile.Settings.isEnabled;
-        }
-
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             this.colorEnhance_Enabled = (this.Profile.Settings as BnSSettings).colorEnhance_Enabled;

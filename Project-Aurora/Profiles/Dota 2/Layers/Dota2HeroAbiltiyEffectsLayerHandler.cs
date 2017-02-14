@@ -15,11 +15,11 @@ using System.Windows.Controls;
 
 namespace Aurora.Profiles.Dota_2.Layers
 {
-    public class Dota2HeroAbiltiyEffectsLayerHandlerProperties : LayerHandlerProperties2Color<Dota2HeroAbiltiyEffectsLayerHandlerProperties>
+    public class Dota2HeroAbilityEffectsLayerHandlerProperties : LayerHandlerProperties2Color<Dota2HeroAbilityEffectsLayerHandlerProperties>
     {
-        public Dota2HeroAbiltiyEffectsLayerHandlerProperties() : base() { }
+        public Dota2HeroAbilityEffectsLayerHandlerProperties() : base() { }
 
-        public Dota2HeroAbiltiyEffectsLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
+        public Dota2HeroAbilityEffectsLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
         public override void Default()
         {
@@ -27,7 +27,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         }
     }
 
-    public class Dota2HeroAbiltiyEffectsLayerHandler : LayerHandler<Dota2HeroAbiltiyEffectsLayerHandlerProperties>
+    public class Dota2HeroAbilityEffectsLayerHandler : LayerHandler<Dota2HeroAbilityEffectsLayerHandlerProperties>
     {
         enum Dota2AbilityEffects
         {
@@ -125,9 +125,9 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         private static Abilities_Dota2 abilities;
 
-        public Dota2HeroAbiltiyEffectsLayerHandler() : base()
+        public Dota2HeroAbilityEffectsLayerHandler() : base()
         {
-            _Type = LayerType.Dota2Abilities;
+            _ID = "Dota2Abilities";
         }
 
         protected override UserControl CreateControl()

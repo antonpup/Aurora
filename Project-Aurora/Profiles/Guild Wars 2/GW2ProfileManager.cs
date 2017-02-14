@@ -12,9 +12,9 @@ namespace Aurora.Profiles.Guild_Wars_2
     public class GW2ProfileManager : ProfileManager
     {
         public GW2ProfileManager()
-            : base("Guild Wars 2", "GW2", new string[] { "gw2.exe", "gw2-64.exe" }, typeof(GW2Settings), typeof(Control_GW2), new GameEvent_GW2())
+            : base(new LightEventConfig { Name = "Guild Wars 2", ID = "GW2", ProcessNames = new string[] { "gw2.exe", "gw2-64.exe" }, SettingsType = typeof(GW2Settings), OverviewControlType = typeof(Control_GW2), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_GW2(), IconURI = "Resources/gw2_48x48.png" })
         {
-            IconURI = "Resources/gw2_48x48.png";
+            
         }
     }
 }

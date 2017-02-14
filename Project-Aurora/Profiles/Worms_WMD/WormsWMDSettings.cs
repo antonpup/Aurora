@@ -15,7 +15,7 @@ namespace Aurora.Profiles.WormsWMD
         public WormsWMDSettings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
 
             //Effects
             //// Color Enhancing

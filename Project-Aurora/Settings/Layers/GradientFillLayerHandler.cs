@@ -40,7 +40,7 @@ namespace Aurora.Settings.Layers
     {
         public GradientFillLayerHandler()
         {
-            _Type = LayerType.GradientFill;
+            _ID = "GradientFill";
         }
 
         protected override UserControl CreateControl()

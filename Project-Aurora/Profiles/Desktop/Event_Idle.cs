@@ -206,15 +206,15 @@ namespace Aurora.Profiles.Desktop
             frame.AddOverlayLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
             //This event does not take a game state
-            UpdateLights(frame);
+            //UpdateLights(frame);
         }
 
-        public override bool IsEnabled()
+        public new bool IsEnabled
         {
-            return true;
+            get { return true; }
         }
     }
 }

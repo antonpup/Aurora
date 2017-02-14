@@ -79,7 +79,7 @@ namespace Aurora.Settings.Layers
 
         public AmbilightLayerHandler()
         {
-            _Type = LayerType.Ambilight;
+            _ID = "Ambilight";
 
             if (screenshotTimer == null)
             {

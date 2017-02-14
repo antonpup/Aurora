@@ -42,7 +42,7 @@ namespace Aurora.Profiles.DiscoDodgeball
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as DiscoDodgeballSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as DiscoDodgeballSettings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as DiscoDodgeballSettings).lighting_areas;
         }
 
@@ -80,7 +80,7 @@ namespace Aurora.Profiles.DiscoDodgeball
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as DiscoDodgeballSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as DiscoDodgeballSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

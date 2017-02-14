@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 //using System.Timers;
@@ -10,32 +11,18 @@ using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Utils;
 using Aurora.Profiles.Overlays.SkypeOverlay;
+using Aurora.Settings;
 
 namespace Aurora
 {
-    public enum PreviewType
-    {
-        None,
-        Desktop,
-        Predefined,
-        GenericApplication
-    }
+    
 
     public class GameEventHandler
     {
-        public struct tagLASTINPUTINFO
-        {
-            public uint cbSize;
-            public Int32 dwTime;
-        }
-
-        [DllImport("user32.dll")]
-        public static extern Boolean GetLastInputInfo(ref tagLASTINPUTINFO plii);
-
+        
         private Event_Desktop desktop_e = new Event_Desktop();
         private Event_Idle idle_e = new Event_Idle();
         private Event_SkypeOverlay skype_overlay = new Event_SkypeOverlay();
-        private Dictionary<string, LightEvent> profiles = new Dictionary<string, LightEvent>(); //Process name, GameEvent
 
         private List<TimedListObject> overlays = new List<TimedListObject>();
 
@@ -51,30 +38,9 @@ namespace Aurora
         private PreviewType preview_mode = PreviewType.Desktop;
         private string preview_mode_profile_key = "";
 
-        WinEventDelegate dele = null;
-
-        public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
-        {
-            if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.WindowsEvents)
-            {
-                string active_process = GetActiveWindowsProcessname();
-
-                if (!String.IsNullOrWhiteSpace(active_process))
-                {
-                    process_path = active_process;
-                    //Global.logger.LogLine("Process changed: " + process_path, Logging_Level.Info);
-                }
-            }
-        }
 
         public GameEventHandler()
         {
-            //Include all pre-made profiles
-            foreach (var kvp in Global.Configuration.ApplicationProfiles)
-            {
-                foreach (string process in kvp.Value.ProcessNames)
-                    profiles.Add(process, kvp.Value.Event);
-            }
 
             overlays.Add(new TimedListObject(skype_overlay, 0, overlays));
         }
@@ -86,9 +52,7 @@ namespace Aurora
 
         public bool Init()
         {
-            dele = new WinEventDelegate(WinEventProc);
-            SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
-            SetWinEventHook(EVENT_SYSTEM_MINIMIZESTART, EVENT_SYSTEM_MINIMIZEEND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
+            
 
             try
             {
@@ -128,8 +92,7 @@ namespace Aurora
             update_timer = null;
         }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
+        
 
         delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
@@ -141,29 +104,39 @@ namespace Aurora
         private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
         private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017;
 
-        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
+        [DllImport("Oleacc.dll")]
+        static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
+        [DllImport("psapi.dll")]
+        static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
+		
         private string GetActiveWindowsProcessname()
         {
             try
             {
-                IntPtr handle = IntPtr.Zero;
-                handle = GetForegroundWindow();
+                IntPtr windowHandle = IntPtr.Zero;
+                IntPtr processhandle = IntPtr.Zero;
+                IntPtr zeroHandle = IntPtr.Zero;
+                windowHandle = GetForegroundWindow();
+                processhandle = GetProcessHandleFromHwnd(windowHandle);
 
-                uint processId;
-                if (GetWindowThreadProcessId(handle, out processId) > 0)
-                {
-                    return Process.GetProcessById((int)processId).MainModule.FileName;
-                }
-                else
-                {
-                    return "";
-                }
+                StringBuilder sb = new StringBuilder(4048);
+                GetModuleFileNameEx(processhandle, zeroHandle, sb, 4048);
+                //Global.logger.LogLine("Current Foreground Window: " + sb.ToString(), Logging_Level.Info);
+
+                System.IO.Path.GetFileName(sb.ToString());
+
+
+               return sb.ToString();
+            }
+            catch (ArgumentException aex)
+            {
+                Global.logger.LogLine("Argument Exception: " + aex);
+                return "";
             }
             catch (Exception exc)
             {
-                //Console.WriteLine(exc);
+                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc);
                 return "";
             }
         }
@@ -202,26 +175,29 @@ namespace Aurora
                 }
             }
 
-            if (Global.Configuration.additional_profiles.ContainsKey(process_name) && (Global.Configuration.additional_profiles[process_name].Settings as GenericApplicationSettings).isEnabled)
-            {
-                Global.dev_manager.InitializeOnce();
-                Global.Configuration.additional_profiles[process_name].Event.UpdateLights(newframe);
-                /*if (profiles.ContainsKey(process_name))
-                {
-                    profiles[process_name]
-                }
-                else
-                {
-                    Event_GenericApplication app_event = new Event_GenericApplication();
-                    app_event.UpdateLights(newframe);
-                    profiles.Add(process_name, app_event);
-                }*/
+            ProfileManager profile;
 
+            if (((profile = ProfilesManager.GetProfileFromProcess(process_name)) != null) && profile.Settings.isEnabled)
+            {
+                if (profile.UpdateInterval != null)
+                    timer_interval = (int)profile.UpdateInterval; // in miliseconds
+                else
+                    timer_interval = 33;
+
+                //Does this need to be here?
+                /*if (!(Global.Configuration.time_based_dimming_enabled && Global.Configuration.time_based_dimming_affect_games &&
+                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
+                    )
+                {*/
+                    Global.dev_manager.InitializeOnce();
+
+                    profile.Event.UpdateLights(newframe);
+                //}
             }
-            else if (preview_mode == PreviewType.GenericApplication && Global.Configuration.additional_profiles.ContainsKey(preview_mode_profile_key) && (Global.Configuration.additional_profiles[preview_mode_profile_key].Settings as GenericApplicationSettings).isEnabled)
+            else if (preview_mode == PreviewType.GenericApplication && ((profile = ProfilesManager.GetProfileFromProcess(preview_mode_profile_key)) != null) && profile.Settings.isEnabled)
             {
                 Global.dev_manager.InitializeOnce();
-                Global.Configuration.additional_profiles[preview_mode_profile_key].Event.UpdateLights(newframe);
+                ProfilesManager.Profiles[preview_mode_profile_key].Event.UpdateLights(newframe);
 
                 /*if (profiles.ContainsKey(preview_mode_profile_key))
                     profiles[preview_mode_profile_key].UpdateLights(newframe);
@@ -232,35 +208,13 @@ namespace Aurora
                     profiles.Add(preview_mode_profile_key, app_event);
                 }*/
             }
-            else if (preview_mode == PreviewType.Predefined && profiles.ContainsKey(preview_mode_profile_key) && profiles[preview_mode_profile_key].IsEnabled())
+            else if (preview_mode == PreviewType.Predefined && ((profile = ProfilesManager.GetProfileFromProcess(preview_mode_profile_key)) != null) && profile.Event.IsEnabled())
             {
                 Global.dev_manager.InitializeOnce();
 
-                profiles[preview_mode_profile_key].UpdateLights(newframe);
+                profile.Event.UpdateLights(newframe);
             }
-            else if (profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
-            {
-                if (process_name.Equals("csgo.exe"))
-                {
-                    //Update timer set to 100 ticks a second for CSGO for Smooth Bomb Effect
-                    timer_interval = 33; // in miliseconds
-                }
-                else
-                {
-                    //UPDATE at 30 ticks per second for rest.
-                    timer_interval = 33;
-                }
-
-                if (!(Global.Configuration.time_based_dimming_enabled && Global.Configuration.time_based_dimming_affect_games &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
-                    )
-                {
-                    Global.dev_manager.InitializeOnce();
-
-                    profiles[process_name].UpdateLights(newframe);
-                }
-            }
-            else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && profiles.ContainsKey(Global.net_listener.WrappedProcess) && profiles[Global.net_listener.WrappedProcess].IsEnabled())
+            else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((profile = ProfilesManager.GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && profile.Event.IsEnabled())
             {
                 timer_interval = 33; // in miliseconds
 
@@ -270,7 +224,7 @@ namespace Aurora
                 {
                     Global.dev_manager.InitializeOnce();
 
-                    profiles[Global.net_listener.WrappedProcess].UpdateLights(newframe);
+                    profile.Event.UpdateLights(newframe);
                 }
             }
             else
@@ -280,7 +234,7 @@ namespace Aurora
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
                 {
-                    if (!(Global.Configuration.desktop_profile.Settings as DesktopSettings).isEnabled)
+                    if (!ProfilesManager.DesktopProfile.Settings.isEnabled)
                         Global.dev_manager.Shutdown();
                     else
                     {
@@ -295,7 +249,7 @@ namespace Aurora
             TimedListObject[] overlay_events = overlays.ToArray();
             foreach (TimedListObject evnt in overlay_events)
             {
-                if ((evnt.item as LightEvent).IsEnabled())
+                if ((evnt.item as LightEvent).IsEnabled)
                     (evnt.item as LightEvent).UpdateLights(newframe);
             }
 
@@ -304,11 +258,9 @@ namespace Aurora
             currentTick += (long)timer_interval;
         }
 
-        public void ResetGameState(string process)
-        {
-            if (profiles.ContainsKey(process))
-                profiles[process].ResetGameState();
-        }
+        
+
+        private GameEvent_Aurora_Wrapper ExtraWrapperGameEvent = new GameEvent_Aurora_Wrapper();
 
         public void GameStateUpdate(IGameState gs)
         {
@@ -335,62 +287,73 @@ namespace Aurora
             {
                 bool resolved_state = false;
 
-                switch (Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("appid").ToString())
+                ProfileManager profile = ProfilesManager.GetProfileFromProcess(process_name);
+
+                if (profile != null)
                 {
-                    case "570":
-                        if (process_name.EndsWith("dota2.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
-                        {
-                            profiles[process_name].UpdateLights(newframe, new Profiles.Dota_2.GSI.GameState_Dota2(gs));
-                            resolved_state = true;
-                        }
-                        break;
-                    case "730":
-                        if (process_name.EndsWith("csgo.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
-                        {
-                            profiles[process_name].UpdateLights(newframe, new Profiles.CSGO.GSI.GameState_CSGO(gs));
-                            resolved_state = true;
-                        }
-                        break;
-                    case "218620":
-                        if (process_name.EndsWith("payday2_win32_release.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
-                        {
-                            profiles[process_name].UpdateLights(newframe, new Profiles.Payday_2.GSI.GameState_PD2(gs));
-                            resolved_state = true;
-                        }
-                        break;
-                    case "0":
-                        if (process_name.EndsWith("gta5.exe") && Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant().Equals("gta5.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
-                        {
-                            profiles[process_name].UpdateLights(newframe, gs as Profiles.GTA5.GSI.GameState_GTA5);
-                            resolved_state = true;
-                        }
-                        else if (Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant().Equals("skype.exe") && skype_overlay.IsEnabled())
-                        {
-                            skype_overlay.UpdateLights(newframe, new Profiles.Overlays.SkypeOverlay.State_SkypeOverlay(gs));
-                        }
-                        else
-                        {
-                            if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
+                    profile.Event.UpdateLights(newframe, (IGameState)Activator.CreateInstance(profile.GameStateType, gs));
+                    resolved_state = true;
+                }
+                if (!resolved_state)
+                {
+                    switch (Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("appid").ToString())
+                    {
+                        /*case "570":
+                            if (process_name.EndsWith("dota2.exe") && profile != null && profile.Event.IsEnabled())
                             {
-                                string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
-
-                                if (!profiles.ContainsKey(gs_process_name))
-                                    profiles.Add(gs_process_name, new GameEvent_Aurora_Wrapper());
-
-                                if (process_name.EndsWith(gs_process_name))
+                                profile.Event.UpdateLights(newframe, new Profiles.Dota_2.GSI.GameState_Dota2(gs));
+                                resolved_state = true;
+                            }
+                            break;
+                        case "730":
+                            if (process_name.EndsWith("csgo.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
+                            {
+                                profiles[process_name].UpdateLights(newframe, new Profiles.CSGO.GSI.GameState_CSGO(gs));
+                                resolved_state = true;
+                            }
+                            break;
+                        case "218620":
+                            if (process_name.EndsWith("payday2_win32_release.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
+                            {
+                                profiles[process_name].UpdateLights(newframe, new Profiles.Payday_2.GSI.GameState_PD2(gs));
+                                resolved_state = true;
+                            }
+                            break;*/
+                        case "0":
+                            /*if (process_name.EndsWith("gta5.exe") && Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant().Equals("gta5.exe") && profiles.ContainsKey(process_name) && profiles[process_name].IsEnabled())
+                            {
+                                profiles[process_name].UpdateLights(newframe, gs as Profiles.GTA5.GSI.GameState_GTA5);
+                                resolved_state = true;
+                            }
+                            else*/
+                            if (Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant().Equals("skype.exe") && skype_overlay.IsEnabled())
+                            {
+                                skype_overlay.UpdateLights(newframe, new Profiles.Overlays.SkypeOverlay.State_SkypeOverlay(gs));
+                            }
+                            else
+                            {
+                                if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                                 {
-                                    profiles[gs_process_name].UpdateLights(newframe, gs as GameState_Wrapper);
-                                    resolved_state = true;
-                                }
-                                else
-                                {
-                                    (profiles[gs_process_name] as GameEvent_Aurora_Wrapper).UpdateWrapperLights(gs as GameState_Wrapper);
+                                    string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
+
+                                    ProfileManager gsProfile = ProfilesManager.GetProfileFromProcess(gs_process_name);
+                                    profile = profile ?? gsProfile;
+
+                                    if (profile == null)
+                                        ExtraWrapperGameEvent.UpdateWrapperLights(gs as GameState_Wrapper);
+                                    else if (profile?.Event is GameEvent_Aurora_Wrapper)
+                                        (profile.Event as GameEvent_Aurora_Wrapper).UpdateWrapperLights(gs as GameState_Wrapper);
+                                    else
+                                    {
+                                        profile.Event.UpdateLights(newframe, gs as GameState_Wrapper);
+                                        resolved_state = true;
+                                    }
                                 }
                             }
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 tagLASTINPUTINFO LastInput = new tagLASTINPUTINFO();
                 Int32 IdleTime;
@@ -442,21 +405,6 @@ namespace Aurora
             this.isForced = forced;
         }
 
-        public void SetPreview(PreviewType preview, string profile_key = "")
-        {
-            this.preview_mode = preview;
-            this.preview_mode_profile_key = profile_key;
-        }
-
-        public PreviewType GetPreview()
-        {
-            return this.preview_mode;
-        }
-
-        public string GetPreviewProfileKey()
-        {
-            return this.preview_mode_profile_key;
-        }
 
         public void AddOverlayForDuration(LightEvent overlay_event, int duration, bool isUnique = true)
         {

@@ -16,7 +16,7 @@ namespace Aurora.Profiles.ShadowOfMordor
         public ShadowOfMordorSettings()
         {
             //General
-            isEnabled = true;
+            IsEnabled = true;
             first_time_installed = false;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()

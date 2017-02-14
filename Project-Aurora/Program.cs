@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Profiles;
 using Aurora.Settings;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
@@ -36,7 +37,8 @@ namespace Aurora
         /// Input event subscriptions
         /// </summary>
         public static InputEventsSubscriptions input_subscriptions = new InputEventsSubscriptions();
-        public static GameEventHandler geh;
+        //public static GameEventHandler geh;
+        public static ProfilesManager ProfilesManager;
         public static NetworkListener net_listener;
         public static Configuration Configuration;
         public static DeviceManager dev_manager;
@@ -186,6 +188,9 @@ namespace Aurora
                 }
             }
 
+            Global.logger.LogLine("Loading Profiles", Logging_Level.Info);
+            (Global.ProfilesManager = new ProfilesManager()).Initialize();
+
             Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
             Global.dev_manager.RegisterVariables();
             Global.dev_manager.Initialize();
@@ -198,20 +203,20 @@ namespace Aurora
             Global.input_subscriptions.KeyDown += InputHookKeyDown;
             Global.input_subscriptions.KeyUp += InputHookKeyUp;
 
-            Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
+            /*Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
             Global.geh = new GameEventHandler();
             if (!Global.geh.Init())
             {
                 Global.logger.LogLine("GameEventHander could not initialize", Logging_Level.Error);
                 return;
-            }
+            }*/
 
             Global.logger.LogLine("Starting GameStateListener", Logging_Level.Info);
             try
             {
                 Global.net_listener = new NetworkListener(9088);
-                Global.net_listener.NewGameState += new NewGameStateHandler(Global.geh.GameStateUpdate);
-                Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.geh.ResetGameState);
+                Global.net_listener.NewGameState += new NewGameStateHandler(Global.ProfilesManager.GameStateUpdate);
+                Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.ProfilesManager.ResetGameState);
             }
             catch (Exception exc)
             {
@@ -250,7 +255,7 @@ namespace Aurora
 
             ConfigManager.Save(Global.Configuration);
 
-            Global.geh.Destroy();
+            //Global.geh.Destroy();
             Global.net_listener.Stop();
 
             try
@@ -268,17 +273,10 @@ namespace Aurora
             Environment.Exit(0);
         }
 
-        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        public static void Exit()
         {
-            Exception exc = (Exception)e.ExceptionObject;
-            Global.logger.LogLine("Fatal Exception caught : " + exc, Logging_Level.Error);
-            Global.logger.LogLine(String.Format("Runtime terminating: {0}", e.IsTerminating), Logging_Level.Error);
-
-            System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
-
-            //Perform exit operations
             Global.input_subscriptions.Dispose();
-            Global.geh.Destroy();
+            Global.ProfilesManager.Dispose();
             Global.net_listener.Stop();
 
             try
@@ -288,10 +286,25 @@ namespace Aurora
                     proc.Kill();
                 }
             }
-            catch (Exception exception)
+            catch (Exception exc)
             {
-                Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exception);
+                Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
             }
+
+
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception exc = (Exception)e.ExceptionObject;
+            Global.logger.LogLine("Fatal Exception caught : " + exc, Logging_Level.Error);
+            Global.logger.LogLine(String.Format("Runtime terminating: {0}", e.IsTerminating), Logging_Level.Error);
+
+            System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
+
+            //Perform exit operations
+            Exit();
         }
 
         private static void InstallLogitech()
@@ -430,7 +443,7 @@ namespace Aurora
             }
             else if (e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
             {
-                Global.geh.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
+                Global.ProfilesManager.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
             }
         }
 

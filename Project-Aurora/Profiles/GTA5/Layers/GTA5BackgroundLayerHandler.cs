@@ -97,7 +97,7 @@ namespace Aurora.Profiles.GTA5.Layers
     {
         public GTA5BackgroundLayerHandler() : base()
         {
-            _Type = LayerType.GTA5Background;
+            _ID = "GTA5Background";
         }
 
         protected override UserControl CreateControl()

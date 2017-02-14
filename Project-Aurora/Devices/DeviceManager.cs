@@ -1,4 +1,5 @@
-﻿using CSScriptLibrary;
+﻿using Aurora.Profiles;
+using CSScriptLibrary;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -111,7 +112,7 @@ namespace Aurora.Devices
 
             NewDevicesInitialized?.Invoke(this, new EventArgs());
 
-            if ((Global.Configuration.desktop_profile.Settings as Profiles.Desktop.DesktopSettings).isEnabled)
+            if (Global.ProfilesManager.DesktopProfile.Settings.IsEnabled)
             {
                 if (!retryActivated)
                 {
@@ -127,7 +128,7 @@ namespace Aurora.Devices
         {
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
-                if (!(Global.Configuration.desktop_profile.Settings as Profiles.Desktop.DesktopSettings).isEnabled)
+                if (!Global.ProfilesManager.DesktopProfile.Settings.IsEnabled)
                     break;
 
                 Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);

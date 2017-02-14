@@ -11,11 +11,6 @@ namespace Aurora.Profiles.HotlineMiami
         {
         }
 
-        public override bool IsEnabled()
-        {
-            return this.Profile.Settings.isEnabled;
-        }
-
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones

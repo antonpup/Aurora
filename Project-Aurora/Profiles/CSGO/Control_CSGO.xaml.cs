@@ -57,7 +57,7 @@ namespace Aurora.Profiles.CSGO
             this.profilemanager.ProfileManager = profile_manager;
             this.scriptmanager.ProfileManager = profile_manager;
 
-            this.game_enabled.IsChecked = (profile_manager.Settings as CSGOSettings).isEnabled;
+            this.game_enabled.IsChecked = (profile_manager.Settings as CSGOSettings).IsEnabled;
 
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.Undefined);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.CT);
@@ -74,7 +74,7 @@ namespace Aurora.Profiles.CSGO
                         this.preview_bomb_defused.IsEnabled = false;
                         this.preview_bomb_start.IsEnabled = true;
 
-                        (profile_manager.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Exploded;
+                        (profile_manager.Config.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Exploded;
                         preview_bomb_timer.Stop();
 
                         preview_bomb_remove_effect_timer.Start();
@@ -83,7 +83,7 @@ namespace Aurora.Profiles.CSGO
 
         private void preview_bomb_remove_effect_timer_Tick(object sender, EventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Undefined;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Undefined;
             preview_bomb_remove_effect_timer.Stop();
         }
 
@@ -109,7 +109,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as CSGOSettings).isEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                (profile_manager.Settings as CSGOSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -118,7 +118,7 @@ namespace Aurora.Profiles.CSGO
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_CSGO).Player.Team = (Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Player.Team = (Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
         }
 
         private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -127,7 +127,7 @@ namespace Aurora.Profiles.CSGO
             if (this.preview_health_amount is Label)
             {
                 this.preview_health_amount.Content = hp_val + "%";
-                (profile_manager.Event._game_state as GameState_CSGO).Player.State.Health = hp_val;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.Health = hp_val;
             }
         }
 
@@ -137,8 +137,8 @@ namespace Aurora.Profiles.CSGO
             if (this.preview_ammo_amount is Label)
             {
                 this.preview_ammo_amount.Content = ammo_val + "%";
-                (profile_manager.Event._game_state as GameState_CSGO).Player.Weapons.ActiveWeapon.AmmoClip = ammo_val;
-                (profile_manager.Event._game_state as GameState_CSGO).Player.Weapons.ActiveWeapon.AmmoClipMax = 100;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.Weapons.ActiveWeapon.AmmoClip = ammo_val;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.Weapons.ActiveWeapon.AmmoClipMax = 100;
             }
         }
 
@@ -148,7 +148,7 @@ namespace Aurora.Profiles.CSGO
             if (this.preview_flash_amount is Label)
             {
                 this.preview_flash_amount.Content = flash_val + "%";
-                (profile_manager.Event._game_state as GameState_CSGO).Player.State.Flashed = (int)(((double)flash_val / 100.0) * 255.0);
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.Flashed = (int)(((double)flash_val / 100.0) * 255.0);
             }
         }
 
@@ -158,7 +158,7 @@ namespace Aurora.Profiles.CSGO
             if (this.preview_burning_amount is Label)
             {
                 this.preview_burning_amount.Content = burning_val + "%";
-                (profile_manager.Event._game_state as GameState_CSGO).Player.State.Burning = (int)(((double)burning_val / 100.0) * 255.0);
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.Burning = (int)(((double)burning_val / 100.0) * 255.0);
             }
         }
 
@@ -167,7 +167,7 @@ namespace Aurora.Profiles.CSGO
             this.preview_bomb_defused.IsEnabled = true;
             this.preview_bomb_start.IsEnabled = false;
 
-            (profile_manager.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Planted;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Planted;
             preview_bomb_timer.Start();
             preview_bomb_remove_effect_timer.Stop();
         }
@@ -177,30 +177,30 @@ namespace Aurora.Profiles.CSGO
             this.preview_bomb_defused.IsEnabled = false;
             this.preview_bomb_start.IsEnabled = true;
 
-            (profile_manager.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Defused;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Defused;
             preview_bomb_timer.Stop();
             preview_bomb_remove_effect_timer.Start();
         }
 
         private void preview_typing_enabled_Checked(object sender, RoutedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_CSGO).Player.Activity = (((this.preview_typing_enabled.IsChecked.HasValue) ? this.preview_typing_enabled.IsChecked.Value : false) ? Aurora.Profiles.CSGO.GSI.Nodes.PlayerActivity.TextInput : Aurora.Profiles.CSGO.GSI.Nodes.PlayerActivity.Undefined);
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Player.Activity = (((this.preview_typing_enabled.IsChecked.HasValue) ? this.preview_typing_enabled.IsChecked.Value : false) ? Aurora.Profiles.CSGO.GSI.Nodes.PlayerActivity.TextInput : Aurora.Profiles.CSGO.GSI.Nodes.PlayerActivity.Undefined);
         }
 
         private void preview_respawn_Click(object sender, RoutedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Event._game_state as GameState_CSGO).Player.SteamID;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Config.Event._game_state as GameState_CSGO).Player.SteamID;
 
-            (profile_manager.Event._game_state as GameState_CSGO).Player.State.Health = 100;
-            (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.Health = 99;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.Health = 100;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.Health = 99;
 
             int curr_hp_val = (int)this.preview_health_slider.Value;
 
             System.Threading.Timer reset_conditions_timer = null;
             reset_conditions_timer = new System.Threading.Timer((obj) =>
                 {
-                    (profile_manager.Event._game_state as GameState_CSGO).Player.State.Health = curr_hp_val;
-                    (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.Health = 100;
+                    (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.Health = curr_hp_val;
+                    (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.Health = 100;
 
                     reset_conditions_timer.Dispose();
                 },
@@ -209,20 +209,20 @@ namespace Aurora.Profiles.CSGO
 
         private void preview_addkill_hs_Click(object sender, RoutedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Event._game_state as GameState_CSGO).Player.SteamID;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Config.Event._game_state as GameState_CSGO).Player.SteamID;
 
-            (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
-            (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKills = ++preview_kills;
-            (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKillHS = preview_killshs;
-            (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKillHS = ++preview_killshs;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKills = ++preview_kills;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKillHS = preview_killshs;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKillHS = ++preview_killshs;
 
             System.Threading.Timer reset_conditions_timer = null;
             reset_conditions_timer = new System.Threading.Timer((obj) =>
             {
-                (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
-                (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKills = preview_kills;
-                (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKillHS = preview_killshs;
-                (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKillHS = preview_killshs;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKills = preview_kills;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKillHS = preview_killshs;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKillHS = preview_killshs;
 
                 reset_conditions_timer.Dispose();
             },
@@ -233,16 +233,16 @@ namespace Aurora.Profiles.CSGO
 
         private void preview_addkill_Click(object sender, RoutedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Event._game_state as GameState_CSGO).Player.SteamID;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Config.Event._game_state as GameState_CSGO).Player.SteamID;
 
-            (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
-            (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKills = ++preview_kills;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKills = ++preview_kills;
 
             System.Threading.Timer reset_conditions_timer = null;
             reset_conditions_timer = new System.Threading.Timer((obj) =>
             {
-                (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
-                (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKills = preview_kills;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKills = preview_kills;
 
                 reset_conditions_timer.Dispose();
             },
@@ -252,20 +252,20 @@ namespace Aurora.Profiles.CSGO
         }
         private void preview_kills_reset_Click(object sender, RoutedEventArgs e)
         {
-            (profile_manager.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Event._game_state as GameState_CSGO).Player.SteamID;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Config.Event._game_state as GameState_CSGO).Player.SteamID;
 
-            (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
-            (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKills = 0;
-            (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKillHS = preview_killshs;
-            (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKillHS = 0;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = preview_kills;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKills = 0;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKillHS = preview_killshs;
+            (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKillHS = 0;
 
             System.Threading.Timer reset_conditions_timer = null;
             reset_conditions_timer = new System.Threading.Timer((obj) =>
             {
-                (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = 0;
-                (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKills = 0;
-                (profile_manager.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKillHS = 0;
-                (profile_manager.Event._game_state as GameState_CSGO).Player.State.RoundKillHS = 0;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKills = 0;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKills = 0;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Previously.Player.State.RoundKillHS = 0;
+                (profile_manager.Config.Event._game_state as GameState_CSGO).Player.State.RoundKillHS = 0;
 
                 reset_conditions_timer.Dispose();
             },

@@ -40,7 +40,7 @@ namespace Aurora.Profiles.RocketLeague
         public RocketLeagueSettings()
         {
             //Genereal
-            isEnabled = true;
+            IsEnabled = true;
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
             {

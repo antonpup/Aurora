@@ -26,16 +26,16 @@ namespace Aurora.Profiles.Desktop
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            foreach(var layer in (Global.Configuration.desktop_profile.Settings as DesktopSettings).Layers.Reverse().ToArray())
+            foreach(var layer in this.Profile.Settings.Layers.Reverse().ToArray())
             {
                 if(layer.Enabled && layer.LogicPass)
                     layers.Enqueue(layer.Render(_game_state));
             }
 
-            layers.Enqueue(new EffectLayer("Color Zones").DrawColorZones((Global.Configuration.desktop_profile.Settings as DesktopSettings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("Color Zones").DrawColorZones((this.Profile.Settings as DesktopSettings).lighting_areas.ToArray()));
 
             //Scripts before interactive and shortcut assistant layers
-            Global.Configuration.desktop_profile.UpdateEffectScripts(layers);
+            //ProfilesManager.DesktopProfile.UpdateEffectScripts(layers);
 
             if (Global.Configuration.time_based_dimming_enabled)
             {
@@ -55,15 +55,14 @@ namespace Aurora.Profiles.Desktop
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void UpdateLights(EffectFrame frame, IGameState new_game_state)
+        public override void SetGameState(IGameState new_game_state)
         {
-            //No need to do anything... This doesn't have any gamestates.
-            UpdateLights(frame);
+            
         }
 
-        public override bool IsEnabled()
+        public new bool IsEnabled
         {
-            return true;
+            get { return true; }
         }
     }
 }

@@ -13,24 +13,76 @@ using System.Linq;
 using Aurora.Settings.Layers;
 using System.Reflection;
 using System.Windows.Media.Imaging;
+using System.Runtime.CompilerServices;
 
 namespace Aurora.Settings
 {
-    public class ProfileManager
+    public class LightEventConfig : NotifyPropertyChangedEx
+    {
+        //TODO: Add NotifyPropertyChanged to properties
+        public string[] ProcessNames { get; set; }
+
+        public string Name { get; set; }
+
+        public string ID { get; set; }
+
+        public string AppID { get; set; }
+
+        public Type SettingsType { get; set; } = typeof(ProfileSettings);
+
+        public Type OverviewControlType { get; set; }
+
+        public Type GameStateType { get; set; }
+
+        public LightEvent Event { get; set; }
+
+        public int? UpdateInterval { get; set; } = null;
+
+        public string IconURI { get; set; }
+
+        public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
+
+        protected LightEventType type;
+        public LightEventType Type
+        {
+            get { return type; }
+            protected set
+            {
+                object old = type;
+                object newVal = value;
+                type = value;
+                InvokePropertyChanged(old, newVal);
+            }
+        }
+    }
+
+    public class ProfileManager : IInit, ILightEvent
     {
         #region Public Properties
-        public string Name { get; set; }
-        public string InternalName { get; set; }
-        public string[] ProcessNames { get; set; }
-        public string IconURI { get; set; }
+        public bool Initialized { get; protected set; } = false;
         public ProfileSettings Settings { get; set; }
-        public LightEvent Event { get; set; }
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
         public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
         public bool HasLayers { get; set; }
-        public HashSet<LayerType> AvailableLayers { get; set; }
         public event EventHandler ProfileChanged;
         public bool ScriptsLoaded { get; protected set; }
+        public LightEventConfig Config { get; protected set; }
+        public string ID { get { return Config.ID; } }
+        public Type GameStateType { get { return Config.GameStateType; } }
+        public bool IsEnabled { get { return Settings.IsEnabled; } }
+        public event PropertyChangedExEventHandler PropertyChanged;
+        protected LightEventType type;
+        public LightEventType Type
+        {
+            get { return type; }
+            protected set
+            {
+                object old = type;
+                object newVal = value;
+                type = value;
+                InvokePropertyChanged(old, newVal);
+            }
+        }
         #endregion
 
         #region Internal Properties
@@ -40,30 +92,18 @@ namespace Aurora.Settings
         #endregion
 
         #region Private Fields/Properties
-        protected Type SettingsType = typeof(ProfileSettings);
-        protected Type ControlType = null;
         #endregion
 
-        public ProfileManager(string name, string internal_name, string[] process_names, Type settings, Type control, LightEvent game_event)
+        public ProfileManager(LightEventConfig config)
         {
-            Name = name;
-            InternalName = internal_name;
-            ProcessNames = process_names;
-            Icon = null;
-            Control = null;
-            ControlType = control;
-            SettingsType = settings;
-            Settings = (ProfileSettings)Activator.CreateInstance(settings);
-            game_event.Profile = this;
-            Event = game_event;
+            Config = config;
+
+            Settings = (ProfileSettings)Activator.CreateInstance(config.SettingsType);
+            config.Event.Profile = this;
             Profiles = new Dictionary<string, ProfileSettings>();
             EffectScripts = new Dictionary<string, IEffectScript>();
-            if (game_event._game_state != null)
-            {
-                ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(game_event._game_state.GetType());
-            }
-            else
-                ParameterLookup = new Dictionary<string, Tuple<Type, Type>>();
+            ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
+        }
 
             if (AvailableLayers == null)
                 AvailableLayers = new HashSet<LayerType>();
@@ -84,21 +124,25 @@ namespace Aurora.Settings
             AvailableLayers.Add(LayerType.Equalizer);
             AvailableLayers.Add(LayerType.Ambilight);
             AvailableLayers.Add(LayerType.LockColor);
-            AvailableLayers.Add(LayerType.Animation);
 
             LoadProfiles();
+            Initialized = true;
+            return Initialized;
         }
 
-        public ProfileManager(string name, string internal_name, string process_name, Type settings, Type control, LightEvent game_event) : this(name, internal_name, new string[] { process_name }, settings, control, game_event) { }
+        protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedExEventArgs(propertyName, oldValue, newValue));
+        }
 
         public virtual UserControl GetUserControl()
         {
-            return Control ?? (Control = (UserControl)Activator.CreateInstance(this.ControlType, this));
+            return Control ?? (Control = (UserControl)Activator.CreateInstance(this.Config.OverviewControlType, this));
         }
 
         public virtual ImageSource GetIcon()
         {
-            return Icon ?? (Icon = new BitmapImage(new Uri(IconURI, UriKind.Relative)));
+            return Icon ?? (Icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
         }
 
         public void SwitchToProfile(string profile_name)
@@ -139,8 +183,8 @@ namespace Aurora.Settings
         protected ProfileSettings CloneSettings(ProfileSettings settings)
         {
             return (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(settings, SettingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }),
-                    SettingsType,
+                    JsonConvert.SerializeObject(settings, Config.SettingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }),
+                    Config.SettingsType,
                     new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All }
                     ); //I know this is bad. You can laugh at me for this one. :(
         }
@@ -155,14 +199,14 @@ namespace Aurora.Settings
 
         public virtual string GetProfileFolderPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", InternalName);
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", Config.ID);
         }
 
         public void ResetProfile()
         {
             try
             {
-                Settings = (ProfileSettings)Activator.CreateInstance(SettingsType);
+                Settings = (ProfileSettings)Activator.CreateInstance(Config.SettingsType);
 
                 this.InitalizeScriptSettings(Settings, true);
 
@@ -184,7 +228,7 @@ namespace Aurora.Settings
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
+                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, Config.SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
                         foreach (Layer lyr in prof.Layers)
                         {
                             lyr.AnythingChanged += this.SaveProfilesEvent;
@@ -217,7 +261,7 @@ namespace Aurora.Settings
                     string newPath = path + ".corrupted";
                     File.Move(path, newPath);
                     this.SaveProfile(path, Settings);
-                    MessageBox.Show($"Default profile for {this.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 //if (Global.isDebug)
@@ -238,6 +282,21 @@ namespace Aurora.Settings
             this.EffectScripts.Add(key, obj);
 
             return true;
+        }
+
+        public virtual void UpdateLights(EffectFrame frame)
+        {
+            this.Config.Event.UpdateLights(frame);
+        }
+
+        public virtual void SetGameState(IGameState state)
+        {
+            this.Config.Event.SetGameState(state);
+        }
+
+        public virtual void ResetGameState()
+        {
+            Config.Event.ResetGameState();
         }
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
@@ -387,7 +446,7 @@ namespace Aurora.Settings
             }
             else
             {
-                Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Name), Logging_Level.Info, false);
+                Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Config.Name), Logging_Level.Info, false);
             }
         }
 
@@ -434,5 +493,15 @@ namespace Aurora.Settings
                 Global.logger.LogLine("Exception during SaveProfiles, " + exc, Logging_Level.Error);
             }
         }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
+
+        public bool Initialize()
+        {
+            if (Initialized)
+                return Initialized;

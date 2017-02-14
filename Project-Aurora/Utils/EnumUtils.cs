@@ -167,10 +167,10 @@ namespace Aurora.Utils
         public AnimationTypeToStringVC() : base(AnimationType.None) { }
     }
 
-    public class LayerTypeToStringVC : EnumToStringVC
+    /*public class LayerTypeToStringVC : EnumToStringVC
     {
         public LayerTypeToStringVC() : base(LayerType.Solid) { }
-    }
+    }*/
 
     public class LogicOperatorToStringVC : EnumToStringVC
     {
