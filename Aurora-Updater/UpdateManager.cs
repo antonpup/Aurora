@@ -117,7 +117,7 @@ namespace Aurora_Updater
 
         public bool RetrieveUpdate(UpdateType type)
         {
-            string url = @"http://project-aurora.com/files/" + (type == UpdateType.Major ? responce.Major.File : responce.Minor.File);
+            string url = @"http://project-aurora.com/download.php?id=" + (type == UpdateType.Major ? responce.Major.ID : responce.Minor.ID);
             updateState = UpdateStatus.InProgress;
             try
             {
