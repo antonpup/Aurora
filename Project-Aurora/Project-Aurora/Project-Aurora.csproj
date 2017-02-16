@@ -666,9 +666,6 @@
     <None Include="kb_layouts\masterkeys_pro_m_white.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Scripts\Devices\example_script.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="Scripting.evaluator.cs" />
     <Compile Include="Scripting.Extensions.cs" />
     <Compile Include="Scripting.native.cs" />
@@ -1404,9 +1401,6 @@
     </Content>
     <Resource Include="Resources\worms_wmd.png" />
     <Resource Include="Resources\xcom_64x64.png" />
-    <None Include="Scripts\Devices\example_py_script.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Resource Include="Resources\bf3_64x64.png" />
     <Resource Include="Resources\blacklight_64x64.png" />
     <Content Include="Resources\CorsairInstall\Step1.png" />
