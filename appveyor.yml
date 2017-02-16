@@ -8,7 +8,11 @@ skip_branch_with_pr: true
 configuration: Release
 platform: x64
 before_build:
-- cmd: nuget restore
+- cmd: >-
+    cd Project-Aurora
+
+    nuget restore
+
 build:
-  project: Project-Aurora.sln
+  project: Project-Aurora\Project-Aurora.sln
   verbosity: minimal

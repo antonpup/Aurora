@@ -220,12 +220,12 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
-Project-Aurora.VC.opendb
+Project-Aurora/Project-Aurora.VC.opendb
 .vs/config/applicationhost.config
-Project-Aurora/documentation/Aurora.XML
-Project-Aurora.VC.VC.opendb
-Project-Aurora.VC.opendb
-Project-Aurora.VC.db
+Project-Aurora/Project-Aurora/documentation/Aurora.XML
+Project-Aurora/Project-Aurora.VC.VC.opendb
+Project-Aurora/Project-Aurora.VC.opendb
+Project-Aurora/Project-Aurora.VC.db
 Web Installer/output/*
 
 # NuGet Packages
