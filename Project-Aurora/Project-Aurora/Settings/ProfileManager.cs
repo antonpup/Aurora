@@ -244,6 +244,13 @@ namespace Aurora.Settings
                 if (Path.GetFileNameWithoutExtension(path).Equals("default"))
                 {
                     string newPath = path + ".corrupted";
+
+                    int _copy = 1;
+                    while(File.Exists(newPath))
+                    {
+                        newPath = path + $"({_copy++}).corrupted";
+                    }
+
                     File.Move(path, newPath);
                     this.SaveProfile(path, Settings);
                     MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
