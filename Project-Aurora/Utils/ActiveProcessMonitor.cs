@@ -85,7 +85,6 @@ namespace Aurora.Utils
 
                 StringBuilder sb = new StringBuilder(4048);
                 GetModuleFileNameEx(processhandle, zeroHandle, sb, 4048);
-                //Global.logger.LogLine("Current Foreground Window: " + sb.ToString(), Logging_Level.Info);
 
                 System.IO.Path.GetFileName(sb.ToString());
 
@@ -94,12 +93,12 @@ namespace Aurora.Utils
             }
             catch (ArgumentException aex)
             {
-                Global.logger.LogLine("Argument Exception: " + aex);
+                Global.logger.LogLine("Argument Exception: " + aex, Logging_Level.Error);
                 return "";
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc);
+                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
                 return "";
             }
         }

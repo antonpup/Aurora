@@ -77,7 +77,6 @@ namespace Aurora.Devices.Roccat
                 catch (Exception ex)
                 {
                     Global.logger.LogLine("Roccat device, Exception! Message:" + ex, Logging_Level.Error);
-                    System.Windows.Forms.MessageBox.Show("Roccat device, Exception! Message:" + ex);
                 }
 
                 isInitialized = false;
@@ -145,8 +144,6 @@ namespace Aurora.Devices.Roccat
             catch (Exception e)
             {
                 Global.logger.LogLine("Roccat device, error when updating device. Error: " + e, Logging_Level.Error);
-                Console.WriteLine(e);
-                System.Windows.Forms.MessageBox.Show("Roccat device, error when updating device. Error: " + e);
                 return false;
             }
         }

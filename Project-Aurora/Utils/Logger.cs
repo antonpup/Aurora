@@ -33,7 +33,12 @@ namespace Aurora
         /// <summary>
         /// External, should be used for scripts
         /// </summary>
-        External
+        External,
+
+        /// <summary>
+        /// Debug, will only show when Application is started in debug mode
+        /// </summary>
+        Debug
     }
 
     /// <summary>
@@ -41,11 +46,12 @@ namespace Aurora
     /// </summary>
     public class Logger
     {
-        private bool retrieved_unique_logfile = false;
-        private bool retrieved_unique_logdir = false;
-        private string logfile = "log.txt";
-        private string logdir = "Aurora/Logs/";
-        private Queue<string> message_queue = new Queue<string>();
+        private bool HasUniqueLogFile = false;
+        private bool HasUniqueLogDirectory = false;
+        private string LogFile = "log.txt";
+        private string LogDirectory = "Aurora/Logs/";
+        private Queue<string> MessageQueue = new Queue<string>();
+        private readonly int QueueLimit = 255;
 
         public Logger()
         {
@@ -60,7 +66,7 @@ namespace Aurora
 
                 systeminfo_sb.AppendFormat("Operation System: {0}\r\n", productName);
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 systeminfo_sb.AppendFormat("Operation System: Could not retrieve. [Exception: {0}]\r\n", exc.Message);
             }
@@ -95,13 +101,13 @@ namespace Aurora
         /// <returns>A path to the log file</returns>
         public string GetPath()
         {
-            if (!retrieved_unique_logfile)
-                logfile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("yyyy_dd_MM") + ".log");
+            if (!HasUniqueLogFile)
+                LogFile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("yyyy_dd_MM") + ".log");
 
-            if (!System.IO.File.Exists(logdir))
-                System.IO.Directory.CreateDirectory(logdir);
+            if (!System.IO.File.Exists(LogDirectory))
+                System.IO.Directory.CreateDirectory(LogDirectory);
 
-            return logfile;
+            return LogFile;
         }
 
         /// <summary>
@@ -110,13 +116,13 @@ namespace Aurora
         /// <returns>The path to the Logs directory</returns>
         public string GetLogsDirectory()
         {
-            if (!retrieved_unique_logdir)
-                logdir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), logdir);
+            if (!HasUniqueLogDirectory)
+                LogDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), LogDirectory);
 
-            if (!System.IO.File.Exists(logdir))
-                System.IO.Directory.CreateDirectory(logdir);
+            if (!System.IO.File.Exists(LogDirectory))
+                System.IO.Directory.CreateDirectory(LogDirectory);
 
-            return logdir;
+            return LogDirectory;
         }
 
         /// <summary>
@@ -127,6 +133,9 @@ namespace Aurora
         /// <param name="timestamp">A boolean value representing if a timestamp should be included</param>
         public void LogLine(string message, Logging_Level level = Logging_Level.None, bool timestamp = true)
         {
+            if (level == Logging_Level.Debug && !Global.isDebug)
+                return;
+
             string logLine = PrepareMessage(message, level, timestamp);
 
             try
@@ -134,9 +143,9 @@ namespace Aurora
                 System.IO.StreamWriter sw = System.IO.File.AppendText(GetPath());
                 try
                 {
-                    while(message_queue.Count > 0)
+                    while (MessageQueue.Count > 0)
                     {
-                        string queue_msg = message_queue.Dequeue();
+                        string queue_msg = MessageQueue.Dequeue();
 
                         System.Diagnostics.Debug.WriteLine(queue_msg);
                         sw.WriteLine(queue_msg);
@@ -154,7 +163,8 @@ namespace Aurora
             {
                 System.Diagnostics.Debug.WriteLine("There was an exception during logging, " + e.Message);
 
-                message_queue.Enqueue(logLine);
+                if (MessageQueue.Count < QueueLimit)
+                    MessageQueue.Enqueue(logLine);
             }
         }
 
@@ -175,6 +185,8 @@ namespace Aurora
                     return "ERROR";
                 case (Logging_Level.External):
                     return "EXTERNAL";
+                case (Logging_Level.Debug):
+                    return "DEBUG";
                 default:
                     return "";
             }

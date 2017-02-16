@@ -123,7 +123,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             //Duration cannot be negative
             if (duration < 0)
-                Global.logger.LogLine($"Negative duration!!! duration={duration}", Logging_Level.Warning);
+                Global.logger.LogLine($"Negative duration!!! duration={duration}", Logging_Level.Debug);
             else
                 _duration = duration;
 

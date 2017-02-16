@@ -53,11 +53,7 @@ namespace Aurora.Devices.Razer
                     try
                     {
                         if (!Chroma.SdkAvailable)
-                        {
-                            Global.logger.LogLine("No Chroma SDK available", Logging_Level.Info);
                             throw new Exception("No Chroma SDK available");
-                            //return false;
-                        }
 
                         Chroma.Instance.Initialize();
 
@@ -98,7 +94,6 @@ namespace Aurora.Devices.Razer
                         Global.logger.LogLine("Razer device, Exception! Message:" + ex, Logging_Level.Error);
                     }
 
-
                     isInitialized = false;
                     return false;
                 }
@@ -109,8 +104,6 @@ namespace Aurora.Devices.Razer
 
         public void Shutdown()
         {
-            Global.logger.LogLine("Razer device, Shutdown attempt", Logging_Level.Info);
-
             lock (action_lock)
             {
                 try
@@ -180,7 +173,7 @@ namespace Aurora.Devices.Razer
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Corsair device, error when updating device. Error: " + e, Logging_Level.Error);
+                Global.logger.LogLine("Razer device, error when updating device. Error: " + e, Logging_Level.Error);
                 Console.WriteLine(e);
                 return false;
             }

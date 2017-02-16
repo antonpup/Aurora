@@ -140,7 +140,7 @@ namespace Aurora.Utils
         /// <returns>Path to the location of AppID's install</returns>
         public static string GetGamePath(int gameId)
         {
-            Global.logger.LogLine("Trying to get game path for: " + gameId, Logging_Level.Info);
+            Global.logger.LogLine("Trying to get game path for: " + gameId, Logging_Level.Debug);
 
             try
             {

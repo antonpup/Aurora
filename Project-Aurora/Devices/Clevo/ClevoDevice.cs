@@ -65,7 +65,6 @@ namespace Aurora.Devices.Clevo
                     // Initialize Clevo WMI Interface Connection
                     if (!clevo.Initialize())
                     {
-                        Global.logger.LogLine("Could not connect to Clevo WMI Interface", Logging_Level.Info);
                         throw new Exception("Could not connect to Clevo WMI Interface");
                     }
 
@@ -224,7 +223,6 @@ namespace Aurora.Devices.Clevo
             catch (Exception exception)
             {
                 Global.logger.LogLine("Clevo device, error when updating device. Error: " + exception, Logging_Level.Error, true);
-                Console.WriteLine(exception);
                 update_result = false;
             }
 

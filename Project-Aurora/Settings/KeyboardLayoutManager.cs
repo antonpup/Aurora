@@ -942,8 +942,8 @@ namespace Aurora.Settings
             _virtual_keyboard.Children.Clear();
             _virtual_keyboard = new_virtual_keyboard;
 
-            Global.logger.LogLine("Baseline X = " + (float)baseline_x, Logging_Level.Info, false);
-            Global.logger.LogLine("Baseline Y = " + (float)baseline_y, Logging_Level.Info, false);
+            Global.logger.LogLine("Baseline X = " + (float)baseline_x, Logging_Level.Debug, false);
+            Global.logger.LogLine("Baseline Y = " + (float)baseline_y, Logging_Level.Debug, false);
             Effects.grid_baseline_x = (float)baseline_x;
             Effects.grid_baseline_y = (float)baseline_y;
             Effects.grid_height = (float)new_virtual_keyboard.Height;
