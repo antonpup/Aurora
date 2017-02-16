@@ -130,7 +130,7 @@ namespace Aurora_Updater
                     client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
 
                     // Starts the download
-                    client.DownloadFileAsync(new Uri(url), "update.zip");
+                    client.DownloadFileAsync(new Uri(url), Path.Combine(Program.exePath, "update.zip"));
 
                 }
 
@@ -214,13 +214,13 @@ namespace Aurora_Updater
 
         private bool ExtractUpdate()
         {
-            if (File.Exists("update.zip"))
+            if (File.Exists(Path.Combine(Program.exePath, "update.zip")))
             {
                 log.Enqueue(new LogEntry("Unpacking update..."));
 
                 try
                 {
-                    ZipFile updateFile = new ZipFile("update.zip");
+                    ZipFile updateFile = new ZipFile(Path.Combine(Program.exePath, "update.zip"));
                     log.Enqueue(new LogEntry(updateFile.Count + " files detected."));
 
                     for (int i = 0; i < updateFile.Count; i++)
@@ -236,9 +236,9 @@ namespace Aurora_Updater
 
                         try
                         {
-                            if (File.Exists(fileEntry.FileName))
-                                File.Move(fileEntry.FileName, fileEntry.FileName + ".updateremove");
-                            fileEntry.Extract();
+                            if (File.Exists(Path.Combine(Program.exePath, fileEntry.FileName)))
+                                File.Move(Path.Combine(Program.exePath, fileEntry.FileName), Path.Combine(Program.exePath, fileEntry.FileName + ".updateremove"));
+                            fileEntry.Extract(Program.exePath);
                         }
                         catch (IOException e)
                         {
@@ -251,7 +251,7 @@ namespace Aurora_Updater
                     }
 
                     updateFile.Dispose();
-                    File.Delete("update.zip");
+                    File.Delete(Path.Combine(Program.exePath, "update.zip"));
                 }
                 catch (Exception exc)
                 {
@@ -276,7 +276,7 @@ namespace Aurora_Updater
 
         private void PerformCleanup()
         {
-            string[] _messyFiles = Directory.GetFiles(".", "*.updateremove", SearchOption.AllDirectories);
+            string[] _messyFiles = Directory.GetFiles(Program.exePath, "*.updateremove", SearchOption.AllDirectories);
 
             foreach (string file in _messyFiles)
             {
@@ -290,8 +290,8 @@ namespace Aurora_Updater
                 }
             }
 
-            if (File.Exists("update.zip"))
-                File.Delete("update.zip");
+            if (File.Exists(Path.Combine(Program.exePath, "update.zip")))
+                File.Delete(Path.Combine(Program.exePath, "update.zip"));
         }
     }
 
