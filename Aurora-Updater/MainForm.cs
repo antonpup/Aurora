@@ -9,7 +9,7 @@ namespace Aurora_Updater
         System.Windows.Forms.Timer progressTimer;
         Thread updaterThread;
         int logTracker = 0;
-        UpdateType update_type;
+        UpdateType updatetype;
 
         public MainForm()
         {
@@ -19,8 +19,8 @@ namespace Aurora_Updater
         public MainForm(UpdateType update_type)
         {
             InitializeComponent();
-            this.update_type = update_type;
-            StaticStorage.manager.clearLog();
+            this.updatetype = update_type;
+            StaticStorage.Manager.ClearLog();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -30,7 +30,7 @@ namespace Aurora_Updater
             progressTimer.Tick += this.UpdateProgressTick;
             progressTimer.Enabled = true;
             progressTimer.Start();
-            updaterThread = new Thread(() => StaticStorage.manager.retrieveUpdate(this.update_type));
+            updaterThread = new Thread(() => StaticStorage.Manager.RetrieveUpdate(this.updatetype));
             updaterThread.IsBackground = true;
             updaterThread.Start();
         }
@@ -38,35 +38,24 @@ namespace Aurora_Updater
 
         private void UpdateProgressTick(object sender, EventArgs args)
         {
-            this.update_progress.Value = StaticStorage.manager.getTotalProgress();
+            this.update_progress.Value = StaticStorage.Manager.GetTotalProgress();
 
-            LogEntry[] logs = StaticStorage.manager.getLog();
+            LogEntry[] logs = StaticStorage.Manager.GetLog();
 
             if (logs.Length > logTracker)
             {
                 for (; logTracker < logs.Length; logTracker++)
                 {
-                    this.update_log_richtext.SelectionStart = this.update_log_richtext.TextLength;
-                    this.update_log_richtext.SelectionLength = 0;
+                    this.richtextUpdateLog.SelectionStart = this.richtextUpdateLog.TextLength;
+                    this.richtextUpdateLog.SelectionLength = 0;
 
-                    this.update_log_richtext.SelectionColor = logs[logTracker].getColor();
-                    this.update_log_richtext.AppendText(logs[logTracker] + "\r\n");
-                    this.update_log_richtext.SelectionColor = this.update_log_richtext.ForeColor;
+                    this.richtextUpdateLog.SelectionColor = logs[logTracker].GetColor();
+                    this.richtextUpdateLog.AppendText(logs[logTracker] + "\r\n");
+                    this.richtextUpdateLog.SelectionColor = this.richtextUpdateLog.ForeColor;
                 }
 
-                this.update_log_richtext.ScrollToCaret();
+                this.richtextUpdateLog.ScrollToCaret();
             }
-            
-
-            /*
-            if (StaticStorage.manager.updatestate != UpdateStatus.InProgress)
-            {
-                this.progressTimer.Enabled = false;
-                this.progressTimer.Stop();
-                
-                return;
-            }
-            */
         }
     }
 }

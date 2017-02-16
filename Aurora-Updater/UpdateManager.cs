@@ -8,6 +8,7 @@ using Ionic.Zip;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
+using System.Text;
 
 namespace Aurora_Updater
 {
@@ -34,12 +35,12 @@ namespace Aurora_Updater
             this.color = color;
         }
 
-        public Color getColor()
+        public Color GetColor()
         {
             return color;
         }
 
-        public String getMessage()
+        public String GetMessage()
         {
             return message;
         }
@@ -60,46 +61,46 @@ namespace Aurora_Updater
 
     public class UpdateManager
     {
-        private string infourl = @"http://aurora.lastbullet.net/vcheck.php";
-        private string[] ignorefiles = { };
+        private string infoUrl = @"http://project-aurora.com/vcheck.php";
+        private string[] ignoreFiles = { };
         public UpdateResponce responce = new UpdateResponce();
         private Queue<LogEntry> log = new Queue<LogEntry>();
-        private float downloadprogess = 0.0f;
-        private float extractprogess = 0.0f;
-        public UpdateStatus updatestate = UpdateStatus.None;
-        private int downloadprogresscheck = 0;
-        private int seconds_left = 15;
+        private float downloadProgess = 0.0f;
+        private float extractProgess = 0.0f;
+        public UpdateStatus updateState = UpdateStatus.None;
+        private int downloadProgressCheck = 0;
+        private int secondsLeft = 15;
 
         public UpdateManager()
         {
-            performCleanup();
-            fetchData();
+            PerformCleanup();
+            FetchData();
         }
 
-        public void clearLog()
+        public void ClearLog()
         {
             log.Clear();
         }
 
-        public LogEntry[] getLog()
+        public LogEntry[] GetLog()
         {
             return log.ToArray();
         }
 
-        public int getTotalProgress()
+        public int GetTotalProgress()
         {
-            return (int)((downloadprogess + extractprogess) / 2.0f * 100.0f);
+            return (int)((downloadProgess + extractProgess) / 2.0f * 100.0f);
         }
 
-        private bool fetchData()
+        private bool FetchData()
         {
-            if (String.IsNullOrWhiteSpace(infourl))
+            if (String.IsNullOrWhiteSpace(infoUrl))
                 return false;
 
             try
             {
                 WebClient client = new WebClient();
-                string reply = client.DownloadString(infourl);
+                string reply = client.DownloadString(infoUrl);
 
                 responce = new UpdateResponce(reply);
 
@@ -107,17 +108,17 @@ namespace Aurora_Updater
             }
             catch (Exception exc)
             {
-                updatestate = UpdateStatus.Error;
+                updateState = UpdateStatus.Error;
                 return false;
             }
 
             return true;
         }
 
-        public bool retrieveUpdate(UpdateType type)
+        public bool RetrieveUpdate(UpdateType type)
         {
-            string url = @"http://aurora.modworkshop.net/files/" + (type == UpdateType.Major ? responce.Major.File : responce.Minor.File);
-            updatestate = UpdateStatus.InProgress;
+            string url = @"http://project-aurora.com/files/" + (type == UpdateType.Major ? responce.Major.File : responce.Minor.File);
+            updateState = UpdateStatus.InProgress;
             try
             {
                 if (!String.IsNullOrWhiteSpace(url))
@@ -137,7 +138,7 @@ namespace Aurora_Updater
             catch (Exception exc)
             {
                 log.Enqueue(new LogEntry(exc.Message, Color.Red));
-                updatestate = UpdateStatus.Error;
+                updateState = UpdateStatus.Error;
                 return false;
             }
             return false;
@@ -149,12 +150,12 @@ namespace Aurora_Updater
             double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
             double percentage = bytesIn / totalBytes;
 
-            downloadprogresscheck++;
+            downloadProgressCheck++;
 
-            if (downloadprogresscheck % 10 == 0)
+            if (downloadProgressCheck % 10 == 0)
             {
                 log.Enqueue(new LogEntry("Download " + Math.Truncate(percentage * 100) + "%"));
-                this.downloadprogess = (float)(Math.Truncate(percentage * 100) / 100.0f);
+                this.downloadProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
             }
         }
 
@@ -162,26 +163,26 @@ namespace Aurora_Updater
         {
             this.log.Enqueue(new LogEntry("Download complete."));
             this.log.Enqueue(new LogEntry());
-            this.downloadprogess = 1.0f;
+            this.downloadProgess = 1.0f;
 
-            if (extractUpdate())
+            if (ExtractUpdate())
             {
-                System.Timers.Timer shutdown_timer = new System.Timers.Timer(1000);
-                shutdown_timer.Elapsed += Shutdown_timer_Elapsed;
-                shutdown_timer.Start();
+                System.Timers.Timer shutdownTimer = new System.Timers.Timer(1000);
+                shutdownTimer.Elapsed += ShutdownTimerElapsed;
+                shutdownTimer.Start();
 
-                updatestate = UpdateStatus.Complete;
+                updateState = UpdateStatus.Complete;
             }
             else
-                updatestate = UpdateStatus.Error;
+                updateState = UpdateStatus.Error;
         }
 
-        private void Shutdown_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void ShutdownTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (seconds_left > 0)
+            if (secondsLeft > 0)
             {
-                this.log.Enqueue(new LogEntry($"Restarting Aurora in {seconds_left} second{(seconds_left == 1 ? "" : "s")}..."));
-                seconds_left--;
+                this.log.Enqueue(new LogEntry($"Restarting Aurora in {secondsLeft} second{(secondsLeft == 1 ? "" : "s")}..."));
+                secondsLeft--;
             }
             else
             {
@@ -192,7 +193,7 @@ namespace Aurora_Updater
                 try
                 {
                     ProcessStartInfo auroraProc = new ProcessStartInfo();
-                    auroraProc.FileName = Path.Combine(Program.exe_path, "Aurora.exe");
+                    auroraProc.FileName = Path.Combine(Program.exePath, "Aurora.exe");
                     Process.Start(auroraProc);
 
                     Environment.Exit(0); //Exit, no further action required
@@ -211,7 +212,7 @@ namespace Aurora_Updater
             }
         }
 
-        private bool extractUpdate()
+        private bool ExtractUpdate()
         {
             if (File.Exists("update.zip"))
             {
@@ -219,37 +220,37 @@ namespace Aurora_Updater
 
                 try
                 {
-                    ZipFile update_file = new ZipFile("update.zip");
-                    log.Enqueue(new LogEntry(update_file.Count + " files detected."));
+                    ZipFile updateFile = new ZipFile("update.zip");
+                    log.Enqueue(new LogEntry(updateFile.Count + " files detected."));
 
-                    for (int i = 0; i < update_file.Count; i++)
+                    for (int i = 0; i < updateFile.Count; i++)
                     {
-                        float percentage = ((float)i / (float)update_file.Count);
+                        float percentage = ((float)i / (float)updateFile.Count);
 
-                        ZipEntry fileentry = update_file[i];
-                        log.Enqueue(new LogEntry("[" + Math.Truncate(percentage * 100) + "%] Updating: " + fileentry.FileName));
-                        this.extractprogess = (float)(Math.Truncate(percentage * 100) / 100.0f);
+                        ZipEntry fileEntry = updateFile[i];
+                        log.Enqueue(new LogEntry("[" + Math.Truncate(percentage * 100) + "%] Updating: " + fileEntry.FileName));
+                        this.extractProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
 
-                        if (ignorefiles.Contains(fileentry.FileName))
+                        if (ignoreFiles.Contains(fileEntry.FileName))
                             continue;
 
                         try
                         {
-                            if (File.Exists(fileentry.FileName))
-                                File.Move(fileentry.FileName, fileentry.FileName + ".updateremove");
-                            fileentry.Extract();
+                            if (File.Exists(fileEntry.FileName))
+                                File.Move(fileEntry.FileName, fileEntry.FileName + ".updateremove");
+                            fileEntry.Extract();
                         }
                         catch (IOException e)
                         {
-                            log.Enqueue(new LogEntry(fileentry.FileName + " is inaccessible.", Color.Red));
+                            log.Enqueue(new LogEntry(fileEntry.FileName + " is inaccessible.", Color.Red));
 
-                            MessageBox.Show(fileentry.FileName + " is inaccessible.\r\nPlease close Aurora.\r\n\r\n" + e.Message);
+                            MessageBox.Show(fileEntry.FileName + " is inaccessible.\r\nPlease close Aurora.\r\n\r\n" + e.Message);
                             i--;
                             continue;
                         }
                     }
 
-                    update_file.Dispose();
+                    updateFile.Dispose();
                     File.Delete("update.zip");
                 }
                 catch (Exception exc)
@@ -262,7 +263,7 @@ namespace Aurora_Updater
                 log.Enqueue(new LogEntry("All files updated."));
                 log.Enqueue(new LogEntry());
                 log.Enqueue(new LogEntry("Updater will automatically restart Aurora."));
-                this.extractprogess = 1.0f;
+                this.extractProgess = 1.0f;
 
                 return true;
             }
@@ -273,11 +274,11 @@ namespace Aurora_Updater
             }
         }
 
-        private void performCleanup()
+        private void PerformCleanup()
         {
-            string[] messyfiles = Directory.GetFiles(".", "*.updateremove", SearchOption.AllDirectories);
+            string[] _messyFiles = Directory.GetFiles(".", "*.updateremove", SearchOption.AllDirectories);
 
-            foreach (string file in messyfiles)
+            foreach (string file in _messyFiles)
             {
                 try
                 {
@@ -469,6 +470,145 @@ namespace Aurora_Updater
         }
     }
 
+    public class UpdateVersion
+    {
+        //0.6.0b
+        //FinalVersion.MajorVersion.MinorVersion{AdditionalVersionModifier}
+        public int FinalVersion = 0;
+        public int MajorVersion = 0;
+        public int MinorVersion = 0;
+        public string AdditionalVersionModifier = "";
+
+        public UpdateVersion(string version)
+        {
+            int _final = 0;
+            int _major = 0;
+            int _minor = 0;
+
+            var verSplit = version.Split('.');
+
+            if (verSplit.Count() == 3)
+            {
+                if (int.TryParse(verSplit[0], out _final))
+                    FinalVersion = _final;
+
+                if (int.TryParse(verSplit[1], out _major))
+                    MajorVersion = _major;
+
+                if (int.TryParse(verSplit[2], out _minor))
+                    MinorVersion = _minor;
+                else
+                {
+                    StringBuilder sbMinor = new StringBuilder();
+                    StringBuilder sbAdditional = new StringBuilder();
+                    bool _readingMinor = true;
+
+                    foreach (char c in verSplit[2])
+                    {
+                        switch (c)
+                        {
+                            case '0':
+                            case '1':
+                            case '2':
+                            case '3':
+                            case '4':
+                            case '5':
+                            case '6':
+                            case '7':
+                            case '8':
+                            case '9':
+                                if (_readingMinor)
+                                    sbMinor.Append(c);
+                                else
+                                    sbAdditional.Append(c);
+                                break;
+                            default:
+                                _readingMinor = false;
+                                sbAdditional.Append(c);
+                                break;
+                        }
+
+                    }
+
+                    if (int.TryParse(sbMinor.ToString(), out _minor))
+                        MinorVersion = _minor;
+
+                    AdditionalVersionModifier = sbAdditional.ToString();
+                }
+            }
+        }
+
+        public static bool operator ==(UpdateVersion lhs, UpdateVersion rhs)
+        {
+            if (lhs.FinalVersion == rhs.FinalVersion ||
+                lhs.MajorVersion == rhs.MajorVersion ||
+                lhs.MinorVersion == rhs.MinorVersion ||
+                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) == 0
+                )
+                return true;
+
+            return false;
+        }
+
+        public static bool operator !=(UpdateVersion lhs, UpdateVersion rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        public static bool operator <(UpdateVersion lhs, UpdateVersion rhs)
+        {
+            if (lhs.FinalVersion < rhs.FinalVersion ||
+                lhs.MajorVersion < rhs.MajorVersion ||
+                lhs.MinorVersion < rhs.MinorVersion ||
+                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) < 0
+                )
+                return true;
+
+            return false;
+        }
+
+        public static bool operator >(UpdateVersion lhs, UpdateVersion rhs)
+        {
+            if (lhs.FinalVersion > rhs.FinalVersion ||
+                lhs.MajorVersion > rhs.MajorVersion ||
+                lhs.MinorVersion > rhs.MinorVersion ||
+                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) > 0
+                )
+                return true;
+
+            return false;
+        }
+
+        public static bool operator <=(UpdateVersion lhs, UpdateVersion rhs)
+        {
+            if (lhs.FinalVersion <= rhs.FinalVersion &&
+                lhs.MajorVersion <= rhs.MajorVersion &&
+                lhs.MinorVersion <= rhs.MinorVersion &&
+                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) <= 0
+                )
+                return true;
+
+            return false;
+        }
+
+        public static bool operator >=(UpdateVersion lhs, UpdateVersion rhs)
+        {
+            if (lhs.FinalVersion >= rhs.FinalVersion &&
+                lhs.MajorVersion >= rhs.MajorVersion &&
+                lhs.MinorVersion >= rhs.MinorVersion &&
+                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) >= 0
+                )
+                return true;
+
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return $"{FinalVersion}.{MajorVersion}.{MinorVersion}{AdditionalVersionModifier}";
+        }
+    }
+
     public enum UpdateType
     {
         Undefined,
@@ -479,25 +619,25 @@ namespace Aurora_Updater
     public class UpdateInfoNode : Node
     {
         public readonly int ID;
-        public readonly string Version;
+        public readonly UpdateVersion Version;
         public readonly string Title;
         public readonly string Description;
         public readonly string Changelog;
         public readonly string File;
         public readonly UpdateType Type;
+        public readonly long FileSize;
 
         internal UpdateInfoNode(string JSON)
             : base(JSON)
         {
             ID = GetInt("id");
-            Version = GetString("vnr");
+            Version = new UpdateVersion(GetString("vnr"));
             Title = GetString("title");
             Description = GetString("desc").Replace("\\r\\n", "\r\n");
             Changelog = GetString("clog").Replace("\\r\\n", "\r\n");
             File = GetString("file");
             Type = GetEnum<UpdateType>("type");
+            FileSize = GetLong("size");
         }
     }
-
-
 }

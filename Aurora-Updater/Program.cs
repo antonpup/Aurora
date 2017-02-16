@@ -16,7 +16,7 @@ namespace Aurora_Updater
         /// <summary>
         ///     The index.
         /// </summary>
-        public static UpdateManager manager;
+        public static UpdateManager Manager;
 
         #endregion
     }
@@ -26,12 +26,13 @@ namespace Aurora_Updater
         private static string passedArgs = "";
         private static bool isSilent = false;
         private static bool isSilentMinor = false;
-        private static string version_major = "";
-        private static string version_minor = "";
-        public static string exe_path = "";
+        private static UpdateVersion versionMajor;
+        private static UpdateVersion versionMinor;
+        public static string exePath = "";
         private static UpdateType installType = UpdateType.Undefined;
         public static bool isElevated = false;
 
+        private static MainForm updateForm;
 
         /// <summary>
         /// The main entry point for the application.
@@ -58,7 +59,7 @@ namespace Aurora_Updater
 
             passedArgs.TrimEnd(' ');
 
-            exe_path = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            exePath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
 
             //Check privilege
             WindowsIdentity identity = WindowsIdentity.GetCurrent();
@@ -66,18 +67,18 @@ namespace Aurora_Updater
             isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
 
             //Initialize UpdateManager
-            StaticStorage.manager = new UpdateManager();
+            StaticStorage.Manager = new UpdateManager();
 
             //Check if update retrieval was successful.
-            if (StaticStorage.manager.updatestate == UpdateStatus.Error)
+            if (StaticStorage.Manager.updateState == UpdateStatus.Error)
                 return;
 
             if (installType != UpdateType.Undefined)
             {
                 if (isElevated)
                 {
-                    MainForm majform = new MainForm(installType);
-                    majform.ShowDialog();
+                    updateForm = new MainForm(installType);
+                    updateForm.ShowDialog();
                 }
                 else
                 {
@@ -90,29 +91,34 @@ namespace Aurora_Updater
             }
             else
             {
-                if (File.Exists(Path.Combine(exe_path, "ver_major.txt")))
-                    version_major = File.ReadAllText(Path.Combine(exe_path, "ver_major.txt"));
+                string _maj = "";
 
-                if (!String.IsNullOrWhiteSpace(version_major))
+                if (File.Exists(Path.Combine(exePath, "ver_major.txt")))
+                    _maj = File.ReadAllText(Path.Combine(exePath, "ver_major.txt"));
+
+                if (!String.IsNullOrWhiteSpace(_maj))
                 {
-                    if (!StaticStorage.manager.responce.Major.Version.Equals(version_major))
-                    {
-                        DialogResult result = MessageBox.Show(
-                            "A new version of Aurora is available (" + StaticStorage.manager.responce.Major.Version + ") with following changes:\r\n\r\n" +
-                            StaticStorage.manager.responce.Major.Changelog +
-                            "\r\n\r\nWould you like to install this update?",
-                            "Aurora Updater",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.None,
-                            MessageBoxDefaultButton.Button1,
-                            (MessageBoxOptions)0x40000);
+                    versionMajor = new UpdateVersion(_maj);
 
-                        if (result == DialogResult.Yes)
+                    if (!(StaticStorage.Manager.responce.Major.Version <= versionMajor))
+                    {
+                        UpdateInfoForm userResult = new UpdateInfoForm()
+                        {
+                            changelog = StaticStorage.Manager.responce.Major.Changelog,
+                            updateDescription = StaticStorage.Manager.responce.Major.Description,
+                            updateVersion = StaticStorage.Manager.responce.Major.Version.ToString(),
+                            currentVersion = versionMajor.ToString(),
+                            updateSize = StaticStorage.Manager.responce.Major.FileSize
+                        };
+
+                        userResult.ShowDialog();
+
+                        if (userResult.DialogResult == DialogResult.OK)
                         {
                             if (isElevated)
                             {
-                                MainForm majform = new MainForm(UpdateType.Major);
-                                majform.ShowDialog();
+                                updateForm = new MainForm(UpdateType.Major);
+                                updateForm.ShowDialog();
                             }
                             else
                             {
@@ -156,34 +162,38 @@ namespace Aurora_Updater
                             MessageBoxButtons.OK);
                 }
 
+                string _min = "";
 
-                if (File.Exists(Path.Combine(exe_path, "ver_minor.txt")))
-                    version_minor = File.ReadAllText(Path.Combine(exe_path, "ver_minor.txt"));
+                if (File.Exists(Path.Combine(exePath, "ver_minor.txt")))
+                    _min = File.ReadAllText(Path.Combine(exePath, "ver_minor.txt"));
 
-                if (!String.IsNullOrWhiteSpace(version_minor))
+                if (!String.IsNullOrWhiteSpace(_min))
                 {
-                    if (!StaticStorage.manager.responce.Minor.Version.Equals(version_minor))
+                    versionMinor = new UpdateVersion(_min);
+
+                    if (!(StaticStorage.Manager.responce.Minor.Version <= versionMinor))
                     {
                         if (isSilentMinor)
-                            StaticStorage.manager.retrieveUpdate(UpdateType.Minor);
+                            StaticStorage.Manager.RetrieveUpdate(UpdateType.Minor);
                         else
                         {
-                            DialogResult result = MessageBox.Show(
-                                                    "A new minor version of Aurora is available (" + StaticStorage.manager.responce.Minor.Version + ") with following changes:\r\n\r\n" +
-                                                    StaticStorage.manager.responce.Minor.Changelog +
-                                                    "\r\n\r\nWould you like to install this update?",
-                                                    "Aurora Updater",
-                                                    MessageBoxButtons.YesNo,
-                                                    MessageBoxIcon.None,
-                                                    MessageBoxDefaultButton.Button1,
-                                                    (MessageBoxOptions)0x40000);
+                            UpdateInfoForm userResult = new UpdateInfoForm()
+                            {
+                                changelog = StaticStorage.Manager.responce.Minor.Changelog,
+                                updateDescription = StaticStorage.Manager.responce.Minor.Description,
+                                updateVersion = StaticStorage.Manager.responce.Minor.Version.ToString(),
+                                currentVersion = versionMinor.ToString(),
+                                updateSize = StaticStorage.Manager.responce.Minor.FileSize
+                            };
 
-                            if (result == DialogResult.Yes)
+                            userResult.ShowDialog();
+
+                            if (userResult.DialogResult == DialogResult.Yes)
                             {
                                 if (isElevated)
                                 {
-                                    MainForm majform = new MainForm(UpdateType.Minor);
-                                    majform.ShowDialog();
+                                    updateForm = new MainForm(UpdateType.Minor);
+                                    updateForm.ShowDialog();
                                 }
                                 else
                                 {
