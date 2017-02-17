@@ -454,7 +454,7 @@ namespace Aurora.Settings
             if (String.IsNullOrWhiteSpace(content))
                 return CreateDefaultConfigurationFile();
 
-            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
+            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
 
             /*foreach (var kvp in config.ApplicationProfiles)
             {
@@ -489,7 +489,7 @@ namespace Aurora.Settings
                 _last_save_time = current_time;
 
             var configPath = ConfigPath + ConfigExtension;
-            string content = JsonConvert.SerializeObject(configuration, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            string content = JsonConvert.SerializeObject(configuration, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
@@ -508,7 +508,7 @@ namespace Aurora.Settings
         private static Configuration CreateDefaultConfigurationFile()
         {
             Configuration config = new Configuration();
-            var configData = JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            var configData = JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
             var configPath = ConfigPath + ConfigExtension;
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));

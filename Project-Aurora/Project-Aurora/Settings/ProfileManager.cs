@@ -14,6 +14,7 @@ using Aurora.Settings.Layers;
 using System.Reflection;
 using System.Windows.Media.Imaging;
 using System.Runtime.CompilerServices;
+using Newtonsoft.Json.Serialization;
 
 namespace Aurora.Settings
 {
@@ -168,9 +169,9 @@ namespace Aurora.Settings
         protected ProfileSettings CloneSettings(ProfileSettings settings)
         {
             return (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(settings, Config.SettingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }),
+                    JsonConvert.SerializeObject(settings, Config.SettingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }),
                     Config.SettingsType,
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All }
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
                     ); //I know this is bad. You can laugh at me for this one. :(
         }
 
@@ -213,7 +214,7 @@ namespace Aurora.Settings
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, Config.SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
+                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, Config.SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
                         foreach (Layer lyr in prof.Layers)
                         {
                             lyr.AnythingChanged += this.SaveProfilesEvent;
@@ -246,7 +247,7 @@ namespace Aurora.Settings
                     string newPath = path + ".corrupted";
 
                     int _copy = 1;
-                    while(File.Exists(newPath))
+                    while (File.Exists(newPath))
                     {
                         newPath = path + $"({_copy++}).corrupted";
                     }
@@ -443,7 +444,7 @@ namespace Aurora.Settings
         {
             try
             {
-                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder };
                 string content = JsonConvert.SerializeObject(profile, Formatting.Indented, settings);
 
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));

@@ -535,6 +535,7 @@
       <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
+    <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
     <None Include="App.config">
