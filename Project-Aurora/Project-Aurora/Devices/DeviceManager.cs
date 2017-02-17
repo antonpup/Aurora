@@ -39,7 +39,7 @@ namespace Aurora.Devices
             devices.Add(new Devices.CoolerMaster.CoolerMasterDevice()); //CoolerMaster Device
             devices.Add(new Devices.AtmoOrbDevice.AtmoOrbDevice());     // AtmoOrb Ambilight Device
 
-            string devices_scripts_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Scripts", "Devices");
+            string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
             {

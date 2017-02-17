@@ -253,11 +253,8 @@ namespace Aurora.Settings
 
                     File.Move(path, newPath);
                     this.SaveProfile(path, Settings);
-                    MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc.Message}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
-                //if (Global.isDebug)
-                    //throw exc;
             }
 
             return null;

@@ -28,6 +28,22 @@ namespace Aurora
         /// </summary>
         public static bool isDebug = false;
 
+        private static string _ExecutingDirectory = "";
+
+        /// <summary>
+        /// The path to the application executing directory
+        /// </summary>
+        public static string ExecutingDirectory
+        {
+            get
+            {
+                if(string.IsNullOrWhiteSpace(_ExecutingDirectory))
+                    _ExecutingDirectory = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+
+                return _ExecutingDirectory;
+            }
+        }
+
         /// <summary>
         /// Output logger for errors, warnings, and information
         /// </summary>
@@ -166,7 +182,7 @@ namespace Aurora
 
             if (Global.Configuration.updates_check_on_start_up && !ignore_update)
             {
-                string updater_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Aurora-Updater.exe");
+                string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
 
                 if (File.Exists(updater_path))
                 {

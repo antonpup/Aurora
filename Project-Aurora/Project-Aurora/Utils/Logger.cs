@@ -68,17 +68,18 @@ namespace Aurora
             }
             catch (Exception exc)
             {
-                systeminfo_sb.AppendFormat("Operation System: Could not retrieve. [Exception: {0}]\r\n", exc.Message);
+                systeminfo_sb.AppendFormat("Operation System: Could not be retrieved. [Exception: {0}]\r\n", exc.Message);
             }
 
             systeminfo_sb.AppendFormat("System Architecture: " + (Environment.Is64BitOperatingSystem ? "64 bit" : "32 bit") + "\r\n");
 
             systeminfo_sb.AppendFormat("Environment OS Version: {0}\r\n", Environment.OSVersion);
 
-
             systeminfo_sb.AppendFormat("System Directory: {0}\r\n", Environment.SystemDirectory);
+            systeminfo_sb.AppendFormat("Executing Directory: {0}\r\n", Global.ExecutingDirectory);
+            systeminfo_sb.AppendFormat("Launch Directory: {0}\r\n", Directory.GetCurrentDirectory());
             systeminfo_sb.AppendFormat("Processor Count: {0}\r\n", Environment.ProcessorCount);
-            systeminfo_sb.AppendFormat("User DomainName: {0}\r\n", Environment.UserDomainName);
+            //systeminfo_sb.AppendFormat("User DomainName: {0}\r\n", Environment.UserDomainName);
             systeminfo_sb.AppendFormat("User Name: {0}\r\n", Environment.UserName);
 
             systeminfo_sb.AppendFormat("SystemPageSize: {0}\r\n", Environment.SystemPageSize);

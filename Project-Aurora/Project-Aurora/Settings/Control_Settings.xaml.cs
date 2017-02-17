@@ -466,10 +466,17 @@ namespace Aurora.Settings
         {
             if (IsLoaded && sender is CheckBox)
             {
-                if ((sender as CheckBox).IsChecked.Value)
-                    runRegistryPath.SetValue("Aurora", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\" -silent");
-                else
-                    runRegistryPath.DeleteValue("Aurora");
+                try
+                {
+                    if ((sender as CheckBox).IsChecked.Value)
+                        runRegistryPath.SetValue("Aurora", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\" -silent");
+                    else
+                        runRegistryPath.DeleteValue("Aurora");
+                }
+                catch(Exception exc)
+                {
+                    Global.logger.LogLine("run_at_win_startup_Checked Exception: " + exc, Logging_Level.Error);
+                }
             }
 
         }
@@ -528,7 +535,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                string updater_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Aurora-Updater.exe");
+                string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
 
                 if (File.Exists(updater_path))
                 {
