@@ -25,7 +25,7 @@ namespace Aurora.Profiles.RocketLeague
         {
 
             FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = System.IO.Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Pointers");
+            watcher.Path = System.IO.Path.Combine(Global.ExecutingDirectory, "Pointers");
             watcher.Changed += RLPointers_Changed;
             watcher.EnableRaisingEvents = true;
 
@@ -40,7 +40,7 @@ namespace Aurora.Profiles.RocketLeague
 
         private void ReloadPointers()
         {
-            string path = System.IO.Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Pointers", "RocketLeague.json");
+            string path = System.IO.Path.Combine(Global.ExecutingDirectory, "Pointers", "RocketLeague.json");
 
             if (File.Exists(path))
             {

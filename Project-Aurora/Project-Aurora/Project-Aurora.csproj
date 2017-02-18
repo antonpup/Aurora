@@ -545,6 +545,7 @@
     <Compile Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
       <DependentUpon>Control_AnimationLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
     <None Include="App.config">

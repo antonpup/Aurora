@@ -463,7 +463,7 @@ namespace Aurora.Settings
 
         public KeyboardLayoutManager()
         {
-            layoutsPath = Path.Combine(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), cultures_folder);
+            layoutsPath = Path.Combine(Global.ExecutingDirectory, cultures_folder);
         }
 
         public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)

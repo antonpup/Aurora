@@ -179,9 +179,7 @@ namespace Aurora
         {
             var activatedHandle = GetForegroundWindow();
             if (activatedHandle == IntPtr.Zero)
-            {
                 return false;       // No window is currently activated
-            }
 
             var procId = Process.GetCurrentProcess().Id;
             int activeProcId;

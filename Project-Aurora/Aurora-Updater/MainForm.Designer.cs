@@ -47,12 +47,12 @@
             this.update_progress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.update_progress.TabIndex = 0;
             // 
-            // update_log_richtext
+            // richtextUpdateLog
             // 
             this.richtextUpdateLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richtextUpdateLog.Location = new System.Drawing.Point(12, 82);
-            this.richtextUpdateLog.Name = "update_log_richtext";
+            this.richtextUpdateLog.Name = "richtextUpdateLog";
             this.richtextUpdateLog.ReadOnly = true;
             this.richtextUpdateLog.Size = new System.Drawing.Size(560, 264);
             this.richtextUpdateLog.TabIndex = 1;
@@ -93,10 +93,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 381);
+            this.Controls.Add(this.richtextUpdateLog);
             this.Controls.Add(this.labelUpdateLog);
             this.Controls.Add(this.labelApplicationTitle);
             this.Controls.Add(this.pictureBoxApplicationLogo);
-            this.Controls.Add(this.richtextUpdateLog);
             this.Controls.Add(this.update_progress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
