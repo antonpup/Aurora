@@ -251,6 +251,9 @@
     <Compile Include="Controls\Control_DeviceManager.xaml.cs">
       <DependentUpon>Control_DeviceManager.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_Keybind.xaml.cs">
+      <DependentUpon>Control_Keybind.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_Ruler.xaml.cs">
       <DependentUpon>Control_Ruler.xaml</DependentUpon>
     </Compile>
@@ -535,6 +538,7 @@
       <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
+    <Compile Include="Settings\Keybind.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
@@ -864,6 +868,7 @@
     <Compile Include="Utils\SteamUtils.cs" />
     <Compile Include="Utils\Time.cs" />
     <Compile Include="Utils\TimedListObject.cs" />
+    <Compile Include="Utils\Tree.cs" />
     <Compile Include="Utils\TypeUtils.cs" />
     <Compile Include="Utils\UIUtils.cs" />
   </ItemGroup>
@@ -911,6 +916,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_DeviceManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_Keybind.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

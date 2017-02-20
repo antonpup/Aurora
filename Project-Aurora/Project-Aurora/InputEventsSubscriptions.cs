@@ -2,6 +2,10 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gma.System.MouseKeyHook;
+using System.Collections.Generic;
+using System.Linq;
+using Aurora.Utils;
+using System.Runtime.InteropServices;
 
 namespace Aurora
 {
@@ -26,6 +30,33 @@ namespace Aurora
         /// Event for a Key released on a keyboard
         /// </summary>
         public event KeyEventHandler KeyUp;
+
+        private List<Keys> _PressedKeySequence = new List<Keys>();
+
+        public Keys[] PressedKeys
+        {
+            get
+            {
+                return _PressedKeySequence.ToArray();
+            }
+        }
+
+        public InputEventsSubscriptions()
+        {
+            this.KeyDown += Internal_KeyDown;
+            this.KeyUp += Internal_KeyUp;
+        }
+
+        private void Internal_KeyUp(object sender, KeyEventArgs e)
+        {
+            _PressedKeySequence.RemoveAll(k => k == e.KeyCode);
+        }
+
+        private void Internal_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!_PressedKeySequence.Contains(e.KeyCode))
+                _PressedKeySequence.Add(e.KeyCode);
+        }
 
         public bool Initialize()
         {

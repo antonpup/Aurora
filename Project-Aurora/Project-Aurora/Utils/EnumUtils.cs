@@ -211,4 +211,9 @@ namespace Aurora.Utils
     {
         public EqualizerPresentationTypeToStringVC() : base(EqualizerPresentationType.SolidColor) { }
     }
+
+    public class ShortcutAssistantPresentationTypeToStringVC : EnumToStringVC
+    {
+        public ShortcutAssistantPresentationTypeToStringVC() : base(ShortcutAssistantPresentationType.Default) { }
+    }
 }

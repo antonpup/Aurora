@@ -422,6 +422,20 @@ namespace Aurora.EffectsEngine
         }
 
         /// <summary>
+        /// Sets a specific Devices.DeviceKeys on the bitmap with a specified color.
+        /// </summary>
+        /// <param name="keys">Array of DeviceKeys to be set</param>
+        /// <param name="color">Color to be used</param>
+        /// <returns>Itself</returns>
+        public EffectLayer Set(Devices.DeviceKeys[] keys, Color color)
+        {
+            foreach(var key in keys)
+                SetOneKey(key, color);
+
+            return this;
+        }
+
+        /// <summary>
         /// Sets a specific KeySequence on the bitmap with a specified color.
         /// </summary>
         /// <param name="sequence">KeySequence to specify what regions of the bitmap need to be changed</param>

@@ -9,9 +9,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Controls;
+using Aurora.Utils;
+using System.ComponentModel;
 
 namespace Aurora.Settings.Layers
 {
+    public enum ShortcutAssistantPresentationType
+    {
+        [Description("Show All Keys")]
+        Default = 0,
+
+        [Description("Progressive Suggestion")]
+        ProgressiveSuggestion = 1
+    }
+
     public class ShortcutAssistantLayerHandlerProperties : LayerHandlerProperties<ShortcutAssistantLayerHandlerProperties>
     {
         public bool? _DimBackground { get; set; }
@@ -24,98 +35,58 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public Color DimColor { get { return (Logic._DimColor ?? _DimColor) ?? Color.Empty; } }
 
-        public Keys? _HeldKey { get; set; }
+        [JsonIgnore]
+        private Keybind[] __ShortcutKeys = new Keybind[] { };
+
+        public Keybind[] _ShortcutKeys
+        {
+            get { return __ShortcutKeys; }
+            set { __ShortcutKeys = value; ShortcutKeysInvalidated = true; }
+        }
 
         [JsonIgnore]
-        public Keys HeldKey { get { return Logic._HeldKey ?? _HeldKey ?? Keys.None;  } }
-
-        /*public Color? _WindowsKeyColor { get; set; }
+        public Keybind[] ShortcutKeys { get { return _ShortcutKeys; } }
 
         [JsonIgnore]
-        public Color WindowsKeyColor { get { return Logic._WindowsKeyColor ?? _WindowsKeyColor ?? Color.Empty; } }
-
-        public KeySequence _WindowsKeySequence { get; set; }
+        public bool ShortcutKeysInvalidated = true;
 
         [JsonIgnore]
-        public KeySequence WindowsKeySequence { get { return Logic._WindowsKeySequence ?? _WindowsKeySequence; } }
-
-        public Color? _AltKeyColor { get; set; }
+        private Tree<Keys> _ShortcutKeysTree = new Tree<Keys>(Keys.None);
 
         [JsonIgnore]
-        public Color AltKeyColor { get { return (Logic._AltKeyColor ?? _AltKeyColor) ?? Color.Empty; } }
+        public Tree<Keys> ShortcutKeysTree
+        {
+            get
+            {
+                if (ShortcutKeysInvalidated)
+                {
+                    _ShortcutKeysTree = new Tree<Keys>(Keys.None);
 
-        public KeySequence _AltKeySequence { get; set; }
+                    foreach (Keybind keyb in ShortcutKeys)
+                        _ShortcutKeysTree.AddBranch(keyb.ToArray());
+
+                    ShortcutKeysInvalidated = false;
+                }
+
+                return _ShortcutKeysTree;
+            }
+        }
+
+        public ShortcutAssistantPresentationType? _PresentationType { get; set; }
 
         [JsonIgnore]
-        public KeySequence AltKeySequence { get { return Logic._AltKeySequence ?? _AltKeySequence; } }*/
+        public ShortcutAssistantPresentationType PresentationType { get { return Logic._PresentationType ?? _PresentationType ?? ShortcutAssistantPresentationType.Default; } }
 
         public ShortcutAssistantLayerHandlerProperties() : base() { }
 
         public ShortcutAssistantLayerHandlerProperties(bool empty = false) : base(empty) { }
-
-        public ShortcutAssistantLayerHandlerProperties(System.Windows.Forms.Keys heldKey, bool empty = false) : this(empty)
-        {
-            this._HeldKey = heldKey;
-            this.SetDefaultKeys();
-        }
 
         public override void Default()
         {
             base.Default();
             _DimBackground = true;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
-            _HeldKey = Keys.LControlKey;
-            this.SetDefaultKeys();
-            /*_WindowsKeyColor = Color.Blue;
-            _AltKeyColor = Color.Yellow;
-            _CtrlKeySequence = new KeySequence(new Devices.DeviceKeys[] {
-                    Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.X, Devices.DeviceKeys.Y,
-                    Devices.DeviceKeys.LEFT_ALT, Devices.DeviceKeys.RIGHT_ALT, Devices.DeviceKeys.A, Devices.DeviceKeys.Z
-            });
-            _WindowsKeySequence = new KeySequence(new Devices.DeviceKeys[] {
-                    Devices.DeviceKeys.R, Devices.DeviceKeys.E, Devices.DeviceKeys.M, Devices.DeviceKeys.D,
-                    Devices.DeviceKeys.ARROW_UP, Devices.DeviceKeys.ARROW_DOWN, Devices.DeviceKeys.ARROW_LEFT, Devices.DeviceKeys.ARROW_RIGHT,
-                    Devices.DeviceKeys.TAB
-            });
-            _AltKeySequence = new KeySequence(new Devices.DeviceKeys[] {
-                    Devices.DeviceKeys.F4, Devices.DeviceKeys.E, Devices.DeviceKeys.V, Devices.DeviceKeys.LEFT_CONTROL,
-                    Devices.DeviceKeys.RIGHT_CONTROL, Devices.DeviceKeys.TAB
-            });*/
-        }
-
-        [JsonIgnore]
-        public Dictionary<Keys, KeySequence> DefaultKeys = new Dictionary<System.Windows.Forms.Keys, KeySequence>
-        {
-            { Keys.LControlKey, new KeySequence(new Devices.DeviceKeys[] {
-                    Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.X, Devices.DeviceKeys.Y,
-                    Devices.DeviceKeys.LEFT_ALT, Devices.DeviceKeys.RIGHT_ALT, Devices.DeviceKeys.A, Devices.DeviceKeys.Z
-            }) },
-            { Keys.LWin, new KeySequence(new Devices.DeviceKeys[] {
-                    Devices.DeviceKeys.R, Devices.DeviceKeys.E, Devices.DeviceKeys.M, Devices.DeviceKeys.D,
-                    Devices.DeviceKeys.ARROW_UP, Devices.DeviceKeys.ARROW_DOWN, Devices.DeviceKeys.ARROW_LEFT, Devices.DeviceKeys.ARROW_RIGHT,
-                    Devices.DeviceKeys.TAB
-            }) },
-            { Keys.LMenu, new KeySequence(new Devices.DeviceKeys[] {
-                    Devices.DeviceKeys.F4, Devices.DeviceKeys.E, Devices.DeviceKeys.V, Devices.DeviceKeys.LEFT_CONTROL,
-                    Devices.DeviceKeys.RIGHT_CONTROL, Devices.DeviceKeys.TAB
-            }) }
-        };
-
-        [JsonIgnore]
-        public Dictionary<System.Windows.Forms.Keys, Color> DefaultColours = new Dictionary<Keys, Color> {
-            {Keys.LControlKey, Color.Red },
-            {Keys.LMenu, Color.Yellow},
-            {Keys.LWin, Color.Blue }
-        };
-
-        internal void SetDefaultKeys()
-        {
-            Keys key = _HeldKey ?? Keys.None;
-            if (DefaultKeys.ContainsKey(key))
-                this._Sequence = new KeySequence(this.DefaultKeys[key]);
-
-            if (DefaultColours.ContainsKey(key))
-                this._PrimaryColor = DefaultColours[key];
+            _PresentationType = ShortcutAssistantPresentationType.Default;
         }
     }
 
@@ -134,38 +105,36 @@ namespace Aurora.Settings.Layers
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
-            if (Global.held_modified.HasFlag(Properties.HeldKey))
-            {
-                if (Properties.DimBackground)
-                    sc_assistant_layer.Fill(Properties.DimColor);
 
-                sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKey(Global.held_modified), Properties.PrimaryColor);
-                sc_assistant_layer.Set(Properties.Sequence, Properties.PrimaryColor);
+            Keys[] heldKeys = Global.input_subscriptions.PressedKeys;
+
+            Tree<Keys> _childKeys = Properties.ShortcutKeysTree;
+
+            foreach (var key in heldKeys)
+            {
+                if(_childKeys != null)
+                    _childKeys = _childKeys.ContainsItem(key);
             }
-            /*else if (Global.held_modified == Keys.LMenu || Global.held_modified == Keys.RMenu)
-            {
-                if (Properties.DimBackground)
-                    sc_assistant_layer.Fill(Properties.DimColor);
 
-                if (Global.held_modified == Keys.LMenu)
-                    sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_ALT, Properties.AltKeyColor);
+            if(_childKeys != null && _childKeys.Item != Keys.None)
+            {
+                Keys[] shortcutKeys;
+
+                if (Properties.PresentationType == ShortcutAssistantPresentationType.ProgressiveSuggestion)
+                    shortcutKeys = _childKeys.GetChildren();
                 else
-                    sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_ALT, Properties.AltKeyColor);
-                sc_assistant_layer.Set(Properties.AltKeySequence, Properties.AltKeyColor);
+                    shortcutKeys = _childKeys.GetAllChildren();
+
+                if(shortcutKeys.Length > 0)
+                {
+                    if (Properties.DimBackground)
+                        sc_assistant_layer.Fill(Properties.DimColor);
+
+                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(shortcutKeys), Properties.PrimaryColor);
+                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(heldKeys), Properties.PrimaryColor);
+                }
             }
-            else if (Global.held_modified == Keys.LWin || Global.held_modified == Keys.RWin)
-            {
-                if (Properties.DimBackground)
-                    sc_assistant_layer.Fill(Properties.DimColor);
 
-                if (Global.held_modified == Keys.LWin)
-                    sc_assistant_layer.Set(Devices.DeviceKeys.LEFT_WINDOWS, Properties.WindowsKeyColor);
-                else
-                    sc_assistant_layer.Set(Devices.DeviceKeys.RIGHT_WINDOWS, Properties.WindowsKeyColor);
-                sc_assistant_layer.Set(Properties.WindowsKeySequence, Properties.WindowsKeyColor);
-            }*/
-
-            
             return sc_assistant_layer;
         }
     }

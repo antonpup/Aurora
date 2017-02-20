@@ -5,26 +5,37 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:utils="clr-namespace:Aurora.Utils"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls"
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <utils:ColorConverter x:Key="colorConverter"/>
-            <utils:KeysToStringVC x:Key="KeysToStringVC"/>
-            <DataTemplate x:Key="KeysTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KeysToStringVC}}" />
+
+            <ObjectDataProvider x:Key="ShortcutAssistantPresentationType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:ShortcutAssistantPresentationType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:ShortcutAssistantPresentationTypeToStringVC x:Key="ShortcutAssistantPresentationTypeToStringVC"/>
+            <DataTemplate x:Key="ShortcutAssistantPresentationTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource ShortcutAssistantPresentationTypeToStringVC}}" />
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="235,34,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="clrPrimaryColor" Margin="315,31,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource colorConverter}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
-        <Controls:KeySequence x:Name="keysMain" HorizontalAlignment="Left" Margin="0,58,0,0" Title="Shortcut Assistant Main Keys" RecordingTag="Shortcut Assistant Main Keys" SequenceUpdated="keysMain_SequenceUpdated" MinHeight="6"/>
+        <TextBlock HorizontalAlignment="Left" Margin="404,34,0,0" TextWrapping="Wrap" Text="Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="clrPrimaryColor" Margin="440,31,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource colorConverter}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
         <CheckBox x:Name="chkDimBackground" Content="Dim the background keys to emphasize the shortcut keys" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._DimBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,0"/>
         <TextBlock HorizontalAlignment="Left" Margin="352,3,0,0" TextWrapping="Wrap" Text="Dimming Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="clrDimBackground" Margin="440,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColor="{Binding Path=Properties._DimColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
-        <TextBlock Text="Modifier Key:" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,34,0,0"/>
-        <ComboBox x:Name="cmbModifier" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="75,31,0,0" Width="155" ItemTemplate="{StaticResource KeysTemplate}" SelectedItem="{Binding Path=Properties._HeldKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="cmbModifier_SelectionChanged"/>
+        <TextBlock Text="Shortcuts" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,34,0,0"/>
+        <ScrollViewer HorizontalAlignment="Left" Margin="0,55,0,0" Width="347" MinHeight="80">
+            <StackPanel x:Name="stackPanelShortcuts" Background="#7F646464"/>
+        </ScrollViewer>
+        <ComboBox x:Name="comboboxPresentationType" HorizontalAlignment="Left" Margin="457,58,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource ShortcutAssistantPresentationType}}" ItemTemplate="{Binding Source={StaticResource ShortcutAssistantPresentationTypeTemplate}}" SelectionChanged="comboboxPresentationType_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Presentation Type: " VerticalAlignment="Top" Margin="352,60,0,0"/>
     </Grid>
 </UserControl>

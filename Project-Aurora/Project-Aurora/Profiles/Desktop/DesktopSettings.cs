@@ -72,15 +72,81 @@ namespace Aurora.Profiles.Desktop
             {
                 new Settings.Layers.Layer("Ctrl Shortcuts", new Settings.Layers.ShortcutAssistantLayerHandler()
                 {
-                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties(System.Windows.Forms.Keys.LControlKey)
+                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Red,
+                        _ShortcutKeys = new Keybind[]
+                        {
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.X }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.C }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.V }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Z }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.F4 }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.A }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.D }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.R }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Y }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Right }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Left }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Down }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Up }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Tab }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Up }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Down }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Left }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Right }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Escape }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Escape }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Escape }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.F })
+                        }
+                    }
                 }),
                 new Settings.Layers.Layer("Win Shortcuts", new Settings.Layers.ShortcutAssistantLayerHandler()
                 {
-                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties(System.Windows.Forms.Keys.LWin)
+                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Blue,
+                        _ShortcutKeys = new Keybind[]
+                        {
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.L }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.D }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.B }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.A }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.D }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.E }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.G }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.I }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.M }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.P }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.R }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.S }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Up }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Down }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Left }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Right }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Home }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.D })
+                        }
+                    }
                 }),
                 new Settings.Layers.Layer("Alt Shortcuts", new Settings.Layers.ShortcutAssistantLayerHandler()
                 {
-                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties(System.Windows.Forms.Keys.LMenu)
+                    Properties = new Settings.Layers.ShortcutAssistantLayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Yellow,
+                        _ShortcutKeys = new Keybind[]
+                        {
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Tab }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.F4 }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Space }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Left }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Right }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.PageUp }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.PageDown }),
+                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Tab }),
+                        }
+                    }
                 }),
                 new Settings.Layers.Layer("CPU Usage", new Settings.Layers.PercentLayerHandler()
                 {
