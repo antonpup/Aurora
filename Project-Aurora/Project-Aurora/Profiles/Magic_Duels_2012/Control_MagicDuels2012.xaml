@@ -26,11 +26,8 @@
                 <Grid>
                     <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="800" Text="For Magic: The Gathering - Duels of the Planeswalkers 2012 support to work, you have to apply the Aurora Wrapper Patch for LightFX in order for Aurora to receive lighting information. Please press &quot;Patch Magic: The Gathering - Duels of the Planeswalkers 2012&quot; button, it will automatically detect the game and install the wrapper"/>
                     <Button x:Name="patch_button" Content="Patch Magic: The Gathering - Duels of the Planeswalkers 2012" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,199,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="519" Text="Magic: The Gathering - Duels of the Planeswalkers 2012 natively offers LightFX effects. The Color Zones is added to allow users to light up additional keys."/>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Magic: The Gathering - Duels of the Planeswalkers 2012" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
                     <Button x:Name="unpatch_button" Content="Unpatch Magic: The Gathering - Duels of the Planeswalkers 2012" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
-                    <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
-                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Color Zones">

@@ -29,16 +29,16 @@ namespace Aurora.Settings
     {
         private bool isSettingNewLayer = false;
 
-        protected Layer _Layer;
+        protected Layers.Layer _Layer;
 
-        public Layer Layer { get { return _Layer; } set { _Layer = value; SetLayer(value); } }
+        public Layers.Layer Layer { get { return _Layer; } set { _Layer = value; SetLayer(value); } }
 
         public Control_LayerControlPresenter()
         {
             InitializeComponent();
         }
 
-        public Control_LayerControlPresenter(Layer layer) : this()
+        public Control_LayerControlPresenter(Layers.Layer layer) : this()
         {
             Layer = layer;
             cmbLayerType.SelectedItem = Layer.Handler.ID;
@@ -47,7 +47,7 @@ namespace Aurora.Settings
             grd_LayerControl.Effect = null;
         }
 
-        private void SetLayer(Layer layer)
+        private void SetLayer(Layers.Layer layer)
         {
             isSettingNewLayer = true;
 

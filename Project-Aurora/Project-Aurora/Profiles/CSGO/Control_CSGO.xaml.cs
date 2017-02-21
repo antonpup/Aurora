@@ -54,9 +54,6 @@ namespace Aurora.Profiles.CSGO
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as CSGOSettings).IsEnabled;
 
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.Undefined);

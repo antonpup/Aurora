@@ -32,9 +32,6 @@ namespace Aurora.Profiles.Blade_and_Soul
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as BnSSettings).IsEnabled;
             this.ce_enabled.IsChecked = (profile_manager.Settings as BnSSettings).colorEnhance_Enabled;
             this.ce_mode.SelectedIndex = (profile_manager.Settings as BnSSettings).colorEnhance_Mode;

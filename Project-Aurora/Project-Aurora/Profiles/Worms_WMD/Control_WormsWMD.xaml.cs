@@ -24,9 +24,6 @@ namespace Aurora.Profiles.WormsWMD
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as WormsWMDSettings).IsEnabled;
             this.ce_enabled.IsChecked = (profile_manager.Settings as WormsWMDSettings).colorEnhance_Enabled;
             this.ce_mode.SelectedIndex = (profile_manager.Settings as WormsWMDSettings).colorEnhance_Mode;

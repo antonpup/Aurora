@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,21 +21,99 @@ namespace Aurora.Settings.Layers
     /// </summary>
     public partial class Control_ShortcutAssistantLayer : UserControl
     {
+        private Button buttonAddNewShortcut = new Button() {
+            Content = "New shortcut",
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
         public Control_ShortcutAssistantLayer()
         {
             InitializeComponent();
+
+            buttonAddNewShortcut.Click += ButtonAddNewShortcut_Click;
+
             this.Loaded += (obj, e) => { this.SetSettings(); };
         }
 
         public Control_ShortcutAssistantLayer(ShortcutAssistantLayerHandler datacontext) : this()
         {
             this.DataContext = datacontext;
-            cmbModifier.ItemsSource = datacontext.Properties.DefaultKeys.Keys;
         }
 
         public void SetSettings()
         {
-            this.keysMain.Sequence = ((ShortcutAssistantLayerHandler)this.DataContext).Properties._Sequence;
+            this.comboboxPresentationType.SelectedItem = ((ShortcutAssistantLayerHandler)this.DataContext).Properties._PresentationType;
+
+            this.stackPanelShortcuts.Children.Clear();
+            foreach(Keybind keyb in ((ShortcutAssistantLayerHandler)this.DataContext).Properties._ShortcutKeys)
+            {
+                AddKeybind(keyb);
+            }
+            AddStackPanelButton();
+        }
+
+        private void ButtonRemoveKeybind_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is Button && (sender as Button).Tag is DockPanel)
+                this.stackPanelShortcuts.Children.Remove((sender as Button).Tag as DockPanel);
+        }
+
+        private void ButtonAddNewShortcut_Click(object sender, RoutedEventArgs e)
+        {
+            this.stackPanelShortcuts.Children.Remove(buttonAddNewShortcut);
+
+            AddKeybind(new Keybind());
+
+            AddStackPanelButton();
+        }
+
+        private void AddKeybind(Keybind keyb)
+        {
+            Control_Keybind keybindEditor = new Control_Keybind();
+            keybindEditor.ContextKeybind = keyb;
+            keybindEditor.VerticalAlignment = VerticalAlignment.Stretch;
+            keybindEditor.KeybindUpdated += KeybindEditor_KeybindUpdated;
+
+            DockPanel dp = new DockPanel()
+            {
+                LastChildFill = true,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Tag = keybindEditor
+            };
+
+            Button ButtonRemoveKeybind = new Button()
+            {
+                Content = "X",
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Tag = dp
+            };
+            DockPanel.SetDock(ButtonRemoveKeybind, Dock.Right);
+            ButtonRemoveKeybind.Click += ButtonRemoveKeybind_Click;
+
+
+            dp.Children.Add(ButtonRemoveKeybind);
+            dp.Children.Add(keybindEditor);
+
+            this.stackPanelShortcuts.Children.Add(dp);
+        }
+
+        public void AddStackPanelButton()
+        {
+            this.stackPanelShortcuts.Children.Add(buttonAddNewShortcut);
+        }
+
+        private void KeybindEditor_KeybindUpdated(object sender, Keybind newKeybind)
+        {
+            List<Keybind> newShortcuts = new List<Keybind>();
+
+            foreach (var child in this.stackPanelShortcuts.Children)
+            {
+                if(child is DockPanel && (child as DockPanel).Tag is Control_Keybind)
+                    newShortcuts.Add(((child as DockPanel).Tag as Control_Keybind).ContextKeybind);
+            }
+
+            ((ShortcutAssistantLayerHandler)this.DataContext).Properties._ShortcutKeys = newShortcuts.ToArray();
         }
 
         private void keysMain_SequenceUpdated(object sender, EventArgs e)
@@ -45,9 +124,14 @@ namespace Aurora.Settings.Layers
         private void cmbModifier_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0) {
-                ((ShortcutAssistantLayerHandler)this.DataContext).Properties.SetDefaultKeys();
                 this.SetSettings();
             }
+        }
+
+        private void comboboxPresentationType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded && this.DataContext is ShortcutAssistantLayerHandler && sender is ComboBox)
+                ((ShortcutAssistantLayerHandler)this.DataContext).Properties._PresentationType = (ShortcutAssistantPresentationType)Enum.Parse(typeof(ShortcutAssistantPresentationType), (sender as ComboBox).SelectedIndex.ToString());
         }
     }
 }

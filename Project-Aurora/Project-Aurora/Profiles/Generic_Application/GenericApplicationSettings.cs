@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Generic_Application
 {
-    public class GenericApplicationSettings : ProfileSettings
+    public class GenericApplicationSettings : Settings.ProfileSettings
     {
         //Generic
         public string ApplicationName;
@@ -21,7 +21,7 @@ namespace Aurora.Profiles.Generic_Application
         [Newtonsoft.Json.JsonIgnore]
         public bool _simulateDaytime = false;
 
-        public ObservableCollection<Layer> Layers_NightTime { get; set; }
+        public ObservableCollection<Settings.Layers.Layer> Layers_NightTime { get; set; }
 
         //Effects
         //// Lighting Areas
@@ -41,7 +41,7 @@ namespace Aurora.Profiles.Generic_Application
             ApplicationName = "New Application Profile";
             IsEnabled = true;
 
-            Layers_NightTime = new ObservableCollection<Layer>();
+            Layers_NightTime = new ObservableCollection<Settings.Layers.Layer>();
 
             //Effects
             //// Lighting Areas
@@ -62,7 +62,7 @@ namespace Aurora.Profiles.Generic_Application
             ApplicationName = appname;
             IsEnabled = true;
 
-            Layers_NightTime = new ObservableCollection<Layer>();
+            Layers_NightTime = new ObservableCollection<Settings.Layers.Layer>();
 
             //Effects
             //// Lighting Areas

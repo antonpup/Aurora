@@ -28,7 +28,6 @@
                     <Button x:Name="patch_button" Content="Patch Logitech LED SDK" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,230,0,0" TextWrapping="Wrap" Text="Please note: There are NO settings to configure for this profile. The game itself provides effects and lights up keys based on keybinds." VerticalAlignment="Top" Width="519"/>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with The Division" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
-                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="63" Width="300"/>
                 </Grid>
             </TabItem>
         </TabControl>

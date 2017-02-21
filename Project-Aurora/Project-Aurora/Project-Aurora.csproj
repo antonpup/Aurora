@@ -251,6 +251,9 @@
     <Compile Include="Controls\Control_DeviceManager.xaml.cs">
       <DependentUpon>Control_DeviceManager.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_Keybind.xaml.cs">
+      <DependentUpon>Control_Keybind.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_Ruler.xaml.cs">
       <DependentUpon>Control_Ruler.xaml</DependentUpon>
     </Compile>
@@ -534,10 +537,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Control_ProfileControlPresenter.xaml.cs">
+      <DependentUpon>Control_ProfileControlPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Control_ProfileManager.xaml.cs">
+      <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Control_ScriptManager.xaml.cs">
       <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
+    <Compile Include="Settings\Keybind.cs" />
     <Compile Include="Settings\Keycaps\Control_GhostKeycap.xaml.cs">
       <DependentUpon>Control_GhostKeycap.xaml</DependentUpon>
     </Compile>
@@ -828,9 +838,6 @@
     <Compile Include="Settings\Control_LayerManager.xaml.cs">
       <DependentUpon>Control_LayerManager.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Control_ProfileManager.xaml.cs">
-      <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Control_Settings.xaml.cs">
       <DependentUpon>Control_Settings.xaml</DependentUpon>
     </Compile>
@@ -874,6 +881,7 @@
     <Compile Include="Utils\SteamUtils.cs" />
     <Compile Include="Utils\Time.cs" />
     <Compile Include="Utils\TimedListObject.cs" />
+    <Compile Include="Utils\Tree.cs" />
     <Compile Include="Utils\TypeUtils.cs" />
     <Compile Include="Utils\UIUtils.cs" />
   </ItemGroup>
@@ -921,6 +929,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_DeviceManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_Keybind.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1148,9 +1160,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Control_ProfileControlPresenter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Settings\Control_LayerControlPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Control_ProfileManager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Control_ScriptManager.xaml">
       <SubType>Designer</SubType>
@@ -1249,10 +1269,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Control_LayerManager.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Control_ProfileManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1415,6 +1431,9 @@
     <Resource Include="Resources\Layers_Remove.png" />
     <Resource Include="Resources\LayerConfig_icon.png" />
     <Resource Include="Resources\AnimationEditor_ScrubberTop.png" />
+    <Resource Include="Resources\Save_Icon.png" />
+    <Resource Include="Resources\Import_Icon.png" />
+    <Resource Include="Resources\Export_Icon.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

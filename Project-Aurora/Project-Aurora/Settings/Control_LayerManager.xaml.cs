@@ -22,7 +22,7 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Control_LayerManager : UserControl
     {
-        public delegate void NewLayerHandler(Layer layer);
+        public delegate void NewLayerHandler(Layers.Layer layer);
 
         public event NewLayerHandler NewLayer;
 
@@ -32,7 +32,7 @@ namespace Aurora.Settings
 
         public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ProfileManager), typeof(Control_LayerManager), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
 
-        public Dictionary<ProfileManager, Layer> LastSelectedLayer = new Dictionary<ProfileManager, Layer>();
+        public Dictionary<ProfileManager, Layers.Layer> LastSelectedLayer = new Dictionary<ProfileManager, Layers.Layer>();
 
         public ProfileManager FocusedProfile
         {
@@ -63,7 +63,7 @@ namespace Aurora.Settings
                 if (self.LastSelectedLayer.ContainsKey(prof))
                     self.LastSelectedLayer.Remove(prof);
 
-                self.LastSelectedLayer.Add(prof, self.lstLayers.SelectedItem as Layer);
+                self.LastSelectedLayer.Add(prof, self.lstLayers.SelectedItem as Layers.Layer);
 
             }
             self.UpdateLayers();
@@ -104,10 +104,10 @@ namespace Aurora.Settings
                 var hander = NewLayer;
                 if (lstLayers.SelectedItem != null)
                 {
-                    if (!(lstLayers.SelectedItem is Layer))
+                    if (!(lstLayers.SelectedItem is Layers.Layer))
                         throw new ArgumentException($"Items contained in the ListView must be of type 'Layer', not '{lstLayers.SelectedItem.GetType()}'");
 
-                    Layer lyr = (Layer)lstLayers.SelectedItem;
+                    Layers.Layer lyr = (Layers.Layer)lstLayers.SelectedItem;
 
                     lyr.SetProfile(FocusedProfile);
 
@@ -121,7 +121,7 @@ namespace Aurora.Settings
 
         private void add_layer_button_Click(object sender, RoutedEventArgs e)
         {
-            Layer lyr = new Layer("New layer " + Utils.Time.GetMilliSeconds());
+            Layers.Layer lyr = new Layers.Layer("New layer " + Utils.Time.GetMilliSeconds());
             lyr.AnythingChanged += this.FocusedProfile.SaveProfilesEvent;
 
             lyr.SetProfile(FocusedProfile);
@@ -140,7 +140,7 @@ namespace Aurora.Settings
         {
             if (this.lstLayers.SelectedIndex > -1)
             {
-                if (MessageBox.Show($"Are you sure you want to delete Layer '{((Layer)lstLayers.SelectedItem).Name}'", "Confirm action", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Are you sure you want to delete Layer '{((Layers.Layer)lstLayers.SelectedItem).Name}'", "Confirm action", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                 {
                     int index = this.lstLayers.SelectedIndex;
                     if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
@@ -193,8 +193,8 @@ namespace Aurora.Settings
         //Based on: http://stackoverflow.com/questions/3350187/wpf-c-rearrange-items-in-listbox-via-drag-and-drop
         private void stckLayer_Drop(object sender, DragEventArgs e)
         {
-            Layer droppedData = e.Data.GetData(typeof(Layer)) as Layer;
-            Layer target = ((FrameworkElement)(sender)).DataContext as Layer;
+            Layers.Layer droppedData = e.Data.GetData(typeof(Layers.Layer)) as Layers.Layer;
+            Layers.Layer target = ((FrameworkElement)(sender)).DataContext as Layers.Layer;
 
             int removedIdx = lstLayers.Items.IndexOf(droppedData);
             int targetIdx = lstLayers.Items.IndexOf(target);
@@ -258,10 +258,10 @@ namespace Aurora.Settings
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
                 if (e.Key == Key.C)
-                    Global.Clipboard = (this.lstLayers.SelectedItem as Layer)?.Clone();
-                else if (e.Key == Key.V && Global.Clipboard is Layer)
+                    Global.Clipboard = (this.lstLayers.SelectedItem as Layers.Layer)?.Clone();
+                else if (e.Key == Key.V && Global.Clipboard is Layers.Layer)
                 {
-                    Layer lyr = (Layer)((Layer)Global.Clipboard)?.Clone();
+                    Layers.Layer lyr = (Layers.Layer)((Layers.Layer)Global.Clipboard)?.Clone();
 
                     if (Global.ProfilesManager.DefaultLayerHandlers.Contains(lyr.Handler.ID) || FocusedProfile.Config.ExtraAvailableLayers.Contains(lyr.Handler.ID))
                     {

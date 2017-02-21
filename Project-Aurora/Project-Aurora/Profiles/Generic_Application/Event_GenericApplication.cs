@@ -21,7 +21,7 @@ namespace Aurora.Profiles.Generic_Application
 
             GenericApplicationSettings settings = (GenericApplicationSettings)this.Profile.Settings;
 
-            ObservableCollection<Layer> timeLayers = settings.Layers;
+            ObservableCollection<Settings.Layers.Layer> timeLayers = settings.Layers;
 
             //Scripts
             this.Profile.UpdateEffectScripts(layers);

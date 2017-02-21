@@ -69,6 +69,13 @@ namespace Aurora
         /// </summary>
         public string WrappedProcess { get { return wrapped_process; } }
 
+        private Thread ListenerThread;
+        private Thread ServerThread;
+        private Thread CommandThread;
+
+        private NamedPipeServerStream IPCpipeStream;
+        private NamedPipeServerStream IPCCommandpipeStream;
+
         public NetworkListener()
         {
             CommandRecieved += NetworkListener_CommandRecieved;
@@ -115,14 +122,14 @@ namespace Aurora
         {
             if (!isRunning)
             {
-                Thread ListenerThread = new Thread(new ThreadStart(Run));
+                ListenerThread = new Thread(new ThreadStart(Run));
                 try
                 {
                     net_Listener.Start();
                 }
                 catch (HttpListenerException exc)
                 {
-                    if(exc.ErrorCode == 5)//Access Denied
+                    if (exc.ErrorCode == 5)//Access Denied
                         System.Windows.MessageBox.Show($"Access error during start of network listener.\r\n\r\nTo fix this issue, please run the following commands as admin in Command Prompt:\r\n   netsh http add urlacl url=http://localhost:{Port}/ user=Everyone listen=yes\r\nand\r\n   netsh http add urlacl url=http://127.0.0.1:{Port}/ user=Everyone listen=yes", "Aurora - Error");
 
                     Global.logger.LogLine(exc.ToString(), Logging_Level.Error);
@@ -132,9 +139,9 @@ namespace Aurora
                 isRunning = true;
                 ListenerThread.Start();
 
-                Thread ServerThread = new Thread(IPCServerThread);
+                ServerThread = new Thread(IPCServerThread);
                 ServerThread.Start();
-                Thread CommandThread = new Thread(AuroraCommandsServerIPC);
+                CommandThread = new Thread(AuroraCommandsServerIPC);
                 CommandThread.Start();
                 return true;
             }
@@ -148,6 +155,41 @@ namespace Aurora
         public void Stop()
         {
             isRunning = false;
+
+            if (ListenerThread != null)
+            {
+                ListenerThread.Abort();
+                ListenerThread = null;
+            }
+
+            if (ServerThread != null)
+            {
+                ServerThread.Abort();
+                ServerThread = null;
+            }
+                
+
+            if (CommandThread != null)
+            {
+                CommandThread.Abort();
+                CommandThread = null;
+            }
+
+            if(IPCpipeStream != null)
+            {
+                if(IPCpipeStream.IsConnected)
+                    IPCpipeStream.Disconnect();
+                IPCpipeStream.Dispose();
+                IPCpipeStream = null;
+            }
+
+            if (IPCCommandpipeStream != null)
+            {
+                if (IPCCommandpipeStream.IsConnected)
+                    IPCCommandpipeStream.Disconnect();
+                IPCCommandpipeStream.Dispose();
+                IPCCommandpipeStream = null;
+            }
         }
 
         private void Run()
@@ -220,11 +262,11 @@ namespace Aurora
             PipeSecurity pipeSa = new PipeSecurity();
             pipeSa.SetAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null),
                             PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow));
-            while (true)
+            while (isRunning)
             {
                 try
                 {
-                    using (NamedPipeServerStream pipeStream = new NamedPipeServerStream(
+                    using (IPCpipeStream = new NamedPipeServerStream(
                     "Aurora\\server",
                     PipeDirection.In,
                     NamedPipeServerStream.MaxAllowedServerInstances,
@@ -238,12 +280,12 @@ namespace Aurora
                     {
                         wrapper_connected = false;
                         wrapped_process = "";
-                        Global.logger.LogLine(String.Format("[IPCServer] Pipe created {0}", pipeStream.GetHashCode()));
+                        Global.logger.LogLine(String.Format("[IPCServer] Pipe created {0}", IPCpipeStream?.GetHashCode()));
 
-                        pipeStream.WaitForConnection();
+                        IPCpipeStream?.WaitForConnection();
                         Global.logger.LogLine("[IPCServer] Pipe connection established");
 
-                        using (StreamReader sr = new StreamReader(pipeStream))
+                        using (StreamReader sr = new StreamReader(IPCpipeStream))
                         {
                             string temp;
                             while ((temp = sr.ReadLine()) != null)
@@ -281,11 +323,11 @@ namespace Aurora
             PipeSecurity pipeSa = new PipeSecurity();
             pipeSa.SetAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null),
                             PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow));
-            while (true)
+            while (isRunning)
             {
                 try
                 {
-                    using (NamedPipeServerStream pipeStream = new NamedPipeServerStream(
+                    using (IPCCommandpipeStream = new NamedPipeServerStream(
                     "Aurora\\interface",
                     PipeDirection.In,
                     NamedPipeServerStream.MaxAllowedServerInstances,
@@ -297,12 +339,12 @@ namespace Aurora
                     HandleInheritability.None
                     ))
                     {
-                        Global.logger.LogLine(String.Format("[AuroraCommandsServerIPC] Pipe created {0}", pipeStream.GetHashCode()));
+                        Global.logger.LogLine(String.Format("[AuroraCommandsServerIPC] Pipe created {0}", IPCCommandpipeStream?.GetHashCode()));
 
-                        pipeStream.WaitForConnection();
+                        IPCCommandpipeStream?.WaitForConnection();
                         Global.logger.LogLine("[AuroraCommandsServerIPC] Pipe connection established");
 
-                        using (StreamReader sr = new StreamReader(pipeStream))
+                        using (StreamReader sr = new StreamReader(IPCCommandpipeStream))
                         {
                             string temp;
                             while ((temp = sr.ReadLine()) != null)
@@ -324,7 +366,7 @@ namespace Aurora
 
         private void NetworkListener_CommandRecieved(string command, string args)
         {
-            switch(command)
+            switch (command)
             {
                 case "restore":
                     Program.MainWindow.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());

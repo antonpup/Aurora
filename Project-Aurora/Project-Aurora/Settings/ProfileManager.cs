@@ -62,7 +62,7 @@ namespace Aurora.Settings
         #region Public Properties
         public bool Initialized { get; protected set; } = false;
         public ProfileSettings Settings { get; set; }
-        public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
+        public ObservableCollection<ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
         public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
         public bool HasLayers { get; set; }
         public event EventHandler ProfileChanged;
@@ -100,8 +100,9 @@ namespace Aurora.Settings
             Config = config;
 
             Settings = (ProfileSettings)Activator.CreateInstance(config.SettingsType);
+            Settings.PropertyChanged += Profile_PropertyChanged;
             config.Event.Profile = this;
-            Profiles = new Dictionary<string, ProfileSettings>();
+            Profiles = new ObservableCollection<ProfileSettings>();
             EffectScripts = new Dictionary<string, IEffectScript>();
             ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
         }
@@ -131,37 +132,27 @@ namespace Aurora.Settings
             return Icon ?? (Icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
         }
 
-        public void SwitchToProfile(string profile_name)
+        public void SwitchToProfile(ProfileSettings newProfileSettings)
         {
-            if (Profiles.ContainsKey(profile_name))
+            if(newProfileSettings != null)
             {
-                Type setting_type = Profiles[profile_name].GetType();
+                Settings = (ProfileSettings)newProfileSettings.Clone();
 
-                Settings = CloneSettings(Profiles[profile_name]);
+                Settings.PropertyChanged += Profile_PropertyChanged;
 
                 if (ProfileChanged != null)
                     ProfileChanged(this, new EventArgs());
             }
         }
 
-        public void SaveDefaultProfile(string profile_name)
+        public void SaveDefaultProfile()
         {
-            profile_name = GetValidFilename(profile_name);
+            ProfileSettings _newProfile = (ProfileSettings)Settings.Clone();
+            _newProfile.ProfileName = $"Profile {Profiles.Count + 1}";
+            _newProfile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(_newProfile.ProfileName) + ".json");
+            _newProfile.PropertyChanged += Profile_PropertyChanged;
 
-            if (Profiles.ContainsKey(profile_name))
-            {
-                MessageBoxResult result = MessageBox.Show("Profile already exists. Would you like to replace it?", "Aurora", MessageBoxButton.YesNo);
-
-                if (result != MessageBoxResult.Yes)
-                    return;
-
-
-                Profiles[profile_name] = CloneSettings(Settings);
-            }
-            else
-            {
-                Profiles.Add(profile_name, Settings);
-            }
+            Profiles.Add(_newProfile);
 
             SaveProfiles();
         }
@@ -193,6 +184,7 @@ namespace Aurora.Settings
             try
             {
                 Settings = (ProfileSettings)Activator.CreateInstance(Config.SettingsType);
+                Settings.PropertyChanged += Profile_PropertyChanged;
 
                 this.InitalizeScriptSettings(Settings, true);
 
@@ -215,7 +207,12 @@ namespace Aurora.Settings
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
                         ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, Config.SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
-                        foreach (Layer lyr in prof.Layers)
+                        prof.ProfileFilepath = path;
+
+                        if (String.IsNullOrWhiteSpace(prof.ProfileName))
+                            prof.ProfileName = Path.GetFileNameWithoutExtension(path);
+
+                        foreach (Layers.Layer lyr in prof.Layers)
                         {
                             lyr.AnythingChanged += this.SaveProfilesEvent;
                             lyr.SetProfile(this);
@@ -225,7 +222,7 @@ namespace Aurora.Settings
                         {
                             if (e.NewItems != null)
                             {
-                                foreach (Layer lyr in e.NewItems)
+                                foreach (Layers.Layer lyr in e.NewItems)
                                 {
                                     if (lyr == null)
                                         continue;
@@ -260,6 +257,12 @@ namespace Aurora.Settings
             }
 
             return null;
+        }
+
+        private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(sender is ProfileSettings)
+                SaveProfile((sender as ProfileSettings).ProfileFilepath, sender as ProfileSettings);
         }
 
         public bool RegisterEffect(string key, IEffectScript obj)
@@ -410,27 +413,26 @@ namespace Aurora.Settings
 
         public virtual void LoadProfiles()
         {
-            string profiles_path = GetProfileFolderPath();
+            string profilesPath = GetProfileFolderPath();
 
             if (Directory.Exists(profiles_path))
             {
                 this.LoadScripts(profiles_path);
 
-                foreach (string profile in Directory.EnumerateFiles(profiles_path, "*.json", SearchOption.TopDirectoryOnly))
+                foreach (string profile in Directory.EnumerateFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
                 {
-                    string profile_name = Path.GetFileNameWithoutExtension(profile);
-                    ProfileSettings profile_settings = LoadProfile(profile);
+                    ProfileSettings profileSettings = LoadProfile(profile);
+                    string profileFilename = Path.GetFileNameWithoutExtension(profile);
 
-                    if (profile_settings != null)
+                    if (profileSettings != null)
                     {
-                        this.InitalizeScriptSettings(profile_settings);
+                        this.InitalizeScriptSettings(profileSettings);
 
-                        if (profile_name.Equals("default"))
-                            Settings = profile_settings;
+                        if (profileFilename.Equals("default"))
+                            Settings = profileSettings;
                         else
                         {
-                            if (!Profiles.ContainsKey(profile_name))
-                                Profiles.Add(profile_name, profile_settings);
+                            Profiles.Add(profileSettings);
                         }
                     }
                 }
@@ -474,9 +476,9 @@ namespace Aurora.Settings
 
                 SaveProfile(Path.Combine(profiles_path, "default.json"), Settings);
 
-                foreach (KeyValuePair<string, ProfileSettings> kvp in Profiles)
+                foreach (var profile in Profiles)
                 {
-                    SaveProfile(Path.Combine(profiles_path, kvp.Key + ".json"), kvp.Value);
+                    SaveProfile(Path.Combine(profiles_path, GetValidFilename(profile.ProfileName) + ".json"), profile);
                 }
             }
             catch (Exception exc)
@@ -491,3 +493,36 @@ namespace Aurora.Settings
         }
     }
 }
+
+using Newtonsoft.Json.Serialization;
+using System.Collections.ObjectModel;
+
+        public void DeleteProfile(ProfileSettings profile)
+        {
+            if(profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
+            {
+                if(File.Exists(profile.ProfileFilepath))
+                {
+                    try
+                    {
+                        File.Delete(profile.ProfileFilepath);
+                    }
+                    catch(Exception exc)
+                    {
+                        Global.logger.LogLine($"Could not delete profile with path \"{profile.ProfileFilepath}\"", Logging_Level.Error);
+                        Global.logger.LogLine($"Exception: {exc}", Logging_Level.Error, false);
+                    }
+                }
+
+                if(Profiles.Contains(profile))
+                    Profiles.Remove(profile);
+
+                SaveProfiles();
+            }
+                        };
+
+                        prof.PropertyChanged += Profile_PropertyChanged;
+
+            if (Directory.Exists(profilesPath))
+            {
+                this.LoadScripts(profilesPath);

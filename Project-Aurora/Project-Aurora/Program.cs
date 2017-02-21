@@ -271,29 +271,19 @@ namespace Aurora
 
             ConfigManager.Save(Global.Configuration);
 
-            //Global.geh.Destroy();
-            Global.net_listener.Stop();
-
-            try
-            {
-                foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
-                {
-                    proc.Kill();
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
-            }
-
-            Environment.Exit(0);
+            Exit();
         }
 
+        /// <summary>
+        /// Executes exit operations
+        /// </summary>
         public static void Exit()
         {
-            Global.input_subscriptions.Dispose();
-            Global.ProfilesManager.Dispose();
-            Global.net_listener.Stop();
+            Global.input_subscriptions?.Dispose();
+            Global.ProfilesManager?.Dispose();
+            Global.net_listener?.Stop();
+            Global.dev_manager?.Shutdown();
+            Global.dev_manager?.Dispose();
 
             try
             {
@@ -307,8 +297,8 @@ namespace Aurora
                 Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
             }
 
-
-            System.Windows.Application.Current.Shutdown();
+            Process.GetCurrentProcess().Kill();
+            //System.Windows.Application.Current.Shutdown();
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -422,6 +412,7 @@ namespace Aurora
                 Global.net_listener?.Stop();
 
                 Global.dev_manager?.Shutdown();
+                Global.dev_manager?.Dispose();
 
                 if (Global.Configuration != null)
                     ConfigManager.Save(Global.Configuration);

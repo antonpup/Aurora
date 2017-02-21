@@ -27,6 +27,7 @@ namespace Aurora
         //Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
 
         Control_LayerControlPresenter layercontrol_presenter = new Control_LayerControlPresenter();
+        Control_ProfileControlPresenter profilecontrol_presenter = new Control_ProfileControlPresenter();
 
         EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
 
@@ -36,6 +37,7 @@ namespace Aurora
         private float transitionamount = 0.0f;
 
         private FrameworkElement selected_item = null;
+        private FrameworkElement _selectedManager = null;
 
         private bool settingsloaded = false;
         private bool shownHiddenMessage = false;
@@ -94,8 +96,17 @@ namespace Aurora
             ctrlLayerManager.NewLayer += Layer_manager_NewLayer;
             ctrlLayerManager.ProfileOverviewRequest += CtrlLayerManager_ProfileOverviewRequest;
 
+            ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
+
             GenerateProfileStack();
             settings_control.DataContext = this;
+        }
+
+        private void CtrlProfileManager_ProfileSelected(ProfileSettings profile)
+        {
+            profilecontrol_presenter.ProfileSettings = profile;
+
+            this.content_grid.Content = profilecontrol_presenter;
         }
 
         private void CtrlLayerManager_ProfileOverviewRequest(UserControl profile_control)
@@ -167,6 +178,8 @@ namespace Aurora
             keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
             keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
             keyboard_viewbox.UpdateLayout();
+
+            UpdateManagerStackFocus(ctrlLayerManager);
 
             this.UpdateLayout();
 
@@ -733,7 +746,41 @@ namespace Aurora
             UpdateProfileStackBackground(selected_item);
         }
 
+        private void UpdateManagerStackFocus(object focusedElement, bool forced = false)
+        {
+            if(focusedElement != null && focusedElement is FrameworkElement && (!focusedElement.Equals(_selectedManager) || forced))
+            {
+                _selectedManager = focusedElement as FrameworkElement;
 
+                stackPanelManagers.Height = gridManagers.ActualHeight;
+                double totalHeight = stackPanelManagers.Height;
+
+                foreach(FrameworkElement child in stackPanelManagers.Children)
+                {
+                    if(child.Equals(focusedElement))
+                        child.Height = totalHeight - (28.0 * (stackPanelManagers.Children.Count - 1));
+                    else
+                        child.Height = 25.0;
+                }
+            }
+        }
+
+        private void ctrlLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.content_grid.Content = layercontrol_presenter;
+            UpdateManagerStackFocus(sender);
+        }
+
+        private void ctrlProfileManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.content_grid.Content = profilecontrol_presenter;
+            UpdateManagerStackFocus(sender);
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateManagerStackFocus(_selectedManager, true);
+        }
     }
 }
 

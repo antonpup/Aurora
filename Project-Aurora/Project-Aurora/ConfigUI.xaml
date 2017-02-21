@@ -8,7 +8,7 @@
              xmlns:tb="http://www.hardcodet.net/taskbar"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.ConfigUI"
              mc:Ignorable="d" Height="600" Width="1000" Title="Aurora" Loaded="Window_Loaded" Initialized="Window_Initialized" Closing="Window_Closing" Activated="Window_Activated" Deactivated="Window_Deactivated" HorizontalContentAlignment="Stretch" MinWidth="926" MinHeight="575" 
-             DataContext="{Binding RelativeSource={RelativeSource Self}}">
+             DataContext="{Binding RelativeSource={RelativeSource Self}}" SizeChanged="Window_SizeChanged">
     <DockPanel x:Name="bg_grid" Background="#FF660000">
         <tb:TaskbarIcon x:Name="trayicon"
 			Visibility="Visible"
@@ -53,7 +53,14 @@
             </ScrollViewer>
             <Image Source="Resources/settings_icon.png" ToolTip="General Settings" Margin="6,0,10,0" MouseDown="DesktopControl_MouseDown" RenderTransformOrigin="0.5,0.5" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
         </Grid>
-        <Settings:Control_LayerManager x:Name="ctrlLayerManager" Margin="5,5,0,5" HorizontalAlignment="Left" Width="200" FocusedProfile="{Binding FocusedProfile}" />
+
+        <Grid x:Name="gridManagers" Margin="5,5,0,5" HorizontalAlignment="Left" Width="200">
+            <StackPanel x:Name="stackPanelManagers">
+                <Settings:Control_ProfileManager x:Name="ctrlProfileManager" FocusedProfile="{Binding FocusedProfile}" Height="25" Margin="0,0,0,3" Background="#00000000" PreviewMouseDown="ctrlProfileManager_PreviewMouseDown" />
+                <Settings:Control_LayerManager x:Name="ctrlLayerManager" FocusedProfile="{Binding FocusedProfile}" Background="#00000000" PreviewMouseDown="ctrlLayerManager_PreviewMouseDown" />
+            </StackPanel>
+        </Grid>
+        
         <Grid Margin="5,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

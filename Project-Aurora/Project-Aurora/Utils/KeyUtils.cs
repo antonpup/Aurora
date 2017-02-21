@@ -290,6 +290,21 @@ namespace Aurora.Utils
         }
 
         /// <summary>
+        /// Converts Forms.Keys to Devices.DeviceKeys
+        /// </summary>
+        /// <param name="formsKeys">Array of Forms.Keys to be converted</param>
+        /// <returns>The resulting Devices.DeviceKeys</returns>
+        public static DeviceKeys[] GetDeviceKeys(Keys[] formsKeys)
+        {
+            DeviceKeys[] _returnKeys = new DeviceKeys[formsKeys.Length];
+
+            for(int i = 0; i < formsKeys.Length; i++)
+                _returnKeys[i] = GetDeviceKey(formsKeys[i]);
+
+            return _returnKeys;
+        }
+
+        /// <summary>
         /// Converts CorsairLedId to Devices.DeviceKeys
         /// </summary>
         /// <param name="CorsairKey">The CorsairLedId to be converted</param>
