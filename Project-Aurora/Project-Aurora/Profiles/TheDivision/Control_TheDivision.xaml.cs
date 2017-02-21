@@ -23,8 +23,6 @@ namespace Aurora.Profiles.TheDivision
 
         private void SetSettings()
         {
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as TheDivisionSettings).IsEnabled;
         }
 

@@ -21,7 +21,7 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Window_LayerLogicEditor : Window
     {
-        public Window_LayerLogicEditor(Layer layer)
+        public Window_LayerLogicEditor(Layers.Layer layer)
         {
             InitializeComponent();
             this.DataContext = layer;
@@ -36,7 +36,7 @@ namespace Aurora.Settings
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            ((Layer)this.DataContext).Logics.Add(new LogicItem());
+            ((Layers.Layer)this.DataContext).Logics.Add(new LogicItem());
         }
 
         private void btnAddCheck_Click(object sender, RoutedEventArgs e)

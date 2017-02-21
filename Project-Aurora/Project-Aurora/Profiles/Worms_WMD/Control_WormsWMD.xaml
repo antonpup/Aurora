@@ -33,8 +33,6 @@
                         </StackPanel>
                         <Button x:Name="unpatch_button" Content="Unpatch Worms W.M.D" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
                     </StackPanel>
-                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" Margin="0,0,10,41" VerticalAlignment="Bottom" Height="63" Width="300"/>
-                    <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Color Enhancing">

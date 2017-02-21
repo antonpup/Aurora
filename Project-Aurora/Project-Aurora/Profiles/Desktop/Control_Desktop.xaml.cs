@@ -33,9 +33,6 @@ namespace Aurora.Profiles.Desktop
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.profile_enabled.IsChecked = (profile_manager.Settings as DesktopSettings).IsEnabled;
 
             this.desktop_cz.ColorZonesList = (profile_manager.Settings as DesktopSettings).lighting_areas;

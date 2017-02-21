@@ -30,8 +30,6 @@
                         <Button x:Name="patch_button" Content="Patch League of Legends" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
                         <TextBlock Margin="10,10,325,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Text="League of Legends natively offers LightFX effects for hero's current HP, when they are hit, and when they are dead. The Color Zones is added to allow users to light up additional keys."/>
                     </StackPanel>
-                    <EnumPercentEffectType:Control_ScriptManager x:Name="scriptmanager" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="63" Width="300" Margin="0,0,10,36"/>
-                    <EnumPercentEffectType:Control_ProfileManager x:Name="profilemanager" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Color Zones">

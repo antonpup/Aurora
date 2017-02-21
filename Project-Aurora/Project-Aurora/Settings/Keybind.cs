@@ -28,11 +28,16 @@ namespace Aurora.Settings
             return this;
         }
 
+        public bool IsEmpty()
+        {
+            return _AssignedKeys.Count == 0;
+        }
+
         public bool IsPressed()
         {
             Keys[] PressedKeys = Global.input_subscriptions.PressedKeys;
 
-            if (PressedKeys.Length == _AssignedKeys.Count)
+            if (PressedKeys.Length > 0 && PressedKeys.Length == _AssignedKeys.Count)
             {
                 for(int i = 0; i < _AssignedKeys.Count; i++)
                 {
@@ -53,6 +58,9 @@ namespace Aurora.Settings
 
         public override string ToString()
         {
+            if (IsEmpty())
+                return "[EMPTY]";
+
             StringBuilder _sb = new StringBuilder();
 
             Queue<Keys> _KeysCopy = new Queue<Keys>(_AssignedKeys);
@@ -66,9 +74,6 @@ namespace Aurora.Settings
                 if (_KeysCopy.Count > 0)
                     _sb.Append(" + ");
             }
-
-            if (String.IsNullOrWhiteSpace(_sb.ToString()))
-                return "[EMPTY]";
 
             return _sb.ToString();
         }

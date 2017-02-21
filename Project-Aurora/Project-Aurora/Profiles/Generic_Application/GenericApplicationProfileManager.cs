@@ -47,31 +47,30 @@ namespace Aurora.Profiles.Generic_Application
 
         public override void LoadProfiles()
         {
-            string profiles_path = GetProfileFolderPath();
+            string profilesPath = GetProfileFolderPath();
 
-            if (Directory.Exists(profiles_path))
+            if (Directory.Exists(profilesPath))
             {
-                this.LoadScripts(profiles_path);
+                this.LoadScripts(profilesPath);
 
-                foreach (string profile in Directory.EnumerateFiles(profiles_path, "*.json", SearchOption.TopDirectoryOnly))
+                foreach (string profile in Directory.EnumerateFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
                 {
-                    string profile_name = Path.GetFileNameWithoutExtension(profile);
+                    string profileFilename = Path.GetFileNameWithoutExtension(profile);
 
-                    if (profile_name.Equals("app_info"))
+                    if (profileFilename.Equals("app_info"))
                         continue;
 
-                    ProfileSettings profile_settings = LoadProfile(profile);
+                    ProfileSettings profileSettings = LoadProfile(profile);
 
-                    if (profile_settings != null)
+                    if (profileSettings != null)
                     {
-                        this.InitalizeScriptSettings(profile_settings);
+                        this.InitalizeScriptSettings(profileSettings);
 
-                        if (profile_name.Equals("default"))
-                            Settings = profile_settings;
+                        if (profileFilename.Equals("default"))
+                            Settings = profileSettings;
                         else
                         {
-                            if (!Profiles.ContainsKey(profile_name))
-                                Profiles.Add(profile_name, profile_settings);
+                            Profiles.Add(profileSettings);
                         }
                     }
                 }

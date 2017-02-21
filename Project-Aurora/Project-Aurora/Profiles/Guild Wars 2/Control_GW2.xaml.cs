@@ -32,9 +32,6 @@ namespace Aurora.Profiles.Guild_Wars_2
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as GW2Settings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as GW2Settings).lighting_areas;
         }

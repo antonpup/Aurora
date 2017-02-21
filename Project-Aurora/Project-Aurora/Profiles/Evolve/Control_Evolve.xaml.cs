@@ -33,9 +33,6 @@ namespace Aurora.Profiles.Evolve
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as EvolveSettings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as EvolveSettings).lighting_areas;
         }

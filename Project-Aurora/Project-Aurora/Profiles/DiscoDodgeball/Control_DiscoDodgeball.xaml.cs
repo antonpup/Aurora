@@ -39,9 +39,6 @@ namespace Aurora.Profiles.DiscoDodgeball
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as DiscoDodgeballSettings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as DiscoDodgeballSettings).lighting_areas;
         }

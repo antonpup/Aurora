@@ -213,6 +213,16 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Export_Icon {
+            get {
+                object obj = ResourceManager.GetObject("Export_Icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap FreeForm_Circle {
             get {
                 object obj = ResourceManager.GetObject("FreeForm_Circle", resourceCulture);
@@ -277,6 +287,16 @@ namespace Aurora.Properties {
             get {
                 object obj = ResourceManager.GetObject("gamestate_integration_aurora_dota2", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Import_Icon {
+            get {
+                object obj = ResourceManager.GetObject("Import_Icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -426,6 +446,16 @@ namespace Aurora.Properties {
         internal static System.Drawing.Bitmap rocketleague_256x256 {
             get {
                 object obj = ResourceManager.GetObject("rocketleague_256x256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Save_Icon {
+            get {
+                object obj = ResourceManager.GetObject("Save_Icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

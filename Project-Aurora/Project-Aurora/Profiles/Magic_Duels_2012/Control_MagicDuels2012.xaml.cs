@@ -39,9 +39,6 @@ namespace Aurora.Profiles.Magic_Duels_2012
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as MagicDuels2012Settings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as MagicDuels2012Settings).lighting_areas;
         }

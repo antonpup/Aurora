@@ -39,9 +39,6 @@ namespace Aurora.Profiles.Metro_Last_Light
 
         private void SetSettings()
         {
-            this.profilemanager.ProfileManager = profile_manager;
-            this.scriptmanager.ProfileManager = profile_manager;
-
             this.game_enabled.IsChecked = (profile_manager.Settings as MetroLLSettings).IsEnabled;
             this.cz.ColorZonesList = (profile_manager.Settings as MetroLLSettings).lighting_areas;
         }

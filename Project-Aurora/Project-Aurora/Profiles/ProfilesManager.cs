@@ -515,6 +515,16 @@ namespace Aurora.Profiles
 
             timerInterval = (profile as ProfileManager)?.Config?.UpdateInterval ?? defaultTimerInterval;
 
+            //Check if any keybinds have been triggered
+            foreach(var prof in (profile as ProfileManager).Profiles)
+            {
+                if(prof.TriggerKeybind.IsPressed() && !(profile as ProfileManager).Settings.ProfileName.Equals(prof.ProfileName))
+                {
+                    (profile as ProfileManager).SwitchToProfile(prof);
+                    break;
+                }
+            }
+
             Global.dev_manager.InitializeOnce();
             profile.UpdateLights(newFrame);
 
@@ -618,6 +628,11 @@ namespace Aurora.Profiles
 
         public void Dispose()
         {
+            if(updateTimer != null)
+            {
+                updateTimer.Dispose();
+                updateTimer = null;
+            }
         }
     }
 }

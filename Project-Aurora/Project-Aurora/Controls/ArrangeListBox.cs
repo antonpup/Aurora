@@ -318,7 +318,13 @@ namespace Aurora.Controls
 
             itemspanel.VisualTree.AddHandler(ArrangePanel.LoadedEvent, new RoutedEventHandler(ItemsPanel_Loaded));
             itemspanel.Seal();
-            ItemsPanelProperty.OverrideMetadata(typeof(ArrangeListBox), new FrameworkPropertyMetadata(itemspanel));
+            try
+            {
+                ItemsPanelProperty.OverrideMetadata(typeof(ArrangeListBox), new FrameworkPropertyMetadata(itemspanel));
+            }
+            catch (Exception)
+            { }
+
             this.SelectionMode = SelectionMode.Single;
         }
 
