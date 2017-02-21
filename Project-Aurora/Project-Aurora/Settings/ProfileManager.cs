@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Windows.Media.Imaging;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Serialization;
+using System.Collections.ObjectModel;
 
 namespace Aurora.Settings
 {
@@ -134,7 +135,7 @@ namespace Aurora.Settings
 
         public void SwitchToProfile(ProfileSettings newProfileSettings)
         {
-            if(newProfileSettings != null)
+            if (newProfileSettings != null)
             {
                 Settings = (ProfileSettings)newProfileSettings.Clone();
 
@@ -157,13 +158,28 @@ namespace Aurora.Settings
             SaveProfiles();
         }
 
-        protected ProfileSettings CloneSettings(ProfileSettings settings)
+        public void DeleteProfile(ProfileSettings profile)
         {
-            return (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(settings, Config.SettingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }),
-                    Config.SettingsType,
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
-                    ); //I know this is bad. You can laugh at me for this one. :(
+            if (profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
+            {
+                if (File.Exists(profile.ProfileFilepath))
+                {
+                    try
+                    {
+                        File.Delete(profile.ProfileFilepath);
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.LogLine($"Could not delete profile with path \"{profile.ProfileFilepath}\"", Logging_Level.Error);
+                        Global.logger.LogLine($"Exception: {exc}", Logging_Level.Error, false);
+                    }
+                }
+
+                if (Profiles.Contains(profile))
+                    Profiles.Remove(profile);
+
+                SaveProfiles();
+            }
         }
 
         private string GetValidFilename(string filename)
@@ -232,6 +248,8 @@ namespace Aurora.Settings
                             this.SaveProfiles();
                         };
 
+                        prof.PropertyChanged += Profile_PropertyChanged;
+
                         return prof;
                     }
                 }
@@ -252,7 +270,6 @@ namespace Aurora.Settings
                     File.Move(path, newPath);
                     this.SaveProfile(path, Settings);
                     MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc.Message}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
-
                 }
             }
 
@@ -261,7 +278,7 @@ namespace Aurora.Settings
 
         private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(sender is ProfileSettings)
+            if (sender is ProfileSettings)
                 SaveProfile((sender as ProfileSettings).ProfileFilepath, sender as ProfileSettings);
         }
 
@@ -415,9 +432,9 @@ namespace Aurora.Settings
         {
             string profilesPath = GetProfileFolderPath();
 
-            if (Directory.Exists(profiles_path))
+            if (Directory.Exists(profilesPath))
             {
-                this.LoadScripts(profiles_path);
+                this.LoadScripts(profilesPath);
 
                 foreach (string profile in Directory.EnumerateFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
                 {
@@ -493,36 +510,3 @@ namespace Aurora.Settings
         }
     }
 }
-
-using Newtonsoft.Json.Serialization;
-using System.Collections.ObjectModel;
-
-        public void DeleteProfile(ProfileSettings profile)
-        {
-            if(profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
-            {
-                if(File.Exists(profile.ProfileFilepath))
-                {
-                    try
-                    {
-                        File.Delete(profile.ProfileFilepath);
-                    }
-                    catch(Exception exc)
-                    {
-                        Global.logger.LogLine($"Could not delete profile with path \"{profile.ProfileFilepath}\"", Logging_Level.Error);
-                        Global.logger.LogLine($"Exception: {exc}", Logging_Level.Error, false);
-                    }
-                }
-
-                if(Profiles.Contains(profile))
-                    Profiles.Remove(profile);
-
-                SaveProfiles();
-            }
-                        };
-
-                        prof.PropertyChanged += Profile_PropertyChanged;
-
-            if (Directory.Exists(profilesPath))
-            {
-                this.LoadScripts(profilesPath);

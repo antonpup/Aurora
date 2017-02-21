@@ -128,6 +128,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Equalizer", "Equalizer Layer", typeof(EqualizerLayerHandler) ),
                 new LayerHandlerEntry("Ambilight", "Ambilight Layer", typeof(AmbilightLayerHandler) ),
                 new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
+                new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
             }, true);
 
             #endregion

@@ -44,7 +44,7 @@
             </ListBox>
         </DockPanel>
         <TextBlock x:Name="textblockDownload" Margin="10,0,10,3" TextWrapping="Wrap" RenderTransformOrigin="0.49,0.531" TextAlignment="Center" Height="16" VerticalAlignment="Bottom"><Hyperlink NavigateUri="http://modworkshop.net/mydownloads.php?action=browse_cat&amp;cid=299" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Download More Profiles"/></Hyperlink></TextBlock>
-        <Button x:Name="btnImportProfile" Margin="0,55,132,0" VerticalAlignment="Top" HorizontalAlignment="Right" ToolTip="Import a new profile" Height="24">
+        <Button x:Name="btnImportProfile" Margin="0,55,132,0" VerticalAlignment="Top" HorizontalAlignment="Right" ToolTip="Import a new profile" Height="24" Click="btnImportProfile_Click">
             <DockPanel Margin="2,0">
                 <Image Source="/Aurora;component/Resources/Import_Icon.png" Width="18" Height="18"/>
                 <TextBlock><Run Text="Import"/></TextBlock>
