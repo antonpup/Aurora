@@ -37,6 +37,7 @@ namespace Aurora.Devices
             devices.Add(new Devices.Razer.RazerDevice());               // Razer Device
             //devices.Add(new Devices.Roccat.RoccatDevice());             // Roccat Device
             devices.Add(new Devices.Clevo.ClevoDevice());               // Clevo Device
+            devices.Add(new Devices.ArduinoRGB.ArduinoRGBDevice());     // Arduino Device
             devices.Add(new Devices.CoolerMaster.CoolerMasterDevice()); //CoolerMaster Device
             devices.Add(new Devices.AtmoOrbDevice.AtmoOrbDevice());     // AtmoOrb Ambilight Device
 

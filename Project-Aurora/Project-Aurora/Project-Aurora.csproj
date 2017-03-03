@@ -278,6 +278,8 @@
     <Compile Include="Controls\LogicCheckEdit.xaml.cs">
       <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\ArduinoRGB\ArduinoRGBDevice.cs" />
+    <Compile Include="Devices\ArduinoRGB\ArduinoSerialRGBLight.cs" />
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
     <Compile Include="Devices\Clevo\ClevoSetKBLED.cs" />
     <Compile Include="Devices\Clevo\ClevoDevice.cs" />
