@@ -32,6 +32,7 @@ namespace Aurora.Devices
             devices.Add(new Devices.Corsair.CorsairDevice());           // Corsair Device
             devices.Add(new Devices.Razer.RazerDevice());               // Razer Device
             devices.Add(new Devices.Clevo.ClevoDevice());               // Clevo Device
+            devices.Add(new Devices.ArduinoRGB.ArduinoRGBDevice());     // Arduino Device
             devices.Add(new Devices.CoolerMaster.CoolerMasterDevice()); //CoolerMaster Device
 
             string devices_scripts_path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "Scripts", "Devices");
