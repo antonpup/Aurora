@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Aurora.Settings.Layers.Control_EqualizerLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             xmlns:ncore="http://schemas.ncore.com/wpf/xaml/colorbox"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
+             xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="EqualizerType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:EqualizerType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:EqualizerTypeToStringVC x:Key="EqualizerTypeToStringVC"/>
+            <DataTemplate x:Key="EqualizerTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource EqualizerTypeToStringVC}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="EqualizerPresentationType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:EqualizerPresentationType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:EqualizerPresentationTypeToStringVC x:Key="EqualizerPresentationTypeToStringVC"/>
+            <DataTemplate x:Key="EqualizerPresentationTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource EqualizerPresentationTypeToStringVC}}" />
+            </DataTemplate>
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Equalizer Effect Type: " VerticalAlignment="Top"/>
+        <ComboBox x:Name="eq_type" HorizontalAlignment="Left" Margin="120,-2,0,0" VerticalAlignment="Top" Width="177" ItemsSource="{Binding Source={StaticResource EqualizerType}}" ItemTemplate="{Binding Source={StaticResource EqualizerTypeTemplate}}" SelectionChanged="eq_type_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="View Type: " VerticalAlignment="Top" Margin="0,27,0,0"/>
+        <ComboBox x:Name="eq_view_type" HorizontalAlignment="Left" Margin="65,25,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource EqualizerPresentationType}}" ItemTemplate="{Binding Source={StaticResource EqualizerPresentationTypeTemplate}}" SelectionChanged="eq_view_type_SelectionChanged"/>
+
+        <TextBlock HorizontalAlignment="Left" Margin="0,54,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="Clr_primary_color" Margin="80,52,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="Clr_primary_color_SelectedColorChanged" UsingAlphaChannel="True" />
+
+        <TextBlock HorizontalAlignment="Left" Margin="0,83,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="Clr_secondary_color" Margin="95,81,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" ColorMode="ColorCanvas" SelectedColorChanged="Clr_secondary_color_SelectedColorChanged" UsingAlphaChannel="True" />
+
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Gradient (Linear Only): " VerticalAlignment="Top" Margin="0,110,0,0"/>
+        <ncore:ColorBox x:Name="gradient_editor" HorizontalAlignment="Left" Height="60" Margin="0,130,0,0" VerticalAlignment="Top" Width="260" BrushChanged="Gradient_editor_BrushChanged"/>
+        <Button x:Name="Button_SetGradientRainbow" Content="Set to Rainbow" HorizontalAlignment="Left" Margin="0,195,0,0" VerticalAlignment="Top" Click="Button_SetGradientRainbow_Click"/>
+        <Button x:Name="Button_SetGradientRainbowLoop" Content="Set to Rainbow (Seamless)" Margin="91,195,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Click="Button_SetGradientRainbowLoop_Click"/>
+
+        <TextBlock HorizontalAlignment="Left" Margin="302,4,0,0" TextWrapping="Wrap" Text="Max amplitude:" VerticalAlignment="Top"/>
+        <xctk:IntegerUpDown x:Name="updown_max_amplitude_value" HorizontalAlignment="Left" Height="24" Margin="389,0,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="120" Minimum="1" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged"/>
+        <CheckBox x:Name="chkbox_dimbgonsound" Content="Dim background on sound" HorizontalAlignment="Left" Margin="302,27,0,0" VerticalAlignment="Top" Checked="chkbox_dimbgonsound_Checked" Unchecked="chkbox_dimbgonsound_Checked"/>
+        <TextBlock HorizontalAlignment="Left" Margin="302,50,0,0" TextWrapping="Wrap" Text="Dim Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="Clr_dim_color" Margin="363,48,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="174" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />
+        <TextBlock HorizontalAlignment="Left" Margin="302,77,0,0" TextWrapping="Wrap" Text="Frequencies" VerticalAlignment="Top"/>
+        <ListView x:Name="lstbx_frequencies" HorizontalAlignment="Left" Margin="302,98,0,0" Width="100">
+            <ListBox.ItemTemplate>
+                <HierarchicalDataTemplate>
+                    <DockPanel HorizontalAlignment="Stretch" >
+                        <TextBlock Text="{Binding}" />
+                        <TextBlock Text=" Hz" HorizontalAlignment="Left"/>
+                    </DockPanel>
+                </HierarchicalDataTemplate>
+            </ListBox.ItemTemplate>
+        </ListView>
+        <TextBox x:Name="txtBox_newFreqValue" HorizontalAlignment="Left" Height="23" Margin="407,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>
+        <TextBlock HorizontalAlignment="Left" Margin="472,104,0,0" TextWrapping="Wrap" Text="Hz" VerticalAlignment="Top"/>
+        <Button x:Name="btn_AddFreq" Content="Add Frequency" HorizontalAlignment="Left" Margin="407,128,0,0" VerticalAlignment="Top" Width="100" Click="btn_AddFreq_Click"/>
+        <Button x:Name="btn_DeleteFreq" Content="Delete Frequency" HorizontalAlignment="Left" Margin="407,155,0,0" VerticalAlignment="Top" Width="100" Click="btn_DeleteFreq_Click"/>
+        <TextBlock HorizontalAlignment="Left" Margin="411,182,0,0" TextWrapping="Wrap" Text="Note: There must be at least 2 frequencies to sample between" VerticalAlignment="Top" Height="46" Width="116"/>
+        <Button x:Name="btn_ShowPreviewWindow" Content="Show Preview Window" HorizontalAlignment="Left" Margin="462,0,0,0" VerticalAlignment="Top" Click="btn_ShowPreviewWindow_Click"/>
+    </Grid>
+</UserControl>

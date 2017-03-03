@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Aurora.Settings.Layers.Control_AmbilightLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
+             xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="AmbilightEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:AmbilightType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:AmbilightEffectsToStringVC x:Key="AmbilightEffectsToStringVC"/>
+            <DataTemplate x:Key="AmbilightEffectsTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource AmbilightEffectsToStringVC}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="AmbilightCapture" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:AmbilightCaptureType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:AmbilightCaptureToStringVC x:Key="AmbilightCaptureToStringVC"/>
+            <DataTemplate x:Key="AmbilightCaptureTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource AmbilightCaptureToStringVC}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <ComboBox x:Name="combobox_ambilight_effect_type" HorizontalAlignment="Left" Margin="127,0,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" SelectionChanged="combobox_ambilight_effect_type_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Effect Type: " VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <ComboBox x:Name="combobox_ambilight_capture_type" HorizontalAlignment="Left" Margin="136,27,0,0" VerticalAlignment="Top" Width="161" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" SelectionChanged="combobox_ambilight_capture_type_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Capture Type: " VerticalAlignment="Top" Margin="0,29,0,0"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Specific Process Name: " VerticalAlignment="Top" Margin="0,56,0,0"/>
+        <TextBox x:Name="txtBox_process_name" HorizontalAlignment="Left" Height="20" Margin="136,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" TextChanged="txtBox_process_name_TextChanged"/>
+    </Grid>
+</UserControl>

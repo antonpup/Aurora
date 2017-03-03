@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Aurora.Settings.Layers.Control_ScriptLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             xmlns:controls="clr-namespace:Aurora.Controls"
+             xmlns:utils="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <utils:ExceptionToStringConverter x:Key="ExceptionToStringConv"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Label Content="Script:" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" Padding="0"/>
+        <ComboBox x:Name="cboScripts" HorizontalAlignment="Left" Margin="48,14,0,0" VerticalAlignment="Top" Width="130" IsEditable="False" SelectionChanged="cboScripts_SelectionChanged" SelectedValue="{Binding Path=Properties._Script, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <DockPanel>
+            <Border x:Name="brdScriptPropertiesEditor" Margin="10,41,0,0" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Stretch" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" BorderThickness="1" DockPanel.Dock="Left">
+                <controls:Control_VariableRegistryEditor x:Name="ScriptPropertiesEditor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Border>
+            <TextBlock x:Name="txtError" Text="{Binding Path=ScriptException, Converter={StaticResource ExceptionToStringConv}}" Foreground="Red" Padding="0" Margin="5,41,0,0" TextWrapping="Wrap"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

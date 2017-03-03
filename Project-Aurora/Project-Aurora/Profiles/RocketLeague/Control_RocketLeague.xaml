@@ -1,0 +1,38 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.RocketLeague"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.Profiles.RocketLeague.Control_RocketLeague"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Rocket League">
+                <Grid>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="Rocket League support works via memory reading. As a result, you do not have to apply any patches for the game to work with Aurora. However, this does mean that whenever a game update is released, Aurora's Rocket League support"/><Run Text=" would stop working. Aurora's memory reading pointers have to be updated manually, and thus Aurora will regularly check for new memory reading pointers via automatic updates. So, I apologize for any delays in Rocket League support, please inform me on Aurora's github page about a Rocket League update, and I will look into releasing a patch."/><LineBreak/><Run/><LineBreak/><Run Text="(Github link can be found under Settings -&gt; About)"/></TextBlock>
+                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Rocket League" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Preview">
+                <Grid>
+                    <Label Content="Team:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="preview_team" HorizontalAlignment="Left" Margin="55,13,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="preview_team_SelectionChanged" SelectedIndex="0"/>
+                    <Slider x:Name="preview_boost_amount" HorizontalAlignment="Left" Margin="102,45,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_boost_amount_ValueChanged"/>
+                    <TextBlock x:Name="preview_boost_amount_label" HorizontalAlignment="Left" Margin="227,46,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="preview_team1_score" HorizontalAlignment="Left" Height="24" Margin="98,73,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_team1_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100"/>
+                    <xctk:IntegerUpDown x:Name="preview_team2_score" HorizontalAlignment="Left" Height="24" Margin="98,104,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_team2_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100"/>
+                    <Label Content="Boost amount:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Team 1 Score:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Team 2 Score:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Color Zones">
+                <Grid>
+                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

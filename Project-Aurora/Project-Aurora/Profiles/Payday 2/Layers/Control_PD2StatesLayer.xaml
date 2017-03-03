@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="Aurora.Profiles.Payday_2.Layers.Control_PD2StatesLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.Payday_2.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
+             xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
+             xmlns:EnumPD2="clr-namespace:Aurora.Profiles.Payday_2"
+             xmlns:EnumPD2_GSI="clr-namespace:Aurora.Profiles.Payday_2.GSI.Nodes"
+             xmlns:Utils="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="EnumPercentEffectType:PercentEffectType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <Utils:PercentEffectTypeToStringVC x:Key="PercentEffectTypeToStringVC"/>
+            <Utils:ColorConverter x:Key="ColorConverter"/>
+            <DataTemplate x:Key="PercentEffectTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource PercentEffectTypeToStringVC}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Downed Color:" VerticalAlignment="Top" Margin="0,3,0,0"/>
+        <xctk:ColorPicker x:Name="clrDowned" Margin="84,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="160" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColor="{Binding Path=_DownedColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Arrested Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="clrArrested" Margin="84,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="160" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _ArrestedColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,87,0,0" TextWrapping="Wrap" Text="Swan Song Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="clr_SwanSong" Margin="98,84,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="146" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _SwanSongColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock HorizontalAlignment="Left" Margin="0,115,0,0" TextWrapping="Wrap" Text="Swan Song Speed:" VerticalAlignment="Top"/>
+        <Label x:Name="lblSwanSongSpeed" Content="x 1" HorizontalAlignment="Left" Margin="262,108,0,0" VerticalAlignment="Top"/>
+        <Slider x:Name="sldSwanSongSpeed" HorizontalAlignment="Left" Margin="102,113,0,0" VerticalAlignment="Top" Width="155" Minimum="0.5" Maximum="1.5" SmallChange="0.25" Value="{Binding _SwanSongSpeedMultiplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="sldSwanSongSpeed_ValueChanged"/>
+
+        <CheckBox x:Name="chkbx_UseSwanSong" Content="Enable Swan Song effect" HorizontalAlignment="Left" Margin="0,63,0,0" VerticalAlignment="Top" IsChecked="{Binding Path=_ShowSwanSong, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    </Grid>
+</UserControl>
