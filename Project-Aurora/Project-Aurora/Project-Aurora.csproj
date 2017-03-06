@@ -233,6 +233,9 @@
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_AddLightEvent.xaml.cs">
+      <DependentUpon>Control_AddLightEvent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_AnimationEditor.xaml.cs">
       <DependentUpon>Control_AnimationEditor.xaml</DependentUpon>
     </Compile>
@@ -741,7 +744,7 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\IInit.cs" />
+    <Compile Include="Settings\IInitialize.cs" />
     <Compile Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml.cs">
       <DependentUpon>Control_ColorizedKeycapBlank.xaml</DependentUpon>
     </Compile>
@@ -895,6 +898,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ColorZones.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_AddLightEvent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1416,6 +1423,7 @@
     <Resource Include="Resources\Save_Icon.png" />
     <Resource Include="Resources\Import_Icon.png" />
     <Resource Include="Resources\Export_Icon.png" />
+    <Resource Include="Resources\skype_64x64.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

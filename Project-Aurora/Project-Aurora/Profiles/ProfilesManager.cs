@@ -13,13 +13,155 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles
 {
-    public class ProfilesManager : IInit
+    public class LightEventsLayer : IInitialize
+    {
+        [JsonIgnore]
+        public Dictionary<string, ILightEvent> Events = new Dictionary<string, ILightEvent>();
+
+        [JsonIgnore]
+        private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
+
+        [JsonIgnore]
+        private Dictionary<string, string> EventAppIDs { get; set; } = new Dictionary<string, string>();
+
+        [JsonIgnore]
+        public List<ILightEvent> SortedEvents { get { var lst = Events.Values.ToList(); lst.Sort((i, j) => EventOrder.IndexOf(i.Config.ID).CompareTo(EventOrder.IndexOf(j.Config.ID))); return lst; } }
+
+        [JsonIgnore]
+        public bool Initialized { get; private set; }
+
+        public List<string> EventOrder = new List<string>();
+
+        private void InsertEvent(ILightEvent @event)
+        {
+            string key = @event.Config.ID;
+            Events.Add(key, @event);
+
+            if (@event.Config.ProcessNames != null)
+            {
+                foreach (string exe in @event.Config.ProcessNames)
+                {
+                    if (!exe.Equals(key) && !EventProcesses.ContainsKey(exe))
+                        EventProcesses.Add(exe, key);
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(@event.Config.AppID))
+                EventAppIDs.Add(@event.Config.AppID, key);
+
+            if(!EventOrder.Contains(key))
+                EventOrder.Add(key);
+
+        }
+
+        public bool RegisterEvent(ILightEvent @event)
+        {
+            string key = @event.Config.ID;
+            if (string.IsNullOrWhiteSpace(key) || Events.ContainsKey(key))
+                return false;
+
+            InsertEvent(@event);
+            
+            return true;
+        }
+
+        public ILightEvent GetEvent(string name)
+        {
+            if (Events.ContainsKey(name))
+                return Events[name];
+            else if (EventAppIDs.ContainsKey(name))
+                return Events[EventAppIDs[name]];
+            else if (EventProcesses.ContainsKey(name))
+                return Events[EventProcesses[name]];
+
+            return null;
+        }
+
+        public bool Initialize()
+        {
+            if (Initialized)
+                return true;
+
+            foreach(var lightEvent in Events)
+            {
+                lightEvent.Value.Initialize();
+            }
+
+            Initialized = true;
+            return true;
+        }
+
+        public void SaveAll()
+        {
+            foreach(var lightEvent in Events)
+            {
+                if (lightEvent.Value is ProfileManager)
+                {
+                    ((ProfileManager)lightEvent.Value).SaveProfiles();
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+
+        }
+
+        public void Remove(string ID, ProfilesManager profiles)
+        {
+            if (!Events.ContainsKey(ID))
+                return;
+
+            ILightEvent levent = Events[ID];
+            if (levent is ProfileManager)
+                ((ProfileManager)levent).SaveProfiles();
+            profiles.RegisterEvent(levent);
+            Events.Remove(ID);
+
+            if (levent.Config.ProcessNames != null)
+            {
+                foreach (string exe in levent.Config.ProcessNames)
+                {
+                    if (EventProcesses.ContainsKey(exe))
+                        EventProcesses.Remove(exe);
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(levent.Config.AppID) && EventAppIDs.ContainsKey(levent.Config.AppID))
+                EventAppIDs.Remove(levent.Config.AppID);
+
+            EventOrder.Remove(ID);
+        }
+
+        internal void GetMissing(ProfilesManager profilesManager)
+        {
+            for (int i = 0; i < EventOrder.Count; i++)
+            {
+                string key = EventOrder[i];
+                if (Events.ContainsKey(key))
+                    continue;
+                if (!profilesManager.AvailableEvents.ContainsKey(key))
+                {
+                    EventOrder.RemoveAt(i);
+                    i = Math.Max(0, i - 1);
+                }
+                else
+                {
+                    InsertEvent(profilesManager.AvailableEvents[key]);
+                    profilesManager.AvailableEvents.Remove(key);
+                }
+            }
+        }
+    }
+
+    public class ProfilesManager : IInitialize
     {
         //private static ProfilesManager instance;
 
@@ -46,22 +188,38 @@ namespace Aurora.Profiles
             }
         }
 
-        /*public class ProfilesManagerSettings
+        public class ProfilesManagerSettings
         {
-            public List<string> ProfileOrder { get; protected set; } = new List<string>();
-        }*/
+            public Dictionary<LightEventType, LightEventsLayer> EventLayers { get; private set; } = new Dictionary<LightEventType, LightEventsLayer>();
 
-        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.DesktopProfileManager() } };
+            public ProfilesManagerSettings()
+            {
+                AddMissing();
+            }
 
-        public Desktop.DesktopProfileManager DesktopProfile { get { return (Desktop.DesktopProfileManager)Events["desktop"]; } }
+            private void AddMissing()
+            {
+                foreach (var eventType in Enum.GetValues(typeof(LightEventType)))
+                {
+                    LightEventType type = (LightEventType)eventType;
+                    if (!EventLayers.ContainsKey(type))
+                        EventLayers.Add(type, new LightEventsLayer());
+                }
+            }
 
-        private List<string> Underlays = new List<string>();
-        private List<string> Normal = new List<string>();
-        private List<string> Overlays = new List<string>();
+            [OnDeserialized]
+            void OnDeserialized(StreamingContext context)
+            {
+                AddMissing();
+            }
+        }
 
-        private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
+        public ProfilesManagerSettings Settings { get; protected set; }
 
-        private Dictionary<string, string> EventAppIDs { get; set; } = new Dictionary<string, string>();
+        public Desktop.DesktopProfileManager DesktopProfile { get { return (Desktop.DesktopProfileManager)Settings.EventLayers[LightEventType.Normal].Events["desktop"]; } }
+
+        public Dictionary<string, ILightEvent> AvailableEvents = new Dictionary<string, ILightEvent>();
+
 
         public Dictionary<string, LayerHandlerEntry> LayerHandlers { get; private set; } = new Dictionary<string, LayerHandlerEntry>();
 
@@ -69,13 +227,15 @@ namespace Aurora.Profiles
 
         public string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
 
-        //public string ProfilesManagerSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "ProfilesSettings.json");
-
-        //public static ProfilesManagerSettings Settings { get; private set; }
+        public string ProfilesManagerSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "ProfilesSettings.json");
 
         private ActiveProcessMonitor processMonitor;
 
         public bool Initialized { get; private set; }
+
+        public ProfilesManager()
+        {
+        }
 
         public bool Initialize()
         {
@@ -84,8 +244,13 @@ namespace Aurora.Profiles
 
             processMonitor = new ActiveProcessMonitor();
 
+            LoadSettings();
+
+            //TODO: Registration of outside events needs to be done after loading the settings
+
             #region Initiate Defaults
             RegisterEvents(new List<ILightEvent> {
+                new Desktop.DesktopProfileManager(),
                 new Dota_2.Dota2ProfileManager(),
                 new CSGO.CSGOProfileManager(),
                 new GTA5.GTA5ProfileManager(),
@@ -145,12 +310,15 @@ namespace Aurora.Profiles
                 }
             }
 
-            foreach (var profile in Events)
+            foreach (var group in Settings.EventLayers)
             {
-                profile.Value.Initialize();
+                group.Value.Initialize();
             }
 
-            LoadSettings();
+            foreach(var layer in Settings.EventLayers)
+            {
+                layer.Value.GetMissing(this);
+            }
 
             this.InitUpdate();
 
@@ -160,7 +328,7 @@ namespace Aurora.Profiles
 
         private void LoadSettings()
         {
-            /*if (File.Exists(ProfilesManagerSettingsPath))
+            if (File.Exists(ProfilesManagerSettingsPath))
             {
                 try
                 {
@@ -173,40 +341,27 @@ namespace Aurora.Profiles
                 }
             }
             else
-                SaveSettings();*/
-
-            foreach (var kvp in Events)
-            {
-                if (!Global.Configuration.ProfileOrder.Contains(kvp.Key) && kvp.Value is ProfileManager)
-                    Global.Configuration.ProfileOrder.Add(kvp.Key);
-            }
-
-            foreach(string key in Global.Configuration.ProfileOrder.ToList())
-            {
-                if (!Events.ContainsKey(key) || !(Events[key] is ProfileManager))
-                    Global.Configuration.ProfileOrder.Remove(key);
-            }
-
+                SaveSettings();
+                
             //Settings.ProfileOrder.Remove("desktop");
             //Settings.ProfileOrder.Insert(0, "desktop");
         }
 
-        /*public static void SaveSettings()
+        public void SaveSettings()
         {
             if (Settings == null)
                 Settings = new ProfilesManagerSettings();
 
             File.WriteAllText(ProfilesManagerSettingsPath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }));
-        }*/
+        }
 
         public void SaveAll()
         {
-            //SaveSettings();
+            SaveSettings();
 
-            foreach(var profile in Events)
+            foreach (var group in Settings.EventLayers)
             {
-                if (profile.Value is ProfileManager)
-                    ((ProfileManager)profile.Value).SaveProfiles();
+                group.Value.SaveAll();
             }
         }
 
@@ -215,43 +370,31 @@ namespace Aurora.Profiles
             return RegisterEvent(new ProfileManager(config));
         }
 
-        private List<string> GetEventTable(LightEventType type)
-        {
-            List<string> events;
-            switch (type)
-            {
-                case LightEventType.Normal:
-                    events = Normal;
-                    break;
-                case LightEventType.Overlay:
-                    events = Overlays;
-                    break;
-                case LightEventType.Underlay:
-                    events = Underlays;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            return events;
-        }
-
         private bool InsertLightEvent(ILightEvent lightEvent, LightEventType? old = null)
         {
             if (old == null)
             {
-                lightEvent.Config.PropertyChanged += LightEvent_PropertyChanged;
+                //lightEvent.Config.PropertyChanged += LightEvent_PropertyChanged;
             }
             else
             {
-                var oldEvents = GetEventTable((LightEventType)old);
-                oldEvents.Remove(lightEvent.Config.ID);
+                //var oldEvents = Settings.EventLayers[(LightEventType)old];
+                //oldEvents.Remove(lightEvent.Config.ID, this);
             }
 
-            var events = GetEventTable(lightEvent.Config.Type);
+            var events = Settings.EventLayers[(LightEventType)lightEvent.Config.Type];
 
-            events.Add(lightEvent.Config.ID);
+            return events.RegisterEvent(lightEvent);
+        }
 
-            return true;   
+        public bool RegisterEventToLayer(LightEventType layerType, string effectKey)
+        {
+            if (!AvailableEvents.ContainsKey(effectKey))
+                return false;
+
+            ILightEvent lightEvent = AvailableEvents[effectKey];
+            AvailableEvents.Remove(effectKey);
+            return Settings.EventLayers[layerType].RegisterEvent(lightEvent);
         }
 
         private void LightEvent_PropertyChanged(object sender, PropertyChangedExEventArgs e)
@@ -272,33 +415,18 @@ namespace Aurora.Profiles
         public bool RegisterEvent(ILightEvent @event)
         {
             string key = @event.Config.ID;
-            if (string.IsNullOrWhiteSpace(key) || Events.ContainsKey(key))
+            LightEventType? type = @event.Config.Type;
+            if (string.IsNullOrWhiteSpace(key))
                 return false;
 
-            Events.Add(key, @event);
 
-            if (@event.Config.ProcessNames != null)
+            if (!@event.Config.IsDefault)
             {
-                foreach (string exe in @event.Config.ProcessNames)
-                {
-                    if (!exe.Equals(key))
-                        EventProcesses.Add(exe, key);
-                }
+                if (!AvailableEvents.ContainsKey(key))
+                    AvailableEvents.Add(key, @event);
             }
-
-            if (!String.IsNullOrWhiteSpace(@event.Config.AppID))
-                EventAppIDs.Add(@event.Config.AppID, key);
-
-            if (@event is ProfileManager)
-            {
-                if (!Global.Configuration.ProfileOrder.Contains(key))
-                    Global.Configuration.ProfileOrder.Add(key);
-            }
-
-            this.InsertLightEvent(@event);
-
-            if (Initialized)
-                @event.Initialize();
+            else
+                InsertLightEvent(@event);
 
             return true;
         }
@@ -319,7 +447,20 @@ namespace Aurora.Profiles
             }
         }
 
-        public void RemoveGenericProfile(string key)
+        public void DeleteEvent(string key, LightEventType? type = null)
+        {
+            if (type != null)
+                Settings.EventLayers[(LightEventType)type].Remove(key, this);
+
+            ILightEvent levent = AvailableEvents[key];
+            if (!levent.Config.IsDeletable)
+                return;
+            levent.Delete();
+            AvailableEvents.Remove(key);
+        }
+
+        //TODO: Update this method
+        /*public void RemoveGenericProfile(string key)
         {
             if (Events.ContainsKey(key))
             {
@@ -335,32 +476,7 @@ namespace Aurora.Profiles
 
                 //SaveSettings();
             }
-        }
-
-        public ILightEvent GetProfileFromProcess(string process)
-        {
-            if (EventProcesses.ContainsKey(process))
-                return Events[EventProcesses[process]];
-            else if (Events.ContainsKey(process))
-                return Events[process];
-            else if (Events.ContainsKey(process))
-                return Events[process];
-
-
-            return null;
-        }
-
-        public ILightEvent GetProfileFromAppID(string appid)
-        {
-            if (EventAppIDs.ContainsKey(appid))
-                return Events[EventAppIDs[appid]];
-            else if (Events.ContainsKey(appid))
-                return Events[appid];
-            else if (Events.ContainsKey(appid))
-                return Events[appid];
-
-            return null;
-        }
+        }*/
 
         public void RegisterLayerHandlers(List<LayerHandlerEntry> layers, bool @default = true)
         {
@@ -386,6 +502,12 @@ namespace Aurora.Profiles
         public bool RegisterLayerHandler(string key, string title, Type type, bool @default = true)
         {
             return RegisterLayerHandler(new LayerHandlerEntry(key, title, type));
+        }
+
+        public void RemoveEventFromLayer(LightEventType layerType, string key)
+        {
+            Settings.EventLayers[layerType].Remove(key, this);
+            this.SaveSettings();
         }
 
         public Type GetLayerHandlerType(string key)
@@ -446,7 +568,7 @@ namespace Aurora.Profiles
 
         private void UpdateProcess()
         {
-            if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
+            if (Global.Configuration.detection_mode == ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
             {
                 processMonitor.GetActiveWindowsProcessname();
                 nextProcessNameUpdate = currentTick + 1000L;
@@ -476,6 +598,17 @@ namespace Aurora.Profiles
             }
         }
 
+        private void UpdateEventsLayer(LightEventType layer, EffectsEngine.EffectFrame newFrame)
+        {
+            var eventLayer = Settings.EventLayers[layer];
+            foreach(var levent in eventLayer.EventOrder)
+            {
+                ILightEvent @event = eventLayer.Events[levent];
+                if (@event.IsEnabled && (previewModeProfileKey.Equals(levent) || ((@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)) && string.IsNullOrWhiteSpace(previewModeProfileKey))))
+                    @event.UpdateLights(newFrame);
+            }
+        }
+
         private void Update()
         {
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
@@ -489,29 +622,26 @@ namespace Aurora.Profiles
 
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
-            foreach(var underlay in Underlays)
-            {
-                ILightEvent @event = Events[underlay];
-                if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
-                    @event.UpdateLights(newFrame);
-            }
+            Global.dev_manager.InitializeOnce();
+
+            this.UpdateEventsLayer(LightEventType.Underlay, newFrame);
 
             //TODO: Move these IdleEffects to an event
             //this.UpdateIdleEffects(newFrame);
 
             ILightEvent profile = null;
             ILightEvent tempProfile = null;
-            //Global.logger.LogLine(process_name);
-            if (!Global.Configuration.excluded_programs.Contains(process_name)) { 
-                //TODO: GetProfile that checks based on event type
-                if ((((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                    || (((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                    || (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+            if (!Global.Configuration.excluded_programs.Contains(process_name)) {
+                var layer = Settings.EventLayers[LightEventType.Normal];
+                if ((((tempProfile = layer.GetEvent(process_name)) != null) && tempProfile.IsEnabled)
+                    || (((tempProfile = layer.GetEvent(previewModeProfileKey)) != null) && tempProfile.IsEnabled)
+                    || (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = layer.GetEvent(Global.net_listener.WrappedProcess)) != null) && tempProfile.IsEnabled)
                 )
                     profile = tempProfile;
             }
 
-            profile = profile ?? DesktopProfile;
+            if (profile == null && string.IsNullOrWhiteSpace(previewModeProfileKey))
+                profile = DesktopProfile;
 
             timerInterval = (profile as ProfileManager)?.Config?.UpdateInterval ?? defaultTimerInterval;
 
@@ -525,15 +655,9 @@ namespace Aurora.Profiles
                 }
             }
 
-            Global.dev_manager.InitializeOnce();
-            profile.UpdateLights(newFrame);
+            profile?.UpdateLights(newFrame);
 
-            foreach (var overlay in Overlays)
-            {
-                ILightEvent @event = Events[overlay];
-                if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
-                    @event.UpdateLights(newFrame);
-            }
+            this.UpdateEventsLayer(LightEventType.Overlay, newFrame);
 
             //Add overlays
             TimedListObject[] overlay_events = overlays.ToArray();
@@ -548,42 +672,33 @@ namespace Aurora.Profiles
 
         public void GameStateUpdate(IGameState gs)
         {
-            //Debug.WriteLine("Received gs!");
-
-            //Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
-
-            //UpdateProcess();
-
             string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
-
-            //EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
             try
             {
-                ILightEvent profile = this.GetProfileFromProcess(process_name);
+                ILightEvent profile = this.GetEvent(process_name);
 
                 JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
                 string appid = provider.GetValue("appid").ToString();
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
-                if (profile != null || (profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
+                if (profile != null || (profile = GetEvent(appid)) != null || (profile = GetEvent(name)) != null)
                     profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs));
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
 
-                    profile = profile ?? GetProfileFromProcess(gs_process_name);
+                    profile = profile ?? GetEvent(gs_process_name);
 
                     if (profile == null)
                     {
-                        Events.Add(gs_process_name, new GameEvent_Aurora_Wrapper());
-                        profile = Events[gs_process_name];
+                        var layer = Settings.EventLayers[LightEventType.Normal];
+                        layer.RegisterEvent(new GameEvent_Aurora_Wrapper(gs_process_name));
+                        profile = layer.Events[gs_process_name];
                     }
 
                     profile.SetGameState(gs);
                 }
-
-                //UpdateIdleEffects(newFrame);
             }
             catch (Exception e)
             {
@@ -591,10 +706,22 @@ namespace Aurora.Profiles
             }
         }
 
+        public ILightEvent GetEvent(string name)
+        {
+            foreach(var layer in Settings.EventLayers)
+            {
+                var levent = layer.Value.GetEvent(name);
+                if (levent != null)
+                    return levent;
+            }
+
+            return null;
+        }
+
         public void ResetGameState(string process)
         {
             ILightEvent profile;
-            if (((profile = GetProfileFromProcess(process)) != null))
+            if (((profile = GetEvent(process)) != null))
                 profile.ResetGameState();
         }
 
@@ -628,11 +755,16 @@ namespace Aurora.Profiles
 
         public void Dispose()
         {
-            if(updateTimer != null)
+            updateTimer.Dispose();
+            foreach (var layer in Settings.EventLayers)
             {
-                updateTimer.Dispose();
-                updateTimer = null;
+                foreach(var levent in layer.Value.Events)
+                {
+                    levent.Value.Dispose();
+                }
             }
+
         }
+
     }
 }

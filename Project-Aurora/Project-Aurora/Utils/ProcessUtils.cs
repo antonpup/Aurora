@@ -13,7 +13,7 @@ namespace Aurora.Utils
         {
             foreach(string proc in processes)
             {
-                if (Process.GetProcessesByName(proc).Length > 0)
+                if (Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(proc)).Length > 0)
                     return true;
             }
 

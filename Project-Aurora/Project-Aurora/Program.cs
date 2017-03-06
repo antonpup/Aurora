@@ -276,6 +276,7 @@ namespace Aurora
         public static void Exit()
         {
             Global.input_subscriptions?.Dispose();
+            Global.ProfilesManager.SaveAll();
             Global.ProfilesManager?.Dispose();
             Global.net_listener?.Stop();
             Global.dev_manager?.Shutdown();

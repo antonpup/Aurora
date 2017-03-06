@@ -42,13 +42,17 @@ namespace Aurora.Settings
 
         public string IconURI { get; set; }
 
+        public bool IsDefault { get; set; } = false;
+
+        public bool IsDeletable { get; set; } = false;
+
         public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
 
-        protected LightEventType type;
-        public LightEventType Type
+        protected LightEventType? type;
+        public LightEventType? Type
         {
             get { return type; }
-            protected set
+            set
             {
                 object old = type;
                 object newVal = value;
@@ -58,7 +62,7 @@ namespace Aurora.Settings
         }
     }
 
-    public class ProfileManager : IInit, ILightEvent
+    public class ProfileManager : IInitialize, ILightEvent
     {
         #region Public Properties
         public bool Initialized { get; protected set; } = false;
@@ -85,10 +89,16 @@ namespace Aurora.Settings
                 InvokePropertyChanged(old, newVal);
             }
         }
+        public ImageSource Icon
+        {
+            get {
+                return GetIcon();
+            }
+        }
         #endregion
 
         #region Internal Properties
-        internal ImageSource Icon { get; set; }
+        internal ImageSource icon { get; set; }
         internal UserControl Control { get; set; }
         internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
@@ -130,7 +140,7 @@ namespace Aurora.Settings
 
         public virtual ImageSource GetIcon()
         {
-            return Icon ?? (Icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
+            return icon ?? (icon = new BitmapImage(new Uri("/Aurora;component/"+Config.IconURI, UriKind.Relative)));
         }
 
         public void SwitchToProfile(ProfileSettings newProfileSettings)
@@ -269,8 +279,11 @@ namespace Aurora.Settings
 
                     File.Move(path, newPath);
                     this.SaveProfile(path, Settings);
-                    MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc.Message}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
+                //if (Global.isDebug)
+                    //throw exc;
             }
 
             return null;
@@ -506,7 +519,16 @@ namespace Aurora.Settings
 
         public void Dispose()
         {
+
+        }
+
+        public virtual void Delete()
+        {
             throw new NotImplementedException();
         }
     }
 }
+
+
+                    
+

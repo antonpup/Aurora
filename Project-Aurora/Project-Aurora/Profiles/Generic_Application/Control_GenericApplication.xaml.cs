@@ -38,7 +38,7 @@ namespace Aurora.Profiles.Generic_Application
         
         private bool HasProfile()
         {
-            return Global.ProfilesManager.Events.ContainsKey(profile_manager.Config.ProcessNames[0]);
+            return Global.ProfilesManager.GetEvent(profile_manager.Config.ProcessNames[0]) != null;
         }
                
         private void app_name_textbox_TextChanged(object sender, TextChangedEventArgs e)

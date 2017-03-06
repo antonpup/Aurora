@@ -16,6 +16,10 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
             Config = new Settings.LightEventConfig
             {
                 ID = "skype.exe",
+                Name = "Skype",
+                Type = LightEventType.Overlay,
+                IsDefault = true,
+                IconURI = "Resources/skype_64x64.png",
                 GameStateType = typeof(State_SkypeOverlay)
             };
 

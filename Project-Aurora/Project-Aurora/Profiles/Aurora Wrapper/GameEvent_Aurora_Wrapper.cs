@@ -22,6 +22,16 @@ namespace Aurora.Profiles.Aurora_Wrapper
         internal float colorEnhance_color_hsv_sine = 0.1f;
         internal float colorEnhance_color_hsv_gamma = 2.5f;
 
+        public GameEvent_Aurora_Wrapper()
+        {
+
+        }
+
+        public GameEvent_Aurora_Wrapper(string gs_process_name)
+        {
+            this.Config = new Settings.LightEventConfig { ID = gs_process_name };
+        }
+
         protected virtual void UpdateExtraLights(Queue<EffectLayer> layers)
         {
 

@@ -2,17 +2,20 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Aurora.Profiles
 {
     public enum LightEventType
     {
+        Overlay,
         Normal,
-        Underlay,
-        Overlay
+        Underlay
+        
     }
 
-    public interface ILightEvent : IInit
+    public interface ILightEvent : IInitialize
     {
         void UpdateLights(EffectsEngine.EffectFrame frame);
 
@@ -24,6 +27,10 @@ namespace Aurora.Profiles
 
         LightEventConfig Config { get; }
 
+        ImageSource Icon { get; }
+
+        void Delete();
+
     }
 
     /// <summary>
@@ -33,6 +40,14 @@ namespace Aurora.Profiles
     {
         public ProfileManager Profile { get; set; }
         public LightEventConfig Config { get; protected set; }
+        private ImageSource icon;
+        public ImageSource Icon
+        {
+            get
+            {
+                return GetIcon();
+            }
+        }
 
         internal IGameState _game_state;
 
@@ -66,7 +81,8 @@ namespace Aurora.Profiles
         /// <returns>A boolean value representing if this LightEvent is active</returns>
         public virtual bool IsEnabled
         {
-            get { return this.Profile.Settings.IsEnabled; }
+            //TODO: Maybe add a local variable to use for IsEnabled when Profile is absent?
+            get { return this.Profile?.Settings?.IsEnabled ?? true; }
         }
 
         public bool Initialized { get; protected set; }
@@ -95,6 +111,16 @@ namespace Aurora.Profiles
         public virtual void Dispose()
         {
 
+        }
+
+        public virtual ImageSource GetIcon()
+        {
+            return icon ?? (icon = new BitmapImage(new Uri("/Aurora;component/" + Config.IconURI, UriKind.Relative)));
+        }
+
+        public virtual void Delete()
+        {
+            throw new NotImplementedException();
         }
     }
 }

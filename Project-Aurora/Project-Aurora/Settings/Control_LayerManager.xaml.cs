@@ -24,7 +24,7 @@ namespace Aurora.Settings
     {
         public delegate void NewLayerHandler(Layers.Layer layer);
 
-        public event NewLayerHandler NewLayer;
+        public event NewLayerHandler SelectedLayerChanged;
 
         public delegate void ProfileOverviewHandler(UserControl profile_control);
 
@@ -101,7 +101,7 @@ namespace Aurora.Settings
         {
             if (e.AddedItems.Count == 1)
             {
-                var hander = NewLayer;
+                var hander = SelectedLayerChanged;
                 if (lstLayers.SelectedItem != null)
                 {
                     if (!(lstLayers.SelectedItem is Layers.Layer))
@@ -112,11 +112,15 @@ namespace Aurora.Settings
                     lyr.SetProfile(FocusedProfile);
 
                     hander?.Invoke(lyr);
-
+                    return;
                 }
             }
             else if (e.RemovedItems.Count > 0)
+            {
                 this.FocusedProfile?.SaveProfiles();
+            }
+
+            ProfileOverviewRequest?.Invoke(FocusedProfile?.Control);
         }
 
         private void add_layer_button_Click(object sender, RoutedEventArgs e)
@@ -148,7 +152,7 @@ namespace Aurora.Settings
                     else
                         this.FocusedProfile?.Settings?.Layers.RemoveAt(index);
 
-                    this.lstLayers.SelectedIndex = Math.Max(0, index - 1);
+                    this.lstLayers.SelectedIndex = Math.Max(-1, index - 1);
                 }
             }
         }

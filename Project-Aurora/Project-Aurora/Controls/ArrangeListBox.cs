@@ -183,7 +183,7 @@ namespace Aurora.Controls
                 {
 
                     dynamic items_lst = this.ParentList.ItemsSource;
-                    int old_index = items_lst.IndexOf(((FrameworkElement)_dragging).DataContext as Layer);
+                    int old_index = items_lst.IndexOf((dynamic)((FrameworkElement)_dragging).DataContext);
                     int new_index = GetOrder(_dragging);
                     if (old_index != new_index)
                         items_lst.Move(old_index, new_index);
@@ -312,20 +312,27 @@ namespace Aurora.Controls
 
     public class ArrangeListBox : ListBox
     {
-        public ArrangeListBox() : base()
+        private static bool OverridenMetaData = false;
+        static ArrangeListBox()
         {
             var itemspanel = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(ArrangePanel)));
-
-            itemspanel.VisualTree.AddHandler(ArrangePanel.LoadedEvent, new RoutedEventHandler(ItemsPanel_Loaded));
             itemspanel.Seal();
-            try
-            {
-                ItemsPanelProperty.OverrideMetadata(typeof(ArrangeListBox), new FrameworkPropertyMetadata(itemspanel));
-            }
-            catch (Exception)
-            { }
+            ItemsPanelProperty.OverrideMetadata(typeof(ArrangeListBox), new FrameworkPropertyMetadata(itemspanel));
+        }
+
+        public ArrangeListBox() : base()
+        {
+            this.Loaded += ArrangeListBox_Loaded;
 
             this.SelectionMode = SelectionMode.Single;
+        }
+
+        private void ArrangeListBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            ItemsPresenter itemsPresenter = GetVisualChild<ItemsPresenter>(this);
+            ArrangePanel itemsPanel = VisualTreeHelper.GetChild(itemsPresenter, 0) as ArrangePanel;
+            InternalItemsPanel = (ArrangePanel)itemsPanel;
+            InternalItemsPanel.ParentList = this;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -336,13 +343,28 @@ namespace Aurora.Controls
 
         }
 
-        private ArrangePanel InternalItemsPanel;
-
-        void ItemsPanel_Loaded(object sender, EventArgs e)
+        private static T GetVisualChild<T>(DependencyObject parent) where T : Visual
         {
-            InternalItemsPanel = (ArrangePanel)sender;
-            InternalItemsPanel.ParentList = this;
+            T child = default(T);
+
+            int numVisuals = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < numVisuals; i++)
+            {
+                Visual v = (Visual)VisualTreeHelper.GetChild(parent, i);
+                child = v as T;
+                if (child == null)
+                {
+                    child = GetVisualChild<T>(v);
+                }
+                if (child != null)
+                {
+                    break;
+                }
+            }
+            return child;
         }
+
+        private ArrangePanel InternalItemsPanel;
 
         public void StopReordering()
         {

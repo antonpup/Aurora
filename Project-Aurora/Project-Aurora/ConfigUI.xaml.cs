@@ -54,11 +54,11 @@ namespace Aurora
         private readonly double width;
         private readonly double height;
 
-        public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ProfileManager), typeof(ConfigUI), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
+        public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ILightEvent), typeof(ConfigUI), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
 
-        public ProfileManager FocusedProfile
+        public ILightEvent FocusedProfile
         {
-            get { return (ProfileManager)GetValue(FocusedProfileProperty); }
+            get { return (ILightEvent)GetValue(FocusedProfileProperty); }
             set
             {
                 SetValue(FocusedProfileProperty, value);
@@ -77,7 +77,7 @@ namespace Aurora
             set
             {
                 _ShowHidden = value;
-                this.ShowHiddenChanged(value);
+                //this.ShowHiddenChanged(value);
             }
         }
 
@@ -93,13 +93,16 @@ namespace Aurora
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
-            ctrlLayerManager.NewLayer += Layer_manager_NewLayer;
+            ctrlLayerManager.SelectedLayerChanged += Layer_manager_NewLayer;
             ctrlLayerManager.ProfileOverviewRequest += CtrlLayerManager_ProfileOverviewRequest;
 
             ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
-            GenerateProfileStack();
+            //GenerateProfileStack();
+            this.lstEvents.ItemsSource = Global.ProfilesManager.Settings.EventLayers;
             settings_control.DataContext = this;
+
+            
         }
 
         private void CtrlProfileManager_ProfileSelected(ProfileSettings profile)
@@ -184,15 +187,15 @@ namespace Aurora
             this.UpdateLayout();
 
             Global.input_subscriptions.Initialize();
-
-            this.ProfileImage_MouseDown(this.profiles_stack.Children[0], null);
         }
 
         public static bool ApplicationIsActivated()
         {
             var activatedHandle = GetForegroundWindow();
             if (activatedHandle == IntPtr.Zero)
+            {
                 return false;       // No window is currently activated
+            }
 
             var procId = Process.GetCurrentProcess().Id;
             int activeProcId;
@@ -341,20 +344,11 @@ namespace Aurora
         private BitmapImage _visible = new BitmapImage(new Uri(@"Resources/Visible.png", UriKind.Relative));
         private BitmapImage _not_visible = new BitmapImage(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
 
-        private void GenerateProfileStack(string focusedKey = null)
+        /*private void GenerateProfileStack(string focusedKey = "desktop")
         {
             selected_item = null;
             this.profiles_stack.Children.Clear();
 
-            /*Image profile_desktop = new Image
-            {
-                Tag = Global.Configuration.desktop_profile,
-                Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative)),
-                ToolTip = "Desktop Settings",
-                Margin = new Thickness(0, 5, 0, 0)
-            };
-            profile_desktop.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_desktop);*/
 
             //Included Game Profiles
             foreach (string profile_k in Global.Configuration.ProfileOrder)
@@ -447,14 +441,14 @@ namespace Aurora
             };
             profile_hidden.MouseDown += HiddenProfile_MouseDown;
             this.profiles_stack.Children.Add(profile_hidden);
-        }
+        }*/
 
         private void HiddenProfile_MouseDown(object sender, EventArgs e)
         {
             this.ShowHidden = !this.ShowHidden;
         }
 
-        protected void ShowHiddenChanged(bool value)
+        /*protected void ShowHiddenChanged(bool value)
         {
             profile_hidden.Source = value ? _visible : _not_visible;
 
@@ -495,7 +489,7 @@ namespace Aurora
         {
             if (!(((ContextMenu)e.Source).PlacementTarget is Image))
                 e.Handled = true;
-        }
+        }*/
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
         {
@@ -548,49 +542,60 @@ namespace Aurora
             transitionamount = 0.0f;
 
             UpdateProfileStackBackground(source);
+            ILightEvent levent = (ILightEvent)source.Tag;
+            for (int i = 0; i < this.lstEvents.Items.Count; i++)
+            {
+                var container = (ContentPresenter)this.lstEvents.ItemContainerGenerator.ContainerFromIndex(i);
+                StackPanel panel = (StackPanel)container.ContentTemplate.FindName("stckEvent", container);
+                var ctrl = VisualTreeHelper.GetChild(panel, 0); //DockPanel
+                ctrl = VisualTreeHelper.GetChild(ctrl, 0); //GridHeader
+                ctrl = VisualTreeHelper.GetChild(ctrl, 1); //stckOptions
+                ctrl = VisualTreeHelper.GetChild(ctrl, 1); //imgRemove
+                Image removeImg = (Image)ctrl;
+                removeImg.IsEnabled = ((KeyValuePair<LightEventType, LightEventsLayer>)removeImg.DataContext).Key.Equals((LightEventType?)((Border)source.Parent).Tag) && !levent.Config.IsDefault;
+            }
+
         }
 
         private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Image image = sender as Image;
-            if (image != null && image.Tag != null && image.Tag is ProfileManager)
+            if (image != null && image.Tag != null && image.Tag is ILightEvent)
             {
                 if (e == null || e.LeftButton == MouseButtonState.Pressed)
                 {
-                    this.FocusedProfile = image.Tag as ProfileManager;
+                    this.FocusedProfile = image.Tag as ILightEvent;
                     this.TransitionToProfile(image);
-                    
+
                 }
-                else if (e.RightButton == MouseButtonState.Pressed)
+                /*else if (e.RightButton == MouseButtonState.Pressed)
                 {
                     this.cmenuProfiles.PlacementTarget = (Image)sender;
                     this.cmenuProfiles.IsOpen = true;
-                }
+                }*/
             }
         }
 
         private static void FocusedProfileChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
         {
             ConfigUI th = source as ConfigUI;
-            ProfileManager value = e.NewValue as ProfileManager;
+            ProfileManager oldProfile = e.OldValue as ProfileManager;
+            oldProfile?.SaveProfiles();
 
-            th.ctrlLayerManager.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
+            ILightEvent value = e.NewValue as ILightEvent;
+
+            th.gridManagers.Visibility = value == null || !(value is ProfileManager) ? Visibility.Collapsed : Visibility.Visible;
 
             if (value == null)
                 return;
 
-            /*th.content_grid.Children.Clear();
-            UIElement element = value.GetUserControl();
-            //th.content_grid.DataContext = element;
-            th.content_grid.MinHeight = ((UserControl)element).MinHeight;
-            th.content_grid.Children.Add(element);
-            th.content_grid.UpdateLayout();*/
-            th.content_grid.Content = value.GetUserControl();
+            //TODO: Add 'Event doesn't have a control' empty control
+            th.content_grid.Content = (value as ProfileManager)?.GetUserControl();
             th.content_grid.UpdateLayout();
 
         }
 
-        private void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
+        /*private void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is string)
             {
@@ -606,9 +611,9 @@ namespace Aurora
                     }
                 }
             }
-        }
+        }*/
 
-        private void AddProfile_MouseDown(object sender, MouseButtonEventArgs e)
+        /*private void AddProfile_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog exe_filedlg = new Microsoft.Win32.OpenFileDialog();
 
@@ -645,7 +650,7 @@ namespace Aurora
                     GenerateProfileStack(filename);
                 }
             }
-        }
+        }*/
 
         private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -660,6 +665,9 @@ namespace Aurora
 
         private void UpdateProfileStackBackground(FrameworkElement item)
         {
+            if (selected_item?.Parent is Border)
+                ((Border)selected_item.Parent).Background = null;
+
             selected_item = item;
 
             if (selected_item != null)
@@ -682,7 +690,7 @@ namespace Aurora
                 double width = profiles_background.ActualWidth;
                 double height = selected_item.ActualHeight + 4.0D;
 
-                if (item.Parent != null && item.Parent.Equals(profiles_stack))
+                /*if (item.Parent != null && item.Parent.Equals(profiles_stack))
                 {
                     Point relativePointWithinStack = profiles_stack.TransformToAncestor(profiles_background)
                               .Transform(new Point(0, 0));
@@ -697,30 +705,30 @@ namespace Aurora
 
                 }
                 else
-                {
-                    x = 0.0D;
-                    y = relativePoint.Y - 2.0D;
-                    width = profiles_background.ActualWidth;
-                    height = selected_item.ActualHeight + 4.0D;
+                {*/
+                x = 0.0D;
+                y = relativePoint.Y - 2.0D;
+                width = profiles_background.ActualWidth;
+                height = selected_item.ActualHeight + 4.0D;
 
-                    if (y + height > profiles_background.ActualHeight - 40)
-                        height -= (y + height) - (profiles_background.ActualHeight - 40);
-                }
+                if (y + height > profiles_background.ActualHeight - 40)
+                    height -= (y + height) - (profiles_background.ActualHeight - 40);
+                //}
 
-                if (height > 0 && width > 0)
-                {
-                    GeometryDrawing transparent_region =
-                        new GeometryDrawing(
-                            new SolidColorBrush((Color)current_color),
-                            null,
-                            new RectangleGeometry(new Rect(x, y, width, height)));
 
-                    drawingGroup.Children.Add(transparent_region);
-                }
+                GeometryDrawing transparent_region =
+                    new GeometryDrawing(
+                        new SolidColorBrush((Color)current_color),
+                        null,
+                        new RectangleGeometry(new Rect(0, 0, profiles_background.ActualWidth, profiles_background.ActualHeight)));
+
+                drawingGroup.Children.Add(transparent_region);
+
 
                 mask.Drawing = drawingGroup;
-
-                profiles_background.Background = mask;
+                if (selected_item.Parent is Border)
+                    ((Border)selected_item.Parent).Background = mask;
+                //profiles_background.Background = mask;
             }
         }
 
@@ -748,16 +756,16 @@ namespace Aurora
 
         private void UpdateManagerStackFocus(object focusedElement, bool forced = false)
         {
-            if(focusedElement != null && focusedElement is FrameworkElement && (!focusedElement.Equals(_selectedManager) || forced))
+            if (focusedElement != null && focusedElement is FrameworkElement && (!focusedElement.Equals(_selectedManager) || forced))
             {
                 _selectedManager = focusedElement as FrameworkElement;
 
                 stackPanelManagers.Height = gridManagers.ActualHeight;
                 double totalHeight = stackPanelManagers.Height;
 
-                foreach(FrameworkElement child in stackPanelManagers.Children)
+                foreach (FrameworkElement child in stackPanelManagers.Children)
                 {
-                    if(child.Equals(focusedElement))
+                    if (child.Equals(focusedElement))
                         child.Height = totalHeight - (28.0 * (stackPanelManagers.Children.Count - 1));
                     else
                         child.Height = 25.0;
@@ -780,6 +788,69 @@ namespace Aurora
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateManagerStackFocus(_selectedManager, true);
+        }
+
+        private void Grid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Grid grd = (Grid)sender;
+            ((StackPanel)grd.FindName("grdOptions")).Visibility = Visibility.Visible;
+        }
+
+        private void Grid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Grid grd = (Grid)sender;
+            ((StackPanel)grd.FindName("grdOptions")).Visibility = Visibility.Hidden;
+        }
+
+        private void imgAdd_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            KeyValuePair<LightEventType, LightEventsLayer> layer = (KeyValuePair<LightEventType, LightEventsLayer>)((Image)sender).DataContext;
+            this.ctrlAddLightEvent.FocusedLayer = layer.Key;
+            this.ctrlAddLightEvent.Visibility = Visibility.Visible;
+            bg_grid.IsHitTestVisible = false;
+            //bg_grid.Effect = new System.Windows.Media.Effects.BlurEffect();
+        }
+
+        private void ctrlAddLightEvent_EventSelected(object sender, EventSelectedEventArgs e)
+        {
+            this.ctrlAddLightEvent.Visibility = Visibility.Hidden;
+            bg_grid.IsHitTestVisible = true;
+            //bg_grid.Effect = null;
+
+            if (e.SelectedKey != null && ctrlAddLightEvent.FocusedLayer != null)
+            {
+                Global.ProfilesManager.RegisterEventToLayer((LightEventType)ctrlAddLightEvent.FocusedLayer, e.SelectedKey);
+                this.lstEvents.ItemsSource = null;
+                this.lstEvents.ItemsSource = Global.ProfilesManager.Settings.EventLayers;
+            }
+        }
+
+        private void imgRemove_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!((FrameworkElement)sender).IsEnabled)
+                return;
+
+            KeyValuePair<LightEventType, LightEventsLayer> layer = (KeyValuePair<LightEventType, LightEventsLayer>)((Image)sender).DataContext;
+
+            Global.ProfilesManager.RemoveEventFromLayer(layer.Key, this.FocusedProfile.Config.ID);
+
+            this.lstEvents.ItemsSource = null;
+            this.lstEvents.ItemsSource = Global.ProfilesManager.Settings.EventLayers;
+        }
+
+        private void imgRemove_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((FrameworkElement)sender).Opacity = (bool)e.NewValue ? 1 : 0.5;
+        }
+
+        private void EventImage_Loaded(object sender, RoutedEventArgs e)
+        {
+            Image sentImage = (Image)sender;
+            if (sentImage.Tag is Profiles.Desktop.DesktopProfileManager)
+            {
+                this.FocusedProfile = (ILightEvent)sentImage.Tag;
+                this.TransitionToProfile(sentImage);
+            }
         }
     }
 }

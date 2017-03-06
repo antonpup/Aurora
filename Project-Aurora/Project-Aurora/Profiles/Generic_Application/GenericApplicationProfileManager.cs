@@ -13,7 +13,7 @@ namespace Aurora.Profiles.Generic_Application
     public class GenericApplicationProfileManager : ProfileManager
     {
         public GenericApplicationProfileManager(string process_name)
-            : base(new LightEventConfig { Name="Generic Application", ID=process_name, ProcessNames= new[] { process_name }, SettingsType= typeof(GenericApplicationSettings), OverviewControlType= typeof(Control_GenericApplication), GameStateType= typeof(GameState), Event= new Event_GenericApplication() })
+            : base(new LightEventConfig { Name=Path.GetFileNameWithoutExtension(process_name), ID=process_name, ProcessNames= new[] { process_name }, SettingsType= typeof(GenericApplicationSettings), OverviewControlType= typeof(Control_GenericApplication), GameStateType= typeof(GameState), Event= new Event_GenericApplication(), IsDeletable = true })
         {
         }
 
@@ -24,7 +24,7 @@ namespace Aurora.Profiles.Generic_Application
 
         public override ImageSource GetIcon()
         {
-            if (Icon == null)
+            if (icon == null)
             {
                 string icon_path = Path.Combine(GetProfileFolderPath(), "icon.png");
 
@@ -36,13 +36,13 @@ namespace Aurora.Profiles.Generic_Application
                     b.StreamSource = memStream;
                     b.EndInit();
 
-                    Icon = b;
+                    icon = b;
                 }
                 else
-                    Icon = new BitmapImage(new Uri(@"Resources/unknown_app_icon.png", UriKind.Relative));
+                    icon = new BitmapImage(new Uri(@"Resources/unknown_app_icon.png", UriKind.Relative));
             }
 
-            return Icon;
+            return icon;
         }
 
         public override void LoadProfiles()
@@ -79,6 +79,13 @@ namespace Aurora.Profiles.Generic_Application
             {
                 Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Config.Name), Logging_Level.Info, false);
             }
+        }
+
+        public override void Delete()
+        {
+            string path = GetProfileFolderPath();
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
         }
     }
 }
