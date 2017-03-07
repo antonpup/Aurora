@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using Aurora;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -36,68 +37,87 @@ namespace RobertKoszewski.DeviceDrivers
 
         public enum Mode : byte
         {
-            TURNOFF = 0, // Turn off Lights
-            TURNON = 1, // Turn on Lights
-            TURNONTRANSITION = 2, // Turn on Lights with Color Transition
-            SETCOLOR = 2, // Set Light Colors
+            TURN_ON = 0, // Turn ON/OFF Lights
+            TURN_ON_WITH_TRANSITION = 1, // Turn ON Lights with Color Transition
 
-            SETBRIGHTNESS = 10, // Set Light Brightness
-            CALIBRATECOLOR = 11, // Calibrate Color (Set MAX white color)
+            SET_COLOR = 5, // Set Light Colors
 
-            TRANSITION_ENABLE = 20, // Light Transition = Enable
-            TRANSITION_DISABLE = 21, // Light Transition = Disable
+            SET_BRIGHTNESS = 10, // Set Light Brightness
+            CALIBRATE_COLOR = 11, // Calibrate Color (Set MAX white color)
+
+            ENABLE_COLOR_TRANSITION = 20, // Light Transition = ENABLDE/DISABLE
+            ENABLE_GAMMA_CORRECTION = 21, // ENABLE-DISSABLE Gamma Correction
         }
 
         SerialPort port;
 
         // Connect to Serial Port
-        public void connect(string com, int baud_rate)
+        public bool connect(string com, int baud_rate)
         {
-            // port = new SerialPort("COM4", 57600);
-            port = new SerialPort(com, baud_rate);
+            port = new SerialPort(com, baud_rate); // Default: COM4, Baud rate: 57600
             port.Open();
+            return port.IsOpen;
         }
 
         // Disconnect from Serial Port
         public void disconnect()
         {
             port.Close();
+            port.Dispose();
         }
 
         // Turn ON
         public void turnOn()
         {
-            sendMessage(formatMessage(0, 0, 0, Mode.TURNON));
+            sendMessage(formatMessage(255, 255, 255, Mode.TURN_ON));
         }
 
-        // Turn ON
+        // Turn ON (With Color Transition)
         public void turnOn(byte color_r, byte color_g, byte color_b)
         {
-            sendMessage(formatMessage(color_r, color_g, color_b, Mode.TURNONTRANSITION));
+            sendMessage(formatMessage(color_r, color_g, color_b, Mode.TURN_ON_WITH_TRANSITION));
         }
 
         // Turn OFF
         public void turnOff()
         {
-            sendMessage(formatMessage(0, 0, 0, Mode.TURNOFF));
+            sendMessage(formatMessage(0, 0, 0, Mode.TURN_ON));
         }
 
         // Set Light Color
         public void setColor(byte color_r, byte color_g, byte color_b)
         {
-            sendMessage(formatMessage(color_r, color_g, color_b, Mode.SETCOLOR));
+            sendMessage(formatMessage(color_r, color_g, color_b, Mode.SET_COLOR));
         }
 
         // Set Light Color
         public void calibrateColor(byte color_r, byte color_g, byte color_b)
         {
-            sendMessage(formatMessage(color_r, color_g, color_b, Mode.CALIBRATECOLOR));
+            sendMessage(formatMessage(color_r, color_g, color_b, Mode.CALIBRATE_COLOR));
         }
 
         // Set Brightness
         public void setBrightness(byte brightness)
         {
-            sendMessage(formatMessage(0, 0, brightness, Mode.SETBRIGHTNESS));
+            sendMessage(formatMessage(0, 0, brightness, Mode.SET_BRIGHTNESS));
+        }
+
+        // Enable Color Transitions
+        public void enableColorTransitions(bool enable)
+        {
+            if(enable)
+                sendMessage(formatMessage(255, 255, 255, Mode.ENABLE_COLOR_TRANSITION));
+            else
+                sendMessage(formatMessage(  0,   0,   0, Mode.ENABLE_COLOR_TRANSITION));
+        }
+
+        // Enable Gamma Correction
+        public void enableGamaCorrection(bool enable)
+        {
+            if (enable)
+                sendMessage(formatMessage(255, 255, 255, Mode.ENABLE_GAMMA_CORRECTION));
+            else
+                sendMessage(formatMessage(  0,   0,   0, Mode.ENABLE_GAMMA_CORRECTION));
         }
 
         // Send Message to Device

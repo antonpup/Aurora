@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using MirrSharp.Driver;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,8 @@ namespace Aurora.Settings.Layers
 
     public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>
     {
+        private static bool useMirageDriver = false;
+
         private static float image_scale_x = 0;
         private static float image_scale_y = 0;
         private static Color avg_color = Color.Empty;
@@ -77,14 +80,41 @@ namespace Aurora.Settings.Layers
         private static Image screen;
         private static long last_use_time = 0;
 
+        // Mirsharp Mirror
+        readonly DesktopMirror mirror;
+
+        static void _mirror_DesktopChange(object sender, DesktopMirror.DesktopChangeEventArgs e)
+        {
+            Trace.WriteLine(string.Format("Changed rect is {0},{1} ; {2}, {3} ({4})", new object[] { e.x1, e.y1, e.x2, e.y2, e.type }));
+        }
+
         public AmbilightLayerHandler()
         {
             _ID = "Ambilight";
+
+            // Mirror Changes
+            //mirror.DesktopChange += _mirror_DesktopChange;
 
             if (screenshotTimer == null)
             {
                 screenshotTimer = new System.Timers.Timer(100);
                 screenshotTimer.Elapsed += ScreenshotTimer_Elapsed;
+
+                // Start Mirror
+                if (useMirageDriver) {
+                    try
+                    {
+                        mirror = new DesktopMirror();
+                        mirror.Load();
+                        mirror.Connect();
+                        mirror.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
                 screenshotTimer.Start();
             }
         }
@@ -94,34 +124,91 @@ namespace Aurora.Settings.Layers
             return new Control_AmbilightLayer(this);
         }
 
+        private static Image screen_store;
+
         private void ScreenshotTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Image newscreen = Pranas.ScreenshotCapture.TakeScreenshot();
+            Image newscreen;
+            if (!useMirageDriver)
+            {   // Default Screenshot Method
+                newscreen = Pranas.ScreenshotCapture.TakeScreenshot();
 
-            image_scale_x = Effects.canvas_width / (float)newscreen.Width;
-            image_scale_y = Effects.canvas_height / (float)newscreen.Height;
+                image_scale_x = Effects.canvas_width / (float)newscreen.Width;
+                image_scale_y = Effects.canvas_height / (float)newscreen.Height;
 
-            var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
 
-            using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(newscreen, 0, 0, Effects.canvas_width, Effects.canvas_height);
+                using (var graphics = Graphics.FromImage(newImage))
+                    graphics.DrawImage(newscreen, 0, 0, Effects.canvas_width, Effects.canvas_height);
 
-            avg_color = GetAverageColor(newscreen);
+                avg_color = GetAverageColor(newscreen);
+
+                newscreen?.Dispose();
+
+                screen = newImage;
+            }
+            else
+            {
+                // Mirage Driver
+                newscreen = mirror.GetScreen();
+
+                image_scale_x = Effects.canvas_width / (float)newscreen.Width;
+                image_scale_y = Effects.canvas_height / (float)newscreen.Height;
+
+                //if(screen == null)
+                screen = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+
+                using (var graphics = Graphics.FromImage(screen))
+                {
+                    graphics.Clear(Color.Orange);
+
+                    if (screen_store != null)
+                        graphics.DrawImage(screen_store, 0, 0, Effects.canvas_width, Effects.canvas_height);
+
+                    graphics.DrawImage(newscreen, 0, 0, Effects.canvas_width, Effects.canvas_height);
+                }
+
+                screen_store = screen;
+            }
+
+            avg_color = GetAverageColor(screen);
 
             newscreen?.Dispose();
 
-            screen = newImage;
-
-            if(Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000) //If wasn't used for 2 seconds
+            if (Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
+            { //If wasn't used for 2 seconds
                 screenshotTimer.Stop();
+                // Unload Mirror
+                if (useMirageDriver) { 
+                    mirror.Stop();
+                    mirror.Disconnect();
+                    mirror.Unload();
+                }
+            }
         }
 
         public override EffectLayer Render(IGameState gamestate)
         {
             last_use_time = Utils.Time.GetMillisecondsSinceEpoch();
 
-            if (!screenshotTimer.Enabled) // Static timer isn't running, start it!
+            if (!screenshotTimer.Enabled)
+            { // Static timer isn't running, start it!
                 screenshotTimer.Start();
+                // Start Mirror Again
+                if (useMirageDriver)
+                {
+                    try
+                    {
+                        mirror.Load();
+                        mirror.Connect();
+                        mirror.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
 
             //Handle different capture types
             Image screen_image = screen;
@@ -144,6 +231,8 @@ namespace Aurora.Settings.Layers
 
                         using (var graphics = Graphics.FromImage(newImage))
                             graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), prim_scr_region, GraphicsUnit.Pixel);
+
+
 
                         screen_image = newImage;
                         average_color = GetAverageColor(newImage);

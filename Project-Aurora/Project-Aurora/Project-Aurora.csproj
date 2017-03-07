@@ -297,6 +297,8 @@
     <Compile Include="Devices\Razer\RazerDevice.cs" />
     <Compile Include="Devices\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Include="Drivers\DesktopMirror.cs" />
+    <Compile Include="Drivers\Interop.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledRectangle.cs" />
