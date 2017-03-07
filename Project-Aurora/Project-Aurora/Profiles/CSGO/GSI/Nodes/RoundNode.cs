@@ -68,7 +68,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         Undefined,
 
         /// <summary>
-        /// Bomb plated state
+        /// Bomb planted state
         /// </summary>
         Planted,
 
@@ -84,7 +84,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     }
 
     /// <summary>
-    /// Enum lust for each winning team
+    /// Enum list for each winning team
     /// </summary>
     public enum RoundWinTeam
     {
