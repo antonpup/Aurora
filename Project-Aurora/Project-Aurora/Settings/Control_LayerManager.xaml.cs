@@ -95,10 +95,17 @@ namespace Aurora.Settings
             }
             else
                 this.grid_timeselection.Visibility = Visibility.Collapsed;
+
+            if (lstLayers.SelectedItem != null)
+                SelectedLayerChanged?.Invoke((Layers.Layer)lstLayers.SelectedItem);
+            else
+                ProfileOverviewRequest?.Invoke(FocusedProfile?.Control);
         }
 
         private void Layers_listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.lstLayers.InternalItemsPanel.ManualDragUpdating = true;
+
             if (e.AddedItems.Count == 1)
             {
                 var hander = SelectedLayerChanged;
@@ -153,88 +160,6 @@ namespace Aurora.Settings
                         this.FocusedProfile?.Settings?.Layers.RemoveAt(index);
 
                     this.lstLayers.SelectedIndex = Math.Max(-1, index - 1);
-                }
-            }
-        }
-
-        Point? DragStartPosition;
-        FrameworkElement DraggingItem;
-
-        private void stckLayer_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (DragStartPosition == null || !this.lstLayers.IsMouseOver)
-                return;
-
-            Point curr = e.GetPosition(null);
-            Point start = (Point)DragStartPosition;
-
-            if (Math.Abs(curr.X - start.X) >= SystemParameters.MinimumHorizontalDragDistance ||
-                Math.Abs(curr.Y - start.Y) >= SystemParameters.MinimumVerticalDragDistance)
-            {
-                DragDrop.DoDragDrop(DraggingItem, DraggingItem.DataContext, DragDropEffects.Move);
-
-            }
-        }
-
-        private void stckLayer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            FrameworkElement stckLayer;
-            if ((stckLayer = sender as FrameworkElement) != null)
-            {
-                //this.lstLayers.SelectedValue = stckLayer.DataContext;
-                DragStartPosition = e.GetPosition(null);
-                DraggingItem = stckLayer;
-                //stckLayer.IsSelected = true;
-            }
-        }
-
-        private void lstLayers_PreviewMouseUp(object sender, EventArgs e)
-        {
-            DraggingItem = null;
-            DragStartPosition = null;
-        }
-
-        //Based on: http://stackoverflow.com/questions/3350187/wpf-c-rearrange-items-in-listbox-via-drag-and-drop
-        private void stckLayer_Drop(object sender, DragEventArgs e)
-        {
-            Layers.Layer droppedData = e.Data.GetData(typeof(Layers.Layer)) as Layers.Layer;
-            Layers.Layer target = ((FrameworkElement)(sender)).DataContext as Layers.Layer;
-
-            int removedIdx = lstLayers.Items.IndexOf(droppedData);
-            int targetIdx = lstLayers.Items.IndexOf(target);
-
-            if (removedIdx < targetIdx)
-            {
-                if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
-                {
-                    ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Insert(targetIdx + 1, droppedData);
-                    ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.RemoveAt(removedIdx);
-                }
-                else
-                {
-                    this.FocusedProfile?.Settings?.Layers.Insert(targetIdx + 1, droppedData);
-                    this.FocusedProfile?.Settings?.Layers.RemoveAt(removedIdx);
-                }
-            }
-            else
-            {
-                int remIdx = removedIdx + 1;
-
-                if (this.FocusedProfile is Profiles.Generic_Application.GenericApplicationProfileManager && this.radiobtn_nighttime.IsChecked.Value)
-                {
-                    if (((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Count + 1 > remIdx)
-                    {
-                        ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.Insert(targetIdx, droppedData);
-                        ((FocusedProfile as Profiles.Generic_Application.GenericApplicationProfileManager)?.Settings as Profiles.Generic_Application.GenericApplicationSettings)?.Layers_NightTime?.RemoveAt(remIdx);
-                    }
-                }
-                else
-                {
-                    if (this.FocusedProfile?.Settings?.Layers.Count + 1 > remIdx)
-                    {
-                        this.FocusedProfile?.Settings?.Layers.Insert(targetIdx, droppedData);
-                        this.FocusedProfile?.Settings?.Layers.RemoveAt(remIdx);
-                    }
                 }
             }
         }
@@ -316,6 +241,11 @@ namespace Aurora.Settings
         private void UserControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             this.lstLayers.StopReordering();
+        }
+
+        public UserControl GetCurrentControl()
+        {
+            return (this.lstLayers.SelectedItem as Layer)?.Control ?? this.FocusedProfile?.Control;
         }
     }
 }

@@ -17,6 +17,7 @@ using Aurora.Profiles.Generic_Application;
 using System.IO;
 using Aurora.Settings.Keycaps;
 using Aurora.Profiles;
+using Aurora.Utils;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
@@ -775,7 +776,7 @@ namespace Aurora
 
         private void ctrlLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.content_grid.Content = layercontrol_presenter;
+            this.content_grid.Content = ctrlLayerManager.GetCurrentControl();
             UpdateManagerStackFocus(sender);
         }
 
