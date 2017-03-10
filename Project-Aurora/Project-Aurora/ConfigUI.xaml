@@ -48,13 +48,31 @@
                             <StackPanel x:Name="stckEvent" Orientation="Vertical">
                                 <DockPanel>
                                     <Grid x:Name="grdHeader" DockPanel.Dock="Top" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
-                                        <Label DockPanel.Dock="Top" Content="{Binding Path=Key}" Foreground="Black" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Center" />
+                                        <Border Background="#544D4D4D" CornerRadius="8" VerticalAlignment="Stretch" MouseDown="EventBorder_MouseDown">
+                                            <Label DockPanel.Dock="Top" Content="{Binding Path=Key}" Foreground="Black" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Center" />
+                                        </Border>
                                         <StackPanel x:Name="grdOptions" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Height="18">
                                             <Image x:Name="imgAdd" Source="Resources/Layers_Add.png" ToolTip="Add Event" DataContext="{Binding .}" MouseDown="imgAdd_MouseDown"/>
                                             <Image x:Name="imgRemove" Source="Resources/Layers_Remove.png" ToolTip="Remove Event" DataContext="{Binding .}" MouseDown="imgRemove_MouseDown" IsEnabledChanged="imgRemove_IsEnabledChanged"/>
                                         </StackPanel>
                                     </Grid>
-                                    <Controls:ArrangeListBox x:Name="lstEvents" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" Background="Transparent" DockPanel.Dock="Bottom" ItemsSource="{Binding Path=Value.SortedEvents}" Tag="{Binding Path=Key}" Padding="0">
+                                    <Controls:ArrangeListBox x:Name="lstEvents" BorderThickness="0"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" Background="Transparent" DockPanel.Dock="Bottom" ItemsSource="{Binding Path=Value.SortedEvents}" Tag="{Binding Path=Key}" Padding="0">
+                                        <Controls:ArrangeListBox.Style>
+                                            <Style TargetType="Controls:ArrangeListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                                <Style.Triggers>
+                                                    <Trigger Property="Visibility" Value="Visible">
+                                                        <Trigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0.0" To="1.0" Duration="0:0:0.2"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.EnterActions>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Controls:ArrangeListBox.Style>
                                         <Controls:ArrangeListBox.ItemContainerStyle>
                                             <Style TargetType="{x:Type ListBoxItem}">
                                                 <Setter Property="Focusable" Value="False"/>

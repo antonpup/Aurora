@@ -14,9 +14,10 @@
     </UserControl.Resources>
     <Grid>
         <Border Background="#A5000000" CornerRadius="8" />
-        <Border Background="#54A8A8A8" CornerRadius="8" VerticalAlignment="Top" Height="25" />
+        <Border Background="#54A8A8A8" CornerRadius="8" VerticalAlignment="Top" Height="25">
+            <TextBlock TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="10,3,10,0"/>
+        </Border>
         <Button x:Name="btnProfileOverview" Content="Show Profile Overview/Options" Margin="0,30,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfileOverview_Click" ToolTip="Go back to profile overview page"/>
-        <TextBlock TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="10,3,10,0"/>
         <Button x:Name="btnAddLayer" Margin="0,55,81,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="add_layer_button_Click" ToolTip="Add a new layer" Height="24">
             <DockPanel Margin="2,0">
                 <Image Source="/Aurora;component/Resources/Layers_Add.png" Width="18" Height="18"/>
@@ -44,12 +45,10 @@
                     </Grid>
                 </RadioButton>
             </Grid>
-            <AControls:ArrangeListBox x:Name="lstLayers" Margin="0,0,0,0" SelectionMode="Single"  DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="lstLayers_SelectionChanged">
-                <!--PreviewMouseMove="stckLayer_PreviewMouseMove" PreviewMouseUp="lstLayers_PreviewMouseUp" MouseLeave="lstLayers_PreviewMouseUp" HorizontalContentAlignment="Stretch"-->
+            <AControls:ArrangeListBox x:Name="lstLayers" Margin="0,0,0,0" SelectionMode="Single" DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="lstLayers_SelectionChanged">
                 <AControls:ArrangeListBox.ItemTemplate>
                     <HierarchicalDataTemplate>
-                        <DockPanel  HorizontalAlignment="Stretch" Width="192" >
-                            <!--AllowDrop="True" PreviewMouseLeftButtonDown="stckLayer_PreviewMouseLeftButtonDown" Drop="stckLayer_Drop"-->
+                        <DockPanel HorizontalAlignment="Stretch" Width="192" >
                             <CheckBox IsChecked="{Binding Path=Enabled, Mode=TwoWay}" />
                             <Image Source="/Aurora;component/Resources/Layers_Drag.png" Cursor="SizeNS" Width="16" Height="16" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" ToolTip="Drag to rearrange layers"/>
                             <TextBlock Text="{Binding Path=Name, Converter={StaticResource ResourceKey=TextCharacterLimitConv}}"/>

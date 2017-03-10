@@ -1,5 +1,4 @@
-﻿using Aurora.Settings.Layers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +22,8 @@ namespace Aurora.Controls
         private double[] ChildHeights;
 
         public ArrangeListBox ParentList { get; internal set; }
+
+        public bool ManualDragUpdating { get; set; } = false;
 
         protected override Size MeasureOverride(Size availableSize)
         {
@@ -66,8 +67,6 @@ namespace Aurora.Controls
             return new Size(final_width, final_height);
         }
 
-        
-
         protected override Size ArrangeOverride(Size finalSize)
         {
             double current_height = 0;
@@ -94,18 +93,18 @@ namespace Aurora.Controls
             StopDragging();
         }
 
-        /*protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (_dragging != null)
+            if (!ManualDragUpdating && _dragging != null)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
-                    DoReordering(e);
+                    UpdateOrder(e);
             }
-        }*/
+        }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
-            if (e.OriginalSource is UserControl)
+            if (e.OriginalSource is UserControl || !ManualDragUpdating)
                 StopDragging();
             base.OnMouseLeave(e);
         }
@@ -312,7 +311,6 @@ namespace Aurora.Controls
 
     public class ArrangeListBox : ListBox
     {
-        private static bool OverridenMetaData = false;
         static ArrangeListBox()
         {
             var itemspanel = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(ArrangePanel)));
@@ -364,7 +362,7 @@ namespace Aurora.Controls
             return child;
         }
 
-        private ArrangePanel InternalItemsPanel;
+        public ArrangePanel InternalItemsPanel { get; internal set; }
 
         public void StopReordering()
         {

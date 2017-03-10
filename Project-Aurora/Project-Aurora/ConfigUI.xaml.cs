@@ -852,6 +852,18 @@ namespace Aurora
                 this.TransitionToProfile(sentImage);
             }
         }
+
+        private void EventBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Border brd = (Border)sender;
+            var parent = VisualTreeHelper.GetParent(brd);
+            parent = VisualTreeHelper.GetParent(parent);
+            var lstEvents = VisualTreeHelper.GetChild(parent, 1);
+            ListBox box = (ListBox)lstEvents;
+            box.Visibility = box.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+            Color clr = Color.FromArgb(0x54, 0x4D, 0x4D, 0x4D);
+            brd.Background = new SolidColorBrush(box.Visibility == Visibility.Collapsed ? System.Windows.Forms.ControlPaint.Dark(clr.ToDrawingColor()).ToMediaColor() : clr);
+        }
     }
 }
 

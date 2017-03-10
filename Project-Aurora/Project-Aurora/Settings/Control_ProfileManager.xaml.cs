@@ -128,69 +128,6 @@ namespace Aurora.Settings
             }
         }
 
-        Point? DragStartPosition;
-        FrameworkElement DraggingItem;
-
-        private void stckProfile_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (DragStartPosition == null || !this.lstProfiles.IsMouseOver)
-                return;
-
-            Point curr = e.GetPosition(null);
-            Point start = (Point)DragStartPosition;
-
-            if (Math.Abs(curr.X - start.X) >= SystemParameters.MinimumHorizontalDragDistance ||
-                Math.Abs(curr.Y - start.Y) >= SystemParameters.MinimumVerticalDragDistance)
-            {
-                DragDrop.DoDragDrop(DraggingItem, DraggingItem.DataContext, DragDropEffects.Move);
-
-            }
-        }
-
-        private void stckProfile_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            FrameworkElement stckProfile;
-            if ((stckProfile = sender as FrameworkElement) != null)
-            {
-                //this.lstLayers.SelectedValue = stckLayer.DataContext;
-                DragStartPosition = e.GetPosition(null);
-                DraggingItem = stckProfile;
-                //stckLayer.IsSelected = true;
-            }
-        }
-
-        private void lstProfiles_PreviewMouseUp(object sender, EventArgs e)
-        {
-            DraggingItem = null;
-            DragStartPosition = null;
-        }
-
-        //Based on: http://stackoverflow.com/questions/3350187/wpf-c-rearrange-items-in-listbox-via-drag-and-drop
-        private void stckProfile_Drop(object sender, DragEventArgs e)
-        {
-            ProfileSettings droppedData = e.Data.GetData(typeof(ProfileSettings)) as ProfileSettings;
-            ProfileSettings target = ((FrameworkElement)(sender)).DataContext as ProfileSettings;
-
-            int removedIdx = lstProfiles.Items.IndexOf(droppedData);
-            int targetIdx = lstProfiles.Items.IndexOf(target);
-
-            if (removedIdx < targetIdx)
-            {
-                this.FocusedProfile?.Profiles.Insert(targetIdx + 1, droppedData);
-                this.FocusedProfile?.Profiles.RemoveAt(removedIdx);
-            }
-            else
-            {
-                int remIdx = removedIdx + 1;
-
-                if (this.FocusedProfile?.Profiles.Count + 1 > remIdx)
-                {
-                    this.FocusedProfile?.Profiles.Insert(targetIdx, droppedData);
-                    this.FocusedProfile?.Profiles.RemoveAt(remIdx);
-                }
-            }
-        }
-
         private void btnProfilePath_Click(object sender, RoutedEventArgs e)
         {
             if (FocusedProfile != null)
