@@ -34,80 +34,148 @@ namespace Aurora.Profiles.Dota_2.Layers
             None,
             abaddon_death_coil,
             abaddon_borrowed_time,
+
             alchemist_acid_spray,
+
             ancient_apparition_ice_vortex,
             ancient_apparition_ice_blast,
+
             antimage_blink,
             antimage_mana_void,
+
             axe_berserkers_call,
+            axe_battle_hunger,
+            axe_culling_blade,
+
+            arc_warden_flux,
+            arc_warden_magnetic_field,
+            arc_warden_spark_wraith,
+            arc_warden_tempest_double,
+
             beastmaster_primal_roar,
+
             brewmaster_thunder_clap,
+
             centaur_hoof_stomp,
+
             chaos_knight_chaos_bolt,
+
             crystal_maiden_crystal_nova,
+
             doom_bringer_scorched_earth,
+
             dragon_knight_breathe_fire,
+
             earthshaker_fissure,
             earthshaker_echo_slam,
+
             elder_titan_earth_splitter,
 
             kunkka_torrent,
             kunkka_ghostship,
+
             legion_commander_overwhelming_odds,
+
             life_stealer_rage,
+
             magnataur_shockwave,
+            magnataur_empower,
+            magnataur_skewer,
+            magnataur_reverse_polarity,
+
             omniknight_purification,
             omniknight_repel,
+
             sandking_epicenter,
+
             slardar_slithereen_crush,
 
             lina_dragon_slave,
             lina_light_strike_array,
             lina_laguna_blade,
+
             nevermore_shadowraze,
             nevermore_requiem,
+
             rattletrap_rocket_flare,
+
             razor_plasma_field,
+
             riki_smoke_screen,
+
             zuus_arc_lightning,
             zuus_lightning_bolt,
             zuus_thundergods_wrath
 
         }
 
-        private AnimationTrack razor_plasma_field_track;
+        private AnimationTrack abaddon_death_coil_track;
+
+        private AnimationTrack antimage_blink_track;
+        private AnimationTrack antimage_mana_void_track;
+        private AnimationTrack antimage_mana_void_core_track;
+
+        private AnimationTrack ancient_apparition_ice_blast_track;
+
+        private AnimationMix arc_warden_flux_mix;
+        private AnimationMix arc_warden_magnetic_field_mix;
+        private AnimationMix arc_warden_spark_wraith_mix;
+        private AnimationTrack arc_warden_tempest_double;
+
+        private AnimationTrack axe_berserkers_call_track;
+        private AnimationTrack axe_battle_hunger_track;
+        private AnimationMix axe_culling_blade_mix;
+
+        private AnimationTrack beastmaster_primal_roar_track;
+
+        private AnimationTrack brewmaster_thunder_clap_track;
+
+        private AnimationTrack centaur_hoof_stomp_track;
+
+        private AnimationMix chaos_knight_chaos_bolt_mix;
+
         private AnimationTrack crystal_maiden_crystal_nova_track;
+
+        private AnimationTrack dragon_knight_breathe_fire_track;
+
+        private AnimationTrack elder_titan_earth_splitter_track;
+
+        private AnimationMix kunkka_torrent_mix;
+        private AnimationTrack kunkka_ghostship_track;
+
+        private AnimationTrack legion_commander_overwhelming_odds_track;
+
+        private AnimationTrack life_stealer_rage_track;
+
+        private AnimationTrack razor_plasma_field_track;
+
         private AnimationTrack riki_smoke_screen_track;
         private AnimationTrack lina_dragon_slave_track;
         private AnimationTrack lina_light_strike_array_track;
         private AnimationTrack lina_laguna_blade_track;
-        private AnimationTrack abaddon_death_coil_track;
+
+        private AnimationTrack magnataur_shockwave_track;
+        private AnimationTrack magnataur_empower_track;
+        private AnimationTrack magnataur_skewer_track;
+        private AnimationMix magnataur_skewer_track_mix;
+        private AnimationTrack magnataur_reverse_polarity_track;
+
         private AnimationTrack nevermore_shadowraze_track;
         private AnimationTrack nevermore_requiem_track;
+
+        private AnimationTrack omniknight_purification_track;
+        private AnimationTrack omniknight_repel_track;
+
+        private AnimationTrack rattletrap_rocket_flare_track;
+
+        private AnimationMix sandking_epicenter_mix;
+
+        private AnimationTrack slardar_slithereen_crush_track;
+
         private AnimationTrack zuus_arc_lightning_track;
         private AnimationTrack zuus_lightning_bolt_track;
         private AnimationTrack zuus_lightning_bolt_shade_track;
-        private AnimationTrack antimage_blink_track;
-        private AnimationTrack antimage_mana_void_track;
-        private AnimationTrack antimage_mana_void_core_track;
-        private AnimationTrack ancient_apparition_ice_blast_track;
-        private AnimationTrack axe_berserkers_call_track;
-        private AnimationTrack beastmaster_primal_roar_track;
-        private AnimationTrack brewmaster_thunder_clap_track;
-        private AnimationTrack centaur_hoof_stomp_track;
-        private AnimationMix chaos_knight_chaos_bolt_mix;
-        private AnimationTrack rattletrap_rocket_flare_track;
-        private AnimationTrack dragon_knight_breathe_fire_track;
-        private AnimationTrack elder_titan_earth_splitter_track;
-        private AnimationMix kunkka_torrent_mix;
-        private AnimationTrack kunkka_ghostship_track;
-        private AnimationTrack legion_commander_overwhelming_odds_track;
-        private AnimationTrack life_stealer_rage_track;
-        private AnimationTrack magnataur_shockwave_track;
-        private AnimationTrack omniknight_purification_track;
-        private AnimationTrack omniknight_repel_track;
-        private AnimationMix sandking_epicenter_mix;
-        private AnimationTrack slardar_slithereen_crush_track;
+        
 
         private long previoustime = 0;
         private long currenttime = 0;
@@ -117,7 +185,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             return (currenttime - previoustime) / 1000.0f;
         }
 
-        private static float abiltiyeffect_keyframe = 0.0f;
+        private static float abilityeffect_keyframe = 0.0f;
         private static Dota2AbilityEffects currentabilityeffect = Dota2AbilityEffects.None;
         private static float abilityeffect_time = 0.0f;
 
@@ -163,31 +231,31 @@ namespace Aurora.Profiles.Dota_2.Layers
                             {
                                 currentabilityeffect = Dota2AbilityEffects.razor_plasma_field;
                                 abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("crystal_maiden_crystal_nova"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.crystal_maiden_crystal_nova;
                                 abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("riki_smoke_screen"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.riki_smoke_screen;
                                 abilityeffect_time = 6.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("lina_dragon_slave"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.lina_dragon_slave;
                                 abilityeffect_time = 1.25f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("lina_light_strike_array"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.lina_light_strike_array;
                                 abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("lina_laguna_blade"))
                             {
@@ -233,7 +301,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                                 currentabilityeffect = Dota2AbilityEffects.lina_laguna_blade;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("abaddon_death_coil"))
                             {
@@ -279,7 +347,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                                 currentabilityeffect = Dota2AbilityEffects.abaddon_death_coil;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("abaddon_borrowed_time"))
                             {
@@ -294,19 +362,19 @@ namespace Aurora.Profiles.Dota_2.Layers
                                 else
                                     abilityeffect_time = 6.0f;
 
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("nevermore_shadowraze1") || ability.Name.Equals("nevermore_shadowraze2") || ability.Name.Equals("nevermore_shadowraze3"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.nevermore_shadowraze;
                                 abilityeffect_time = 0.7f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("nevermore_requiem"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.nevermore_requiem;
                                 abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("zuus_arc_lightning"))
                             {
@@ -352,85 +420,141 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                                 currentabilityeffect = Dota2AbilityEffects.zuus_arc_lightning;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("zuus_lightning_bolt"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.zuus_lightning_bolt;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("zuus_thundergods_wrath"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.zuus_thundergods_wrath;
                                 abilityeffect_time = 0.25f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("antimage_blink"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.antimage_blink;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("antimage_mana_void"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.antimage_mana_void;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("ancient_apparition_ice_vortex"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_vortex;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("ancient_apparition_ice_blast"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_blast;
                                 abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("alchemist_acid_spray"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.alchemist_acid_spray;
                                 abilityeffect_time = 16.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
+
+                            else if (ability.Name.Equals("arc_warden_flux"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.arc_warden_flux;
+                                abilityeffect_time = 3.0f;
+                                abilityeffect_keyframe = 0.0f;
+                            }
+
+                            else if (ability.Name.Equals("arc_warden_magnetic_field"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.arc_warden_magnetic_field;
+                                if (ability.Level == 2)
+                                    abilityeffect_time = 4.5f;
+                                else if (ability.Level == 3)
+                                    abilityeffect_time = 5.5f;
+                                else if (ability.Level == 4)
+                                    abilityeffect_time = 6.5f;
+
+                                else
+                                    abilityeffect_time = 3.5f;
+
+                                abilityeffect_keyframe = 0.0f;
+                            }
+
+                            else if (ability.Name.Equals("arc_warden_spark_wraith"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.arc_warden_spark_wraith;
+                                abilityeffect_time = 3.0f;
+                                abilityeffect_keyframe = 0.0f;
+                            }
+
+                            else if (ability.Name.Equals("arc_warden_tempest_double"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.arc_warden_tempest_double;
+                                if (ability.Level == 2)
+                                    abilityeffect_time = 14.0f;
+                                else if (ability.Level == 3)
+                                    abilityeffect_time = 16.0f;
+                                else
+                                    abilityeffect_time = 12.0f;
+                            }
+        
                             else if (ability.Name.Equals("axe_berserkers_call"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.axe_berserkers_call;
                                 abilityeffect_time = 0.7f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
+                            }
+
+                            else if (ability.Name.Equals("axe_battle_hunger"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.axe_battle_hunger;
+                                abilityeffect_time = 1.0f;
+                                abilityeffect_keyframe = 0.0f; 
+                            }
+
+                            else if (ability.Name.Equals("axe_culling_blade"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.axe_culling_blade;
+                                abilityeffect_time = 2.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("beastmaster_primal_roar"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.beastmaster_primal_roar;
                                 abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("brewmaster_thunder_clap"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.brewmaster_thunder_clap;
                                 abilityeffect_time = 1.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("centaur_hoof_stomp"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.centaur_hoof_stomp;
                                 abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("chaos_knight_chaos_bolt"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.chaos_knight_chaos_bolt;
                                 abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("rattletrap_rocket_flare"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.rattletrap_rocket_flare;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("doom_bringer_scorched_earth"))
                             {
@@ -444,49 +568,49 @@ namespace Aurora.Profiles.Dota_2.Layers
                                     abilityeffect_time = 16.0f;
                                 else
                                     abilityeffect_time = 10.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("dragon_knight_breathe_fire"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.dragon_knight_breathe_fire;
                                 abilityeffect_time = 1.25f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("earthshaker_fissure"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.earthshaker_fissure;
                                 abilityeffect_time = 0.25f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("earthshaker_echo_slam"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.earthshaker_echo_slam;
                                 abilityeffect_time = 0.25f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("elder_titan_earth_splitter"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.elder_titan_earth_splitter;
                                 abilityeffect_time = 4.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("kunkka_torrent"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.kunkka_torrent;
                                 abilityeffect_time = 4.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("kunkka_ghostship"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.kunkka_ghostship;
                                 abilityeffect_time = 2.7f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("legion_commander_overwhelming_odds"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.legion_commander_overwhelming_odds;
                                 abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("life_stealer_rage"))
                             {
@@ -498,22 +622,44 @@ namespace Aurora.Profiles.Dota_2.Layers
                                     abilityeffect_time = 4.0f;
                                 else if (ability.Level == 3)
                                     abilityeffect_time = 5.0f;
-                                if (ability.Level == 4)
+                                else if (ability.Level == 4)
                                     abilityeffect_time = 6.0f;
 
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("magnataur_shockwave"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.magnataur_shockwave;
                                 abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
+
+                            else if (ability.Name.Equals("magnataur_empower"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.magnataur_empower;
+                                abilityeffect_time = 1.0f;
+                                abilityeffect_keyframe = 0.0f;
+                            }
+
+                            else if (ability.Name.Equals("magnataur_skewer"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.magnataur_skewer;
+                                abilityeffect_time = 1.5f;
+                                abilityeffect_keyframe = 0.0f;
+                            }
+
+                            else if (ability.Name.Equals("magnataur_reverse_polarity"))
+                            {
+                                currentabilityeffect = Dota2AbilityEffects.magnataur_reverse_polarity;
+                                abilityeffect_time = 1.0f;
+                                abilityeffect_keyframe = 0.0f;
+                            }
+
                             else if (ability.Name.Equals("omniknight_purification"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.omniknight_purification;
                                 abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("omniknight_repel"))
                             {
@@ -528,19 +674,19 @@ namespace Aurora.Profiles.Dota_2.Layers
                                 if (ability.Level == 4)
                                     abilityeffect_time = 12.0f;
 
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("sandking_epicenter"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.sandking_epicenter;
                                 abilityeffect_time = 5.0f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else if (ability.Name.Equals("slardar_slithereen_crush"))
                             {
                                 currentabilityeffect = Dota2AbilityEffects.slardar_slithereen_crush;
                                 abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
+                                abilityeffect_keyframe = 0.0f;
                             }
                             else
                             {
@@ -557,10 +703,10 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                 //Begin rendering
 
-                if (abiltiyeffect_keyframe >= abilityeffect_time)
+                if (abilityeffect_keyframe >= abilityeffect_time)
                 {
                     currentabilityeffect = Dota2AbilityEffects.None;
-                    abiltiyeffect_keyframe = 0.0f;
+                    abilityeffect_keyframe = 0.0f;
                 }
 
                 float mid_x = Effects.canvas_width / 2.0f;
@@ -569,37 +715,37 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                 if (currentabilityeffect == Dota2AbilityEffects.razor_plasma_field)
                 {
-                    razor_plasma_field_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    razor_plasma_field_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.crystal_maiden_crystal_nova)
                 {
-                    crystal_maiden_crystal_nova_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    crystal_maiden_crystal_nova_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.riki_smoke_screen)
                 {
-                    riki_smoke_screen_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    riki_smoke_screen_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.lina_dragon_slave)
                 {
-                    lina_dragon_slave_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    lina_dragon_slave_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.lina_light_strike_array)
                 {
-                    lina_light_strike_array_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    lina_light_strike_array_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.lina_laguna_blade)
                 {
-                    lina_laguna_blade_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    lina_laguna_blade_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
 
                     //Kept to remember the times without AnimationTracks. The pain was real.
                     /*
-                    if (abiltiyeffect_keyframe == 0.0f)
+                    if (abilityeffect_keyframe == 0.0f)
                     {
                         laguna_point1 = new EffectPoint(mid_x, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
                         laguna_point2 = new EffectPoint(mid_x + 3.0f, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
@@ -607,7 +753,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                         laguna_point4 = new EffectPoint(mid_x + 9.0f, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
                     }
 
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
+                    float progress = (abilityeffect_keyframe += getDeltaTime()) / abilityeffect_time;
 
                     float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
 
@@ -647,12 +793,12 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.abaddon_death_coil)
                 {
-                    abaddon_death_coil_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    abaddon_death_coil_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.abaddon_borrowed_time)
                 {
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
+                    float progress = (abilityeffect_keyframe += getDeltaTime()) / abilityeffect_time;
 
                     float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
 
@@ -664,28 +810,28 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.nevermore_shadowraze)
                 {
-                    nevermore_shadowraze_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    nevermore_shadowraze_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.nevermore_requiem)
                 {
-                    nevermore_requiem_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    nevermore_requiem_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.zuus_arc_lightning)
                 {
-                    zuus_arc_lightning_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    zuus_arc_lightning_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.zuus_lightning_bolt)
                 {
-                    zuus_lightning_bolt_shade_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    zuus_lightning_bolt_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    zuus_lightning_bolt_shade_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    zuus_lightning_bolt_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.zuus_thundergods_wrath)
                 {
-                    float x_offset = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
+                    float x_offset = (abilityeffect_keyframe += getDeltaTime()) / abilityeffect_time;
 
                     float alpha_percent = (x_offset >= 0.85f ? 1.0f + (1.0f - (1.17f) * x_offset) : 1.0f);
 
@@ -693,18 +839,18 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.antimage_blink)
                 {
-                    antimage_blink_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    antimage_blink_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.antimage_mana_void)
                 {
-                    antimage_mana_void_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    antimage_mana_void_core_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    antimage_mana_void_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    antimage_mana_void_core_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.ancient_apparition_ice_vortex)
                 {
-                    float x_offset = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
+                    float x_offset = (abilityeffect_keyframe += getDeltaTime()) / abilityeffect_time;
 
                     float alpha_percent = (x_offset >= 0.85f ? 1.0f + (1.0f - (1.17f) * x_offset) : 1.0f);
 
@@ -712,50 +858,85 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.ancient_apparition_ice_blast)
                 {
-                    ancient_apparition_ice_blast_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    ancient_apparition_ice_blast_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
+
+                else if (currentabilityeffect == Dota2AbilityEffects.arc_warden_flux)
+                {
+                    arc_warden_flux_mix.Draw(ability_effects_layer.GetGraphics(), abilityeffect_keyframe);
+                    abilityeffect_keyframe += getDeltaTime();
+                }
+                else if (currentabilityeffect == Dota2AbilityEffects.arc_warden_magnetic_field)
+                {
+                    arc_warden_magnetic_field_mix.Draw(ability_effects_layer.GetGraphics(), abilityeffect_keyframe);
+                    abilityeffect_keyframe += getDeltaTime();
+                }
+                //else if (currentabilityeffect == Dota2AbilityEffects.arc_warden_spark_wraith)
+                //{
+                //    arc_warden_spark_wraith_mix.Draw(ability_effects_layer.GetGraphics(), abilityeffect_keyframe);
+                //    abilityeffect_keyframe += getDeltaTime();
+                //}
+                else if (currentabilityeffect == Dota2AbilityEffects.arc_warden_tempest_double)
+                {
+                    arc_warden_tempest_double.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
+                }
+
                 else if (currentabilityeffect == Dota2AbilityEffects.alchemist_acid_spray)
                 {
-                    float alpha_percent = (float)Math.Pow(Math.Sin(((double)abiltiyeffect_keyframe / (abilityeffect_time / 16)) * Math.PI), 2.0);
+                    float alpha_percent = (float)Math.Pow(Math.Sin(((double)abilityeffect_keyframe / (abilityeffect_time / 16)) * Math.PI), 2.0);
 
                     ability_effects_layer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alpha_percent < 0.2f ? 0.2f : alpha_percent)));
 
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.axe_berserkers_call)
                 {
-                    axe_berserkers_call_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    axe_berserkers_call_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
+                }
+                else if (currentabilityeffect == Dota2AbilityEffects.axe_battle_hunger)
+                {
+                    axe_battle_hunger_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
+                }
+                else if (currentabilityeffect == Dota2AbilityEffects.axe_culling_blade)
+                {
+                    axe_culling_blade_mix.Draw(ability_effects_layer.GetGraphics(), abilityeffect_keyframe);
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.beastmaster_primal_roar)
                 {
-                    beastmaster_primal_roar_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    beastmaster_primal_roar_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.brewmaster_thunder_clap)
                 {
-                    brewmaster_thunder_clap_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    brewmaster_thunder_clap_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.centaur_hoof_stomp)
                 {
-                    centaur_hoof_stomp_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    centaur_hoof_stomp_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
+
                 else if (currentabilityeffect == Dota2AbilityEffects.chaos_knight_chaos_bolt)
                 {
-                    chaos_knight_chaos_bolt_mix.Draw(ability_effects_layer.GetGraphics(), abiltiyeffect_keyframe);
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    chaos_knight_chaos_bolt_mix.Draw(ability_effects_layer.GetGraphics(), abilityeffect_keyframe);
+                    abilityeffect_keyframe += getDeltaTime();
                 }
+
                 else if (currentabilityeffect == Dota2AbilityEffects.rattletrap_rocket_flare)
                 {
-                    rattletrap_rocket_flare_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    rattletrap_rocket_flare_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
+
                 else if (currentabilityeffect == Dota2AbilityEffects.doom_bringer_scorched_earth)
                 {
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
+                    float progress = (abilityeffect_keyframe += getDeltaTime()) / abilityeffect_time;
 
                     float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
 
@@ -765,14 +946,17 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     ability_effects_layer.Fill(color);
                 }
+
                 else if (currentabilityeffect == Dota2AbilityEffects.dragon_knight_breathe_fire)
                 {
-                    dragon_knight_breathe_fire_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    dragon_knight_breathe_fire_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
+
+
                 else if (currentabilityeffect == Dota2AbilityEffects.earthshaker_fissure)
                 {
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
+                    float progress = (abilityeffect_keyframe += getDeltaTime()) / abilityeffect_time;
 
                     float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
 
@@ -784,7 +968,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.earthshaker_echo_slam)
                 {
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
+                    float progress = (abilityeffect_keyframe += getDeltaTime()) / abilityeffect_time;
 
                     float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
 
@@ -796,53 +980,71 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.elder_titan_earth_splitter)
                 {
-                    elder_titan_earth_splitter_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    elder_titan_earth_splitter_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.kunkka_torrent)
                 {
-                    kunkka_torrent_mix.Draw(ability_effects_layer.GetGraphics(), abiltiyeffect_keyframe);
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    kunkka_torrent_mix.Draw(ability_effects_layer.GetGraphics(), abilityeffect_keyframe);
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.kunkka_ghostship)
                 {
-                    kunkka_ghostship_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    kunkka_ghostship_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.legion_commander_overwhelming_odds)
                 {
-                    legion_commander_overwhelming_odds_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    legion_commander_overwhelming_odds_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.life_stealer_rage)
                 {
-                    life_stealer_rage_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    life_stealer_rage_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.magnataur_shockwave)
                 {
-                    magnataur_shockwave_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    magnataur_shockwave_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
+                }
+
+                else if (currentabilityeffect == Dota2AbilityEffects.magnataur_empower)
+                {
+                    magnataur_empower_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
+                }
+
+                else if (currentabilityeffect == Dota2AbilityEffects.magnataur_skewer)
+                {
+                    magnataur_skewer_track_mix.Draw(ability_effects_layer.GetGraphics(), abilityeffect_keyframe);
+                    abilityeffect_keyframe += getDeltaTime();
+                }
+
+                else if (currentabilityeffect == Dota2AbilityEffects.magnataur_reverse_polarity)
+                {
+                    magnataur_reverse_polarity_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.omniknight_purification)
                 {
-                    omniknight_purification_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    omniknight_purification_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.omniknight_repel)
                 {
-                    omniknight_repel_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    omniknight_repel_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.sandking_epicenter)
                 {
-                    sandking_epicenter_mix.Draw(ability_effects_layer.GetGraphics(), abiltiyeffect_keyframe);
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    sandking_epicenter_mix.Draw(ability_effects_layer.GetGraphics(), abilityeffect_keyframe);
+                    abilityeffect_keyframe += getDeltaTime();
                 }
                 else if (currentabilityeffect == Dota2AbilityEffects.slardar_slithereen_crush)
                 {
-                    slardar_slithereen_crush_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
+                    slardar_slithereen_crush_track.GetFrame(abilityeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
+                    abilityeffect_keyframe += getDeltaTime();
                 }
             }
 
@@ -856,6 +1058,9 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public void UpdateAnimations()
         {
+
+            float new_duration = 0.0f;
+
             razor_plasma_field_track = new AnimationTrack("Razor Plasma Field", 2.0f);
             razor_plasma_field_track.SetFrame(0.0f,
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 200, 255), 3)
@@ -962,6 +1167,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 20)
                 );
 
+            //Antimage Blink
             antimage_blink_track = new AnimationTrack("Anti-mage Blink", 0.5f);
             antimage_blink_track.SetFrame(0.0f,
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(128, 0, 255), 3)
@@ -970,6 +1176,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(128, 0, 255), 3)
                 );
 
+            //Antimage Mana Void
             antimage_mana_void_track = new AnimationTrack("Anti-mage Void", 0.5f);
             antimage_mana_void_track.SetFrame(0.0f,
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(0, 0, 255))
@@ -981,6 +1188,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 0, 0, 255))
                 );
 
+            //Antimage's Mana Void Core
             antimage_mana_void_core_track = new AnimationTrack("Anti-mage Void Core", 0.5f);
             antimage_mana_void_core_track.SetFrame(0.0f,
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 255, 255))
@@ -992,6 +1200,8 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 255, 255))
                 );
 
+
+            //Ancient Apparition's Ice Blast
             ancient_apparition_ice_blast_track = new AnimationTrack("AA Ice Blast", 1.0f);
             ancient_apparition_ice_blast_track.SetFrame(0.0f,
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(200, 200, 255))
@@ -1003,6 +1213,108 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 200, 200, 255))
                 );
 
+
+            //Arc Warden's Flux
+            arc_warden_flux_mix = new AnimationMix();
+
+            //Arc Warden's Flux Core Inner Circle
+            AnimationTrack arc_warden_flux_core = new AnimationTrack("Arc Warden Flux Core", 3.0f);
+            arc_warden_flux_core.SetFrame(0.0f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 10.0f, Color.FromArgb(46, 58, 235), 1, 0.5f));
+            arc_warden_flux_core.SetFrame(0.3f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 8.0f, Color.FromArgb(46, 58, 235), 1, 0.5f));
+            arc_warden_flux_core.SetFrame(0.7f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 6.0f, Color.FromArgb(46, 58, 235), 1, 0.5f));
+            arc_warden_flux_core.SetFrame(1.0f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 8.0f, Color.FromArgb(46, 58, 235), 1, 0.5f));
+            arc_warden_flux_core.SetFrame(1.4f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 6.0f, Color.FromArgb(46, 58, 235), 1, 0.5f));
+            arc_warden_flux_core.SetFrame(1.6f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 12.0f, Color.FromArgb(46, 58, 235), 1, 0.5f));
+
+            //Arc Warden's Flux Core Outer Circle
+            AnimationTrack arc_warden_flux_outer1 = new AnimationTrack("Arc Warden Flux Outer 1", 1.5f);
+            arc_warden_flux_outer1.SetFrame(0.0f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 0, Color.FromArgb(245, 42, 245), 2));
+            arc_warden_flux_outer1.SetFrame(1.5f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), Effects.canvas_biggest, Color.FromArgb(245, 42, 245), 2));
+
+            AnimationTrack arc_warden_flux_outer2 = new AnimationTrack("Arc Warden Flux Outer 2", 1.5f, 0.5f);
+            arc_warden_flux_outer2.SetFrame(0.0f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 0, Color.FromArgb(245, 42, 245), 2));
+            arc_warden_flux_outer2.SetFrame(1.5f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), Effects.canvas_biggest, Color.FromArgb(245, 42, 245), 2));
+
+            AnimationTrack arc_warden_flux_outer3 = new AnimationTrack("Arc Warden Flux Outer 3", 1.5f, 1.0f);
+            arc_warden_flux_outer3.SetFrame(0.0f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center + 1.0f), 0, Color.FromArgb(245, 42, 245), 2));
+            arc_warden_flux_outer3.SetFrame(1.5f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center + 1.0f), Effects.canvas_biggest, Color.FromArgb(245, 42, 245), 2));
+
+            AnimationTrack arc_warden_flux_outer4 = new AnimationTrack("Arc Warden Flux Outer 4", 1.5f, 1.5f);
+            arc_warden_flux_outer4.SetFrame(0.0f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), 0, Color.FromArgb(245, 42, 245), 2));
+            arc_warden_flux_outer4.SetFrame(1.5f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center+1.0f), Effects.canvas_biggest, Color.FromArgb(245, 42, 245), 2));
+
+            arc_warden_flux_mix.AddTrack(arc_warden_flux_core);
+            arc_warden_flux_mix.AddTrack(arc_warden_flux_outer1);
+            arc_warden_flux_mix.AddTrack(arc_warden_flux_outer2);
+            arc_warden_flux_mix.AddTrack(arc_warden_flux_outer3);
+            arc_warden_flux_mix.AddTrack(arc_warden_flux_outer4);
+
+            //Arc Warden's Magnetic Field
+            arc_warden_magnetic_field_mix = new AnimationMix();
+
+            //Arc Warden's Magnetic Field Inner
+            AnimationTrack arc_warden_magnetic_inner = new AnimationTrack("Arc Warden Magnetic Inner", 6.5f);
+            arc_warden_magnetic_inner.SetFrame(0.0f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), 6.0f, Color.FromArgb(8, 0, 114), 1));
+            arc_warden_magnetic_inner.SetFrame(2.5f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Effects.canvas_height, Color.FromArgb(8, 0, 114), 1));
+            arc_warden_magnetic_inner.SetFrame(6.5f,
+                new AnimationFilledCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), 6.0f, Color.FromArgb(8, 0, 114), 1));
+
+            //Arc Warden's Magnetic Field Outer
+            AnimationTrack arc_warden_magnetic_outer = new AnimationTrack("Arc Warden Magnetic Outer", 6.5f);
+            arc_warden_magnetic_outer.SetFrame(0.0f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), 8.0f, Color.FromArgb(255, 214, 3), 2));
+            arc_warden_magnetic_outer.SetFrame(2.5f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Effects.canvas_biggest, Color.FromArgb(255, 214, 3), 2));
+            arc_warden_magnetic_outer.SetFrame(6.5f,
+                new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), 8.0f, Color.FromArgb(255, 214, 3), 2));
+
+            arc_warden_magnetic_field_mix.AddTrack(arc_warden_magnetic_inner);
+            arc_warden_magnetic_field_mix.AddTrack(arc_warden_magnetic_outer);
+
+            //Arc Warden's Spark Wraith
+
+            ////Arc Warden's Spark Wraith Core
+            //AnimationTrack arc_warden_spark_wraith_core = new AnimationTrack("Arc Warden Spark Wraith Core", 3.0f);
+            //arc_warden_spark_wraith_core.SetFrame(0.0f,
+            //    new AnimationFilledRectangle(Effects.canvas_width_center/1.5f, Effects.canvas_height_center+1.0f, 1.0f, 1.0f, Color.FromArgb(255,255,255)));
+            //arc_warden_spark_wraith_core.SetFrame(0.9f,
+            //    new AnimationFilledRectangle(Effects.canvas_width_center / 1.5f, Effects.canvas_height_center + 1.0f, 2.0f, 2.0f, Color.FromArgb(255, 255, 255)));
+            //arc_warden_spark_wraith_core.SetFrame(1.9f,
+            //    new AnimationFilledRectangle(Effects.canvas_width_center / 1.5f, Effects.canvas_height_center + 1.0f, 1.0f, 1.0f, Color.FromArgb(255, 255, 255)));
+            //arc_warden_spark_wraith_core.SetFrame(3.0f,
+            //    new AnimationFilledRectangle(Effects.canvas_width_center / 1.5f, Effects.canvas_height_center + 1.0f, 2.0f, 2.0f, Color.FromArgb(255, 255, 255)));
+
+            ////Arc Warden's Spark Wraith Circle
+            //AnimationTrack arc_warden_spark_wraith_circle = new AnimationTrack("Arc Warden Spark Wraith Circle", 3.0f);
+            //arc_warden_spark_wraith_circle.SetFrame(0.0f,
+            //    new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center + 1.0f), Effects.canvas_biggest/2.0f, Color.FromArgb(245, 42, 245), 2));
+            //arc_warden_spark_wraith_circle.SetFrame(0.9f,
+            //    new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center + 1.0f), Effects.canvas_biggest/4.0f, Color.FromArgb(245, 42, 245), 2));
+            //arc_warden_spark_wraith_circle.SetFrame(1.9f,
+            //    new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center + 1.0f), Effects.canvas_biggest / 2.0f, Color.FromArgb(245, 42, 245), 2));
+            //arc_warden_spark_wraith_circle.SetFrame(3.0f,
+            //    new AnimationCircle(new PointF(Effects.canvas_width_center, Effects.canvas_height_center + 1.0f), Effects.canvas_biggest / 4.0f, Color.FromArgb(245, 42, 245), 2));
+
+            //arc_warden_spark_wraith_mix.AddTrack(arc_warden_spark_wraith_core);
+            //arc_warden_spark_wraith_mix.AddTrack(arc_warden_spark_wraith_circle);
+
+            //Axe's Berserker Call
             axe_berserkers_call_track = new AnimationTrack("Axe Berserker", 0.7f);
             axe_berserkers_call_track.SetFrame(0.0f,
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0))
@@ -1014,6 +1326,37 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
                 );
 
+            //Axe's Battle Hunger
+
+            axe_battle_hunger_track = new AnimationTrack("Axe Battle Hunger", 1.0f);
+            axe_battle_hunger_track.SetFrame(0.0f,
+                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 0))
+                );
+            axe_battle_hunger_track.SetFrame(1.0f,
+                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 0, 0))
+                );
+
+            //Axe's Culling Blade
+            axe_culling_blade_mix = new AnimationMix();
+
+            //Axe's Culling Blade central point
+            AnimationTrack axe_culling_blade_point = new AnimationTrack("Axe Culling Blade Square", 1.0f);
+            axe_culling_blade_point.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center+1.0f, 0.0f, Color.FromArgb(200, 0, 0), 1, 0.0f));
+            axe_culling_blade_point.SetFrame(1.0f,
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center+1.0f, Effects.canvas_width*0.4f, Color.FromArgb(255, 0, 0), 1, 1.0f));
+
+            //Axe's Culling Blade external circle effect
+            AnimationTrack axe_culling_blade_circle = new AnimationTrack("Axe Culling Blade Circle", 2.0f);
+            axe_culling_blade_circle.SetFrame(0.0f,
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center+1.0f, 1.0f, Color.FromArgb(200, 0, 0), 2, 0.0f));
+            axe_culling_blade_circle.SetFrame(1.0f,
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center+1.0f, Effects.canvas_biggest, Color.FromArgb(200, 0, 0), 2, 2.0f));
+
+            axe_culling_blade_mix.AddTrack(axe_culling_blade_point);
+            axe_culling_blade_mix.AddTrack(axe_culling_blade_circle);
+             
+            //Beast Master's Primal Roar
             beastmaster_primal_roar_track = new AnimationTrack("BM Primal Roar", 1.0f);
             beastmaster_primal_roar_track.SetFrame(0.0f,
                 new AnimationFilledCircle(0, Effects.canvas_height_center, 0, Color.FromArgb(255, 200, 100))
@@ -1207,6 +1550,74 @@ namespace Aurora.Profiles.Dota_2.Layers
                 );
             magnataur_shockwave_track.SetFrame(1.0f,
                 new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 205, 255))
+                );
+
+
+            antimage_blink_track = new AnimationTrack("Anti-mage Blink", 0.5f);
+            antimage_blink_track.SetFrame(0.0f,
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(128, 0, 255), 3)
+                );
+            antimage_blink_track.SetFrame(0.5f,
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(128, 0, 255), 3)
+                );
+
+            magnataur_empower_track = new AnimationTrack("Magnataur Empower", 1.0f);
+            magnataur_empower_track.SetFrame(0.0f,
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height, 0, Color.FromArgb(0, 205, 255),2)
+                );
+            magnataur_empower_track.SetFrame(1.0f,
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height, Effects.canvas_biggest, Color.FromArgb(0, 205, 255),2)
+                );
+
+
+
+            magnataur_skewer_track_mix = new AnimationMix();
+
+            //AnimationTrack magnataur_skewer_rectangle = new AnimationTrack("Magnataur Skewer Rectangle", 1.5f);
+
+            //magnataur_skewer_rectangle.SetFrame(0.0f,
+            //    new AnimationFilledRectangle(0.0f, Effects.canvas_height_center+1.0f, 0.0f, Effects.canvas_height_center, Color.FromArgb(0, 255, 255)));
+            //magnataur_skewer_rectangle.SetFrame(0.5f,
+            //    new AnimationFilledRectangle(0.0f, Effects.canvas_height_center+1.0f, Effects.canvas_width_center, Effects.canvas_height_center, Color.FromArgb(0, 255, 255)));
+            //magnataur_skewer_rectangle.SetFrame(1.0f,
+            //    new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center+1.0f, Effects.canvas_width, Effects.canvas_height_center, Color.FromArgb(0, 255, 255)));
+
+
+            AnimationTrack magnataur_skewer_line = new AnimationTrack("Magnataur Skewer Line", 1.5f);
+              magnataur_skewer_line.SetFrame(0.1f,
+                new AnimationLine(new PointF(Effects.canvas_width / 8.0f, Effects.canvas_height_center), new PointF(Effects.canvas_width / 8.0f, Effects.canvas_height_center), Color.FromArgb(0, 255, 255), 3));
+              magnataur_skewer_line.SetFrame(1.1f,
+                new AnimationLine(new PointF(Effects.canvas_width / 8.0f, Effects.canvas_height_center), new PointF(Effects.canvas_width, Effects.canvas_height_center), Color.FromArgb(0, 255, 255), 3));
+
+            AnimationTrack magnataur_skewer_line2 = new AnimationTrack("Magnataur Skewer Line 2", 1.5f);
+              magnataur_skewer_line2.SetFrame(0.1f,
+                new AnimationLine(new PointF(0.0f, Effects.canvas_height_center+3.0f), new PointF(0.0f, Effects.canvas_height_center + 3.0f), Color.FromArgb(255,255, 255), Color.FromArgb(255, 255, 255), 3));
+              magnataur_skewer_line2.SetFrame(1.1f,
+                new AnimationLine(new PointF(0.0f, Effects.canvas_height_center +3.0f), new PointF(Effects.canvas_width, Effects.canvas_height_center +3.0f), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), 3));
+
+            AnimationTrack magnataur_skewer_line3 = new AnimationTrack("Magnataur Skewer Line 3", 1.5f);
+              magnataur_skewer_line3.SetFrame(0.1f,
+                new AnimationLine(new PointF(Effects.canvas_width/4.0f, Effects.canvas_height_center + 6.0f), new PointF(Effects.canvas_width / 4.0f, Effects.canvas_height_center + 6.0f), Color.FromArgb(0, 255, 255), 3));
+              magnataur_skewer_line3.SetFrame(1.1f,
+                new AnimationLine(new PointF(Effects.canvas_width / 4.0f, Effects.canvas_height_center + 6.0f), new PointF(Effects.canvas_width, Effects.canvas_height_center + 6.0f), Color.FromArgb(0, 255,255), 3));
+
+
+            //magnataur_skewer_track_mix.AddTrack(magnataur_skewer_rectangle);
+            magnataur_skewer_track_mix.AddTrack(magnataur_skewer_line);
+            magnataur_skewer_track_mix.AddTrack(magnataur_skewer_line2);
+            magnataur_skewer_track_mix.AddTrack(magnataur_skewer_line3);
+
+
+
+            magnataur_reverse_polarity_track = new AnimationTrack("Magnataur Reverse Polarity", 0.75f);
+            magnataur_reverse_polarity_track.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 255))
+                );
+            magnataur_reverse_polarity_track.SetFrame(0.20f,
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 4.0f, Color.FromArgb(204, 255, 255)
+                ));
+            magnataur_reverse_polarity_track.SetFrame(0.50f,
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 255, 255))
                 );
 
             omniknight_purification_track = new AnimationTrack("Omniknight Purification", 1.0f);
