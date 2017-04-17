@@ -6,7 +6,7 @@
 
 Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, The Division, League of Legends, Hotline Miami, The Talos Principle, Battlefield 3, Blacklight: Retribution, Magic: The Gathering - Duels of the Planeswalkers 2012, Middle-earth: Shadow of Mordor, Serious Sam 3, Robot Roller-Derby Disco Dodgeball, XCOM: Enemy Unknown, Evolve Stage 2, Metro: Last Light, Guild Wars 2, Worms W.M.D, and Blade and Soul.
 
-#Requirements
+# Requirements
 Recommended:
 * OS: Windows based operating system
 * Processor: Quad core processor
