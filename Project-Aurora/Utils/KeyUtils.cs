@@ -244,7 +244,7 @@ namespace Aurora.Utils
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.FORWARD_SLASH;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.NUM_MINUS;
+                        return DeviceKeys.FORWARD_SLASH;
                     else
                         return DeviceKeys.MINUS;
                 case (Keys.OemPeriod):
