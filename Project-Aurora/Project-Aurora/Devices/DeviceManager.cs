@@ -21,6 +21,8 @@ namespace Aurora.Devices
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
 
+        private bool _InitializeOnceAllowed = false;
+
         public int RetryAttempts
         {
             get
@@ -123,6 +125,8 @@ namespace Aurora.Devices
                     retryActivated = true;
                 }
             }
+
+            _InitializeOnceAllowed = true;
         }
 
         private void RetryInitialize()
@@ -155,7 +159,7 @@ namespace Aurora.Devices
 
         public void InitializeOnce()
         {
-            if (!anyInitialized)
+            if (!anyInitialized && _InitializeOnceAllowed)
                 Initialize();
         }
 

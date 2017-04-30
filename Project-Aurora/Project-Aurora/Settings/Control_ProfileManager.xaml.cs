@@ -199,6 +199,11 @@ namespace Aurora.Settings
             }
         }
 
+        private void btnProfileReset_Click(object sender, RoutedEventArgs e)
+        {
+            this.FocusedProfile?.ResetProfile();
+        }
+
         private void lstProfiles_KeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))

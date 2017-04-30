@@ -86,6 +86,7 @@ namespace Aurora.Profiles
 
             #region Initiate Defaults
             RegisterEvents(new List<ILightEvent> {
+                new Desktop.DesktopProfileManager(),
                 new Dota_2.Dota2ProfileManager(),
                 new CSGO.CSGOProfileManager(),
                 new GTA5.GTA5ProfileManager(),
@@ -128,6 +129,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Equalizer", "Equalizer Layer", typeof(EqualizerLayerHandler) ),
                 new LayerHandlerEntry("Ambilight", "Ambilight Layer", typeof(AmbilightLayerHandler) ),
                 new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
+                new LayerHandlerEntry("Glitch", "Glitch Effect Layer", typeof(GlitchLayerHandler) ),
             }, true);
 
             #endregion
@@ -187,8 +189,8 @@ namespace Aurora.Profiles
                     Global.Configuration.ProfileOrder.Remove(key);
             }
 
-            //Settings.ProfileOrder.Remove("desktop");
-            //Settings.ProfileOrder.Insert(0, "desktop");
+            Global.Configuration.ProfileOrder.Remove("desktop");
+            Global.Configuration.ProfileOrder.Insert(0, "desktop");
         }
 
         /*public static void SaveSettings()

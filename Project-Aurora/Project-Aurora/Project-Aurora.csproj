@@ -545,6 +545,10 @@
     </Compile>
     <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
     <Compile Include="Settings\Keybind.cs" />
+    <Compile Include="Settings\Layers\Control_GlitchLayer.xaml.cs">
+      <DependentUpon>Control_GlitchLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\GlitchLayerHandler.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
@@ -1197,6 +1201,10 @@
     <Page Include="Settings\Layers\Control_BreathingLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_GlitchLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_GradientFillLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
