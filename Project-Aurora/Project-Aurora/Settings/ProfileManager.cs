@@ -135,7 +135,7 @@ namespace Aurora.Settings
 
         public void SwitchToProfile(ProfileSettings newProfileSettings)
         {
-            if(newProfileSettings != null)
+            if (newProfileSettings != null)
             {
                 Settings = (ProfileSettings)newProfileSettings.Clone();
 
@@ -160,22 +160,22 @@ namespace Aurora.Settings
 
         public void DeleteProfile(ProfileSettings profile)
         {
-            if(profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
+            if (profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
             {
-                if(File.Exists(profile.ProfileFilepath))
+                if (File.Exists(profile.ProfileFilepath))
                 {
                     try
                     {
                         File.Delete(profile.ProfileFilepath);
                     }
-                    catch(Exception exc)
+                    catch (Exception exc)
                     {
                         Global.logger.LogLine($"Could not delete profile with path \"{profile.ProfileFilepath}\"", Logging_Level.Error);
                         Global.logger.LogLine($"Exception: {exc}", Logging_Level.Error, false);
                     }
                 }
 
-                if(Profiles.Contains(profile))
+                if (Profiles.Contains(profile))
                     Profiles.Remove(profile);
 
                 SaveProfiles();
@@ -278,7 +278,7 @@ namespace Aurora.Settings
 
         private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(sender is ProfileSettings)
+            if (sender is ProfileSettings)
                 SaveProfile((sender as ProfileSettings).ProfileFilepath, sender as ProfileSettings);
         }
 

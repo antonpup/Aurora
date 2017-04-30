@@ -6,8 +6,11 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationEllipse : AnimationFrame
     {
+        [Newtonsoft.Json.JsonProperty]
         private float _radius_x = 0.0f;
+        [Newtonsoft.Json.JsonProperty]
         private float _radius_y = 0.0f;
+        [Newtonsoft.Json.JsonProperty]
         private PointF _center = new PointF();
 
         public float RadiusHorizontal { get { return _radius_x; } }

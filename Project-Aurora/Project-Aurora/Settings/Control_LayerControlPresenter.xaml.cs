@@ -140,6 +140,9 @@ namespace Aurora.Settings
                     case LayerType.LockColor:
                         _Layer.Handler = new LockColourLayerHandler();
                         break;
+                    case LayerType.Animation:
+                        _Layer.Handler = new AnimationLayerHandler();
+                        break;
                     case LayerType.Dota2Background:
                         _Layer.Handler = new Dota2BackgroundLayerHandler();
                         break;

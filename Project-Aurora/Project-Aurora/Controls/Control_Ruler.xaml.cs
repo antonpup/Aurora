@@ -34,7 +34,7 @@ namespace Aurora.Controls
             {
                 SetValue(MarkSizeProperty, value);
 
-                GenerateRulerMarks(ActualWidth, true);
+                GenerateRulerMarks(true);
             }
         }
 
@@ -51,7 +51,7 @@ namespace Aurora.Controls
             {
                 SetValue(DisplayNumberCountProperty, value);
 
-                GenerateRulerMarks(ActualWidth, true);
+                GenerateRulerMarks(true);
             }
         }
 
@@ -68,7 +68,24 @@ namespace Aurora.Controls
             {
                 SetValue(NumberCountSuffixProperty, value);
 
-                GenerateRulerMarks(ActualWidth, true);
+                GenerateRulerMarks(true);
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public static readonly DependencyProperty IsVerticalProperty = DependencyProperty.Register("IsVertical", typeof(bool), typeof(Control_Ruler));
+
+        public bool IsVertical
+        {
+            get
+            {
+                return (bool)GetValue(IsVerticalProperty);
+            }
+            set
+            {
+                SetValue(IsVerticalProperty, value);
+
+                GenerateRulerMarks(true);
             }
         }
 
@@ -79,17 +96,26 @@ namespace Aurora.Controls
             InitializeComponent();
 
             SetValue(MarkSizeProperty, 50.0);
+            SetValue(IsVerticalProperty, false);
 
-            GenerateRulerMarks(ActualWidth);
+            GenerateRulerMarks();
         }
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            GenerateRulerMarks(e.NewSize.Width);
+            GenerateRulerMarks();
         }
 
-        private void GenerateRulerMarks(double width, bool forceRedraw = false)
+        private void GenerateRulerMarks(bool forceRedraw = false)
         {
+            if(forceRedraw)
+                _calculatedWidth = 0.0;
+
+            double width = ActualWidth;
+
+            if (IsVertical)
+                width = ActualHeight;
+
             if (_calculatedWidth < width)
             {
                 int _existingMarks = (int)(_calculatedWidth / MarkSize);
@@ -104,16 +130,29 @@ namespace Aurora.Controls
                 for (int tickMark = _existingMarks; tickMark <= _newSizeMarks; tickMark++)
                 {
                     gridRulerSpace.Children.Add(
-                        new Rectangle()
-                        {
-                            Margin = new Thickness(MarkSize * (double)tickMark, 0, 0, 0),
-                            HorizontalAlignment = HorizontalAlignment.Left,
-                            VerticalAlignment = VerticalAlignment.Stretch,
-                            Width = 1,
-                            MaxWidth = 1,
-                            MinWidth = 1,
-                            Fill = new SolidColorBrush(Color.FromRgb(125, 125, 125))
-                        }
+                        (IsVertical ?
+                            new Rectangle()
+                            {
+                                Margin = new Thickness(0, MarkSize * (double)tickMark, 0, 0),
+                                HorizontalAlignment = HorizontalAlignment.Stretch,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Height = 1,
+                                MaxHeight = 1,
+                                MinHeight = 1,
+                                Fill = Foreground
+                            }
+                        :
+                            new Rectangle()
+                            {
+                                Margin = new Thickness(MarkSize * (double)tickMark, 0, 0, 0),
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Stretch,
+                                Width = 1,
+                                MaxWidth = 1,
+                                MinWidth = 1,
+                                Fill = Foreground
+                            }
+                        )
                     );
 
                     if (DisplayNumberCount && tickMark > 0)
@@ -121,10 +160,11 @@ namespace Aurora.Controls
                         gridRulerSpace.Children.Add(
                         new TextBlock()
                         {
-                            Margin = new Thickness((MarkSize * (double)tickMark) + 2, 0, 0, 0),
+                            Margin = (IsVertical ? new Thickness(0, (MarkSize * (double)tickMark) + 2, 0, 0) : new Thickness((MarkSize * (double)tickMark) + 2, 0, 0, 0)),
                             HorizontalAlignment = HorizontalAlignment.Left,
                             VerticalAlignment = VerticalAlignment.Top,
-                            Text = $"{tickMark} {NumberCountSuffix.TrimStart(' ')}"
+                            Text = $"{tickMark} {(string.IsNullOrWhiteSpace(NumberCountSuffix) ? "" : NumberCountSuffix.TrimStart(' '))}",
+                            Foreground = Foreground
                         }
                     );
                     }
@@ -138,7 +178,7 @@ namespace Aurora.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            GenerateRulerMarks(ActualWidth);
+            GenerateRulerMarks();
         }
     }
 }

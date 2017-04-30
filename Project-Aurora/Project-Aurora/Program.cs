@@ -68,6 +68,8 @@ namespace Aurora
         public static Keys held_modified = Keys.None;
 
         public static object Clipboard { get; set; }
+
+        public static long StartTime;
     }
 
     static class Program
@@ -162,6 +164,8 @@ namespace Aurora
                 System.Threading.Thread.Sleep((int)delayTime);
 
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+
+            Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
 
             Global.dev_manager = new DeviceManager();
             Global.effengine = new Effects();

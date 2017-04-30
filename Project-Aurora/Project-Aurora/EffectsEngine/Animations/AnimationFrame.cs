@@ -54,14 +54,20 @@ namespace Aurora.EffectsEngine.Animations
 
     public class AnimationFrame
     {
+        [Newtonsoft.Json.JsonProperty]
         internal Color _color;
+        [Newtonsoft.Json.JsonProperty]
         internal RectangleF _dimension;
+        [Newtonsoft.Json.JsonProperty]
         internal int _width;
+        [Newtonsoft.Json.JsonProperty]
         internal float _duration;
         internal Pen _pen = null;
         internal Brush _brush = null;
         internal bool _invalidated = true;
+        [Newtonsoft.Json.JsonProperty]
         internal AnimationFrameTransitionType _transitionType = AnimationFrameTransitionType.Linear;
+        [Newtonsoft.Json.JsonProperty]
         internal float _angle = 0.0f;
 
         public Color Color { get { return _color; } }
@@ -123,7 +129,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             //Duration cannot be negative
             if (duration < 0)
-                Global.logger.LogLine($"Negative duration!!! duration={duration}", Logging_Level.Debug);
+                Global.logger.LogLine($"Negative duration!!! duration={duration}", Logging_Level.Warning);
             else
                 _duration = duration;
 

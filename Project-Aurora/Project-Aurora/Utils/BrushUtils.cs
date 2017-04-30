@@ -55,7 +55,7 @@ namespace Aurora.Utils
 
                 foreach (var grad_stop in lgb.GradientStops)
                 {
-                    if(!brush_blend.ContainsKey((float)grad_stop.Offset))
+                    if (!brush_blend.ContainsKey((float)grad_stop.Offset))
                         brush_blend.Add((float)grad_stop.Offset, ColorUtils.MediaColorToDrawingColor(grad_stop.Color));
                 }
 
@@ -184,7 +184,7 @@ namespace Aurora.Utils
                         }
                     }
                 }
-                catch(Exception exc)
+                catch (Exception exc)
                 {
                     for (int x = 0; x < lgb.LinearColors.Length; x++)
                     {

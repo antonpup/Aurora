@@ -274,5 +274,39 @@ namespace Aurora.Controls
         {
             ContextTrack = null;
         }
+
+        private void txtboxTrackNameEdit_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(ContextTrack != null)
+            {
+                ContextTrack.SetName(txtboxTrackNameEdit.Text);
+                txtblkTrackName.Text = txtboxTrackNameEdit.Text;
+            }
+        }
+
+        private void txtblkTrackName_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                txtboxTrackNameEdit.Text = txtblkTrackName.Text;
+                txtblkTrackName.Visibility = Visibility.Collapsed;
+                canvasTrackEdit.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void txtboxTrackNameEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            txtblkTrackName.Visibility = Visibility.Visible;
+            canvasTrackEdit.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtboxTrackNameEdit_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                txtblkTrackName.Visibility = Visibility.Visible;
+                canvasTrackEdit.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }

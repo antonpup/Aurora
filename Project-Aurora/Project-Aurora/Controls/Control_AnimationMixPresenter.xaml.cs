@@ -39,7 +39,7 @@ namespace Aurora.Controls
 
                 stkPanelTracks.Children.Clear();
 
-                foreach(var track in value.GetTracks())
+                foreach (var track in value.GetTracks())
                 {
                     Control_AnimationTrackPresenter newTrack = new Control_AnimationTrackPresenter() { ContextTrack = track.Value };
                     newTrack.AnimationTrackUpdated += NewTrack_AnimationTrackUpdated;
@@ -48,6 +48,8 @@ namespace Aurora.Controls
                     stkPanelTracks.Children.Add(newTrack);
                     //stkPanelTracks.Children.Add(new Separator());
                 }
+
+                AnimationMixUpdated?.Invoke(this, ContextMix);
             }
         }
 
@@ -60,7 +62,7 @@ namespace Aurora.Controls
 
         private void NewTrack_AnimationTrackUpdated(object sender, AnimationTrack track)
         {
-            if(track == null)
+            if (track == null)
                 stkPanelTracks.Children.Remove(sender as Control_AnimationTrackPresenter);
 
             ContextMix.Clear();
@@ -75,12 +77,18 @@ namespace Aurora.Controls
                 }
             }
 
+            AnimationMixUpdated?.Invoke(this, ContextMix);
+
             UpdatePlaybackTime();
         }
 
         public delegate void AnimationMixRenderedDelegate(object sender);
 
         public event AnimationMixRenderedDelegate AnimationMixRendered;
+
+        public delegate void AnimationMixArgs(object sender, AnimationMix mix);
+
+        public event AnimationMixArgs AnimationMixUpdated;
 
         public Bitmap RenderedBitmap;
 
@@ -180,7 +188,7 @@ namespace Aurora.Controls
 
         private void chkbxDrawToDevices_Checked(object sender, RoutedEventArgs e)
         {
-            if(!(sender as CheckBox).IsChecked.Value)
+            if (!(sender as CheckBox).IsChecked.Value)
                 Global.effengine.ForceImageRender(null);
         }
 
@@ -230,6 +238,43 @@ namespace Aurora.Controls
             newLineTrack.SetFrame(0.0f, new AnimationLine());
 
             ContextMix = ContextMix.AddTrack(newLineTrack);
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Global.effengine.ForceImageRender(null);
+        }
+
+        private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            float deltaT = 0.001f;
+
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                deltaT = 0.01f;
+
+            if (e.Key == Key.Left)
+            {
+                e.Handled = true;
+
+                if (_currentPlaybackTime - deltaT < 0)
+                    _currentPlaybackTime = 0.0f;
+                else
+                    _currentPlaybackTime -= deltaT;
+
+                gridScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100, 0, 0, 0);
+
+                UpdatePlaybackTime();
+            }
+            else if (e.Key == Key.Right)
+            {
+                e.Handled = true;
+
+                _currentPlaybackTime += deltaT;
+
+                gridScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100, 0, 0, 0);
+
+                UpdatePlaybackTime();
+            }
         }
     }
 }

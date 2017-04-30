@@ -10,7 +10,7 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public AnimationFilledRectangle(Rectangle dimension, Color color, float duration = 0.0f) : base(dimension, color, 1, duration)
+        public AnimationFilledRectangle(RectangleF dimension, Color color, float duration = 0.0f) : base(dimension, color, 1, duration)
         {
         }
 
@@ -30,7 +30,7 @@ namespace Aurora.EffectsEngine.Animations
                 _invalidated = false;
             }
 
-            Rectangle _scaledDimension = new Rectangle((int)(_dimension_int.X * scale), (int)(_dimension_int.Y * scale), (int)(_dimension_int.Width * scale), (int)(_dimension_int.Height * scale));
+            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
 
             PointF rotatePoint = new PointF(_scaledDimension.X + (_scaledDimension.Width / 2.0f), _scaledDimension.Y + (_scaledDimension.Height / 2.0f));
 
@@ -52,10 +52,10 @@ namespace Aurora.EffectsEngine.Animations
 
             amount = GetTransitionValue(amount);
 
-            Rectangle newrect = new Rectangle((int)CalculateNewValue(_dimension_int.X, (otherAnim as AnimationFilledRectangle)._dimension_int.X, amount),
-                (int)CalculateNewValue(_dimension_int.Y, (otherAnim as AnimationFilledRectangle)._dimension_int.Y, amount),
-                (int)CalculateNewValue(_dimension_int.Width, (otherAnim as AnimationFilledRectangle)._dimension_int.Width, amount),
-                (int)CalculateNewValue(_dimension_int.Height, (otherAnim as AnimationFilledRectangle)._dimension_int.Height, amount)
+            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
+                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
+                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
+                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
             int newwidth = (int)CalculateNewValue(_width, otherAnim._width, amount);
@@ -75,7 +75,7 @@ namespace Aurora.EffectsEngine.Animations
         public bool Equals(AnimationFilledRectangle p)
         {
             return _color.Equals(p._color) &&
-                _dimension_int.Equals(p._dimension_int) &&
+                _dimension.Equals(p._dimension) &&
                 _width.Equals(p._width) &&
                 _duration.Equals(p._duration) &&
                 _angle.Equals(p._angle);
@@ -87,7 +87,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 int hash = 17;
                 hash = hash * 23 + _color.GetHashCode();
-                hash = hash * 23 + _dimension_int.GetHashCode();
+                hash = hash * 23 + _dimension.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
                 hash = hash * 23 + _duration.GetHashCode();
                 hash = hash * 23 + _angle.GetHashCode();
@@ -97,7 +97,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public override string ToString()
         {
-            return $"AnimationFilledRectangle [ Color: {_color.ToString()} Dimensions: {_dimension_int.ToString()} Duration: {_duration} Angle: {_angle} ]";
+            return $"AnimationFilledRectangle [ Color: {_color.ToString()} Dimensions: {_dimension.ToString()} Duration: {_duration} Angle: {_angle} ]";
         }
     }
 }

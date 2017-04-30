@@ -6,17 +6,28 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationMix
     {
+        [Newtonsoft.Json.JsonProperty]
         private Dictionary<string, AnimationTrack> _tracks;
 
         /// <summary>
         /// When true, will remove Animation tracks that no longer have any animations.
         /// </summary>
+        [Newtonsoft.Json.JsonProperty]
         private bool _automatically_remove_complete;
 
         public AnimationMix()
         {
             _tracks = new Dictionary<string, AnimationTrack>();
             _automatically_remove_complete = false;
+        }
+
+        public AnimationMix(AnimationTrack[] tracks)
+        {
+            _tracks = new Dictionary<string, AnimationTrack>();
+            _automatically_remove_complete = false;
+
+            foreach(var track in tracks)
+                AddTrack(track);
         }
 
         public AnimationMix SetAutoRemove(bool value)
@@ -63,6 +74,21 @@ namespace Aurora.EffectsEngine.Animations
                 return _tracks[track_name];
             else
                 return null;
+        }
+
+        public float GetDuration()
+        {
+            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
+
+            float return_val = 0.0f;
+
+            foreach (KeyValuePair<string, AnimationTrack> track in _local)
+            {
+                if (track.Value.AnimationDuration > return_val)
+                    return_val = track.Value.AnimationDuration;
+            }
+
+            return return_val;
         }
 
         public Dictionary<string, AnimationTrack> GetTracks()

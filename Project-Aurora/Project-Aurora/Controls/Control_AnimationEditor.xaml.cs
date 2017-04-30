@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static Aurora.Controls.Control_AnimationMixPresenter;
 
 namespace Aurora.Controls
 {
@@ -38,18 +39,51 @@ namespace Aurora.Controls
                 SetValue(AnimationMixProperty, value);
 
                 animMixer.ContextMix = value;
+
+                AnimationMixUpdated?.Invoke(this, value);
             }
         }
+
+        public event AnimationMixArgs AnimationMixUpdated;
 
         private UIElement _selectedFrameItem = null;
 
         public Control_AnimationEditor()
         {
             InitializeComponent();
+
+            UpdateVirtualKeyboard();
+
+            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
+        }
+
+        private void KbLayout_KeyboardLayoutUpdated(object sender)
+        {
+            UpdateVirtualKeyboard();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void UpdateVirtualKeyboard()
+        {
+            Grid virtial_kb = Global.kbLayout.AbstractVirtualKeyboard;
+
+            keyboard_grid.Children.Clear();
+            keyboard_grid.Children.Add(virtial_kb);
+            keyboard_grid.Children.Add(new LayerEditor());
+
+            keyboard_grid.Width = virtial_kb.Width;
+            keyboard_grid.Height = virtial_kb.Height;
+
+            keyboard_grid.UpdateLayout();
+
+            viewbxAnimationView.MaxWidth = virtial_kb.Width + 50;
+            viewbxAnimationView.MaxHeight = virtial_kb.Height + 50;
+            viewbxAnimationView.UpdateLayout();
+
+            this.UpdateLayout();
         }
 
         private void animMixer_AnimationMixRendered(object sender)
@@ -67,6 +101,7 @@ namespace Aurora.Controls
                     bitmapimage.EndInit();
 
                     keyboard_overlayPreview.Source = bitmapimage;
+                    UpdateScale(keyboard_overlayPreview.ActualWidth);
                 }
             }
             catch (Exception exc)
@@ -76,12 +111,20 @@ namespace Aurora.Controls
 
         private void keyboard_overlayPreview_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            float scale = (float)(e.NewSize.Width / Effects.canvas_width);
+            UpdateScale(e.NewSize.Width);
+        }
+
+        private void UpdateScale(double width)
+        {
+            float scale = (float)(width / Effects.canvas_width);
 
             if (scale < 1.0f)
                 scale = 1.0f;
 
             animMixer.AnimationScale = scale;
+
+            rulerHorizontalPixels.MarkSize = scale;
+            rulerVerticalPixels.MarkSize = scale;
         }
 
         private void animMixer_AnimationFrameItemSelected(object sender, AnimationFrame frame)
@@ -161,25 +204,25 @@ namespace Aurora.Controls
                 Control_VariableItem varItemPositionX = new Control_VariableItem()
                 {
                     VariableTitle = "Position X",
-                    VariableObject = _frameRectangle.Dimension_int.X
+                    VariableObject = _frameRectangle.Dimension.X
                 };
                 varItemPositionX.VariableUpdated += VarItemPositionX_VariableUpdated;
                 Control_VariableItem varItemPositionY = new Control_VariableItem()
                 {
                     VariableTitle = "Position Y",
-                    VariableObject = _frameRectangle.Dimension_int.Y
+                    VariableObject = _frameRectangle.Dimension.Y
                 };
                 varItemPositionY.VariableUpdated += VarItemPositionY_VariableUpdated;
                 Control_VariableItem varItemDimensionWidth = new Control_VariableItem()
                 {
                     VariableTitle = "Width",
-                    VariableObject = _frameRectangle.Dimension_int.Width
+                    VariableObject = _frameRectangle.Dimension.Width
                 };
                 varItemDimensionWidth.VariableUpdated += VarItemDimensionWidth_VariableUpdated;
                 Control_VariableItem varItemDimensionHeight = new Control_VariableItem()
                 {
                     VariableTitle = "Height",
-                    VariableObject = _frameRectangle.Dimension_int.Height
+                    VariableObject = _frameRectangle.Dimension.Height
                 };
                 varItemDimensionHeight.VariableUpdated += VarItemDimensionHeight_VariableUpdated;
 
@@ -378,7 +421,7 @@ namespace Aurora.Controls
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
-                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, frame.Dimension_int.Y, frame.Dimension_int.Width, (int)(float)newVariable));
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimension(new System.Drawing.RectangleF(frame.Dimension.X, frame.Dimension.Y, frame.Dimension.Width, (float)newVariable));
                 }
                 else
                 {
@@ -397,7 +440,7 @@ namespace Aurora.Controls
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
-                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, frame.Dimension_int.Y, (int)(float)newVariable, frame.Dimension_int.Height));
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimension(new System.Drawing.RectangleF(frame.Dimension.X, frame.Dimension.Y, (float)newVariable, frame.Dimension.Height));
                 }
                 else
                 {
@@ -416,7 +459,7 @@ namespace Aurora.Controls
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
-                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle(frame.Dimension_int.X, (int)(float)newVariable, frame.Dimension_int.Width, frame.Dimension_int.Height));
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimension(new System.Drawing.RectangleF(frame.Dimension.X, (float)newVariable, frame.Dimension.Width, frame.Dimension.Height));
                 }
                 else
                 {
@@ -435,7 +478,7 @@ namespace Aurora.Controls
                 {
                     AnimationRectangle frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationRectangle);
 
-                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimensionInt(new System.Drawing.Rectangle((int)(float)newVariable, frame.Dimension_int.Y, frame.Dimension_int.Width, frame.Dimension_int.Height));
+                    (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = frame.SetDimension(new System.Drawing.RectangleF((float)newVariable, frame.Dimension.Y, frame.Dimension.Width, frame.Dimension.Height));
                 }
                 else
                 {
@@ -454,6 +497,23 @@ namespace Aurora.Controls
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetColor((System.Drawing.Color)newVariable);
+        }
+
+        private void animMixer_AnimationMixUpdated(object sender, AnimationMix mix)
+        {
+            SetValue(AnimationMixProperty, mix);
+
+            AnimationMixUpdated?.Invoke(this, mix);
+        }
+
+        private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Delete && _selectedFrameItem != null)
+            {
+                (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = null;
+
+                grpbxProperties.Content = null;
+            }
         }
     }
 }

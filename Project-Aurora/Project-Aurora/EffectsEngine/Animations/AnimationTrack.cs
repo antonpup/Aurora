@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Settings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,13 +7,19 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationTrack
     {
+        [Newtonsoft.Json.JsonProperty]
         private Dictionary<float, AnimationFrame> _animations;
+        [Newtonsoft.Json.JsonProperty]
         private float _animationDuration;
+        [Newtonsoft.Json.JsonProperty]
         private string _track_name;
+        [Newtonsoft.Json.JsonProperty]
         private float _shift;
 
         private Type _supported_animation_type = typeof(AnimationFrame);
         public Type SupportedAnimationType { get { return _supported_animation_type; } }
+
+        public float AnimationDuration { get { return _animationDuration; } }
 
         public AnimationTrack(string track_name, float animationDuration, float shift = 0.0f)
         {
@@ -137,15 +144,15 @@ namespace Aurora.EffectsEngine.Animations
             Tuple<float, float> closeValues = GetCloseValues(time);
 
             if (!_animations.ContainsKey(closeValues.Item1) || closeValues.Item1 > time)
-                return (AnimationFrame)Activator.CreateInstance(SupportedAnimationType);
+                return new AnimationFrame();
 
             //The time value is exact
             if (closeValues.Item1 == closeValues.Item2)
-                return _animations[closeValues.Item1].BlendWith(_animations[closeValues.Item1], 0.0f);
+                return _animations[closeValues.Item1];
             else
             {
                 if (closeValues.Item1 + _animations[closeValues.Item1]._duration > time)
-                    return _animations[closeValues.Item1].BlendWith(_animations[closeValues.Item1], 0.0f);
+                    return _animations[closeValues.Item1];
                 else
                 {
                     if (_animations.ContainsKey(closeValues.Item1) && _animations.ContainsKey(closeValues.Item2))
