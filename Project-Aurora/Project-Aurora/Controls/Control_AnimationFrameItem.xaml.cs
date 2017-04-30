@@ -66,7 +66,7 @@ namespace Aurora.Controls
                     }
                     else if (value is AnimationManualColorFrame)
                     {
-                        bgBrush = new SolidColorBrush(Color.FromArgb(150, 100, 100, 100));
+                        bgBrush = new LinearGradientBrush(Color.FromArgb(255, 100, 100, 100), Color.FromArgb(0, 0, 0, 0), new Point(0.5, 0), new Point(0.5, 1));
                         splitterBrush = Brushes.Black;
                     }
 
@@ -102,6 +102,16 @@ namespace Aurora.Controls
         private void grdSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             CompletedDrag?.Invoke(this, 0.0);
+        }
+
+        public void SetSelected(bool value)
+        {
+            //Is selected!
+            if (value)
+                rectSelected.Visibility = Visibility.Visible;
+            //Deselect
+            else
+                rectSelected.Visibility = Visibility.Collapsed;
         }
     }
 }

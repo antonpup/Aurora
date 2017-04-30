@@ -173,7 +173,12 @@ namespace Aurora.Controls
 
         private void animMixer_AnimationFrameItemSelected(object sender, AnimationFrame frame)
         {
+            //Deselect old frame
+            if (_selectedFrameItem != null && _selectedFrameItem is Control_AnimationFrameItem)
+                (_selectedFrameItem as Control_AnimationFrameItem).SetSelected(false);
+
             _selectedFrameItem = (Control_AnimationFrameItem)sender;
+            (_selectedFrameItem as Control_AnimationFrameItem).SetSelected(true);
 
             StackPanel newPanel = new StackPanel();
 

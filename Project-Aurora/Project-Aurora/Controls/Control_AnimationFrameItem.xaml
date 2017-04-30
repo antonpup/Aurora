@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="192" >
     <Grid>
+        <Rectangle x:Name="rectSelected" IsHitTestVisible="False" Fill="#BF00FF00" Visibility="Collapsed" />
         <GridSplitter x:Name="grdSplitterLeft" HorizontalAlignment="Left" Width="5" DragDelta="grdSplitterLeft_DragDelta" DragCompleted="grdSplitter_DragCompleted" Margin="-5,0,0,0"/>
         <GridSplitter x:Name="grdSplitterRight" Width="5" DragDelta="grdSplitterRight_DragDelta" DragCompleted="grdSplitter_DragCompleted" Margin="0,0,-5,0"/>
         <GridSplitter x:Name="grdSplitterContent" DragDelta="grdSplitterContent_DragDelta" DragCompleted="grdSplitter_DragCompleted" HorizontalAlignment="Stretch" Background="{x:Null}" Cursor="SizeAll" Focusable="False" Foreground="{x:Null}"/>
