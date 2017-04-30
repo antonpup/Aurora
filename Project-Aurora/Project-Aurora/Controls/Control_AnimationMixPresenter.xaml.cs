@@ -152,7 +152,7 @@ namespace Aurora.Controls
             UpdatePlaybackTime();
         }
 
-        private void UpdatePlaybackTime()
+        public void UpdatePlaybackTime()
         {
             int seconds = (int)_currentPlaybackTime;
             int milliseconds = (int)((_currentPlaybackTime - seconds) * 1000.0);

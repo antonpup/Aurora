@@ -69,7 +69,7 @@ namespace Aurora.Controls
         {
             txtblkTrackName.Text = ContextTrack.GetName();
 
-            if(ContextTrack.SupportedAnimationType == typeof(AnimationFilledCircle))
+            if (ContextTrack.SupportedAnimationType == typeof(AnimationFilledCircle))
             {
                 this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_CircleFilled.png", UriKind.Relative));
                 this.imgTrackType.ToolTip = "Filled Circle Track";

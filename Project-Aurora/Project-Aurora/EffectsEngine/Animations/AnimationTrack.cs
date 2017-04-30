@@ -16,8 +16,24 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         private float _shift;
 
-        private Type _supported_animation_type = typeof(AnimationFrame);
-        public Type SupportedAnimationType { get { return _supported_animation_type; } }
+        private bool _SupportedTypeIdentified = false;
+        private Type _SupportedAnimationType = typeof(AnimationFrame);
+        public Type SupportedAnimationType
+        {
+            get
+            {
+                if (!_SupportedTypeIdentified)
+                {
+                    if (_animations.Count > 0)
+                    {
+                        _SupportedAnimationType = _animations.Values.ToArray()[0].GetType();
+                        _SupportedTypeIdentified = true;
+                    }
+                }
+
+                return _SupportedAnimationType;
+            }
+        }
 
         public float AnimationDuration { get { return _animationDuration; } }
 
@@ -73,11 +89,14 @@ namespace Aurora.EffectsEngine.Animations
         {
             //One can retype the animation track by removing all frames
             if (_animations.Count == 0)
-                _supported_animation_type = animframe.GetType();
-
-            if (_supported_animation_type == animframe.GetType())
             {
-                if(_animations.Count > 0)
+                _SupportedAnimationType = animframe.GetType();
+                _SupportedTypeIdentified = true;
+            }
+
+            if (_SupportedAnimationType == animframe.GetType())
+            {
+                if (_animations.Count > 0)
                 {
                     Tuple<float, float> closeValues = GetCloseValues(time);
 
@@ -190,7 +209,7 @@ namespace Aurora.EffectsEngine.Animations
 
         private void UpdateDuration()
         {
-            if(_animations.Count > 0)
+            if (_animations.Count > 0)
             {
                 float max = _animations.Keys.Max();
                 _animationDuration = max + _animations[max].Duration;

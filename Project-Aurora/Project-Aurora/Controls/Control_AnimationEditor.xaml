@@ -17,8 +17,8 @@
                                 <Rectangle Margin="0" Width="15" Height="15" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="White"/>
                                 <local:Control_Ruler x:Name="rulerHorizontalPixels" Height="15" Margin="15,0,0,0" Background="White" VerticalAlignment="Top" Foreground="Black" />
                                 <local:Control_Ruler x:Name="rulerVerticalPixels" Width="15" Margin="0,15,0,0" Background="White" IsVertical="True" HorizontalAlignment="Left" Foreground="Black" />
-                                <Image x:Name="keyboard_overlayPreview" RenderOptions.BitmapScalingMode="HighQuality" SizeChanged="keyboard_overlayPreview_SizeChanged" Margin="15,15,0,0" />
-                                <Grid x:Name="keyboard_grid" Margin="15,15,0,0" Height="192" VerticalAlignment="Top" HorizontalAlignment="Left" Width="803" Opacity="0.8">
+                                <Image x:Name="keyboard_overlayPreview" RenderOptions.BitmapScalingMode="HighQuality" SizeChanged="keyboard_overlayPreview_SizeChanged" Margin="15,15,0,0" Stretch="Fill" />
+                                <Grid x:Name="keyboard_grid" Margin="15,15,0,0" Opacity="0.8">
                                     <Grid.CacheMode>
                                         <BitmapCache EnableClearType="True"/>
                                     </Grid.CacheMode>

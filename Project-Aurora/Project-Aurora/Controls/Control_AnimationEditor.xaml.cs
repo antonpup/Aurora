@@ -106,6 +106,8 @@ namespace Aurora.Controls
             if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
             {
                 SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _PrimaryManualColor);
+
+                this.animMixer.UpdatePlaybackTime();
             }
         }
 
@@ -114,6 +116,8 @@ namespace Aurora.Controls
             if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
             {
                 SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _SecondaryManualColor);
+
+                this.animMixer.UpdatePlaybackTime();
             }
         }
 
@@ -435,6 +439,8 @@ namespace Aurora.Controls
                     AnimationManualColorFrame frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationManualColorFrame);
 
                     frame.SetBitmapColors(new Dictionary<DeviceKeys, System.Drawing.Color>());
+
+                    this.animMixer.UpdatePlaybackTime();
                 }
             }
         }
