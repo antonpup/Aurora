@@ -200,9 +200,27 @@ namespace Aurora.Controls
             (sender as Button).ContextMenu.IsOpen = true;
         }
 
+        private string GetAvailableTrackName(string DefaultTrackName)
+        {
+            int trackCopy = 1;
+            string trackName = DefaultTrackName;
+
+            if (ContextMix.ContainsTrack(trackName))
+            {
+                while (ContextMix.ContainsTrack($"{trackName} ({trackCopy})"))
+                {
+                    trackCopy++;
+                }
+
+                trackName = $"{trackName} ({trackCopy})";
+            }
+
+            return trackName;
+        }
+
         private void menuitemAddCircleTrack_Click(object sender, RoutedEventArgs e)
         {
-            AnimationTrack newCircleTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            AnimationTrack newCircleTrack = new AnimationTrack(GetAvailableTrackName("Circle Track"), 0.0f);
             newCircleTrack.SetFrame(0.0f, new AnimationCircle());
 
             ContextMix = ContextMix.AddTrack(newCircleTrack);
@@ -210,7 +228,7 @@ namespace Aurora.Controls
 
         private void menuitemAddFilledCircleTrack_Click(object sender, RoutedEventArgs e)
         {
-            AnimationTrack newFilledCircleTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            AnimationTrack newFilledCircleTrack = new AnimationTrack(GetAvailableTrackName("Filled Circle Track"), 0.0f);
             newFilledCircleTrack.SetFrame(0.0f, new AnimationFilledCircle());
 
             ContextMix = ContextMix.AddTrack(newFilledCircleTrack);
@@ -218,7 +236,7 @@ namespace Aurora.Controls
 
         private void menuitemAddRectangleTrack_Click(object sender, RoutedEventArgs e)
         {
-            AnimationTrack newRectangleTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            AnimationTrack newRectangleTrack = new AnimationTrack(GetAvailableTrackName("Rectangle Track"), 0.0f);
             newRectangleTrack.SetFrame(0.0f, new AnimationRectangle());
 
             ContextMix = ContextMix.AddTrack(newRectangleTrack);
@@ -226,7 +244,7 @@ namespace Aurora.Controls
 
         private void menuitemAddFilledRectangleTrack_Click(object sender, RoutedEventArgs e)
         {
-            AnimationTrack newFilledRectangleTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            AnimationTrack newFilledRectangleTrack = new AnimationTrack(GetAvailableTrackName("Filled Rectangle Track"), 0.0f);
             newFilledRectangleTrack.SetFrame(0.0f, new AnimationFilledRectangle());
 
             ContextMix = ContextMix.AddTrack(newFilledRectangleTrack);
@@ -234,7 +252,7 @@ namespace Aurora.Controls
 
         private void menuitemAddLineTrack_Click(object sender, RoutedEventArgs e)
         {
-            AnimationTrack newLineTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            AnimationTrack newLineTrack = new AnimationTrack(GetAvailableTrackName("Line Track"), 0.0f);
             newLineTrack.SetFrame(0.0f, new AnimationLine());
 
             ContextMix = ContextMix.AddTrack(newLineTrack);
@@ -242,7 +260,7 @@ namespace Aurora.Controls
 
         private void menuitemAddManualColorTrack_Click(object sender, RoutedEventArgs e)
         {
-            AnimationTrack newManualColorTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            AnimationTrack newManualColorTrack = new AnimationTrack(GetAvailableTrackName("Manual Color Track"), 0.0f);
             newManualColorTrack.SetFrame(0.0f, new AnimationManualColorFrame());
 
             ContextMix = ContextMix.AddTrack(newManualColorTrack);

@@ -26,7 +26,7 @@ namespace Aurora.EffectsEngine.Animations
             _tracks = new Dictionary<string, AnimationTrack>();
             _automatically_remove_complete = false;
 
-            foreach(var track in tracks)
+            foreach (var track in tracks)
                 AddTrack(track);
         }
 
@@ -39,7 +39,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationMix AddTrack(AnimationTrack track)
         {
-            if(track != null)
+            if (track != null)
             {
                 if (_tracks.ContainsKey(track.GetName()))
                     _tracks[track.GetName()] = track;
@@ -74,6 +74,11 @@ namespace Aurora.EffectsEngine.Animations
                 return _tracks[track_name];
             else
                 return null;
+        }
+
+        public bool ContainsTrack(string track_name)
+        {
+            return _tracks.ContainsKey(track_name);
         }
 
         public float GetDuration()
@@ -123,7 +128,7 @@ namespace Aurora.EffectsEngine.Animations
                     {
                         track.Value.GetFrame(time).Draw(g, scale);
                     }
-                    catch(Exception exc)
+                    catch (Exception exc)
                     {
                         System.Console.WriteLine();
                     }
