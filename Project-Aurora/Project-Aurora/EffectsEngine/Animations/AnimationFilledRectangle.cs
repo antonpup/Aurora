@@ -58,10 +58,20 @@ namespace Aurora.EffectsEngine.Animations
                 (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
-            int newwidth = (int)CalculateNewValue(_width, otherAnim._width, amount);
             float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
 
             return new AnimationFilledRectangle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount)).SetAngle(newAngle);
+        }
+
+        public override AnimationFrame GetCopy()
+        {
+            RectangleF newrect = new RectangleF(_dimension.X,
+                _dimension.Y,
+                _dimension.Width,
+                _dimension.Height
+                );
+
+            return new AnimationFilledRectangle(newrect, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
         }
 
         public override bool Equals(object obj)

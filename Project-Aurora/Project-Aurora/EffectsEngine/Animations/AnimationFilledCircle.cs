@@ -66,6 +66,17 @@ namespace Aurora.EffectsEngine.Animations
             return new AnimationFilledCircle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount)).SetAngle(newAngle);
         }
 
+        public override AnimationFrame GetCopy()
+        {
+            RectangleF newrect = new RectangleF(_dimension.X,
+                _dimension.Y,
+                _dimension.Width,
+                _dimension.Height
+                );
+
+            return new AnimationFilledCircle(newrect, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

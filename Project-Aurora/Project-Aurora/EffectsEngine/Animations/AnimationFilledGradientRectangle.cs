@@ -69,6 +69,17 @@ namespace Aurora.EffectsEngine.Animations
             return new AnimationFilledGradientRectangle(newrect, _gradientBrush.BlendEffectBrush((otherAnim as AnimationFilledGradientRectangle)._gradientBrush, amount)).SetAngle(newAngle);
         }
 
+        public override AnimationFrame GetCopy()
+        {
+            RectangleF newrect = new RectangleF(_dimension.X,
+                _dimension.Y,
+                _dimension.Width,
+                _dimension.Height
+                );
+
+            return new AnimationFilledGradientRectangle(newrect, new EffectBrush(_gradientBrush), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

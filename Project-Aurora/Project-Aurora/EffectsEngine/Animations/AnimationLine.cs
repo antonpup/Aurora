@@ -162,6 +162,14 @@ namespace Aurora.EffectsEngine.Animations
             return new AnimationLine(newstart, newend, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), Utils.ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth).SetAngle(newAngle);
         }
 
+        public override AnimationFrame GetCopy()
+        {
+            PointF newstart = new PointF(_start_point.X, _start_point.Y);
+            PointF newend = new PointF(_end_point.X, _end_point.Y);
+
+            return new AnimationLine(newstart, newend, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), Color.FromArgb(_end_color.A, _end_color.R, _end_color.G, _end_color.B), _width, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

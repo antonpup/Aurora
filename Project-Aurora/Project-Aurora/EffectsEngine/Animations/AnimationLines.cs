@@ -43,6 +43,18 @@ namespace Aurora.EffectsEngine.Animations
             return new AnimationLines(newlines.ToArray());
         }
 
+        public override AnimationFrame GetCopy()
+        {
+            List<AnimationLine> newlines = new List<AnimationLine>(_lines.Count);
+
+            foreach(var line in _lines)
+            {
+                newlines.Add(line.GetCopy() as AnimationLine);
+            }
+
+            return new AnimationLines(newlines.ToArray(), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

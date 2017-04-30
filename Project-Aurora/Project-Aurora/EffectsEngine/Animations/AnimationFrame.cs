@@ -181,7 +181,7 @@ namespace Aurora.EffectsEngine.Animations
                     break;
                 //An exponential relationship between frames y = (e^x - 1)/(e - 1)
                 case AnimationFrameTransitionType.Exponential:
-                    returnamount = (Math.Exp(amount) - 1)/(Math.E - 1);
+                    returnamount = (Math.Exp(amount) - 1) / (Math.E - 1);
                     break;
                 //A squared relationship between frames y = x^2
                 case AnimationFrameTransitionType.Squared:
@@ -218,6 +218,21 @@ namespace Aurora.EffectsEngine.Animations
                 return first;
             else
                 return (double)(first * (1.0 - amount) + second * (amount));
+        }
+
+        public virtual AnimationFrame GetCopy()
+        {
+            RectangleF newrect = new RectangleF(_dimension.X,
+                _dimension.Y,
+                _dimension.Width,
+                _dimension.Height
+                );
+
+            AnimationFrame copy = new AnimationFrame();
+            copy._dimension = newrect;
+            copy._color = Color.FromArgb(_color.A, _color.R, _color.G, _color.B);
+
+            return copy;
         }
 
         public override bool Equals(object obj)

@@ -94,6 +94,11 @@ namespace Aurora.Controls
                 this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_Line.png", UriKind.Relative));
                 this.imgTrackType.ToolTip = "Line Track";
             }
+            else if (ContextTrack.SupportedAnimationType == typeof(AnimationManualColorFrame))
+            {
+                this.imgTrackType.Source = new BitmapImage(new Uri(@"/Aurora;component/Resources/FreeForm_ManualColor.png", UriKind.Relative));
+                this.imgTrackType.ToolTip = "Manual Color Track";
+            }
 
             gridTrackItems.Children.Clear();
 
@@ -255,7 +260,7 @@ namespace Aurora.Controls
 
                 float time = ConvertToTime(mouseLoc.X, ContextTrack.GetShift());
 
-                ContextTrack.SetFrame(time, ContextTrack.GetFrame(time));
+                ContextTrack.SetFrame(time, ContextTrack.GetFrame(time).GetCopy());
 
                 UpdateControls();
             }

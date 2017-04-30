@@ -240,6 +240,14 @@ namespace Aurora.Controls
             ContextMix = ContextMix.AddTrack(newLineTrack);
         }
 
+        private void menuitemAddManualColorTrack_Click(object sender, RoutedEventArgs e)
+        {
+            AnimationTrack newManualColorTrack = new AnimationTrack("New Track " + Utils.Time.GetMilliSeconds(), 0.0f);
+            newManualColorTrack.SetFrame(0.0f, new AnimationManualColorFrame());
+
+            ContextMix = ContextMix.AddTrack(newManualColorTrack);
+        }
+
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             Global.effengine.ForceImageRender(null);

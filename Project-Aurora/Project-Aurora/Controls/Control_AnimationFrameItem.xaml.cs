@@ -64,6 +64,11 @@ namespace Aurora.Controls
                         bgBrush = (value as AnimationFilledGradientRectangle).GradientBrush.GetMediaBrush();
                         splitterBrush = (value as AnimationFilledGradientRectangle).GradientBrush.GetMediaBrush();
                     }
+                    else if (value is AnimationManualColorFrame)
+                    {
+                        bgBrush = new SolidColorBrush(Color.FromArgb(150, 100, 100, 100));
+                        splitterBrush = Brushes.Black;
+                    }
 
                     rectDisplay.Fill = bgBrush;
                     grdSplitterLeft.Background = splitterBrush;

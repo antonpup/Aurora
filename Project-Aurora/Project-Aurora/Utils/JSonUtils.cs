@@ -32,6 +32,8 @@ namespace Aurora.Utils
                     return typeof(SortedDictionary<float, System.Drawing.Color>);
                 case "System.Collections.Generic.Queue`1[[System.Windows.Forms.Keys, System.Windows.Forms]]":
                     return typeof(Queue<System.Windows.Forms.Keys>);
+                case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]":
+                    return typeof(Dictionary<Devices.DeviceKeys, System.Drawing.Color>);
                 default:
                     return base.BindToType(assemblyName, typeName);
             }

@@ -574,7 +574,9 @@ namespace Aurora
             ConfigUI th = source as ConfigUI;
             ProfileManager value = e.NewValue as ProfileManager;
 
-            th.ctrlLayerManager.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
+            //th.ctrlLayerManager.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
+            //th.ctrlProfileManager.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
+            th.gridManagers.Visibility = value == null ? Visibility.Collapsed : Visibility.Visible;
 
             if (value == null)
                 return;
@@ -752,10 +754,11 @@ namespace Aurora
             {
                 _selectedManager = focusedElement as FrameworkElement;
 
-                stackPanelManagers.Height = gridManagers.ActualHeight;
+                if(gridManagers.ActualHeight != 0)
+                    stackPanelManagers.Height = gridManagers.ActualHeight;
                 double totalHeight = stackPanelManagers.Height;
 
-                foreach(FrameworkElement child in stackPanelManagers.Children)
+                foreach (FrameworkElement child in stackPanelManagers.Children)
                 {
                     if(child.Equals(focusedElement))
                         child.Height = totalHeight - (28.0 * (stackPanelManagers.Children.Count - 1));

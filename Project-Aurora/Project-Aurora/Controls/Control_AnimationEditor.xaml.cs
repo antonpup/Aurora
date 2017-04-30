@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine.Animations;
+﻿using Aurora.Devices;
+using Aurora.EffectsEngine.Animations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,6 +49,10 @@ namespace Aurora.Controls
 
         private UIElement _selectedFrameItem = null;
 
+        private System.Drawing.Color _PrimaryManualColor = System.Drawing.Color.Blue;
+
+        private System.Drawing.Color _SecondaryManualColor = System.Drawing.Color.Transparent;
+
         public Control_AnimationEditor()
         {
             InitializeComponent();
@@ -84,6 +89,41 @@ namespace Aurora.Controls
             viewbxAnimationView.UpdateLayout();
 
             this.UpdateLayout();
+
+            //Generate a new mapping
+            foreach (FrameworkElement Child in virtial_kb.Children)
+            {
+                if (Child is Settings.Keycaps.IKeycap && (Child as Settings.Keycaps.IKeycap).GetKey() != DeviceKeys.NONE)
+                {
+                    Child.PreviewMouseLeftButtonDown += KeyboardKey_PreviewMouseLeftButtonDown;
+                    Child.PreviewMouseRightButtonDown += KeyboardKey_PreviewMouseRightButtonDown;
+                }
+            }
+        }
+
+        private void KeyboardKey_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
+            {
+                SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _PrimaryManualColor);
+            }
+        }
+
+        private void KeyboardKey_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
+            {
+                SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _SecondaryManualColor);
+            }
+        }
+
+        private void SetKeyColor(DeviceKeys key, System.Drawing.Color color)
+        {
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame)
+            {
+                AnimationManualColorFrame frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationManualColorFrame);
+                frame.SetKeyColor(key, color);
+            }
         }
 
         private void animMixer_AnimationMixRendered(object sender)
@@ -132,6 +172,8 @@ namespace Aurora.Controls
             _selectedFrameItem = (Control_AnimationFrameItem)sender;
 
             StackPanel newPanel = new StackPanel();
+
+            bool _skipExtra = false;
 
             double separatorHeight = 3;
 
@@ -308,16 +350,55 @@ namespace Aurora.Controls
                 newPanel.Children.Add(varItemEndPositionY);
                 newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
             }
-
-            Control_VariableItem varItemAngle = new Control_VariableItem()
+            else if (frame is AnimationManualColorFrame)
             {
-                VariableTitle = "Angle",
-                VariableObject = frame.Angle
-            };
-            varItemAngle.VariableUpdated += VarItemAngle_VariableUpdated; ;
+                _skipExtra = true;
 
-            newPanel.Children.Add(varItemAngle);
-            newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
+                Control_VariableItem VarItemPrimaryManualColor = new Control_VariableItem()
+                {
+                    VariableTitle = "Primary Color",
+                    VariableObject = _PrimaryManualColor
+                };
+                VarItemPrimaryManualColor.VariableUpdated += VarItemPrimaryManualColor_VariableUpdated;
+                Control_VariableItem VarItemSecondaryManualColor = new Control_VariableItem()
+                {
+                    VariableTitle = "Secondary Color",
+                    VariableObject = _SecondaryManualColor
+                };
+                VarItemSecondaryManualColor.VariableUpdated += VarItemSecondaryManualColor_VariableUpdated;
+
+                Button btnClearColors = new Button()
+                {
+                    Content = "Clear Frame Colors",
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch
+                };
+
+                btnClearColors.Click += BtnClearColors_Click;
+
+                //Color picker
+
+                newPanel.Children.Add(VarItemPrimaryManualColor);
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
+                newPanel.Children.Add(VarItemSecondaryManualColor);
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
+                newPanel.Children.Add(btnClearColors);
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
+
+            }
+
+            if (!_skipExtra)
+            {
+                Control_VariableItem varItemAngle = new Control_VariableItem()
+                {
+                    VariableTitle = "Angle",
+                    VariableObject = frame.Angle
+                };
+                varItemAngle.VariableUpdated += VarItemAngle_VariableUpdated; ;
+
+                newPanel.Children.Add(varItemAngle);
+                newPanel.Children.Add(new Separator() { Height = separatorHeight, Opacity = 0 });
+            }
 
             Control_VariableItem varItemTransitionType = new Control_VariableItem()
             {
@@ -341,6 +422,31 @@ namespace Aurora.Controls
             newPanel.Children.Add(btnRemoveFrame);
 
             grpbxProperties.Content = newPanel;
+        }
+
+        private void BtnClearColors_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedFrameItem != null)
+            {
+                Type FrameType = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.GetType();
+
+                if (FrameType == typeof(AnimationManualColorFrame))
+                {
+                    AnimationManualColorFrame frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationManualColorFrame);
+
+                    frame.SetBitmapColors(new Dictionary<DeviceKeys, System.Drawing.Color>());
+                }
+            }
+        }
+
+        private void VarItemSecondaryManualColor_VariableUpdated(object sender, object newVariable)
+        {
+            _SecondaryManualColor = (System.Drawing.Color)newVariable;
+        }
+
+        private void VarItemPrimaryManualColor_VariableUpdated(object sender, object newVariable)
+        {
+            _PrimaryManualColor = (System.Drawing.Color)newVariable;
         }
 
         private void VarItemEndColor_VariableUpdated(object sender, object newVariable)
@@ -508,7 +614,7 @@ namespace Aurora.Controls
 
         private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Delete && _selectedFrameItem != null)
+            if (e.Key == Key.Delete && _selectedFrameItem != null)
             {
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = null;
 

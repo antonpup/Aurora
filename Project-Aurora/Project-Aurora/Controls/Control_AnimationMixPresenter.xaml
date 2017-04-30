@@ -35,6 +35,11 @@
                             <Image Source="/Aurora;component/Resources/FreeForm_RectangleFilled.png" Width="16" Height="16"/>
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem x:Name="menuitemAddManualColorTrack" Header="Add Manual Color Track" Click="menuitemAddManualColorTrack_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Aurora;component/Resources/FreeForm_ManualColor.png" Width="16" Height="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </Button.ContextMenu>
         </Button> 
