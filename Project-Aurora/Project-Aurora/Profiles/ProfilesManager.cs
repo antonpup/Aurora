@@ -553,7 +553,8 @@ namespace Aurora.Profiles
                 JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));                string appid = provider.GetValue("appid").ToString();                string name = provider.GetValue("name").ToString().ToLowerInvariant();
                 if ((profile != null || (profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null) && (profile.Config != null && profile.Config.GameStateType != null))                    profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs));                else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)                {                    string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
                     profile = profile ?? GetProfileFromProcess(gs_process_name);
-                    if (profile == null)                    {                        Events.Add(gs_process_name, new GameEvent_Aurora_Wrapper());                        profile = Events[gs_process_name];                    }
+                    if (profile == null)                    {
+                        Events.Add(gs_process_name, new ProfileManager(new LightEventConfig { SettingsType = typeof(ProfileSettings), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Aurora_Wrapper() }));                        profile = Events[gs_process_name];                    }
                     profile.SetGameState(gs);                }
                 //UpdateIdleEffects(newFrame);
             }            catch (Exception e)            {                Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);            }        }
