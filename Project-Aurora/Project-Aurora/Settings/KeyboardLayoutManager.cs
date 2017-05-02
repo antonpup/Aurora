@@ -504,6 +504,9 @@ namespace Aurora.Settings
                         case PreferredKeyboardLocalization.jpn:
                             culture = "ja-JP";
                             break;
+                        case PreferredKeyboardLocalization.nordic:
+                            culture = "nordic";
+                            break;
                     }
 
                     switch (culture)
@@ -541,6 +544,14 @@ namespace Aurora.Settings
                         case ("en-US"):
                             _loaded_localization = PreferredKeyboardLocalization.us;
                             LoadCulture("us");
+                            break;
+                        case ("da-DK"):
+                        case ("se-SE"):
+                        case ("nb-NO"):
+                        case ("nn-NO"):
+                        case ("nordic"):
+                            _loaded_localization = PreferredKeyboardLocalization.nordic;
+                            LoadCulture("nordic");
                             break;
                         default:
                             _loaded_localization = PreferredKeyboardLocalization.intl;
