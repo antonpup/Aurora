@@ -76,7 +76,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is ComboBox)
             {
-                ProfilesManager.LayerHandlerEntry enumVal = (ProfilesManager.LayerHandlerEntry)((sender as ComboBox).SelectedItem);
+                LayerHandlerEntry enumVal = (LayerHandlerEntry)((sender as ComboBox).SelectedItem);
 
                 ResetLayer(enumVal);
             }
@@ -88,7 +88,7 @@ namespace Aurora.Settings
             logic_edit.ShowDialog();
         }
 
-        private void ResetLayer(ProfilesManager.LayerHandlerEntry type)
+        private void ResetLayer(LayerHandlerEntry type)
         {
             if (IsLoaded && !isSettingNewLayer)
             {
@@ -216,7 +216,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
-                ProfilesManager.LayerHandlerEntry enumVal = (ProfilesManager.LayerHandlerEntry)(cmbLayerType.SelectedItem);
+                LayerHandlerEntry enumVal = (LayerHandlerEntry)(cmbLayerType.SelectedItem);
 
                 ResetLayer(enumVal);
             }

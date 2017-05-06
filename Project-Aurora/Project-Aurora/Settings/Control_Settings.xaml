@@ -245,6 +245,11 @@
                     <Controls:Control_DeviceManager Margin="10"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="Plugin Management">
+                <Grid>
+                    <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>
+                </Grid>
+            </TabItem>
             <TabItem Header="Updates">
                 <Grid>
                     <Button x:Name="updates_check" Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>

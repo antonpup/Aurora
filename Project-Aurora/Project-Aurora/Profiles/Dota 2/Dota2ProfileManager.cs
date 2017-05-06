@@ -28,14 +28,14 @@ namespace Aurora.Profiles.Dota_2
             })
         {
 
-            var extra = new List<ProfilesManager.LayerHandlerEntry>
+            var extra = new List<LayerHandlerEntry>
             {
-                new ProfilesManager.LayerHandlerEntry("Dota2Background", "Dota 2 Background Layer", typeof(Dota2BackgroundLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("Dota2Respawn", "Dota 2 Respawn Layer", typeof(Dota2RespawnLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("Dota2Abilities", "Dota 2 Abilities Layer", typeof(Dota2AbilityLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("Dota2Items", "Dota 2 Items Layer", typeof(Dota2ItemLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("Dota2HeroAbilityEffects", "Dota 2 Hero Ability Effects Layer", typeof(Dota2HeroAbilityEffectsLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("Dota2Killstreak", "Dota 2 Killstreak Layer", typeof(Dota2KillstreakLayerHandler)),
+                new LayerHandlerEntry("Dota2Background", "Dota 2 Background Layer", typeof(Dota2BackgroundLayerHandler)),
+                new LayerHandlerEntry("Dota2Respawn", "Dota 2 Respawn Layer", typeof(Dota2RespawnLayerHandler)),
+                new LayerHandlerEntry("Dota2Abilities", "Dota 2 Abilities Layer", typeof(Dota2AbilityLayerHandler)),
+                new LayerHandlerEntry("Dota2Items", "Dota 2 Items Layer", typeof(Dota2ItemLayerHandler)),
+                new LayerHandlerEntry("Dota2HeroAbilityEffects", "Dota 2 Hero Ability Effects Layer", typeof(Dota2HeroAbilityEffectsLayerHandler)),
+                new LayerHandlerEntry("Dota2Killstreak", "Dota 2 Killstreak Layer", typeof(Dota2KillstreakLayerHandler)),
             };
 
             Global.ProfilesManager.RegisterLayerHandlers(extra, false);

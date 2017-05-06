@@ -35,8 +35,9 @@
                 <!--PreviewMouseMove="stckLayer_PreviewMouseMove" PreviewMouseUp="lstLayers_PreviewMouseUp" MouseLeave="lstLayers_PreviewMouseUp" HorizontalContentAlignment="Stretch"-->
                 <ListBox.ItemTemplate>
                     <HierarchicalDataTemplate>
-                        <DockPanel  HorizontalAlignment="Stretch" Width="192" >
+                        <DockPanel HorizontalAlignment="Stretch" Width="192">
                             <TextBlock Text="{Binding Path=ProfileName, Converter={StaticResource ResourceKey=TextCharacterLimitConv}}"/>
+                            
                         </DockPanel>
                     </HierarchicalDataTemplate>
                 </ListBox.ItemTemplate>

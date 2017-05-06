@@ -523,18 +523,14 @@ namespace Aurora
 
         private void Profile_grid_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (sender != null && sender is Grid && (sender as Grid).Tag != null && (sender as Grid).Tag is Image)
-            {
+            if ((sender as Grid)?.Tag is Image)
                 ((sender as Grid).Tag as Image).Visibility = Visibility.Hidden;
-            }
         }
 
         private void Profile_grid_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (sender != null && sender is Grid && (sender as Grid).Tag != null && (sender as Grid).Tag is Image)
-            {
+            if ((sender as Grid)?.Tag is Image)
                 ((sender as Grid).Tag as Image).Visibility = Visibility.Visible;
-            }
         }
 
         private void TransitionToProfile(Image source)
@@ -708,7 +704,7 @@ namespace Aurora
                     if (y + height > profiles_background.ActualHeight - 40)
                         height -= (y + height) - (profiles_background.ActualHeight - 40);
                 }
-
+                
                 if (height > 0 && width > 0)
                 {
                     GeometryDrawing transparent_region =

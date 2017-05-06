@@ -39,6 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -247,6 +248,9 @@
     </Compile>
     <Compile Include="Controls\Control_DeviceItem.xaml.cs">
       <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_PluginManager.xaml.cs">
+      <DependentUpon>Control_PluginManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Control_DeviceManager.xaml.cs">
       <DependentUpon>Control_DeviceManager.xaml</DependentUpon>
@@ -932,6 +936,10 @@
     <Page Include="Controls\Control_DeviceItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_PluginManager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Control_DeviceManager.xaml">
       <SubType>Designer</SubType>

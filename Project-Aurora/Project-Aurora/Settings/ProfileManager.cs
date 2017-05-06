@@ -44,11 +44,11 @@ namespace Aurora.Settings
 
         public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
 
-        protected LightEventType type;
-        public LightEventType Type
+        protected LightEventType? type;
+        public LightEventType? Type
         {
             get { return type; }
-            protected set
+            set
             {
                 object old = type;
                 object newVal = value;
@@ -85,10 +85,16 @@ namespace Aurora.Settings
                 InvokePropertyChanged(old, newVal);
             }
         }
+        public ImageSource Icon
+        {
+            get {
+                return GetIcon();
+            }
+        }
         #endregion
 
         #region Internal Properties
-        internal ImageSource Icon { get; set; }
+        internal ImageSource icon { get; set; }
         internal UserControl Control { get; set; }
         internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
@@ -130,7 +136,7 @@ namespace Aurora.Settings
 
         public virtual ImageSource GetIcon()
         {
-            return Icon ?? (Icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
+            return icon ?? (icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
         }
 
         public void SwitchToProfile(ProfileSettings newProfileSettings)
@@ -141,8 +147,7 @@ namespace Aurora.Settings
 
                 Settings.PropertyChanged += Profile_PropertyChanged;
 
-                if (ProfileChanged != null)
-                    ProfileChanged(this, new EventArgs());
+                ProfileChanged?.Invoke(this, new EventArgs());
             }
         }
 
@@ -184,7 +189,7 @@ namespace Aurora.Settings
 
         private string GetValidFilename(string filename)
         {
-            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+            foreach (char c in Path.GetInvalidFileNameChars())
                 filename = filename.Replace(c, '_');
 
             return filename;
@@ -228,7 +233,7 @@ namespace Aurora.Settings
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
                             prof.ProfileName = Path.GetFileNameWithoutExtension(path);
 
-                        foreach (Layers.Layer lyr in prof.Layers)
+                        foreach (Layer lyr in prof.Layers)
                         {
                             lyr.AnythingChanged += this.SaveProfilesEvent;
                             lyr.SetProfile(this);
@@ -384,7 +389,7 @@ namespace Aurora.Settings
 
                             break;
                         case ".cs":
-                            System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(script);
+                            Assembly script_assembly = CSScript.LoadCodeFrom(script);
                             Type effectType = typeof(IEffectScript);
                             foreach (Type typ in script_assembly.ExportedTypes)
                             {

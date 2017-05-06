@@ -17,11 +17,11 @@ namespace Aurora.Profiles.Payday_2
         public PD2ProfileManager()
             : base(new LightEventConfig { Name = "Payday 2", ID = "pd2", AppID= "218620", ProcessNames = new[] { "payday2_win32_release.exe" }, SettingsType = typeof(PD2Settings), OverviewControlType = typeof(Control_PD2), GameStateType = typeof(GSI.GameState_PD2), Event = new GameEvent_PD2(), IconURI = "Resources/pd2_64x64.png" })
         {
-            var extra = new List<ProfilesManager.LayerHandlerEntry>
+            var extra = new List<LayerHandlerEntry>
             {
-                new ProfilesManager.LayerHandlerEntry("PD2Background", "Payday 2 Background Layer", typeof(PD2BackgroundLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("PD2Flashbang", "Payday 2 Flashbang Layer", typeof(PD2FlashbangLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("PD2States", "Payday 2 States Layer", typeof(PD2StatesLayerHandler)),
+                new LayerHandlerEntry("PD2Background", "Payday 2 Background Layer", typeof(PD2BackgroundLayerHandler)),
+                new LayerHandlerEntry("PD2Flashbang", "Payday 2 Flashbang Layer", typeof(PD2FlashbangLayerHandler)),
+                new LayerHandlerEntry("PD2States", "Payday 2 States Layer", typeof(PD2StatesLayerHandler)),
             };
 
             Global.ProfilesManager.RegisterLayerHandlers(extra, false);

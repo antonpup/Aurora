@@ -19,13 +19,13 @@ namespace Aurora.Profiles.CSGO
         {
             //UpdateInterval = 33;
 
-            var extra = new List<ProfilesManager.LayerHandlerEntry> {
-                new ProfilesManager.LayerHandlerEntry("CSGOBackground", "CSGO Background Layer", typeof(CSGOBackgroundLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("CSGOBomb", "CSGO Bomb Layer", typeof(CSGOBombLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("CSGOKillsIndicator", "CSGO Kills Indicator Layer", typeof(CSGOKillIndicatorLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("CSGOBurning", "CSGO Burning Effect Layer", typeof(CSGOBurningLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("CSGOFlashbang", "CSGO Flashbang Layer", typeof(CSGOFlashbangLayerHandler)),
-                new ProfilesManager.LayerHandlerEntry("CSGOTyping", "CSGO Typing Layer", typeof(CSGOTypingIndicatorLayerHandler)),
+            var extra = new List<LayerHandlerEntry> {
+                new LayerHandlerEntry("CSGOBackground", "CSGO Background Layer", typeof(CSGOBackgroundLayerHandler)),
+                new LayerHandlerEntry("CSGOBomb", "CSGO Bomb Layer", typeof(CSGOBombLayerHandler)),
+                new LayerHandlerEntry("CSGOKillsIndicator", "CSGO Kills Indicator Layer", typeof(CSGOKillIndicatorLayerHandler)),
+                new LayerHandlerEntry("CSGOBurning", "CSGO Burning Effect Layer", typeof(CSGOBurningLayerHandler)),
+                new LayerHandlerEntry("CSGOFlashbang", "CSGO Flashbang Layer", typeof(CSGOFlashbangLayerHandler)),
+                new LayerHandlerEntry("CSGOTyping", "CSGO Typing Layer", typeof(CSGOTypingIndicatorLayerHandler)),
             };
 
             Global.ProfilesManager.RegisterLayerHandlers(extra, false);

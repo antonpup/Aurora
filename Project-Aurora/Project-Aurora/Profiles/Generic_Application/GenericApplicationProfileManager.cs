@@ -24,7 +24,7 @@ namespace Aurora.Profiles.Generic_Application
 
         public override ImageSource GetIcon()
         {
-            if (Icon == null)
+            if (icon == null)
             {
                 string icon_path = Path.Combine(GetProfileFolderPath(), "icon.png");
 
@@ -36,13 +36,13 @@ namespace Aurora.Profiles.Generic_Application
                     b.StreamSource = memStream;
                     b.EndInit();
 
-                    Icon = b;
+                    icon = b;
                 }
                 else
-                    Icon = new BitmapImage(new Uri(@"Resources/unknown_app_icon.png", UriKind.Relative));
+                    icon = new BitmapImage(new Uri(@"Resources/unknown_app_icon.png", UriKind.Relative));
             }
 
-            return Icon;
+            return icon;
         }
 
         public override void LoadProfiles()

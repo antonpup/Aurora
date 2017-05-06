@@ -115,7 +115,7 @@ namespace Aurora.Settings.Layers
         public ProfileManager Profile { get; protected set; }
 
         [JsonIgnore]
-        internal UserControl _Control;
+        protected UserControl _Control;
 
         [JsonIgnore]
         public UserControl Control
@@ -127,7 +127,7 @@ namespace Aurora.Settings.Layers
         }
 
         [JsonIgnore]
-        internal string _ID;
+        protected string _ID;
 
         [JsonIgnore]
         public string ID { get { return _ID; } }
