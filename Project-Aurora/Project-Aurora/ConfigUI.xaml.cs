@@ -749,7 +749,6 @@ namespace Aurora
             if(focusedElement != null && focusedElement is FrameworkElement && (!focusedElement.Equals(_selectedManager) || forced))
             {
                 _selectedManager = focusedElement as FrameworkElement;
-
                 if(gridManagers.ActualHeight != 0)
                     stackPanelManagers.Height = gridManagers.ActualHeight;
                 double totalHeight = stackPanelManagers.Height;
@@ -761,6 +760,7 @@ namespace Aurora
                     else
                         child.Height = 25.0;
                 }
+                _selectedManager.RaiseEvent(new RoutedEventArgs(GotFocusEvent));
             }
         }
 

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Aurora.Settings"
              xmlns:AControls="clr-namespace:Aurora.Controls"
              xmlns:Utils="clr-namespace:Aurora.Utils"
-             mc:Ignorable="d" d:DesignWidth="200" MinWidth="200" MinHeight="25" KeyDown="lstLayers_KeyDown" MouseMove="UserControl_MouseMove" MouseLeave="UserControl_MouseLeave" MouseLeftButtonUp="UserControl_MouseLeftButtonUp" d:DesignHeight="180" >
+             mc:Ignorable="d" d:DesignWidth="200" MinWidth="200" MinHeight="25" KeyDown="lstLayers_KeyDown" MouseMove="UserControl_MouseMove" MouseLeave="UserControl_MouseLeave" MouseLeftButtonUp="UserControl_MouseLeftButtonUp" d:DesignHeight="180" GotFocus="LayerManager_GotFocus">
     <UserControl.Resources>
         <ResourceDictionary>
             <Utils:TextCharacterLimitConv x:Key="TextCharacterLimitConv" MaxLength="24"/>

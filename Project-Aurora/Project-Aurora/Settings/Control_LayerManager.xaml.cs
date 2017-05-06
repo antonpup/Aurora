@@ -313,5 +313,12 @@ namespace Aurora.Settings
         {
             this.lstLayers.StopReordering();
         }
+
+        private void LayerManager_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (this.lstLayers.SelectedItem == null)
+                this.lstLayers.SelectedIndex = 0;
+
+        }
     }
 }
