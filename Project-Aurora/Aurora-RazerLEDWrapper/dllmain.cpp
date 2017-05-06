@@ -1019,7 +1019,7 @@ WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZ
 		additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(breathing_effect->Color1) << "\"" << ',';
 		additional_effect_data << "\"red_end\": " << "\"" << GetRValue(breathing_effect->Color2) << "\"" << ',';
 		additional_effect_data << "\"green_end\": " << "\"" << GetGValue(breathing_effect->Color2) << "\"" << ',';
-		additional_effect_data << "\blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
+		additional_effect_data << "\"blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
 		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
 
 		switch (breathing_effect->Type)
@@ -1222,7 +1222,7 @@ WRAPPER_EFFECT HandleMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE Effect, PRZPARAM 
 		additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(breathing_effect->Color1) << "\"" << ',';
 		additional_effect_data << "\"red_end\": " << "\"" << GetRValue(breathing_effect->Color2) << "\"" << ',';
 		additional_effect_data << "\"green_end\": " << "\"" << GetGValue(breathing_effect->Color2) << "\"" << ',';
-		additional_effect_data << "\blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
+		additional_effect_data << "\"blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
 		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
 
 		switch (breathing_effect->Type)
