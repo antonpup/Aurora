@@ -1,5 +1,5 @@
 # Aurora - Unified Lighting Effects
-![Aurora Logo](https://dl.dropboxusercontent.com/u/30675690/Aurora/aurora_logo_256x256.png)
+![Aurora Logo](http://i.imgur.com/ZkxyAyp.png)
 
 [Link to Aurora's webpage, includes some demos and changelogs](http://project-aurora.com/)
 
@@ -9,7 +9,10 @@
 
 Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games.
 
-#Requirements
+## Minor Announcement
+I ([@Antonpup](https://github.com/antonpup)) will no longer be able to develop this project futher due to my new future job. I have handed over the project development to [@Simon W](https://github.com/simon-wh). He has access to everything in order to push new updates and upkeep the project. I will keep this project on my Github account, as it is part of my porfolio. I hope you enjoy the work Simon will be putting into this project. Some of you will see my work again in the near future.
+
+# Requirements
 Recommended:
 * OS: Windows based operating system
 * Processor: Quad core processor
