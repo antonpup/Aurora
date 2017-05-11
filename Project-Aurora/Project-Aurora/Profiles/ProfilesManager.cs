@@ -223,42 +223,52 @@ namespace Aurora.Profiles
 
         private void LoadPlugins()
         {
-            string dir = "./" + PluginDirectory;
+            string dir = Path.Combine(Global.ExecutingDirectory, PluginDirectory);
             if (!Directory.Exists(dir))
+            {
                 Directory.CreateDirectory(dir);
+
+                //No need to search the directory if we just created it
+                return;
+            }
 
             /*AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(
                 (sender, e) => {
                     return Assembly.LoadFrom(e.Name);
                 }
             );*/
-            AppDomain.CurrentDomain.AppendPrivatePath(AppDomain.CurrentDomain.BaseDirectory);
+
             foreach (string pathPlugin in Directory.EnumerateFiles(dir, "*.dll", SearchOption.TopDirectoryOnly))
             {
                 try
                 {
                     Assembly dllPlugin = Assembly.LoadFrom(pathPlugin);
-                    foreach(AssemblyName name in dllPlugin.GetReferencedAssemblies())
+
+                    foreach (AssemblyName name in dllPlugin.GetReferencedAssemblies())
                         AppDomain.CurrentDomain.Load(name);
 
                     foreach (Type typ in dllPlugin.GetExportedTypes())
                     {
                         if (typeof(IPlugin).IsAssignableFrom(typ))
                         {
+                            //Create an instance of the plugin type
                             IPlugin objPlugin = (IPlugin)Activator.CreateInstance(typ);
 
+                            //Get the ID of the plugin
                             string id = objPlugin.ID;
-                            if (!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id])
-                            {
+
+                            if (id != null && (!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id]))
                                 objPlugin.PluginHost = this;
-                            }
+
                             this.Plugins.Add(id, objPlugin);
                         }
                     }
                 }
-                catch(Exception exc)
+                catch (Exception exc)
                 {
                     Global.logger.LogLine(exc.ToString(), Logging_Level.Error, true);
+                    if (Global.isDebug)
+                        throw exc;
                 }
             }
         }

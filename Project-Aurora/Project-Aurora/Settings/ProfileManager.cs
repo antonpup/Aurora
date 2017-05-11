@@ -227,14 +227,21 @@ namespace Aurora.Settings
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, Config.SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, Config.SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder, Error = new EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs>(LoadProfilesError) });
                         prof.ProfileFilepath = path;
 
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
                             prof.ProfileName = Path.GetFileNameWithoutExtension(path);
 
-                        foreach (Layer lyr in prof.Layers)
+                        foreach (Layer lyr in prof.Layers.ToList())
                         {
+                            //Remove any Layers that have non-functional handlers
+                            if (lyr.Handler == null || !Global.ProfilesManager.LayerHandlers.ContainsKey(lyr.Handler.ID))
+                            {
+                                prof.Layers.Remove(lyr);
+                                continue;
+                            }
+
                             lyr.AnythingChanged += this.SaveProfilesEvent;
                             lyr.SetProfile(this);
                         }
@@ -243,7 +250,7 @@ namespace Aurora.Settings
                         {
                             if (e.NewItems != null)
                             {
-                                foreach (Layers.Layer lyr in e.NewItems)
+                                foreach (Layer lyr in e.NewItems)
                                 {
                                     if (lyr == null)
                                         continue;
@@ -279,6 +286,18 @@ namespace Aurora.Settings
             }
 
             return null;
+        }
+
+        private void LoadProfilesError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+        {
+            if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
+                e.ErrorContext.Handled = true;
+
+            if (e.CurrentObject.GetType() == typeof(Layer) && e.ErrorContext.Member.Equals("Handler"))
+            {
+                ((Layer)e.ErrorContext.OriginalObject).Handler = null;
+                e.ErrorContext.Handled = true;
+            }
         }
 
         private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

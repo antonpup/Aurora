@@ -34,6 +34,9 @@ namespace Aurora.Utils
                     return typeof(Queue<System.Windows.Forms.Keys>);
                 case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]":
                     return typeof(Dictionary<Devices.DeviceKeys, System.Drawing.Color>);
+                    //Resolve typo'd AbilityLayerHandler type
+                case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler, Aurora":
+                    return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
                 default:
                     return base.BindToType(assemblyName, typeName);
             }
