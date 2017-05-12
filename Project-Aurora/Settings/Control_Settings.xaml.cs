@@ -10,6 +10,7 @@ using Xceed.Wpf.Toolkit;
 using Aurora.Profiles.Desktop;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Aurora.Settings
 {
@@ -30,6 +31,8 @@ namespace Aurora.Settings
 
             this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
             this.app_detection_mode.SelectedIndex = (int)Global.Configuration.detection_mode;
+
+            load_excluded_listbox();
 
             this.volume_as_brightness_enabled.IsChecked = Global.Configuration.use_volume_as_brightness;
 
@@ -387,6 +390,7 @@ namespace Aurora.Settings
 
         private void excluded_remove_Click(object sender, RoutedEventArgs e)
         {
+
             if (this.excluded_listbox.SelectedItem != null)
             {
                 if (Global.Configuration.excluded_programs.Contains((string)this.excluded_listbox.SelectedItem))
@@ -967,6 +971,25 @@ namespace Aurora.Settings
                 Global.Configuration.volume_overlay_settings.dim_color = Utils.ColorUtils.MediaColorToDrawingColor(this.volume_overlay_dim_color.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
+        }
+
+        private void excluded_process_name_DropDownOpened(object sender, EventArgs e)
+        {
+            HashSet<string> processes = new HashSet<string>();
+
+            foreach (var p in Process.GetProcesses())
+            {
+                try
+                {
+                    processes.Add( Path.GetFileName( p.MainModule.FileName ) );
+                }
+                catch(Exception exc)
+                {
+
+                }
+            }
+
+            excluded_process_name.ItemsSource = processes.ToArray();
         }
     }
 }
