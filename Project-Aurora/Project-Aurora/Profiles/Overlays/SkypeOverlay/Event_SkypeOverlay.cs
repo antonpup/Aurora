@@ -44,7 +44,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
             _is_calling = state;
         }
 
-        public new bool IsEnabled
+        public override bool IsEnabled
         {
             get { return Global.Configuration.skype_overlay_settings.enabled; }
         }

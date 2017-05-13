@@ -111,8 +111,8 @@ namespace Aurora.Utils
             {
                 if (windowHandle.Equals(IntPtr.Zero))
                     windowHandle = GetForegroundWindow();
-
-                if (GetWindowThreadProcessId(windowHandle, out uint pid) > 0)
+                uint pid;
+                if (GetWindowThreadProcessId(windowHandle, out pid) > 0)
                     return Process.GetProcessById((int)pid).MainModule.FileName;
             }
             catch(Exception exc)
