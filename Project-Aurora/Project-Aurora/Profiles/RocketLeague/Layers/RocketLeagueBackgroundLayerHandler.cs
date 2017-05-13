@@ -146,6 +146,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
         public override void SetProfile(ProfileManager profile)
         {
             (Control as Control_RocketLeagueBackgroundLayer).SetProfile(profile);
+            base.SetProfile(profile);
         }
     }
 }

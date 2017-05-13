@@ -115,6 +115,7 @@ namespace Aurora.Profiles.CSGO.Layers
         public override void SetProfile(ProfileManager profile)
         {
             (Control as Control_CSGOBurningLayer).SetProfile(profile);
+            base.SetProfile(profile);
         }
     }
 }

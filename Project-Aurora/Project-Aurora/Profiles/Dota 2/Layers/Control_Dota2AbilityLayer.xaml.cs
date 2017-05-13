@@ -247,7 +247,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("You are already recording a key sequence for " + Global.key_recorder.GetRecordingType());
+                    MessageBox.Show("You are already recording a key sequence for " + Global.key_recorder.GetRecordingType());
                 }
             }
             else

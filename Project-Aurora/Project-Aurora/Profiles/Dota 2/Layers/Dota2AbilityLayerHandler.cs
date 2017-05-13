@@ -92,6 +92,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         public override void SetProfile(ProfileManager profile)
         {
             (Control as Control_Dota2AbilityLayer).SetProfile(profile);
+            base.SetProfile(profile);
         }
     }
 }

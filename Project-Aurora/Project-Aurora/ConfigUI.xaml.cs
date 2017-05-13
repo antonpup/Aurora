@@ -233,9 +233,9 @@ namespace Aurora
                             }
 
                             if (Global.key_recorder.IsRecording())
-                                this.keyboard_record_message.Visibility = System.Windows.Visibility.Visible;
+                                this.keyboard_record_message.Visibility = Visibility.Visible;
                             else
-                                this.keyboard_record_message.Visibility = System.Windows.Visibility.Hidden;
+                                this.keyboard_record_message.Visibility = Visibility.Hidden;
 
                         });
         }
@@ -263,7 +263,7 @@ namespace Aurora
         {
             if (Program.isSilent || Global.Configuration.start_silently)
             {
-                this.Visibility = System.Windows.Visibility.Hidden;
+                this.Visibility = Visibility.Hidden;
                 this.WindowStyle = WindowStyle.None;
                 this.ShowInTaskbar = false;
                 Hide();
@@ -274,7 +274,7 @@ namespace Aurora
         {
             if (Global.Configuration.close_mode == AppExitMode.Ask)
             {
-                MessageBoxResult result = System.Windows.MessageBox.Show("Would you like to Exit Aurora?", "Aurora", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Would you like to Exit Aurora?", "Aurora", MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.No)
                 {
@@ -299,7 +299,7 @@ namespace Aurora
 
         private void exitApp()
         {
-            trayicon.Visibility = System.Windows.Visibility.Hidden;
+            trayicon.Visibility = Visibility.Hidden;
             virtual_keyboard_timer.Stop();
             Program.Exit();
         }
@@ -359,6 +359,9 @@ namespace Aurora
             //Included Game Profiles
             foreach (string profile_k in Global.Configuration.ProfileOrder)
             {
+                if (!Global.ProfilesManager.Events.ContainsKey(profile_k))
+                    continue;
+
                 ProfileManager profile = (ProfileManager)Global.ProfilesManager.Events[profile_k];
                 ImageSource icon = profile.GetIcon();
                 UserControl control = profile.GetUserControl();
@@ -596,7 +599,7 @@ namespace Aurora
 
                 if (Global.ProfilesManager.Events.ContainsKey(name))
                 {
-                    if (System.Windows.MessageBox.Show("Are you sure you want to delete profile for " + (((ProfileManager)Global.ProfilesManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if (MessageBox.Show("Are you sure you want to delete profile for " + (((ProfileManager)Global.ProfilesManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
                         Global.ProfilesManager.RemoveGenericProfile(name);
                         //ConfigManager.Save(Global.Configuration);
@@ -621,7 +624,7 @@ namespace Aurora
 
                 if (Global.ProfilesManager.Events.ContainsKey(filename))
                 {
-                    System.Windows.MessageBox.Show("Profile for this application already exists.");
+                    MessageBox.Show("Profile for this application already exists.");
                 }
                 else
                 {

@@ -715,7 +715,7 @@ namespace Aurora.Settings
         private void skype_run_integration_Click(object sender, RoutedEventArgs e)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = @"Aurora-SkypeIntegration.exe";
+            startInfo.FileName = Path.Combine(Global.ExecutingDirectory, "Aurora-SkypeIntegration.exe");
             Process.Start(startInfo);
         }
 

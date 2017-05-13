@@ -65,28 +65,31 @@ namespace Aurora.Utils
         [DllImport("user32.dll")]
         public static extern Boolean GetLastInputInfo(ref tagLASTINPUTINFO plii);
 
-        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         [DllImport("Oleacc.dll")]
         static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
-        [DllImport("psapi.dll")]
+        [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
 
         public string GetActiveWindowsProcessname()
         {
+            IntPtr windowHandle = IntPtr.Zero;
+
             try
             {
-                IntPtr windowHandle = IntPtr.Zero;
                 IntPtr processhandle = IntPtr.Zero;
                 IntPtr zeroHandle = IntPtr.Zero;
                 windowHandle = GetForegroundWindow();
                 processhandle = GetProcessHandleFromHwnd(windowHandle);
-
+                
                 StringBuilder sb = new StringBuilder(4048);
                 GetModuleFileNameEx(processhandle, zeroHandle, sb, 4048);
-
-                System.IO.Path.GetFileName(sb.ToString());
+                string path = sb.ToString();
+                System.IO.Path.GetFileName(path);
+                if (!System.IO.File.Exists(path))
+                    throw new Exception();
 
 
                 return sb.ToString();
@@ -94,13 +97,32 @@ namespace Aurora.Utils
             catch (ArgumentException aex)
             {
                 Global.logger.LogLine("Argument Exception: " + aex, Logging_Level.Error);
-                return "";
+                //if (Global.isDebug)
+                    //throw aex;
             }
             catch (Exception exc)
             {
                 Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
-                return "";
+                //if (Global.isDebug)
+                    //throw exc;
             }
+
+            try
+            {
+                if (windowHandle.Equals(IntPtr.Zero))
+                    windowHandle = GetForegroundWindow();
+
+                if (GetWindowThreadProcessId(windowHandle, out uint pid) > 0)
+                    return Process.GetProcessById((int)pid).MainModule.FileName;
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
+                if (Global.isDebug)
+                    throw exc;
+            }
+
+            return "";
         }
     }
 }

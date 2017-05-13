@@ -161,6 +161,7 @@ namespace Aurora.Profiles.GTA5.Layers
         public override void SetProfile(ProfileManager profile)
         {
             (Control as Control_GTA5BackgroundLayer).SetProfile(profile);
+            base.SetProfile(profile);
         }
     }
 }

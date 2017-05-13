@@ -89,6 +89,7 @@ namespace Aurora.Settings.Layers
                     Properties._MaxVariablePath = string.Empty;
             }
             (Control as Control_PercentGradientLayer).SetProfile(profile);
+            this.Profile = profile;
         }
     }
 }

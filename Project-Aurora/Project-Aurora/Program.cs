@@ -283,6 +283,8 @@ namespace Aurora
         /// </summary>
         public static void Exit()
         {
+            Global.ProfilesManager.SaveAll();
+
             Global.input_subscriptions?.Dispose();
             Global.ProfilesManager?.Dispose();
             Global.net_listener?.Stop();

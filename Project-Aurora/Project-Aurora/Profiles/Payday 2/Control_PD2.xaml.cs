@@ -75,21 +75,21 @@ namespace Aurora.Profiles.Payday_2
 
                         }
 
-                        System.Windows.MessageBox.Show("GSI for Payday 2 installed.");
+                        MessageBox.Show("GSI for Payday 2 installed.");
                     }
                     else
                     {
-                        System.Windows.MessageBox.Show("BLT Hook was not found.\r\nCould not install the GSI mod.");
+                        MessageBox.Show("BLT Hook was not found.\r\nCould not install the GSI mod.");
                     }
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("Payday 2 directory is not found.\r\nCould not install the GSI mod.");
+                    MessageBox.Show("Payday 2 directory is not found.\r\nCould not install the GSI mod.");
                 }
             }
             else
             {
-                System.Windows.MessageBox.Show("Payday 2 is not installed through Steam.\r\nCould not install the GSI mod.");
+                MessageBox.Show("Payday 2 is not installed through Steam.\r\nCould not install the GSI mod.");
             }
         }
 

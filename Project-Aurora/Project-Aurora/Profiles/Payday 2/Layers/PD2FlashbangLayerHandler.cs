@@ -72,6 +72,7 @@ namespace Aurora.Profiles.Payday_2.Layers
         public override void SetProfile(ProfileManager profile)
         {
             (Control as Control_PD2FlashbangLayer).SetProfile(profile);
+            base.SetProfile(profile);
         }
     }
 }

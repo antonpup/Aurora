@@ -117,6 +117,7 @@ namespace Aurora.Profiles.Payday_2.Layers
         public override void SetProfile(ProfileManager profile)
         {
             (_Control as Control_PD2StatesLayer)?.SetProfile(profile);
+            base.SetProfile(profile);
         }
     }
 }

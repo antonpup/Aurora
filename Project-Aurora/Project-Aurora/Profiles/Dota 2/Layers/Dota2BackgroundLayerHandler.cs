@@ -127,6 +127,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         public override void SetProfile(ProfileManager profile)
         {
             (Control as Control_Dota2BackgroundLayer).SetProfile(profile);
+            base.SetProfile(profile);
         }
 
         private double getDimmingValue()

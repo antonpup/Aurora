@@ -232,12 +232,6 @@ namespace Aurora.Profiles
                 return;
             }
 
-            /*AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(
-                (sender, e) => {
-                    return Assembly.LoadFrom(e.Name);
-                }
-            );*/
-
             foreach (string pathPlugin in Directory.EnumerateFiles(dir, "*.dll", SearchOption.TopDirectoryOnly))
             {
                 try
@@ -326,7 +320,7 @@ namespace Aurora.Profiles
 
         public void SaveAll()
         {
-            //SaveSettings();
+            SaveSettings();
 
             foreach(var profile in Events)            {
                 if (profile.Value is ProfileManager)
@@ -361,6 +355,9 @@ namespace Aurora.Profiles
 
         private bool InsertLightEvent(ILightEvent lightEvent, LightEventType? old = null)
         {
+            LightEventType type = lightEvent.Config.Type ?? LightEventType.Normal;
+            lightEvent.Config.Type = type;
+
             if (old == null)
             {
                 lightEvent.Config.PropertyChanged += LightEvent_PropertyChanged;
@@ -371,7 +368,7 @@ namespace Aurora.Profiles
                 oldEvents.Remove(lightEvent.Config.ID);
             }
 
-            var events = GetEventTable(lightEvent.Config.Type ?? LightEventType.Normal);
+            var events = GetEventTable(type);
 
             events.Add(lightEvent.Config.ID);
 
@@ -469,7 +466,6 @@ namespace Aurora.Profiles
                 return Events[process];
             else if (Events.ContainsKey(process))
                 return Events[process];
-
 
             return null;
         }
