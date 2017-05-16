@@ -562,6 +562,7 @@
       <DependentUpon>Control_AnimationLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\ObjectSettings.cs" />
+    <Compile Include="Settings\PluginManager.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />

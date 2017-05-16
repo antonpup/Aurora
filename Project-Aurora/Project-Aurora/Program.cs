@@ -54,6 +54,7 @@ namespace Aurora
         /// </summary>
         public static InputEventsSubscriptions input_subscriptions = new InputEventsSubscriptions();
         //public static GameEventHandler geh;
+        public static PluginManager PluginManager;
         public static LightingStateManager LightingStateManager;
         public static NetworkListener net_listener;
         public static Configuration Configuration;
@@ -208,7 +209,10 @@ namespace Aurora
                 }
             }
 
-            Global.logger.LogLine("Loading Profiles", Logging_Level.Info);
+            Global.logger.LogLine("Loading Plugins", Logging_Level.Info);
+            (Global.PluginManager = new PluginManager()).Initialize();
+
+            Global.logger.LogLine("Loading Applications", Logging_Level.Info);
             (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
             Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);

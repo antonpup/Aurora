@@ -3,6 +3,7 @@ using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aurora.Profiles.Desktop
 {
@@ -82,28 +83,28 @@ namespace Aurora.Profiles.Desktop
                         _PrimaryColor = Color.Red,
                         _ShortcutKeys = new Keybind[]
                         {
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.X }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.C }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.V }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Z }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.F4 }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.A }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.D }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.R }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Y }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Right }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Left }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Down }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Up }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Tab }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Up }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Down }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Left }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Right }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Escape }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.LShiftKey, System.Windows.Forms.Keys.Escape }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.Escape }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LControlKey, System.Windows.Forms.Keys.F })
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.X }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.C }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.V }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Z }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.F4 }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.A }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.D }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.R }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Y }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Right }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Left }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Down }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Up }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LMenu, Keys.Tab }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Up }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Down }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Left }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Right }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Escape }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Escape }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Escape }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.F })
                         }
                     }
                 }),
@@ -114,24 +115,24 @@ namespace Aurora.Profiles.Desktop
                         _PrimaryColor = Color.Blue,
                         _ShortcutKeys = new Keybind[]
                         {
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.L }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.D }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.B }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.A }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.D }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.E }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.G }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.I }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.M }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.P }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.R }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.S }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Up }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Down }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Left }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Right }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.Home }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LWin, System.Windows.Forms.Keys.D })
+                            new Keybind( new Keys[] { Keys.LWin, Keys.L }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.D }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.B }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.A }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.LMenu, Keys.D }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.E }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.G }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.I }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.M }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.P }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.R }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.S }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.Up }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.Down }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.Left }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.Right }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.Home }),
+                            new Keybind( new Keys[] { Keys.LWin, Keys.D })
                         }
                     }
                 }),
@@ -142,14 +143,14 @@ namespace Aurora.Profiles.Desktop
                         _PrimaryColor = Color.Yellow,
                         _ShortcutKeys = new Keybind[]
                         {
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Tab }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.F4 }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Space }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Left }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Right }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.PageUp }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.PageDown }),
-                            new Keybind( new System.Windows.Forms.Keys[] { System.Windows.Forms.Keys.LMenu, System.Windows.Forms.Keys.Tab }),
+                            new Keybind( new Keys[] { Keys.LMenu, Keys.Tab }),
+                            new Keybind( new Keys[] { Keys.LMenu, Keys.F4 }),
+                            new Keybind( new Keys[] { Keys.LMenu, Keys.Space }),
+                            new Keybind( new Keys[] { Keys.LMenu, Keys.Left }),
+                            new Keybind( new Keys[] { Keys.LMenu, Keys.Right }),
+                            new Keybind( new Keys[] { Keys.LMenu, Keys.PageUp }),
+                            new Keybind( new Keys[] { Keys.LMenu, Keys.PageDown }),
+                            new Keybind( new Keys[] { Keys.LMenu, Keys.Tab }),
                         }
                     }
                 }),

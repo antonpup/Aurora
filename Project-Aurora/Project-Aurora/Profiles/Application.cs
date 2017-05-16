@@ -487,8 +487,11 @@ namespace Aurora.Profiles
 
                 foreach (string profile in Directory.EnumerateFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
                 {
-                    ApplicationProfile profileSettings = LoadProfile(profile);
+
                     string profileFilename = Path.GetFileNameWithoutExtension(profile);
+                    if (profileFilename.Equals(Path.GetFileNameWithoutExtension(SettingsSavePath)))
+                        continue;
+                    ApplicationProfile profileSettings = LoadProfile(profile);
 
                     if (profileSettings != null)
                     {
@@ -547,11 +550,11 @@ namespace Aurora.Profiles
                 if (!Directory.Exists(profiles_path))
                     Directory.CreateDirectory(profiles_path);
 
-                SaveProfile(Path.Combine(profiles_path, Profile.ProfileFilepath), Profile);
+                //SaveProfile(Path.Combine(profiles_path, Profile.ProfileFilepath), Profile);
 
                 foreach (var profile in Profiles)
                 {
-                    SaveProfile(Path.Combine(profiles_path, GetValidFilename(profile.ProfileName) + ".json"), profile);
+                    SaveProfile(Path.Combine(profiles_path, profile.ProfileFilepath), profile);
                 }
             }
             catch (Exception exc)

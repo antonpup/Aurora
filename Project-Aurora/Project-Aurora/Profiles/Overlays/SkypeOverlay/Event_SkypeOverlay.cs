@@ -16,7 +16,8 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
             Config = new LightEventConfig
             {
                 ID = "skype.exe",
-                GameStateType = typeof(State_SkypeOverlay)
+                GameStateType = typeof(State_SkypeOverlay),
+                Type = LightEventType.Overlay
             };
 
             if (Global.Configuration.skype_overlay_settings.enabled)
