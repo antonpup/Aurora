@@ -56,8 +56,8 @@
 
         <Grid x:Name="gridManagers" Margin="5,5,0,5" HorizontalAlignment="Left" Width="200">
             <StackPanel x:Name="stackPanelManagers">
-                <Settings:Control_ProfileManager x:Name="ctrlProfileManager" FocusedProfile="{Binding FocusedProfile}" Height="25" Margin="0,0,0,3" Background="#00000000" PreviewMouseDown="ctrlProfileManager_PreviewMouseDown" />
-                <Settings:Control_LayerManager x:Name="ctrlLayerManager" FocusedProfile="{Binding FocusedProfile}" Background="#00000000" PreviewMouseDown="ctrlLayerManager_PreviewMouseDown" />
+                <Settings:Control_ProfileManager x:Name="ctrlProfileManager" FocusedApplication="{Binding FocusedApplication}" Height="25" Margin="0,0,0,3" Background="#00000000" PreviewMouseDown="ctrlProfileManager_PreviewMouseDown" />
+                <Settings:Control_LayerManager x:Name="ctrlLayerManager" FocusedApplication="{Binding FocusedApplication}" Background="#00000000" PreviewMouseDown="ctrlLayerManager_PreviewMouseDown" />
             </StackPanel>
         </Grid>
         

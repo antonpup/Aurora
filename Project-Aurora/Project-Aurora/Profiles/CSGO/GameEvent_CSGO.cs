@@ -22,19 +22,19 @@ namespace Aurora.Profiles.CSGO
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            CSGOSettings settings = (CSGOSettings)this.Profile.Settings;
+            CSGOProfile settings = (CSGOProfile)this.Application.Profile;
 
-            foreach (var layer in settings.Layers.Reverse().ToArray())
+            foreach (var layer in Application.Profile.Layers.Reverse().ToArray())
             {
                 if (layer.Enabled && layer.LogicPass)
                     layers.Enqueue(layer.Render(_game_state));
             }
 
             //Scripts
-            this.Profile.UpdateEffectScripts(layers, _game_state);
+            this.Application.UpdateEffectScripts(layers, _game_state);
 
             //ColorZones
-            layers.Enqueue(new EffectLayer("CSGO - Color Zones").DrawColorZones((this.Profile.Settings as CSGOSettings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("CSGO - Color Zones").DrawColorZones((this.Application.Profile as CSGOProfile).lighting_areas.ToArray()));
 
             frame.AddLayers(layers.ToArray());
         }

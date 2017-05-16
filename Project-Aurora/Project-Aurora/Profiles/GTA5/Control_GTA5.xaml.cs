@@ -16,12 +16,12 @@ namespace Aurora.Profiles.GTA5
     /// </summary>
     public partial class Control_GTA5 : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
         private Timer preview_wantedlevel_timer;
         private int frame = 0;
 
-        public Control_GTA5(ProfileManager profile)
+        public Control_GTA5(Application profile)
         {
             InitializeComponent();
 
@@ -35,15 +35,15 @@ namespace Aurora.Profiles.GTA5
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as GTA5Settings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as GTA5Settings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as GTA5Profile).lighting_areas;
         }
 
         private void preview_state_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
-                (profile_manager.Config.Event._game_state as GameState_GTA5).CurrentState = (GTA5.GSI.PlayerState)Enum.Parse(typeof(GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString());
+                (this.profile_manager.Config.Event._game_state as GameState_GTA5).CurrentState = (Profiles.GTA5.GSI.PlayerState)Enum.Parse(typeof(Profiles.GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString());
             }
         }
 
@@ -86,7 +86,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as GTA5Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as GTA5Profile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }
@@ -111,7 +111,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as GTA5Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

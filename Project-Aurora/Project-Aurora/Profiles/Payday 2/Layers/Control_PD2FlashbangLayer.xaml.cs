@@ -46,7 +46,7 @@ namespace Aurora.Profiles.Payday_2.Layers
             }
         }
 
-        internal void SetProfile(ProfileManager profile)
+        internal void SetProfile(Application profile)
         {
             if (profile != null && !profileset)
             {

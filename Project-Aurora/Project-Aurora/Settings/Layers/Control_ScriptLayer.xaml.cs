@@ -20,7 +20,7 @@ namespace Aurora.Settings.Layers
     /// </summary>
     public partial class Control_ScriptLayer : UserControl
     {
-        private ProfileManager Profile { get; set; }
+        private Profiles.Application Application { get; set; }
 
         public Control_ScriptLayer()
         {
@@ -34,11 +34,11 @@ namespace Aurora.Settings.Layers
             this.UpdateScriptSettings();
         }
 
-        public void SetProfile(ProfileManager profile)
+        public void SetProfile(Profiles.Application application)
         {
-            this.cboScripts.ItemsSource = profile.EffectScripts.Keys;
-            this.cboScripts.IsEnabled = profile.EffectScripts.Keys.Count > 0;
-            this.Profile = profile;
+            this.cboScripts.ItemsSource = application.EffectScripts.Keys;
+            this.cboScripts.IsEnabled = application.EffectScripts.Keys.Count > 0;
+            this.Application = application;
         }
 
         private void cboScripts_SelectionChanged(object sender, SelectionChangedEventArgs e)

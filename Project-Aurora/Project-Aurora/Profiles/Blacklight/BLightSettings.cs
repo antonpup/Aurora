@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
 using Aurora.Settings;
+using Aurora.Settings.Layers;
 using System.Drawing;
 
 namespace Aurora.Profiles.Blacklight
 {
-    public class BLightSettings : ProfileSettings
+    public class BLightProfile : ApplicationProfile
     {
-        //General
-        public bool first_time_installed;
-
         //Effects
         //// Lighting Areas
         public List<ColorZone> lighting_areas { get; set; }
 
-        public BLightSettings()
+        public BLightProfile() : base()
         {
-            //General
-            IsEnabled = true;
-            first_time_installed = false;
+            
+        }
 
-            Layers = new System.Collections.ObjectModel.ObservableCollection<Settings.Layers.Layer>()
+        public override void Reset()
+        {
+            base.Reset();
+            Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
-                new Settings.Layers.Layer("Movement", new Settings.Layers.SolidColorLayerHandler()
+                new Layer("Movement", new SolidColorLayerHandler()
                 {
-                    Properties = new Settings.Layers.LayerHandlerProperties()
+                    Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Orange,
                         _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })

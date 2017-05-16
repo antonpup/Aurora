@@ -12,9 +12,9 @@ namespace Aurora.Profiles.Magic_Duels_2012
     /// </summary>
     public partial class Control_MagicDuels2012 : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_MagicDuels2012(ProfileManager profile)
+        public Control_MagicDuels2012(Application profile)
         {
             InitializeComponent();
 
@@ -23,10 +23,10 @@ namespace Aurora.Profiles.Magic_Duels_2012
             SetSettings();
 
             //Apply LightFX Wrapper, if needed.
-            if (!(profile_manager.Settings as MagicDuels2012Settings).first_time_installed)
+            if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
             {
                 InstallWrapper();
-                (profile_manager.Settings as MagicDuels2012Settings).first_time_installed = true;
+                (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
             }
 
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
@@ -39,8 +39,8 @@ namespace Aurora.Profiles.Magic_Duels_2012
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as MagicDuels2012Settings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as MagicDuels2012Settings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as MagicDuels2012Profile).lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -64,7 +64,7 @@ namespace Aurora.Profiles.Magic_Duels_2012
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as MagicDuels2012Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -73,7 +73,7 @@ namespace Aurora.Profiles.Magic_Duels_2012
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as MagicDuels2012Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as MagicDuels2012Profile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

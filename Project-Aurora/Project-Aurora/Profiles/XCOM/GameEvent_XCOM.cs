@@ -14,7 +14,7 @@ namespace Aurora.Profiles.XCOM
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            layers.Enqueue(new EffectLayer("XCOM - Color Zones").DrawColorZones((this.Profile.Settings as XCOMSettings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("XCOM - Color Zones").DrawColorZones((this.Application.Profile as XCOMProfile).lighting_areas.ToArray()));
         }
     }
 }

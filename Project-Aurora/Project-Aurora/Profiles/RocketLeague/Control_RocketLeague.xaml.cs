@@ -15,9 +15,9 @@ namespace Aurora.Profiles.RocketLeague
     /// </summary>
     public partial class Control_RocketLeague : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_RocketLeague(ProfileManager profile)
+        public Control_RocketLeague(Application profile)
         {
             InitializeComponent();
 
@@ -35,8 +35,8 @@ namespace Aurora.Profiles.RocketLeague
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as RocketLeagueSettings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as RocketLeagueSettings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as RocketLeagueProfile).lighting_areas;
 
             if (!this.preview_team.HasItems)
             {
@@ -50,7 +50,7 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as RocketLeagueSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -87,7 +87,7 @@ namespace Aurora.Profiles.RocketLeague
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as RocketLeagueSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as RocketLeagueProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

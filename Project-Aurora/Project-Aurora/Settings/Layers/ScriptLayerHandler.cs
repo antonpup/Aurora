@@ -42,7 +42,7 @@ namespace Aurora.Settings.Layers
 
     public class ScriptLayerHandler : LayerHandler<ScriptLayerHandlerProperties>, INotifyPropertyChanged
     {
-        internal ProfileManager profileManager;
+        internal Application profileManager;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -117,7 +117,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool IsScriptValid { get { return profileManager?.EffectScripts?.ContainsKey(Properties.Script) ?? false; } }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             profileManager = profile;
             (_Control as Control_ScriptLayer)?.SetProfile(profile);

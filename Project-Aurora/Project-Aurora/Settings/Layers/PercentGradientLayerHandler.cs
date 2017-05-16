@@ -77,7 +77,7 @@ namespace Aurora.Settings.Layers
             return percent_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             if (profile != null)
             {
@@ -88,8 +88,8 @@ namespace Aurora.Settings.Layers
                 if (!double.TryParse(Properties._MaxVariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._MaxVariablePath) && !profile.ParameterLookup.ContainsKey(Properties._MaxVariablePath))
                     Properties._MaxVariablePath = string.Empty;
             }
-            (Control as Control_PercentGradientLayer).SetProfile(profile);
-            this.Profile = profile;
+            (Control as Control_PercentGradientLayer).SetApplication(profile);
+            this.Application = profile;
         }
     }
 }

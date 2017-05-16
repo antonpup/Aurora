@@ -84,10 +84,10 @@ namespace Aurora.Settings.Layers
             return _GlitchLayer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_GlitchLayer).SetProfile(profile);
-            base.SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 

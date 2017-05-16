@@ -24,20 +24,20 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Control_ProfileManager : UserControl
     {
-        public delegate void ProfileSelectedHandler(ProfileSettings profile);
+        public delegate void ProfileSelectedHandler(ApplicationProfile profile);
 
         public event ProfileSelectedHandler ProfileSelected;
 
-        public static readonly DependencyProperty FocusedProfileProperty = DependencyProperty.Register("FocusedProfile", typeof(ProfileManager), typeof(Control_ProfileManager), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
+        public static readonly DependencyProperty FocusedApplicationProperty = DependencyProperty.Register("FocusedApplication", typeof(Profiles.Application), typeof(Control_ProfileManager), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
 
-        public Dictionary<ProfileManager, ProfileSettings> LastSelectedProfile = new Dictionary<ProfileManager, ProfileSettings>();
+        public Dictionary<Profiles.Application, ApplicationProfile> LastSelectedProfile = new Dictionary<Profiles.Application, ApplicationProfile>();
 
-        public ProfileManager FocusedProfile
+        public Profiles.Application FocusedApplication
         {
-            get { return (ProfileManager)GetValue(FocusedProfileProperty); }
+            get { return (Profiles.Application)GetValue(FocusedApplicationProperty); }
             set
             {
-                SetValue(FocusedProfileProperty, value);
+                SetValue(FocusedApplicationProperty, value);
             }
         }
 
@@ -54,20 +54,20 @@ namespace Aurora.Settings
             Control_ProfileManager self = source as Control_ProfileManager;
             if (e.OldValue != null)
             {
-                ProfileManager prof = ((ProfileManager)e.OldValue);
+                Profiles.Application prof = ((Profiles.Application)e.OldValue);
                 prof.ProfileChanged -= self.UpdateProfiles;
                 prof.SaveProfiles();
 
                 if (self.LastSelectedProfile.ContainsKey(prof))
                     self.LastSelectedProfile.Remove(prof);
 
-                self.LastSelectedProfile.Add(prof, self.lstProfiles.SelectedItem as ProfileSettings);
+                self.LastSelectedProfile.Add(prof, self.lstProfiles.SelectedItem as ApplicationProfile);
 
             }
             self.UpdateProfiles();
             if (e.NewValue != null)
             {
-                ProfileManager profile = ((ProfileManager)e.NewValue);
+                Profiles.Application profile = ((Profiles.Application)e.NewValue);
 
                 profile.ProfileChanged += self.UpdateProfiles;
 
@@ -83,7 +83,8 @@ namespace Aurora.Settings
 
         public void UpdateProfiles(object sender, EventArgs e)
         {
-            this.lstProfiles.ItemsSource = this.FocusedProfile?.Profiles;
+            this.lstProfiles.ItemsSource = this.FocusedApplication?.Profiles;
+            this.lstProfiles.SelectedItem = this.FocusedApplication?.Profiles.First((profile) => System.IO.Path.GetFileNameWithoutExtension(profile.ProfileFilepath).Equals(this.FocusedApplication?.Settings.SelectedProfile));
         }
 
         private void lstProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -92,24 +93,24 @@ namespace Aurora.Settings
             {
                 if (lstProfiles.SelectedItem != null)
                 {
-                    if (!(lstProfiles.SelectedItem is ProfileSettings))
+                    if (!(lstProfiles.SelectedItem is ApplicationProfile))
                         throw new ArgumentException($"Items contained in the ListView must be of type 'ProfileSettings', not '{lstProfiles.SelectedItem.GetType()}'");
 
-                    this.FocusedProfile?.SwitchToProfile(lstProfiles.SelectedItem as ProfileSettings);
+                    this.FocusedApplication?.SwitchToProfile(lstProfiles.SelectedItem as ApplicationProfile);
 
-                    ProfileSelected?.Invoke(lstProfiles.SelectedItem as ProfileSettings);
+                    ProfileSelected?.Invoke(lstProfiles.SelectedItem as ApplicationProfile);
                     this.btnDeleteProfile.IsEnabled = true;
                 }
                 else
                     this.btnDeleteProfile.IsEnabled = false;
             }
             else if (e.RemovedItems.Count > 0)
-                this.FocusedProfile?.SaveProfiles();
+                this.FocusedApplication?.SaveProfiles();
         }
 
-        private void buttonSaveProfile_Click(object sender, RoutedEventArgs e)
+        private void btnNewProfile_Click(object sender, RoutedEventArgs e)
         {
-            this.FocusedProfile?.SaveDefaultProfile();
+            this.FocusedApplication?.SaveDefaultProfile();
 
             this.lstProfiles.SelectedIndex = this.lstProfiles.Items.Count - 1;
         }
@@ -118,93 +119,31 @@ namespace Aurora.Settings
         {
             if (this.lstProfiles.SelectedIndex > -1)
             {
-                if (MessageBox.Show($"Are you sure you want to delete Profile '{((ProfileSettings)lstProfiles.SelectedItem).ProfileName}'", "Confirm action", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Are you sure you want to delete Profile '{((ApplicationProfile)lstProfiles.SelectedItem).ProfileName}'", "Confirm action", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                 {
                     int index = this.lstProfiles.SelectedIndex;
-                    ProfileSettings profile = (ProfileSettings)this.lstProfiles.SelectedItem;
+                    ApplicationProfile profile = (ApplicationProfile)this.lstProfiles.SelectedItem;
 
-                    this.FocusedProfile.DeleteProfile(profile);
+                    this.FocusedApplication.DeleteProfile(profile);
 
-                    this.lstProfiles.SelectedIndex = Math.Max(0, index - 1);
+                    //this.lstProfiles.SelectedIndex = Math.Max(0, index - 1);
                 }
             }
         }
-
-        Point? DragStartPosition;
-        FrameworkElement DraggingItem;
-
-        private void stckProfile_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (DragStartPosition == null || !this.lstProfiles.IsMouseOver)
-                return;
-
-            Point curr = e.GetPosition(null);
-            Point start = (Point)DragStartPosition;
-
-            if (Math.Abs(curr.X - start.X) >= SystemParameters.MinimumHorizontalDragDistance ||
-                Math.Abs(curr.Y - start.Y) >= SystemParameters.MinimumVerticalDragDistance)
-            {
-                DragDrop.DoDragDrop(DraggingItem, DraggingItem.DataContext, DragDropEffects.Move);
-
-            }
-        }
-
-        private void stckProfile_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            FrameworkElement stckProfile;
-            if ((stckProfile = sender as FrameworkElement) != null)
-            {
-                //this.lstLayers.SelectedValue = stckLayer.DataContext;
-                DragStartPosition = e.GetPosition(null);
-                DraggingItem = stckProfile;
-                //stckLayer.IsSelected = true;
-            }
-        }
-
-        private void lstProfiles_PreviewMouseUp(object sender, EventArgs e)
-        {
-            DraggingItem = null;
-            DragStartPosition = null;
-        }
-
-        //Based on: http://stackoverflow.com/questions/3350187/wpf-c-rearrange-items-in-listbox-via-drag-and-drop
-        private void stckProfile_Drop(object sender, DragEventArgs e)
-        {
-            ProfileSettings droppedData = e.Data.GetData(typeof(ProfileSettings)) as ProfileSettings;
-            ProfileSettings target = ((FrameworkElement)(sender)).DataContext as ProfileSettings;
-
-            int removedIdx = lstProfiles.Items.IndexOf(droppedData);
-            int targetIdx = lstProfiles.Items.IndexOf(target);
-
-            if (removedIdx < targetIdx)
-            {
-                this.FocusedProfile?.Profiles.Insert(targetIdx + 1, droppedData);
-                this.FocusedProfile?.Profiles.RemoveAt(removedIdx);
-            }
-            else
-            {
-                int remIdx = removedIdx + 1;
-
-                if (this.FocusedProfile?.Profiles.Count + 1 > remIdx)
-                {
-                    this.FocusedProfile?.Profiles.Insert(targetIdx, droppedData);
-                    this.FocusedProfile?.Profiles.RemoveAt(remIdx);
-                }
-            }
-        }
-
+        
         private void btnProfilePath_Click(object sender, RoutedEventArgs e)
         {
-            if (FocusedProfile != null)
+            if (FocusedApplication != null)
             {
-                System.Diagnostics.Process.Start(FocusedProfile.GetProfileFolderPath());
+                System.Diagnostics.Process.Start(FocusedApplication.GetProfileFolderPath());
             }
         }
 
 
         private void btnProfileReset_Click(object sender, RoutedEventArgs e)
         {
-            this.FocusedProfile?.ResetProfile();
+            if (MessageBox.Show($"Are you sure you want to reset the \"{this.FocusedApplication.Profile.ProfileName}\" profile?", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                this.FocusedApplication?.ResetProfile();
         }
 
         private void lstProfiles_KeyDown(object sender, KeyEventArgs e)
@@ -212,16 +151,16 @@ namespace Aurora.Settings
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
                 if (e.Key == Key.C)
-                    Global.Clipboard = (this.lstProfiles.SelectedItem as ProfileSettings)?.Clone();
-                else if (e.Key == Key.V && Global.Clipboard is ProfileSettings)
+                    Global.Clipboard = (this.lstProfiles.SelectedItem as ApplicationProfile)?.Clone();
+                else if (e.Key == Key.V && Global.Clipboard is ApplicationProfile)
                 {
 
-                    ProfileSettings prof = (ProfileSettings)((ProfileSettings)Global.Clipboard)?.Clone();
+                    ApplicationProfile prof = (ApplicationProfile)((ApplicationProfile)Global.Clipboard)?.Clone();
                     prof.ProfileName += " - Copy";
 
-                    FocusedProfile.Profiles.Insert(0, prof);
+                    FocusedApplication.Profiles.Insert(0, prof);
 
-                    FocusedProfile.SaveProfiles();
+                    FocusedApplication.SaveProfiles();
                 }
             }
             else if (e.Key == Key.Delete)
@@ -309,7 +248,7 @@ namespace Aurora.Settings
                             {
                                 var layers = profProperty.Element("ptr_wrapper").Element("data").Element("properties").Element("value1").Element("value").Element("ptr_wrapper").Element("data").Element("base").Element("layers");
 
-                                FocusedProfile.Settings.Layers.Clear();
+                                FocusedApplication.Profile.Layers.Clear();
 
                                 uint _basePolyID = 2147483648;
                                 Dictionary<uint, string> _definedPolyIDS = new Dictionary<uint, string>();
@@ -398,7 +337,7 @@ namespace Aurora.Settings
 
                                     if ("StaticLighting".Equals(layerPolyName))
                                     {
-                                        FocusedProfile.Settings.Layers.Add(new Layers.Layer()
+                                        FocusedApplication.Profile.Layers.Add(new Layers.Layer()
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
@@ -448,7 +387,7 @@ namespace Aurora.Settings
                                             animTrack.SetFrame(transitions.Keys.ElementAt(x), new AnimationFill(transitions[transitions.Keys.ElementAt(x)], transitionDuration));
                                         }
 
-                                        FocusedProfile.Settings.Layers.Add(new Layers.Layer()
+                                        FocusedApplication.Profile.Layers.Add(new Layers.Layer()
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
@@ -497,7 +436,7 @@ namespace Aurora.Settings
                                             animTrack.SetFrame(transitions.Keys.ElementAt(x), new AnimationFill(transitions[transitions.Keys.ElementAt(x)], transitionDuration).SetTransitionType(AnimationFrameTransitionType.None));
                                         }
 
-                                        FocusedProfile.Settings.Layers.Add(new Layers.Layer()
+                                        FocusedApplication.Profile.Layers.Add(new Layers.Layer()
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
@@ -755,7 +694,7 @@ namespace Aurora.Settings
                                             animTracks.Add(animTrack2);
                                         }
 
-                                        FocusedProfile.Settings.Layers.Add(new Layers.Layer()
+                                        FocusedApplication.Profile.Layers.Add(new Layers.Layer()
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,
@@ -829,7 +768,7 @@ namespace Aurora.Settings
 
                                         animTrack.SetFrame(terminalTime, new AnimationGradientCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, new EffectsEngine.EffectBrush(transitions).SetBrushType(EffectsEngine.EffectBrush.BrushType.Radial), (int)width));
 
-                                        FocusedProfile.Settings.Layers.Add(new Layers.Layer()
+                                        FocusedApplication.Profile.Layers.Add(new Layers.Layer()
                                         {
                                             Name = layerName,
                                             Enabled = layerEnabled,

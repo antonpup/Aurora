@@ -12,9 +12,9 @@ namespace Aurora.Profiles.HotlineMiami
     /// </summary>
     public partial class Control_HM : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_HM(ProfileManager profile)
+        public Control_HM(Application profile)
         {
             InitializeComponent();
 
@@ -23,10 +23,10 @@ namespace Aurora.Profiles.HotlineMiami
             SetSettings();
 
             //Apply LightFX Wrapper, if needed.
-            if (!(profile_manager.Settings as HMSettings).first_time_installed)
+            if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
             {
                 InstallWrapper();
-                (profile_manager.Settings as HMSettings).first_time_installed = true;
+                (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
             }
 
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
@@ -39,8 +39,8 @@ namespace Aurora.Profiles.HotlineMiami
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as HMSettings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as HMSettings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as HMProfile).lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -77,7 +77,7 @@ namespace Aurora.Profiles.HotlineMiami
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as HMSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -86,7 +86,7 @@ namespace Aurora.Profiles.HotlineMiami
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as HMSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as HMProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

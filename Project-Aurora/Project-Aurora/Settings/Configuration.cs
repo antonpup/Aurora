@@ -494,7 +494,7 @@ namespace Aurora.Settings
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
 
-            Global.ProfilesManager.SaveAll();
+            Global.LightingStateManager.SaveAll();
 
             /*configuration.desktop_profile.SaveProfiles();
 

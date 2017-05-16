@@ -115,7 +115,7 @@ namespace Aurora.Devices
 
             NewDevicesInitialized?.Invoke(this, new EventArgs());
 
-            if (Global.ProfilesManager.DesktopProfile.Settings.IsEnabled)
+            if (Global.LightingStateManager.DesktopProfile.Settings.IsEnabled)
             {
                 if (!retryActivated)
                 {
@@ -133,7 +133,7 @@ namespace Aurora.Devices
         {
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
-                if (!Global.ProfilesManager.DesktopProfile.Settings.IsEnabled)
+                if (!Global.LightingStateManager.DesktopProfile.Settings.IsEnabled)
                     break;
 
                 Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);

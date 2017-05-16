@@ -31,7 +31,7 @@ namespace Aurora.Profiles
     /// </summary>
     public class LightEvent : ILightEvent
     {
-        public ProfileManager Profile { get; set; }
+        public Application Application { get; set; }
         public LightEventConfig Config { get; protected set; }
 
         internal IGameState _game_state;
@@ -66,7 +66,7 @@ namespace Aurora.Profiles
         /// <returns>A boolean value representing if this LightEvent is active</returns>
         public virtual bool IsEnabled
         {
-            get { return this.Profile.Settings.IsEnabled; }
+            get { return this.Application.Settings.IsEnabled; }
         }
 
         public bool Initialized { get; protected set; }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Aurora.Utils
@@ -37,10 +38,13 @@ namespace Aurora.Utils
                     //Resolve typo'd AbilityLayerHandler type
                 case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler, Aurora":
                     return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
+                case "Aurora.Profiles.TheDivision.TheDivisionSettings":
+                    return typeof(Settings.ApplicationProfile);
                 default:
+                    if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
+                        return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));
                     return base.BindToType(assemblyName, typeName);
             }
-
         }
     }
 }

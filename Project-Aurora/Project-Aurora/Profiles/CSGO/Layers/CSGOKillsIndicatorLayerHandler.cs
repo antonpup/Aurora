@@ -113,10 +113,10 @@ namespace Aurora.Profiles.CSGO.Layers
             return kills_indicator_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_CSGOKillIndicatorLayer).SetProfile(profile);
-            base.SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 }

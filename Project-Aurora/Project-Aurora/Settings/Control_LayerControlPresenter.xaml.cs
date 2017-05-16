@@ -55,10 +55,10 @@ namespace Aurora.Settings
 
             cmbLayerType.Items.Clear();
 
-            foreach(var layertype in Global.ProfilesManager.DefaultLayerHandlers.Concat(layer.AssociatedProfile.Config.ExtraAvailableLayers))
-                cmbLayerType.Items.Add(Global.ProfilesManager.LayerHandlers[layertype]);
+            foreach(var layertype in Global.LightingStateManager.DefaultLayerHandlers.Concat(layer.AssociatedApplication.Config.ExtraAvailableLayers))
+                cmbLayerType.Items.Add(Global.LightingStateManager.LayerHandlers[layertype]);
 
-            cmbLayerType.SelectedItem = Global.ProfilesManager.LayerHandlers[Layer.Handler.ID];
+            cmbLayerType.SelectedItem = Global.LightingStateManager.LayerHandlers[Layer.Handler.ID];
             ctrlLayerTypeConfig.Content = layer.Control;
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
             chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
@@ -92,7 +92,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer)
             {
-                _Layer.Handler = Global.ProfilesManager.GetLayerHandlerInstance(type);
+                _Layer.Handler = Global.LightingStateManager.GetLayerHandlerInstance(type);
                 /*switch (type)
                 {
                     case LayerType.Solid:
@@ -208,7 +208,7 @@ namespace Aurora.Settings
                 keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
                 sldr_Opacity.Value = (int)(Layer.Handler.Opacity * 100.0f);
                 lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
-                this._Layer.AssociatedProfile.SaveProfiles();
+                this._Layer.AssociatedApplication.SaveProfiles();
             }
         }
 

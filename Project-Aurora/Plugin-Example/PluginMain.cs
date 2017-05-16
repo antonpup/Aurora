@@ -25,9 +25,9 @@ namespace Plugin_Example
         public IPluginHost PluginHost { get { return pluginHost; }
             set {
                 pluginHost = value;
-                if (value is ProfilesManager)
+                if (value is LightingStateManager)
                 {
-                    ((ProfilesManager)value).RegisterLayerHandler(new LayerHandlerEntry("ExampleLayer", "Example Layer", typeof(ExampleLayerHandler)));
+                    ((LightingStateManager)value).RegisterLayerHandler(new LayerHandlerEntry("ExampleLayer", "Example Layer", typeof(ExampleLayerHandler)));
                 }
             }
         }

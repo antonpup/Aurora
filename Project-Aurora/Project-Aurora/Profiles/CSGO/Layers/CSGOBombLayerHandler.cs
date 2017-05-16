@@ -192,10 +192,10 @@ namespace Aurora.Profiles.CSGO.Layers
             return bomb_effect_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_CSGOBombLayer).SetProfile(profile);
-            base.SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 }

@@ -85,7 +85,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (dota2state.Previously.Hero.HealthPercent == 0 && dota2state.Hero.HealthPercent == 100 && !dota2state.Previously.Hero.IsAlive && dota2state.Hero.IsAlive)
                 {
                     isDimming = false;
-                    dim_bg_at = dota2state.Map.GameTime + (this.Profile.Settings as Dota2Settings).bg_dim_after;
+                    dim_bg_at = dota2state.Map.GameTime + (this.Application.Profile as Dota2Profile).bg_dim_after;
                     dim_value = 1.0;
                 }
 
@@ -124,10 +124,10 @@ namespace Aurora.Profiles.Dota_2.Layers
             return bg_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_Dota2BackgroundLayer).SetProfile(profile);
-            base.SetProfile(profile);
+            base.SetApplication(profile);
         }
 
         private double getDimmingValue()

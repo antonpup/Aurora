@@ -315,19 +315,19 @@
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
     <Compile Include="InputEventsSubscriptions.cs" />
-    <Compile Include="Profiles\BF3\BF3ProfileManager.cs" />
-    <Compile Include="Profiles\BF3\BF3Settings.cs" />
+    <Compile Include="Profiles\BF3\BF3Application.cs" />
+    <Compile Include="Profiles\BF3\BF3Profile.cs" />
     <Compile Include="Profiles\BF3\Control_BF3.xaml.cs">
       <DependentUpon>Control_BF3.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\BF3\GameEvent_BF3.cs" />
-    <Compile Include="Profiles\Blacklight\BLightProfileManager.cs" />
+    <Compile Include="Profiles\Blacklight\BLightApplication.cs" />
     <Compile Include="Profiles\Blacklight\BLightSettings.cs" />
     <Compile Include="Profiles\Blacklight\Control_BLight.xaml.cs">
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
-    <Compile Include="Profiles\CSGO\CSGOProfileManager.cs" />
+    <Compile Include="Profiles\CSGO\CSGOApplication.cs" />
     <Compile Include="Profiles\CSGO\Layers\Control_CSGOTypingIndicatorLayer.xaml.cs">
       <DependentUpon>Control_CSGOTypingIndicatorLayer.xaml</DependentUpon>
     </Compile>
@@ -352,14 +352,14 @@
     <Compile Include="Profiles\CSGO\Layers\CSGOKillsIndicatorLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOBombLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOBackgroundLayerHandler.cs" />
-    <Compile Include="Profiles\Desktop\DesktopProfileManager.cs" />
+    <Compile Include="Profiles\Desktop\DesktopApplication.cs" />
     <Compile Include="Profiles\DiscoDodgeball\Control_DiscoDodgeball.xaml.cs">
       <DependentUpon>Control_DiscoDodgeball.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballSettings.cs" />
-    <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballProfileManager.cs" />
+    <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballProfile.cs" />
+    <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballApplication.cs" />
     <Compile Include="Profiles\DiscoDodgeball\GameEvent_DiscoDodgeball.cs" />
-    <Compile Include="Profiles\Dota 2\Dota2ProfileManager.cs" />
+    <Compile Include="Profiles\Dota 2\Dota2Application.cs" />
     <Compile Include="Profiles\Dota 2\Layers\Control_Dota2AbilityLayer.xaml.cs">
       <DependentUpon>Control_Dota2AbilityLayer.xaml</DependentUpon>
     </Compile>
@@ -395,57 +395,57 @@
     <Compile Include="Profiles\Evolve\Control_Evolve.xaml.cs">
       <DependentUpon>Control_Evolve.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Evolve\EvolveProfileManager.cs" />
-    <Compile Include="Profiles\Evolve\EvolveSettings.cs" />
+    <Compile Include="Profiles\Evolve\EvolveApplication.cs" />
+    <Compile Include="Profiles\Evolve\EvolveProfile.cs" />
     <Compile Include="Profiles\Evolve\GameEvent_Evolve.cs" />
     <Compile Include="Profiles\Generic_Application\Control_GenericApplication.xaml.cs">
       <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Generic_Application\Event_GenericApplication.cs" />
-    <Compile Include="Profiles\Generic_Application\GenericApplicationProfileManager.cs" />
-    <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
+    <Compile Include="Profiles\Generic_Application\GenericApplication.cs" />
+    <Compile Include="Profiles\Generic_Application\GenericApplicationProfile.cs" />
     <Compile Include="Profiles\GTA5\Control_GTA5.xaml.cs">
       <DependentUpon>Control_GTA5.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Profiles\GTA5\GTA5ProfileManager.cs" />
+    <Compile Include="Profiles\GTA5\GTA5Application.cs" />
     <Compile Include="Profiles\Guild Wars 2\Control_GW2.xaml.cs">
       <DependentUpon>Control_GW2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Guild Wars 2\GameEvent_GW2.cs" />
-    <Compile Include="Profiles\Guild Wars 2\GW2ProfileManager.cs" />
-    <Compile Include="Profiles\Guild Wars 2\GW2Settings.cs" />
+    <Compile Include="Profiles\Guild Wars 2\GW2Application.cs" />
+    <Compile Include="Profiles\Guild Wars 2\GW2Profile.cs" />
     <Compile Include="Profiles\Blade and Soul\Control_BnS.xaml.cs">
       <DependentUpon>Control_BnS.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Blade and Soul\GameEvent_BnS.cs" />
-    <Compile Include="Profiles\Blade and Soul\BnSProfileManager.cs" />
-    <Compile Include="Profiles\Blade and Soul\BnSSettings.cs" />
+    <Compile Include="Profiles\Blade and Soul\BnSApplication.cs" />
+    <Compile Include="Profiles\Blade and Soul\BnSProfile.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\HotlineMiami\GameEvent_HM.cs" />
-    <Compile Include="Profiles\HotlineMiami\HMProfileManager.cs" />
-    <Compile Include="Profiles\HotlineMiami\HMSettings.cs" />
+    <Compile Include="Profiles\HotlineMiami\HMApplication.cs" />
+    <Compile Include="Profiles\HotlineMiami\HMProfile.cs" />
     <Compile Include="Profiles\LeagueOfLegends\Control_LoL.xaml.cs">
       <DependentUpon>Control_LoL.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
-    <Compile Include="Profiles\LeagueOfLegends\LoLProfileManager.cs" />
-    <Compile Include="Profiles\LeagueOfLegends\LoLSettings.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\LoLApplication.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\LoLProfile.cs" />
     <Compile Include="Profiles\Aurora Wrapper\GameEvent_Aurora_Wrapper.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml.cs">
       <DependentUpon>Control_MagicDuels2012.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Magic_Duels_2012\GameEvent_MagicDuels2012.cs" />
-    <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012ProfileManager.cs" />
-    <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Settings.cs" />
+    <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Application.cs" />
+    <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Profile.cs" />
     <Compile Include="Profiles\Metro Last Light\Control_MetroLL.xaml.cs">
       <DependentUpon>Control_MetroLL.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Metro Last Light\GameEvent_MetroLL.cs" />
-    <Compile Include="Profiles\Metro Last Light\MetroLLProfileManager.cs" />
-    <Compile Include="Profiles\Metro Last Light\MetroLLSettings.cs" />
+    <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
+    <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
@@ -463,7 +463,7 @@
     <Compile Include="Profiles\Payday 2\Layers\PD2StatesLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
-    <Compile Include="Profiles\ProfilesManager.cs" />
+    <Compile Include="Profiles\LightingStateManager.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
@@ -476,14 +476,14 @@
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Worms_WMD\GameEvent_WormsWMD.cs" />
-    <Compile Include="Profiles\Worms_WMD\WormsWMDProfileManager.cs" />
-    <Compile Include="Profiles\Worms_WMD\WormsWMDSettings.cs" />
+    <Compile Include="Profiles\Worms_WMD\WormsWMDApplication.cs" />
+    <Compile Include="Profiles\Worms_WMD\WormsWMDProfile.cs" />
     <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
       <DependentUpon>Control_Overwatch.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Overwatch\GameEvent_Overwatch.cs" />
-    <Compile Include="Profiles\Overwatch\OverwatchProfileManager.cs" />
-    <Compile Include="Profiles\Overwatch\OverwatchSettings.cs" />
+    <Compile Include="Profiles\Overwatch\OverwatchApplication.cs" />
+    <Compile Include="Profiles\Overwatch\OverwatchProfile.cs" />
     <Compile Include="Profiles\Payday 2\Control_PD2.xaml.cs">
       <DependentUpon>Control_PD2.xaml</DependentUpon>
     </Compile>
@@ -499,49 +499,49 @@
     <Compile Include="Profiles\Payday 2\GSI\Nodes\ProviderNode.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponNode.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponsNode.cs" />
-    <Compile Include="Profiles\Payday 2\PD2ProfileManager.cs" />
-    <Compile Include="Profiles\Payday 2\PD2Settings.cs" />
+    <Compile Include="Profiles\Payday 2\PD2Application.cs" />
+    <Compile Include="Profiles\Payday 2\PD2Profile.cs" />
     <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
       <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeagueProfileManager.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeagueSettings.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
     <Compile Include="Profiles\Serious Sam 3\Control_SSam3.xaml.cs">
       <DependentUpon>Control_SSam3.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Serious Sam 3\GameEvent_SSam3.cs" />
-    <Compile Include="Profiles\Serious Sam 3\SSam3ProfileManager.cs" />
-    <Compile Include="Profiles\Serious Sam 3\SSam3Settings.cs" />
+    <Compile Include="Profiles\Serious Sam 3\SSam3Application.cs" />
+    <Compile Include="Profiles\Serious Sam 3\SSam3Profile.cs" />
     <Compile Include="Profiles\ShadowOfMordor\Control_ShadowOfMordor.xaml.cs">
       <DependentUpon>Control_ShadowOfMordor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\ShadowOfMordor\GameEvent_ShadowOfMordor.cs" />
-    <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorProfileManager.cs" />
-    <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorSettings.cs" />
+    <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorApplication.cs" />
+    <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorProfile.cs" />
     <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\TheDivision\TheDivisionProfileManager.cs" />
-    <Compile Include="Profiles\TheDivision\TheDivisionSettings.cs" />
+    <Compile Include="Profiles\TheDivision\TheDivisionApplication.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
       <DependentUpon>Control_TalosPrinciple.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\TheTalosPrinciple\GameEvent_TalosPrinciple.cs" />
-    <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleProfileManager.cs" />
-    <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleSettings.cs" />
+    <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleApplication.cs" />
+    <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleProfile.cs" />
     <Compile Include="Profiles\XCOM\Control_XCOM.xaml.cs">
       <DependentUpon>Control_XCOM.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\XCOM\GameEvent_XCOM.cs" />
-    <Compile Include="Profiles\XCOM\XCOMProfileManager.cs" />
-    <Compile Include="Profiles\XCOM\XCOMSettings.cs" />
+    <Compile Include="Profiles\XCOM\XCOMApplication.cs" />
+    <Compile Include="Profiles\XCOM\XCOMProfile.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\ApplicationSettings.cs" />
     <Compile Include="Settings\Control_ProfileControlPresenter.xaml.cs">
       <DependentUpon>Control_ProfileControlPresenter.xaml</DependentUpon>
     </Compile>
@@ -561,6 +561,7 @@
     <Compile Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
       <DependentUpon>Control_AnimationLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\ObjectSettings.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
@@ -711,7 +712,7 @@
     <Compile Include="Profiles\CSGO\Control_CSGO.xaml.cs">
       <DependentUpon>Control_CSGO.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\CSGO\CSGOSettings.cs" />
+    <Compile Include="Profiles\CSGO\CSGOProfile.cs" />
     <Compile Include="Profiles\CSGO\GameEvent_CSGO.cs" />
     <Compile Include="Profiles\CSGO\GSI\GameState_CSGO.cs" />
     <Compile Include="Profiles\CSGO\GSI\Nodes\AllPlayersNode.cs" />
@@ -728,13 +729,13 @@
     <Compile Include="Profiles\Desktop\Control_Desktop.xaml.cs">
       <DependentUpon>Control_Desktop.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Desktop\DesktopSettings.cs" />
+    <Compile Include="Profiles\Desktop\DesktopProfile.cs" />
     <Compile Include="Profiles\Desktop\Event_Desktop.cs" />
     <Compile Include="Profiles\Desktop\Event_Idle.cs" />
     <Compile Include="Profiles\Dota 2\Control_Dota2.xaml.cs">
       <DependentUpon>Control_Dota2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Dota 2\Dota2Settings.cs" />
+    <Compile Include="Profiles\Dota 2\Dota2Profile.cs" />
     <Compile Include="Profiles\Dota 2\GameEvent_Dota2.cs" />
     <Compile Include="Profiles\Dota 2\GSI\GameState_Dota2.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Abilities.cs" />
@@ -749,7 +750,7 @@
     <Compile Include="Profiles\GameState_Wrapper.cs" />
     <Compile Include="Profiles\GTA5\GameEvent_GTA5.cs" />
     <Compile Include="Profiles\GTA5\GSI\GameState_GTA5.cs" />
-    <Compile Include="Profiles\GTA5\GTA5Settings.cs" />
+    <Compile Include="Profiles\GTA5\GTA5Profile.cs" />
     <Compile Include="Profiles\Node.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Provider.cs" />
@@ -856,12 +857,12 @@
     </Compile>
     <Compile Include="Settings\Layers\Layer.cs" />
     <Compile Include="Settings\Layers\LogicItem.cs" />
-    <Compile Include="Settings\ProfileManager.cs" />
+    <Compile Include="Profiles\Application.cs" />
     <Compile Include="Settings\KeyboardLayoutManager.cs" />
     <Compile Include="Settings\KeyRecorder.cs" />
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
-    <Compile Include="Settings\ProfileSettings.cs" />
+    <Compile Include="Settings\ApplicationProfile.cs" />
     <Compile Include="Controls\Control_VariableRegistryEditor.xaml.cs">
       <DependentUpon>Control_VariableRegistryEditor.xaml</DependentUpon>
     </Compile>

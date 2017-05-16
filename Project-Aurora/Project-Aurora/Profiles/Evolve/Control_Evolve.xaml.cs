@@ -13,9 +13,9 @@ namespace Aurora.Profiles.Evolve
     /// </summary>
     public partial class Control_Evolve : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_Evolve(ProfileManager profile)
+        public Control_Evolve(Application profile)
         {
             InitializeComponent();
 
@@ -33,8 +33,8 @@ namespace Aurora.Profiles.Evolve
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as EvolveSettings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as EvolveSettings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as EvolveProfile).lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -50,7 +50,7 @@ namespace Aurora.Profiles.Evolve
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as EvolveSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -59,7 +59,7 @@ namespace Aurora.Profiles.Evolve
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as EvolveSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as EvolveProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

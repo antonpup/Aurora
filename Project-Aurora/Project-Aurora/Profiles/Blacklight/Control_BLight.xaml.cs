@@ -12,9 +12,9 @@ namespace Aurora.Profiles.Blacklight
     /// </summary>
     public partial class Control_BLight : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_BLight(ProfileManager profile)
+        public Control_BLight(Application profile)
         {
             InitializeComponent();
 
@@ -23,10 +23,10 @@ namespace Aurora.Profiles.Blacklight
             SetSettings();
 
             //Apply LightFX Wrapper, if needed.
-            if (!(profile_manager.Settings as BLightSettings).first_time_installed)
+            if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
             {
                 InstallWrapper();
-                (profile_manager.Settings as BLightSettings).first_time_installed = true;
+                (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
             }
 
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
@@ -39,8 +39,8 @@ namespace Aurora.Profiles.Blacklight
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as BLightSettings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as BLightSettings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as BLightProfile).lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -64,7 +64,7 @@ namespace Aurora.Profiles.Blacklight
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as BLightSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -73,7 +73,7 @@ namespace Aurora.Profiles.Blacklight
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as BLightSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as BLightProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

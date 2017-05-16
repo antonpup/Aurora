@@ -12,9 +12,9 @@ namespace Aurora.Profiles.TheTalosPrinciple
     /// </summary>
     public partial class Control_TalosPrinciple : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_TalosPrinciple(ProfileManager profile)
+        public Control_TalosPrinciple(Application profile)
         {
             InitializeComponent();
 
@@ -23,10 +23,10 @@ namespace Aurora.Profiles.TheTalosPrinciple
             SetSettings();
 
             //Apply LightFX Wrapper, if needed.
-            if (!(profile_manager.Settings as TalosPrincipleSettings).first_time_installed)
+            if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
             {
                 InstallWrapper();
-                (profile_manager.Settings as TalosPrincipleSettings).first_time_installed = true;
+                (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
             }
 
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
@@ -39,8 +39,8 @@ namespace Aurora.Profiles.TheTalosPrinciple
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as TalosPrincipleSettings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as TalosPrincipleSettings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as TalosPrincipleProfile).lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -63,7 +63,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as TalosPrincipleSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -72,7 +72,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as TalosPrincipleSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as TalosPrincipleProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

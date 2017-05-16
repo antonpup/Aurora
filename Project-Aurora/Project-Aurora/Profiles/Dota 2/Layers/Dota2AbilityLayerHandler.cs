@@ -89,10 +89,10 @@ namespace Aurora.Profiles.Dota_2.Layers
             return abilities_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_Dota2AbilityLayer).SetProfile(profile);
-            base.SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 }
