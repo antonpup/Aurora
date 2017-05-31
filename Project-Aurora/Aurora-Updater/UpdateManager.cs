@@ -63,7 +63,7 @@ namespace Aurora_Updater
     {
         private string infoUrl = @"http://project-aurora.com/vcheck.php";
         private string[] ignoreFiles = { };
-        public UpdateResponce responce = new UpdateResponce();
+        public UpdateResponse response = new UpdateResponse();
         private Queue<LogEntry> log = new Queue<LogEntry>();
         private float downloadProgess = 0.0f;
         private float extractProgess = 0.0f;
@@ -102,7 +102,7 @@ namespace Aurora_Updater
                 WebClient client = new WebClient();
                 string reply = client.DownloadString(infoUrl);
 
-                responce = new UpdateResponce(reply);
+                response = new UpdateResponse(reply);
 
                 //Console.WriteLine(reply);
             }
@@ -117,7 +117,7 @@ namespace Aurora_Updater
 
         public bool RetrieveUpdate(UpdateType type)
         {
-            string url = @"http://project-aurora.com/download.php?id=" + (type == UpdateType.Major ? responce.Major.ID : responce.Minor.ID);
+            string url = @"http://project-aurora.com/download.php?id=" + (type == UpdateType.Major ? response.Major.ID : response.Minor.ID);
             updateState = UpdateStatus.InProgress;
             try
             {
@@ -296,7 +296,7 @@ namespace Aurora_Updater
     }
 
 
-    public class UpdateResponce
+    public class UpdateResponse
     {
         protected Newtonsoft.Json.Linq.JObject _ParsedData;
         protected string json;
@@ -329,13 +329,13 @@ namespace Aurora_Updater
             }
         }
 
-        public UpdateResponce()
+        public UpdateResponse()
         {
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
 
-        public UpdateResponce(string json_data)
+        public UpdateResponse(string json_data)
         {
             if (String.IsNullOrWhiteSpace(json_data))
             {
@@ -346,7 +346,7 @@ namespace Aurora_Updater
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);
         }
 
-        public UpdateResponce(UpdateResponce other_state)
+        public UpdateResponse(UpdateResponse other_state)
         {
             _ParsedData = other_state._ParsedData;
             json = other_state.json;

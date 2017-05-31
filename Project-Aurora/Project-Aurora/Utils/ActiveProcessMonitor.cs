@@ -71,7 +71,7 @@ namespace Aurora.Utils
         [DllImport("Oleacc.dll")]
         static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
+        static extern uint GetModuleFileNameExW(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
 
         public string GetActiveWindowsProcessname()
         {
@@ -79,20 +79,42 @@ namespace Aurora.Utils
 
             try
             {
+                if (windowHandle.Equals(IntPtr.Zero))
+                    windowHandle = GetForegroundWindow();
+                uint pid;
+                if (GetWindowThreadProcessId(windowHandle, out pid) > 0)
+                {
+                    Process proc = Process.GetProcessById((int)pid);
+                    string path = proc.MainModule.FileName;
+                    if (!System.IO.File.Exists(path))
+                        throw new Exception($"Found file path does not exist! '{path}'");
+                    return path;
+                }
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
+                if (Global.isDebug)
+                    throw exc;
+            }
+
+            /*try
+            {
                 IntPtr processhandle = IntPtr.Zero;
                 IntPtr zeroHandle = IntPtr.Zero;
-                windowHandle = GetForegroundWindow();
+                if (windowHandle.Equals(IntPtr.Zero))
+                    windowHandle = GetForegroundWindow();
                 processhandle = GetProcessHandleFromHwnd(windowHandle);
                 
                 StringBuilder sb = new StringBuilder(4048);
-                GetModuleFileNameEx(processhandle, zeroHandle, sb, 4048);
+                uint error = GetModuleFileNameExW(processhandle, zeroHandle, sb, 4048);
                 string path = sb.ToString();
                 System.IO.Path.GetFileName(path);
                 if (!System.IO.File.Exists(path))
-                    throw new Exception();
+                    throw new Exception($"Found file path does not exist! '{path}'");
 
 
-                return sb.ToString();
+                return path;
             }
             catch (ArgumentException aex)
             {
@@ -105,22 +127,7 @@ namespace Aurora.Utils
                 Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
                 //if (Global.isDebug)
                     //throw exc;
-            }
-
-            try
-            {
-                if (windowHandle.Equals(IntPtr.Zero))
-                    windowHandle = GetForegroundWindow();
-                uint pid;
-                if (GetWindowThreadProcessId(windowHandle, out pid) > 0)
-                    return Process.GetProcessById((int)pid).MainModule.FileName;
-            }
-            catch(Exception exc)
-            {
-                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
-                if (Global.isDebug)
-                    throw exc;
-            }
+            }*/
 
             return "";
         }

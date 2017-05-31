@@ -11,6 +11,7 @@ using Aurora.Profiles.Desktop;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aurora.Settings
 {
@@ -912,22 +913,27 @@ namespace Aurora.Settings
             }
         }
 
-        private void excluded_process_name_DropDownOpened(object sender, EventArgs e)
+        private async void excluded_process_name_DropDownOpened(object sender, EventArgs e)
         {
+            excluded_process_name.ItemsSource = new string[] { "Working..." };
+
             HashSet<string> processes = new HashSet<string>();
-
-            foreach (var p in Process.GetProcesses())
+            await Task.Run(() =>
             {
-                try
-                {
-                    processes.Add( Path.GetFileName( p.MainModule.FileName ) );
-                }
-                catch(Exception exc)
-                {
 
-                }
-            }
+                foreach (var p in Process.GetProcesses())
+                {
+                    try
+                    {
+                        processes.Add(Path.GetFileName(p.MainModule.FileName));
+                    }
+                    catch (Exception exc)
+                    {
 
+                    }
+                }
+
+            });
             excluded_process_name.ItemsSource = processes.ToArray();
         }
 

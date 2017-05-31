@@ -100,15 +100,15 @@ namespace Aurora_Updater
                 {
                     versionMajor = new UpdateVersion(_maj);
 
-                    if (!(StaticStorage.Manager.responce.Major.Version <= versionMajor))
+                    if (!(StaticStorage.Manager.response.Major.Version <= versionMajor))
                     {
                         UpdateInfoForm userResult = new UpdateInfoForm()
                         {
-                            changelog = StaticStorage.Manager.responce.Major.Changelog,
-                            updateDescription = StaticStorage.Manager.responce.Major.Description,
-                            updateVersion = StaticStorage.Manager.responce.Major.Version.ToString(),
+                            changelog = StaticStorage.Manager.response.Major.Changelog,
+                            updateDescription = StaticStorage.Manager.response.Major.Description,
+                            updateVersion = StaticStorage.Manager.response.Major.Version.ToString(),
                             currentVersion = versionMajor.ToString(),
-                            updateSize = StaticStorage.Manager.responce.Major.FileSize
+                            updateSize = StaticStorage.Manager.response.Major.FileSize
                         };
 
                         userResult.ShowDialog();
@@ -171,7 +171,7 @@ namespace Aurora_Updater
                 {
                     versionMinor = new UpdateVersion(_min);
 
-                    if (!(StaticStorage.Manager.responce.Minor.Version <= versionMinor))
+                    if (!(StaticStorage.Manager.response.Minor.Version <= versionMinor))
                     {
                         if (isSilentMinor)
                             StaticStorage.Manager.RetrieveUpdate(UpdateType.Minor);
@@ -179,11 +179,11 @@ namespace Aurora_Updater
                         {
                             UpdateInfoForm userResult = new UpdateInfoForm()
                             {
-                                changelog = StaticStorage.Manager.responce.Minor.Changelog,
-                                updateDescription = StaticStorage.Manager.responce.Minor.Description,
-                                updateVersion = StaticStorage.Manager.responce.Minor.Version.ToString(),
+                                changelog = StaticStorage.Manager.response.Minor.Changelog,
+                                updateDescription = StaticStorage.Manager.response.Minor.Description,
+                                updateVersion = StaticStorage.Manager.response.Minor.Version.ToString(),
                                 currentVersion = versionMinor.ToString(),
-                                updateSize = StaticStorage.Manager.responce.Minor.FileSize
+                                updateSize = StaticStorage.Manager.response.Minor.FileSize
                             };
 
                             userResult.ShowDialog();

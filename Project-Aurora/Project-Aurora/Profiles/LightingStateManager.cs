@@ -437,9 +437,12 @@ namespace Aurora.Profiles
         public ILightEvent GetProfileFromProcess(string process)
         {
             if (EventProcesses.ContainsKey(process))
+            {
+                if (!Events.ContainsKey(EventProcesses[process]))
+                    Global.logger.LogLine($"GetProfileFromProcess: The process '{process}' exists in EventProcesses but subsequently '{EventProcesses[process]}' does not in Events!", Logging_Level.Warning);
+
                 return Events[EventProcesses[process]];
-            else if (Events.ContainsKey(process))
-                return Events[process];
+            }
             else if (Events.ContainsKey(process))
                 return Events[process];
 
@@ -449,9 +452,11 @@ namespace Aurora.Profiles
         public ILightEvent GetProfileFromAppID(string appid)
         {
             if (EventAppIDs.ContainsKey(appid))
+            {
+                if (!Events.ContainsKey(EventAppIDs[appid]))
+                    Global.logger.LogLine($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs but subsequently '{EventAppIDs[appid]}' does not in Events!", Logging_Level.Warning);
                 return Events[EventAppIDs[appid]];
-            else if (Events.ContainsKey(appid))
-                return Events[appid];
+            }
             else if (Events.ContainsKey(appid))
                 return Events[appid];
 
@@ -606,7 +611,7 @@ namespace Aurora.Profiles
             if (!Global.Configuration.excluded_programs.Contains(process_name)) { 
                 //TODO: GetProfile that checks based on event type
                 if ((((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                    || (((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+                    || (((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) && tempProfile.Config.Type == LightEventType.Normal)
                     || (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
                 )
                     profile = tempProfile;
@@ -627,7 +632,8 @@ namespace Aurora.Profiles
             }
 
             Global.dev_manager.InitializeOnce();
-            profile.UpdateLights(newFrame);
+            if (profile.IsEnabled)
+                profile.UpdateLights(newFrame);
 
             foreach (var overlay in Overlays)
             {
