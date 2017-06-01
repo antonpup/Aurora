@@ -36,6 +36,7 @@ namespace Aurora.Settings
 
             this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
             this.app_detection_mode.SelectedIndex = (int)Global.Configuration.detection_mode;
+            this.chkOverlayPreview.IsChecked = Global.Configuration.OverlaysInPreview;
 
             load_excluded_listbox();
 
@@ -59,6 +60,7 @@ namespace Aurora.Settings
             this.nighttime_start_minute_updown.Value = Global.Configuration.nighttime_start_minute;
             this.nighttime_end_hour_updown.Value = Global.Configuration.nighttime_end_hour;
             this.nighttime_end_minute_updown.Value = Global.Configuration.nighttime_end_minute;
+
 
             this.volume_overlay_enabled.IsChecked = Global.Configuration.volume_overlay_settings.enabled;
             this.volume_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.low_color);
@@ -1013,6 +1015,15 @@ namespace Aurora.Settings
         {
             if (sender is Button)
                 System.Diagnostics.Process.Start(Global.logger.GetLogsDirectory());
+        }
+
+        private void chkOverlayPreview_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.OverlaysInPreview = (this.chkOverlayPreview.IsChecked.HasValue) ? this.chkOverlayPreview.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
         }
     }
 }

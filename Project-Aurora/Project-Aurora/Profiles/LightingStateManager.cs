@@ -595,25 +595,25 @@ namespace Aurora.Profiles
 
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
-            foreach(var underlay in Underlays)
-            {
-                ILightEvent @event = Events[underlay];
-                if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
-                    @event.UpdateLights(newFrame);
-            }
+            
 
             //TODO: Move these IdleEffects to an event
             //this.UpdateIdleEffects(newFrame);
 
             ILightEvent profile = null;
             ILightEvent tempProfile = null;
+            bool preview = false;
             //Global.logger.LogLine(process_name);
-            if (!Global.Configuration.excluded_programs.Contains(process_name)) { 
+            if (!Global.Configuration.excluded_programs.Contains(process_name)) {
                 //TODO: GetProfile that checks based on event type
-                if ((((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                    || (((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) && tempProfile.Config.Type == LightEventType.Normal)
-                    || (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                )
+                if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+                    profile = tempProfile;
+                else if ((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
+                {
+                    profile = tempProfile;
+                    preview = true;
+                }
+                else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
                     profile = tempProfile;
             }
 
@@ -632,22 +632,36 @@ namespace Aurora.Profiles
             }
 
             Global.dev_manager.InitializeOnce();
+            if (Global.Configuration.OverlaysInPreview || !preview)
+            {
+                foreach (var underlay in Underlays)
+                {
+                    ILightEvent @event = Events[underlay];
+                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                        @event.UpdateLights(newFrame);
+                }
+            }
+
+            //Need to do another check in case Desktop is disabled or the selected preview is disabled
             if (profile.IsEnabled)
                 profile.UpdateLights(newFrame);
 
-            foreach (var overlay in Overlays)
+            if (Global.Configuration.OverlaysInPreview || !preview)
             {
-                ILightEvent @event = Events[overlay];
-                if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
-                    @event.UpdateLights(newFrame);
-            }
+                foreach (var overlay in Overlays)
+                {
+                    ILightEvent @event = Events[overlay];
+                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                        @event.UpdateLights(newFrame);
+                }
 
-            //Add overlays
-            TimedListObject[] overlay_events = overlays.ToArray();
-            foreach (TimedListObject evnt in overlay_events)
-            {
-                if ((evnt.item as LightEvent).IsEnabled)
-                    (evnt.item as LightEvent).UpdateLights(newFrame);
+                //Add overlays
+                TimedListObject[] overlay_events = overlays.ToArray();
+                foreach (TimedListObject evnt in overlay_events)
+                {
+                    if ((evnt.item as LightEvent).IsEnabled)
+                        (evnt.item as LightEvent).UpdateLights(newFrame);
+                }
             }
 
             Global.effengine.PushFrame(newFrame);

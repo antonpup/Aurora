@@ -118,6 +118,7 @@
                 <Grid>
                     <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
                     <CheckBox x:Name="timed_dimming_checkbox" Content="Enable timed blackout of the keyboard" HorizontalAlignment="Left" Margin="10,129,0,0" VerticalAlignment="Top" Checked="timed_dimming_checkbox_Checked" Unchecked="timed_dimming_checkbox_Checked"/>
+                    <CheckBox x:Name="chkOverlayPreview" Content="Show Overlays and Underlays in Profile Preview?" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Checked="chkOverlayPreview_Checked" Unchecked="chkOverlayPreview_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="11,171,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
                     <TextBlock HorizontalAlignment="Left" Margin="11,203,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
                     <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,149,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>

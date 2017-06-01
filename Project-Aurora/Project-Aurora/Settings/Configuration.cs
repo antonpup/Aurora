@@ -302,6 +302,7 @@ namespace Aurora.Settings
         public bool devices_disable_mouse;
         public bool devices_disable_headset;
         public HashSet<Type> devices_disabled;
+        public bool OverlaysInPreview;
 
         //[JsonIgnoreAttribute]
         //public Dictionary<string, GenericApplicationProfileManager> additional_profiles;
@@ -400,6 +401,7 @@ namespace Aurora.Settings
             devices_disable_mouse = false;
             devices_disable_headset = false;
             devices_disabled = new HashSet<Type>();
+            OverlaysInPreview = false;
 
             //Blackout and Night theme
             time_based_dimming_enabled = false;

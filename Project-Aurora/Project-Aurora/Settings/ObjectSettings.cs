@@ -23,6 +23,10 @@ namespace Aurora.Settings
             if (Settings == null)
                 Settings = (T)Activator.CreateInstance(settingsType);
 
+            string dir = Path.GetDirectoryName(SettingsSavePath);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
             File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented }));
         }
 
