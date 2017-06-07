@@ -289,6 +289,9 @@ namespace Aurora
         {
             Global.LightingStateManager.SaveAll();
 
+            if (Global.Configuration != null)
+                ConfigManager.Save(Global.Configuration);
+
             Global.input_subscriptions?.Dispose();
             Global.LightingStateManager?.Dispose();
             Global.net_listener?.Stop();
@@ -424,8 +427,7 @@ namespace Aurora
                 Global.dev_manager?.Shutdown();
                 Global.dev_manager?.Dispose();
 
-                if (Global.Configuration != null)
-                    ConfigManager.Save(Global.Configuration);
+                
 
                 //Kill all Skype Integrations on Exit
                 foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
@@ -450,9 +452,9 @@ namespace Aurora
             if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt && Global.Configuration.use_volume_as_brightness)
             {
                 if (e.KeyCode == Keys.VolumeUp)
-                    Global.Configuration.global_brightness = Global.Configuration.global_brightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.global_brightness + 0.05f;
+                    Global.Configuration.GlobalBrightness = Global.Configuration.GlobalBrightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.GlobalBrightness + 0.05f;
                 else if (e.KeyCode == Keys.VolumeDown)
-                    Global.Configuration.global_brightness = Global.Configuration.global_brightness - 0.05f < 0.0f ? 0.0f : Global.Configuration.global_brightness - 0.05f;
+                    Global.Configuration.GlobalBrightness = Global.Configuration.GlobalBrightness - 0.05f < 0.0f ? 0.0f : Global.Configuration.GlobalBrightness - 0.05f;
 
                 ConfigManager.Save(Global.Configuration);
 

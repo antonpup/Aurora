@@ -38,7 +38,7 @@ namespace Aurora.Controls
                         if (attempts <= 0)
                             this.txtBlk_retries.Visibility = Visibility.Collapsed;
                         else
-                            this.txtBlk_retries.Text = $"Retries: {Global.dev_manager.RetryAttempts}";
+                            this.txtBlk_retries.Text = $"Retries Remaining: {Global.dev_manager.RetryAttempts}";
 
                         UpdateControls();
                     });

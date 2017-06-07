@@ -102,6 +102,7 @@ namespace Aurora.Devices
 
         public void Initialize()
         {
+            int devicesToRetryNo = 0;
             foreach (Device device in devices)
             {
                 if (device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.GetType()))
@@ -109,21 +110,20 @@ namespace Aurora.Devices
 
                 if (device.Initialize())
                     anyInitialized = true;
+                else
+                    devicesToRetryNo++;
 
                 Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
             }
 
             NewDevicesInitialized?.Invoke(this, new EventArgs());
 
-            if (Global.LightingStateManager.DesktopProfile.Settings.IsEnabled)
+            if (devicesToRetryNo > 0 && !retryActivated)
             {
-                if (!retryActivated)
-                {
-                    retryThread = new Thread(RetryInitialize);
-                    retryThread.Start();
+                retryThread = new Thread(RetryInitialize);
+                retryThread.Start();
 
-                    retryActivated = true;
-                }
+                retryActivated = true;
             }
 
             _InitializeOnceAllowed = true;
@@ -133,25 +133,33 @@ namespace Aurora.Devices
         {
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
-                if (!Global.LightingStateManager.DesktopProfile.Settings.IsEnabled)
-                    break;
-
                 Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);
-
+                int devicesAttempted = 0;
+                bool _anyInitialized = false;
                 foreach (Device device in devices)
                 {
                     if (device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.GetType()))
                         continue;
 
+                    devicesAttempted++;
                     if (device.Initialize())
-                        anyInitialized = true;
+                        _anyInitialized = true;
 
                     Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
                 }
 
                 retryAttemptsLeft--;
 
-                NewDevicesInitialized?.Invoke(this, new EventArgs());
+                //We don't need to continue the loop if we aren't trying to initialize anything
+                if (devicesAttempted == 0)
+                    break;
+
+                //There is only a state change if something suddenly becomes initialized
+                if (_anyInitialized)
+                {
+                    NewDevicesInitialized?.Invoke(this, new EventArgs());
+                    anyInitialized = true;
+                }
 
                 Thread.Sleep(retryInterval);
             }

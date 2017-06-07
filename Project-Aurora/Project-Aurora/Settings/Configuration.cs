@@ -271,7 +271,7 @@ namespace Aurora.Settings
         ForegroroundApp = 1
     }
 
-    public class Configuration
+    public class Configuration : Settings
     {
         //First Time Installs
         public bool redist_first_time;
@@ -284,9 +284,19 @@ namespace Aurora.Settings
         public bool use_volume_as_brightness;
         public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
-        public float global_brightness;
-        public float keyboard_brightness_modifier;
-        public float peripheral_brightness_modifier;
+
+        private float globalBrightness = 1.0f;
+        [JsonProperty(PropertyName = "global_brightness")]
+        public float GlobalBrightness { get { return globalBrightness; } set { globalBrightness = value; InvokePropertyChanged(); } }
+
+        private float keyboardBrightness = 1.0f;
+        [JsonProperty(PropertyName = "keyboard_brightness_modifier")]
+        public float KeyboardBrightness { get { return keyboardBrightness; } set{ keyboardBrightness = value; InvokePropertyChanged(); } }
+
+        private float peripheralBrightness;
+        [JsonProperty(PropertyName = "peripheral_brightness_modifier")]
+        public float PeripheralBrightness { get { return peripheralBrightness; } set { peripheralBrightness = value; InvokePropertyChanged(); } }
+
         public bool updates_check_on_start_up;
         public bool updates_allow_silent_minor;
         public bool start_silently;
@@ -382,9 +392,9 @@ namespace Aurora.Settings
             use_volume_as_brightness = false;
             allow_wrappers_in_background = true;
             allow_all_logitech_bitmaps = true;
-            global_brightness = 1.0f;
-            keyboard_brightness_modifier = 1.0f;
-            peripheral_brightness_modifier = 1.0f;
+            GlobalBrightness = 1.0f;
+            KeyboardBrightness = 1.0f;
+            peripheralBrightness = 1.0f;
             updates_check_on_start_up = true;
             updates_allow_silent_minor = true;
             start_silently = false;
