@@ -15,7 +15,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Available Devices" VerticalAlignment="Top"/>
-        <TextBlock x:Name="txtBlk_retries" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Retries: X" VerticalAlignment="Top" Margin="106,0,0,0"/>
+        <TextBlock x:Name="txtBlk_retries" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Retries Remaining: 0" VerticalAlignment="Top" Margin="106,0,0,0"/>
         <Button x:Name="btnRestartAll" Content="Restart All" HorizontalAlignment="Right" VerticalAlignment="Top" Click="btnRestartAll_Click" Margin="0,0,48,0"/>
         <Button x:Name="btnRefresh" Content="Refresh" HorizontalAlignment="Right" VerticalAlignment="Top" Click="btnRefresh_Click"/>
     </Grid>

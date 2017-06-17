@@ -6,7 +6,7 @@ using static CoolerMaster.CoolerMasterSDK;
 
 namespace CoolerMaster
 {
-    
+
     class CoolerMasterSDK
     {
         public enum EFF_INDEX
@@ -39,6 +39,9 @@ namespace CoolerMaster
             DEV_MKeys_L_White = 2,
             DEV_MKeys_M_White = 3,
             DEV_MMouse_L = 4,
+            DEV_MMouse_S = 5,
+            DEV_MKeys_M = 6,
+            DEV_MKeys_S_White = 7,
         }
 
         public enum LAYOUT_KEYBOARD

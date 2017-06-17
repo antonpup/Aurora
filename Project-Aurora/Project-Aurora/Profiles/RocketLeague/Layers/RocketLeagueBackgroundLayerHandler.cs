@@ -143,9 +143,10 @@ namespace Aurora.Profiles.RocketLeague.Layers
             return bg_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_RocketLeagueBackgroundLayer).SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 }

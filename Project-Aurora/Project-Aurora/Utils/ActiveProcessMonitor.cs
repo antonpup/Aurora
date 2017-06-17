@@ -65,42 +65,71 @@ namespace Aurora.Utils
         [DllImport("user32.dll")]
         public static extern Boolean GetLastInputInfo(ref tagLASTINPUTINFO plii);
 
-        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         [DllImport("Oleacc.dll")]
         static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
-        [DllImport("psapi.dll")]
-        static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
+        [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+        static extern uint GetModuleFileNameExW(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
 
         public string GetActiveWindowsProcessname()
         {
+            IntPtr windowHandle = IntPtr.Zero;
+
             try
             {
-                IntPtr windowHandle = IntPtr.Zero;
-                IntPtr processhandle = IntPtr.Zero;
-                IntPtr zeroHandle = IntPtr.Zero;
-                windowHandle = GetForegroundWindow();
-                processhandle = GetProcessHandleFromHwnd(windowHandle);
-
-                StringBuilder sb = new StringBuilder(4048);
-                GetModuleFileNameEx(processhandle, zeroHandle, sb, 4048);
-
-                System.IO.Path.GetFileName(sb.ToString());
-
-
-                return sb.ToString();
-            }
-            catch (ArgumentException aex)
-            {
-                Global.logger.LogLine("Argument Exception: " + aex, Logging_Level.Error);
-                return "";
+                if (windowHandle.Equals(IntPtr.Zero))
+                    windowHandle = GetForegroundWindow();
+                uint pid;
+                if (GetWindowThreadProcessId(windowHandle, out pid) > 0)
+                {
+                    Process proc = Process.GetProcessById((int)pid);
+                    string path = proc.MainModule.FileName;
+                    if (!System.IO.File.Exists(path))
+                        throw new Exception($"Found file path does not exist! '{path}'");
+                    return path;
+                }
             }
             catch (Exception exc)
             {
                 Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
-                return "";
+                if (Global.isDebug)
+                    throw exc;
             }
+
+            /*try
+            {
+                IntPtr processhandle = IntPtr.Zero;
+                IntPtr zeroHandle = IntPtr.Zero;
+                if (windowHandle.Equals(IntPtr.Zero))
+                    windowHandle = GetForegroundWindow();
+                processhandle = GetProcessHandleFromHwnd(windowHandle);
+                
+                StringBuilder sb = new StringBuilder(4048);
+                uint error = GetModuleFileNameExW(processhandle, zeroHandle, sb, 4048);
+                string path = sb.ToString();
+                System.IO.Path.GetFileName(path);
+                if (!System.IO.File.Exists(path))
+                    throw new Exception($"Found file path does not exist! '{path}'");
+
+
+                return path;
+            }
+            catch (ArgumentException aex)
+            {
+                Global.logger.LogLine("Argument Exception: " + aex, Logging_Level.Error);
+                //if (Global.isDebug)
+                    //throw aex;
+            }
+            catch (Exception exc)
+            {
+                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
+                //if (Global.isDebug)
+                    //throw exc;
+            }*/
+
+            return "";
         }
     }
 }

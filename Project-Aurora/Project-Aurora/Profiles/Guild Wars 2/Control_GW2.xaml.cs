@@ -12,9 +12,9 @@ namespace Aurora.Profiles.Guild_Wars_2
     /// </summary>
     public partial class Control_GW2 : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_GW2(ProfileManager profile)
+        public Control_GW2(Application profile)
         {
             InitializeComponent();
 
@@ -32,8 +32,8 @@ namespace Aurora.Profiles.Guild_Wars_2
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as GW2Settings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as GW2Settings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as GW2Profile).lighting_areas;
         }
 
         private void patch_32bit_button_Click(object sender, RoutedEventArgs e)
@@ -68,7 +68,7 @@ namespace Aurora.Profiles.Guild_Wars_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as GW2Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -77,7 +77,7 @@ namespace Aurora.Profiles.Guild_Wars_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as GW2Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as GW2Profile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

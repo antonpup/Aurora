@@ -60,7 +60,7 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        internal void SetProfile(ProfileManager profile)
+        internal void SetApplication(Profiles.Application profile)
         {
             if (profile != null && !profileset)
             {

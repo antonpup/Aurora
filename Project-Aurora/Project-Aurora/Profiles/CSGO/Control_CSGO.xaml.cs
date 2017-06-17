@@ -15,7 +15,7 @@ namespace Aurora.Profiles.CSGO
     /// </summary>
     public partial class Control_CSGO : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
         private Timer preview_bomb_timer;
         private Timer preview_bomb_remove_effect_timer;
@@ -23,7 +23,7 @@ namespace Aurora.Profiles.CSGO
         private int preview_kills = 0;
         private int preview_killshs = 0;
 
-        public Control_CSGO(ProfileManager profile)
+        public Control_CSGO(Application profile)
         {
             InitializeComponent();
 
@@ -40,10 +40,10 @@ namespace Aurora.Profiles.CSGO
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
 
             //Copy cfg file if needed
-            if (!(profile_manager.Settings as CSGOSettings).first_time_installed)
+            if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
             {
                 InstallGSI();
-                (profile_manager.Settings as CSGOSettings).first_time_installed = true;
+                (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
             }
         }
 
@@ -54,13 +54,13 @@ namespace Aurora.Profiles.CSGO
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as CSGOSettings).IsEnabled;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
 
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.Undefined);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.CT);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.T);
 
-            this.cz.ColorZonesList = (profile_manager.Settings as CSGOSettings).lighting_areas;
+            this.cz.ColorZonesList = (profile_manager.Profile as CSGOProfile).lighting_areas;
         }
 
         private void preview_bomb_timer_Tick(object sender, EventArgs e)
@@ -106,7 +106,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as CSGOSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -278,7 +278,7 @@ namespace Aurora.Profiles.CSGO
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as CSGOSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as CSGOProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

@@ -131,10 +131,10 @@ namespace Aurora.Settings.Layers
     /// </summary>
     public class Layer : ICloneable
     {
-        private ProfileManager _profile;
+        private Application _application;
 
         [JsonIgnore]
-        public ProfileManager AssociatedProfile { get { return _profile; } }
+        public Application AssociatedApplication { get { return _application; } }
 
         public event EventHandler AnythingChanged;
 
@@ -159,8 +159,8 @@ namespace Aurora.Settings.Layers
             {
                 _Handler = value;
 
-                if(_profile != null)
-                    _Handler.SetProfile(_profile);
+                if(_application != null)
+                    _Handler.SetApplication(_application);
             }
         }
 
@@ -281,11 +281,11 @@ namespace Aurora.Settings.Layers
             return this._Handler.PostRenderFX(this._Handler.Render(gs));
         }
 
-        public void SetProfile(ProfileManager profile)
+        public void SetProfile(Application profile)
         {
-            _profile = profile;
+            _application = profile;
 
-            _Handler?.SetProfile(_profile);
+            _Handler?.SetApplication(_application);
         }
 
         public object Clone()

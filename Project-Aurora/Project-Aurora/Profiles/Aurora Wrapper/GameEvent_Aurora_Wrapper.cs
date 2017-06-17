@@ -33,9 +33,9 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            if (this.Profile != null)
+            if (this.Application != null)
             {
-                foreach (var layer in this.Profile.Settings.Layers.Reverse().ToArray())
+                foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
                 {
                     if (layer.Enabled && layer.LogicPass)
                         layers.Enqueue(layer.Render(_game_state));
@@ -45,7 +45,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 this.UpdateExtraLights(layers);
 
                 //Scripts
-                this.Profile.UpdateEffectScripts(layers, _game_state);
+                this.Application.UpdateEffectScripts(layers, _game_state);
             }
 
             frame.AddLayers(layers.ToArray());

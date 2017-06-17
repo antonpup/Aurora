@@ -15,16 +15,16 @@ namespace Aurora.Profiles.WormsWMD
 
         public new bool IsEnabled
         {
-            get { return this.Profile.Settings.IsEnabled; }
+            get { return this.Application.Settings.IsEnabled; }
         }
 
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
-            this.colorEnhance_Enabled = (this.Profile.Settings as WormsWMDSettings).colorEnhance_Enabled;
-            this.colorEnhance_Mode = (this.Profile.Settings as WormsWMDSettings).colorEnhance_Mode;
-            this.colorEnhance_color_factor = (this.Profile.Settings as WormsWMDSettings).colorEnhance_color_factor;
-            this.colorEnhance_color_hsv_sine = (this.Profile.Settings as WormsWMDSettings).colorEnhance_color_hsv_sine;
-            this.colorEnhance_color_hsv_gamma = (this.Profile.Settings as WormsWMDSettings).colorEnhance_color_hsv_gamma;
+            this.colorEnhance_Enabled = (this.Application.Profile as WormsWMDProfile).colorEnhance_Enabled;
+            this.colorEnhance_Mode = (this.Application.Profile as WormsWMDProfile).colorEnhance_Mode;
+            this.colorEnhance_color_factor = (this.Application.Profile as WormsWMDProfile).colorEnhance_color_factor;
+            this.colorEnhance_color_hsv_sine = (this.Application.Profile as WormsWMDProfile).colorEnhance_color_hsv_sine;
+            this.colorEnhance_color_hsv_gamma = (this.Application.Profile as WormsWMDProfile).colorEnhance_color_hsv_gamma;
         }
     }
 }

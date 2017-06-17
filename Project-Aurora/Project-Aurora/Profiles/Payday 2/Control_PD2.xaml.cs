@@ -15,9 +15,9 @@ namespace Aurora.Profiles.Payday_2
     /// </summary>
     public partial class Control_PD2 : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_PD2(ProfileManager profile)
+        public Control_PD2(Application profile)
         {
             InitializeComponent();
 
@@ -35,15 +35,15 @@ namespace Aurora.Profiles.Payday_2
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as PD2Settings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as PD2Settings).lighting_areas;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as PD2Profile).lighting_areas;
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as PD2Settings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -75,21 +75,21 @@ namespace Aurora.Profiles.Payday_2
 
                         }
 
-                        System.Windows.MessageBox.Show("GSI for Payday 2 installed.");
+                        MessageBox.Show("GSI for Payday 2 installed.");
                     }
                     else
                     {
-                        System.Windows.MessageBox.Show("BLT Hook was not found.\r\nCould not install the GSI mod.");
+                        MessageBox.Show("BLT Hook was not found.\r\nCould not install the GSI mod.");
                     }
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("Payday 2 directory is not found.\r\nCould not install the GSI mod.");
+                    MessageBox.Show("Payday 2 directory is not found.\r\nCould not install the GSI mod.");
                 }
             }
             else
             {
-                System.Windows.MessageBox.Show("Payday 2 is not installed through Steam.\r\nCould not install the GSI mod.");
+                MessageBox.Show("Payday 2 is not installed through Steam.\r\nCould not install the GSI mod.");
             }
         }
 
@@ -171,7 +171,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as PD2Settings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as PD2Profile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

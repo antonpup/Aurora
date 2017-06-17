@@ -23,23 +23,23 @@ namespace Aurora.Settings
     {
         private bool isSettingNewLayer = false;
 
-        protected ProfileSettings _ProfileSettings;
+        protected ApplicationProfile _Profile;
 
-        public ProfileSettings ProfileSettings { get { return _ProfileSettings; } set { _ProfileSettings = value; SetProfile(value); } }
+        public ApplicationProfile Profile { get { return _Profile; } set { _Profile = value; SetProfile(value); } }
 
         public Control_ProfileControlPresenter()
         {
             InitializeComponent();
         }
 
-        public Control_ProfileControlPresenter(ProfileSettings profile) : this()
+        public Control_ProfileControlPresenter(ApplicationProfile profile) : this()
         {
-            ProfileSettings = profile;
+            Profile = profile;
             grd_LayerControl.IsHitTestVisible = true;
             grd_LayerControl.Effect = null;
         }
 
-        private void SetProfile(ProfileSettings profile)
+        private void SetProfile(ApplicationProfile profile)
         {
             isSettingNewLayer = true;
 
@@ -53,9 +53,11 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && DataContext != null)
             {
-                Type settingsType = DataContext.GetType();
-
-                ProfileSettings = (ProfileSettings)Activator.CreateInstance(settingsType);
+                if (MessageBox.Show($"Are you sure you want to reset the \"{this.Profile.ProfileName}\" profile?", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    this.Profile?.Reset();
+                    //SetProfile(this.Profile);
+                }
             }
         }
 
@@ -67,19 +69,19 @@ namespace Aurora.Settings
 
         private void Control_Keybind_KeybindUpdated(object sender, Keybind newKeybind)
         {
-            if (IsLoaded && !isSettingNewLayer && DataContext != null && DataContext is ProfileSettings)
+            if (IsLoaded && !isSettingNewLayer && DataContext != null && DataContext is ApplicationProfile)
             {
-                (DataContext as ProfileSettings).TriggerKeybind = newKeybind;
+                (DataContext as ApplicationProfile).TriggerKeybind = newKeybind;
             }
         }
 
         private void buttonResetKeybind_Click(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && !isSettingNewLayer && DataContext != null && DataContext is ProfileSettings)
+            if (IsLoaded && !isSettingNewLayer && DataContext != null && DataContext is ApplicationProfile)
             {
                 Keybind newkb = new Keybind();
 
-                (DataContext as ProfileSettings).TriggerKeybind = newkb;
+                (DataContext as ApplicationProfile).TriggerKeybind = newkb;
                 this.keybindEditor.ContextKeybind = newkb;
             }
         }

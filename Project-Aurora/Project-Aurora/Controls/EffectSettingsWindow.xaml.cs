@@ -122,12 +122,12 @@ namespace Aurora.Controls
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            Global.ProfilesManager.PreviewProfileKey = preview_key;
+            Global.LightingStateManager.PreviewProfileKey = preview_key;
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
-            Global.ProfilesManager.PreviewProfileKey = null;
+            Global.LightingStateManager.PreviewProfileKey = null;
         }
 
         private void effect_angle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

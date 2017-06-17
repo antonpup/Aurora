@@ -216,8 +216,10 @@ namespace Aurora.Settings
         de = 6,
         [Description("Japanese")]
         jpn = 7,
+        [Description("Turkish")]
+        tr = 8,
         [Description("Nordic")]
-        nordic = 8
+        nordic = 9
     }
 
     public enum PreferredMouse
@@ -272,7 +274,7 @@ namespace Aurora.Settings
         ForegroroundApp = 1
     }
 
-    public class Configuration
+    public class Configuration : Settings
     {
         //First Time Installs
         public bool redist_first_time;
@@ -285,9 +287,19 @@ namespace Aurora.Settings
         public bool use_volume_as_brightness;
         public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
-        public float global_brightness;
-        public float keyboard_brightness_modifier;
-        public float peripheral_brightness_modifier;
+
+        private float globalBrightness = 1.0f;
+        [JsonProperty(PropertyName = "global_brightness")]
+        public float GlobalBrightness { get { return globalBrightness; } set { globalBrightness = value; InvokePropertyChanged(); } }
+
+        private float keyboardBrightness = 1.0f;
+        [JsonProperty(PropertyName = "keyboard_brightness_modifier")]
+        public float KeyboardBrightness { get { return keyboardBrightness; } set{ keyboardBrightness = value; InvokePropertyChanged(); } }
+
+        private float peripheralBrightness;
+        [JsonProperty(PropertyName = "peripheral_brightness_modifier")]
+        public float PeripheralBrightness { get { return peripheralBrightness; } set { peripheralBrightness = value; InvokePropertyChanged(); } }
+
         public bool updates_check_on_start_up;
         public bool updates_allow_silent_minor;
         public bool start_silently;
@@ -303,6 +315,7 @@ namespace Aurora.Settings
         public bool devices_disable_mouse;
         public bool devices_disable_headset;
         public HashSet<Type> devices_disabled;
+        public bool OverlaysInPreview;
 
         //[JsonIgnoreAttribute]
         //public Dictionary<string, GenericApplicationProfileManager> additional_profiles;
@@ -382,9 +395,9 @@ namespace Aurora.Settings
             use_volume_as_brightness = false;
             allow_wrappers_in_background = true;
             allow_all_logitech_bitmaps = true;
-            global_brightness = 1.0f;
-            keyboard_brightness_modifier = 1.0f;
-            peripheral_brightness_modifier = 1.0f;
+            GlobalBrightness = 1.0f;
+            KeyboardBrightness = 1.0f;
+            peripheralBrightness = 1.0f;
             updates_check_on_start_up = true;
             updates_allow_silent_minor = true;
             start_silently = false;
@@ -401,6 +414,7 @@ namespace Aurora.Settings
             devices_disable_mouse = false;
             devices_disable_headset = false;
             devices_disabled = new HashSet<Type>();
+            OverlaysInPreview = false;
 
             //Blackout and Night theme
             time_based_dimming_enabled = false;
@@ -495,7 +509,7 @@ namespace Aurora.Settings
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
 
-            Global.ProfilesManager.SaveAll();
+            Global.LightingStateManager.SaveAll();
 
             /*configuration.desktop_profile.SaveProfiles();
 

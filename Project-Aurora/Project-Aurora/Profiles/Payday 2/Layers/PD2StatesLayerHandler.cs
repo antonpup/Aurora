@@ -114,9 +114,10 @@ namespace Aurora.Profiles.Payday_2.Layers
             return states_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (_Control as Control_PD2StatesLayer)?.SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 }

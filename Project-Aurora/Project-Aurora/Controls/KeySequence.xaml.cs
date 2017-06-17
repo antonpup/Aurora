@@ -203,7 +203,7 @@ namespace Aurora.Controls
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("You are already recording a key sequence for " + Global.key_recorder.GetRecordingType());
+                    MessageBox.Show("You are already recording a key sequence for " + Global.key_recorder.GetRecordingType());
                 }
             }
             else

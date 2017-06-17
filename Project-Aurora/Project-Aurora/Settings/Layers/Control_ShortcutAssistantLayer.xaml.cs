@@ -26,9 +26,11 @@ namespace Aurora.Settings.Layers
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
-        public Control_ShortcutAssistantLayer()
+        protected Control_ShortcutAssistantLayer()
         {
             InitializeComponent();
+
+            this.PopulatePresets();
 
             buttonAddNewShortcut.Click += ButtonAddNewShortcut_Click;
 
@@ -50,6 +52,33 @@ namespace Aurora.Settings.Layers
                 AddKeybind(keyb);
             }
             AddStackPanelButton();
+        }
+        private void PopulatePresets(MenuItem item = null, ShortcutNode node = null)
+        {
+            MenuItem currentItem = item ?? menuPresets;
+            foreach (IShortcut shortcut in node?.Children ?? Global.PluginManager.PredefinedShortcuts)
+            {
+                MenuItem newItem = new MenuItem { Header = shortcut.Title, Tag = shortcut };
+                newItem.Click += ShortcutPresetClick;
+                if (shortcut is ShortcutNode)
+                    PopulatePresets(newItem, (ShortcutNode)shortcut);
+                currentItem.Items.Add(newItem);
+            }
+        }
+
+        private void ShortcutPresetClick(object sender, RoutedEventArgs e)
+        {
+            IShortcut shortcut;
+            if ((shortcut = (e.OriginalSource as MenuItem)?.Tag as IShortcut) != null)
+            {
+                ShortcutAssistantLayerHandler layer = (ShortcutAssistantLayerHandler)this.DataContext;
+                if (shortcut is ShortcutNode)
+                    layer.Properties._ShortcutKeys = ((ShortcutNode)shortcut).GetShortcuts();
+                else if (shortcut is ShortcutGroup)
+                    layer.Properties._ShortcutKeys = ((ShortcutGroup)shortcut).Shortcuts;
+                this.SetSettings();
+                e.Handled = true;
+            }
         }
 
         private void ButtonRemoveKeybind_Click(object sender, RoutedEventArgs e)

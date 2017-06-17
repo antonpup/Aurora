@@ -67,9 +67,10 @@ namespace Aurora.Profiles.CSGO.Layers
             return flashed_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_CSGOFlashbangLayer).SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 }

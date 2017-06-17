@@ -106,16 +106,16 @@ namespace Aurora.Settings.Layers
 
         EffectLayer PostRenderFX(EffectLayer layer_render);
 
-        void SetProfile(ProfileManager profile);
+        void SetApplication(Application profile);
     }
 
     public abstract class LayerHandler<TProperty> : ILayerHandler where TProperty : LayerHandlerProperties<TProperty>
     {
         [JsonIgnore]
-        public ProfileManager Profile { get; protected set; }
+        public Application Application { get; protected set; }
 
         [JsonIgnore]
-        internal UserControl _Control;
+        protected UserControl _Control;
 
         [JsonIgnore]
         public UserControl Control
@@ -127,7 +127,7 @@ namespace Aurora.Settings.Layers
         }
 
         [JsonIgnore]
-        internal string _ID;
+        protected string _ID;
 
         [JsonIgnore]
         public string ID { get { return _ID; } }
@@ -207,9 +207,9 @@ namespace Aurora.Settings.Layers
             return returnLayer;
         }
 
-        public virtual void SetProfile(ProfileManager profile)
+        public virtual void SetApplication(Application profile)
         {
-            Profile = profile;
+            Application = profile;
         }
 
         protected virtual UserControl CreateControl()

@@ -14,7 +14,7 @@ namespace Aurora.Profiles.ShadowOfMordor
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            layers.Enqueue(new EffectLayer("Shadow of Mordor - Color Zones").DrawColorZones((this.Profile.Settings as ShadowOfMordorSettings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("Shadow of Mordor - Color Zones").DrawColorZones((this.Application.Profile as ShadowOfMordorProfile).lighting_areas.ToArray()));
         }
     }
 }

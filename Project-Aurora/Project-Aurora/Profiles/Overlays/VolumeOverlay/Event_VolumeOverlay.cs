@@ -8,15 +8,15 @@ namespace Aurora.Profiles.Overlays
 {
     public class Event_VolumeOverlay : LightEvent
     {
-        public new bool IsEnabled
+        public override bool IsEnabled
         {
-            get { return true; }
+            get { return Global.Configuration.volume_overlay_settings.enabled; }
         }
 
         public override void UpdateLights(EffectFrame frame)
         {
-            if (Global.Configuration.volume_overlay_settings.enabled)
-            {
+            //if (Global.Configuration.volume_overlay_settings.enabled)
+            //{
                 Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
                 if (Global.Configuration.volume_overlay_settings.dim_background)
@@ -36,7 +36,7 @@ namespace Aurora.Profiles.Overlays
                 layers.Enqueue(volume_bar);
 
                 frame.AddOverlayLayers(layers.ToArray());
-            }
+            //}
         }
 
         public override void SetGameState(IGameState new_game_state)

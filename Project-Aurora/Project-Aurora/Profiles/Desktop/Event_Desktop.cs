@@ -26,13 +26,13 @@ namespace Aurora.Profiles.Desktop
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            foreach(var layer in this.Profile.Settings.Layers.Reverse().ToArray())
+            foreach(var layer in this.Application.Profile.Layers.Reverse().ToArray())
             {
                 if(layer.Enabled && layer.LogicPass)
                     layers.Enqueue(layer.Render(_game_state));
             }
 
-            layers.Enqueue(new EffectLayer("Color Zones").DrawColorZones((this.Profile.Settings as DesktopSettings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("Color Zones").DrawColorZones((this.Application.Profile as DesktopProfile).lighting_areas.ToArray()));
 
             //Scripts before interactive and shortcut assistant layers
             //ProfilesManager.DesktopProfile.UpdateEffectScripts(layers);

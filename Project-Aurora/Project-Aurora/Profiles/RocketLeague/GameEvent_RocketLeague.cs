@@ -75,7 +75,7 @@ namespace Aurora.Profiles.RocketLeague
 
         public new bool IsEnabled
         {
-            get { return this.Profile.Settings.IsEnabled && isInitialized; }
+            get { return this.Application.Settings.IsEnabled && isInitialized; }
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -83,7 +83,7 @@ namespace Aurora.Profiles.RocketLeague
 
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            RocketLeagueSettings settings = (RocketLeagueSettings)this.Profile.Settings;
+            RocketLeagueProfile settings = (RocketLeagueProfile)this.Application.Profile;
 
             Process[] process_search = Process.GetProcessesByName("RocketLeague");
 
@@ -101,17 +101,17 @@ namespace Aurora.Profiles.RocketLeague
                 }
             }
 
-            foreach (var layer in this.Profile.Settings.Layers.Reverse().ToArray())
+            foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
             {
                 if (layer.Enabled && layer.LogicPass)
                     layers.Enqueue(layer.Render(_game_state));
             }
 
             //Scripts
-            this.Profile.UpdateEffectScripts(layers);
+            this.Application.UpdateEffectScripts(layers);
 
             //ColorZones
-            layers.Enqueue(new EffectLayer("Rocket League - Color Zones").DrawColorZones((this.Profile.Settings as RocketLeagueSettings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("Rocket League - Color Zones").DrawColorZones((this.Application.Profile as RocketLeagueProfile).lighting_areas.ToArray()));
 
             frame.AddLayers(layers.ToArray());
         }

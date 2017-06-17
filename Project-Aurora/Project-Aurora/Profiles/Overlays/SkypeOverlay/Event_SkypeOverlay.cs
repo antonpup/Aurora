@@ -13,10 +13,11 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
 
         public Event_SkypeOverlay()
         {
-            Config = new Settings.LightEventConfig
+            Config = new LightEventConfig
             {
                 ID = "skype.exe",
-                GameStateType = typeof(State_SkypeOverlay)
+                GameStateType = typeof(State_SkypeOverlay),
+                Type = LightEventType.Overlay
             };
 
             if (Global.Configuration.skype_overlay_settings.enabled)
@@ -44,7 +45,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
             _is_calling = state;
         }
 
-        public new bool IsEnabled
+        public override bool IsEnabled
         {
             get { return Global.Configuration.skype_overlay_settings.enabled; }
         }

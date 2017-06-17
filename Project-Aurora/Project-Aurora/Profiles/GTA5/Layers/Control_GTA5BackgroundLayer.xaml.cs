@@ -56,7 +56,7 @@ namespace Aurora.Profiles.GTA5.Layers
             }
         }
 
-        internal void SetProfile(ProfileManager profile)
+        internal void SetProfile(Application profile)
         {
             if (profile != null && !profileset)
             {

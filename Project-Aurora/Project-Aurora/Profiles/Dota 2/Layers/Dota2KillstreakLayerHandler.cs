@@ -142,9 +142,10 @@ namespace Aurora.Profiles.Dota_2.Layers
             return killstreak_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_Dota2KillstreakLayer).SetProfile(profile);
+            base.SetApplication(profile);
         }
 
         private Color getKillStreakColor(int killstreak_count)

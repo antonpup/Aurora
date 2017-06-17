@@ -12,9 +12,9 @@ namespace Aurora.Profiles.LeagueOfLegends
     /// </summary>
     public partial class Control_LoL : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_LoL(ProfileManager profile)
+        public Control_LoL(Application profile)
         {
             InitializeComponent();
 
@@ -32,9 +32,9 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as LoLSettings).IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Settings as LoLSettings).lighting_areas;
-            this.cz_disable_on_dark.IsChecked = (profile_manager.Settings as LoLSettings).disable_cz_on_dark;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.cz.ColorZonesList = (profile_manager.Profile as LoLProfile).lighting_areas;
+            this.cz_disable_on_dark.IsChecked = (profile_manager.Profile as LoLProfile).disable_cz_on_dark;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -57,7 +57,7 @@ namespace Aurora.Profiles.LeagueOfLegends
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as LoLSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -66,7 +66,7 @@ namespace Aurora.Profiles.LeagueOfLegends
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as LoLSettings).lighting_areas = (sender as ColorZones).ColorZonesList;
+                (profile_manager.Profile as LoLProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }
@@ -75,7 +75,7 @@ namespace Aurora.Profiles.LeagueOfLegends
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as LoLSettings).disable_cz_on_dark = (this.cz_disable_on_dark.IsChecked.HasValue) ? this.cz_disable_on_dark.IsChecked.Value : false;
+                (profile_manager.Profile as LoLProfile).disable_cz_on_dark = (this.cz_disable_on_dark.IsChecked.HasValue) ? this.cz_disable_on_dark.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

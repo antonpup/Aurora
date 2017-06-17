@@ -14,7 +14,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            layers.Enqueue(new EffectLayer("Talos - Color Zones").DrawColorZones((this.Profile.Settings as TalosPrincipleSettings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("Talos - Color Zones").DrawColorZones((this.Application.Profile as TalosPrincipleProfile).lighting_areas.ToArray()));
         }
     }
 }

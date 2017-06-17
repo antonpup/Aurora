@@ -12,9 +12,9 @@ namespace Aurora.Profiles.Generic_Application
     /// </summary>
     public partial class Control_GenericApplication : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_GenericApplication(ProfileManager profile)
+        public Control_GenericApplication(Application profile)
         {
             InitializeComponent();
 
@@ -32,13 +32,13 @@ namespace Aurora.Profiles.Generic_Application
 
         private void SetSettings()
         {
-            this.profile_enabled.IsChecked = (profile_manager.Settings as GenericApplicationSettings).IsEnabled;
-            this.app_name_textbox.Text = (profile_manager.Settings as GenericApplicationSettings).ApplicationName;
+            this.profile_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            this.app_name_textbox.Text = (profile_manager.Profile as GenericApplicationProfile).ApplicationName;
         }
         
         private bool HasProfile()
         {
-            return Global.ProfilesManager.Events.ContainsKey(profile_manager.Config.ProcessNames[0]);
+            return Global.LightingStateManager.Events.ContainsKey(profile_manager.Config.ProcessNames[0]);
         }
                
         private void app_name_textbox_TextChanged(object sender, TextChangedEventArgs e)
@@ -46,7 +46,7 @@ namespace Aurora.Profiles.Generic_Application
             if (this.IsInitialized)
             {
                 if (HasProfile())
-                    (profile_manager.Settings as GenericApplicationSettings).ApplicationName = app_name_textbox.Text;
+                    (profile_manager.Profile as GenericApplicationProfile).ApplicationName = app_name_textbox.Text;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -55,7 +55,7 @@ namespace Aurora.Profiles.Generic_Application
         {
             if (IsLoaded && HasProfile())
             {
-                (profile_manager.Settings as GenericApplicationSettings).IsEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -64,7 +64,7 @@ namespace Aurora.Profiles.Generic_Application
         {
             if (IsLoaded && HasProfile())
             {
-                (profile_manager.Settings as GenericApplicationSettings)._simulateNighttime = (this.profile_nighttime_check.IsChecked.HasValue) ? this.profile_nighttime_check.IsChecked.Value : false;
+                (profile_manager.Profile as GenericApplicationProfile)._simulateNighttime = (this.profile_nighttime_check.IsChecked.HasValue) ? this.profile_nighttime_check.IsChecked.Value : false;
             }
         }
     }

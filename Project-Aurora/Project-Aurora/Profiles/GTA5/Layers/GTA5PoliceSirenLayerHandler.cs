@@ -228,9 +228,10 @@ namespace Aurora.Profiles.GTA5.Layers
             return sirens_layer;
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             (Control as Control_GTA5PoliceSirenLayer).SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Aurora.Profiles.HotlineMiami
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            layers.Enqueue(new EffectLayer("Hotline - Color Zones").DrawColorZones((this.Profile.Settings as HMSettings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("Hotline - Color Zones").DrawColorZones((this.Application.Profile as HMProfile).lighting_areas.ToArray()));
         }
     }
 }

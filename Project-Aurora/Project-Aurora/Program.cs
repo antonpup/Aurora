@@ -54,7 +54,8 @@ namespace Aurora
         /// </summary>
         public static InputEventsSubscriptions input_subscriptions = new InputEventsSubscriptions();
         //public static GameEventHandler geh;
-        public static ProfilesManager ProfilesManager;
+        public static PluginManager PluginManager;
+        public static LightingStateManager LightingStateManager;
         public static NetworkListener net_listener;
         public static Configuration Configuration;
         public static DeviceManager dev_manager;
@@ -85,6 +86,10 @@ namespace Aurora
         [STAThread]
         static void Main(string[] args)
         {
+#if DEBUG
+            Global.isDebug = true;
+#endif
+
             string arg = "";
 
             for (int arg_i = 0; arg_i < args.Length; arg_i++)
@@ -204,8 +209,11 @@ namespace Aurora
                 }
             }
 
-            Global.logger.LogLine("Loading Profiles", Logging_Level.Info);
-            (Global.ProfilesManager = new ProfilesManager()).Initialize();
+            Global.logger.LogLine("Loading Plugins", Logging_Level.Info);
+            (Global.PluginManager = new PluginManager()).Initialize();
+
+            Global.logger.LogLine("Loading Applications", Logging_Level.Info);
+            (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
             Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
             Global.dev_manager.RegisterVariables();
@@ -231,8 +239,8 @@ namespace Aurora
             try
             {
                 Global.net_listener = new NetworkListener(9088);
-                Global.net_listener.NewGameState += new NewGameStateHandler(Global.ProfilesManager.GameStateUpdate);
-                Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.ProfilesManager.ResetGameState);
+                Global.net_listener.NewGameState += new NewGameStateHandler(Global.LightingStateManager.GameStateUpdate);
+                Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.LightingStateManager.ResetGameState);
             }
             catch (Exception exc)
             {
@@ -279,8 +287,13 @@ namespace Aurora
         /// </summary>
         public static void Exit()
         {
+            Global.LightingStateManager.SaveAll();
+
+            if (Global.Configuration != null)
+                ConfigManager.Save(Global.Configuration);
+
             Global.input_subscriptions?.Dispose();
-            Global.ProfilesManager?.Dispose();
+            Global.LightingStateManager?.Dispose();
             Global.net_listener?.Stop();
             Global.dev_manager?.Shutdown();
             Global.dev_manager?.Dispose();
@@ -414,8 +427,7 @@ namespace Aurora
                 Global.dev_manager?.Shutdown();
                 Global.dev_manager?.Dispose();
 
-                if (Global.Configuration != null)
-                    ConfigManager.Save(Global.Configuration);
+                
 
                 //Kill all Skype Integrations on Exit
                 foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
@@ -440,9 +452,9 @@ namespace Aurora
             if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt && Global.Configuration.use_volume_as_brightness)
             {
                 if (e.KeyCode == Keys.VolumeUp)
-                    Global.Configuration.global_brightness = Global.Configuration.global_brightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.global_brightness + 0.05f;
+                    Global.Configuration.GlobalBrightness = Global.Configuration.GlobalBrightness + 0.05f > 1.0f ? 1.0f : Global.Configuration.GlobalBrightness + 0.05f;
                 else if (e.KeyCode == Keys.VolumeDown)
-                    Global.Configuration.global_brightness = Global.Configuration.global_brightness - 0.05f < 0.0f ? 0.0f : Global.Configuration.global_brightness - 0.05f;
+                    Global.Configuration.GlobalBrightness = Global.Configuration.GlobalBrightness - 0.05f < 0.0f ? 0.0f : Global.Configuration.GlobalBrightness - 0.05f;
 
                 ConfigManager.Save(Global.Configuration);
 
@@ -450,7 +462,7 @@ namespace Aurora
             }
             else if (e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown)
             {
-                Global.ProfilesManager.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
+                Global.LightingStateManager.AddOverlayForDuration(new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
             }
         }
 

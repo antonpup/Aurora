@@ -15,9 +15,9 @@ namespace Aurora.Profiles.LeagueOfLegends
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            if (!((this.Profile.Settings as LoLSettings).disable_cz_on_dark && last_fill_color.Equals(Color.Black)))
+            if (!((this.Application.Profile as LoLProfile).disable_cz_on_dark && last_fill_color.Equals(Color.Black)))
             {
-                layers.Enqueue(new EffectLayer("League - Color Zones").DrawColorZones((this.Profile.Settings as LoLSettings).lighting_areas.ToArray()));
+                layers.Enqueue(new EffectLayer("League - Color Zones").DrawColorZones((this.Application.Profile as LoLProfile).lighting_areas.ToArray()));
             }
         }
     }

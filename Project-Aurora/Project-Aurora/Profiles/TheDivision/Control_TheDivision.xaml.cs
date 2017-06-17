@@ -10,9 +10,9 @@ namespace Aurora.Profiles.TheDivision
     /// </summary>
     public partial class Control_TheDivision : UserControl
     {
-        private ProfileManager profile_manager;
+        private Application profile_manager;
 
-        public Control_TheDivision(ProfileManager profile)
+        public Control_TheDivision(Application profile)
         {
             InitializeComponent();
 
@@ -23,7 +23,7 @@ namespace Aurora.Profiles.TheDivision
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = (profile_manager.Settings as TheDivisionSettings).IsEnabled;
+            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -47,7 +47,7 @@ namespace Aurora.Profiles.TheDivision
         {
             if (IsLoaded)
             {
-                (profile_manager.Settings as TheDivisionSettings).IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

@@ -14,7 +14,7 @@ namespace Aurora.Profiles.Guild_Wars_2
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
             //ColorZones
-            layers.Enqueue(new EffectLayer("Guild Wars 2 - Color Zones").DrawColorZones((this.Profile.Settings as GW2Settings).lighting_areas.ToArray()));
+            layers.Enqueue(new EffectLayer("Guild Wars 2 - Color Zones").DrawColorZones((this.Application.Profile as GW2Profile).lighting_areas.ToArray()));
         }
     }
 }

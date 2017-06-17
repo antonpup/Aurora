@@ -11,6 +11,7 @@ using Aurora.Profiles.Desktop;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aurora.Settings
 {
@@ -29,22 +30,20 @@ namespace Aurora.Settings
         {
             InitializeComponent();
 
+            this.tabMain.DataContext = Global.Configuration;
+
+
             this.run_at_win_startup.IsChecked = !(runRegistryPath.GetValue("Aurora", null) == null);
 
             this.start_silently_enabled.IsChecked = Global.Configuration.start_silently;
 
             this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
             this.app_detection_mode.SelectedIndex = (int)Global.Configuration.detection_mode;
+            this.chkOverlayPreview.IsChecked = Global.Configuration.OverlaysInPreview;
 
             load_excluded_listbox();
 
             this.volume_as_brightness_enabled.IsChecked = Global.Configuration.use_volume_as_brightness;
-
-            this.brightness_kb_label.Text = Global.Configuration.keyboard_brightness_modifier + " %";
-            this.brightness_kb_slider.Value = (float)Global.Configuration.keyboard_brightness_modifier;
-
-            this.brightness_peri_label.Text = Global.Configuration.peripheral_brightness_modifier + " %";
-            this.brightness_peri_slider.Value = (float)Global.Configuration.peripheral_brightness_modifier;
 
             this.timed_dimming_checkbox.IsChecked = Global.Configuration.time_based_dimming_enabled;
             this.timed_dimming_start_hour_updown.Value = Global.Configuration.time_based_dimming_start_hour;
@@ -58,6 +57,7 @@ namespace Aurora.Settings
             this.nighttime_start_minute_updown.Value = Global.Configuration.nighttime_start_minute;
             this.nighttime_end_hour_updown.Value = Global.Configuration.nighttime_end_hour;
             this.nighttime_end_minute_updown.Value = Global.Configuration.nighttime_end_minute;
+
 
             this.volume_overlay_enabled.IsChecked = Global.Configuration.volume_overlay_settings.enabled;
             this.volume_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.low_color);
@@ -133,6 +133,7 @@ namespace Aurora.Settings
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             Global.effengine.NewLayerRender += OnLayerRendered;
+            this.ctrlPluginManager.Host = Global.LightingStateManager;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -434,32 +435,18 @@ namespace Aurora.Settings
                 (sender as Button).Content = "Record";
         }
 
-        private void brightness_kb_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void sliderPercentages_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (IsLoaded)
-            {
-                Global.Configuration.keyboard_brightness_modifier = (float)this.brightness_kb_slider.Value;
-                ConfigManager.Save(Global.Configuration);
-            }
+            Slider sld = sender as Slider;
+            if (sld == null)
+                return;
 
-            if (this.brightness_kb_label is TextBlock)
-            {
-                this.brightness_kb_label.Text = (int)(this.brightness_kb_slider.Value * 100) + " %";
-            }
-        }
+            TextBlock label = sld.Tag as TextBlock;
 
-        private void brightness_peri_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.peripheral_brightness_modifier = (float)this.brightness_peri_slider.Value;
-                ConfigManager.Save(Global.Configuration);
-            }
+            if (label == null)
+                return;
 
-            if (this.brightness_peri_label is TextBlock)
-            {
-                this.brightness_peri_label.Text = (int)(this.brightness_peri_slider.Value * 100) + " %";
-            }
+            label.Text = (int)(sld.Value * 100) + " %";
         }
 
         private void run_at_win_startup_Checked(object sender, RoutedEventArgs e)
@@ -714,7 +701,7 @@ namespace Aurora.Settings
         private void skype_run_integration_Click(object sender, RoutedEventArgs e)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = @"Aurora-SkypeIntegration.exe";
+            startInfo.FileName = Path.Combine(Global.ExecutingDirectory, "Aurora-SkypeIntegration.exe");
             Process.Start(startInfo);
         }
 
@@ -911,22 +898,27 @@ namespace Aurora.Settings
             }
         }
 
-        private void excluded_process_name_DropDownOpened(object sender, EventArgs e)
+        private async void excluded_process_name_DropDownOpened(object sender, EventArgs e)
         {
+            excluded_process_name.ItemsSource = new string[] { "Working..." };
+
             HashSet<string> processes = new HashSet<string>();
-
-            foreach (var p in Process.GetProcesses())
+            await Task.Run(() =>
             {
-                try
-                {
-                    processes.Add( Path.GetFileName( p.MainModule.FileName ) );
-                }
-                catch(Exception exc)
-                {
 
-                }
-            }
+                foreach (var p in Process.GetProcesses())
+                {
+                    try
+                    {
+                        processes.Add(Path.GetFileName(p.MainModule.FileName));
+                    }
+                    catch (Exception exc)
+                    {
 
+                    }
+                }
+
+            });
             excluded_process_name.ItemsSource = processes.ToArray();
         }
 
@@ -1006,6 +998,15 @@ namespace Aurora.Settings
         {
             if (sender is Button)
                 System.Diagnostics.Process.Start(Global.logger.GetLogsDirectory());
+        }
+
+        private void chkOverlayPreview_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.OverlaysInPreview = (this.chkOverlayPreview.IsChecked.HasValue) ? this.chkOverlayPreview.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
         }
     }
 }

@@ -19,12 +19,12 @@ namespace Aurora.Profiles.Generic_Application
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            GenericApplicationSettings settings = (GenericApplicationSettings)this.Profile.Settings;
+            GenericApplicationProfile settings = (GenericApplicationProfile)this.Application.Profile;
 
-            ObservableCollection<Settings.Layers.Layer> timeLayers = settings.Layers;
+            ObservableCollection<Layer> timeLayers = settings.Layers;
 
             //Scripts
-            this.Profile.UpdateEffectScripts(layers);
+            this.Application.UpdateEffectScripts(layers);
 
             if ((Global.Configuration.nighttime_enabled &&
                 Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute)) ||
@@ -43,9 +43,9 @@ namespace Aurora.Profiles.Generic_Application
             frame.AddLayers(layers.ToArray());
         }
 
-        public void UpdateLights(EffectFrame frame, ProfileManager profile)
+        public void UpdateLights(EffectFrame frame, Application profile)
         {
-            this.Profile = profile;
+            this.Application = profile;
 
             UpdateLights(frame);
         }

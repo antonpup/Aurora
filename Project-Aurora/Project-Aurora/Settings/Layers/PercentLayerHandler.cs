@@ -94,7 +94,7 @@ namespace Aurora.Settings.Layers
             return new EffectLayer().PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
         }
 
-        public override void SetProfile(ProfileManager profile)
+        public override void SetApplication(Application profile)
         {
             if (profile != null)
             {
@@ -106,6 +106,7 @@ namespace Aurora.Settings.Layers
                     Properties._MaxVariablePath = string.Empty;
             }
             (Control as Control_PercentLayer).SetProfile(profile);
+            base.SetApplication(profile);
         }
     }
 

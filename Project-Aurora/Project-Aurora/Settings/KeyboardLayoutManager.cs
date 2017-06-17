@@ -506,11 +506,16 @@ namespace Aurora.Settings
                             break;
                         case PreferredKeyboardLocalization.nordic:
                             culture = "nordic";
+                        case PreferredKeyboardLocalization.tr:
+                            culture = "tr-TR";
                             break;
                     }
 
                     switch (culture)
                     {
+                        case ("tr-TR"):
+                            LoadCulture("tr");
+                            break;
                         case ("ja-JP"):
                             LoadCulture("jpn");
                             break;

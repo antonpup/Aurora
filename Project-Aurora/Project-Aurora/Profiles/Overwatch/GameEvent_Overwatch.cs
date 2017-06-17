@@ -15,11 +15,11 @@ namespace Aurora.Profiles.Overwatch
 
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
         {
-            this.colorEnhance_Enabled = (this.Profile.Settings as OverwatchSettings).colorEnhance_Enabled;
-            this.colorEnhance_Mode = (this.Profile.Settings as OverwatchSettings).colorEnhance_Mode;
-            this.colorEnhance_color_factor = (this.Profile.Settings as OverwatchSettings).colorEnhance_color_factor;
-            this.colorEnhance_color_hsv_sine = (this.Profile.Settings as OverwatchSettings).colorEnhance_color_hsv_sine;
-            this.colorEnhance_color_hsv_gamma = (this.Profile.Settings as OverwatchSettings).colorEnhance_color_hsv_gamma;
+            this.colorEnhance_Enabled = (this.Application.Profile as OverwatchProfile).colorEnhance_Enabled;
+            this.colorEnhance_Mode = (this.Application.Profile as OverwatchProfile).colorEnhance_Mode;
+            this.colorEnhance_color_factor = (this.Application.Profile as OverwatchProfile).colorEnhance_color_factor;
+            this.colorEnhance_color_hsv_sine = (this.Application.Profile as OverwatchProfile).colorEnhance_color_hsv_sine;
+            this.colorEnhance_color_hsv_gamma = (this.Application.Profile as OverwatchProfile).colorEnhance_color_hsv_gamma;
         }
     }
 }

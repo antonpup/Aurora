@@ -32,6 +32,9 @@
         <TextBlock HorizontalAlignment="Left" Margin="352,3,0,0" TextWrapping="Wrap" Text="Dimming Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="clrDimBackground" Margin="440,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColor="{Binding Path=Properties._DimColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
         <TextBlock Text="Shortcuts" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,34,0,0"/>
+        <Menu Margin="295,34,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="52">
+            <MenuItem x:Name="menuPresets" Header="Presets"/>
+        </Menu>
         <ScrollViewer HorizontalAlignment="Left" Margin="0,55,0,0" Width="347" MinHeight="80">
             <StackPanel x:Name="stackPanelShortcuts" Background="#7F646464"/>
         </ScrollViewer>

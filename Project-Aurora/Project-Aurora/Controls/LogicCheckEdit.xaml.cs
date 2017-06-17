@@ -34,7 +34,7 @@ namespace Aurora.Controls
             set
             {
                 SetValue(LayerProperty, value);
-                this.cmbParameter.ItemsSource = value.AssociatedProfile.ParameterLookup
+                this.cmbParameter.ItemsSource = value.AssociatedApplication.ParameterLookup
                     .Where(s => (s.Value.Item1.IsPrimitive || s.Value.Item1 == typeof(string)) && s.Value.Item2 == null).ToDictionary(s => s) //Remove methods and non-primitives for right now
                     .Keys;
             }
@@ -67,8 +67,8 @@ namespace Aurora.Controls
             
             string str = e.AddedItems[0] as string;
             string old_str = e.RemovedItems[0] as string;
-            Tuple<Type, Type> typ = Layer.AssociatedProfile.ParameterLookup[str];
-            Tuple<Type, Type> old_typ = old_str != null ? Layer.AssociatedProfile.ParameterLookup[str] : null;
+            Tuple<Type, Type> typ = Layer.AssociatedApplication.ParameterLookup[str];
+            Tuple<Type, Type> old_typ = old_str != null ? Layer.AssociatedApplication.ParameterLookup[str] : null;
             if (old_typ == null || old_typ.Item1 != typ.Item1)
             {
                 List<LogicOperator> operators = new List<LogicOperator>();

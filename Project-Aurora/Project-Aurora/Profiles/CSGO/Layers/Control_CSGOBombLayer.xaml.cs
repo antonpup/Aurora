@@ -53,7 +53,7 @@ namespace Aurora.Profiles.CSGO.Layers
             }
         }
 
-        internal void SetProfile(ProfileManager profile)
+        internal void SetProfile(Application profile)
         {
             if (profile != null && !profileset)
             {
