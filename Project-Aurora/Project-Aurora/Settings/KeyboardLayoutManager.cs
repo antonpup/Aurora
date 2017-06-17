@@ -506,6 +506,7 @@ namespace Aurora.Settings
                             break;
                         case PreferredKeyboardLocalization.nordic:
                             culture = "nordic";
+                            break;
                         case PreferredKeyboardLocalization.tr:
                             culture = "tr-TR";
                             break;
