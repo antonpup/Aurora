@@ -217,7 +217,9 @@ namespace Aurora.Settings
         [Description("Japanese")]
         jpn = 7,
         [Description("Turkish")]
-        tr = 8
+        tr = 8,
+        [Description("Nordic")]
+        nordic = 9
     }
 
     public enum PreferredMouse

@@ -228,16 +228,23 @@ namespace Aurora.Utils
                 case (Keys.MediaPlayPause):
                     return DeviceKeys.MEDIA_PLAY_PAUSE;
                 case (Keys.OemSemicolon):
-                    return DeviceKeys.SEMICOLON;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.CLOSE_BRACKET;
+                    else
+                        return DeviceKeys.SEMICOLON;
                 case (Keys.Oemplus):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.CLOSE_BRACKET;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.MINUS;
                     else
                         return DeviceKeys.EQUALS;
                 case (Keys.Oemcomma):
                     return DeviceKeys.COMMA;
                 case (Keys.OemMinus):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.FORWARD_SLASH;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.FORWARD_SLASH;
                     else
                         return DeviceKeys.MINUS;
@@ -246,6 +253,8 @@ namespace Aurora.Utils
                 case (Keys.OemQuestion):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.HASHTAG;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.HASHTAG;
                     else
                         return DeviceKeys.FORWARD_SLASH;
                 case (Keys.ProcessKey):
@@ -253,21 +262,29 @@ namespace Aurora.Utils
                 case (Keys.Oemtilde):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.APOSTROPHE;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.SEMICOLON;
                     else
                         return DeviceKeys.TILDE;
                 case (Keys.OemOpenBrackets):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.MINUS;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.EQUALS;
                     else
                         return DeviceKeys.OPEN_BRACKET;
                 case (Keys.OemPipe):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.BACKSLASH_UK;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.TILDE;
                     else
                         return DeviceKeys.BACKSLASH;
                 case (Keys.OemCloseBrackets):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.EQUALS;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.OPEN_BRACKET;
                     else
                         return DeviceKeys.CLOSE_BRACKET;
                 case (Keys.OemQuotes):
