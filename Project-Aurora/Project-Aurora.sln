@@ -1,11 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project-Aurora", "Project-Aurora\Project-Aurora.csproj", "{18D2D471-3F57-4ECE-9C62-836A801473D8}"
 	ProjectSection(ProjectDependencies) = postProject
-		{6F81D40A-6AA0-4C8B-A395-779EF3003CA4} = {6F81D40A-6AA0-4C8B-A395-779EF3003CA4}
 		{A759300D-9550-47BA-8616-C24B6BC05A02} = {A759300D-9550-47BA-8616-C24B6BC05A02}
 		{40085232-ACED-4CBE-945B-90BA8153C151} = {40085232-ACED-4CBE-945B-90BA8153C151}
 		{004D1E3E-F20E-4ECA-ABB1-467D1CE2C173} = {004D1E3E-F20E-4ECA-ABB1-467D1CE2C173}
@@ -18,6 +17,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora-RazerLEDWrapper", "Aurora-RazerLEDWrapper\Aurora-RazerLEDWrapper.vcxproj", "{004D1E3E-F20E-4ECA-ABB1-467D1CE2C173}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurora-Updater", "Aurora-Updater\Aurora-Updater.csproj", "{6F81D40A-6AA0-4C8B-A395-779EF3003CA4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18D2D471-3F57-4ECE-9C62-836A801473D8} = {18D2D471-3F57-4ECE-9C62-836A801473D8}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora-LeagueLogiLEDWrapper", "Aurora-LeagueLogiLEDWrapper\Aurora-LeagueLogiLEDWrapper.vcxproj", "{7A7C78E5-0307-4139-9625-401A5A56C51F}"
 EndProject

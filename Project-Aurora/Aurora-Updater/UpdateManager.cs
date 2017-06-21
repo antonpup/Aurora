@@ -70,11 +70,25 @@ namespace Aurora_Updater
         public UpdateStatus updateState = UpdateStatus.None;
         private int downloadProgressCheck = 0;
         private int secondsLeft = 15;
+        private Aurora.Settings.Configuration Config;
 
         public UpdateManager()
         {
+            LoadSettings();
             PerformCleanup();
             FetchData();
+        }
+
+        public void LoadSettings()
+        {
+            try
+            {
+                Config = Aurora.Settings.ConfigManager.Load();
+            }
+            catch (Exception e)
+            {
+                Config = new Aurora.Settings.Configuration();
+            }
         }
 
         public void ClearLog()
@@ -94,13 +108,18 @@ namespace Aurora_Updater
 
         private bool FetchData()
         {
-            if (String.IsNullOrWhiteSpace(infoUrl))
+            string sinfoUrl = infoUrl;
+
+            if (Config.GetDevReleases)
+                sinfoUrl += "?prerelease=1";
+
+            if (String.IsNullOrWhiteSpace(sinfoUrl))
                 return false;
 
             try
             {
                 WebClient client = new WebClient();
-                string reply = client.DownloadString(infoUrl);
+                string reply = client.DownloadString(sinfoUrl);
 
                 response = new UpdateResponse(reply);
 
@@ -435,11 +454,11 @@ namespace Aurora_Updater
                         typeof(DescriptionAttribute)) as DescriptionAttribute;
                     if (attribute != null)
                     {
-                        if (attribute.Description.ToLowerInvariant().Equals(value.ToString().ToLowerInvariant()))
+                        if (attribute.Description.ToLowerInvariant().Equals(Name))
                             return (T)field.GetValue(null);
                     }
 
-                    if (field.Name.ToLowerInvariant().Equals(value.ToString().ToLowerInvariant()))
+                    if (field.Name.ToLowerInvariant().Equals(Name))
                         return (T)field.GetValue(null);
                 }
 
@@ -626,6 +645,7 @@ namespace Aurora_Updater
         public readonly string File;
         public readonly UpdateType Type;
         public readonly long FileSize;
+        public readonly bool PreRelease;
 
         internal UpdateInfoNode(string JSON)
             : base(JSON)
@@ -638,6 +658,7 @@ namespace Aurora_Updater
             File = GetString("file");
             Type = GetEnum<UpdateType>("type");
             FileSize = GetLong("size");
+            PreRelease = GetInt("prerelease") == 1 ? true : false;
         }
     }
 }

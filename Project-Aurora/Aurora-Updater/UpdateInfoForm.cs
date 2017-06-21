@@ -9,6 +9,7 @@ namespace Aurora_Updater
         public string currentVersion = "";
         public string updateVersion = "";
         public string updateDescription = "";
+        public bool preRelease = false;
         public long updateSize = 0;
 
         public UpdateInfoForm()
@@ -30,6 +31,7 @@ namespace Aurora_Updater
 
         private void UpdateInfoForm_Shown(object sender, EventArgs e)
         {
+            this.lblUpdateTitle.Text = preRelease ? "New Aurora Pre-release update is available!" : "New Aurora update is available!";
             this.labelUpdateDescription.Text = updateDescription;
             this.labelCurrentVersion.Text = $"Installed Version: {currentVersion}";
             this.labelUpdateVersion.Text = $"Update Version: {updateVersion}";

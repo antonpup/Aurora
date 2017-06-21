@@ -59,7 +59,7 @@ namespace Aurora_Updater
 
             passedArgs.TrimEnd(' ');
 
-            exePath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            exePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 
             //Check privilege
             WindowsIdentity identity = WindowsIdentity.GetCurrent();
@@ -108,7 +108,8 @@ namespace Aurora_Updater
                             updateDescription = StaticStorage.Manager.response.Major.Description,
                             updateVersion = StaticStorage.Manager.response.Major.Version.ToString(),
                             currentVersion = versionMajor.ToString(),
-                            updateSize = StaticStorage.Manager.response.Major.FileSize
+                            updateSize = StaticStorage.Manager.response.Major.FileSize,
+                            preRelease = StaticStorage.Manager.response.Major.PreRelease
                         };
 
                         userResult.ShowDialog();
@@ -183,7 +184,8 @@ namespace Aurora_Updater
                                 updateDescription = StaticStorage.Manager.response.Minor.Description,
                                 updateVersion = StaticStorage.Manager.response.Minor.Version.ToString(),
                                 currentVersion = versionMinor.ToString(),
-                                updateSize = StaticStorage.Manager.response.Minor.FileSize
+                                updateSize = StaticStorage.Manager.response.Minor.FileSize,
+                                preRelease = StaticStorage.Manager.response.Minor.PreRelease
                             };
 
                             userResult.ShowDialog();
