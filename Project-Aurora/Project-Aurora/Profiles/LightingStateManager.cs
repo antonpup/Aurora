@@ -749,4 +749,4 @@ namespace Aurora.Profiles
 
         public void Dispose()
         {
-            updateTimer.Dispose();        }    }}
+            updateTimer.Dispose();            updateTimer = null;        }    }}
