@@ -43,51 +43,10 @@ namespace Aurora.Profiles
         {
             return Title;
         }
-    }
-
-    public interface IPluginHost
-    {
-        Dictionary<string, IPlugin> Plugins { get; }
-        void SetPluginEnabled(string id, bool enabled);
-    }
-
-    public interface IPlugin
-    {
-        string ID { get; }
-        string Title { get; }
-        string Author { get; }
-        Version Version { get; }
-        IPluginHost PluginHost { get; set; }
-    }
-
-    public static class PluginUtils
-    {
-        public static bool Enabled(this IPlugin self)
-        {
-            return self.PluginHost != null;
-        }
-    }
-
-    public class PluginEnabledConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var plugin = (IPlugin)value;
-            return plugin.Enabled();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    
+    }    
 
     public class ProfilesManagerSettings
     {
-        public Dictionary<string, bool> PluginManagement { get; private set; } = new Dictionary<string, bool>();
-
         public ProfilesManagerSettings()
         {
 
@@ -100,12 +59,8 @@ namespace Aurora.Profiles
         }
     }
 
-    public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit, IPluginHost
-    {        public const string PluginDirectory = "Plugins";
-
-        public Dictionary<string, IPlugin> Plugins { get; set; } = new Dictionary<string, IPlugin>();
-        
-        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
+    public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit
+    {        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
 
         public Desktop.Desktop DesktopProfile { get { return (Desktop.Desktop)Events["desktop"]; } }
 
@@ -121,7 +76,6 @@ namespace Aurora.Profiles
         public List<string> DefaultLayerHandlers { get; private set; } = new List<string>();
 
         public string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
-
 
         private ActiveProcessMonitor processMonitor;
 
@@ -220,58 +174,7 @@ namespace Aurora.Profiles
 
         private void LoadPlugins()
         {
-            string dir = Path.Combine(Global.ExecutingDirectory, PluginDirectory);
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-
-                //No need to search the directory if we just created it
-                return;
-            }
-
-            foreach (string pathPlugin in Directory.EnumerateFiles(dir, "*.dll", SearchOption.TopDirectoryOnly))
-            {
-                try
-                {
-                    Assembly dllPlugin = Assembly.LoadFrom(pathPlugin);
-
-                    foreach (AssemblyName name in dllPlugin.GetReferencedAssemblies())
-                        AppDomain.CurrentDomain.Load(name);
-
-                    foreach (Type typ in dllPlugin.GetExportedTypes())
-                    {
-                        if (typeof(IPlugin).IsAssignableFrom(typ))
-                        {
-                            //Create an instance of the plugin type
-                            IPlugin objPlugin = (IPlugin)Activator.CreateInstance(typ);
-
-                            //Get the ID of the plugin
-                            string id = objPlugin.ID;
-
-                            if (id != null && (!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id]))
-                                objPlugin.PluginHost = this;
-
-                            this.Plugins.Add(id, objPlugin);
-                        }
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.LogLine(exc.ToString(), Logging_Level.Error, true);
-                    if (Global.isDebug)
-                        throw exc;
-                }
-            }
-        }
-
-        public void SetPluginEnabled(string id, bool enabled)
-        {
-            if (!this.Settings.PluginManagement.ContainsKey(id))
-                this.Settings.PluginManagement.Add(id, enabled);
-            else
-                this.Settings.PluginManagement[id] = enabled;
-
-            this.SaveSettings();
+            Global.PluginManager.ProcessManager(this);
         }
 
         protected override void LoadSettings(Type settingsType)
@@ -704,7 +607,6 @@ namespace Aurora.Profiles
                     profile.SetGameState(gs);
                 }
 
-                //UpdateIdleEffects(newFrame);
             }
             catch (Exception e)
             {

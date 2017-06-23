@@ -133,7 +133,7 @@ namespace Aurora.Settings
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             Global.effengine.NewLayerRender += OnLayerRendered;
-            this.ctrlPluginManager.Host = Global.LightingStateManager;
+            this.ctrlPluginManager.Host = Global.PluginManager;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

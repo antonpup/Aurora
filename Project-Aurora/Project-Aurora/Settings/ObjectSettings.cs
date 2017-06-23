@@ -13,7 +13,7 @@ namespace Aurora.Settings
         protected string SettingsSavePath { get; set; }
         public T Settings { get; protected set; }
 
-        protected void SaveSettings()
+        public void SaveSettings()
         {
             this.SaveSettings(typeof(T));
         }

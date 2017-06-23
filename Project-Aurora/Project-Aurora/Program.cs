@@ -288,6 +288,7 @@ namespace Aurora
         public static void Exit()
         {
             Global.LightingStateManager.SaveAll();
+            Global.PluginManager.SaveSettings();
 
             if (Global.Configuration != null)
                 ConfigManager.Save(Global.Configuration);
