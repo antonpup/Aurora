@@ -52,6 +52,11 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// </summary>
         public int RoundKillHS;
 
+        /// <summary>
+        /// Value of equipment
+        /// </summary>
+        public int EquipValue;
+
         internal PlayerStateNode(string JSON)
             : base(JSON)
         {
@@ -64,6 +69,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
             Money = GetInt("money");
             RoundKills = GetInt("round_kills");
             RoundKillHS = GetInt("round_killhs");
+            EquipValue = GetInt("equip_value");
         }
     }
 }

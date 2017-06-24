@@ -19,6 +19,11 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         public string SteamID { get { return _SteamID; } }
 
         /// <summary>
+        /// Observer Slot
+        /// </summary>
+        public int ObserverSlot;
+
+        /// <summary>
         /// Player's name
         /// </summary>
         public string Name;
@@ -57,6 +62,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
             : base(JSON)
         {
             _SteamID = GetString("steamid");
+            ObserverSlot = GetInt("observer_slot");
             Name = GetString("name");
             Team = GetEnum<PlayerTeam>("team");
             Clan = GetString("clan");

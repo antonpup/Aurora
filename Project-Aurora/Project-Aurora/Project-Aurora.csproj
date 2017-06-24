@@ -715,7 +715,6 @@
     <Compile Include="EffectsEngine\EffectFrame.cs" />
     <Compile Include="EffectsEngine\EffectLayer.cs" />
     <Compile Include="EffectsEngine\Effects.cs" />
-    <Content Include="GameEventHandler.cs" />
     <Compile Include="Profiles\CSGO\Control_CSGO.xaml.cs">
       <DependentUpon>Control_CSGO.xaml</DependentUpon>
     </Compile>
