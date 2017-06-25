@@ -148,9 +148,9 @@ namespace Aurora.Profiles.GTA5.GSI
 
             if(state_color == Color.FromArgb(255, 175, 80, 0))
                 CurrentState = PlayerState.PlayingSP_Trevor;
-            else if (state_color == Color.FromArgb(255, 50, 255, 255))
+            else if (state_color == Color.FromArgb(255, 48, 255, 255))
                 CurrentState = PlayerState.PlayingSP_Michael;
-            else if (state_color == Color.FromArgb(255, 50, 255, 0))
+            else if (state_color == Color.FromArgb(255, 48, 255, 0))
                 CurrentState = PlayerState.PlayingSP_Franklin;
             else if (state_color == Color.FromArgb(255, 125, 0, 0))
                 CurrentState = PlayerState.PlayingSP_Chop;
@@ -187,6 +187,14 @@ namespace Aurora.Profiles.GTA5.GSI
         /// <param name="other_state">The passed GameState</param>
         public GameState_GTA5(GameState other_state) : base(other_state)
         {
+            GameState_GTA5 gta = other_state as GameState_GTA5;
+            if (gta != null) {
+                this.HasCops = gta.HasCops;
+                this.LeftSirenColor = gta.LeftSirenColor;
+                this.RightSirenColor = gta.RightSirenColor;
+                this.CurrentState = gta.CurrentState;
+                this.StateColor = gta.StateColor;
+            }
         }
 
         private Color JSonToColor(byte a, byte r, byte g, byte b)
