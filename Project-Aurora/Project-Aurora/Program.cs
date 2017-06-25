@@ -275,7 +275,8 @@ namespace Aurora
 
             MainWindow = new ConfigUI();
             WinApp.MainWindow = MainWindow;
-            WinApp.Run(MainWindow);
+            ((ConfigUI)MainWindow).Display();
+            WinApp.Run();
 
             ConfigManager.Save(Global.Configuration);
 

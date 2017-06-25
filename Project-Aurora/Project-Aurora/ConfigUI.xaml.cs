@@ -101,6 +101,23 @@ namespace Aurora
 
             GenerateProfileStack();
             settings_control.DataContext = this;
+
+            
+        }
+
+        internal void Display()
+        {
+            if (Program.isSilent || Global.Configuration.start_silently)
+            {
+                this.Visibility = Visibility.Hidden;
+                this.WindowStyle = WindowStyle.None;
+                this.ShowInTaskbar = false;
+                Hide();
+            }
+            else
+            {
+                this.Show();
+            }
         }
 
         private void CtrlProfileManager_ProfileSelected(ApplicationProfile profile)
@@ -149,6 +166,8 @@ namespace Aurora
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            
+
             if (!settingsloaded)
             {
                 virtual_keyboard_timer = new Timer(100);
@@ -263,13 +282,7 @@ namespace Aurora
 
         private void Window_Initialized(object sender, EventArgs e)
         {
-            if (Program.isSilent || Global.Configuration.start_silently)
-            {
-                this.Visibility = Visibility.Hidden;
-                this.WindowStyle = WindowStyle.None;
-                this.ShowInTaskbar = false;
-                Hide();
-            }
+            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
