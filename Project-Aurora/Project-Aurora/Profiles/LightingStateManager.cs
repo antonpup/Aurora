@@ -565,6 +565,8 @@ namespace Aurora.Profiles
                     if ((evnt.item as LightEvent).IsEnabled)
                         (evnt.item as LightEvent).UpdateLights(newFrame);
                 }
+
+                UpdateIdleEffects(newFrame);
             }
 
             Global.effengine.PushFrame(newFrame);
