@@ -282,7 +282,7 @@ namespace Aurora.Profiles
                 foreach (string exe in @event.Config.ProcessNames)
                 {
                     if (!exe.Equals(key))
-                        EventProcesses.Add(exe, key);
+                        EventProcesses.Add(exe.ToLower(), key);
                 }
             }
 
@@ -522,15 +522,18 @@ namespace Aurora.Profiles
 
             profile = profile ?? DesktopProfile;
 
-            timerInterval = (profile as Application)?.Config?.UpdateInterval ?? defaultTimerInterval;
+            timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
             //Check if any keybinds have been triggered
-            foreach(var prof in (profile as Application).Profiles)
+            if (profile is Application)
             {
-                if(prof.TriggerKeybind.IsPressed() && !(profile as Application).Profile.ProfileName.Equals(prof.ProfileName))
+                foreach (var prof in (profile as Application).Profiles)
                 {
-                    (profile as Application).SwitchToProfile(prof);
-                    break;
+                    if (prof.TriggerKeybind.IsPressed() && !(profile as Application).Profile.ProfileName.Equals(prof.ProfileName))
+                    {
+                        (profile as Application).SwitchToProfile(prof);
+                        break;
+                    }
                 }
             }
 
@@ -593,20 +596,22 @@ namespace Aurora.Profiles
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
                 if (profile != null || (profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
-                    profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs));
+                    profile.SetGameState(gs); // (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs)
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
-
-                    profile = profile ?? GetProfileFromProcess(gs_process_name);
-
-                    if (profile == null)
+                    lock (Events)
                     {
-                        Events.Add(gs_process_name, new Application(new LightEventConfig { ProfileType = typeof(ApplicationProfile), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Aurora_Wrapper() }));
-                        profile = Events[gs_process_name];
-                    }
+                        profile = profile ?? GetProfileFromProcess(gs_process_name);
 
-                    profile.SetGameState(gs);
+                        if (profile == null)
+                        {
+                            Events.Add(gs_process_name, new GameEvent_Aurora_Wrapper(new LightEventConfig { GameStateType = typeof(GameState_Wrapper), ProcessNames = new[] { gs_process_name } }));
+                            profile = Events[gs_process_name];
+                        }
+
+                        profile.SetGameState(gs);
+                    }
                 }
 
             }
