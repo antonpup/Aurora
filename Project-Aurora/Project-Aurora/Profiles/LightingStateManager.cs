@@ -537,7 +537,16 @@ namespace Aurora.Profiles
                 }
             }
 
-            Global.dev_manager.InitializeOnce();
+            if (profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled)
+            {
+                Global.dev_manager.Shutdown();
+                Global.effengine.PushFrame(newFrame);
+                return;
+            }
+            else
+                Global.dev_manager.InitializeOnce();
+
+
             if (Global.Configuration.OverlaysInPreview || !preview)
             {
                 foreach (var underlay in Underlays)
@@ -589,13 +598,13 @@ namespace Aurora.Profiles
 
             try
             {
-                ILightEvent profile = this.GetProfileFromProcess(process_name);
+                ILightEvent profile;// = this.GetProfileFromProcess(process_name);
 
                 JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
                 string appid = provider.GetValue("appid").ToString();
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
-                if (profile != null || (profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
+                if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
                     profile.SetGameState(gs); // (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs)
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {

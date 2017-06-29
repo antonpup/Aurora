@@ -303,6 +303,9 @@ namespace Aurora.Settings
         private bool getDevReleases = false;
         public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
 
+        private bool showDefaultLightingOnDisabled = false;
+        public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
+
         public bool updates_check_on_start_up;
         public bool updates_allow_silent_minor;
         public bool start_silently;

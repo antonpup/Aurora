@@ -113,7 +113,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <TabControl Margin="0,7,0,-7" x:Name="tabMain">
+        <TabControl Margin="0,7,0,-11" x:Name="tabMain">
             <TabItem Header="General Settings">
                 <Grid>
                     <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
@@ -158,6 +158,7 @@
                     <TextBlock HorizontalAlignment="Left" Margin="10,74,0,0" TextWrapping="Wrap" Text="Global brightness modifier: " VerticalAlignment="Top"/>
                     <TextBlock x:Name="lblGlobalBrightness" HorizontalAlignment="Left" Margin="333,74,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
                     <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="178,74,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblGlobalBrightness, Path=.}"/>
+                    <CheckBox x:Name="chkShowDefaultLighting" Content="Show Default lighting(CUE, LGS, etc) when Desktop is disabled" HorizontalAlignment="Left" Margin="10,257,0,0" VerticalAlignment="Top"  IsChecked="{Binding ShowDefaultLightingOnDisabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">
