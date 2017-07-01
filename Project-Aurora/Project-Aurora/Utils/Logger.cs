@@ -54,7 +54,7 @@ namespace Aurora
         private Queue<string> MessageQueue = new Queue<string>();
         private readonly int QueueLimit = 255;
         private StreamWriter logWriter;
-        private StreamWriter LogWriter { get { return logWriter ?? (logWriter = new StreamWriter(GetPath())); } }
+        private StreamWriter LogWriter { get { return logWriter ?? (logWriter = new StreamWriter(GetPath(), true)); } }
 
         public Logger()
         {

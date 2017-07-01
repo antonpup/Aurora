@@ -12,6 +12,7 @@ using Microsoft.Win32;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Win32.TaskScheduler;
 
 namespace Aurora.Settings
 {
@@ -21,6 +22,7 @@ namespace Aurora.Settings
     public partial class Control_Settings : UserControl
     {
         private RegistryKey runRegistryPath = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        private const string StartupTaskID = "AuroraStartup";
 
         private Window winBitmapView = null;
         private Image imgBitmap = new Image();
@@ -32,8 +34,11 @@ namespace Aurora.Settings
 
             this.tabMain.DataContext = Global.Configuration;
 
-
-            this.run_at_win_startup.IsChecked = !(runRegistryPath.GetValue("Aurora", null) == null);
+            if (runRegistryPath.GetValue("Aurora") != null)
+                runRegistryPath.DeleteValue("Aurora");
+            using (TaskService service = new TaskService()) {
+                this.run_at_win_startup.IsChecked = service.FindTask(StartupTaskID)?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
+            }
 
             this.start_silently_enabled.IsChecked = Global.Configuration.start_silently;
 
@@ -455,10 +460,47 @@ namespace Aurora.Settings
             {
                 try
                 {
-                    if ((sender as CheckBox).IsChecked.Value)
+                    /*if ((sender as CheckBox).IsChecked.Value)
                         runRegistryPath.SetValue("Aurora", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\" -silent");
                     else
-                        runRegistryPath.DeleteValue("Aurora");
+                        runRegistryPath.DeleteValue("Aurora");*/
+
+                    using (TaskService ts = new TaskService())
+                    {
+                        //Find existing task
+                        var task = ts.FindTask(StartupTaskID);
+                        if ((sender as CheckBox).IsChecked.Value)
+                        {
+                            if (task != null)
+                            {
+                                task.Enabled = true;
+                            }
+                            else
+                            {
+                                TaskDefinition td = ts.NewTask();
+                                td.RegistrationInfo.Description = "Start Aurora on Startup";
+
+                                td.Triggers.Add(new LogonTrigger { Enabled = true });
+
+                                string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+                                td.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
+
+                                td.Principal.RunLevel = TaskRunLevel.Highest;
+                                td.Settings.DisallowStartIfOnBatteries = false;
+                                td.Settings.DisallowStartOnRemoteAppSession = false;
+                                td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
+
+                                ts.RootFolder.RegisterTaskDefinition(StartupTaskID, td);
+                            }
+                        }
+                        else
+                        {
+                            if (task != null)
+                                task.Enabled = false;
+                            //ts.RootFolder.DeleteTask(StartupTaskID);
+                        }
+                    }
                 }
                 catch(Exception exc)
                 {
@@ -903,7 +945,7 @@ namespace Aurora.Settings
             excluded_process_name.ItemsSource = new string[] { "Working..." };
 
             HashSet<string> processes = new HashSet<string>();
-            await Task.Run(() =>
+            await System.Threading.Tasks.Task.Run(() =>
             {
 
                 foreach (var p in Process.GetProcesses())

@@ -204,7 +204,6 @@ namespace Aurora
 
             this.UpdateLayout();
 
-            Global.input_subscriptions.Initialize();
 
             this.ProfileImage_MouseDown(this.profiles_stack.Children[0], null);
         }

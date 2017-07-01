@@ -273,6 +273,8 @@ namespace Aurora
 
             Global.logger.LogLine("Loading ConfigUI...", Logging_Level.None);
 
+            Global.input_subscriptions.Initialize();
+
             MainWindow = new ConfigUI();
             WinApp.MainWindow = MainWindow;
             ((ConfigUI)MainWindow).Display();
