@@ -1,8 +1,0 @@
-{
-  "replace_RWin_with_FN": false,
-  "keys_to_remove": [ ],
-  "keys_to_set_as_new_line": [ ],
-  "included_features": [
-	"logitech_g810_features.json"
-  ]
-}

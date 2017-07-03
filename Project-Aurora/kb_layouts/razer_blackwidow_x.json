@@ -1,8 +1,0 @@
-{
-  "replace_RWin_with_FN": true,
-  "keys_to_remove": [ ],
-  "keys_to_set_as_new_line": [ ],
-  "included_features": [
-	"razer_blackwidow_left_bottom_features.json"
-  ]
-}

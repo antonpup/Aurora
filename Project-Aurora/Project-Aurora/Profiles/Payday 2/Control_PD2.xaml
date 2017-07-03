@@ -1,0 +1,108 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.Payday_2"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
+             xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             xmlns:EnumPD2="clr-namespace:Aurora.Profiles.Payday_2"
+             xmlns:EnumPD2_GSI="clr-namespace:Aurora.Profiles.Payday_2.GSI.Nodes"
+             xmlns:devices="clr-namespace:Aurora.Devices"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.Payday_2.Control_PD2"
+             mc:Ignorable="d"
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="EnumPercentEffectType:PercentEffectType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:PercentEffectTypeToStringVC x:Key="PercentEffectTypeToStringVC"/>
+            <DataTemplate x:Key="PercentEffectTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource PercentEffectTypeToStringVC}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="PD2_LevelPhaseType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="EnumPD2_GSI:LevelPhase" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:PD2_LevelPhaseTypeToStringVC x:Key="PD2_LevelPhaseTypeToStringVC"/>
+            <DataTemplate x:Key="PD2_LevelPhaseTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource PD2_LevelPhaseTypeToStringVC}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="PD2_PlayerStateType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="EnumPD2_GSI:PlayerState" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:PD2_PlayerStateTypeToStringVC x:Key="PD2_PlayerStateTypeToStringVC"/>
+            <DataTemplate x:Key="PD2_PlayerStateTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource PD2_PlayerStateTypeToStringVC}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="PD2_GameStateType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="EnumPD2_GSI:GameStates" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:PD2_GameStateTypeToStringVC x:Key="PD2_GameStateTypeToStringVC"/>
+            <DataTemplate x:Key="PD2_GameStateTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource PD2_GameStateTypeToStringVC}}" />
+            </DataTemplate>
+
+            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
+            <DataTemplate x:Key="DeviceKeys">
+                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Payday 2">
+                <Grid>
+                    <TextBlock Margin="10,30,0,0" Text="In order for Payday 2 support to work, you have to install the BLT Lua hook and the GSI mod for Payday 2. Press the &quot;Get BLT Hook&quot; button to be taken to the BLT download page. Afterwards, you can press &quot;Install GSI for Payday 2&quot; to automatically install the GSI mod. (You need to have the BLT hook for GSI mod to function)" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"/>
+                    <Button x:Name="get_hook_button" Content="Get BLT Hook" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" Click="get_hook_button_Click"/>
+                    <Button x:Name="install_mod_button" Content="Install GSI for Payday 2" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Click="install_mod_button_Click"/>
+                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Payday 2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Preview">
+                <Grid>
+                    <Label Content="Level Phase:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="preview_levelphase" HorizontalAlignment="Left" Margin="90,43,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource PD2_LevelPhaseType}}" ItemTemplate="{Binding Source={StaticResource PD2_LevelPhaseTypeTemplate}}" SelectionChanged="preview_levelphase_SelectionChanged"/>
+                    <Label Content="Health:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_health_slider" HorizontalAlignment="Left" Margin="62,107,0,0" VerticalAlignment="Top" Width="114" Maximum="100" SmallChange="1" ValueChanged="preview_health_slider_ValueChanged"/>
+                    <Label x:Name="preview_health_amount" Content="0%" HorizontalAlignment="Left" Margin="181,103,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Ammo:" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_ammo_slider" HorizontalAlignment="Left" Margin="62,138,0,0" VerticalAlignment="Top" Width="114" Maximum="100" SmallChange="1" ValueChanged="preview_ammo_slider_ValueChanged"/>
+                    <Label x:Name="preview_ammo_amount" Content="0%" HorizontalAlignment="Left" Margin="181,134,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Suspicion:" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_suspicion_slider" HorizontalAlignment="Left" Margin="78,169,0,0" VerticalAlignment="Top" Width="98" Maximum="100" SmallChange="1" ValueChanged="preview_suspicion_slider_ValueChanged"/>
+                    <Label x:Name="preview_suspicion_amount" Content="0%" HorizontalAlignment="Left" Margin="181,165,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.692,3.115"/>
+                    <Label Content="Player State:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="preview_playerstate" HorizontalAlignment="Left" Margin="90,74,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource PD2_PlayerStateType}}" ItemTemplate="{Binding Source={StaticResource PD2_PlayerStateTypeTemplate}}" SelectionChanged="preview_playerstate_SelectionChanged"/>
+                    <CheckBox x:Name="preview_swansong" Content="Is player in Swan Song" HorizontalAlignment="Left" Margin="13,196,0,0" VerticalAlignment="Top" Checked="preview_swansong_Checked" Unchecked="preview_swansong_Checked"/>
+                    <Label Content="Flashbang amount:" HorizontalAlignment="Left" Margin="10,216,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_flashbang_slider" HorizontalAlignment="Left" Margin="126,222,0,0" VerticalAlignment="Top" Width="98" Maximum="100" SmallChange="1" ValueChanged="preview_flashbang_slider_ValueChanged"/>
+                    <Label x:Name="preview_flashbang_amount" Content="0%" HorizontalAlignment="Left" Margin="229,218,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.692,3.115"/>
+                    <Label Content="Game State:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="preview_gamestate" HorizontalAlignment="Left" Margin="90,12,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource PD2_GameStateType}}" ItemTemplate="{Binding Source={StaticResource PD2_GameStateTypeTemplate}}" SelectionChanged="preview_gamestate_SelectionChanged"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Color Zones">
+                <Grid>
+                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

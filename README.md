@@ -1,25 +1,28 @@
 # Aurora - Unified Lighting Effects
 ![Aurora Logo](http://i.imgur.com/ZkxyAyp.png)
 
-[Link to Aurora's webpage, includes some demos and changelogs](http://aurora.modworkshop.net/)
+[Link to Aurora's webpage, includes some demos and changelogs](http://project-aurora.com/)
+
+[![Latest Version](https://img.shields.io/github/release/antonpup/aurora.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Total Downloads](https://img.shields.io/github/downloads/antonpup/aurora/total.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Build status](https://ci.appveyor.com/api/projects/status/jh44k7r5ewelxiss?svg=true)](https://ci.appveyor.com/project/antonpup/aurora) ![Build status](https://img.shields.io/badge/language-C%23-178600.svg)
 
 
-Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games. Aurora has native support for Dota 2, Counter-Strike: Global Offensive, Grand Theft Auto V, Rocket League, PAYDAY 2, The Division, League of Legends, Hotline Miami, The Talos Principle, Battlefield 3, Blacklight: Retribution, Magic: The Gathering - Duels of the Planeswalkers 2012, Middle-earth: Shadow of Mordor, Serious Sam 3, Robot Roller-Derby Disco Dodgeball, XCOM: Enemy Unknown, Evolve Stage 2, Metro: Last Light, Guild Wars 2, Worms W.M.D, and Blade and Soul.
+
+Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games.
 
 ## Minor Announcement
-I ([@Antonpup](https://github.com/antonpup)) will no longer be able to develop this project futher due to my new future job. I have handed over the project development to [@Simon W](https://github.com/simon-wh). He has access to everything in order to push new updates and upkeep the project. I will keep this project on my Github account, as it is part of my porfolio. I hope you enjoy the work Simon will be putting into this project. Some of you will see my work again in the near future.
+I ([@Antonpup](https://github.com/antonpup)) will no longer be able to develop this project further due to my new future job. I have handed over the project development to [@Simon W](https://github.com/simon-wh). He has access to everything in order to push new updates and upkeep the project. I will keep this project on my Github account, as it is part of my portfolio. I hope you enjoy the work Simon will be putting into this project. Some of you will see my work again in the near future.
 
 # Requirements
 Recommended:
 * OS: Windows based operating system
 * Processor: Quad core processor
 * Memory: 255 MB RAM
-* Sotware : Make sure to have installed [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
+* Software : Make sure to have installed [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 * Internet Connection: Required for automatic updates
 * Additional Notes: Being able to run games with stable performance
 
 # How to Install
-1. First of all, make sure that your PC meets the requirements listed above. Also make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653) installed.
+1. First of all, make sure that your PC meets the requirements listed above. Also, make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653) installed.
 2. Download the latest release from [here](https://github.com/antonpup/Aurora/releases/latest).
 3. Extract the archive anywhere on your computer. Preferably keep it in a location you can easily access.
 4. Run "Aurora.exe", from that point, Aurora should provide you with further instructions and options.
@@ -95,7 +98,7 @@ Robot Roller-Derby Disco Dodgeball Demo
 ![Skype Integration Settings](https://puu.sh/tfLfu/57b1df348a.png)
 
 
-## Indepth features
+## In-depth features
 General
 
 * Support for per-key Logitech devices
@@ -125,7 +128,7 @@ General
 * Ability to select your mouse, and it's orientation (left/right handed)
 * Import/Export for profile settings
 * Customizable gradient layers
-* Scripting support for custom lighitng effects & custom devices
+* Scripting support for custom lighting effects & custom devices
 
 Dota 2 features
 
@@ -248,7 +251,7 @@ The Talos Principle features
    Secondary goal of Aurora is to integrate RGB lighting into popular games. RGB lighting is a nifty feature that is often underused, and as a result gamers with RGB gear are unable to utilize the lighting effects that they paid for.
    
 # Donations
-If you want to help this project rapidly grow, you can donate via PayPal to help me further develop Aurora. While being a university student, Aurora does not take my monetary priority. Games and RGB hardware are not cheap, and as a result, support for not owned products will take more time to develop. The donations will be used to purchase hardware and videogames with intent to add support for them with Aurora. Alternatively you can gift games directly to me via Steam.
+If you want to help this project rapidly grow, you can donate via PayPal to help me further develop Aurora. While being a university student, Aurora does not take my monetary priority. Games and RGB hardware are not cheap, and as a result, support for not owned products will take more time to develop. The donations will be used to purchase hardware and video games with intent to add support for them with Aurora. Alternatively you can gift games directly to me via Steam.
 
 I do not have any intent in charging money for Aurora, it will always be a free and open source project. 
 

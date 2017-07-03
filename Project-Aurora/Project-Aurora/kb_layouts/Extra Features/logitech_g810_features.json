@@ -1,0 +1,22 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 1,
+  "grouped_keys": [
+    {
+      "visualName": "LOGO",
+      "tag": 128,
+      "margin_left": 0.0,
+      "margin_top": -37.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 0,
+      "margin_top_bits": -3,
+      "image": "Logi_G810_logo.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+  ]
+}
