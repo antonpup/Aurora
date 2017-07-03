@@ -40,6 +40,10 @@ namespace Aurora.Settings
                 this.run_at_win_startup.IsChecked = service.FindTask(StartupTaskID)?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
             }
 
+            string v = File.ReadAllText("./ver_major.txt");
+
+            this.lblVersion.Content = ((int.Parse(v[0].ToString()) > 0) ? "" : "beta ") + $"v{v}" + " by Antonpup & simon-wh";
+
             this.start_silently_enabled.IsChecked = Global.Configuration.start_silently;
 
             this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
