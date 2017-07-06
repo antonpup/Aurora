@@ -40,7 +40,7 @@ namespace Aurora.Settings
                 this.run_at_win_startup.IsChecked = service.FindTask(StartupTaskID)?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
             }
 
-            string v = File.ReadAllText("./ver_major.txt");
+            string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
             this.lblVersion.Content = ((int.Parse(v[0].ToString()) > 0) ? "" : "beta ") + $"v{v}" + " by Antonpup & simon-wh";
 

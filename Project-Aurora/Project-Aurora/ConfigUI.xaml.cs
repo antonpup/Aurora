@@ -741,8 +741,13 @@ namespace Aurora
 
         public void ShowWindow()
         {
+            Global.logger.LogLine("Show Window called");
+            this.Visibility = Visibility.Visible;
             this.WindowStyle = WindowStyle.SingleBorderWindow;
+            this.ShowInTaskbar = true;
+            //this.Topmost = true;
             this.Show();
+            this.Activate();
         }
 
         private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)

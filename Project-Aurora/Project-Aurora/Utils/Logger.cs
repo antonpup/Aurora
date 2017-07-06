@@ -106,7 +106,7 @@ namespace Aurora
         public string GetPath()
         {
             if (!HasUniqueLogFile)
-                LogFile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("dd_MM_yyyy") + ".log");
+                LogFile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("yyyy_MM_dd") + ".log");
 
             if (!System.IO.File.Exists(LogDirectory))
                 System.IO.Directory.CreateDirectory(LogDirectory);

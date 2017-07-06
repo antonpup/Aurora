@@ -349,6 +349,7 @@ namespace Aurora
                             string temp;
                             while ((temp = sr.ReadLine()) != null)
                             {
+                                Global.logger.LogLine("[AuroraCommandsServerIPC] Recieved command: " + temp);
                                 string[] split = temp.Contains(':') ? temp.Split(':') : new[] { temp };
                                 CommandRecieved.Invoke(split[0], split.Length > 1 ? split[1] : "");
                             }
@@ -369,7 +370,8 @@ namespace Aurora
             switch (command)
             {
                 case "restore":
-                    Program.MainWindow.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());
+                    Global.logger.LogLine("Initiating command restore");
+                    Program.WinApp.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());
                     break;
             }
         }

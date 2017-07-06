@@ -93,8 +93,9 @@ namespace Aurora_Updater
             {
                 string _maj = "";
 
-                if (File.Exists(Path.Combine(exePath, "ver_major.txt")))
-                    _maj = File.ReadAllText(Path.Combine(exePath, "ver_major.txt"));
+                string auroraPath;
+                if (File.Exists(auroraPath = Path.Combine(exePath, "Aurora.exe")))
+                    _maj =  FileVersionInfo.GetVersionInfo(auroraPath).FileVersion;
 
                 if (!String.IsNullOrWhiteSpace(_maj))
                 {

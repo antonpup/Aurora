@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -37,7 +38,7 @@ namespace Aurora
         {
             get
             {
-                if(string.IsNullOrWhiteSpace(_ExecutingDirectory))
+                if (string.IsNullOrWhiteSpace(_ExecutingDirectory))
                     _ExecutingDirectory = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
 
                 return _ExecutingDirectory;
@@ -75,6 +76,8 @@ namespace Aurora
 
     static class Program
     {
+
+        static Mutex mutex = new Mutex(true, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
         public static System.Windows.Application WinApp { get; private set; }
         public static Window MainWindow;
 
@@ -86,66 +89,222 @@ namespace Aurora
         [STAThread]
         static void Main(string[] args)
         {
+            if (mutex.WaitOne(TimeSpan.Zero, true))
+            {
+
 #if DEBUG
-            Global.isDebug = true;
+                Global.isDebug = true;
 #endif
 
-            string arg = "";
+                string arg = "";
 
-            for (int arg_i = 0; arg_i < args.Length; arg_i++)
-            {
-                arg = args[arg_i];
-
-                switch (arg)
+                for (int arg_i = 0; arg_i < args.Length; arg_i++)
                 {
-                    case ("-debug"):
-                        Global.isDebug = true;
-                        Global.logger.LogLine("Program started in debug mode.", Logging_Level.Info);
-                        break;
-                    case ("-silent"):
-                        isSilent = true;
-                        Global.logger.LogLine("Program started with '-silent' parameter", Logging_Level.Info);
-                        break;
-                    case ("-ignore_update"):
-                        ignore_update = true;
-                        Global.logger.LogLine("Program started with '-ignore_update' parameter", Logging_Level.Info);
-                        break;
-                    case ("-delay"):
-                        isDelayed = true;
+                    arg = args[arg_i];
 
-                        if (arg_i + 1 < args.Length && int.TryParse(args[arg_i + 1], out delayTime))
-                            arg_i++;
-                        else
-                            delayTime = 5000;
+                    switch (arg)
+                    {
+                        case ("-debug"):
+                            Global.isDebug = true;
+                            Global.logger.LogLine("Program started in debug mode.", Logging_Level.Info);
+                            break;
+                        case ("-silent"):
+                            isSilent = true;
+                            Global.logger.LogLine("Program started with '-silent' parameter", Logging_Level.Info);
+                            break;
+                        case ("-ignore_update"):
+                            ignore_update = true;
+                            Global.logger.LogLine("Program started with '-ignore_update' parameter", Logging_Level.Info);
+                            break;
+                        case ("-delay"):
+                            isDelayed = true;
 
-                        Global.logger.LogLine("Program started with '-delay' parameter with delay of " + delayTime + " ms", Logging_Level.Info);
+                            if (arg_i + 1 < args.Length && int.TryParse(args[arg_i + 1], out delayTime))
+                                arg_i++;
+                            else
+                                delayTime = 5000;
 
-                        break;
-                    case ("-install_logitech"):
-                        Global.logger.LogLine("Program started with '-install_logitech' parameter", Logging_Level.Info);
+                            Global.logger.LogLine("Program started with '-delay' parameter with delay of " + delayTime + " ms", Logging_Level.Info);
 
+                            break;
+                        case ("-install_logitech"):
+                            Global.logger.LogLine("Program started with '-install_logitech' parameter", Logging_Level.Info);
+
+                            try
+                            {
+                                InstallLogitech();
+                            }
+                            catch (Exception exc)
+                            {
+                                System.Windows.MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
+                            }
+
+                            Environment.Exit(0);
+                            break;
+                    }
+                }
+
+                AppDomain currentDomain = AppDomain.CurrentDomain;
+                if (!Global.isDebug)
+                    currentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+                //Make sure there is only one instance of Aurora
+                /*Process[] processes;
+                if ((processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName)).Length > 1)
+                {
+                    try
+                    {
+                        NamedPipeClientStream client = new NamedPipeClientStream(".", "aurora\\interface", PipeDirection.Out);
+                        client.Connect(30);
+                        if (!client.IsConnected)
+                            throw new Exception();
+                        byte[] command = System.Text.Encoding.ASCII.GetBytes("restore");
+                        client.Write(command, 0, command.Length);
+                        client.Close();
+                    }
+                    catch
+                    {
+                        Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
+                        System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
+                    }
+                    Environment.Exit(0);
+                }*/
+
+
+                if (isDelayed)
+                    System.Threading.Thread.Sleep((int)delayTime);
+
+                AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+
+                Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
+
+                Global.dev_manager = new DeviceManager();
+                Global.effengine = new Effects();
+
+                //Load config
+                Global.logger.LogLine("Loading Configuration", Logging_Level.Info);
+                try
+                {
+                    Global.Configuration = ConfigManager.Load();
+                }
+                catch (Exception e)
+                {
+                    Global.logger.LogLine("Exception during ConfigManager.Load(). Error: " + e, Logging_Level.Error);
+                    System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
+
+                    Global.Configuration = new Configuration();
+                }
+
+                if (Global.Configuration.updates_check_on_start_up && !ignore_update)
+                {
+                    string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
+
+                    if (File.Exists(updater_path))
+                    {
                         try
                         {
-                            InstallLogitech();
+                            ProcessStartInfo updaterProc = new ProcessStartInfo();
+                            updaterProc.FileName = updater_path;
+                            updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
+                            Process.Start(updaterProc);
                         }
                         catch (Exception exc)
                         {
-                            System.Windows.MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
+                            Global.logger.LogLine("Could not start Aurora Updater. Error: " + exc, Logging_Level.Error);
                         }
-
-                        Environment.Exit(0);
-                        break;
+                    }
                 }
+
+                Global.logger.LogLine("Loading Plugins", Logging_Level.Info);
+                (Global.PluginManager = new PluginManager()).Initialize();
+
+                Global.logger.LogLine("Loading Applications", Logging_Level.Info);
+                (Global.LightingStateManager = new LightingStateManager()).Initialize();
+
+                Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
+                Global.dev_manager.RegisterVariables();
+                Global.dev_manager.Initialize();
+
+                Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
+                Global.kbLayout = new KeyboardLayoutManager();
+                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+
+                Global.logger.LogLine("Input Hooking", Logging_Level.Info);
+                Global.input_subscriptions.KeyDown += InputHookKeyDown;
+                Global.input_subscriptions.KeyUp += InputHookKeyUp;
+
+                /*Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
+                Global.geh = new GameEventHandler();
+                if (!Global.geh.Init())
+                {
+                    Global.logger.LogLine("GameEventHander could not initialize", Logging_Level.Error);
+                    return;
+                }*/
+
+                Global.logger.LogLine("Starting GameStateListener", Logging_Level.Info);
+                try
+                {
+                    Global.net_listener = new NetworkListener(9088);
+                    Global.net_listener.NewGameState += new NewGameStateHandler(Global.LightingStateManager.GameStateUpdate);
+                    Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.LightingStateManager.ResetGameState);
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine("GameStateListener Exception, " + exc, Logging_Level.Error);
+                    System.Windows.MessageBox.Show("GameStateListener Exception.\r\n" + exc);
+                    Environment.Exit(0);
+                }
+
+                if (!Global.net_listener.Start())
+                {
+                    Global.logger.LogLine("GameStateListener could not start", Logging_Level.Error);
+                    System.Windows.MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
+                    Environment.Exit(0);
+                }
+
+                Global.logger.LogLine("Listening for game integration calls...", Logging_Level.None);
+
+                Global.logger.LogLine("Loading WinApp...", Logging_Level.None);
+                WinApp = new System.Windows.Application();
+                Global.logger.LogLine("Loaded WinApp", Logging_Level.None);
+
+                Global.logger.LogLine("Loading ResourceDictionaries...", Logging_Level.None);
+
+                WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
+                WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
+
+                Global.logger.LogLine("Loaded ResourceDictionaries", Logging_Level.None);
+
+                WinApp.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+                Global.logger.LogLine("Loading ConfigUI...", Logging_Level.None);
+
+                Global.input_subscriptions.Initialize();
+
+                MainWindow = new ConfigUI();
+                //((ConfigUI)MainWindow).InitiateWndProc();
+                WinApp.MainWindow = MainWindow;
+                ((ConfigUI)MainWindow).Display();
+                WinApp.Run();
+
+                ConfigManager.Save(Global.Configuration);
+
+                Exit();
             }
-
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            if (!Global.isDebug)
-                currentDomain.UnhandledException += CurrentDomain_UnhandledException;
-
-            //Make sure there is only one instance of Aurora
-            Process[] processes;
-            if ((processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName)).Length > 1)
+            else
             {
+                /*Process current = Process.GetCurrentProcess();
+                var prc = Process.GetProcessesByName(current.ProcessName).ToList();
+                prc.RemoveAll((p) => p.Id == current.Id);
+
+                if (prc.Count > 1)
+                    throw new Exception("There should only be one process left");*/
+
+                /*Utils.NativeUtils.PostMessage(
+                    prc[0].MainWindowHandle,
+                    Utils.NativeUtils.WM_SHOWME,
+                    IntPtr.Zero,
+                    IntPtr.Zero);*/
                 try
                 {
                     NamedPipeClientStream client = new NamedPipeClientStream(".", "aurora\\interface", PipeDirection.Out);
@@ -158,131 +317,10 @@ namespace Aurora
                 }
                 catch
                 {
-                    Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
+                    //Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
                     System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
                 }
-                Environment.Exit(0);
             }
-
-
-            if (isDelayed)
-                System.Threading.Thread.Sleep((int)delayTime);
-
-            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
-
-            Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
-
-            Global.dev_manager = new DeviceManager();
-            Global.effengine = new Effects();
-
-            //Load config
-            Global.logger.LogLine("Loading Configuration", Logging_Level.Info);
-            try
-            {
-                Global.Configuration = ConfigManager.Load();
-            }
-            catch (Exception e)
-            {
-                Global.logger.LogLine("Exception during ConfigManager.Load(). Error: " + e, Logging_Level.Error);
-                System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
-
-                Global.Configuration = new Configuration();
-            }
-
-            if (Global.Configuration.updates_check_on_start_up && !ignore_update)
-            {
-                string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
-
-                if (File.Exists(updater_path))
-                {
-                    try
-                    {
-                        ProcessStartInfo updaterProc = new ProcessStartInfo();
-                        updaterProc.FileName = updater_path;
-                        updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
-                        Process.Start(updaterProc);
-                    }
-                    catch(Exception exc)
-                    {
-                        Global.logger.LogLine("Could not start Aurora Updater. Error: " + exc, Logging_Level.Error);
-                    }
-                }
-            }
-
-            Global.logger.LogLine("Loading Plugins", Logging_Level.Info);
-            (Global.PluginManager = new PluginManager()).Initialize();
-
-            Global.logger.LogLine("Loading Applications", Logging_Level.Info);
-            (Global.LightingStateManager = new LightingStateManager()).Initialize();
-
-            Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
-            Global.dev_manager.RegisterVariables();
-            Global.dev_manager.Initialize();
-
-            Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
-            Global.kbLayout = new KeyboardLayoutManager();
-            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
-
-            Global.logger.LogLine("Input Hooking", Logging_Level.Info);
-            Global.input_subscriptions.KeyDown += InputHookKeyDown;
-            Global.input_subscriptions.KeyUp += InputHookKeyUp;
-
-            /*Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
-            Global.geh = new GameEventHandler();
-            if (!Global.geh.Init())
-            {
-                Global.logger.LogLine("GameEventHander could not initialize", Logging_Level.Error);
-                return;
-            }*/
-
-            Global.logger.LogLine("Starting GameStateListener", Logging_Level.Info);
-            try
-            {
-                Global.net_listener = new NetworkListener(9088);
-                Global.net_listener.NewGameState += new NewGameStateHandler(Global.LightingStateManager.GameStateUpdate);
-                Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.LightingStateManager.ResetGameState);
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine("GameStateListener Exception, " + exc, Logging_Level.Error);
-                System.Windows.MessageBox.Show("GameStateListener Exception.\r\n" + exc);
-                Environment.Exit(0);
-            }
-
-            if (!Global.net_listener.Start())
-            {
-                Global.logger.LogLine("GameStateListener could not start", Logging_Level.Error);
-                System.Windows.MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
-                Environment.Exit(0);
-            }
-
-            Global.logger.LogLine("Listening for game integration calls...", Logging_Level.None);
-
-            Global.logger.LogLine("Loading WinApp...", Logging_Level.None);
-            WinApp = new System.Windows.Application();
-            Global.logger.LogLine("Loaded WinApp", Logging_Level.None);
-
-            Global.logger.LogLine("Loading ResourceDictionaries...", Logging_Level.None);
-
-            WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
-            WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
-
-            Global.logger.LogLine("Loaded ResourceDictionaries", Logging_Level.None);
-
-            WinApp.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-
-            Global.logger.LogLine("Loading ConfigUI...", Logging_Level.None);
-
-            Global.input_subscriptions.Initialize();
-
-            MainWindow = new ConfigUI();
-            WinApp.MainWindow = MainWindow;
-            ((ConfigUI)MainWindow).Display();
-            WinApp.Run();
-
-            ConfigManager.Save(Global.Configuration);
-
-            Exit();
         }
 
         /// <summary>
