@@ -419,6 +419,8 @@ namespace Aurora.Devices.CoolerMaster
                         )
                         dev_key = DeviceKeys.BACKSLASH;
 
+
+                    //Move this to the SendColorsToKeyboard and SendColorsToMouse as they do not need to be set on every key, they only need to be directed to the correct method for setting key/light
                     if (Effects.possible_peripheral_keys.Contains(key.Key))
                     {
                         List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
@@ -426,6 +428,9 @@ namespace Aurora.Devices.CoolerMaster
                             SwitchToDevice(devices.First());
                         else
                             return false;
+
+                        //temp
+                        return false;
                     }
                     else
                     {
