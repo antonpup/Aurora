@@ -499,6 +499,11 @@ namespace Aurora.Settings
             Devices.Razer.RazerInstallInstructions instructions = new Devices.Razer.RazerInstallInstructions();
             instructions.ShowDialog();
         }
+        private void devices_view_first_time_steelseries_Click(object sender, RoutedEventArgs e)
+        {
+            Devices.SteelSeries.SteelSeriesInstallInstructions instructions = new Devices.SteelSeries.SteelSeriesInstallInstructions();
+            instructions.ShowDialog();
+        }
 
         private void devices_enable_logitech_color_enhance_Checked(object sender, RoutedEventArgs e)
         {
