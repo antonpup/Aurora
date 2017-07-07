@@ -576,6 +576,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
+                else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
+                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95_platinum.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_K70)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_K65)
@@ -592,10 +594,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
-                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L_White)
-                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l_white.json");
-                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M_White)
-                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m_white.json");
+                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M)
+                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
                 //else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 //    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
                 else
@@ -626,7 +626,7 @@ namespace Aurora.Settings
                     }
 
                     //Extra fix for Master keys Pro M White foreign layouts
-                    if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M_White)
+                    if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M)
                     {
                         switch(_loaded_localization)
                         {

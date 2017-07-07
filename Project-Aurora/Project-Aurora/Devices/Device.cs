@@ -1054,6 +1054,12 @@ namespace Aurora.Devices
         Profile_Key6 = 168,
 
         /// <summary>
+        /// Numpad 00
+        /// </summary>
+        [Description("Numpad 00")]
+        NUM_ZEROZERO = 169,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]

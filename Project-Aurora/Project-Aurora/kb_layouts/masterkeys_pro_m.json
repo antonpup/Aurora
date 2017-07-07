@@ -119,7 +119,39 @@
       "margin_left_bits": null,
       "margin_top_bits": null,
       "enabled": null
+    },
+    "105": {
+      "visualName": null,
+      "tag": 105,
+      "line_break": null,
+      "margin_left": null,
+      "margin_top": null,
+      "width": 30.0,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    },
+    "106": {
+      "visualName": null,
+      "tag": 106,
+      "line_break": null,
+      "margin_left": 44.0,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
     }
   },
-  "included_features": []
+  "included_features": [
+    "masterkeys_pro_m_features.json"
+  ]
 }

@@ -132,7 +132,7 @@ namespace Aurora
         int pushedframes = 0;
         Timer fpsDebugTimer = new Timer(1000D);
 
-        private static Devices.DeviceKeys[] possible_peripheral_keys = {
+        public static Devices.DeviceKeys[] possible_peripheral_keys = {
                     Devices.DeviceKeys.Peripheral,
                     Devices.DeviceKeys.Peripheral_FrontLight,
                     Devices.DeviceKeys.Peripheral_ScrollWheel,

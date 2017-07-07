@@ -542,6 +542,9 @@
     <None Include="kb_layouts\corsair_k70.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\corsair_k95_platinum.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\corsair_k95.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -557,7 +560,13 @@
     <None Include="kb_layouts\Extra Features\corsair_k65_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\corsair_k95_platinum_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\corsair_k95_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\corsair_k95_platinum_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\corsair_k95_right_features.json">
@@ -605,16 +614,13 @@
     <None Include="kb_layouts\Extra Features\masterkeys_pro_l_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\Extra Features\masterkeys_pro_m_white_right_features.json">
+    <None Include="kb_layouts\Extra Features\masterkeys_pro_m_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g410.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g810.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\masterkeys_pro_l_white.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.tr.json">
@@ -665,7 +671,7 @@
     <None Include="kb_layouts\Plain Keyboard\layout.us.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\masterkeys_pro_m_white.json">
+    <None Include="kb_layouts\masterkeys_pro_m.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Scripting.evaluator.cs" />

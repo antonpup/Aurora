@@ -171,6 +171,8 @@ namespace Aurora.Settings
         Corsair_K65 = 202,
         [Description("Corsair - STRAFE")]
         Corsair_STRAFE = 203,
+        [Description("Corsair - K95 Platinum")]
+        Corsair_K95_PL = 204,
 
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
@@ -187,10 +189,8 @@ namespace Aurora.Settings
         Masterkeys_Pro_L = 500,
         [Description("Masterkeys Pro S")]
         Masterkeys_Pro_S = 501,
-        [Description("Masterkeys Pro L White")]
-        Masterkeys_Pro_L_White = 502,
-        [Description("Masterkeys Pro M White")]
-        Masterkeys_Pro_M_White = 503,
+        [Description("Masterkeys Pro M")]
+        Masterkeys_Pro_M = 502,
 
 
         //Roccat range is 600-699
