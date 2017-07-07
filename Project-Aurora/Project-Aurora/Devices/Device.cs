@@ -1054,6 +1054,12 @@ namespace Aurora.Devices
         Profile_Key6 = 168,
 
         /// <summary>
+        /// Macrokey 0 key
+        /// </summary>
+        [Description("G0")]
+        G0 = 169,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]
