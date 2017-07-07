@@ -8,8 +8,6 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using Aurora;
-
 namespace SteelSeries.GameSenseSDK
 {
 
@@ -196,8 +194,6 @@ namespace SteelSeries.GameSenseSDK
 
         private void sendPostRequest(String address, String payload)
         {
-            //Global.logger.LogLine("GameSenseSDK debug: payload of POST: " + payload, Logging_Level.Info);
-
             var httpWebRequest = (HttpWebRequest) WebRequest.Create(address);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
@@ -211,7 +207,6 @@ namespace SteelSeries.GameSenseSDK
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();
-                //Global.logger.LogLine("GameSenseSDK debug: result of POST: " + result, Logging_Level.Info);
             }
         }
         
