@@ -192,10 +192,13 @@ namespace Aurora.Settings
         [Description("Masterkeys Pro M White")]
         Masterkeys_Pro_M_White = 503,
 
-
         //Roccat range is 600-699
         //[Description("Roccat Ryos")]
         //Roccat_Ryos = 600
+
+        //Steelseries range is 700-799
+        [Description("SteelSeries Apex M800")]
+        SteelSeries_Apex_M800 = 700,
     }
 
     public enum PreferredKeyboardLocalization
@@ -246,6 +249,10 @@ namespace Aurora.Settings
         Clevo_Touchpad = 400
 
         //Cooler Master range is 500-599
+
+        //Roccat range is 600-699
+
+        //Steelseries range is 700-799
     }
 
     public enum KeycapType
@@ -278,6 +285,7 @@ namespace Aurora.Settings
         public bool logitech_first_time;
         public bool corsair_first_time;
         public bool razer_first_time;
+        public bool steelseries_first_time;
 
         //General Program Settings
         public bool allow_peripheral_devices;
@@ -386,6 +394,7 @@ namespace Aurora.Settings
             logitech_first_time = true;
             corsair_first_time = true;
             razer_first_time = true;
+            steelseries_first_time = true;
 
             //General Program Settings
             allow_peripheral_devices = true;
