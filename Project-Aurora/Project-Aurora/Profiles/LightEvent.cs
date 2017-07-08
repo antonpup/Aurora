@@ -42,6 +42,11 @@ namespace Aurora.Profiles
             this.ResetGameState();
         }
 
+        public LightEvent(LightEventConfig config) : this()
+        {
+            this.Config = config;
+        }
+
         /// <summary>
         /// Adds new layers to the passed EffectFrame instance based on GameState information.
         /// </summary>
@@ -66,7 +71,7 @@ namespace Aurora.Profiles
         /// <returns>A boolean value representing if this LightEvent is active</returns>
         public virtual bool IsEnabled
         {
-            get { return this.Application.Settings.IsEnabled; }
+            get { return this.Application?.Settings?.IsEnabled ?? true; }
         }
 
         public bool Initialized { get; protected set; }

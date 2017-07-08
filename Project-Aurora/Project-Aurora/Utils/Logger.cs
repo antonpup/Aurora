@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Aurora
 {
@@ -52,6 +53,8 @@ namespace Aurora
         private string LogDirectory = "Aurora/Logs/";
         private Queue<string> MessageQueue = new Queue<string>();
         private readonly int QueueLimit = 255;
+        private StreamWriter logWriter;
+        private StreamWriter LogWriter { get { return logWriter ?? (logWriter = new StreamWriter(GetPath(), true)); } }
 
         public Logger()
         {
@@ -103,7 +106,7 @@ namespace Aurora
         public string GetPath()
         {
             if (!HasUniqueLogFile)
-                LogFile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("yyyy_dd_MM") + ".log");
+                LogFile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("yyyy_MM_dd") + ".log");
 
             if (!System.IO.File.Exists(LogDirectory))
                 System.IO.Directory.CreateDirectory(LogDirectory);
@@ -126,47 +129,62 @@ namespace Aurora
             return LogDirectory;
         }
 
+        public async void LogLine(string message, Logging_Level level = Logging_Level.None, bool timestamp = true)
+        {
+            await logLine(message, level, timestamp);
+        }
+
         /// <summary>
         /// Logs a line into the currently used log file
         /// </summary>
         /// <param name="message">Message you wish to log</param>
         /// <param name="level">The logging level of this message</param>
         /// <param name="timestamp">A boolean value representing if a timestamp should be included</param>
-        public void LogLine(string message, Logging_Level level = Logging_Level.None, bool timestamp = true)
+        private async Task logLine(string message, Logging_Level level = Logging_Level.None, bool timestamp = true)
         {
             if (level == Logging_Level.Debug && !Global.isDebug)
                 return;
 
-            string logLine = PrepareMessage(message, level, timestamp);
-
-            try
+            await Task.Run(() =>
             {
-                System.IO.StreamWriter sw = System.IO.File.AppendText(GetPath());
+                string logLine = PrepareMessage(message, level, timestamp);
                 try
                 {
-                    while (MessageQueue.Count > 0)
+                    lock (MessageQueue)
                     {
-                        string queue_msg = MessageQueue.Dequeue();
+                        lock (LogWriter)
+                        {
+                            Queue<string> queue = new Queue<string>(MessageQueue);
 
-                        System.Diagnostics.Debug.WriteLine(queue_msg);
-                        sw.WriteLine(queue_msg);
+                            while (queue.Count > 0)
+                            {
+                                string queue_msg = queue.Dequeue();
+
+                                System.Diagnostics.Debug.WriteLine(queue_msg);
+                                LogWriter.WriteLine(queue_msg);
+                            }
+
+                            System.Diagnostics.Debug.WriteLine(logLine);
+                            LogWriter.WriteLine(logLine);
+
+
+                            MessageQueue = queue;
+
+                            LogWriter.Flush();
+                        }
                     }
-
-                    System.Diagnostics.Debug.WriteLine(logLine);
-                    sw.WriteLine(logLine);
                 }
-                finally
+                catch (Exception e)
                 {
-                    sw.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("There was an exception during logging, " + e.Message);
+                    System.Diagnostics.Debug.WriteLine("There was an exception during logging, " + e.Message);
 
-                if (MessageQueue.Count < QueueLimit)
-                    MessageQueue.Enqueue(logLine);
-            }
+                    lock (MessageQueue)
+                    {
+                        if (MessageQueue.Count < QueueLimit)
+                            MessageQueue.Enqueue(logLine);
+                    }
+                }
+            });
         }
 
         private string PrepareMessage(string message, Logging_Level level, bool timestamp)

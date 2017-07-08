@@ -1,0 +1,8 @@
+{
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "included_features": [
+    "corsair_k95_platinum_left_features.json",
+    "corsair_k95_platinum_right_features.json"
+  ]
+}

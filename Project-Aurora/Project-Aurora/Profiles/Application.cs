@@ -47,7 +47,7 @@ namespace Aurora.Profiles
 
         public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
 
-        protected LightEventType? type;
+        protected LightEventType? type = LightEventType.Normal;
         public LightEventType? Type
         {
             get { return type; }

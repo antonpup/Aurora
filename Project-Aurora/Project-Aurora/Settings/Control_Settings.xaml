@@ -113,12 +113,12 @@
     </UserControl.Resources>
 
     <Grid>
-        <TabControl Margin="0,7,0,-7" x:Name="tabMain">
+        <TabControl Margin="0,7,0,-11" x:Name="tabMain">
             <TabItem Header="General Settings">
                 <Grid>
                     <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
                     <CheckBox x:Name="timed_dimming_checkbox" Content="Enable timed blackout of the keyboard" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Checked="timed_dimming_checkbox_Checked" Unchecked="timed_dimming_checkbox_Checked"/>
-                    <CheckBox x:Name="chkOverlayPreview" Content="Show Overlays and Underlays in Application Preview?" HorizontalAlignment="Left" Margin="10,237,0,0" VerticalAlignment="Top" Checked="chkOverlayPreview_Checked" Unchecked="chkOverlayPreview_Checked"/>
+                    <CheckBox x:Name="chkOverlayPreview" Content="Show Overlays and Underlays in Application Preview" HorizontalAlignment="Left" Margin="10,237,0,0" VerticalAlignment="Top" Checked="chkOverlayPreview_Checked" Unchecked="chkOverlayPreview_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="11,179,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
                     <TextBlock HorizontalAlignment="Left" Margin="11,208,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
                     <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
@@ -151,12 +151,14 @@
                     <CheckBox x:Name="nighttime_enabled_checkbox" Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" HorizontalAlignment="Left" Margin="332,139,0,0" VerticalAlignment="Top" Unchecked="nighttime_enabled_checkbox_Checked" Checked="nighttime_enabled_checkbox_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="What to do when Aurora window is closed:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="app_exit_mode" HorizontalAlignment="Left" Margin="242,27,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource appexitmode}}" ItemTemplate="{Binding Source={StaticResource appexitmodeTemplate}}" SelectionChanged="app_exit_mode_SelectionChanged"/>
-                    <CheckBox x:Name="start_silently_enabled" Content="Start Aurora in a minimized state" HorizontalAlignment="Left" Margin="156,10,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
+                    <CheckBox x:Name="start_silently_enabled" Content="Start Aurora in a minimized state" HorizontalAlignment="Left" Margin="142,10,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
+                    <CheckBox x:Name="chkGetPrereleases" Content="Get Pre-release updates" HorizontalAlignment="Left" Margin="317,237,0,0" VerticalAlignment="Top" IsChecked="{Binding GetDevReleases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="496,13,0,0" TextWrapping="Wrap" Text="Application Detection Method:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="app_detection_mode" HorizontalAlignment="Left" Margin="664,10,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource AppDetectionMode}}" ItemTemplate="{Binding Source={StaticResource AppDetectionModeTemplate}}" SelectionChanged="app_detection_mode_SelectionChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,74,0,0" TextWrapping="Wrap" Text="Global brightness modifier: " VerticalAlignment="Top"/>
                     <TextBlock x:Name="lblGlobalBrightness" HorizontalAlignment="Left" Margin="333,74,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
                     <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="178,74,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblGlobalBrightness, Path=.}"/>
+                    <CheckBox x:Name="chkShowDefaultLighting" Content="Show Default lighting(CUE, LGS, etc) when Desktop is disabled" HorizontalAlignment="Left" Margin="10,257,0,0" VerticalAlignment="Top"  IsChecked="{Binding ShowDefaultLightingOnDisabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">
@@ -266,9 +268,9 @@
             <TabItem Header="About">
                 <Grid>
                     <Label Content="Aurora" HorizontalAlignment="Left" Margin="143,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
-                    <Label Content="by Antonpup &amp; simon-wh" HorizontalAlignment="Left" Margin="294,12,0,0" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/><LineBreak/><LineBreak/><Run Text="You can report problems and give suggestions to me via "/><Hyperlink NavigateUri="http://steamcommunity.com/id/pupant/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Steam"/></Hyperlink><LineBreak/><Run Text="or you can create an issue on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><Run Text="."/><LineBreak/><LineBreak/><Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><LineBreak/><Run Text="Game logos and other images are owned by their respective owners."/><LineBreak/><LineBreak/><Run Text="I can be contacted at iamnotaspy@lastbullet.net"/></TextBlock>
-                    <Label Content="beta v0.6.0-dev2" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
+                    <!--<Label Content="by Antonpup &amp; simon-wh" HorizontalAlignment="Left" Margin="294,12,0,0" VerticalAlignment="Top"/>-->
+                    <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/><LineBreak/><LineBreak/><Run Text="You can report problems and give suggestions to me via "/><Hyperlink NavigateUri="http://steamcommunity.com/id/pupant/"><Run Text="Steam"/></Hyperlink><LineBreak/><Run Text="or you can create an issue on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/"><Run Text="Github"/></Hyperlink><Run Text="."/><LineBreak/><LineBreak/><Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/"><Run Text="Github"/></Hyperlink><LineBreak/><Run Text="Game logos and other images are owned by their respective owners."/><LineBreak/><LineBreak/><Run Text="I can be contacted at simon@modworkshop.net (simon-wh)"/><LineBreak/><Run Text="or iamnotaspy@"/><Run Text="modworkshop"/><Run Text=".net (Antonpup)"/></TextBlock>
+                    <Label x:Name="lblVersion" Content="beta v0.6.0-dev2" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
                     <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
                 </Grid>
             </TabItem>

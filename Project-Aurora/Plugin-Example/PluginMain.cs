@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Aurora.Profiles;
 using Plugin_Example.Layers;
+using Aurora.Settings;
 
 namespace Plugin_Example
 {
-    
-
     public class PluginMain : IPlugin
     {
         public string ID { get; private set; } = "PluginExample";
@@ -25,16 +24,21 @@ namespace Plugin_Example
         public IPluginHost PluginHost { get { return pluginHost; }
             set {
                 pluginHost = value;
-                if (value is LightingStateManager)
-                {
-                    ((LightingStateManager)value).RegisterLayerHandler(new LayerHandlerEntry("ExampleLayer", "Example Layer", typeof(ExampleLayerHandler)));
-                }
+                //Add stuff to the plugin manager
             }
         }
 
         public PluginMain()
         {
 
+        }
+
+        public void ProcessManager(object manager)
+        {
+            if (manager is LightingStateManager)
+            {
+                ((LightingStateManager)manager).RegisterLayerHandler(new LayerHandlerEntry("ExampleLayer", "Example Layer", typeof(ExampleLayerHandler)));
+            }
         }
     }
 }

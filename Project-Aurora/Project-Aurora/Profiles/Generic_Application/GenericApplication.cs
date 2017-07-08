@@ -53,47 +53,5 @@ namespace Aurora.Profiles.Generic_Application
             profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
             return profile;
         }
-
-        public override void LoadProfiles()
-        {
-            string profilesPath = GetProfileFolderPath();
-
-            if (Directory.Exists(profilesPath))
-            {
-                this.LoadScripts(profilesPath);
-
-                foreach (string profile in Directory.EnumerateFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
-                {
-                    string profileFilename = Path.GetFileNameWithoutExtension(profile);
-
-                    if (profileFilename.Equals("app_info"))
-                        continue;
-
-                    ApplicationProfile profileSettings = LoadProfile(profile);
-
-                    if (profileSettings != null)
-                    {
-                        this.InitalizeScriptSettings(profileSettings);
-
-                        if (profileFilename.Equals("default") || profileFilename.Equals(Settings.SelectedProfile))
-                            SwitchToProfile(profileSettings);
-
-                        Profiles.Add(profileSettings);
-                    }
-                }
-            }
-            else
-            {
-                Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Config.Name), Logging_Level.Info, false);
-            }
-
-            if (Profile == null)
-                SwitchToProfile(Profiles.FirstOrDefault());
-
-            if (Profile == null)
-                CreateDefaultProfile();
-
-            Settings.SelectedProfile = Path.GetFileNameWithoutExtension(Profile.ProfileFilepath);
-        }
     }
 }

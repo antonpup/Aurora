@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

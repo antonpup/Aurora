@@ -16,10 +16,16 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// </summary>
         public int Score;
 
+        /// <summary>
+        /// Remaining Timeouts
+        /// </summary>
+        public int TimeoutsRemaining;
+
         internal MapTeamNode(string JSON)
             : base(JSON)
         {
             Score = GetInt("score");
+            TimeoutsRemaining = GetInt("timeouts_remaining");
         }
     }
 }

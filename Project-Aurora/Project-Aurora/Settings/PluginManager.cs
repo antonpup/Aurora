@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Forms;
 
 namespace Aurora.Settings
@@ -54,9 +59,73 @@ namespace Aurora.Settings
         }
     }
 
-    public class PluginManager : IInit
+    public interface IPluginHost
+    {
+        Dictionary<string, IPlugin> Plugins { get; }
+        void SetPluginEnabled(string id, bool enabled);
+    }
+
+    public interface IPlugin
+    {
+        string ID { get; }
+        string Title { get; }
+        string Author { get; }
+        Version Version { get; }
+        IPluginHost PluginHost { get; set; }
+        void ProcessManager(object manager);
+    }
+
+    public static class PluginUtils
+    {
+        public static bool Enabled(this IPlugin self)
+        {
+            return self.PluginHost != null;
+        }
+    }
+
+    public class PluginEnabledConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var plugin = (IPlugin)value;
+            return plugin.Enabled();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class PluginManagerSettings : Settings
+    {
+        public Dictionary<string, bool> PluginManagement { get; private set; } = new Dictionary<string, bool>();
+
+        public PluginManagerSettings()
+        {
+
+        }
+
+        [OnDeserialized]
+        void OnDeserialized(StreamingContext context)
+        {
+
+        }
+    }
+
+    public class PluginManager : ObjectSettings<PluginManagerSettings>, IInit, IPluginHost
     {
         public List<IShortcut> PredefinedShortcuts { get; protected set; } = new List<IShortcut>();
+
+        public const string PluginDirectory = "Plugins";
+
+        public Dictionary<string, IPlugin> Plugins { get; set; } = new Dictionary<string, IPlugin>();
+
+        public PluginManager()
+        {
+            SettingsSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "PluginSettings.json");
+            this.CreateDefaults();
+        }
 
         public bool Initialized { get; protected set; }
 
@@ -65,9 +134,74 @@ namespace Aurora.Settings
             if (Initialized)
                 return true;
 
-            this.CreateDefaults();
+            this.LoadSettings();
+            this.LoadPlugins();
 
             return Initialized = true;
+        }
+
+        public void ProcessManager(object manager)
+        {
+            foreach (var plugin in this.Plugins)
+            {
+                plugin.Value.ProcessManager(manager);
+            }
+        }
+
+        private void LoadPlugins()
+        {
+            string dir = Path.Combine(Global.ExecutingDirectory, PluginDirectory);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+
+                //No need to search the directory if we just created it
+                return;
+            }
+
+            foreach (string pathPlugin in Directory.EnumerateFiles(dir, "*.dll", SearchOption.TopDirectoryOnly))
+            {
+                try
+                {
+                    Assembly dllPlugin = Assembly.LoadFrom(pathPlugin);
+
+                    foreach (AssemblyName name in dllPlugin.GetReferencedAssemblies())
+                        AppDomain.CurrentDomain.Load(name);
+
+                    foreach (Type typ in dllPlugin.GetExportedTypes())
+                    {
+                        if (typeof(IPlugin).IsAssignableFrom(typ))
+                        {
+                            //Create an instance of the plugin type
+                            IPlugin objPlugin = (IPlugin)Activator.CreateInstance(typ);
+
+                            //Get the ID of the plugin
+                            string id = objPlugin.ID;
+
+                            if (id != null && (!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id]))
+                                objPlugin.PluginHost = this;
+
+                            this.Plugins.Add(id, objPlugin);
+                        }
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine(exc.ToString(), Logging_Level.Error, true);
+                    if (Global.isDebug)
+                        throw exc;
+                }
+            }
+        }
+
+        public void SetPluginEnabled(string id, bool enabled)
+        {
+            if (!this.Settings.PluginManagement.ContainsKey(id))
+                this.Settings.PluginManagement.Add(id, enabled);
+            else
+                this.Settings.PluginManagement[id] = enabled;
+
+            this.SaveSettings();
         }
 
         protected void CreateDefaults()

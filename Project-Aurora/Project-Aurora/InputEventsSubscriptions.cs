@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Aurora.Utils;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Aurora
 {
@@ -77,20 +78,6 @@ namespace Aurora
             return true;
         }
 
-        private void Input_hook_KeyUp(object sender, KeyEventArgs e)
-        {
-            Task.Factory.StartNew(
-                () => { KeyUp?.Invoke(sender, e); }
-            );
-        }
-
-        private void Input_hook_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            Task.Factory.StartNew(
-                () => { KeyPress?.Invoke(sender, e); }
-            );
-        }
-
         private void Input_hook_KeyDown(object sender, KeyEventArgs e)
         {
             Task.Factory.StartNew(
@@ -100,6 +87,20 @@ namespace Aurora
             //Handle special cases
             if ((e.KeyCode == Keys.VolumeUp || e.KeyCode == Keys.VolumeDown) && e.Modifiers == Keys.Alt)
                 e.Handled = true;
+        }
+
+        private void Input_hook_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Task.Factory.StartNew(
+                () => { KeyPress?.Invoke(sender, e); }
+            );
+        }
+
+        private void Input_hook_KeyUp(object sender, KeyEventArgs e)
+        {
+            Task.Factory.StartNew(
+                () => { KeyUp?.Invoke(sender, e); }
+            );
         }
 
         #region IDisposable Support

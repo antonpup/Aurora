@@ -43,51 +43,10 @@ namespace Aurora.Profiles
         {
             return Title;
         }
-    }
-
-    public interface IPluginHost
-    {
-        Dictionary<string, IPlugin> Plugins { get; }
-        void SetPluginEnabled(string id, bool enabled);
-    }
-
-    public interface IPlugin
-    {
-        string ID { get; }
-        string Title { get; }
-        string Author { get; }
-        Version Version { get; }
-        IPluginHost PluginHost { get; set; }
-    }
-
-    public static class PluginUtils
-    {
-        public static bool Enabled(this IPlugin self)
-        {
-            return self.PluginHost != null;
-        }
-    }
-
-    public class PluginEnabledConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var plugin = (IPlugin)value;
-            return plugin.Enabled();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    
+    }    
 
     public class ProfilesManagerSettings
     {
-        public Dictionary<string, bool> PluginManagement { get; private set; } = new Dictionary<string, bool>();
-
         public ProfilesManagerSettings()
         {
 
@@ -100,12 +59,8 @@ namespace Aurora.Profiles
         }
     }
 
-    public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit, IPluginHost
-    {        public const string PluginDirectory = "Plugins";
-
-        public Dictionary<string, IPlugin> Plugins { get; set; } = new Dictionary<string, IPlugin>();
-        
-        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
+    public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit
+    {        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
 
         public Desktop.Desktop DesktopProfile { get { return (Desktop.Desktop)Events["desktop"]; } }
 
@@ -121,7 +76,6 @@ namespace Aurora.Profiles
         public List<string> DefaultLayerHandlers { get; private set; } = new List<string>();
 
         public string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
-
 
         private ActiveProcessMonitor processMonitor;
 
@@ -220,58 +174,7 @@ namespace Aurora.Profiles
 
         private void LoadPlugins()
         {
-            string dir = Path.Combine(Global.ExecutingDirectory, PluginDirectory);
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-
-                //No need to search the directory if we just created it
-                return;
-            }
-
-            foreach (string pathPlugin in Directory.EnumerateFiles(dir, "*.dll", SearchOption.TopDirectoryOnly))
-            {
-                try
-                {
-                    Assembly dllPlugin = Assembly.LoadFrom(pathPlugin);
-
-                    foreach (AssemblyName name in dllPlugin.GetReferencedAssemblies())
-                        AppDomain.CurrentDomain.Load(name);
-
-                    foreach (Type typ in dllPlugin.GetExportedTypes())
-                    {
-                        if (typeof(IPlugin).IsAssignableFrom(typ))
-                        {
-                            //Create an instance of the plugin type
-                            IPlugin objPlugin = (IPlugin)Activator.CreateInstance(typ);
-
-                            //Get the ID of the plugin
-                            string id = objPlugin.ID;
-
-                            if (id != null && (!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id]))
-                                objPlugin.PluginHost = this;
-
-                            this.Plugins.Add(id, objPlugin);
-                        }
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.LogLine(exc.ToString(), Logging_Level.Error, true);
-                    if (Global.isDebug)
-                        throw exc;
-                }
-            }
-        }
-
-        public void SetPluginEnabled(string id, bool enabled)
-        {
-            if (!this.Settings.PluginManagement.ContainsKey(id))
-                this.Settings.PluginManagement.Add(id, enabled);
-            else
-                this.Settings.PluginManagement[id] = enabled;
-
-            this.SaveSettings();
+            Global.PluginManager.ProcessManager(this);
         }
 
         protected override void LoadSettings(Type settingsType)
@@ -379,7 +282,7 @@ namespace Aurora.Profiles
                 foreach (string exe in @event.Config.ProcessNames)
                 {
                     if (!exe.Equals(key))
-                        EventProcesses.Add(exe, key);
+                        EventProcesses.Add(exe.ToLower(), key);
                 }
             }
 
@@ -613,25 +516,37 @@ namespace Aurora.Profiles
                     profile = tempProfile;
                     preview = true;
                 }
-                else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+                else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.Config.ProcessNames.Contains(process_name) && tempProfile.IsEnabled)
                     profile = tempProfile;
             }
 
             profile = profile ?? DesktopProfile;
 
-            timerInterval = (profile as Application)?.Config?.UpdateInterval ?? defaultTimerInterval;
+            timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
             //Check if any keybinds have been triggered
-            foreach(var prof in (profile as Application).Profiles)
+            if (profile is Application)
             {
-                if(prof.TriggerKeybind.IsPressed() && !(profile as Application).Profile.ProfileName.Equals(prof.ProfileName))
+                foreach (var prof in (profile as Application).Profiles)
                 {
-                    (profile as Application).SwitchToProfile(prof);
-                    break;
+                    if (prof.TriggerKeybind.IsPressed() && !(profile as Application).Profile.ProfileName.Equals(prof.ProfileName))
+                    {
+                        (profile as Application).SwitchToProfile(prof);
+                        break;
+                    }
                 }
             }
 
-            Global.dev_manager.InitializeOnce();
+            if (profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled)
+            {
+                Global.dev_manager.Shutdown();
+                Global.effengine.PushFrame(newFrame);
+                return;
+            }
+            else
+                Global.dev_manager.InitializeOnce();
+
+
             if (Global.Configuration.OverlaysInPreview || !preview)
             {
                 foreach (var underlay in Underlays)
@@ -662,6 +577,8 @@ namespace Aurora.Profiles
                     if ((evnt.item as LightEvent).IsEnabled)
                         (evnt.item as LightEvent).UpdateLights(newFrame);
                 }
+
+                UpdateIdleEffects(newFrame);
             }
 
             Global.effengine.PushFrame(newFrame);
@@ -681,30 +598,31 @@ namespace Aurora.Profiles
 
             try
             {
-                ILightEvent profile = this.GetProfileFromProcess(process_name);
+                ILightEvent profile;// = this.GetProfileFromProcess(process_name);
 
                 JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
                 string appid = provider.GetValue("appid").ToString();
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
-                if (profile != null || (profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
-                    profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs));
+                if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
+                    profile.SetGameState(gs); // (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs)
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
-
-                    profile = profile ?? GetProfileFromProcess(gs_process_name);
-
-                    if (profile == null)
+                    lock (Events)
                     {
-                        Events.Add(gs_process_name, new Application(new LightEventConfig { ProfileType = typeof(ApplicationProfile), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Aurora_Wrapper() }));
-                        profile = Events[gs_process_name];
-                    }
+                        profile = profile ?? GetProfileFromProcess(gs_process_name);
 
-                    profile.SetGameState(gs);
+                        if (profile == null)
+                        {
+                            Events.Add(gs_process_name, new GameEvent_Aurora_Wrapper(new LightEventConfig { GameStateType = typeof(GameState_Wrapper), ProcessNames = new[] { gs_process_name } }));
+                            profile = Events[gs_process_name];
+                        }
+
+                        profile.SetGameState(gs);
+                    }
                 }
 
-                //UpdateIdleEffects(newFrame);
             }
             catch (Exception e)
             {
@@ -749,4 +667,4 @@ namespace Aurora.Profiles
 
         public void Dispose()
         {
-            updateTimer.Dispose();        }    }}
+            updateTimer.Dispose();            updateTimer = null;        }    }}

@@ -37,7 +37,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonInstall = new System.Windows.Forms.Button();
             this.pictureBoxApplicationLogo = new System.Windows.Forms.PictureBox();
-            this.labelApplicationTitle = new System.Windows.Forms.Label();
+            this.lblUpdateTitle = new System.Windows.Forms.Label();
             this.labelUpdateDescription = new System.Windows.Forms.Label();
             this.linkLabelViewHistory = new System.Windows.Forms.LinkLabel();
             this.labelUpdateSize = new System.Windows.Forms.Label();
@@ -130,15 +130,15 @@
             this.pictureBoxApplicationLogo.TabIndex = 5;
             this.pictureBoxApplicationLogo.TabStop = false;
             // 
-            // labelApplicationTitle
+            // lblUpdateTitle
             // 
-            this.labelApplicationTitle.AutoSize = true;
-            this.labelApplicationTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelApplicationTitle.Location = new System.Drawing.Point(66, 12);
-            this.labelApplicationTitle.Name = "labelApplicationTitle";
-            this.labelApplicationTitle.Size = new System.Drawing.Size(261, 20);
-            this.labelApplicationTitle.TabIndex = 6;
-            this.labelApplicationTitle.Text = "New Aurora update is available!";
+            this.lblUpdateTitle.AutoSize = true;
+            this.lblUpdateTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUpdateTitle.Location = new System.Drawing.Point(66, 12);
+            this.lblUpdateTitle.Name = "lblUpdateTitle";
+            this.lblUpdateTitle.Size = new System.Drawing.Size(261, 20);
+            this.lblUpdateTitle.TabIndex = 6;
+            this.lblUpdateTitle.Text = "New Aurora update is available!";
             // 
             // labelUpdateDescription
             // 
@@ -179,7 +179,7 @@
             this.Controls.Add(this.labelUpdateSize);
             this.Controls.Add(this.linkLabelViewHistory);
             this.Controls.Add(this.labelUpdateDescription);
-            this.Controls.Add(this.labelApplicationTitle);
+            this.Controls.Add(this.lblUpdateTitle);
             this.Controls.Add(this.pictureBoxApplicationLogo);
             this.Controls.Add(this.buttonInstall);
             this.Controls.Add(this.buttonCancel);
@@ -214,7 +214,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonInstall;
         private System.Windows.Forms.PictureBox pictureBoxApplicationLogo;
-        private System.Windows.Forms.Label labelApplicationTitle;
+        private System.Windows.Forms.Label lblUpdateTitle;
         private System.Windows.Forms.Label labelUpdateDescription;
         private System.Windows.Forms.LinkLabel linkLabelViewHistory;
         private System.Windows.Forms.Label labelUpdateSize;

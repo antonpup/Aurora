@@ -171,6 +171,8 @@ namespace Aurora.Settings
         Corsair_K65 = 202,
         [Description("Corsair - STRAFE")]
         Corsair_STRAFE = 203,
+        [Description("Corsair - K95 Platinum")]
+        Corsair_K95_PL = 204,
 
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
@@ -187,10 +189,8 @@ namespace Aurora.Settings
         Masterkeys_Pro_L = 500,
         [Description("Masterkeys Pro S")]
         Masterkeys_Pro_S = 501,
-        [Description("Masterkeys Pro L White")]
-        Masterkeys_Pro_L_White = 502,
-        [Description("Masterkeys Pro M White")]
-        Masterkeys_Pro_M_White = 503,
+        [Description("Masterkeys Pro M")]
+        Masterkeys_Pro_M = 502,
 
         //Roccat range is 600-699
         //[Description("Roccat Ryos")]
@@ -218,8 +218,11 @@ namespace Aurora.Settings
         [Description("Deutsch")]
         de = 6,
         [Description("Japanese")]
-        jpn = 7
-
+        jpn = 7,
+        [Description("Turkish")]
+        tr = 8,
+        [Description("Nordic")]
+        nordic = 9
     }
 
     public enum PreferredMouse
@@ -301,9 +304,15 @@ namespace Aurora.Settings
         [JsonProperty(PropertyName = "keyboard_brightness_modifier")]
         public float KeyboardBrightness { get { return keyboardBrightness; } set{ keyboardBrightness = value; InvokePropertyChanged(); } }
 
-        private float peripheralBrightness;
+        private float peripheralBrightness = 1.0f;
         [JsonProperty(PropertyName = "peripheral_brightness_modifier")]
         public float PeripheralBrightness { get { return peripheralBrightness; } set { peripheralBrightness = value; InvokePropertyChanged(); } }
+
+        private bool getDevReleases = false;
+        public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
+
+        private bool showDefaultLightingOnDisabled = false;
+        public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
 
         public bool updates_check_on_start_up;
         public bool updates_allow_silent_minor;
@@ -321,9 +330,6 @@ namespace Aurora.Settings
         public bool devices_disable_headset;
         public HashSet<Type> devices_disabled;
         public bool OverlaysInPreview;
-
-        //[JsonIgnoreAttribute]
-        //public Dictionary<string, GenericApplicationProfileManager> additional_profiles;
 
         //Blackout and Night theme
         public bool time_based_dimming_enabled;
@@ -348,38 +354,7 @@ namespace Aurora.Settings
         public int idle_amount;
         public float idle_frequency;
 
-        //Game Settings
-        /*[JsonIgnoreAttribute]
-        public ProfileManager desktop_profile = new Profiles.Desktop.DesktopProfileManager();*/
-
         public VariableRegistry VarRegistry;
-
-        /*[JsonIgnoreAttribute]
-        public Dictionary<string, ProfileManager> ApplicationProfiles = new Dictionary<string, ProfileManager>()
-        {
-            { "Dota 2", new Profiles.Dota_2.Dota2ProfileManager() },
-            { "CSGO", new Profiles.CSGO.CSGOProfileManager() },
-            { "GTA5", new Profiles.GTA5.GTA5ProfileManager() },
-            { "RocketLeague", new Profiles.RocketLeague.RocketLeagueProfileManager() },
-            { "Overwatch", new Profiles.Overwatch.OverwatchProfileManager() },
-            { "Payday 2", new Profiles.Payday_2.PD2ProfileManager() },
-            { "The Division", new Profiles.TheDivision.TheDivisionProfileManager() },
-            { "League of Legends", new Profiles.LeagueOfLegends.LoLProfileManager() },
-            { "Hotline", new Profiles.HotlineMiami.HMProfileManager() },
-            { "Talos", new Profiles.TheTalosPrinciple.TalosPrincipleProfileManager() },
-            { "BF3", new Profiles.BF3.BF3ProfileManager() },
-            { "BLight", new Profiles.Blacklight.BLightProfileManager() },
-            { "MagicDuels2012", new Profiles.Magic_Duels_2012.MagicDuels2012ProfileManager() },
-            { "ShadowOfMordor", new Profiles.ShadowOfMordor.ShadowOfMordorProfileManager() },
-            { "SSam3", new Profiles.Serious_Sam_3.SSam3ProfileManager() },
-            { "DiscoDodgeball", new Profiles.DiscoDodgeball.DiscoDodgeballProfileManager() },
-            { "XCOM", new Profiles.XCOM.XCOMProfileManager() },
-            { "Evolve", new Profiles.Evolve.EvolveProfileManager() },
-            { "MetroLL", new Profiles.Metro_Last_Light.MetroLLProfileManager() },
-            { "GW2", new Profiles.Guild_Wars_2.GW2ProfileManager() },
-            { "WormsWMD", new Profiles.WormsWMD.WormsWMDProfileManager() },
-            { "BnS", new Profiles.Blade_and_Soul.BnSProfileManager() }
-        };*/
 
         //Overlay Settings
         public VolumeOverlaySettings volume_overlay_settings;
@@ -477,26 +452,6 @@ namespace Aurora.Settings
 
             Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
 
-            /*foreach (var kvp in config.ApplicationProfiles)
-            {
-                if (!config.ProfileOrder.Contains(kvp.Key))
-                    config.ProfileOrder.Add(kvp.Key);
-            }*/
-
-
-            /*if (Directory.Exists(AdditionalProfilesPath))
-            {
-                List<string> additionals = new List<string>(Directory.EnumerateDirectories(AdditionalProfilesPath));
-                foreach (var dir in additionals)
-                {
-                    if (File.Exists(Path.Combine(dir, "default.json")))
-                    {
-                        string proccess_name = Path.GetFileName(dir);
-                        config.additional_profiles.Add(proccess_name, new GenericApplicationProfileManager(proccess_name));
-                    }
-                }
-            }*/
-
             return config;
         }
 
@@ -516,14 +471,6 @@ namespace Aurora.Settings
             File.WriteAllText(configPath, content, Encoding.UTF8);
 
             Global.LightingStateManager.SaveAll();
-
-            /*configuration.desktop_profile.SaveProfiles();
-
-            foreach (var kvp in configuration.ApplicationProfiles)
-                kvp.Value.SaveProfiles();
-
-            foreach (var kvp in configuration.additional_profiles)
-                kvp.Value.SaveProfiles();*/
         }
 
         private static Configuration CreateDefaultConfigurationFile()
