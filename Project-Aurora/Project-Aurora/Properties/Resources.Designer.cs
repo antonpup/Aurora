@@ -169,7 +169,31 @@ namespace Aurora.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SteelSeriesInstall_Step1
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("SteelSeriesInstall_Step1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SteelSeriesInstall_Step2
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("SteelSeriesInstall_Step2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>

@@ -1477,7 +1477,6 @@
     <Resource Include="Resources\FreeForm_ManualColor.png" />
     <Content Include="Resources\SteelSeriesInstall\Step1.png" />
     <Content Include="Resources\SteelSeriesInstall\Step2.png" />
-    <None Include="Resources\SteelSeriesInstall_Step1.bmp" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

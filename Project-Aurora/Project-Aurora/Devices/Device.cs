@@ -1057,7 +1057,7 @@ namespace Aurora.Devices
         /// Macrokey 0 key
         /// </summary>
         [Description("G0")]
-        G0 = 169,
+        G0 = 170,
 
         /// <summary>
         /// None
