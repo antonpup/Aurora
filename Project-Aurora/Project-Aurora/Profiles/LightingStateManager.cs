@@ -60,11 +60,13 @@ namespace Aurora.Profiles
     }
 
     public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit
-    {        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
+    {
+        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
 
         public Desktop.Desktop DesktopProfile { get { return (Desktop.Desktop)Events["desktop"]; } }
 
-        private List<string> Underlays = new List<string>();        private List<string> Normal = new List<string>();
+        private List<string> Underlays = new List<string>();
+        private List<string> Normal = new List<string>();
         private List<string> Overlays = new List<string>();
 
         private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
@@ -100,6 +102,7 @@ namespace Aurora.Profiles
                 new CSGO.CSGO(),
                 new GTA5.GTA5(),
                 new RocketLeague.RocketLeague(),
+                new Borderlands2.Borderlands2(),
                 new Overwatch.Overwatch(),
                 new Payday_2.PD2(),
                 new TheDivision.TheDivision(),
@@ -201,7 +204,8 @@ namespace Aurora.Profiles
         {
             SaveSettings();
 
-            foreach(var profile in Events)            {
+            foreach(var profile in Events)
+            {
                 if (profile.Value is Application)
                     ((Application)profile.Value).SaveAll();
             }
@@ -667,4 +671,8 @@ namespace Aurora.Profiles
 
         public void Dispose()
         {
-            updateTimer.Dispose();            updateTimer = null;        }    }}
+            updateTimer.Dispose();
+            updateTimer = null;
+        }
+    }
+}

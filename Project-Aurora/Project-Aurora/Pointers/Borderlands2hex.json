@@ -1,0 +1,21 @@
+﻿{
+  "Health_maximum": {
+    "baseAddress": "0x01F00C8C",
+    "pointers": [ "0x0", "0x6E0", "0x298", "0x3AC", "0x58" ]
+  },
+
+  "Health_current": {
+    "baseAddress": "0x01F00C8C",
+    "pointers": [ "0x0", "0x6E0", "0x298", "0x3AC", "0x6C" ]
+  },
+
+  "Shield_maximum": {
+    "baseAddress": "0x01F00C8C",
+    "pointers": [ "0x0", "0x6E0", "0x298", "0x3B8", "0x58" ]
+  },
+
+  "Shield_current": {
+    "baseAddress": "0x01F00C8C",
+    "pointers": [ "0x0", "0x6E0", "0x298", "0x3B8", "0x6C" ]
+  }
+}
