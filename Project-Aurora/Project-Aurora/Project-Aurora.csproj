@@ -1455,8 +1455,7 @@
     <Resource Include="Resources\Export_Icon.png" />
     <Resource Include="Resources\Save_Icon.png" />
     <Resource Include="Resources\FreeForm_ManualColor.png" />
-    <Content Include="Resources\Borderlands2_256x256.png" />
-    <Content Include="Resources\Borderlands2_64x64.png" />
+    <Resource Include="Resources\Borderlands2_256x256.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
