@@ -46,6 +46,16 @@ namespace Aurora.Profiles.Borderlands2.Layers
 
         [JsonIgnore]
         public Color ColorBackgroundDeath { get { return Logic._ColorBackgroundDeath ?? _ColorBackgroundDeath ?? Color.Empty; } }
+
+        public bool? _ShowHealthStatus { get; set; }
+
+        [JsonIgnore]
+        public bool ShowHealthStatus { get { return Logic._ShowHealthStatus ?? _ShowHealthStatus ?? false; } }
+
+        public bool? _ShowShieldStatus { get; set; }
+
+        [JsonIgnore]
+        public bool ShowShieldStatus { get { return Logic._ShowShieldStatus ?? _ShowShieldStatus ?? false; } }
         
         public Borderlands2BackgroundLayerHandlerProperties() : base() { }
 
@@ -61,6 +71,8 @@ namespace Aurora.Profiles.Borderlands2.Layers
             this._ColorShieldLow = Color.DarkCyan;
             this._ColorBackground = Color.LightGoldenrodYellow;
             this._ColorBackgroundDeath = Color.IndianRed;
+            this._ShowHealthStatus = true;
+            this._ShowShieldStatus = true;
         }
 
     }
@@ -81,21 +93,51 @@ namespace Aurora.Profiles.Borderlands2.Layers
         {
             EffectLayer bg_layer = new EffectLayer("Borderlands 2 - Background");
 
+            KeySequence KeySequenceHealth = new KeySequence(new Devices.DeviceKeys[] {
+                Devices.DeviceKeys.TILDE, Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR,
+                Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT, Devices.DeviceKeys.NINE,
+                Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS, Devices.DeviceKeys.BACKSPACE
+            });
+            KeySequence KeySequenceShield = new KeySequence(new Devices.DeviceKeys[] {
+                Devices.DeviceKeys.ESC, Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4,
+                Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8, Devices.DeviceKeys.F9,
+                Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
+            });
+
             if (state is GameState_Borderlands2)
             {
                 GameState_Borderlands2 rlstate = state as GameState_Borderlands2;
 
                 if (rlstate.Player.maximumHealth == 0.0f)
                 {
+                    //// Main Menu
                     bg_layer.Fill(Properties.ColorBackground);
-                }
-                else if (rlstate.Player.currentHealth == 0.0f)
-                {
-                    bg_layer.Fill(Properties.ColorBackgroundDeath);
                 }
                 else
                 {
-                    bg_layer.Fill(Properties.ColorBackground);
+                    //// Not in Main Menu
+                    if (rlstate.Player.currentHealth == 0.0f)
+                    {
+                        //// Dead
+                        bg_layer.Fill(Properties.ColorBackgroundDeath);
+                    }
+                    else
+                    {
+                        //// Alive
+                        bg_layer.Fill(Properties.ColorBackground);
+
+                        //// Health Bar
+                        if (Properties._ShowHealthStatus == true)
+                        {
+                            bg_layer.PercentEffect(Properties._ColorHealth.Value, Properties._ColorHealthLow.Value, KeySequenceHealth, rlstate.Player.currentHealth, rlstate.Player.maximumHealth, PercentEffectType.Progressive_Gradual);
+                        }
+
+                        //// Shield Bar
+                        if (Properties._ShowShieldStatus == true && rlstate.Player.maximumShield > 0.0f)
+                        {
+                            bg_layer.PercentEffect(Properties._ColorShield.Value, Properties._ColorShieldLow.Value, KeySequenceShield, rlstate.Player.currentShield, rlstate.Player.maximumShield, PercentEffectType.Progressive_Gradual);
+                        }
+                    }
                 }
             }
 

@@ -95,10 +95,10 @@ namespace Aurora.Profiles.Borderlands2
                     //(_game_state as GameState_Borderlands2).Player.maximumShield = memread.ReadFloat(pointers.Shield_maximum.baseAddress, pointers.Shield_maximum.pointers);
                     //(_game_state as GameState_Borderlands2).Player.currentShield = memread.ReadFloat(pointers.Shield_current.baseAddress, pointers.Shield_current.pointers);
 
-                    (_game_state as GameState_Borderlands2).Player.maximumHealth = memread.ReadFloat(0x01F00C8C, new int[] { 0x0, 0x6E0, 0x298, 0x3AC, 0x58 } );
-                    (_game_state as GameState_Borderlands2).Player.currentHealth = memread.ReadFloat(0x01F00C8C, new int[] { 0x0, 0x6E0, 0x298, 0x3AC, 0x6C } );
-                    (_game_state as GameState_Borderlands2).Player.maximumShield = memread.ReadFloat(0x01F00C8C, new int[] { 0x0, 0x6E0, 0x298, 0x3B8, 0x58 } );
-                    (_game_state as GameState_Borderlands2).Player.currentShield = memread.ReadFloat(0x01F00C8C, new int[] { 0x0, 0x6E0, 0x298, 0x3B8, 0x6C } );
+                    (_game_state as GameState_Borderlands2).Player.maximumHealth = memread.ReadFloat(0x01F003E8, new int[] { 0x0, 0x6E0, 0x298, 0x3AC, 0x58 } );
+                    (_game_state as GameState_Borderlands2).Player.currentHealth = memread.ReadFloat(0x01F003E8, new int[] { 0x0, 0x6E0, 0x298, 0x3AC, 0x6C } );
+                    (_game_state as GameState_Borderlands2).Player.maximumShield = memread.ReadFloat(0x01F003E8, new int[] { 0x0, 0x6E0, 0x298, 0x3B8, 0x58 } );
+                    (_game_state as GameState_Borderlands2).Player.currentShield = memread.ReadFloat(0x01F003E8, new int[] { 0x0, 0x6E0, 0x298, 0x3B8, 0x6C } );
                 }
             }
 
