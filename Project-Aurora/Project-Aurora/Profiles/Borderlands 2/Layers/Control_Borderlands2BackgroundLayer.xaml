@@ -19,5 +19,7 @@
         <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Background:" VerticalAlignment="Top" Margin="0,52,295,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_Background_Death" Margin="300,50,0,0" Height="20" Width="90" HorizontalAlignment="Left" VerticalAlignment="Top" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Background_Death_SelectedColorChanged" />
         <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Death Color:" VerticalAlignment="Top" Margin="0,52,95,0" />
+        <CheckBox x:Name="Checkbox_ShowHealthStatus" Content="Show Health Status" HorizontalAlignment="Left" Margin="10,77,0,0" VerticalAlignment="Top" Checked="Checkbox_ShowHealthStatus_CheckedChanged" Unchecked="Checkbox_ShowHealthStatus_CheckedChanged"/>
+        <CheckBox x:Name="Checkbox_ShowShieldStatus" Content="Show Shield Status" HorizontalAlignment="Left" Margin="210,77,0,0" VerticalAlignment="Top" Checked="Checkbox_ShowShieldStatus_CheckedChanged" Unchecked="Checkbox_ShowShieldStatus_CheckedChanged"/>
     </Grid>
 </UserControl>
