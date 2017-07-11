@@ -253,4 +253,10 @@
   <data name="FreeForm_ManualColor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\freeform_manualcolor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SteelSeriesInstall_Step1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SteelSeriesInstall\Step1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SteelSeriesInstall_Step2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SteelSeriesInstall\Step2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
