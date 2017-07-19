@@ -106,9 +106,6 @@ namespace Aurora.Profiles.Borderlands2
             //Scripts
             this.Application.UpdateEffectScripts(layers);
 
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Borderlands 2 - Color Zones").DrawColorZones((this.Application.Profile as Borderlands2Profile).lighting_areas.ToArray()));
-
             frame.AddLayers(layers.ToArray());
         }
 

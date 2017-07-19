@@ -36,7 +36,6 @@ namespace Aurora.Profiles.Borderlands2
         private void SetSettings()
         {
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Profile as Borderlands2Profile).lighting_areas;
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
@@ -52,7 +51,6 @@ namespace Aurora.Profiles.Borderlands2
         {
             if (IsLoaded)
             {
-                (profile_manager.Profile as Borderlands2Profile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }
