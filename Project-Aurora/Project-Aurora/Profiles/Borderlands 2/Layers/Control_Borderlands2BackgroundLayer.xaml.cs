@@ -40,22 +40,8 @@ namespace Aurora.Profiles.Borderlands2.Layers
         {
             if (this.DataContext is Borderlands2BackgroundLayerHandler && !settingsset)
             {
-                /// Health
-                this.ColorPicker_Health.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorHealth ?? System.Drawing.Color.Empty);
-                this.ColorPicker_Health_Low.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorHealthLow ?? System.Drawing.Color.Empty);
-
-                /// Shield
-                this.ColorPicker_Shield.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorShield ?? System.Drawing.Color.Empty);
-                this.ColorPicker_Shield_Low.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorShieldLow ?? System.Drawing.Color.Empty);
-
-                /// Background
                 this.ColorPicker_Background.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorBackground ?? System.Drawing.Color.Empty);
-                this.ColorPicker_Background_Death.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorBackgroundDeath ?? System.Drawing.Color.Empty);
-
-                /// Show Status Bars
-                this.Checkbox_ShowHealthStatus.IsChecked = (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ShowHealthStatus ?? false;
-                this.Checkbox_ShowShieldStatus.IsChecked = (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ShowShieldStatus ?? false;
-
+                
                 settingsset = true;
             }
         }
@@ -76,53 +62,11 @@ namespace Aurora.Profiles.Borderlands2.Layers
 
             this.Loaded -= UserControl_Loaded;
         }
-
-        private void ColorPicker_Health_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Borderlands2BackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorHealth = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void ColorPicker_Health_Low_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Borderlands2BackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorHealthLow = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void ColorPicker_Shield_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Borderlands2BackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorShield = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void ColorPicker_Shield_Low_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Borderlands2BackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorShieldLow = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
+        
         private void ColorPicker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Borderlands2BackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorBackground = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void ColorPicker_Background_Death_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Borderlands2BackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ColorBackgroundDeath = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void Checkbox_ShowHealthStatus_CheckedChanged(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Borderlands2BackgroundLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
-                (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ShowHealthStatus = (sender as CheckBox).IsChecked.Value;
-        }
-
-        private void Checkbox_ShowShieldStatus_CheckedChanged(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is Borderlands2BackgroundLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
-                (this.DataContext as Borderlands2BackgroundLayerHandler).Properties._ShowShieldStatus = (sender as CheckBox).IsChecked.Value;
         }
     }
 }

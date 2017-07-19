@@ -5,21 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Profiles.Borderlands2.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             mc:Ignorable="d" Loaded="UserControl_Loaded" Width="390">
+             mc:Ignorable="d" Loaded="UserControl_Loaded" Width="190">
     <Grid>
-        <xctk:ColorPicker x:Name="ColorPicker_Health" Margin="100,0,0,0" Height="20" Width="90" HorizontalAlignment="Left" VerticalAlignment="Top" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Health_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Health Color:" VerticalAlignment="Top" Margin="0,2,295,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_Health_Low" Margin="300,0,0,0" Height="20" Width="90" HorizontalAlignment="Left" VerticalAlignment="Top" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Health_Low_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Low Health Color:" VerticalAlignment="Top" Margin="0,2,95,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_Shield" Margin="100,25,0,0" Height="20" Width="90" HorizontalAlignment="Left" VerticalAlignment="Top" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Shield_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Shield Color:" VerticalAlignment="Top" Margin="0,27,295,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_Shield_Low" Margin="300,25,0,0" Height="20" Width="90" HorizontalAlignment="Left" VerticalAlignment="Top" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Shield_Low_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Low Shield Color:" VerticalAlignment="Top" Margin="0,27,95,0" />
-        <xctk:ColorPicker x:Name="ColorPicker_Background" Margin="100,50,0,0" Height="20" Width="90" HorizontalAlignment="Left" VerticalAlignment="Top" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Background_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Background:" VerticalAlignment="Top" Margin="0,52,295,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_Background_Death" Margin="300,50,0,0" Height="20" Width="90" HorizontalAlignment="Left" VerticalAlignment="Top" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Background_Death_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Death Color:" VerticalAlignment="Top" Margin="0,52,95,0" />
-        <CheckBox x:Name="Checkbox_ShowHealthStatus" Content="Show Health Status" HorizontalAlignment="Left" Margin="10,77,0,0" VerticalAlignment="Top" Checked="Checkbox_ShowHealthStatus_CheckedChanged" Unchecked="Checkbox_ShowHealthStatus_CheckedChanged"/>
-        <CheckBox x:Name="Checkbox_ShowShieldStatus" Content="Show Shield Status" HorizontalAlignment="Left" Margin="210,77,0,0" VerticalAlignment="Top" Checked="Checkbox_ShowShieldStatus_CheckedChanged" Unchecked="Checkbox_ShowShieldStatus_CheckedChanged"/>
+        <xctk:ColorPicker x:Name="ColorPicker_Background" Margin="100,0,0,0" Height="20" Width="90" HorizontalAlignment="Left" VerticalAlignment="Top" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Background_SelectedColorChanged" />
+        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="Background:" VerticalAlignment="Top" Margin="0,2,95,0"/>
     </Grid>
 </UserControl>
