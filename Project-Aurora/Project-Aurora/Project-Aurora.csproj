@@ -893,8 +893,9 @@
     <Resource Include="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
     <Resource Include="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
     <None Include="packages.config" />
-    <None Include="Pointers\Borderlands2hex.json" />
-    <None Include="Pointers\Borderlands2.json" />
+    <None Include="Pointers\Borderlands2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Pointers\RocketLeague.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
