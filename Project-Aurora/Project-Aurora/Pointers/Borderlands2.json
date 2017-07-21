@@ -1,0 +1,21 @@
+﻿{
+  "Health_maximum": {
+    "baseAddress": "32506856",
+    "pointers": [ "0", "1760", "664", "940", "88" ]
+  },
+
+  "Health_current": {
+    "baseAddress": "32506856",
+    "pointers": [ "0", "1760", "664", "940", "108" ]
+  },
+
+  "Shield_maximum": {
+    "baseAddress": "32506856",
+    "pointers": [ "0", "1760", "664", "952", "88" ]
+  },
+
+  "Shield_current": {
+    "baseAddress": "32506856",
+    "pointers": [ "0", "1760", "664", "952", "108" ]
+  }
+}

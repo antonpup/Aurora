@@ -295,6 +295,19 @@
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
+    <Compile Include="Profiles\Borderlands 2\Borderlands2Application.cs" />
+    <Compile Include="Profiles\Borderlands 2\Borderlands2Pointers.cs" />
+    <Compile Include="Profiles\Borderlands 2\Borderlands2Profile.cs" />
+    <Compile Include="Profiles\Borderlands 2\Control_Borderlands2.xaml.cs">
+      <DependentUpon>Control_Borderlands2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Borderlands 2\GameEvent_Borderlands2.cs" />
+    <Compile Include="Profiles\Borderlands 2\GSI\GameState_Borderlands2.cs" />
+    <Compile Include="Profiles\Borderlands 2\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\Borderlands 2\Layers\Borderlands2BackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\Borderlands 2\Layers\Control_Borderlands2BackgroundLayer.xaml.cs">
+      <DependentUpon>Control_Borderlands2BackgroundLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\CSGO\CSGOApplication.cs" />
     <Compile Include="Profiles\CSGO\Layers\Control_CSGOTypingIndicatorLayer.xaml.cs">
       <DependentUpon>Control_CSGOTypingIndicatorLayer.xaml</DependentUpon>
@@ -894,6 +907,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Pointers\Borderlands2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Pointers\RocketLeague.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -1010,6 +1026,14 @@
     <Page Include="Profiles\Blacklight\Control_BLight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Borderlands 2\Control_Borderlands2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Borderlands 2\Layers\Control_Borderlands2BackgroundLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\CSGO\Control_CSGO.xaml">
       <SubType>Designer</SubType>
@@ -1453,6 +1477,7 @@
     <Resource Include="Resources\Export_Icon.png" />
     <Resource Include="Resources\Save_Icon.png" />
     <Resource Include="Resources\FreeForm_ManualColor.png" />
+    <Resource Include="Resources\Borderlands2_256x256.png" />
     <Content Include="Resources\SteelSeriesInstall\Step1.png" />
     <Content Include="Resources\SteelSeriesInstall\Step2.png" />
     <Content Include="SDKDLL.dll">
@@ -1517,11 +1542,17 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\CUE.NET.1.1.3.1\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.1.3.1\build\net45\CUE.NET.targets'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+
+       Other similar extension points exist, see Microsoft.Common.targets.
+
+  <Target Name="BeforeBuild">
+
+  </Target>
+
+  <Target Name="AfterBuild">
+
+  </Target>
+
   -->
 </Project>
