@@ -80,6 +80,11 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public float MaxAmplitude { get { return Logic._MaxAmplitude ?? _MaxAmplitude ?? 20.0f; } }
 
+        public bool? _ScaleWithSystemVolume { get; set; }
+
+        [JsonIgnore]
+        public bool ScaleWithSystemVolume { get { return Logic._ScaleWithSystemVolume ?? _ScaleWithSystemVolume ?? false; } }
+
         public bool? _DimBackgroundOnSound { get; set; }
 
         [JsonIgnore]
@@ -178,6 +183,13 @@ namespace Aurora.Settings.Layers
         {
             MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
 
+            // The system sound as a value between 0.0 and 1.0
+            float system_sound_normalized = current_device.AudioEndpointVolume.MasterVolumeLevelScalar;
+
+            // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
+            // Replaces all Properties.MaxAmplitude calls with the sclaed value
+            float scaled_max_amplitude = Properties.MaxAmplitude * (Properties.ScaleWithSystemVolume ? system_sound_normalized : 1);
+
             if (default_device == null || default_device.ID != current_device.ID)
             {
                 UpdateAudioCapture();
@@ -225,7 +237,7 @@ namespace Aurora.Settings.Layers
 
                             Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
 
-                            g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val / Properties.MaxAmplitude * 500.0f);
+                            g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val / scaled_max_amplitude * 500.0f);
                         }
                         break;
                     case EqualizerType.Waveform_Bottom:
@@ -235,7 +247,7 @@ namespace Aurora.Settings.Layers
 
                             Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
 
-                            g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val / Properties.MaxAmplitude) * 1000.0f);
+                            g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f);
                         }
                         break;
                     case EqualizerType.PowerBars:
@@ -282,7 +294,7 @@ namespace Aurora.Settings.Layers
 
                         for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
                         {
-                            float fft_val = flux_array[f_x] / Properties.MaxAmplitude;
+                            float fft_val = flux_array[f_x] / scaled_max_amplitude;
 
                             fft_val = Math.Min(1.0f, fft_val);
 
