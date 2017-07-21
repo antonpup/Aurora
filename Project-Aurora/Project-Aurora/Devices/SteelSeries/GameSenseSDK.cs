@@ -67,35 +67,35 @@ namespace SteelSeries.GameSenseSDK
 
         public void setPeripheryColor(byte red, byte green, byte blue)
         {
-            sendColor("PERIPHERYCOLOR", red, green, blue);
+            sendColor("periph", red, green, blue);
         }
 
         public void setMouseColor(byte red, byte green, byte blue)
         {
-            sendColor("MOUSECOLOR", red, green, blue);
+            sendColor("mouse", red, green, blue);
         }
 
         public void setMouseScrollWheelColor(byte red, byte green, byte blue)
         {
-            sendColor("MOUSEWHEELCOLOR", red, green, blue);
+            sendColor("mousewheel", red, green, blue);
         }
 
         public void setMouseLogoColor(byte red, byte green, byte blue)
         {
-            sendColor("MOUSELOGOCOLOR", red, green, blue);
+            sendColor("mouselogo", red, green, blue);
         }
 
         public void setHeadsetColor(byte red, byte green, byte blue)
         {
-            sendColor("HEADSETCOLOR", red, green, blue);
+            sendColor("headset", red, green, blue);
         }
 
-        public void sendColor(String deviceEvent, byte red, byte green, byte blue)
+        public void sendColor(String deviceType, byte red, byte green, byte blue)
         {
             GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
             payload.game = sseGameName;
-            payload.Event = deviceEvent;
-            payload.data = "{\"value\": [" + red + ", " + green + ", " + blue + "]}";
+            payload.Event = "COLOR";
+            payload.data = "{\""+ deviceType + "\":{\"color\": [" + red + ", " + green + ", " + blue + "]}}";
             // sending POST request
             String json = JsonConvert.SerializeObject(payload);
             sendPostRequest("http://" + sseAddress + "/game_event", json);
@@ -105,18 +105,22 @@ namespace SteelSeries.GameSenseSDK
         {
             GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
             payload.game = sseGameName;
-            payload.Event = "KEYBOARDCOLORS";
+            payload.Event = "COLOR";
 
             payload.data = "{";
-            payload.data += "\"hids\": ";
+            payload.data += "\"keyboard\":{";
+            payload.data += "\"hids\":";
             payload.data += JsonConvert.SerializeObject(hids);
             payload.data += ",";
-            payload.data += "\"colors\": [";
+            payload.data += "\"colors\":[";
             foreach (Tuple<byte, byte, byte> color in colors)
             {
-                payload.data += "[" + color.Item1 + ", " + color.Item2 + ", " + color.Item3 + "], ";
+                payload.data += "[" + color.Item1 + ", " + color.Item2 + ", " + color.Item3 + "],";
             }
+            // JSON doesn't allow trailing commas
+            payload.data = payload.data.TrimEnd(',');
             payload.data += "]";
+            payload.data += "}";
             payload.data += "}";
 
             // sending POST request
@@ -150,28 +154,55 @@ namespace SteelSeries.GameSenseSDK
             payload.game = sseGameName;
 
             // sending POST requests with golisp handler
-            payload.golisp = "(handler \"PERIPHERYCOLOR\"  (lambda (data)    (let* ((val (value: data)))      (on-device \"rgb-2-zone\" show: val) (on-device \"rgb-1-zone\" show: val))))";
-            json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/load_golisp_handlers", json);
+            payload.golisp = @"
+(handler ""COLOR""
+    (lambda (data)
+        (when (keyboard:? data)
+            (let* ((keyboard (keyboard: data))
+                   (hids (hids: keyboard))
+                   (colors (colors: keyboard)))
+                (on-device ""rgb-per-key-zones"" show-on-keys: hids colors)))
 
-            payload.golisp = "(handler \"MOUSECOLOR\"  (lambda (data)    (let* ((val (value: data)))      (on-device \"mouse\" show: val))))";
-            json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/load_golisp_handlers", json);
+        (when (periph:? data)
+            (let* ((periph (periph: data))
+                   (color (color: periph)))
+                (on-device ""rgb-1-zone"" show: color)
+                (on-device ""rgb-2-zone"" show: color)
+                (on-device ""rgb-3-zone"" show: color)
+                (on-device ""rgb-4-zone"" show: color)
+                (on-device ""rgb-5-zone"" show: color)
+                (on-device ""rgb-12-zone"" show: color)))
 
-            payload.golisp = "(handler \"MOUSEWHEELCOLOR\"  (lambda (data)    (let* ((val (value: data)))      (on-device \"mouse\" show-on-zone: val wheel:))))";
-            json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/load_golisp_handlers", json);
+        (when (mouse:? data)
+            (let* ((mouse (mouse: data))
+                   (color (color: mouse)))
+                (on-device ""mouse"" show: color)))
 
-            payload.golisp = "(handler \"MOUSELOGOCOLOR\"  (lambda (data)    (let* ((val (value: data)))      (on-device \"mouse\" show-on-zone: val logo:))))";
-            json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/load_golisp_handlers", json);
+        (when (mousewheel:? data)
+            (let* ((mousewheel (mousewheel: data))
+                   (color (color: mousewheel)))
+                (on-device ""mouse"" show-on-zone: color wheel:)))
 
-            payload.golisp = "(handler \"HEADSETCOLOR\"  (lambda (data)    (let* ((val (value: data)))      (on-device \"headset\" show: val))))";
-            json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/load_golisp_handlers", json);
+        (when (mouselogo:? data)
+            (let* ((mouselogo (mouselogo: data))
+                   (color (color: mouselogo)))
+                (on-device ""mouse"" show-on-zone: color logo:)))
 
-            //keyboard beta handler
-            payload.golisp = "(handler \"KEYBOARDCOLORS\"  (lambda (data)    (let* ((hids (take 124 (hids: data)))    (colors (take 124 (colors: data))))      (on-device \"rgb-per-key-zones\" show-on-keys: hids colors)))) (add-event-per-key-zone-use \"KEYBOARDCOLORS\" \"all\")";
+        (when (headset:? data)
+            (let* ((headset (headset: data))
+                   (color (color: headset)))
+                (on-device ""headset"" show: color)))
+    )
+)
+
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-1-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-2-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-3-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-4-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-5-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-12-zone"")
+(add-event-per-key-zone-use ""COLOR"" ""all"")
+";
             json = JsonConvert.SerializeObject(payload);
             sendPostRequest("http://" + sseAddress + "/load_golisp_handlers", json);
 
