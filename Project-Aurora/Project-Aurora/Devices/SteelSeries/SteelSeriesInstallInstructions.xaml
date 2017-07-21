@@ -1,0 +1,22 @@
+﻿<Window x:Class="Aurora.Devices.SteelSeries.SteelSeriesInstallInstructions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Devices.SteelSeries"
+             mc:Ignorable="d" Height="479" Width="700" WindowStyle="ToolWindow" ResizeMode="NoResize" Title="First-time SteelSeries GameSense Setup Instructions" Background="Transparent">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="25*"/>
+            <ColumnDefinition Width="49*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="step1_text" HorizontalAlignment="Left" Margin="22,10,0,0" TextWrapping="Wrap" Text="Open SteelSeries Engine 3 Client and goto Engine Apps tab" VerticalAlignment="Top" Width="202"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="●" VerticalAlignment="Top" Height="16" Width="7"/>
+        <TextBlock x:Name="step2_text" HorizontalAlignment="Left" Margin="22,47,0,0" TextWrapping="Wrap" Text="Disable conflicting settings (CS:GO and Dota 2)" VerticalAlignment="Top" Width="202" IsEnabled="False"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,47,0,0" TextWrapping="Wrap" Text="●" VerticalAlignment="Top" Height="16" Width="7"/>
+        <Image x:Name="content_image" Grid.Column="1" Margin="10,10,10,0" VerticalAlignment="Top" Height="302"/>
+        <TextBlock x:Name="content_textblock" Grid.Column="1" HorizontalAlignment="Left" Margin="10,317,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="96" Width="438"/>
+        <Button x:Name="button_next" Content="Next" Grid.Column="1" HorizontalAlignment="Left" Margin="373,418,0,0" VerticalAlignment="Top" Width="75" Click="button_next_Click"/>
+        <Button x:Name="button_back" Content="Back" Grid.Column="1" HorizontalAlignment="Left" Margin="10,418,0,0" VerticalAlignment="Top" Width="75" Click="button_back_Click"/>
+    </Grid>
+</Window>
