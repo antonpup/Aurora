@@ -126,6 +126,9 @@ namespace Aurora.Settings.Layers
                 previous_key = Keys.None;
         }
 
+        private Dictionary<Devices.DeviceKeys, long> TimeOfLastPress = new Dictionary<Devices.DeviceKeys, long>();
+        private const long pressBuffer = 300L;
+
         private void Input_subscriptions_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
@@ -134,13 +137,23 @@ namespace Aurora.Settings.Layers
             if (previous_key == e.KeyCode)
                 return;
 
+            long? currentTime = null;
             Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+
+            if (TimeOfLastPress.ContainsKey(device_key))
+            {
+                if ((currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
+                    return;
+                else
+                    TimeOfLastPress.Remove(device_key);
+            }
 
             if (device_key != Devices.DeviceKeys.NONE && !Properties.Sequence.keys.Contains(device_key))
             {
                 PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
                 if (pt != new PointF(0, 0))
                 {
+                    TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
                     _input_list.Add(CreateInputItem(device_key, pt));
                     previous_key = e.KeyCode;
                 }
@@ -244,6 +257,12 @@ namespace Aurora.Settings.Layers
         {
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+
+            foreach (var lengthPresses in TimeOfLastPress.ToList())
+            {
+                if (currenttime - lengthPresses.Value > pressBuffer)
+                    TimeOfLastPress.Remove(lengthPresses.Key);
+            }
 
             EffectLayer interactive_layer = new EffectLayer("Interactive Effects");
 
