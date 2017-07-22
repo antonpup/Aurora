@@ -143,5 +143,12 @@ namespace Aurora.Settings.Layers
                     this.interactive_effects_width_label.Text = this.interactive_effects_width_slider.Value + " px";
             }
         }
+
+        {
+            if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+            {
+                (this.DataContext as InteractiveLayerHandler).Properties._WaitOnKeyUp = (sender as CheckBox).IsChecked.Value;
+            }
+        }
     }
 }
