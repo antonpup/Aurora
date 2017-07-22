@@ -152,29 +152,29 @@ namespace Aurora.Settings.Layers
                 return; //This event wasn't used for at least 1 second
 
 
-            if (previous_key != e.KeyCode)
+            if (previous_key == e.KeyCode)
+                return;
+
+            long? currentTime = null;
+            Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+
+            if (TimeOfLastPress.ContainsKey(device_key))
             {
-                long? currentTime = null;
-                Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+                if ((currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
+                    return;
+                else
+                    TimeOfLastPress.Remove(device_key);
+            }
 
-                if (TimeOfLastPress.ContainsKey(device_key))
+            if (device_key != Devices.DeviceKeys.NONE && !Properties.Sequence.keys.Contains(device_key))
+            {
+                PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
+                if (pt != new PointF(0, 0))
                 {
-                    if ((currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
-                        return;
-                    else
-                        TimeOfLastPress.Remove(device_key);
-                }
+                    TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
 
-                if (device_key != Devices.DeviceKeys.NONE && !Properties.Sequence.keys.Contains(device_key))
-                {
-                    PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
-                    if (pt != new PointF(0, 0))
-                    {
-                        TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
-
-                        _input_list.Add(CreateInputItem(device_key, pt));
-                        previous_key = e.KeyCode;
-                    }
+                    _input_list.Add(CreateInputItem(device_key, pt));
+                    previous_key = e.KeyCode;
                 }
             }
         }

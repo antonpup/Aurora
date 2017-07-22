@@ -51,6 +51,7 @@ namespace Aurora.Settings.Layers
                 this.interactive_effects_speed_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectSpeed;
                 this.interactive_effects_width_label.Text = (this.DataContext as InteractiveLayerHandler).Properties._EffectWidth + " px";
                 this.interactive_effects_width_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectWidth;
+                this.interactive_effects_start_on_key_up_enabled.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._WaitOnKeyUp;
                 this.KeySequence_keys.Sequence = (this.DataContext as InteractiveLayerHandler).Properties._Sequence;
                 this.KeySequence_keys.FreestyleEnabled = false;
 
@@ -144,6 +145,7 @@ namespace Aurora.Settings.Layers
             }
         }
 
+        private void interactive_effects_start_on_key_up_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
