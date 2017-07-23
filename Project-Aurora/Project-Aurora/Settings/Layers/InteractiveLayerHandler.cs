@@ -25,28 +25,30 @@ namespace Aurora.Settings.Layers
 
         public Devices.DeviceKeys key;
         public float progress;
+        public bool waitOnKeyUp;
         public AnimationMix animation;
         public ColorSpectrum spectrum;
         public readonly input_type type;
 
-        public input_item(Devices.DeviceKeys key, float progress, AnimationMix animation)
+        public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, AnimationMix animation)
         {
             this.key = key;
             this.progress = progress;
+            this.waitOnKeyUp = waitOnKeyUp;
             this.animation = animation;
 
             type = input_type.AnimationMix;
         }
 
-        public input_item(Devices.DeviceKeys key, float progress, ColorSpectrum spectrum)
+        public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, ColorSpectrum spectrum)
         {
             this.key = key;
             this.progress = progress;
+            this.waitOnKeyUp = waitOnKeyUp;
             this.spectrum = spectrum;
 
             type = input_type.Spectrum;
         }
-
     }
 
     public class InteractiveLayerHandlerProperties : LayerHandlerProperties2Color<InteractiveLayerHandlerProperties>
@@ -62,6 +64,11 @@ namespace Aurora.Settings.Layers
         public bool RandomSecondaryColor { get { return Logic._RandomSecondaryColor ?? _RandomSecondaryColor ?? false; } }
 
         public float? _EffectSpeed { get; set; }
+
+        public bool? _WaitOnKeyUp { get; set; }
+
+        [JsonIgnore]
+        public bool WaitOnKeyUp { get { return Logic._WaitOnKeyUp ?? _WaitOnKeyUp ?? false; } }
 
         [JsonIgnore]
         public float EffectSpeed { get { return Logic._EffectSpeed ?? _EffectSpeed ?? 0.0f; } }
@@ -85,6 +92,7 @@ namespace Aurora.Settings.Layers
             base.Default();
             this._RandomPrimaryColor = false;
             this._RandomSecondaryColor = false;
+            this._WaitOnKeyUp = false;
             this._EffectSpeed = 1.0f;
             this._InteractiveEffect = InteractiveEffects.None;
             this._EffectWidth = 2;
@@ -98,6 +106,8 @@ namespace Aurora.Settings.Layers
 
         private long previoustime = 0;
         private long currenttime = 0;
+
+        private input_item holdKeyInputItem;
 
         private float getDeltaTime()
         {
@@ -122,6 +132,13 @@ namespace Aurora.Settings.Layers
             if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
+            Devices.DeviceKeys deviceKey = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+            foreach (var input in _input_list.ToArray())
+            {
+                if (input.waitOnKeyUp && input.key == deviceKey)
+                    input.waitOnKeyUp = false;
+            }
+
             if (previous_key == e.KeyCode)
                 previous_key = Keys.None;
         }
@@ -133,6 +150,7 @@ namespace Aurora.Settings.Layers
         {
             if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
+
 
             if (previous_key == e.KeyCode)
                 return;
@@ -154,6 +172,7 @@ namespace Aurora.Settings.Layers
                 if (pt != new PointF(0, 0))
                 {
                     TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
+
                     _input_list.Add(CreateInputItem(device_key, pt));
                     previous_key = e.KeyCode;
                 }
@@ -210,7 +229,7 @@ namespace Aurora.Settings.Layers
                 spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
                 spec.SetColorAt(0.80f, secondary_c);
 
-                return new input_item(key, 0.0f, spec);
+                return new input_item(key, 0.0f, Properties.WaitOnKeyUp, spec);
             }
             else if (Properties.InteractiveEffect == InteractiveEffects.ArrowFlow)
             {
@@ -250,7 +269,7 @@ namespace Aurora.Settings.Layers
                 anim_mix.AddTrack(arrow);
             }
 
-            return new input_item(key, 0.0f, anim_mix);
+            return new input_item(key, 0.0f, Properties.WaitOnKeyUp, anim_mix);
         }
 
         public override EffectLayer Render(IGameState gamestate)
@@ -308,8 +327,11 @@ namespace Aurora.Settings.Layers
                         _input_list.RemoveAt(x);
                     else
                     {
-                        float trans_added = (Properties.EffectSpeed * (getDeltaTime() * 5.0f));
-                        _input_list[x].progress += trans_added;
+                        if(!_input_list[x].waitOnKeyUp)
+                        {
+                            float trans_added = (Properties.EffectSpeed * (getDeltaTime() * 5.0f));
+                            _input_list[x].progress += trans_added;
+                        }
                     }
                 }
                 catch (Exception exc)
