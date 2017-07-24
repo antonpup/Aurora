@@ -140,10 +140,6 @@
       <HintPath>..\packages\CS-Script.bin.3.19.0.0\lib\net45\Mono.CSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NAudio, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.8.0\lib\net35\NAudio.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -906,7 +902,9 @@
     <None Include="kb_layouts\steelseries_apex_m800.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Pointers\Borderlands2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -1493,7 +1491,6 @@
     <None Include="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Resource Include="Resources\LastBullet_Logo.png" />
     <Resource Include="Resources\overwatch_icon.png" />
     <Resource Include="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
     <Resource Include="Resources\pd2_64x64.png" />
@@ -1529,6 +1526,10 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NAudio\NAudio\NAudio.csproj">
+      <Project>{da4f02e3-0b5e-42cd-b8d9-5583fa51d66e}</Project>
+      <Name>NAudio</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj">
       <Project>{40085232-aced-4cbe-945b-90ba8153c151}</Project>
       <Name>ColorBox</Name>

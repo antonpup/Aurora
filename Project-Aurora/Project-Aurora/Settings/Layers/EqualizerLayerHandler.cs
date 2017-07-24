@@ -129,7 +129,7 @@ namespace Aurora.Settings.Layers
     {
         public event NewLayerRendered NewLayerRender = delegate { };
 
-        MMDeviceEnumerator audio_device_enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+        MMDeviceEnumerator audio_device_enumerator = new MMDeviceEnumerator();
         MMDevice default_device = null;
 
         private List<float> flux_array = new List<float>();
@@ -159,7 +159,7 @@ namespace Aurora.Settings.Layers
             return new Control_EqualizerLayer(this);
         }
 
-        private void UpdateAudioCapture()
+        private void UpdateAudioCapture(MMDevice defaultDevice)
         {
             if (waveIn != null)
             {
@@ -167,7 +167,8 @@ namespace Aurora.Settings.Layers
                 waveIn.Dispose();
             }
 
-            default_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+            default_device?.Dispose();
+            default_device = defaultDevice;
 
             // Here you decide what you want to use as the waveIn.
             // There are many options in NAudio and you can use other streams/files.
@@ -179,21 +180,26 @@ namespace Aurora.Settings.Layers
             waveIn.StartRecording();
         }
 
+
         public override EffectLayer Render(IGameState gamestate)
         {
+            //if (current_device != null)
+            //current_device.Dispose();
             MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
 
+            if (default_device == null || default_device.ID != current_device.ID)
+                UpdateAudioCapture(current_device);
+            else
+                current_device.Dispose();
+
+            current_device = null;
+
             // The system sound as a value between 0.0 and 1.0
-            float system_sound_normalized = current_device.AudioEndpointVolume.MasterVolumeLevelScalar;
+            float system_sound_normalized = default_device.AudioEndpointVolume.MasterVolumeLevelScalar;
 
             // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
-            // Replaces all Properties.MaxAmplitude calls with the sclaed value
+            // Replaces all Properties.MaxAmplitude calls with the scaled value
             float scaled_max_amplitude = Properties.MaxAmplitude * (Properties.ScaleWithSystemVolume ? system_sound_normalized : 1);
-
-            if (default_device == null || default_device.ID != current_device.ID)
-            {
-                UpdateAudioCapture();
-            }
 
             float[] freqs = Properties.Frequencies.ToArray(); //Defined Frequencies
 

@@ -29,7 +29,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class responsible for applying EffectLayers to an EffectFrame based on GameState information.
     /// </summary>
-    public class LightEvent : ILightEvent
+    public class LightEvent : ILightEvent, IDisposable
     {
         public Application Application { get; set; }
         public LightEventConfig Config { get; protected set; }
