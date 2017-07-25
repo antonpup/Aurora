@@ -19,7 +19,7 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="forms_key">The Forms.Key to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys GetDeviceKey(Keys forms_key)
+        public static DeviceKeys GetDeviceKey(Keys forms_key, bool isExtendedKey)
         {
             switch (forms_key)
             {
@@ -30,7 +30,7 @@ namespace Aurora.Utils
                 case (Keys.Tab):
                     return DeviceKeys.TAB;
                 case (Keys.Enter):
-                    return DeviceKeys.ENTER;
+                    return isExtendedKey ? DeviceKeys.NUM_ENTER : DeviceKeys.ENTER;
                 case (Keys.LShiftKey):
                     return DeviceKeys.LEFT_SHIFT;
                 case (Keys.LControlKey):
@@ -316,7 +316,7 @@ namespace Aurora.Utils
             DeviceKeys[] _returnKeys = new DeviceKeys[formsKeys.Length];
 
             for(int i = 0; i < formsKeys.Length; i++)
-                _returnKeys[i] = GetDeviceKey(formsKeys[i]);
+                _returnKeys[i] = GetDeviceKey(formsKeys[i], false);
 
             return _returnKeys;
         }
