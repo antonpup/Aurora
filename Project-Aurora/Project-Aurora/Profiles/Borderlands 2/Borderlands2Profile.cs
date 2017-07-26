@@ -55,7 +55,12 @@ namespace Aurora.Profiles.Borderlands2
                         _MaxVariablePath = "Player/MaximumShield"
                     },
                 }),
-                new Layer("Borderlands 2 Background", new Layers.Borderlands2BackgroundLayerHandler())
+                new Layer("Borderlands 2 Background", new SolidFillLayerHandler(){
+                    Properties = new SolidFillLayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.LightGoldenrodYellow
+                    }
+                })
             };
         }
     }

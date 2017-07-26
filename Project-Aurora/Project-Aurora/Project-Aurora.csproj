@@ -296,10 +296,6 @@
     <Compile Include="Profiles\Borderlands 2\GameEvent_Borderlands2.cs" />
     <Compile Include="Profiles\Borderlands 2\GSI\GameState_Borderlands2.cs" />
     <Compile Include="Profiles\Borderlands 2\GSI\Nodes\Player.cs" />
-    <Compile Include="Profiles\Borderlands 2\Layers\Borderlands2BackgroundLayerHandler.cs" />
-    <Compile Include="Profiles\Borderlands 2\Layers\Control_Borderlands2BackgroundLayer.xaml.cs">
-      <DependentUpon>Control_Borderlands2BackgroundLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\CSGO\CSGOApplication.cs" />
     <Compile Include="Profiles\CSGO\Layers\Control_CSGOTypingIndicatorLayer.xaml.cs">
       <DependentUpon>Control_CSGOTypingIndicatorLayer.xaml</DependentUpon>
@@ -1025,10 +1021,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Borderlands 2\Control_Borderlands2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Borderlands 2\Layers\Control_Borderlands2BackgroundLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
