@@ -56,7 +56,7 @@ namespace Aurora.Profiles.Borderlands2.Layers
             {
                 GameState_Borderlands2 rlstate = state as GameState_Borderlands2;
 
-                if (rlstate.Player.maximumHealth == 0.0f)
+                if (rlstate.Player.MaximumHealth == 0.0f)
                 {
                     //// Main Menu
                     bg_layer.Fill(Properties.ColorBackground);
@@ -64,7 +64,7 @@ namespace Aurora.Profiles.Borderlands2.Layers
                 else
                 {
                     //// Not in Main Menu
-                    if (rlstate.Player.currentHealth == 0.0f)
+                    if (rlstate.Player.CurrentHealth == 0.0f)
                     {
                         //// Dead
                         bg_layer.Fill(Properties.ColorBackground);
