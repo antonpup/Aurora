@@ -259,7 +259,11 @@ namespace Aurora.Controls
 
         private void ColorPickerDrawing_control_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            SetValue(VariableObjectProperty, Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value));
+            ColorPicker picker = (sender as ColorPicker);
+            if (picker.SelectedColor == null)
+                picker.SelectedColor = Color.FromArgb(0, 0, 0, 0);
+
+            SetValue(VariableObjectProperty, Utils.ColorUtils.MediaColorToDrawingColor(picker.SelectedColor.Value));
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
