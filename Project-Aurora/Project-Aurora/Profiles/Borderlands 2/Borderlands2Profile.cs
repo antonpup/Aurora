@@ -33,8 +33,8 @@ namespace Aurora.Profiles.Borderlands2
                         }),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "Player/currentHealth",
-                        _MaxVariablePath = "Player/maximumHealth"
+                        _VariablePath = "Player/CurrentHealth",
+                        _MaxVariablePath = "Player/MaximumHealth"
                     },
                 }),
                 new Layer("Shield Indicator", new PercentLayerHandler()
@@ -51,8 +51,8 @@ namespace Aurora.Profiles.Borderlands2
                         }),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "Player/currentShield",
-                        _MaxVariablePath = "Player/maximumShield"
+                        _VariablePath = "Player/CurrentShield",
+                        _MaxVariablePath = "Player/MaximumShield"
                     },
                 }),
                 new Layer("Borderlands 2 Background", new Layers.Borderlands2BackgroundLayerHandler())
