@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Gma.System.MouseKeyHook;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace Aurora.Settings
         {
             if (IsRecording())
             {
-                DeviceKeys key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+                DeviceKeys key = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).IsExtendedKey);
 
                 if(key != DeviceKeys.NONE)
                 {

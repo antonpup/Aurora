@@ -3,19 +3,32 @@
   "origin_region": 4,
   "grouped_keys": [
     {
-      "visualName": "Mouse/\r\nHeadset",
-      "tag": 0,
-	  "font_size": 12,
-      "margin_left": 20.0,
-      "margin_top": -90.0,
-      "width": 90.0,
-      "height": 90.0,
-      "width_bits": 6,
-      "height_bits": 6,
-      "margin_left_bits": 2,
-      "margin_top_bits": -6,
-      "enabled": true,
-      "absolute_location": true
+        "tag": -1,
+        "margin_left": 20.0,
+        "margin_top": -90.0,
+        "width": 90.0,
+        "height": 90.0,
+        "width_bits": 6,
+        "height_bits": 6,
+        "margin_left_bits": 2,
+        "margin_top_bits": -6,
+        "enabled": true,
+        "absolute_location": true
+    },
+    {
+        "visualName": "Mouse/\r\nHeadset",
+        "tag": 0,
+        "font_size": 12,
+        "margin_left": 20.0,
+        "margin_top": -90.0,
+        "width": 90.0,
+        "height": 90.0,
+        "width_bits": 6,
+        "height_bits": 6,
+        "margin_left_bits": 2,
+        "margin_top_bits": -6,
+        "enabled": true,
+        "absolute_location": true
     }
   ]
 }

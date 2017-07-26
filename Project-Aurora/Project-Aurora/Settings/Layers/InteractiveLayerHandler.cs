@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Controls;
+using Gma.System.MouseKeyHook;
 
 namespace Aurora.Settings.Layers
 {
@@ -132,7 +133,7 @@ namespace Aurora.Settings.Layers
             if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
-            Devices.DeviceKeys deviceKey = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+            Devices.DeviceKeys deviceKey = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).IsExtendedKey);
             foreach (var input in _input_list.ToArray())
             {
                 if (input.waitOnKeyUp && input.key == deviceKey)
@@ -156,7 +157,7 @@ namespace Aurora.Settings.Layers
                 return;
 
             long? currentTime = null;
-            Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+            Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).IsExtendedKey);
 
             if (TimeOfLastPress.ContainsKey(device_key))
             {
