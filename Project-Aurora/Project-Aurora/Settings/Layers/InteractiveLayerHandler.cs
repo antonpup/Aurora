@@ -159,12 +159,15 @@ namespace Aurora.Settings.Layers
             long? currentTime = null;
             Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).IsExtendedKey);
 
-            if (TimeOfLastPress.ContainsKey(device_key))
+            lock (TimeOfLastPress)
             {
-                if ((currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
-                    return;
-                else
-                    TimeOfLastPress.Remove(device_key);
+                if (TimeOfLastPress.ContainsKey(device_key))
+                {
+                    if ((currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
+                        return;
+                    else
+                        TimeOfLastPress.Remove(device_key);
+                }
             }
 
             if (device_key != Devices.DeviceKeys.NONE && !Properties.Sequence.keys.Contains(device_key))
@@ -281,7 +284,12 @@ namespace Aurora.Settings.Layers
             foreach (var lengthPresses in TimeOfLastPress.ToList())
             {
                 if (currenttime - lengthPresses.Value > pressBuffer)
-                    TimeOfLastPress.Remove(lengthPresses.Key);
+                {
+                    lock (TimeOfLastPress)
+                    {
+                        TimeOfLastPress.Remove(lengthPresses.Key);
+                    }
+                }
             }
 
             EffectLayer interactive_layer = new EffectLayer("Interactive Effects");

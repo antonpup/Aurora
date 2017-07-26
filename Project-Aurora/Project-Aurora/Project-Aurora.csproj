@@ -640,6 +640,9 @@
     <None Include="kb_layouts\logitech_g810.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.sw.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Plain Keyboard\layout.tr.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

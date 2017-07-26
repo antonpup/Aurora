@@ -510,6 +510,9 @@ namespace Aurora.Settings
                         case PreferredKeyboardLocalization.tr:
                             culture = "tr-TR";
                             break;
+                        case PreferredKeyboardLocalization.swiss:
+                            culture = "de-CH";
+                            break;
                     }
 
                     switch (culture)
@@ -525,6 +528,11 @@ namespace Aurora.Settings
                         case ("dsb-DE"):
                             _loaded_localization = PreferredKeyboardLocalization.de;
                             LoadCulture("de");
+                            break;
+                        case ("fr-CH"):
+                        case ("de-CH"):
+                            _loaded_localization = PreferredKeyboardLocalization.swiss;
+                            LoadCulture("sw");
                             break;
                         case ("fr-FR"):
                         case ("br-FR"):

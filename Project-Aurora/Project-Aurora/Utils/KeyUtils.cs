@@ -19,7 +19,7 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="forms_key">The Forms.Key to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys GetDeviceKey(Keys forms_key, bool isExtendedKey)
+        public static DeviceKeys GetDeviceKey(Keys forms_key, bool isExtendedKey = false)
         {
             switch (forms_key)
             {
