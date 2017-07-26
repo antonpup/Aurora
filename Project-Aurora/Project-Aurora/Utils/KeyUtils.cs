@@ -25,6 +25,8 @@ namespace Aurora.Utils
             {
                 case (Keys.Escape):
                     return DeviceKeys.ESC;
+                case (Keys.Clear):
+                    return DeviceKeys.NUM_FIVE;
                 case (Keys.Back):
                     return DeviceKeys.BACKSPACE;
                 case (Keys.Tab):
@@ -56,27 +58,27 @@ namespace Aurora.Utils
                 case (Keys.Space):
                     return DeviceKeys.SPACE;
                 case (Keys.PageUp):
-                    return DeviceKeys.PAGE_UP;
+                    return isExtendedKey ? DeviceKeys.PAGE_UP : DeviceKeys.NUM_NINE;
                 case (Keys.PageDown):
-                    return DeviceKeys.PAGE_DOWN;
+                    return isExtendedKey ? DeviceKeys.PAGE_DOWN : DeviceKeys.NUM_THREE;
                 case (Keys.End):
-                    return DeviceKeys.END;
+                    return isExtendedKey ? DeviceKeys.END : DeviceKeys.NUM_ONE;
                 case (Keys.Home):
-                    return DeviceKeys.HOME;
+                    return isExtendedKey ? DeviceKeys.HOME : DeviceKeys.NUM_SEVEN;
                 case (Keys.Left):
-                    return DeviceKeys.ARROW_LEFT;
+                    return isExtendedKey ? DeviceKeys.ARROW_LEFT : DeviceKeys.NUM_FOUR;
                 case (Keys.Up):
-                    return DeviceKeys.ARROW_UP;
+                    return isExtendedKey ? DeviceKeys.ARROW_UP : DeviceKeys.NUM_EIGHT;
                 case (Keys.Right):
-                    return DeviceKeys.ARROW_RIGHT;
+                    return isExtendedKey ? DeviceKeys.ARROW_RIGHT : DeviceKeys.NUM_SIX;
                 case (Keys.Down):
-                    return DeviceKeys.ARROW_DOWN;
+                    return isExtendedKey ? DeviceKeys.ARROW_DOWN : DeviceKeys.NUM_TWO;
                 case (Keys.PrintScreen):
                     return DeviceKeys.PRINT_SCREEN;
                 case (Keys.Insert):
-                    return DeviceKeys.INSERT;
+                    return isExtendedKey ? DeviceKeys.INSERT : DeviceKeys.NUM_ZERO;
                 case (Keys.Delete):
-                    return DeviceKeys.DELETE;
+                    return isExtendedKey ? DeviceKeys.DELETE : DeviceKeys.NUM_PERIOD;
                 case (Keys.D0):
                     return DeviceKeys.ZERO;
                 case (Keys.D1):
@@ -315,7 +317,7 @@ namespace Aurora.Utils
         {
             DeviceKeys[] _returnKeys = new DeviceKeys[formsKeys.Length];
 
-            for(int i = 0; i < formsKeys.Length; i++)
+            for (int i = 0; i < formsKeys.Length; i++)
                 _returnKeys[i] = GetDeviceKey(formsKeys[i], false);
 
             return _returnKeys;
