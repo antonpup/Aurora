@@ -134,10 +134,13 @@ namespace Aurora.Settings.Layers
                 return; //This event wasn't used for at least 1 second
 
             Devices.DeviceKeys deviceKey = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).ScanCode, ((KeyEventArgsExt)e).IsExtendedKey);
-            foreach (var input in _input_list.ToArray())
+            if(deviceKey != Devices.DeviceKeys.NONE)
             {
-                if (input.waitOnKeyUp && input.key == deviceKey)
-                    input.waitOnKeyUp = false;
+                foreach (var input in _input_list.ToArray())
+                {
+                    if (input.waitOnKeyUp && input.key == deviceKey)
+                        input.waitOnKeyUp = false;
+                }
             }
 
             if (previous_key == e.KeyCode)
