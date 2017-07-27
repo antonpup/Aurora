@@ -239,3 +239,7 @@ Project-Aurora/.vs/*
 #!**/packages/repositories.config
 # NuGet v3's project.json files produces more ignoreable files
 *.nuget.props
+
+Project-Aurora/Project-Aurora/Resources/Win64/
+
+Project-Aurora/Project-Aurora/Resources/Win32/
