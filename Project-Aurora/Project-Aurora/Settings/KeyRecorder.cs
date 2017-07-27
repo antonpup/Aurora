@@ -27,7 +27,7 @@ namespace Aurora.Settings
         {
             if (IsRecording())
             {
-                DeviceKeys key = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).IsExtendedKey);
+                DeviceKeys key = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).ScanCode, ((KeyEventArgsExt)e).IsExtendedKey);
 
                 if(key != DeviceKeys.NONE)
                 {
