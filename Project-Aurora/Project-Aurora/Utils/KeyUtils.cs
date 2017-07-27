@@ -30,6 +30,7 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="key">The key to be converted</param>
         /// <returns>The scan code of the key. If the method fails, the return value is 0</returns>
+        private static int GetScanCodeByKey(Keys key)
         {
             return (int)MapVirtualKey((uint)key, 0);
         }
@@ -56,6 +57,7 @@ namespace Aurora.Utils
                 case (Keys.LShiftKey):
                     return DeviceKeys.LEFT_SHIFT;
                 case (Keys.LControlKey):
+                    if (scanCode > 0 && leftControlScanCode > 0 && scanCode != leftControlScanCode) // Alt Graph
                         return DeviceKeys.NONE;
                     return DeviceKeys.LEFT_CONTROL;
                 case (Keys.LMenu):
