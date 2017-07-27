@@ -26,12 +26,12 @@
     
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_LeftSiren" Margin="89,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="155" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_LeftSiren_SelectedColorChanged" UsingAlphaChannel="True"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,2,0,0" TextWrapping="Wrap" Text="Left Siren Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,2,0,0" Padding="0" Content="Left Siren Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_RightSiren" Margin="97,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="147" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_RightSiren_SelectedColorChanged" UsingAlphaChannel="True"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,27,0,0" TextWrapping="Wrap" Text="Right Siren Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,27,0,0" Padding="0" Content="Right Siren Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="Checkbox_DisplayOnPeripherals" Content="Display effect on peripheral devices" HorizontalAlignment="Left" Margin="0,77,0,0" Checked="Checkbox_DisplayOnPeripherals_Checked" Unchecked="Checkbox_DisplayOnPeripherals_Checked" Height="16" VerticalAlignment="Top"/>
         <ComboBox x:Name="ComboBox_SirenEffectType" HorizontalAlignment="Left" Margin="68,50,0,0" VerticalAlignment="Top" Width="176" ItemsSource="{Binding Source={StaticResource GTA5_PoliceEffects}}" ItemTemplate="{Binding Source={StaticResource GTA5_PoliceEffectsTemplate}}" SelectionChanged="ComboBox_SirenEffectType_SelectionChanged"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,53,0,0" TextWrapping="Wrap" Text="Effect Type:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,53,0,0" Padding="0" Content="Effect Type:" VerticalAlignment="Top"/>
         <Controls:KeySequence x:Name="KeySequence_LeftSiren" Margin="254,0,0,0" RecordingTag="GTA 5 - Left Siren" Title="Left Siren Keys" HorizontalAlignment="Left" Width="230" SequenceUpdated="KeySequence_LeftSiren_SequenceUpdated"/>
         <Controls:KeySequence x:Name="KeySequence_RightSiren" Margin="489,0,0,0" RecordingTag="GTA 5 - Right Siren" Title="Right Siren Keys" HorizontalAlignment="Left" Width="230" SequenceUpdated="KeySequence_RightSiren_SequenceUpdated"/>
     </Grid>

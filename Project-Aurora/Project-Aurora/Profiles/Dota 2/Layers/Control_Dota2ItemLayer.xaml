@@ -8,9 +8,9 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_Item_Empty" Margin="91,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="152" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_Item_Empty_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,3,0,0" TextWrapping="Wrap" Text="Item slot empty:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,3,0,0" Padding="0" Content="Item slot empty:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_Item_Cooldown" Margin="136,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_Item_Cooldown_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Item on cooldown Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,32,0,0" Padding="0" Content="Item on cooldown Color:" VerticalAlignment="Top"/>
         <GroupBox Header="Inventory &amp; Stash Keys" HorizontalAlignment="Left" Margin="248,0,0,0" VerticalAlignment="Top" Height="102" Width="256" BorderBrush="DimGray">
             <Grid Margin="0,0,0,0">
                 <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="12,10,0,0" VerticalAlignment="Top" CornerRadius="5">
@@ -74,9 +74,9 @@
             </Grid>
         </GroupBox>
         <xctk:ColorPicker x:Name="ColorPicker_Item_NoCharges" Margin="125,58,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="118" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_Item_NoCharges_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,61,0,0" TextWrapping="Wrap" Text="Item no charges Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,61,0,0" Padding="0" Content="Item no charges Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_Item_Color" Margin="63,87,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="180" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_Item_Color_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,90,0,0" TextWrapping="Wrap" Text="Item Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,90,0,0" Padding="0" Content="Item Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="CheckBox_Use_Item_Colors" Content="Color keys based on item icon color" HorizontalAlignment="Left" Margin="0,116,0,-2" VerticalAlignment="Top" Unchecked="CheckBox_Use_Item_Colors_Checked" Checked="CheckBox_Use_Item_Colors_Checked"/>
 
     </Grid>

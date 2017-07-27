@@ -8,12 +8,12 @@
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.Dota_2.Layers.Control_Dota2RespawnLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Respawn Background Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Respawn Background Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_background" Margin="153,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="115" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_background_SelectedColorChanged" />
         <xctk:ColorPicker x:Name="ColorPicker_respawn" Margin="86,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="182" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_respawn_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,26,0,0" TextWrapping="Wrap" Text="Respawn Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,26,0,0" Padding="0" Content="Respawn Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_respawning" Margin="177,50,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="91" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_respawning_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,51,0,0" TextWrapping="Wrap" Text="Respawning (5 sec or less) Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,51,0,0" Padding="0" Content="Respawning (5 sec or less) Color:" VerticalAlignment="Top"/>
         <Controls:KeySequence x:Name="KeySequence_sequence" RecordingTag="Dota 2 - Respawn" Title="Respawn Keys" HorizontalAlignment="Left" Margin="0,75,0,0" SequenceUpdated="KeySequence_sequence_SequenceUpdated"/>
     </Grid>
 </UserControl>

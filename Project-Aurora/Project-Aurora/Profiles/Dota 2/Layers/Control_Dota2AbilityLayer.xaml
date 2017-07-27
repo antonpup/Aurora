@@ -8,9 +8,9 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_CanCastAbility" Margin="119,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="124" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="abilities_canuse_colorpicker_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Can cast ability Color:" VerticalAlignment="Top" Margin="0,3,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Can cast ability Color:" VerticalAlignment="Top" Margin="0,3,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_CanNotCastAbility" Margin="140,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="103" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="abilities_cannotuse_colorpicker_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Can not cast ability Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,32,0,0" Padding="0" Content="Can not cast ability Color:" VerticalAlignment="Top"/>
         <GroupBox Header="Ability Keys" HorizontalAlignment="Left" Margin="0,58,0,0" VerticalAlignment="Top" Height="80" Width="245" BorderBrush="DimGray">
             <Grid Margin="0,0,0,0">
                 <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="10,21,0,0" VerticalAlignment="Top" CornerRadius="5">
