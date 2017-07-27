@@ -8,14 +8,14 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_Dire" Margin="61,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Dire_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Dire Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Dire Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_Radiant" Margin="80,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="164" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Radiant_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,27,0,0" TextWrapping="Wrap" Text="Radiant Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Radiant Color:" VerticalAlignment="Top" Margin="0,27,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,50,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,52,0,0" TextWrapping="Wrap" Text="Ambient Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,52,0,0" Padding="0" Content="Ambient Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="Checkbox_DimEnabled" Content="Dim background after time &amp; on death" HorizontalAlignment="Left" Margin="0,73,0,0" VerticalAlignment="Top" Checked="Checkbox_DimEnabled_enabled_Checked" Unchecked="Checkbox_DimEnabled_enabled_Checked"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,93,0,0" TextWrapping="Wrap" Text="Dim delay:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,93,0,0" Padding="0" Content="Dim delay:" VerticalAlignment="Top"/>
         <Slider x:Name="Slider_DimSelector" HorizontalAlignment="Left" Margin="61,93,0,0" VerticalAlignment="Top" Width="130" Maximum="120" ValueChanged="Slider_DimSelector_ValueChanged" Value="15"/>
-        <TextBlock x:Name="TextBox_DimValue" HorizontalAlignment="Left" Margin="196,93,0,0" TextWrapping="Wrap" Text="15s" VerticalAlignment="Top"/>
+        <Label x:Name="TextBox_DimValue" HorizontalAlignment="Left" Margin="196,93,0,0" Padding="0" Content="15s" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Aurora.Profiles.Dota_2.Layers"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="No options to configure for this layer" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="No options to configure for this layer" VerticalAlignment="Top"/>
         <Button Content="View Editor" HorizontalAlignment="Left" Margin="0,21,0,0    " VerticalAlignment="Top" Width="75" Click="Button_Click"/>
 
     </Grid>

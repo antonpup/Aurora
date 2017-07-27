@@ -9,23 +9,23 @@
     <Grid>
 
         <xctk:ColorPicker x:Name="ColorPicker_doublekill" Margin="107,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_doublekill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="10,2,0,0" TextWrapping="Wrap" Text="Double Kill Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="10,2,0,0" Padding="0" Content="Double Kill Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_triplekill" Margin="107,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_triplekill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="2,27,0,0" TextWrapping="Wrap" Text="Killing Spree Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="2,27,0,0" Padding="0" Content="Killing Spree Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_quadkill" Margin="107,50,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_quadkill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="5,52,0,0" TextWrapping="Wrap" Text="Dominating Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="5,52,0,0" Padding="0" Content="Dominating Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_pentakill" Margin="107,75,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_pentakill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="18,77,0,0" TextWrapping="Wrap" Text="Mega Kill Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="18,77,0,0" Padding="0" Content="Mega Kill Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_hexakill" Margin="107,100,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_hexakill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,102,0,0" TextWrapping="Wrap" Text="Unstoppable Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,102,0,0" Padding="0" Content="Unstoppable Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_septakill" Margin="107,125,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_septakill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="5,127,0,0" TextWrapping="Wrap" Text="Wicked Sick Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="5,127,0,0" Padding="0" Content="Wicked Sick Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_octakill" Margin="107,150,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_octakill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="4,152,0,0" TextWrapping="Wrap" Text="Monster Kill Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="4,152,0,0" Padding="0" Content="Monster Kill Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_nonakill" Margin="107,175,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_nonakill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="27,177,0,0" TextWrapping="Wrap" Text="Godlike Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="27,177,0,0" Padding="0" Content="Godlike Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_decakill" Margin="107,200,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_decakill_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="19,202,0,0" TextWrapping="Wrap" Text="Godlike+ Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="19,202,0,0" Padding="0" Content="Godlike+ Color:" VerticalAlignment="Top"/>
 
     </Grid>
 </UserControl>

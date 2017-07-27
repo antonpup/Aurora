@@ -9,7 +9,7 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_TypingKeys" Margin="103,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="141" UsingAlphaChannel="False" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_CT_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Typing Keys Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Typing Keys Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
         <Controls:KeySequence x:Name="KeySequence_keys" Margin="254,0,0,0" RecordingTag="CSGO - Typing Indicator" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
     </Grid>
 </UserControl>

@@ -35,7 +35,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Height="255">
+    <Grid>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Equalizer Effect Type: " VerticalAlignment="Top"/>
         <ComboBox x:Name="eq_type" HorizontalAlignment="Left" Margin="120,-2,0,0" VerticalAlignment="Top" Width="177" ItemsSource="{Binding Source={StaticResource EqualizerType}}" ItemTemplate="{Binding Source={StaticResource EqualizerTypeTemplate}}" SelectionChanged="eq_type_SelectionChanged"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="View Type: " VerticalAlignment="Top" Margin="0,27,0,0"/>
