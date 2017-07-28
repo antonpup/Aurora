@@ -83,8 +83,11 @@ namespace Aurora.Settings.Layers
 
         private void ButtonRemoveKeybind_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is Button && (sender as Button).Tag is DockPanel)
+            if (sender is Button && (sender as Button).Tag is DockPanel)
+            {
                 this.stackPanelShortcuts.Children.Remove((sender as Button).Tag as DockPanel);
+                ApplySettings();
+            }
         }
 
         private void ButtonAddNewShortcut_Click(object sender, RoutedEventArgs e)
@@ -134,11 +137,16 @@ namespace Aurora.Settings.Layers
 
         private void KeybindEditor_KeybindUpdated(object sender, Keybind newKeybind)
         {
+            ApplySettings();
+        }
+
+        private void ApplySettings()
+        {
             List<Keybind> newShortcuts = new List<Keybind>();
 
             foreach (var child in this.stackPanelShortcuts.Children)
             {
-                if(child is DockPanel && (child as DockPanel).Tag is Control_Keybind)
+                if (child is DockPanel && (child as DockPanel).Tag is Control_Keybind)
                     newShortcuts.Add(((child as DockPanel).Tag as Control_Keybind).ContextKeybind);
             }
 

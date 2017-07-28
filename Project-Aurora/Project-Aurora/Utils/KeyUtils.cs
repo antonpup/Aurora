@@ -634,5 +634,22 @@ namespace Aurora.Utils
                     return DeviceKeys.NONE;
             }
         }
+
+        public static Keys GetStandardKey(Keys key)
+        {
+            switch (key)
+            {
+                case Keys.RControlKey:
+                    return Keys.LControlKey;
+                case Keys.RMenu:
+                    return Keys.LMenu;
+                case Keys.RShiftKey:
+                    return Keys.LShiftKey;
+                case Keys.RWin:
+                    return Keys.LMenu;
+                default:
+                    return key;
+            }
+        }
     }
 }
