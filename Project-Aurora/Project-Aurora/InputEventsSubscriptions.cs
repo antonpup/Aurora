@@ -50,11 +50,23 @@ namespace Aurora
 
         private void Internal_KeyUp(object sender, KeyEventArgs e)
         {
+            KeyEventArgsExt args = (KeyEventArgsExt)e;
+
+            //This is so we can ignore the LControlKey when Alt Gr is pressed
+            if (KeyUtils.GetDeviceKey(e.KeyCode, args.ScanCode, args.IsExtendedKey) == Devices.DeviceKeys.NONE)
+                return;
+
             _PressedKeySequence.RemoveAll(k => k == e.KeyCode);
         }
 
         private void Internal_KeyDown(object sender, KeyEventArgs e)
         {
+            KeyEventArgsExt args = (KeyEventArgsExt)e;
+
+            //This is so we can ignore the LControlKey when Alt Gr is pressed
+            if (KeyUtils.GetDeviceKey(e.KeyCode, args.ScanCode, args.IsExtendedKey) == Devices.DeviceKeys.NONE)
+                return;
+
             if (!_PressedKeySequence.Contains(e.KeyCode))
                 _PressedKeySequence.Add(e.KeyCode);
         }

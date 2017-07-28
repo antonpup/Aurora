@@ -133,11 +133,14 @@ namespace Aurora.Settings.Layers
             if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
-            Devices.DeviceKeys deviceKey = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).IsExtendedKey);
-            foreach (var input in _input_list.ToArray())
+            Devices.DeviceKeys deviceKey = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).ScanCode, ((KeyEventArgsExt)e).IsExtendedKey);
+            if(deviceKey != Devices.DeviceKeys.NONE)
             {
-                if (input.waitOnKeyUp && input.key == deviceKey)
-                    input.waitOnKeyUp = false;
+                foreach (var input in _input_list.ToArray())
+                {
+                    if (input.waitOnKeyUp && input.key == deviceKey)
+                        input.waitOnKeyUp = false;
+                }
             }
 
             if (previous_key == e.KeyCode)
@@ -157,7 +160,7 @@ namespace Aurora.Settings.Layers
                 return;
 
             long? currentTime = null;
-            Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).IsExtendedKey);
+            Devices.DeviceKeys device_key = Utils.KeyUtils.GetDeviceKey(e.KeyCode, ((KeyEventArgsExt)e).ScanCode, ((KeyEventArgsExt)e).IsExtendedKey);
 
             lock (TimeOfLastPress)
             {

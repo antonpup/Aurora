@@ -3,6 +3,7 @@ using CUE.NET.Devices.Generic.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,12 +15,32 @@ namespace Aurora.Utils
     /// </summary>
     public static class KeyUtils
     {
+        [DllImport("user32.dll")]
+        private static extern uint MapVirtualKey(uint uCode, uint uMapType);
+
+        private static readonly int leftControlScanCode;
+
+        static KeyUtils()
+        {
+            leftControlScanCode = Utils.KeyUtils.GetScanCodeByKey(Keys.LControlKey);
+        }
+
+        /// <summary>
+        /// Converts <see cref="Keys"/> to the hardware scan code/>
+        /// </summary>
+        /// <param name="key">The key to be converted</param>
+        /// <returns>The scan code of the key. If the method fails, the return value is 0</returns>
+        private static int GetScanCodeByKey(Keys key)
+        {
+            return (int)MapVirtualKey((uint)key, 0);
+        }
+
         /// <summary>
         /// Converts Forms.Keys to Devices.DeviceKeys
         /// </summary>
         /// <param name="forms_key">The Forms.Key to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys GetDeviceKey(Keys forms_key, bool isExtendedKey = false)
+        public static DeviceKeys GetDeviceKey(Keys forms_key, int scanCode = 0, bool isExtendedKey = false)
         {
             switch (forms_key)
             {
@@ -36,6 +57,8 @@ namespace Aurora.Utils
                 case (Keys.LShiftKey):
                     return DeviceKeys.LEFT_SHIFT;
                 case (Keys.LControlKey):
+                    if (scanCode > 0 && leftControlScanCode > 0 && scanCode != leftControlScanCode) // Alt Graph
+                        return DeviceKeys.NONE;
                     return DeviceKeys.LEFT_CONTROL;
                 case (Keys.LMenu):
                     return DeviceKeys.LEFT_ALT;
@@ -318,7 +341,7 @@ namespace Aurora.Utils
             DeviceKeys[] _returnKeys = new DeviceKeys[formsKeys.Length];
 
             for (int i = 0; i < formsKeys.Length; i++)
-                _returnKeys[i] = GetDeviceKey(formsKeys[i], false);
+                _returnKeys[i] = GetDeviceKey(formsKeys[i]);
 
             return _returnKeys;
         }
