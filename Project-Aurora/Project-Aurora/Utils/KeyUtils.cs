@@ -35,12 +35,22 @@ namespace Aurora.Utils
             return (int)MapVirtualKey((uint)key, 0);
         }
 
+        public static DeviceKeys GetDeviceKey(Keys forms_key, int scanCode = 0, bool isExtendedKey = false)
+        {
+            DeviceKeys key = getDeviceKey(forms_key, scanCode, isExtendedKey);
+            //Global.logger.LogLine(key.ToString() + ":" + ((int)key).ToString());
+            if (Global.kbLayout.LayoutKeyConversion.ContainsKey(key))
+                return Global.kbLayout.LayoutKeyConversion[key];
+
+            return key;
+        }
+
         /// <summary>
         /// Converts Forms.Keys to Devices.DeviceKeys
         /// </summary>
         /// <param name="forms_key">The Forms.Key to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys GetDeviceKey(Keys forms_key, int scanCode = 0, bool isExtendedKey = false)
+        private static DeviceKeys getDeviceKey(Keys forms_key, int scanCode = 0, bool isExtendedKey = false)
         {
             switch (forms_key)
             {
@@ -253,76 +263,76 @@ namespace Aurora.Utils
                 case (Keys.MediaPlayPause):
                     return DeviceKeys.MEDIA_PLAY_PAUSE;
                 case (Keys.OemSemicolon):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.CLOSE_BRACKET;
-                    else
+                    else*/
                         return DeviceKeys.SEMICOLON;
                 case (Keys.Oemplus):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.CLOSE_BRACKET;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.MINUS;
-                    else
+                    else*/
                         return DeviceKeys.EQUALS;
                 case (Keys.Oemcomma):
                     return DeviceKeys.COMMA;
                 case (Keys.OemMinus):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.FORWARD_SLASH;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.FORWARD_SLASH;
-                    else
+                    else*/
                         return DeviceKeys.MINUS;
                 case (Keys.OemPeriod):
                     return DeviceKeys.PERIOD;
                 case (Keys.OemQuestion):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.HASHTAG;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.HASHTAG;
-                    else
+                    else*/
                         return DeviceKeys.FORWARD_SLASH;
                 case (Keys.ProcessKey):
                     return DeviceKeys.JPN_HALFFULLWIDTH;
                 case (Keys.Oemtilde):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.APOSTROPHE;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.SEMICOLON;
-                    else
+                    else*/
                         return DeviceKeys.TILDE;
                 case (Keys.OemOpenBrackets):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.MINUS;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.EQUALS;
-                    else
+                    else*/
                         return DeviceKeys.OPEN_BRACKET;
                 case (Keys.OemPipe):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.BACKSLASH_UK;
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.TILDE;
-                    else
+                    else*/
                         return DeviceKeys.BACKSLASH;
                 case (Keys.OemCloseBrackets):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.EQUALS;
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.OPEN_BRACKET;
-                    else
+                    else*/
                         return DeviceKeys.CLOSE_BRACKET;
                 case (Keys.OemQuotes):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.HASHTAG;
-                    else
+                    else*/
                         return DeviceKeys.APOSTROPHE;
                 case (Keys.OemBackslash):
                     return DeviceKeys.BACKSLASH_UK;
                 case (Keys.Oem8):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.TILDE;
-                    else
+                    else*/
                         return DeviceKeys.OEM8;
                 case (Keys.Play):
                     return DeviceKeys.MEDIA_PLAY;
