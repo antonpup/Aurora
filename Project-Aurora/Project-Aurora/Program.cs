@@ -368,7 +368,7 @@ namespace Aurora
             Exit();
         }
 
-        private static void InstallLogitech()
+        public static void InstallLogitech()
         {
             //Check for Admin
             bool isElevated;
@@ -457,7 +457,7 @@ namespace Aurora
             Global.logger.LogLine("Logitech LED SDK patched successfully", Logging_Level.Info);
             System.Windows.MessageBox.Show("Logitech LED SDK patched successfully");
 
-            Environment.Exit(0);
+            //Environment.Exit(0);
         }
 
         static void OnProcessExit(object sender, EventArgs e)
