@@ -64,8 +64,12 @@ namespace Aurora
                 Data = (KeyboardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyboardHookStruct))
             };
 
-            Debug.WriteLine($@"LL {(Keys)callbackData.Data.VirtualKeyCode} {callbackData.Data.ScanCode} {callbackData.Data.Flags} {KeyUtils.GetDeviceKey(
-                (Keys)callbackData.Data.VirtualKeyCode, callbackData.Data.ScanCode, ((ScanCodeFlags)callbackData.Data.Flags).HasFlag(ScanCodeFlags.E0))}");
+            //Debug.WriteLine(
+            //    $@"LowLevelInput {(Keys)callbackData.Data.VirtualKeyCode} {callbackData.Data.ScanCode} {callbackData.Data.Flags} {
+            //            KeyUtils.GetDeviceKey(
+            //                (Keys)callbackData.Data.VirtualKeyCode, callbackData.Data.ScanCode,
+            //                ((ScanCodeFlags)callbackData.Data.Flags).HasFlag(ScanCodeFlags.E0))
+            //        }", "InputEvents");
 
             Input?.Invoke(this, callbackData);
 

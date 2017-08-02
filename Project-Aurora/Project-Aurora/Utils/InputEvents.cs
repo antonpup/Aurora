@@ -70,7 +70,7 @@ namespace Aurora
 
         private void DeviceOnKeyboardInput(object sender, KeyboardInputEventArgs e)
         {
-            Debug.WriteLine($"RawInput {e.Key} {e.MakeCode} {e.ScanCodeFlags} {e.GetDeviceKey()}");
+            //Debug.WriteLine($"RawInput {e.Key} {e.MakeCode} {e.ScanCodeFlags} {e.GetDeviceKey()}", "InputEvents");
 
             if ((int)e.Key == 255)
             {
