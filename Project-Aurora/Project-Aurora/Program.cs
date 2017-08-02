@@ -222,11 +222,13 @@ namespace Aurora
                 Global.logger.LogLine("Loading Plugins", Logging_Level.Info);
                 (Global.PluginManager = new PluginManager()).Initialize();
 
-                Global.logger.LogLine("Input Hooking", Logging_Level.Info);
+	            Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
+	            Global.kbLayout = new KeyboardLayoutManager();
+	            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
 
+				Global.logger.LogLine("Loading Input Hooking", Logging_Level.Info);
                 Global.InputEvents = new InputEvents();
                 Global.InputEvents.KeyDown += InputEventsOnKeyDown;
-
                 Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
                 SetupVolumeAsBrightness(Global.Configuration,
                     new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
@@ -240,9 +242,7 @@ namespace Aurora
                 Global.dev_manager.RegisterVariables();
                 Global.dev_manager.Initialize();
 
-                Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
-                Global.kbLayout = new KeyboardLayoutManager();
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+
 
 
 

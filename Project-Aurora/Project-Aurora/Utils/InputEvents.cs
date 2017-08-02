@@ -70,8 +70,6 @@ namespace Aurora
 
         private void DeviceOnKeyboardInput(object sender, KeyboardInputEventArgs e)
         {
-            //Debug.WriteLine($"RawInput {e.Key} {e.MakeCode} {e.ScanCodeFlags} {e.GetDeviceKey()}", "InputEvents");
-
             if ((int)e.Key == 255)
             {
                 // discard "fake keys" which are part of an escaped sequence
@@ -80,7 +78,9 @@ namespace Aurora
 
             KeyUtils.CorrectRawInputData(e);
 
-            if (e.ScanCodeFlags.HasFlag(ScanCodeFlags.Break))
+			//Debug.WriteLine($"RawInput {e.Key} {e.MakeCode} {e.ScanCodeFlags} {e.GetDeviceKey()}", "InputEvents");
+
+			if (e.ScanCodeFlags.HasFlag(ScanCodeFlags.Break))
             {
                 pressedKeySequence.RemoveAll(k => k == e.Key);
                 KeyUp?.Invoke(sender, e);
