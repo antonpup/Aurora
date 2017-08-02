@@ -308,7 +308,7 @@ namespace Aurora
 
                 background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
 
-                if (Global.Configuration.use_volume_as_brightness)
+                if (Global.Configuration.UseVolumeAsBrightness)
                     background *= Global.Configuration.GlobalBrightness;
 
                 if (_forcedFrame != null)

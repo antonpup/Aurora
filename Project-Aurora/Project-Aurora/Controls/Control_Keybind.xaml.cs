@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SharpDX.RawInput;
 
 namespace Aurora.Controls
 {
@@ -53,10 +54,10 @@ namespace Aurora.Controls
         {
             InitializeComponent();
 
-            Global.input_subscriptions.KeyDown += Input_subscriptions_KeyDown;
+            Global.InputEvents.KeyDown += InputEventsKeyDown;
         }
 
-        private void Input_subscriptions_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
         {
             Dispatcher.Invoke(
                 () =>
@@ -64,7 +65,7 @@ namespace Aurora.Controls
 
                     if (this.Equals(_ActiveKeybind))
                     {
-                        System.Windows.Forms.Keys[] _PressedKeys = Global.input_subscriptions.PressedKeys;
+                        System.Windows.Forms.Keys[] _PressedKeys = Global.InputEvents.PressedKeys;
 
                         if (ContextKeybind != null)
                         {

@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SharpDX.RawInput;
 
 namespace Aurora.Utils
 {
@@ -15,8 +16,24 @@ namespace Aurora.Utils
     /// </summary>
     public static class KeyUtils
     {
+        /// <summary>
+        ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code into a
+        ///     virtual-key code.
+        /// </summary>
+        /// <param name="uCode">
+        ///     The virtual key code or scan code for a key. How this value is interpreted depends on the value of
+        ///     the uMapType parameter.
+        /// </param>
+        /// <param name="uMapType">
+        ///     The translation to be performed. The value of this parameter depends on the value of the uCode
+        ///     parameter.
+        /// </param>
+        /// <returns>
+        ///     The return value is either a scan code, a virtual-key code, or a character value, depending on the value of
+        ///     uCode and uMapType. If there is no translation, the return value is zero.
+        /// </returns>
         [DllImport("user32.dll")]
-        private static extern uint MapVirtualKey(uint uCode, uint uMapType);
+        private static extern uint MapVirtualKey(uint uCode, MapVirtualKeyMapTypes uMapType);
 
         private static readonly int leftControlScanCode;
 
@@ -32,7 +49,56 @@ namespace Aurora.Utils
         /// <returns>The scan code of the key. If the method fails, the return value is 0</returns>
         private static int GetScanCodeByKey(Keys key)
         {
-            return (int)MapVirtualKey((uint)key, 0);
+            return (int)MapVirtualKey((uint)key, MapVirtualKeyMapTypes.MapvkVkToVsc);
+        }
+
+        /// <summary>
+        /// Correcting RawInput data according to an article https://blog.molecular-matters.com/2011/09/05/properly-handling-keyboard-input/
+        /// </summary>
+        public static void CorrectRawInputData(KeyboardInputEventArgs e)
+        {
+            // e0 and e1 are escape sequences used for certain special keys, such as PRINT and PAUSE/BREAK.
+            // see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
+            bool isE0 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E0);
+            bool isE1 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E1);
+
+            if (isE1)
+            {
+                // for escaped sequences, turn the virtual key into the correct scan code using MapVirtualKey.
+                // however, MapVirtualKey is unable to map VK_PAUSE (this is a known bug), hence we map that by hand.
+                if (e.Key == Keys.Pause)
+                    e.MakeCode = 0x45;
+                else
+                    e.MakeCode = (int)MapVirtualKey((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc);
+            }
+
+            switch (e.Key)
+            {
+                case Keys.NumLock:
+                    // correct PAUSE/BREAK and NUM LOCK silliness, and set the extended bit
+                    e.MakeCode = (int)(MapVirtualKey((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc) | 0x100);
+                    break;
+                case Keys.ShiftKey:
+                    // correct left-hand / right-hand SHIFT
+                    e.Key = (Keys) MapVirtualKey((uint) e.MakeCode, MapVirtualKeyMapTypes.MapvkVscToVkEx);
+                    break;
+                case Keys.ControlKey:
+                    e.Key = isE0 ? Keys.RControlKey : Keys.LControlKey;
+                    break;
+                case Keys.Menu:
+                    e.Key = isE0 ? Keys.RMenu : Keys.LMenu;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Converts Devices.DeviceKeys from RawInput event
+        /// </summary>
+        /// <param name="eventArgs">RawInput event data</param>
+        /// <returns>The resulting Devices.DeviceKeys</returns>
+        public static DeviceKeys GetDeviceKey(this KeyboardInputEventArgs eventArgs)
+        {
+            return GetDeviceKey(eventArgs.Key, eventArgs.MakeCode, eventArgs.ScanCodeFlags.HasFlag(ScanCodeFlags.E0));
         }
 
         /// <summary>
@@ -646,10 +712,50 @@ namespace Aurora.Utils
                 case Keys.RShiftKey:
                     return Keys.LShiftKey;
                 case Keys.RWin:
-                    return Keys.LMenu;
+                    return Keys.LWin;
                 default:
                     return key;
             }
+        }
+
+        /// <summary>
+        ///     The set of valid MapTypes used in MapVirtualKey
+        /// </summary>
+        private enum MapVirtualKeyMapTypes : uint
+        {
+            /// <summary>
+            ///     The uCode parameter is a virtual-key code and is translated into a scan code. If it is a virtual-key code that does
+            ///     not distinguish between left- and right-hand keys, the left-hand scan code is returned. If there is no translation,
+            ///     the function returns 0.
+            /// </summary>
+            MapvkVkToVsc = 0x00,
+
+            /// <summary>
+            ///     The uCode parameter is a scan code and is translated into a virtual-key code that does not distinguish between
+            ///     left- and right-hand keys. If there is no translation, the function returns 0.
+            /// </summary>
+            MapvkVscToVk = 0x01,
+
+            /// <summary>
+            ///     The uCode parameter is a virtual-key code and is translated into an unshifted character value in the low order word
+            ///     of the return value. Dead keys (diacritics) are indicated by setting the top bit of the return value. If there is
+            ///     no translation, the function returns 0.
+            /// </summary>
+            MapvkVkToChar = 0x02,
+
+            /// <summary>
+            ///     The uCode parameter is a scan code and is translated into a virtual-key code that distinguishes between left- and
+            ///     right-hand keys. If there is no translation, the function returns 0.
+            /// </summary>
+            MapvkVscToVkEx = 0x03,
+
+            /// <summary>
+            ///     The uCode parameter is a virtual-key code and is translated into a scan code. If it is a virtual-key code that does
+            ///     not distinguish between left- and right-hand keys, the left-hand scan code is returned. If the scan code is an
+            ///     extended scan code, the high byte of the uCode value can contain either 0xe0 or 0xe1 to specify the extended scan
+            ///     code. If there is no translation, the function returns 0.
+            /// </summary>
+            MapvkVkToVscEx = 0x04
         }
     }
 }

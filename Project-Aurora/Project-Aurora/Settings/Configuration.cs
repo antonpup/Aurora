@@ -294,9 +294,12 @@ namespace Aurora.Settings
 
         //General Program Settings
         public bool allow_peripheral_devices;
-        public bool use_volume_as_brightness;
         public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
+
+        private bool useVolumeAsBrightness = false;
+        [JsonProperty(PropertyName = "use_volume_as_brightness")]
+        public bool UseVolumeAsBrightness { get { return useVolumeAsBrightness; } set { useVolumeAsBrightness = value; InvokePropertyChanged(); } }
 
         private float globalBrightness = 1.0f;
         [JsonProperty(PropertyName = "global_brightness")]
@@ -375,7 +378,7 @@ namespace Aurora.Settings
 
             //General Program Settings
             allow_peripheral_devices = true;
-            use_volume_as_brightness = false;
+            UseVolumeAsBrightness = false;
             allow_wrappers_in_background = true;
             allow_all_logitech_bitmaps = true;
             GlobalBrightness = 1.0f;
