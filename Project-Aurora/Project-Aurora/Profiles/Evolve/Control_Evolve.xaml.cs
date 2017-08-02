@@ -39,11 +39,7 @@ namespace Aurora.Profiles.Evolve
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = @"Aurora.exe";
-            startInfo.Arguments = @"-install_logitech";
-            startInfo.Verb = "runas";
-            Process.Start(startInfo);
+            Program.InstallLogitech();
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)

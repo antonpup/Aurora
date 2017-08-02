@@ -95,11 +95,7 @@ namespace Aurora.Profiles.GTA5
         {
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = @"Aurora.exe";
-                startInfo.Arguments = @"-install_logitech";
-                startInfo.Verb = "runas";
-                Process.Start(startInfo);
+                Program.InstallLogitech();
             }
             catch (Exception exc)
             {

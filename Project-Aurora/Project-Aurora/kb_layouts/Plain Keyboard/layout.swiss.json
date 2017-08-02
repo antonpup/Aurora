@@ -1,6 +1,16 @@
 ﻿{
     "key_conversion":{
-        51:71
+        87:17,
+        49:28,
+        50:29,
+        78:44,
+        69:49,
+        17:50,
+        70:69,
+        51:70,
+        158:71,
+        44:78,
+        28:87
     },
     "keys":[
       {
@@ -244,7 +254,7 @@
         "enabled": true
       },
       {
-        "visualName": "~",
+        "visualName": "§",
         "tag": 17,
         "line_break": false,
         "margin_left": 0.0,
@@ -409,7 +419,7 @@
         "enabled": true
       },
       {
-        "visualName": "-",
+        "visualName": "'",
         "tag": 28,
         "line_break": false,
         "margin_left": 7.0,
@@ -424,7 +434,7 @@
         "enabled": true
       },
       {
-        "visualName": "=",
+        "visualName": "^",
         "tag": 29,
         "line_break": false,
         "margin_left": 7.0,
@@ -649,7 +659,7 @@
         "enabled": true
       },
       {
-        "visualName": "Y",
+        "visualName": "Z",
         "tag": 44,
         "line_break": false,
         "margin_left": 7.0,
@@ -724,7 +734,7 @@
         "enabled": true
       },
       {
-        "visualName": "{",
+        "visualName": "Ü",
         "tag": 49,
         "line_break": false,
         "margin_left": 7.0,
@@ -739,7 +749,7 @@
         "enabled": true
       },
       {
-        "visualName": "}",
+        "visualName": "¨",
         "tag": 50,
         "line_break": false,
         "margin_left": 7.0,
@@ -1009,7 +1019,7 @@
         "enabled": true
       },
       {
-        "visualName": ":",
+        "visualName": "Ö",
         "tag": 69,
         "line_break": false,
         "margin_left": 7.0,
@@ -1024,7 +1034,7 @@
         "enabled": true
       },
       {
-        "visualName": "\"",
+        "visualName": "Ä",
         "tag": 70,
         "line_break": false,
         "margin_left": 7.0,
@@ -1039,7 +1049,7 @@
         "enabled": true
       },
       {
-        "visualName": "\\",
+        "visualName": "$",
         "tag": 71,
         "line_break": false,
         "margin_left": 7.0,
@@ -1129,7 +1139,7 @@
         "enabled": true
       },
       {
-        "visualName": "\\",
+        "visualName": "<",
         "tag": 77,
         "line_break": false,
         "margin_left": 7.0,
@@ -1144,7 +1154,7 @@
         "enabled": true
       },
       {
-        "visualName": "Z",
+        "visualName": "Y",
         "tag": 78,
         "line_break": false,
         "margin_left": 7.0,
@@ -1249,7 +1259,7 @@
         "enabled": true
       },
       {
-        "visualName": "<",
+        "visualName": ";",
         "tag": 85,
         "line_break": false,
         "margin_left": 7.0,
@@ -1264,7 +1274,7 @@
         "enabled": true
       },
       {
-        "visualName": ">",
+        "visualName": ":",
         "tag": 86,
         "line_break": false,
         "margin_left": 7.0,
@@ -1279,7 +1289,7 @@
         "enabled": true
       },
       {
-        "visualName": "?",
+        "visualName": "-",
         "tag": 87,
         "line_break": false,
         "margin_left": 7.0,
@@ -1312,7 +1322,7 @@
         "visualName": "↑",
         "tag": 89,
         "line_break": false,
-        "margin_left": 49.0,
+        "margin_left": 50.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1327,7 +1337,7 @@
         "visualName": "1",
         "tag": 90,
         "line_break": false,
-        "margin_left": 52.0,
+        "margin_left": 51.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1444,14 +1454,14 @@
         "enabled": true
       },
       {
-        "visualName": "ALT",
+        "visualName": "ALT Gr",
         "tag": 98,
         "line_break": false,
         "margin_left": 5.0,
         "margin_top": 0.0,
         "width": 41.0,
         "height": 30.0,
-        "font_size": 12.0,
+        "font_size": 9.0,
         "width_bits": 4,
         "height_bits": 3,
         "margin_left_bits": 0,
@@ -1507,7 +1517,7 @@
         "visualName": "←",
         "tag": 102,
         "line_break": false,
-        "margin_left": 12.0,
+        "margin_left": 13.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1552,7 +1562,7 @@
         "visualName": "0",
         "tag": 105,
         "line_break": false,
-        "margin_left": 15.0,
+        "margin_left": 14.0,
         "margin_top": 0.0,
         "width": 67.0,
         "height": 30.0,
@@ -1564,7 +1574,7 @@
         "enabled": true
       },
       {
-        "visualName": ".",
+        "visualName": ",",
         "tag": 106,
         "line_break": true,
         "margin_left": 7.0,

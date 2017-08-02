@@ -411,6 +411,8 @@ namespace Aurora.Settings
 
     public class KeyboardLayoutManager
     {
+        public Dictionary<DeviceKeys, DeviceKeys> LayoutKeyConversion = new Dictionary<DeviceKeys, DeviceKeys>();
+
         private VirtualGroup virtualKeyboardGroup;
 
         private Dictionary<Devices.DeviceKeys, IKeycap> _virtualKeyboardMap = new Dictionary<DeviceKeys, IKeycap>();
@@ -532,7 +534,7 @@ namespace Aurora.Settings
                         case ("fr-CH"):
                         case ("de-CH"):
                             _loaded_localization = PreferredKeyboardLocalization.swiss;
-                            LoadCulture("sw");
+                            LoadCulture("swiss");
                             break;
                         case ("fr-FR"):
                         case ("br-FR"):
@@ -1009,6 +1011,15 @@ namespace Aurora.Settings
             return new_virtual_keyboard;
         }
 
+        private class KeyboardLayout
+        {
+            [JsonProperty("key_conversion")]
+            public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
+
+            [JsonProperty("keys")]
+            public KeyboardKey[] Keys = null;
+        }
+
         private void LoadCulture(String culture)
         {
             var fileName = "Plain Keyboard\\layout." + culture + ".json";
@@ -1018,10 +1029,11 @@ namespace Aurora.Settings
                 LoadDefault();
 
             string content = File.ReadAllText(layoutPath, Encoding.UTF8);
-            KeyboardKey[] keyboard = JsonConvert.DeserializeObject<KeyboardKey[]>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+            KeyboardLayout keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-            virtualKeyboardGroup = new VirtualGroup(keyboard);
+            virtualKeyboardGroup = new VirtualGroup(keyboard.Keys);
 
+            LayoutKeyConversion = keyboard.KeyConversion ?? new Dictionary<DeviceKeys, DeviceKeys>();
             /*
             if (keyboard.Count > 0)
                 keyboard.Last().line_break = false;
