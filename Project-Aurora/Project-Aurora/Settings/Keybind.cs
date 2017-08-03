@@ -35,7 +35,7 @@ namespace Aurora.Settings
 
         public bool IsPressed()
         {
-            Keys[] PressedKeys = Global.input_subscriptions.PressedKeys;
+            Keys[] PressedKeys = Global.InputEvents.PressedKeys;
 
             if (PressedKeys.Length > 0 && PressedKeys.Length == _AssignedKeys.Count)
             {

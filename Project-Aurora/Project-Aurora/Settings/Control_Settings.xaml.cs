@@ -52,7 +52,7 @@ namespace Aurora.Settings
 
             load_excluded_listbox();
 
-            this.volume_as_brightness_enabled.IsChecked = Global.Configuration.use_volume_as_brightness;
+            this.volume_as_brightness_enabled.IsChecked = Global.Configuration.UseVolumeAsBrightness;
 
             this.timed_dimming_checkbox.IsChecked = Global.Configuration.time_based_dimming_enabled;
             this.timed_dimming_start_hour_updown.Value = Global.Configuration.time_based_dimming_start_hour;
@@ -172,7 +172,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                Global.Configuration.use_volume_as_brightness = (this.volume_as_brightness_enabled.IsChecked.HasValue) ? this.volume_as_brightness_enabled.IsChecked.Value : false;
+                Global.Configuration.UseVolumeAsBrightness = (this.volume_as_brightness_enabled.IsChecked.HasValue) ? this.volume_as_brightness_enabled.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
