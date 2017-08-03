@@ -304,18 +304,6 @@ namespace Aurora
             }
             else
             {
-                /*Process current = Process.GetCurrentProcess();
-                var prc = Process.GetProcessesByName(current.ProcessName).ToList();
-                prc.RemoveAll((p) => p.Id == current.Id);
-
-                if (prc.Count > 1)
-                    throw new Exception("There should only be one process left");*/
-
-                /*Utils.NativeUtils.PostMessage(
-                    prc[0].MainWindowHandle,
-                    Utils.NativeUtils.WM_SHOWME,
-                    IntPtr.Zero,
-                    IntPtr.Zero);*/
                 try
                 {
                     NamedPipeClientStream client = new NamedPipeClientStream(".", "aurora\\interface", PipeDirection.Out);
@@ -415,7 +403,10 @@ namespace Aurora
                 Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
             }
 
-            Process.GetCurrentProcess().Kill();
+            Global.logger.Dispose();
+
+            Environment.Exit(0);
+            //Process.GetCurrentProcess().Kill();
             //System.Windows.Application.Current.Shutdown();
         }
 

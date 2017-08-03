@@ -45,7 +45,7 @@ namespace Aurora
     /// <summary>
     /// A logging class
     /// </summary>
-    public class Logger
+    public class Logger : IDisposable
     {
         private bool HasUniqueLogFile = false;
         private bool HasUniqueLogDirectory = false;
@@ -209,6 +209,12 @@ namespace Aurora
                 default:
                     return "";
             }
+        }
+
+        public void Dispose()
+        {
+            this.logWriter.Flush();
+            this.logWriter.Dispose();
         }
     }
 }

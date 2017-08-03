@@ -596,7 +596,7 @@ namespace Aurora.Profiles
 
             //UpdateProcess();
 
-            string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
+            //string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
 
             //EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
@@ -609,7 +609,7 @@ namespace Aurora.Profiles
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
                 if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
-                    profile.SetGameState(gs); // (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs)
+                    profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json));
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
