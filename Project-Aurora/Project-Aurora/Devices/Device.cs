@@ -1063,7 +1063,13 @@ namespace Aurora.Devices
         /// </summary>
         [Description("G0")]
         G0 = 170,
-		
+
+        /// <summary>
+        /// Macrokey 0 key
+        /// </summary>
+        [Description("Left FN")]
+        LEFT_FN = 171,
+
         /// <summary>
         /// None
         /// </summary>

@@ -181,6 +181,8 @@ namespace Aurora.Settings
         Razer_Blackwidow_X = 301,
         [Description("Razer - Blackwidow Tournament Edition")]
         Razer_Blackwidow_TE = 302,
+        [Description("Razer - Blade")]
+        Razer_Blade = 303,
 
         //Clevo range is 400-499
 

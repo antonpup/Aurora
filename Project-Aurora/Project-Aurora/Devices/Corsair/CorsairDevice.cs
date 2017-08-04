@@ -230,7 +230,6 @@ namespace Aurora.Devices.Corsair
         {
             //Apply and strip Alpha
             color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-
             if (keyboard != null && keyboard[localKey] != null)
                 keyboard[localKey].Color = color;
         }
@@ -538,13 +537,13 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.N):
                     return CorsairLedId.N;
                 case (DeviceKeys.M):
-                        return CorsairLedId.M;
+                    return CorsairLedId.M;
                 case (DeviceKeys.COMMA):
-                        return CorsairLedId.CommaAndLessThan;
+                    return CorsairLedId.CommaAndLessThan;
                 case (DeviceKeys.PERIOD):
-                        return CorsairLedId.PeriodAndBiggerThan;
+                    return CorsairLedId.PeriodAndBiggerThan;
                 case (DeviceKeys.FORWARD_SLASH):
-                        return CorsairLedId.SlashAndQuestionMark;
+                    return CorsairLedId.SlashAndQuestionMark;
                 case (DeviceKeys.OEM8):
                     return CorsairLedId.SlashAndQuestionMark;
                 case (DeviceKeys.RIGHT_SHIFT):

@@ -90,6 +90,9 @@ namespace Aurora.Settings
 
         public Dictionary<DeviceKeys, KeyboardKey> key_modifications = new Dictionary<DeviceKeys, KeyboardKey>();
 
+        [JsonProperty("key_conversion")]
+        public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
+
         /// <summary>
         /// A list of paths for each included group json
         /// </summary>
@@ -116,6 +119,9 @@ namespace Aurora.Settings
         private Rectangle _region_bitmap = new Rectangle(0, 0, 0, 0);
 
         public Rectangle BitmapRegion { get { return _region_bitmap; } }
+
+        [JsonProperty("key_conversion")]
+        public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
 
         public VirtualGroup()
         {
@@ -600,6 +606,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_x.json");
                 else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_TE)
                     layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_te.json");
+                else if (keyboard_preference == PreferredKeyboard.Razer_Blade)
+                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blade.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
@@ -624,6 +632,15 @@ namespace Aurora.Settings
                     virtualKeyboardGroup.AdjustKeys(layoutConfig.key_modifications);
                     virtualKeyboardGroup.RemoveKeys(layoutConfig.keys_to_remove);
 
+                    if (layoutConfig.KeyConversion != null)
+                    {
+                        foreach (var key in layoutConfig.KeyConversion)
+                        {
+                            if (!this.LayoutKeyConversion.ContainsKey(key.Key))
+                                this.LayoutKeyConversion.Add(key.Key, key.Value);
+                        }
+                    }
+
                     foreach (string feature in layoutConfig.included_features)
                     {
                         string feature_path = Path.Combine(layoutsPath, "Extra Features", feature);
@@ -634,6 +651,14 @@ namespace Aurora.Settings
                             VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
                             virtualKeyboardGroup.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
+                            if (feature_config.KeyConversion != null)
+                            {
+                                foreach (var key in feature_config.KeyConversion)
+                                {
+                                    if (!this.LayoutKeyConversion.ContainsKey(key.Key))
+                                        this.LayoutKeyConversion.Add(key.Key, key.Value);
+                                }
+                            }
                         }
                     }
 
@@ -718,7 +743,7 @@ namespace Aurora.Settings
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Global.logger.LogLine(e.ToString());
             }
 
             //Perform end of load functions

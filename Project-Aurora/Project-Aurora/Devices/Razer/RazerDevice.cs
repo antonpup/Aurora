@@ -3,16 +3,21 @@ using Corale.Colore.Razer.Keyboard;
 using System;
 using System.Collections.Generic;
 using Aurora.Settings;
+using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
 
 namespace Aurora.Devices.Razer
 {
     class RazerDevice : Device
     {
+        
+
         private String devicename = "Razer";
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
         private bool peripheral_updated = false;
+        private KeyboardCustom grid = KeyboardCustom.Create();
+        //private bool bladeLayout = true;
 
         IKeyboard keyboard = null;
         IMouse mouse = null;
@@ -76,6 +81,10 @@ namespace Aurora.Devices.Razer
                         }
                         else
                         {
+
+                            /*if (Chroma.Instance.Query(Corale.Colore.Razer.Devices.BladeStealth).Connected || Chroma.Instance.Query(Corale.Colore.Razer.Devices.Blade14).Connected)
+                                bladeLayout = true;*/
+
                             if (Global.Configuration.razer_first_time)
                             {
                                 RazerInstallInstructions instructions = new RazerInstallInstructions();
@@ -146,26 +155,41 @@ namespace Aurora.Devices.Razer
             throw new NotImplementedException();
         }
 
+        private int[] GetKeyCoord(DeviceKeys key)
+        {
+            Dictionary<DeviceKeys, int[]> layout = RazerLayoutMap.GenericKeyboard;
+
+            if (Global.Configuration.keyboard_brand == PreferredKeyboard.Razer_Blade)
+                layout = RazerLayoutMap.Blade;
+
+            if (layout.ContainsKey(key))
+                return layout[key];
+
+            return null;
+        }
+
         public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, bool forced = false)
         {
-            Key keyindex = Key.Invalid;
-
             try
             {
                 foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
                 {
-                    Key localKey = ToRazer(key.Key);
+                    //Key localKey = ToRazer(key.Key);
 
-                    if (localKey == Key.Invalid && key.Key == DeviceKeys.Peripheral_Logo || localKey == Key.Invalid && key.Key == DeviceKeys.Peripheral)
+                    int[] coord = null;
+                    if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(key.Value, forced);
                     }
-                    else if (localKey != Key.Invalid)
+                    else if ((coord = GetKeyCoord(key.Key))!= null)
                     {
+                        SetOneKey(coord, key.Value);
+                    }
+                    else
+                    {
+                        Key localKey = ToRazer(key.Key);
                         SetOneKey(localKey, key.Value);
                     }
-
-                    keyindex = localKey;
                 }
 
                 SendColorsToKeyboard(forced);
@@ -195,14 +219,31 @@ namespace Aurora.Devices.Razer
         {
             if (keyboard != null && !Global.Configuration.devices_disable_keyboard)
             {
+                keyboard.SetCustom(grid);
                 keyboard_updated = true;
             }
         }
 
-        private void SetOneKey(Key localKey, System.Drawing.Color color)
+        private void SetOneKey(int[] coords, System.Drawing.Color color)
         {
-            if (keyboard != null && keyboard[localKey] != null && !Global.Configuration.devices_disable_keyboard)
-                keyboard.SetKey(localKey, new Color(color.R, color.G, color.B));
+            if (!Global.Configuration.devices_disable_keyboard)
+                grid[coords[0], coords[1]] = new Color(color.R, color.G, color.B);
+        }
+
+        private void SetOneKey(Key key, System.Drawing.Color color)
+        {
+            if (key == Key.Invalid)
+                return;
+
+            try
+            {
+                if (!Global.Configuration.devices_disable_keyboard)
+                    grid[key] = new Color(color.R, color.G, color.B);
+            }
+            catch(Exception exc)
+            {
+
+            }
         }
 
         private void SendColorToPeripheral(System.Drawing.Color color, bool forced = false)

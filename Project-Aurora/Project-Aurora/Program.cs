@@ -405,8 +405,8 @@ namespace Aurora
 
             Global.logger.Dispose();
 
-            Environment.Exit(0);
-            //Process.GetCurrentProcess().Kill();
+            //Environment.Exit(0);
+            Process.GetCurrentProcess().Kill();
             //System.Windows.Application.Current.Shutdown();
         }
 
