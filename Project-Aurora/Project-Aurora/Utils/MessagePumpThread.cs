@@ -54,7 +54,7 @@ namespace Aurora
 				if (applicationContext != null)
 				{
 					applicationContext.ExitThread();
-					thread.Join();
+					thread.Join(TimeSpan.Zero);
 					applicationContext.Dispose();
 				}
 			}
