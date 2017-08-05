@@ -498,7 +498,8 @@ namespace Aurora.Profiles
 
             UpdateProcess();
 
-            string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
+            string raw_process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath);
+            string process_name = raw_process_name.ToLowerInvariant();
 
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
@@ -511,18 +512,17 @@ namespace Aurora.Profiles
             ILightEvent tempProfile = null;
             bool preview = false;
             //Global.logger.LogLine(process_name);
-            if (!Global.Configuration.excluded_programs.Contains(process_name)) {
-                //TODO: GetProfile that checks based on event type
-                if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                    profile = tempProfile;
-                else if ((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
-                {
-                    profile = tempProfile;
-                    preview = true;
-                }
-                else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.Config.ProcessNames.Contains(process_name) && tempProfile.IsEnabled)
-                    profile = tempProfile;
+            
+            //TODO: GetProfile that checks based on event type
+            if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+                profile = tempProfile;
+            else if ((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
+            {
+                profile = tempProfile;
+                preview = true;
             }
+            else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.Config.ProcessNames.Contains(process_name) && tempProfile.IsEnabled)
+                profile = tempProfile;
 
             profile = profile ?? DesktopProfile;
 
@@ -541,7 +541,7 @@ namespace Aurora.Profiles
                 }
             }
 
-            if (profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled)
+            if ((profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
                 Global.dev_manager.Shutdown();
                 Global.effengine.PushFrame(newFrame);
