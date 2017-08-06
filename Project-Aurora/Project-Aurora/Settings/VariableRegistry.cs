@@ -53,8 +53,11 @@ namespace Aurora.Settings
             this.Remark = variableRegistryItem.Remark;
             this.Min = variableRegistryItem.Min;
             this.Max = variableRegistryItem.Max;
-
-            if (this.Value == null || variableRegistryItem.Default.GetType() != this.Value.GetType())
+            Type typ = this.Value.GetType();
+            Type defaultType = variableRegistryItem.Default.GetType();
+            if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
+                this.Value = Convert.ChangeType(this.Value, defaultType);
+            else if (this.Value == null && !defaultType.Equals(typ))
                 this.Value = variableRegistryItem.Default;
         }
     }

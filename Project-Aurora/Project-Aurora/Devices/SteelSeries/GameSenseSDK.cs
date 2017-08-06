@@ -52,6 +52,10 @@ namespace SteelSeries.GameSenseSDK
 
         public void init(String sseGameName, String sseGameDisplayname, byte iconColorID)
         {
+
+            if (!File.Exists(COREPROPS_JSON_PATH))
+                throw new FileNotFoundException($"Core Props file could not be found at \"{COREPROPS_JSON_PATH}\"");
+
             // read %PROGRAMDATA%/SteelSeries/SteelSeries Engine 3/coreProps.json
             SSECorePropsJSON coreProps = JsonConvert.DeserializeObject<SSECorePropsJSON>(File.ReadAllText(@COREPROPS_JSON_PATH));
             sseAddress = coreProps.address;
