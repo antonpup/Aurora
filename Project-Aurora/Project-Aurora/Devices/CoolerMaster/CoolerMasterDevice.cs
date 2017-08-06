@@ -386,6 +386,12 @@ namespace Aurora.Devices.CoolerMaster
             if (Global.Configuration.devices_disable_keyboard)
                 return;
 
+            List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
+            if (devices.Count > 0)
+                SwitchToDevice(devices.First());
+            else
+                return;
+
             color_matrix.KeyColor = key_colors;
             CoolerMasterSDK.SetAllLedColor(color_matrix);
             //previous_key_colors = key_colors;
@@ -415,25 +421,17 @@ namespace Aurora.Devices.CoolerMaster
                     if (dev_key == DeviceKeys.ENTER && Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us)
                         dev_key = DeviceKeys.BACKSLASH;
 
-                    //Move this to the SendColorsToKeyboard and SendColorsToMouse as they do not need to be set on every key, they only need to be directed to the correct method for setting key/light
                     if (Effects.possible_peripheral_keys.Contains(key.Key))
                     {
-                        List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
+                        //Temp until mice support is added
+                        continue;
+                        
+                        //Move this to the SendColorsToMouse as they do not need to be set on every key, they only need to be directed to the correct method for setting key/light
+                        /*List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
                         if (devices.Count > 0)
                             SwitchToDevice(devices.First());
                         else
-                            return false;
-
-                        //temp
-                        return false;
-                    }
-                    else
-                    {
-                        List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
-                        if (devices.Count > 0)
-                            SwitchToDevice(devices.First());
-                        else
-                            return false;
+                            return false;*/
                     }
 
                     var coords = CoolerMasterKeys.KeyCoords;
