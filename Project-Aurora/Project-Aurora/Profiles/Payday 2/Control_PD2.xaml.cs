@@ -175,5 +175,10 @@ namespace Aurora.Profiles.Payday_2
                 profile_manager.SaveProfiles();
             }
         }
+
+        private void get_lib_button_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(@"https://github.com/simon-wh/PAYDAY-2-BeardLib"));
+        }
     }
 }

@@ -69,9 +69,10 @@
         <TabControl>
             <TabItem Header="Overview for Payday 2">
                 <Grid>
-                    <TextBlock Margin="10,30,0,0" Text="In order for Payday 2 support to work, you have to install the BLT Lua hook and the GSI mod for Payday 2. Press the &quot;Get BLT Hook&quot; button to be taken to the BLT download page. Afterwards, you can press &quot;Install GSI for Payday 2&quot; to automatically install the GSI mod. (You need to have the BLT hook for GSI mod to function)" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"/>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="In order for Payday 2 support to work, you have to install the BLT Lua hook"/><Run Text=", BeardLib"/><Run Text=" and the GSI mod for Payday 2. Press the &quot;Get BLT Hook&quot; button to be taken to the BLT download page"/><Run Text=". Press the &quot;Get"/><Run Text=" BeardLib"/><Run Text="&quot;"/><Run Text=" button to be taken to its github page where it can be downloaded"/><Run Text=". Afterwards, you can press &quot;Install GSI for Payday 2&quot; to automatically install the GSI mod. (You need to have the BLT hook for GSI mod to function)"/></TextBlock>
                     <Button x:Name="get_hook_button" Content="Get BLT Hook" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" Click="get_hook_button_Click"/>
-                    <Button x:Name="install_mod_button" Content="Install GSI for Payday 2" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Click="install_mod_button_Click"/>
+                    <Button x:Name="get_lib_button" Content="Get BeardLib" HorizontalAlignment="Left" Margin="91,83,0,0" VerticalAlignment="Top" Click="get_lib_button_Click"/>
+                    <Button x:Name="install_mod_button" Content="Install GSI for Payday 2" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Click="install_mod_button_Click" Width="153"/>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Payday 2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
                 </Grid>
             </TabItem>
