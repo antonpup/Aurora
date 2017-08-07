@@ -222,7 +222,7 @@ The Talos Principle features
 
 * Q: Are you open to doing collaborations with other RGB projects or game companies?
 
-   A: Definitely! If you have a project that you think can fit Aurora, feel free to send me an e-mail, iamnotaspy[at]lastbullet.net.
+   A: Definitely! If you have a project that you think can fit Aurora, feel free to send me an e-mail.
 
 * Q: I would like to request support for a game, how do I do that?
 
