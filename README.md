@@ -54,6 +54,7 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * Guild Wars 2
 * Worms W.M.D
 * Blade and Soul
+* Borderlands 2
 
 ## Natively Supported Devices
 * Logitech
@@ -62,9 +63,9 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * Clevo
 * Cooler Master
 * AtmoOrb
+* SteelSeries devices
 
 ## Planned Features/Support
-* SteelSeries devices
 * LightFX devices
 * LightPack
 * Hearthstone
@@ -138,8 +139,6 @@ Dota 2 features
 * Health and Mana indicators
 * Ability and Item indicators
 * Hero ability effects
-* Layering system
-* Rearrange and add general layers
 
 CS:GO features
 
@@ -149,63 +148,47 @@ CS:GO features
 * Kill indicators
 * Burning and Flashbang effects
 * Chat/Console typing keys
-* Layering system
-* Rearrange and add general layers
 
 Grand Theft Auto V features
 
 * Dynamic background lighting (based on current character or race position)
 * Custom police siren effects
-* Layering system
-* Rearrange and add general layers
 
 Rocket League features
 
 * Team-based background lighting
 * Score-split for background effect
 * Boost indicator
-* Layering system
-* Rearrange and add general layers
 
 Overwatch features
 
 * Overwatch effects are controlled by the game itself
-* Layering system
-* Rearrange and add general layers
 
 Payday 2 features
 
 * Assault-based background lighting effects
 * Suspicion background effect
 * Player health and ammo indicators
-* Layering system
-* Rearrange and add general layers
 
 The Division features
 
 * The Division effects are controlled by the game itself
-* Layering system
-* Rearrange and add general layers
 
 League of Legends features
 
 * League of Legends reacts to player HP, when damaged, healed, or killed.
-* Layering system
-* Rearrange and add general layers
 
 Hotline Miami features
 
 * Hotline Miami has a slowly alternating color effect.
-* Layering system
-* Rearrange and add general layers
 
 The Talos Principle features
 
 * The Talos Principle changes color based on the puzzle color you are in.
-* Layering system
-* Rearrange and add general layers
 
+Borderlands 2 features
 
+* Health and Shield indicators
 
 # F.A.Q.
 * Q: Can this give me a ban in a video game?
