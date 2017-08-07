@@ -249,12 +249,24 @@ The Talos Principle features
    A: The main goal of Aurora is to allow RGB peripheral devices to work alongside other RGB peripheral devices from other brands. Meaning, if you own a combination of Logitech, Razer, or Corsair peripheral devices, they should be able to work together.
 
    Secondary goal of Aurora is to integrate RGB lighting into popular games. RGB lighting is a nifty feature that is often underused, and as a result gamers with RGB gear are unable to utilize the lighting effects that they paid for.
+
    
+# Development Team
+* [AntonPup](https://github.com/antonpup) Owner, Lead Developer (until May 2017)
+* [Simon-Wh](https://github.com/simon-wh) Lead Developer (since May 2017), Developer (July 2016 - May 2017)
+
+
 # Donations
 If you want to help this project rapidly grow, you can donate via PayPal to help me further develop Aurora. While being a university student, Aurora does not take my monetary priority. Games and RGB hardware are not cheap, and as a result, support for not owned products will take more time to develop. The donations will be used to purchase hardware and video games with intent to add support for them with Aurora. Alternatively you can gift games directly to me via Steam.
 
 I do not have any intent in charging money for Aurora, it will always be a free and open source project. 
 
+## Simon-Wh
+| PayPal | Steam |
+| ------ | ----- |
+| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/SimonWhyte) | [![](http://steamsignature.com/status/default/76561198044898225.png)](http://steamcommunity.com/id/SimonWhyte) |
+
+## AntonPup
 | PayPal | Steam |
 | ------ | ----- |
 | [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=pupant%40gmail%2ecom&lc=US&item_name=Aurora%20Development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted) | [![](http://steamsignature.com/status/english/76561198025451421.png)](http://steamcommunity.com/id/pupant/) |
@@ -271,12 +283,17 @@ I do not have any intent in charging money for Aurora, it will always be a free 
 * [Infragistics.Themes.MetroDark.Wpf](http://www.infragistics.com/community/blogs/blagunas/archive/2013/05/25/free-metro-light-and-dark-themes-for-wpf-and-silverlight-microsoft-controls.aspx) - Used as a base theme
 * [Elysium](https://elysium.codeplex.com/) - Used parts of this theme
 * [LogiLed2Corsair](https://github.com/VRocker/LogiLed2Corsair) - Used as a resource for Wrappers
-* [GSI for Payday 2](https://github.com/Last-Bullet-Development/PD2GSI) - A GSI mod for Payday 2
+* [GSI for Payday 2](https://github.com/simon-wh/PAYDAY-2-GSI) - A GSI mod for Payday 2
 * [LightFX Extender](https://github.com/Archomeda/lightfx-extender) - A LightFX wrapped by a friend of mine, used as a resource for LightFX Wrapper.
 * [ColorBox](http://colorbox.codeplex.com/) - Used for gradient editor/picker. This repo contains a modified version of ColorBox, to suit Aurora's needs a bit more.
+* [SharpDX](http://sharpdx.org/) - Used for Raw Input for nonblocking input reading for key binds and interactive effects
 
 
-# Special thanks to the testing team:
+# Special thanks to these people:
+## Contributions
+Thanks to all the brilliant people that made contributions to this project. See everyone [here](https://github.com/antonpup/Aurora/graphs/contributors)
+
+## Testing
 * Casper
 * dirty_thomas
 * Dustmuffins
