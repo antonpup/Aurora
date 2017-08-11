@@ -51,7 +51,7 @@ namespace Aurora
         /// <summary>
         /// Output logger for errors, warnings, and information
         /// </summary>
-        public static Logger logger = new Logger();
+        public static Logger logger;
 
         /// <summary>
         /// Input event subscriptions
@@ -76,6 +76,11 @@ namespace Aurora
         public static object Clipboard { get; set; }
 
         public static long StartTime;
+
+        public static void Initialize()
+        {
+            logger = new Logger();
+        }
     }
 
     static class Program
@@ -95,11 +100,10 @@ namespace Aurora
         {
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
-
 #if DEBUG
                 Global.isDebug = true;
 #endif
-
+                Global.Initialize();
                 string arg = "";
 
                 for (int arg_i = 0; arg_i < args.Length; arg_i++)
