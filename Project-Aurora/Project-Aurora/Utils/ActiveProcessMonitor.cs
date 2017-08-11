@@ -45,13 +45,7 @@ namespace Aurora.Utils
         {
             if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.WindowsEvents)
             {
-                string active_process = GetActiveWindowsProcessname();
-
-                if (!String.IsNullOrWhiteSpace(active_process))
-                {
-                    ProcessPath = active_process;
-                    //Global.logger.LogLine("Process changed: " + process_path, Logging_Level.Info);
-                }
+                GetActiveWindowsProcessname();
             }
         }
 
@@ -73,7 +67,15 @@ namespace Aurora.Utils
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         static extern uint GetModuleFileNameExW(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
 
-        public string GetActiveWindowsProcessname()
+        public void GetActiveWindowsProcessname()
+        {
+            string active_process = getActiveWindowsProcessname();
+
+            if (!String.IsNullOrWhiteSpace(active_process))
+                ProcessPath = active_process;
+        }
+
+        private string getActiveWindowsProcessname()
         {
             IntPtr windowHandle = IntPtr.Zero;
 
