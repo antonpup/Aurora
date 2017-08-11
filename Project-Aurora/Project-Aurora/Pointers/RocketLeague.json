@@ -5,13 +5,13 @@
   },
 
   "Orange_score": {
-    "baseAddress": "23406064",
-    "pointers": [ "84", "792", "1116", "4", "496" ]
+    "baseAddress": "26469792",
+    "pointers": [ "524" ]
   },
 
   "Blue_score": {
-    "baseAddress": "23406064",
-    "pointers": [ "84", "792", "1116", "0", "496" ]
+   "baseAddress": "26463496",
+    "pointers": [ "552", "524" ]
   },
 
   "Boost_amount": {
