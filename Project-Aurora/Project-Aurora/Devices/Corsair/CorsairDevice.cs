@@ -403,7 +403,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.PAUSE_BREAK):
                     return CorsairLedId.PauseBreak;
                 case (DeviceKeys.TILDE):
-                        return CorsairLedId.GraveAccentAndTilde;
+                    return CorsairLedId.GraveAccentAndTilde;
                 case (DeviceKeys.ONE):
                     return CorsairLedId.D1;
                 case (DeviceKeys.TWO):
@@ -447,9 +447,9 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.TAB):
                     return CorsairLedId.Tab;
                 case (DeviceKeys.Q):
-                        return CorsairLedId.Q;
+                    return CorsairLedId.Q;
                 case (DeviceKeys.W):
-                        return CorsairLedId.W;
+                    return CorsairLedId.W;
                 case (DeviceKeys.E):
                     return CorsairLedId.E;
                 case (DeviceKeys.R):
@@ -457,7 +457,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.T):
                     return CorsairLedId.T;
                 case (DeviceKeys.Y):
-                        return CorsairLedId.Y;
+                    return CorsairLedId.Y;
                 case (DeviceKeys.U):
                     return CorsairLedId.U;
                 case (DeviceKeys.I):
@@ -467,11 +467,11 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.P):
                     return CorsairLedId.P;
                 case (DeviceKeys.OPEN_BRACKET):
-                        return CorsairLedId.BracketLeft;
+                    return CorsairLedId.BracketLeft;
                 case (DeviceKeys.CLOSE_BRACKET):
-                        return CorsairLedId.BracketRight;
+                    return CorsairLedId.BracketRight;
                 case (DeviceKeys.BACKSLASH):
-                        return CorsairLedId.Backslash;
+                    return CorsairLedId.Backslash;
                 case (DeviceKeys.DELETE):
                     return CorsairLedId.Delete;
                 case (DeviceKeys.END):
@@ -489,7 +489,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.CAPS_LOCK):
                     return CorsairLedId.CapsLock;
                 case (DeviceKeys.A):
-                        return CorsairLedId.A;
+                    return CorsairLedId.A;
                 case (DeviceKeys.S):
                     return CorsairLedId.S;
                 case (DeviceKeys.D):
@@ -507,9 +507,9 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.L):
                     return CorsairLedId.L;
                 case (DeviceKeys.SEMICOLON):
-                        return CorsairLedId.SemicolonAndColon;
+                    return CorsairLedId.SemicolonAndColon;
                 case (DeviceKeys.APOSTROPHE):
-                        return  CorsairLedId.ApostropheAndDoubleQuote;
+                    return  CorsairLedId.ApostropheAndDoubleQuote;
                 case (DeviceKeys.HASHTAG):
                     return CorsairLedId.NonUsTilde;
                 case (DeviceKeys.ENTER):
@@ -525,7 +525,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.BACKSLASH_UK):
                     return CorsairLedId.NonUsBackslash;
                 case (DeviceKeys.Z):
-                        return CorsairLedId.Z;
+                    return CorsairLedId.Z;
                 case (DeviceKeys.X):
                     return CorsairLedId.X;
                 case (DeviceKeys.C):
@@ -622,6 +622,44 @@ namespace Aurora.Devices.Corsair
                     return CorsairLedId.G17;
                 case (DeviceKeys.G18):
                     return CorsairLedId.G18;
+                case (DeviceKeys.ADDITIONALLIGHT1):
+                    return CorsairLedId.Lightbar1;
+                case (DeviceKeys.ADDITIONALLIGHT2):
+                    return CorsairLedId.Lightbar2;
+                case (DeviceKeys.ADDITIONALLIGHT3):
+                    return CorsairLedId.Lightbar3;
+                case (DeviceKeys.ADDITIONALLIGHT4):
+                    return CorsairLedId.Lightbar4;
+                case (DeviceKeys.ADDITIONALLIGHT5):
+                    return CorsairLedId.Lightbar5;
+                case (DeviceKeys.ADDITIONALLIGHT6):
+                    return CorsairLedId.Lightbar6;
+                case (DeviceKeys.ADDITIONALLIGHT7):
+                    return CorsairLedId.Lightbar7;
+                case (DeviceKeys.ADDITIONALLIGHT8):
+                    return CorsairLedId.Lightbar8;
+                case (DeviceKeys.ADDITIONALLIGHT9):
+                    return CorsairLedId.Lightbar9;
+                case (DeviceKeys.ADDITIONALLIGHT10):
+                    return CorsairLedId.Lightbar10;
+                case (DeviceKeys.ADDITIONALLIGHT11):
+                    return CorsairLedId.Lightbar11;
+                case (DeviceKeys.ADDITIONALLIGHT12):
+                    return CorsairLedId.Lightbar12;
+                case (DeviceKeys.ADDITIONALLIGHT13):
+                    return CorsairLedId.Lightbar13;
+                case (DeviceKeys.ADDITIONALLIGHT14):
+                    return CorsairLedId.Lightbar14;
+                case (DeviceKeys.ADDITIONALLIGHT15):
+                    return CorsairLedId.Lightbar15;
+                case (DeviceKeys.ADDITIONALLIGHT16):
+                    return CorsairLedId.Lightbar16;
+                case (DeviceKeys.ADDITIONALLIGHT17):
+                    return CorsairLedId.Lightbar17;
+                case (DeviceKeys.ADDITIONALLIGHT18):
+                    return CorsairLedId.Lightbar18;
+                case (DeviceKeys.ADDITIONALLIGHT19):
+                    return CorsairLedId.Lightbar19;
                 default:
                     return CorsairLedId.Invalid;
             }
