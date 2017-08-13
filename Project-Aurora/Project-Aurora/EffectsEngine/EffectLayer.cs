@@ -962,6 +962,7 @@ namespace Aurora.EffectsEngine
 
                     g.Transform = myMatrix;
                     LinearGradientBrush brush = spectrum.ToLinearGradient(width, 0, x_pos, 0, flash_amount);
+					brush.WrapMode = WrapMode.Tile;
                     g.FillRectangle(brush, rect);
                 }
 
