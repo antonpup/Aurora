@@ -412,14 +412,18 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="formsKeys">Array of Forms.Keys to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys[] GetDeviceKeys(Keys[] formsKeys)
+        public static DeviceKeys[] GetDeviceKeys(Keys[] formsKeys, bool extendedKeys = false, bool getBoth = false)
         {
-            DeviceKeys[] _returnKeys = new DeviceKeys[formsKeys.Length];
+            HashSet<DeviceKeys> _returnKeys = new HashSet<DeviceKeys>();
 
             for (int i = 0; i < formsKeys.Length; i++)
-                _returnKeys[i] = GetDeviceKey(formsKeys[i]);
+            {
+                _returnKeys.Add(GetDeviceKey(formsKeys[i], 0, extendedKeys));
+                if (getBoth)
+                    _returnKeys.Add(GetDeviceKey(formsKeys[i], 0, !extendedKeys));
+            }
 
-            return _returnKeys;
+            return _returnKeys.ToArray();
         }
 
         /// <summary>
