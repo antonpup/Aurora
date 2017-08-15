@@ -499,7 +499,7 @@ namespace Aurora.Profiles
             UpdateProcess();
 
             string raw_process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath);
-            string process_name = raw_process_name.ToLowerInvariant();
+            string process_name = raw_process_name.ToLower();
 
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
