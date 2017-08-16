@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using SharpDX.RawInput;
+using System.Reflection;
 
 namespace Aurora
 {
