@@ -104,6 +104,8 @@ namespace Aurora
                 Global.isDebug = true;
 #endif
                 Global.Initialize();
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
                 string arg = "";
 
                 for (int arg_i = 0; arg_i < args.Length; arg_i++)
