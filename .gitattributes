@@ -1,7 +1,7 @@
 ###############################################################################
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
-* text=auto
+#* text=auto
 
 ###############################################################################
 # Set the merge driver for project and solution files
@@ -53,7 +53,7 @@
 #*.vcxitems  merge=binary
 
 #CSharp
-*.cs     diff=csharp
+*.cs text eol=crlf diff=csharp
 
 #CPP
 #sources
