@@ -189,11 +189,13 @@ namespace Aurora.Profiles
         {
             if (profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
             {
-                if (Profile.Equals(profile))
-                    SwitchToProfile(Profiles[Math.Max(Profiles.IndexOf(profile) -1, 0)]);
+                int profileIndex = Profiles.IndexOf(profile);
 
                 if (Profiles.Contains(profile))
                     Profiles.Remove(profile);
+
+                if (Profile.Equals(profile))
+                    SwitchToProfile(Profiles[Math.Max(profileIndex, 0)]);
 
                 if (File.Exists(profile.ProfileFilepath))
                 {
