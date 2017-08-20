@@ -9,6 +9,6 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_Flashbang" Margin="93,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="151" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Flashbang_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Flashbang Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Flashbang Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
     </Grid>
 </UserControl>

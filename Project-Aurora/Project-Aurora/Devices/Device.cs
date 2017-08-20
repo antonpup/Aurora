@@ -1000,6 +1000,42 @@ namespace Aurora.Devices
         ADDITIONALLIGHT10 = 151,
 
         /// <summary>
+        /// Additional Light 11
+        /// </summary>
+        [Description("Additional Light 11")]
+        ADDITIONALLIGHT11 = 152,
+
+        /// <summary>
+        /// Additional Light 12
+        /// </summary>
+        [Description("Additional Light 12")]
+        ADDITIONALLIGHT12 = 153,
+
+        /// <summary>
+        /// Additional Light 13
+        /// </summary>
+        [Description("Additional Light 13")]
+        ADDITIONALLIGHT13 = 154,
+
+        /// <summary>
+        /// Additional Light 14
+        /// </summary>
+        [Description("Additional Light 14")]
+        ADDITIONALLIGHT14 = 155,
+
+        /// <summary>
+        /// Additional Light 15
+        /// </summary>
+        [Description("Additional Light 15")]
+        ADDITIONALLIGHT15 = 156,
+
+        /// <summary>
+        /// Additional Light 16
+        /// </summary>
+        [Description("Additional Light 16")]
+        ADDITIONALLIGHT16 = 157,
+
+        /// <summary>
         /// Peripheral Logo
         /// </summary>
         [Description("Peripheral Logo")]
@@ -1052,6 +1088,41 @@ namespace Aurora.Devices
         /// </summary>
         [Description("Profile Key 6")]
         Profile_Key6 = 168,
+
+        /// Numpad 00
+        /// </summary>
+        [Description("Numpad 00")]
+        NUM_ZEROZERO = 169,
+
+        /// <summary>
+        /// Macrokey 0 key
+        /// </summary>
+        [Description("G0")]
+        G0 = 170,
+
+        /// <summary>
+        /// Macrokey 0 key
+        /// </summary>
+        [Description("Left FN")]
+        LEFT_FN = 171,
+
+        /// <summary>
+        /// Additional Light 17
+        /// </summary>
+        [Description("Additional Light 17")]
+        ADDITIONALLIGHT17 = 172,
+
+        /// <summary>
+        /// Additional Light 18
+        /// </summary>
+        [Description("Additional Light 18")]
+        ADDITIONALLIGHT18 = 173,
+
+        /// <summary>
+        /// Additional Light 19
+        /// </summary>
+        [Description("Additional Light 19")]
+        ADDITIONALLIGHT19 = 174,
 
         /// <summary>
         /// None

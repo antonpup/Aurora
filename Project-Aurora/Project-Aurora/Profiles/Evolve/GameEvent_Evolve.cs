@@ -10,11 +10,5 @@ namespace Aurora.Profiles.Evolve
         public GameEvent_Evolve()
         {
         }
-
-        protected override void UpdateExtraLights(Queue<EffectLayer> layers)
-        {
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Evolve - Color Zones").DrawColorZones((this.Application.Profile as EvolveProfile).lighting_areas.ToArray()));
-        }
     }
 }

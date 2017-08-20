@@ -36,8 +36,12 @@ namespace Aurora.Utils
                 case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]":
                     return typeof(Dictionary<Devices.DeviceKeys, System.Drawing.Color>);
                     //Resolve typo'd AbilityLayerHandler type
-                case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler, Aurora":
+                case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler":
                     return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
+                case "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandler":
+                    return typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandler);
+                case "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandlerProperties":
+                    return typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandlerProperties);
                 case "Aurora.Profiles.TheDivision.TheDivisionSettings":
                     return typeof(Settings.ApplicationProfile);
                 default:

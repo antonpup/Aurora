@@ -9,8 +9,10 @@ configuration: Release
 platform: x64
 before_build:
 - cmd: >-
+    git submodule update --init --recursive
+    
     cd Project-Aurora
-
+    
     nuget restore
 
 build:

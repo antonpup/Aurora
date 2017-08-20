@@ -10,11 +10,5 @@ namespace Aurora.Profiles.Serious_Sam_3
         public GameEvent_SSam3()
         {
         }
-
-        protected override void UpdateExtraLights(Queue<EffectLayer> layers)
-        {
-            //ColorZones
-            layers.Enqueue(new EffectLayer("SSam3 - Color Zones").DrawColorZones((this.Application.Profile as SSam3Profile).lighting_areas.ToArray()));
-        }
     }
 }

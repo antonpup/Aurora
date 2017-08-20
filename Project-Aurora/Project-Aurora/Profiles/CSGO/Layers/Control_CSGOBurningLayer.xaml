@@ -9,7 +9,7 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_Burning" Margin="81,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Burning_SelectedColorChanged" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Burning Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Burning Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
         <CheckBox x:Name="checkBox_Animated" Content="Animate the burning effect" HorizontalAlignment="Left" Margin="0,23,0,-13" VerticalAlignment="Top" Checked="checkBox_Animated_Checked" Unchecked="checkBox_Animated_Checked"/>
     </Grid>
 </UserControl>

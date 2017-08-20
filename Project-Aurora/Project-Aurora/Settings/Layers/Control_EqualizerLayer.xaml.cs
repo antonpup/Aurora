@@ -66,6 +66,7 @@ namespace Aurora.Settings.Layers
                 this.chkbox_dimbgonsound.IsChecked = (this.DataContext as EqualizerLayerHandler).Properties._DimBackgroundOnSound;
                 this.Clr_dim_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._DimColor ?? System.Drawing.Color.Empty);
                 this.lstbx_frequencies.ItemsSource = (this.DataContext as EqualizerLayerHandler).Properties._Frequencies;
+                this.chkbox_scale_with_system_volume.IsChecked = (this.DataContext as EqualizerLayerHandler).Properties._ScaleWithSystemVolume;
 
                 settingsset = true;
             }
@@ -141,6 +142,12 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
                 (this.DataContext as EqualizerLayerHandler).Properties._DimBackgroundOnSound = (sender as CheckBox).IsChecked.Value;
+        }
+
+        private void chkbox_scale_with_system_sound_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+                (this.DataContext as EqualizerLayerHandler).Properties._ScaleWithSystemVolume = (sender as CheckBox).IsChecked.Value;
         }
 
         private void Clr_dim_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

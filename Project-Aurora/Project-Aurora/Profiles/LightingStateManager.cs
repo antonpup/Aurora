@@ -60,11 +60,13 @@ namespace Aurora.Profiles
     }
 
     public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit
-    {        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
+    {
+        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
 
         public Desktop.Desktop DesktopProfile { get { return (Desktop.Desktop)Events["desktop"]; } }
 
-        private List<string> Underlays = new List<string>();        private List<string> Normal = new List<string>();
+        private List<string> Underlays = new List<string>();
+        private List<string> Normal = new List<string>();
         private List<string> Overlays = new List<string>();
 
         private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
@@ -100,6 +102,7 @@ namespace Aurora.Profiles
                 new CSGO.CSGO(),
                 new GTA5.GTA5(),
                 new RocketLeague.RocketLeague(),
+                new Borderlands2.Borderlands2(),
                 new Overwatch.Overwatch(),
                 new Payday_2.PD2(),
                 new TheDivision.TheDivision(),
@@ -201,7 +204,8 @@ namespace Aurora.Profiles
         {
             SaveSettings();
 
-            foreach(var profile in Events)            {
+            foreach(var profile in Events)
+            {
                 if (profile.Value is Application)
                     ((Application)profile.Value).SaveAll();
             }
@@ -494,7 +498,8 @@ namespace Aurora.Profiles
 
             UpdateProcess();
 
-            string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
+            string raw_process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath);
+            string process_name = raw_process_name.ToLower();
 
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
@@ -507,18 +512,17 @@ namespace Aurora.Profiles
             ILightEvent tempProfile = null;
             bool preview = false;
             //Global.logger.LogLine(process_name);
-            if (!Global.Configuration.excluded_programs.Contains(process_name)) {
-                //TODO: GetProfile that checks based on event type
-                if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                    profile = tempProfile;
-                else if ((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
-                {
-                    profile = tempProfile;
-                    preview = true;
-                }
-                else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.Config.ProcessNames.Contains(process_name) && tempProfile.IsEnabled)
-                    profile = tempProfile;
+            
+            //TODO: GetProfile that checks based on event type
+            if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+                profile = tempProfile;
+            else if ((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
+            {
+                profile = tempProfile;
+                preview = true;
             }
+            else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.Config.ProcessNames.Contains(process_name) && tempProfile.IsEnabled)
+                profile = tempProfile;
 
             profile = profile ?? DesktopProfile;
 
@@ -537,7 +541,7 @@ namespace Aurora.Profiles
                 }
             }
 
-            if (profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled)
+            if ((profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
                 Global.dev_manager.Shutdown();
                 Global.effengine.PushFrame(newFrame);
@@ -592,7 +596,7 @@ namespace Aurora.Profiles
 
             //UpdateProcess();
 
-            string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
+            //string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
 
             //EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
@@ -605,7 +609,7 @@ namespace Aurora.Profiles
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
                 if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
-                    profile.SetGameState(gs); // (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs)
+                    profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json));
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
@@ -667,4 +671,8 @@ namespace Aurora.Profiles
 
         public void Dispose()
         {
-            updateTimer.Dispose();            updateTimer = null;        }    }}
+            updateTimer.Dispose();
+            updateTimer = null;
+        }
+    }
+}

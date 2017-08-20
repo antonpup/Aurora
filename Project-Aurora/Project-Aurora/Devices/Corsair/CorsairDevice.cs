@@ -230,7 +230,6 @@ namespace Aurora.Devices.Corsair
         {
             //Apply and strip Alpha
             color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-
             if (keyboard != null && keyboard[localKey] != null)
                 keyboard[localKey].Color = color;
         }
@@ -371,7 +370,6 @@ namespace Aurora.Devices.Corsair
                     return CorsairLedId.ScanPreviousTrack;
                 case (DeviceKeys.MEDIA_NEXT):
                     return CorsairLedId.ScanNextTrack;
-
                 case (DeviceKeys.ESC):
                     return CorsairLedId.Escape;
                 case (DeviceKeys.F1):
@@ -405,12 +403,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.PAUSE_BREAK):
                     return CorsairLedId.PauseBreak;
                 case (DeviceKeys.TILDE):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.ApostropheAndDoubleQuote;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return CorsairLedId.SemicolonAndColon;
-                    else
-                        return CorsairLedId.GraveAccentAndTilde;
+                    return CorsairLedId.GraveAccentAndTilde;
                 case (DeviceKeys.ONE):
                     return CorsairLedId.D1;
                 case (DeviceKeys.TWO):
@@ -454,15 +447,9 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.TAB):
                     return CorsairLedId.Tab;
                 case (DeviceKeys.Q):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.A;
-                    else
-                        return CorsairLedId.Q;
+                    return CorsairLedId.Q;
                 case (DeviceKeys.W):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.Z;
-                    else
-                        return CorsairLedId.W;
+                    return CorsairLedId.W;
                 case (DeviceKeys.E):
                     return CorsairLedId.E;
                 case (DeviceKeys.R):
@@ -470,12 +457,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.T):
                     return CorsairLedId.T;
                 case (DeviceKeys.Y):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return CorsairLedId.Z;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
-                        return CorsairLedId.Z;
-                    else
-                        return CorsairLedId.Y;
+                    return CorsairLedId.Y;
                 case (DeviceKeys.U):
                     return CorsairLedId.U;
                 case (DeviceKeys.I):
@@ -485,26 +467,11 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.P):
                     return CorsairLedId.P;
                 case (DeviceKeys.OPEN_BRACKET):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.MinusAndUnderscore;
-                    else
-                        return CorsairLedId.BracketLeft;
+                    return CorsairLedId.BracketLeft;
                 case (DeviceKeys.CLOSE_BRACKET):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.BracketLeft;
-                    else
-                        return CorsairLedId.BracketRight;
+                    return CorsairLedId.BracketRight;
                 case (DeviceKeys.BACKSLASH):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.intl)
-                        return CorsairLedId.NonUsTilde;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.ru)
-                        return CorsairLedId.NonUsTilde;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.NonUsTilde;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return CorsairLedId.GraveAccentAndTilde;
-                    else
-                        return CorsairLedId.Backslash;
+                    return CorsairLedId.Backslash;
                 case (DeviceKeys.DELETE):
                     return CorsairLedId.Delete;
                 case (DeviceKeys.END):
@@ -522,10 +489,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.CAPS_LOCK):
                     return CorsairLedId.CapsLock;
                 case (DeviceKeys.A):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.Q;
-                    else
-                        return CorsairLedId.A;
+                    return CorsairLedId.A;
                 case (DeviceKeys.S):
                     return CorsairLedId.S;
                 case (DeviceKeys.D):
@@ -543,17 +507,9 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.L):
                     return CorsairLedId.L;
                 case (DeviceKeys.SEMICOLON):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.BracketRight;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return CorsairLedId.BracketLeft;
-                    else
-                        return CorsairLedId.SemicolonAndColon;
+                    return CorsairLedId.SemicolonAndColon;
                 case (DeviceKeys.APOSTROPHE):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return  CorsairLedId.GraveAccentAndTilde;
-                    else
-                        return  CorsairLedId.ApostropheAndDoubleQuote;
+                    return  CorsairLedId.ApostropheAndDoubleQuote;
                 case (DeviceKeys.HASHTAG):
                     return CorsairLedId.NonUsTilde;
                 case (DeviceKeys.ENTER):
@@ -569,14 +525,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.BACKSLASH_UK):
                     return CorsairLedId.NonUsBackslash;
                 case (DeviceKeys.Z):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return CorsairLedId.Y;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.W;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
-                        return CorsairLedId.Y;
-                    else
-                        return CorsairLedId.Z;
+                    return CorsairLedId.Z;
                 case (DeviceKeys.X):
                     return CorsairLedId.X;
                 case (DeviceKeys.C):
@@ -588,25 +537,13 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.N):
                     return CorsairLedId.N;
                 case (DeviceKeys.M):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.SemicolonAndColon;
-                    else
-                        return CorsairLedId.M;
+                    return CorsairLedId.M;
                 case (DeviceKeys.COMMA):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.M;
-                    else
-                        return CorsairLedId.CommaAndLessThan;
+                    return CorsairLedId.CommaAndLessThan;
                 case (DeviceKeys.PERIOD):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.CommaAndLessThan;
-                    else
-                        return CorsairLedId.PeriodAndBiggerThan;
+                    return CorsairLedId.PeriodAndBiggerThan;
                 case (DeviceKeys.FORWARD_SLASH):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.fr)
-                        return CorsairLedId.PeriodAndBiggerThan;
-                    else
-                        return CorsairLedId.SlashAndQuestionMark;
+                    return CorsairLedId.SlashAndQuestionMark;
                 case (DeviceKeys.OEM8):
                     return CorsairLedId.SlashAndQuestionMark;
                 case (DeviceKeys.RIGHT_SHIFT):
@@ -647,10 +584,8 @@ namespace Aurora.Devices.Corsair
                     return CorsairLedId.Keypad0;
                 case (DeviceKeys.NUM_PERIOD):
                     return CorsairLedId.KeypadPeriodAndDelete;
-
                 case (DeviceKeys.FN_Key):
                     return CorsairLedId.Fn;
-
                 case (DeviceKeys.G1):
                     return CorsairLedId.G1;
                 case (DeviceKeys.G2):
@@ -687,7 +622,44 @@ namespace Aurora.Devices.Corsair
                     return CorsairLedId.G17;
                 case (DeviceKeys.G18):
                     return CorsairLedId.G18;
-
+                case (DeviceKeys.ADDITIONALLIGHT1):
+                    return CorsairLedId.Lightbar1;
+                case (DeviceKeys.ADDITIONALLIGHT2):
+                    return CorsairLedId.Lightbar2;
+                case (DeviceKeys.ADDITIONALLIGHT3):
+                    return CorsairLedId.Lightbar3;
+                case (DeviceKeys.ADDITIONALLIGHT4):
+                    return CorsairLedId.Lightbar4;
+                case (DeviceKeys.ADDITIONALLIGHT5):
+                    return CorsairLedId.Lightbar5;
+                case (DeviceKeys.ADDITIONALLIGHT6):
+                    return CorsairLedId.Lightbar6;
+                case (DeviceKeys.ADDITIONALLIGHT7):
+                    return CorsairLedId.Lightbar7;
+                case (DeviceKeys.ADDITIONALLIGHT8):
+                    return CorsairLedId.Lightbar8;
+                case (DeviceKeys.ADDITIONALLIGHT9):
+                    return CorsairLedId.Lightbar9;
+                case (DeviceKeys.ADDITIONALLIGHT10):
+                    return CorsairLedId.Lightbar10;
+                case (DeviceKeys.ADDITIONALLIGHT11):
+                    return CorsairLedId.Lightbar11;
+                case (DeviceKeys.ADDITIONALLIGHT12):
+                    return CorsairLedId.Lightbar12;
+                case (DeviceKeys.ADDITIONALLIGHT13):
+                    return CorsairLedId.Lightbar13;
+                case (DeviceKeys.ADDITIONALLIGHT14):
+                    return CorsairLedId.Lightbar14;
+                case (DeviceKeys.ADDITIONALLIGHT15):
+                    return CorsairLedId.Lightbar15;
+                case (DeviceKeys.ADDITIONALLIGHT16):
+                    return CorsairLedId.Lightbar16;
+                case (DeviceKeys.ADDITIONALLIGHT17):
+                    return CorsairLedId.Lightbar17;
+                case (DeviceKeys.ADDITIONALLIGHT18):
+                    return CorsairLedId.Lightbar18;
+                case (DeviceKeys.ADDITIONALLIGHT19):
+                    return CorsairLedId.Lightbar19;
                 default:
                     return CorsairLedId.Invalid;
             }

@@ -886,7 +886,7 @@
             </Grid.RowDefinitions>
             <Border BorderBrush="{StaticResource TransparentBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="4" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" />
             <Border x:Name="Header" Grid.Column="1" Padding="10,0,10,0" Grid.Row="0" Grid.RowSpan="2">
-              <ContentPresenter ContentSource="Header" Height="20" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+              <ContentPresenter ContentSource="Header" Height="20" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" TextBlock.Foreground="{StaticResource ForegroundBrush}"/>
             </Border>
             <ContentPresenter Grid.ColumnSpan="2" Grid.Column="1" Margin="{TemplateBinding Padding}" Grid.Row="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
             <Border Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="3">

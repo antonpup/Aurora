@@ -36,7 +36,6 @@ namespace Aurora.Profiles.Payday_2
         private void SetSettings()
         {
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Profile as PD2Profile).lighting_areas;
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
@@ -167,13 +166,9 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
+        private void get_lib_button_Click(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded)
-            {
-                (profile_manager.Profile as PD2Profile).lighting_areas = (sender as ColorZones).ColorZonesList;
-                profile_manager.SaveProfiles();
-            }
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(@"https://github.com/simon-wh/PAYDAY-2-BeardLib"));
         }
     }
 }

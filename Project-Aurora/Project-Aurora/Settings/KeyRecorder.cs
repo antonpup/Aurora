@@ -1,32 +1,37 @@
 ﻿using Aurora.Devices;
+using Gma.System.MouseKeyHook;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Utils;
+using SharpDX.RawInput;
 
 namespace Aurora.Settings
 {
-    public class KeyRecorder
+    public sealed class KeyRecorder : IDisposable
     {
-        private String recordingType = "";
+	    private readonly InputEvents inputEvents;
+	    private String recordingType = "";
         private bool isSingleKey = false;
         private List<DeviceKeys> recordedKeys = new List<DeviceKeys>();
         public delegate void RecordingFinishedHandler(DeviceKeys[] resulting_keys);
         public event RecordingFinishedHandler FinishedRecording;
 
-        public KeyRecorder()
+        public KeyRecorder(InputEvents inputEvents)
         {
-            Reset();
+	        this.inputEvents = inputEvents;
+	        Reset();
 
-            Global.input_subscriptions.KeyUp += Input_subscriptions_KeyUp;
+	        inputEvents.KeyUp += InputEventsOnKeyUp;
         }
-
-        private void Input_subscriptions_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        
+        private void InputEventsOnKeyUp(object sender, KeyboardInputEventArgs e)
         {
             if (IsRecording())
             {
-                DeviceKeys key = Utils.KeyUtils.GetDeviceKey(e.KeyCode);
+                DeviceKeys key = e.GetDeviceKey();
 
                 if(key != DeviceKeys.NONE)
                 {
@@ -123,5 +128,15 @@ namespace Aurora.Settings
             return isSingleKey;
         }
 
+	    private bool disposed;
+
+	    public void Dispose()
+	    {
+		    if (!disposed)
+		    {
+			    disposed = true;
+			    inputEvents.KeyUp -= InputEventsOnKeyUp;
+			}
+		}
     }
 }

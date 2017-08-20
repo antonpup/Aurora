@@ -32,8 +32,6 @@ namespace Aurora.Profiles.Desktop
                     layers.Enqueue(layer.Render(_game_state));
             }
 
-            layers.Enqueue(new EffectLayer("Color Zones").DrawColorZones((this.Application.Profile as DesktopProfile).lighting_areas.ToArray()));
-
             //Scripts before interactive and shortcut assistant layers
             //ProfilesManager.DesktopProfile.UpdateEffectScripts(layers);
 

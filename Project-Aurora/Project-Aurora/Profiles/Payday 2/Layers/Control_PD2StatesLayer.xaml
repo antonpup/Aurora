@@ -27,11 +27,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Downed Color:" VerticalAlignment="Top" Margin="0,3,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Downed Color:" VerticalAlignment="Top" Margin="0,3,0,0"/>
         <xctk:ColorPicker x:Name="clrDowned" Margin="84,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="160" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColor="{Binding Path=_DownedColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Arrested Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,32,0,0" Padding="0" Content="Arrested Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="clrArrested" Margin="84,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="160" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _ArrestedColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,87,0,0" TextWrapping="Wrap" Text="Swan Song Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,87,0,0" Padding="0" Content="Swan Song Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="clr_SwanSong" Margin="98,84,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="146" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _SwanSongColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="0,115,0,0" TextWrapping="Wrap" Text="Swan Song Speed:" VerticalAlignment="Top"/>

@@ -62,8 +62,6 @@ namespace Aurora.Profiles.Dota_2
                 this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Dire);
                 this.preview_team.Items.Add(Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam.Radiant);
             }
-
-            this.cz.ColorZonesList = (profile_manager.Profile as Dota2Profile).lighting_areas;
         }
 
         private void preview_respawn_timer_Tick(object sender, EventArgs e)
@@ -168,15 +166,6 @@ namespace Aurora.Profiles.Dota_2
             (profile_manager.Config.Event._game_state as GameState_Dota2).Player.KillStreak = killstreak++;
             (profile_manager.Config.Event._game_state as GameState_Dota2).Player.Kills++;
             this.preview_killstreak_label.Content = "Killstreak: " + this.killstreak;
-        }
-
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Profile as Dota2Profile).lighting_areas = (sender as ColorZones).ColorZonesList;
-                profile_manager.SaveProfiles();
-            }
         }
 
         private bool InstallGSI()

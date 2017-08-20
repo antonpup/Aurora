@@ -29,28 +29,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-  </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Aurora.Program</StartupObject>
   </PropertyGroup>
@@ -86,30 +64,6 @@
     </DocumentationFile>
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup>
@@ -126,10 +80,6 @@
     </Reference>
     <Reference Include="CUE.NET, Version=1.1.3.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CUE.NET.1.1.3.1\lib\net45\CUE.NET.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Gma.System.MouseKeyHook, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MouseKeyHook.5.4.0\lib\net40\Gma.System.MouseKeyHook.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
@@ -186,10 +136,6 @@
       <HintPath>..\packages\CS-Script.bin.3.19.0.0\lib\net45\Mono.CSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NAudio, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.8.0\lib\net35\NAudio.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -203,6 +149,12 @@
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Roccat-Talk.1.0.0.0\lib\net45\Roccat-Talk.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.0.1\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.RawInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.RawInput.4.0.1\lib\net45\SharpDX.RawInput.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -306,8 +258,14 @@
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Razer\RazerDevice.cs" />
+    <Compile Include="Devices\Razer\RazerLayoutMap.cs" />
     <Compile Include="Devices\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
+    <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
+    <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
+      <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
@@ -323,7 +281,9 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
-    <Compile Include="InputEventsSubscriptions.cs" />
+    <Compile Include="Utils\InputEvents.cs" />
+    <Compile Include="Utils\MessagePumpThread.cs" />
+    <Compile Include="Utils\InputInterceptor.cs" />
     <Compile Include="Profiles\BF3\BF3Application.cs" />
     <Compile Include="Profiles\BF3\BF3Profile.cs" />
     <Compile Include="Profiles\BF3\Control_BF3.xaml.cs">
@@ -331,11 +291,20 @@
     </Compile>
     <Compile Include="Profiles\BF3\GameEvent_BF3.cs" />
     <Compile Include="Profiles\Blacklight\BLightApplication.cs" />
-    <Compile Include="Profiles\Blacklight\BLightSettings.cs" />
+    <Compile Include="Profiles\Blacklight\BLightProfile.cs" />
     <Compile Include="Profiles\Blacklight\Control_BLight.xaml.cs">
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
+    <Compile Include="Profiles\Borderlands 2\Borderlands2Application.cs" />
+    <Compile Include="Profiles\Borderlands 2\Borderlands2Pointers.cs" />
+    <Compile Include="Profiles\Borderlands 2\Borderlands2Profile.cs" />
+    <Compile Include="Profiles\Borderlands 2\Control_Borderlands2.xaml.cs">
+      <DependentUpon>Control_Borderlands2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Borderlands 2\GameEvent_Borderlands2.cs" />
+    <Compile Include="Profiles\Borderlands 2\GSI\GameState_Borderlands2.cs" />
+    <Compile Include="Profiles\Borderlands 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\CSGO\CSGOApplication.cs" />
     <Compile Include="Profiles\CSGO\Layers\Control_CSGOTypingIndicatorLayer.xaml.cs">
       <DependentUpon>Control_CSGOTypingIndicatorLayer.xaml</DependentUpon>
@@ -572,6 +541,7 @@
     </Compile>
     <Compile Include="Settings\ObjectSettings.cs" />
     <Compile Include="Settings\PluginManager.cs" />
+    <Compile Include="Devices\SteelSeries\USBHIDCodes.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
@@ -586,6 +556,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\corsair_k70.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\corsair_k95_platinum.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\corsair_k95.json">
@@ -603,7 +576,13 @@
     <None Include="kb_layouts\Extra Features\corsair_k65_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\corsair_k95_platinum_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\corsair_k95_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\corsair_k95_platinum_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\corsair_k95_right_features.json">
@@ -636,6 +615,15 @@
     <None Include="kb_layouts\Extra Features\razer_blackwidow_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\razer_blade_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\razer_blade_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\razer_blade_right_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\razer_blackwidow_left_bottom_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -651,7 +639,13 @@
     <None Include="kb_layouts\Extra Features\masterkeys_pro_l_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\Extra Features\masterkeys_pro_m_white_right_features.json">
+    <None Include="kb_layouts\Extra Features\masterkeys_pro_m_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\steelseries_apex_m800_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\steelseries_apex_m800_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g410.json">
@@ -660,10 +654,13 @@
     <None Include="kb_layouts\logitech_g810.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\masterkeys_pro_l_white.json">
+    <None Include="kb_layouts\Plain Keyboard\layout.swiss.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.tr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\razer_blade.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\razer_blackwidow_te.json">
@@ -711,7 +708,7 @@
     <None Include="kb_layouts\Plain Keyboard\layout.us.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\masterkeys_pro_m_white.json">
+    <None Include="kb_layouts\masterkeys_pro_m.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Scripting.evaluator.cs" />
@@ -908,6 +905,7 @@
     <Compile Include="Utils\MemoryReader.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
     <Compile Include="Utils\SteamUtils.cs" />
+    <Compile Include="Utils\ThreadPriorityChanger.cs" />
     <Compile Include="Utils\Time.cs" />
     <Compile Include="Utils\TimedListObject.cs" />
     <Compile Include="Utils\Tree.cs" />
@@ -915,11 +913,18 @@
     <Compile Include="Utils\UIUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Devices\SteelSeries\AuroraPlugin.lsp" />
     <Resource Include="Profiles\Payday 2\GSI\PD2_GSI.zip" />
     <Resource Include="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
     <Resource Include="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
-    <None Include="packages.config" />
+    <None Include="kb_layouts\steelseries_apex_m800.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Pointers\Borderlands2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Pointers\RocketLeague.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -1025,6 +1030,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\BF3\Control_BF3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1032,6 +1041,10 @@
     <Page Include="Profiles\Blacklight\Control_BLight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Borderlands 2\Control_Borderlands2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\CSGO\Control_CSGO.xaml">
       <SubType>Designer</SubType>
@@ -1366,8 +1379,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -1456,6 +1469,9 @@
     <Content Include="kb_layouts\Extra Features\images\Sabre_scrollwheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Apex_M800_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1472,6 +1488,9 @@
     <Resource Include="Resources\Export_Icon.png" />
     <Resource Include="Resources\Save_Icon.png" />
     <Resource Include="Resources\FreeForm_ManualColor.png" />
+    <Resource Include="Resources\Borderlands2_256x256.png" />
+    <Content Include="Resources\SteelSeriesInstall\Step1.png" />
+    <Content Include="Resources\SteelSeriesInstall\Step2.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1485,10 +1504,6 @@
     <None Include="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ver_major.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Resource Include="Resources\LastBullet_Logo.png" />
     <Resource Include="Resources\overwatch_icon.png" />
     <Resource Include="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
     <Resource Include="Resources\pd2_64x64.png" />
@@ -1524,6 +1539,14 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GlobalMouseKeyHook\MouseKeyHook\MouseKeyHook.csproj">
+      <Project>{f52aa97e-180a-40ed-8f2b-09080171d6c7}</Project>
+      <Name>MouseKeyHook</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NAudio\NAudio\NAudio.csproj">
+      <Project>{da4f02e3-0b5e-42cd-b8d9-5583fa51d66e}</Project>
+      <Name>NAudio</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj">
       <Project>{40085232-aced-4cbe-945b-90ba8153c151}</Project>
       <Name>ColorBox</Name>
@@ -1537,11 +1560,17 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\CUE.NET.1.1.3.1\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.1.3.1\build\net45\CUE.NET.targets'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+
+       Other similar extension points exist, see Microsoft.Common.targets.
+
+  <Target Name="BeforeBuild">
+
+  </Target>
+
+  <Target Name="AfterBuild">
+
+  </Target>
+
   -->
 </Project>

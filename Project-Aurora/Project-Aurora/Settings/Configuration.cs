@@ -171,6 +171,8 @@ namespace Aurora.Settings
         Corsair_K65 = 202,
         [Description("Corsair - STRAFE")]
         Corsair_STRAFE = 203,
+        [Description("Corsair - K95 Platinum")]
+        Corsair_K95_PL = 204,
 
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
@@ -179,6 +181,8 @@ namespace Aurora.Settings
         Razer_Blackwidow_X = 301,
         [Description("Razer - Blackwidow Tournament Edition")]
         Razer_Blackwidow_TE = 302,
+        [Description("Razer - Blade")]
+        Razer_Blade = 303,
 
         //Clevo range is 400-499
 
@@ -187,15 +191,16 @@ namespace Aurora.Settings
         Masterkeys_Pro_L = 500,
         [Description("Masterkeys Pro S")]
         Masterkeys_Pro_S = 501,
-        [Description("Masterkeys Pro L White")]
-        Masterkeys_Pro_L_White = 502,
-        [Description("Masterkeys Pro M White")]
-        Masterkeys_Pro_M_White = 503,
-
+        [Description("Masterkeys Pro M")]
+        Masterkeys_Pro_M = 502,
 
         //Roccat range is 600-699
         //[Description("Roccat Ryos")]
         //Roccat_Ryos = 600
+
+        //Steelseries range is 700-799
+        [Description("SteelSeries Apex M800")]
+        SteelSeries_Apex_M800 = 700,
     }
 
     public enum PreferredKeyboardLocalization
@@ -219,7 +224,9 @@ namespace Aurora.Settings
         [Description("Turkish")]
         tr = 8,
         [Description("Nordic")]
-        nordic = 9
+        nordic = 9,
+        [Description("Swiss")]
+        swiss = 10
     }
 
     public enum PreferredMouse
@@ -249,6 +256,10 @@ namespace Aurora.Settings
         Clevo_Touchpad = 400
 
         //Cooler Master range is 500-599
+
+        //Roccat range is 600-699
+
+        //Steelseries range is 700-799
     }
 
     public enum KeycapType
@@ -281,12 +292,16 @@ namespace Aurora.Settings
         public bool logitech_first_time;
         public bool corsair_first_time;
         public bool razer_first_time;
+        public bool steelseries_first_time;
 
         //General Program Settings
         public bool allow_peripheral_devices;
-        public bool use_volume_as_brightness;
         public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
+
+        private bool useVolumeAsBrightness = false;
+        [JsonProperty(PropertyName = "use_volume_as_brightness")]
+        public bool UseVolumeAsBrightness { get { return useVolumeAsBrightness; } set { useVolumeAsBrightness = value; InvokePropertyChanged(); } }
 
         private float globalBrightness = 1.0f;
         [JsonProperty(PropertyName = "global_brightness")]
@@ -361,10 +376,11 @@ namespace Aurora.Settings
             logitech_first_time = true;
             corsair_first_time = true;
             razer_first_time = true;
+            steelseries_first_time = true;
 
             //General Program Settings
             allow_peripheral_devices = true;
-            use_volume_as_brightness = false;
+            UseVolumeAsBrightness = false;
             allow_wrappers_in_background = true;
             allow_all_logitech_bitmaps = true;
             GlobalBrightness = 1.0f;

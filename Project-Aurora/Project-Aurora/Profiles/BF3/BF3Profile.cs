@@ -7,10 +7,6 @@ namespace Aurora.Profiles.BF3
 {
     public class BF3Profile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public BF3Profile() : base()
         {
             
@@ -40,10 +36,6 @@ namespace Aurora.Profiles.BF3
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

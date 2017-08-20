@@ -36,7 +36,7 @@ namespace Aurora
             private set
             {
                 currentGameState = value;
-                RaiseOnNewGameState();
+                NewGameState?.Invoke(CurrentGameState);
             }
         }
 
@@ -228,14 +228,6 @@ namespace Aurora
             CurrentGameState = new GameState(JSON);
         }
 
-        private void RaiseOnNewGameState()
-        {
-            var hander = NewGameState;
-
-            if (hander != null)
-                hander.Invoke(CurrentGameState);
-        }
-
         private void HandleNewIPCGameState(string gs_data)
         {
             //Global.logger.LogLine("Received gs!");
@@ -248,9 +240,9 @@ namespace Aurora
 
             var task = new System.Threading.Tasks.Task(() =>
                 {
-                    if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
-                        CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
-                    else
+                    //if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
+                        //CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
+                    //else
                         CurrentGameState = new_state;
                 }
             );
@@ -349,6 +341,7 @@ namespace Aurora
                             string temp;
                             while ((temp = sr.ReadLine()) != null)
                             {
+                                Global.logger.LogLine("[AuroraCommandsServerIPC] Recieved command: " + temp);
                                 string[] split = temp.Contains(':') ? temp.Split(':') : new[] { temp };
                                 CommandRecieved.Invoke(split[0], split.Length > 1 ? split[1] : "");
                             }
@@ -369,7 +362,8 @@ namespace Aurora
             switch (command)
             {
                 case "restore":
-                    Program.MainWindow.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());
+                    Global.logger.LogLine("Initiating command restore");
+                    Program.WinApp.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());
                     break;
             }
         }

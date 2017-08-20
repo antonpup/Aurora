@@ -30,11 +30,6 @@
                     <Button x:Name="patch_64bit_button" Content="Patch Guild Wars 2 (for 64-bit version)" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Click="patch_64bit_button_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Color Zones">
-                <Grid>
-                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
-                </Grid>
-            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

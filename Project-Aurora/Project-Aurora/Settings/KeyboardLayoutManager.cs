@@ -90,6 +90,9 @@ namespace Aurora.Settings
 
         public Dictionary<DeviceKeys, KeyboardKey> key_modifications = new Dictionary<DeviceKeys, KeyboardKey>();
 
+        [JsonProperty("key_conversion")]
+        public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
+
         /// <summary>
         /// A list of paths for each included group json
         /// </summary>
@@ -116,6 +119,9 @@ namespace Aurora.Settings
         private Rectangle _region_bitmap = new Rectangle(0, 0, 0, 0);
 
         public Rectangle BitmapRegion { get { return _region_bitmap; } }
+
+        [JsonProperty("key_conversion")]
+        public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
 
         public VirtualGroup()
         {
@@ -411,6 +417,8 @@ namespace Aurora.Settings
 
     public class KeyboardLayoutManager
     {
+        public Dictionary<DeviceKeys, DeviceKeys> LayoutKeyConversion = new Dictionary<DeviceKeys, DeviceKeys>();
+
         private VirtualGroup virtualKeyboardGroup;
 
         private Dictionary<Devices.DeviceKeys, IKeycap> _virtualKeyboardMap = new Dictionary<DeviceKeys, IKeycap>();
@@ -510,6 +518,9 @@ namespace Aurora.Settings
                         case PreferredKeyboardLocalization.tr:
                             culture = "tr-TR";
                             break;
+                        case PreferredKeyboardLocalization.swiss:
+                            culture = "de-CH";
+                            break;
                     }
 
                     switch (culture)
@@ -525,6 +536,11 @@ namespace Aurora.Settings
                         case ("dsb-DE"):
                             _loaded_localization = PreferredKeyboardLocalization.de;
                             LoadCulture("de");
+                            break;
+                        case ("fr-CH"):
+                        case ("de-CH"):
+                            _loaded_localization = PreferredKeyboardLocalization.swiss;
+                            LoadCulture("swiss");
                             break;
                         case ("fr-FR"):
                         case ("br-FR"):
@@ -576,6 +592,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
+                else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
+                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95_platinum.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_K70)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_K65)
@@ -588,16 +606,18 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_x.json");
                 else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_TE)
                     layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_te.json");
+                else if (keyboard_preference == PreferredKeyboard.Razer_Blade)
+                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blade.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
                 else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
                     layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
-                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L_White)
-                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l_white.json");
-                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M_White)
-                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m_white.json");
+                else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M)
+                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
                 //else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 //    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
+                else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
+                    layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m800.json");
                 else
                 {
                     LoadNone();
@@ -612,6 +632,15 @@ namespace Aurora.Settings
                     virtualKeyboardGroup.AdjustKeys(layoutConfig.key_modifications);
                     virtualKeyboardGroup.RemoveKeys(layoutConfig.keys_to_remove);
 
+                    if (layoutConfig.KeyConversion != null)
+                    {
+                        foreach (var key in layoutConfig.KeyConversion)
+                        {
+                            if (!this.LayoutKeyConversion.ContainsKey(key.Key))
+                                this.LayoutKeyConversion.Add(key.Key, key.Value);
+                        }
+                    }
+
                     foreach (string feature in layoutConfig.included_features)
                     {
                         string feature_path = Path.Combine(layoutsPath, "Extra Features", feature);
@@ -622,11 +651,19 @@ namespace Aurora.Settings
                             VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
                             virtualKeyboardGroup.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
+                            if (feature_config.KeyConversion != null)
+                            {
+                                foreach (var key in feature_config.KeyConversion)
+                                {
+                                    if (!this.LayoutKeyConversion.ContainsKey(key.Key))
+                                        this.LayoutKeyConversion.Add(key.Key, key.Value);
+                                }
+                            }
                         }
                     }
 
                     //Extra fix for Master keys Pro M White foreign layouts
-                    if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M_White)
+                    if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M)
                     {
                         switch(_loaded_localization)
                         {
@@ -706,7 +743,7 @@ namespace Aurora.Settings
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Global.logger.LogLine(e.ToString());
             }
 
             //Perform end of load functions
@@ -999,6 +1036,15 @@ namespace Aurora.Settings
             return new_virtual_keyboard;
         }
 
+        private class KeyboardLayout
+        {
+            [JsonProperty("key_conversion")]
+            public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
+
+            [JsonProperty("keys")]
+            public KeyboardKey[] Keys = null;
+        }
+
         private void LoadCulture(String culture)
         {
             var fileName = "Plain Keyboard\\layout." + culture + ".json";
@@ -1008,10 +1054,11 @@ namespace Aurora.Settings
                 LoadDefault();
 
             string content = File.ReadAllText(layoutPath, Encoding.UTF8);
-            KeyboardKey[] keyboard = JsonConvert.DeserializeObject<KeyboardKey[]>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+            KeyboardLayout keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-            virtualKeyboardGroup = new VirtualGroup(keyboard);
+            virtualKeyboardGroup = new VirtualGroup(keyboard.Keys);
 
+            LayoutKeyConversion = keyboard.KeyConversion ?? new Dictionary<DeviceKeys, DeviceKeys>();
             /*
             if (keyboard.Count > 0)
                 keyboard.Last().line_break = false;

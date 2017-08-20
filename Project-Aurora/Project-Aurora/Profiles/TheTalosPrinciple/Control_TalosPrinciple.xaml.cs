@@ -40,7 +40,6 @@ namespace Aurora.Profiles.TheTalosPrinciple
         private void SetSettings()
         {
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Profile as TalosPrincipleProfile).lighting_areas;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -64,15 +63,6 @@ namespace Aurora.Profiles.TheTalosPrinciple
             if (IsLoaded)
             {
                 profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Profile as TalosPrincipleProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
                 profile_manager.SaveProfiles();
             }
         }

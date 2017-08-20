@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Aurora.EffectsEngine
@@ -22,6 +23,7 @@ namespace Aurora.EffectsEngine
 
         public BrushType type = BrushType.None;
         public BrushWrap wrap = BrushWrap.None;
+        [JsonProperty("color_gradients")]
         public SortedDictionary<float, System.Drawing.Color> colorGradients = new SortedDictionary<float, System.Drawing.Color>();
         public System.Drawing.PointF start;
         public System.Drawing.PointF end;

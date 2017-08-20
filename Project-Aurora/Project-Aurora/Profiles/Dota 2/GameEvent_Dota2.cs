@@ -33,9 +33,6 @@ namespace Aurora.Profiles.Dota_2
             //Scripts
             this.Application.UpdateEffectScripts(layers, _game_state);
 
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Dota 2 - Color Zones").DrawColorZones((this.Application.Profile as Dota2Profile).lighting_areas.ToArray()));
-
             frame.AddLayers(layers.ToArray());
         }
 

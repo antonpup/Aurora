@@ -8,26 +8,26 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="True"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,2,0,0" TextWrapping="Wrap" Text="Ambient Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,2,0,0" Padding="0" Content="Ambient Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_Michael" Margin="81,48,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Michael_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Michael Color:" VerticalAlignment="Top" Margin="0,50,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Michael Color:" VerticalAlignment="Top" Margin="0,50,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_Franklin" Margin="81,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Franklin_SelectedColorChanged" UsingAlphaChannel="True"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,27,0,0" TextWrapping="Wrap" Text="Franklin Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,27,0,0" Padding="0" Content="Franklin Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_Trevor" Margin="73,73,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="171" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Trevor_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Trevor Color:" VerticalAlignment="Top" Margin="0,75,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Trevor Color:" VerticalAlignment="Top" Margin="0,75,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_Chop" Margin="68,98,0,-73" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="176" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Chop_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Chop Color:" VerticalAlignment="Top" Margin="0,100,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Chop Color:" VerticalAlignment="Top" Margin="0,100,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_OnlineMission" Margin="144,123,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_OnlineMission_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="GTA Online Mission Color:" VerticalAlignment="Top" Margin="2,125,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="GTA Online Mission Color:" VerticalAlignment="Top" Margin="2,125,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_OnlineHeistFinale" Margin="164,146,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="80" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_OnlineHeistFinale_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="GTA Online Heist Finale Color:" VerticalAlignment="Top" Margin="0,148,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="GTA Online Heist Finale Color:" VerticalAlignment="Top" Margin="0,148,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_OnlineSpectator" Margin="154,169,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_OnlineSpectator_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="GTA Online Spectator Color:" VerticalAlignment="Top" Margin="0,171,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="GTA Online Spectator Color:" VerticalAlignment="Top" Margin="0,171,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_RaceGold" Margin="379,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="114" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_RaceGold_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" Margin="249,2,0,0" TextWrapping="Wrap" Text="Race Gold Medal Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="249,2,0,0" Padding="0" Content="Race Gold Medal Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_RaceSilver" Margin="382,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="111" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_RaceSilver_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" Margin="249,27,0,0" TextWrapping="Wrap" Text="Race Silver Medal Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="249,27,0,0" Padding="0" Content="Race Silver Medal Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_RaceBronze" Margin="390,48,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="103" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_RaceBronze_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Race Bronze Medal Color:" VerticalAlignment="Top" Margin="249,50,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Race Bronze Medal Color:" VerticalAlignment="Top" Margin="249,50,0,0"/>
     </Grid>
 </UserControl>

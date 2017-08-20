@@ -3,9 +3,11 @@ using CUE.NET.Devices.Generic.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SharpDX.RawInput;
 
 namespace Aurora.Utils
 {
@@ -15,25 +17,124 @@ namespace Aurora.Utils
     public static class KeyUtils
     {
         /// <summary>
+        ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code into a
+        ///     virtual-key code.
+        /// </summary>
+        /// <param name="uCode">
+        ///     The virtual key code or scan code for a key. How this value is interpreted depends on the value of
+        ///     the uMapType parameter.
+        /// </param>
+        /// <param name="uMapType">
+        ///     The translation to be performed. The value of this parameter depends on the value of the uCode
+        ///     parameter.
+        /// </param>
+        /// <returns>
+        ///     The return value is either a scan code, a virtual-key code, or a character value, depending on the value of
+        ///     uCode and uMapType. If there is no translation, the return value is zero.
+        /// </returns>
+        [DllImport("user32.dll")]
+        private static extern uint MapVirtualKey(uint uCode, MapVirtualKeyMapTypes uMapType);
+
+        private static readonly int leftControlScanCode;
+
+        static KeyUtils()
+        {
+            leftControlScanCode = Utils.KeyUtils.GetScanCodeByKey(Keys.LControlKey);
+        }
+
+        /// <summary>
+        /// Converts <see cref="Keys"/> to the hardware scan code/>
+        /// </summary>
+        /// <param name="key">The key to be converted</param>
+        /// <returns>The scan code of the key. If the method fails, the return value is 0</returns>
+        private static int GetScanCodeByKey(Keys key)
+        {
+            return (int)MapVirtualKey((uint)key, 0);
+        }
+
+        public static DeviceKeys GetDeviceKey(Keys forms_key, int scanCode = 0, bool isExtendedKey = false)
+        {
+            DeviceKeys key = getDeviceKey(forms_key, scanCode, isExtendedKey);
+            //Global.logger.LogLine(key.ToString() + ":" + ((int)key).ToString());
+            if (Global.kbLayout.LayoutKeyConversion.ContainsKey(key))
+                return Global.kbLayout.LayoutKeyConversion[key];
+
+            return key;
+        }
+
+        /// <summary>
+        /// Correcting RawInput data according to an article https://blog.molecular-matters.com/2011/09/05/properly-handling-keyboard-input/
+        /// </summary>
+        public static void CorrectRawInputData(KeyboardInputEventArgs e)
+        {
+            // e0 and e1 are escape sequences used for certain special keys, such as PRINT and PAUSE/BREAK.
+            // see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
+            bool isE0 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E0);
+            bool isE1 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E1);
+
+            if (isE1)
+            {
+                // for escaped sequences, turn the virtual key into the correct scan code using MapVirtualKey.
+                // however, MapVirtualKey is unable to map VK_PAUSE (this is a known bug), hence we map that by hand.
+                if (e.Key == Keys.Pause)
+                    e.MakeCode = 0x45;
+                else
+                    e.MakeCode = (int)MapVirtualKey((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc);
+            }
+
+            switch (e.Key)
+            {
+                case Keys.NumLock:
+                    // correct PAUSE/BREAK and NUM LOCK silliness, and set the extended bit
+                    e.MakeCode = (int)(MapVirtualKey((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc) | 0x100);
+                    break;
+                case Keys.ShiftKey:
+                    // correct left-hand / right-hand SHIFT
+                    e.Key = (Keys)MapVirtualKey((uint)e.MakeCode, MapVirtualKeyMapTypes.MapvkVscToVkEx);
+                    break;
+                case Keys.ControlKey:
+                    e.Key = isE0 ? Keys.RControlKey : Keys.LControlKey;
+                    break;
+                case Keys.Menu:
+                    e.Key = isE0 ? Keys.RMenu : Keys.LMenu;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Converts Devices.DeviceKeys from RawInput event
+        /// </summary>
+        /// <param name="eventArgs">RawInput event data</param>
+        /// <returns>The resulting Devices.DeviceKeys</returns>
+        public static DeviceKeys GetDeviceKey(this KeyboardInputEventArgs eventArgs)
+        {
+            return GetDeviceKey(eventArgs.Key, eventArgs.MakeCode, eventArgs.ScanCodeFlags.HasFlag(ScanCodeFlags.E0));
+        }
+
+        /// <summary>
         /// Converts Forms.Keys to Devices.DeviceKeys
         /// </summary>
         /// <param name="forms_key">The Forms.Key to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys GetDeviceKey(Keys forms_key)
+        private static DeviceKeys getDeviceKey(Keys forms_key, int scanCode = 0, bool isExtendedKey = false)
         {
             switch (forms_key)
             {
                 case (Keys.Escape):
                     return DeviceKeys.ESC;
+                case (Keys.Clear):
+                    return DeviceKeys.NUM_FIVE;
                 case (Keys.Back):
                     return DeviceKeys.BACKSPACE;
                 case (Keys.Tab):
                     return DeviceKeys.TAB;
                 case (Keys.Enter):
-                    return DeviceKeys.ENTER;
+                    return isExtendedKey ? DeviceKeys.NUM_ENTER : DeviceKeys.ENTER;
                 case (Keys.LShiftKey):
                     return DeviceKeys.LEFT_SHIFT;
                 case (Keys.LControlKey):
+                    if (scanCode > 0 && leftControlScanCode > 0 && scanCode != leftControlScanCode) // Alt Graph
+                        return DeviceKeys.NONE;
                     return DeviceKeys.LEFT_CONTROL;
                 case (Keys.LMenu):
                     return DeviceKeys.LEFT_ALT;
@@ -56,27 +157,27 @@ namespace Aurora.Utils
                 case (Keys.Space):
                     return DeviceKeys.SPACE;
                 case (Keys.PageUp):
-                    return DeviceKeys.PAGE_UP;
+                    return isExtendedKey ? DeviceKeys.PAGE_UP : DeviceKeys.NUM_NINE;
                 case (Keys.PageDown):
-                    return DeviceKeys.PAGE_DOWN;
+                    return isExtendedKey ? DeviceKeys.PAGE_DOWN : DeviceKeys.NUM_THREE;
                 case (Keys.End):
-                    return DeviceKeys.END;
+                    return isExtendedKey ? DeviceKeys.END : DeviceKeys.NUM_ONE;
                 case (Keys.Home):
-                    return DeviceKeys.HOME;
+                    return isExtendedKey ? DeviceKeys.HOME : DeviceKeys.NUM_SEVEN;
                 case (Keys.Left):
-                    return DeviceKeys.ARROW_LEFT;
+                    return isExtendedKey ? DeviceKeys.ARROW_LEFT : DeviceKeys.NUM_FOUR;
                 case (Keys.Up):
-                    return DeviceKeys.ARROW_UP;
+                    return isExtendedKey ? DeviceKeys.ARROW_UP : DeviceKeys.NUM_EIGHT;
                 case (Keys.Right):
-                    return DeviceKeys.ARROW_RIGHT;
+                    return isExtendedKey ? DeviceKeys.ARROW_RIGHT : DeviceKeys.NUM_SIX;
                 case (Keys.Down):
-                    return DeviceKeys.ARROW_DOWN;
+                    return isExtendedKey ? DeviceKeys.ARROW_DOWN : DeviceKeys.NUM_TWO;
                 case (Keys.PrintScreen):
                     return DeviceKeys.PRINT_SCREEN;
                 case (Keys.Insert):
-                    return DeviceKeys.INSERT;
+                    return isExtendedKey ? DeviceKeys.INSERT : DeviceKeys.NUM_ZERO;
                 case (Keys.Delete):
-                    return DeviceKeys.DELETE;
+                    return isExtendedKey ? DeviceKeys.DELETE : DeviceKeys.NUM_PERIOD;
                 case (Keys.D0):
                     return DeviceKeys.ZERO;
                 case (Keys.D1):
@@ -228,76 +329,76 @@ namespace Aurora.Utils
                 case (Keys.MediaPlayPause):
                     return DeviceKeys.MEDIA_PLAY_PAUSE;
                 case (Keys.OemSemicolon):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.CLOSE_BRACKET;
-                    else
+                    else*/
                         return DeviceKeys.SEMICOLON;
                 case (Keys.Oemplus):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.CLOSE_BRACKET;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.MINUS;
-                    else
+                    else*/
                         return DeviceKeys.EQUALS;
                 case (Keys.Oemcomma):
                     return DeviceKeys.COMMA;
                 case (Keys.OemMinus):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.FORWARD_SLASH;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.FORWARD_SLASH;
-                    else
+                    else*/
                         return DeviceKeys.MINUS;
                 case (Keys.OemPeriod):
                     return DeviceKeys.PERIOD;
                 case (Keys.OemQuestion):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.HASHTAG;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.HASHTAG;
-                    else
+                    else*/
                         return DeviceKeys.FORWARD_SLASH;
                 case (Keys.ProcessKey):
                     return DeviceKeys.JPN_HALFFULLWIDTH;
                 case (Keys.Oemtilde):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.APOSTROPHE;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.SEMICOLON;
-                    else
+                    else*/
                         return DeviceKeys.TILDE;
                 case (Keys.OemOpenBrackets):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.MINUS;
                     else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.EQUALS;
-                    else
+                    else*/
                         return DeviceKeys.OPEN_BRACKET;
                 case (Keys.OemPipe):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.BACKSLASH_UK;
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.TILDE;
-                    else
+                    else*/
                         return DeviceKeys.BACKSLASH;
                 case (Keys.OemCloseBrackets):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
                         return DeviceKeys.EQUALS;
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
                         return DeviceKeys.OPEN_BRACKET;
-                    else
+                    else*/
                         return DeviceKeys.CLOSE_BRACKET;
                 case (Keys.OemQuotes):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.HASHTAG;
-                    else
+                    else*/
                         return DeviceKeys.APOSTROPHE;
                 case (Keys.OemBackslash):
                     return DeviceKeys.BACKSLASH_UK;
                 case (Keys.Oem8):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
                         return DeviceKeys.TILDE;
-                    else
+                    else*/
                         return DeviceKeys.OEM8;
                 case (Keys.Play):
                     return DeviceKeys.MEDIA_PLAY;
@@ -311,14 +412,18 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="formsKeys">Array of Forms.Keys to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys[] GetDeviceKeys(Keys[] formsKeys)
+        public static DeviceKeys[] GetDeviceKeys(Keys[] formsKeys, bool extendedKeys = false, bool getBoth = false)
         {
-            DeviceKeys[] _returnKeys = new DeviceKeys[formsKeys.Length];
+            HashSet<DeviceKeys> _returnKeys = new HashSet<DeviceKeys>();
 
-            for(int i = 0; i < formsKeys.Length; i++)
-                _returnKeys[i] = GetDeviceKey(formsKeys[i]);
+            for (int i = 0; i < formsKeys.Length; i++)
+            {
+                _returnKeys.Add(GetDeviceKey(formsKeys[i], 0, extendedKeys));
+                if (getBoth)
+                    _returnKeys.Add(GetDeviceKey(formsKeys[i], 0, !extendedKeys));
+            }
 
-            return _returnKeys;
+            return _returnKeys.ToArray();
         }
 
         /// <summary>
@@ -608,6 +713,63 @@ namespace Aurora.Utils
                 default:
                     return DeviceKeys.NONE;
             }
+        }
+
+        public static Keys GetStandardKey(Keys key)
+        {
+            switch (key)
+            {
+                case Keys.RControlKey:
+                    return Keys.LControlKey;
+                case Keys.RMenu:
+                    return Keys.LMenu;
+                case Keys.RShiftKey:
+                    return Keys.LShiftKey;
+                case Keys.RWin:
+                    return Keys.LWin;
+                default:
+                    return key;
+            }
+        }
+
+        /// <summary>
+        ///     The set of valid MapTypes used in MapVirtualKey
+        /// </summary>
+        private enum MapVirtualKeyMapTypes : uint
+        {
+            /// <summary>
+            ///     The uCode parameter is a virtual-key code and is translated into a scan code. If it is a virtual-key code that does
+            ///     not distinguish between left- and right-hand keys, the left-hand scan code is returned. If there is no translation,
+            ///     the function returns 0.
+            /// </summary>
+            MapvkVkToVsc = 0x00,
+
+            /// <summary>
+            ///     The uCode parameter is a scan code and is translated into a virtual-key code that does not distinguish between
+            ///     left- and right-hand keys. If there is no translation, the function returns 0.
+            /// </summary>
+            MapvkVscToVk = 0x01,
+
+            /// <summary>
+            ///     The uCode parameter is a virtual-key code and is translated into an unshifted character value in the low order word
+            ///     of the return value. Dead keys (diacritics) are indicated by setting the top bit of the return value. If there is
+            ///     no translation, the function returns 0.
+            /// </summary>
+            MapvkVkToChar = 0x02,
+
+            /// <summary>
+            ///     The uCode parameter is a scan code and is translated into a virtual-key code that distinguishes between left- and
+            ///     right-hand keys. If there is no translation, the function returns 0.
+            /// </summary>
+            MapvkVscToVkEx = 0x03,
+
+            /// <summary>
+            ///     The uCode parameter is a virtual-key code and is translated into a scan code. If it is a virtual-key code that does
+            ///     not distinguish between left- and right-hand keys, the left-hand scan code is returned. If the scan code is an
+            ///     extended scan code, the high byte of the uCode value can contain either 0xe0 or 0xe1 to specify the extended scan
+            ///     code. If there is no translation, the function returns 0.
+            /// </summary>
+            MapvkVkToVscEx = 0x04
         }
     }
 }

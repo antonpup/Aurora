@@ -7,10 +7,6 @@ namespace Aurora.Profiles.XCOM
 {
     class XCOMProfile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public XCOMProfile()
         {
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
@@ -34,10 +30,6 @@ namespace Aurora.Profiles.XCOM
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

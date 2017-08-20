@@ -314,7 +314,7 @@ namespace Aurora
         private void exitApp()
         {
             trayicon.Visibility = Visibility.Hidden;
-            virtual_keyboard_timer.Stop();
+            virtual_keyboard_timer?.Stop();
             Program.Exit();
         }
 
@@ -741,8 +741,13 @@ namespace Aurora
 
         public void ShowWindow()
         {
+            Global.logger.LogLine("Show Window called");
+            this.Visibility = Visibility.Visible;
             this.WindowStyle = WindowStyle.SingleBorderWindow;
+            this.ShowInTaskbar = true;
+            //this.Topmost = true;
             this.Show();
+            this.Activate();
         }
 
         private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
@@ -783,13 +788,15 @@ namespace Aurora
 
         private void ctrlLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.content_grid.Content = this.FocusedApplication.Profile.Layers.Count > 0 ? layercontrol_presenter : this.FocusedApplication.GetUserControl();
+            if (!sender.Equals(_selectedManager))
+                this.content_grid.Content = this.FocusedApplication.Profile.Layers.Count > 0 ? layercontrol_presenter : this.FocusedApplication.GetUserControl();
             UpdateManagerStackFocus(sender);
         }
 
         private void ctrlProfileManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.content_grid.Content = profilecontrol_presenter;
+            if (!sender.Equals(_selectedManager))
+                this.content_grid.Content = profilecontrol_presenter;
             UpdateManagerStackFocus(sender);
         }
 

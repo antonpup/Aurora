@@ -10,11 +10,5 @@ namespace Aurora.Profiles.TheTalosPrinciple
         public GameEvent_TalosPrinciple()
         {
         }
-
-        protected override void UpdateExtraLights(Queue<EffectLayer> layers)
-        {
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Talos - Color Zones").DrawColorZones((this.Application.Profile as TalosPrincipleProfile).lighting_areas.ToArray()));
-        }
     }
 }

@@ -27,29 +27,29 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambient Color:" VerticalAlignment="Top" Margin="0,3,0,0"/>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Ambient Color:" VerticalAlignment="Top" Margin="0,3,0,0"/>
         <xctk:ColorPicker x:Name="clrAmbient" Margin="85,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColor="{Binding Path=_AmbientColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,32,0,0" TextWrapping="Wrap" Text="Assault Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,32,0,0" Padding="0" Content="Assault Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="assault_colorpicker" Margin="77,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="167" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _AssaultColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,61,0,0" TextWrapping="Wrap" Text="Captain Winters Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,61,0,0" Padding="0" Content="Captain Winters Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="winters_colorpicker" Margin="124,58,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _WintersColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="249,5,0,0" TextWrapping="Wrap" Text="Assault Speed:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="249,5,0,0" Padding="0" Content="Assault Speed:" VerticalAlignment="Top"/>
         <Label x:Name="lblAssaultSpeed" Content="x 1" HorizontalAlignment="Left" Margin="511,0,0,0" VerticalAlignment="Top"/>
         <Slider x:Name="sldAssaultSpeed" HorizontalAlignment="Left" Margin="331,5,0,0" VerticalAlignment="Top" Width="175" Minimum="0.5" Maximum="1.5" SmallChange="0.25" Value="{Binding _AssaultSpeedMultiplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="sldAssaultSpeed_ValueChanged"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="249,32,0,0" TextWrapping="Wrap" Text="Assault Fade Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="249,32,0,0" Padding="0" Content="Assault Fade Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="clrAssaultFade" Margin="354,28,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="182" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _AssaultFadeColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <CheckBox x:Name="cmbAssaultAnim" Content="Enable assault animation" HorizontalAlignment="Left" Margin="249,53,0,0" VerticalAlignment="Top" IsChecked="{Binding _AssaultAnimationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <CheckBox x:Name="background_show_suspicion" Content="Show the suspicion meter in the background" HorizontalAlignment="Left" Margin="0,82,0,0" VerticalAlignment="Top" IsChecked="{Binding Path=_ShowSuspicion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,105,0,0" TextWrapping="Wrap" Text="Low Suspicion Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,105,0,0" Padding="0" Content="Low Suspicion Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="low_suspicion_colorpicker" Margin="115,102,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="129" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColor="{Binding _LowSuspicionColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,134,0,0" TextWrapping="Wrap" Text="Medium Suspicion Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,134,0,0" Padding="0" Content="Medium Suspicion Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="medium_suspicion_colorpicker" Margin="137,131,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _MediumSuspicionColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,163,0,0" TextWrapping="Wrap" Text="High Suspicion Color:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,163,0,0" Padding="0" Content="High Suspicion Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="high_suspicion_colorpicker" Margin="119,160,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="125" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColor="{Binding _HighSuspicionColor, Converter={StaticResource ColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,192,0,0" TextWrapping="Wrap" Text="Suspicion Effect Type:" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,192,0,0" Padding="0" Content="Suspicion Effect Type:" VerticalAlignment="Top"/>
         <ComboBox x:Name="suspicion_effect_type" HorizontalAlignment="Left" Margin="119,189,0,0" VerticalAlignment="Top" Width="200" ItemsSource="{Binding Source={StaticResource PercentEffectType}}" ItemTemplate="{Binding Source={StaticResource PercentEffectTypeTemplate}}" SelectedItem="{Binding _SuspicionEffectType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <CheckBox x:Name="background_peripheral_use" Content="Use background color with other peripheral devices" HorizontalAlignment="Left" Margin="0,216,0,0" VerticalAlignment="Top" IsChecked="{Binding _PeripheralUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>

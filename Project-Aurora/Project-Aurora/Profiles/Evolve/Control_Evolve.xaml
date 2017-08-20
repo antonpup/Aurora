@@ -29,11 +29,6 @@
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Evolve Stage 2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Color Zones">
-                <Grid>
-                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
-                </Grid>
-            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

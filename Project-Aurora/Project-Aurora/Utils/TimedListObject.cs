@@ -31,6 +31,8 @@ namespace Aurora.Utils
             if(mainList.Contains(this))
             {
                 mainList.Remove(this);
+                if (item is IDisposable)
+                    ((IDisposable)item).Dispose();
                 timer.Elapsed -= Timer_Elapsed;
             }
                 

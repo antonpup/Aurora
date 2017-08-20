@@ -45,7 +45,7 @@ namespace Aurora
     /// <summary>
     /// A logging class
     /// </summary>
-    public class Logger
+    public class Logger : IDisposable
     {
         private bool HasUniqueLogFile = false;
         private bool HasUniqueLogDirectory = false;
@@ -106,7 +106,7 @@ namespace Aurora
         public string GetPath()
         {
             if (!HasUniqueLogFile)
-                LogFile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("dd_MM_yyyy") + ".log");
+                LogFile = System.IO.Path.Combine(GetLogsDirectory(), System.DateTime.Now.ToString("yyyy_MM_dd") + ".log");
 
             if (!System.IO.File.Exists(LogDirectory))
                 System.IO.Directory.CreateDirectory(LogDirectory);
@@ -209,6 +209,12 @@ namespace Aurora
                 default:
                     return "";
             }
+        }
+
+        public void Dispose()
+        {
+            this.logWriter.Flush();
+            this.logWriter.Dispose();
         }
     }
 }

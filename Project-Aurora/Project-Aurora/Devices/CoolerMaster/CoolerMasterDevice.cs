@@ -1,4 +1,5 @@
 ﻿using Aurora.Settings;
+using Aurora.Utils;
 using CoolerMaster;
 using System;
 using System.Collections.Generic;
@@ -88,9 +89,9 @@ namespace Aurora.Devices.CoolerMaster
             {DeviceKeys.APOSTROPHE, new int [] {3, 11} },
             {DeviceKeys.HASHTAG, new int [] {3, 12} },
             {DeviceKeys.ENTER, new int [] {3, 14} },
-            {DeviceKeys.NUM_FOUR, new int [] {3, 18} },
-            {DeviceKeys.NUM_FIVE, new int [] {3, 19} },
-            {DeviceKeys.NUM_SIX, new int [] {3, 20} },
+            {DeviceKeys.NUM_FOUR, new int [] {3, 17} },
+            {DeviceKeys.NUM_FIVE, new int [] {3, 18} },
+            {DeviceKeys.NUM_SIX, new int [] {3, 19} },
             {DeviceKeys.LEFT_SHIFT, new int [] {4, 0} },
             {DeviceKeys.BACKSLASH_UK, new int [] {4, 1} },
             {DeviceKeys.Z, new int [] {4, 2} },
@@ -121,13 +122,127 @@ namespace Aurora.Devices.CoolerMaster
             {DeviceKeys.ARROW_DOWN, new int [] {5, 16} },
             {DeviceKeys.ARROW_RIGHT, new int [] {5, 17} },
             {DeviceKeys.NUM_ZERO, new int [] {5, 18} },
+            {DeviceKeys.NUM_ZEROZERO, new int [] {5, 19} },
             {DeviceKeys.NUM_PERIOD, new int [] {5, 20} }
+        };
+
+        public static readonly Dictionary<DeviceKeys, int[]> ProMKeyCoords = new Dictionary<DeviceKeys, int[]>
+        {
+            {DeviceKeys.ESC, new int [] {0,0} },
+            {DeviceKeys.F1, new int [] {0, 1} },
+            {DeviceKeys.F2, new int [] {0, 2} },
+            {DeviceKeys.F3, new int [] {0, 3} },
+            {DeviceKeys.F4, new int [] {0, 4} },
+            {DeviceKeys.F5, new int [] {0, 6} },
+            {DeviceKeys.F6, new int [] {0, 7} },
+            {DeviceKeys.F7, new int [] {0, 8} },
+            {DeviceKeys.F8, new int [] {0, 9} },
+            {DeviceKeys.F9, new int [] {0, 11} },
+            {DeviceKeys.F10, new int [] {0, 12} },
+            {DeviceKeys.F11, new int [] {0, 13} },
+            {DeviceKeys.F12, new int [] {0, 14} },
+            {DeviceKeys.PRINT_SCREEN, new int [] {0, 15} },
+            {DeviceKeys.SCROLL_LOCK, new int [] {0, 16} },
+            {DeviceKeys.PAUSE_BREAK, new int [] {0, 17} },
+            {DeviceKeys.Profile_Key1, new int [] {0, 18} },
+            {DeviceKeys.Profile_Key2, new int [] {0, 19} },
+            {DeviceKeys.Profile_Key3, new int [] {0, 20} },
+            {DeviceKeys.Profile_Key4, new int [] {0, 21} },
+            {DeviceKeys.TILDE, new int [] {1, 0} },
+            {DeviceKeys.ONE, new int [] {1, 1} },
+            {DeviceKeys.TWO, new int [] {1, 2} },
+            {DeviceKeys.THREE, new int [] {1, 3} },
+            {DeviceKeys.FOUR, new int [] {1, 4} },
+            {DeviceKeys.FIVE, new int [] {1, 5} },
+            {DeviceKeys.SIX, new int [] {1, 6} },
+            {DeviceKeys.SEVEN, new int [] {1, 7} },
+            {DeviceKeys.EIGHT, new int [] {1, 8} },
+            {DeviceKeys.NINE, new int [] {1, 9} },
+            {DeviceKeys.ZERO, new int [] {1, 10} },
+            {DeviceKeys.MINUS, new int [] {1, 11} },
+            {DeviceKeys.EQUALS, new int [] {1, 12} },
+            {DeviceKeys.BACKSPACE, new int [] {1, 14} },
+            {DeviceKeys.NUM_LOCK, new int [] {1, 15} },
+            {DeviceKeys.NUM_SLASH, new int [] {1, 16} },
+            {DeviceKeys.NUM_ASTERISK, new int [] {1, 17} },
+            {DeviceKeys.NUM_MINUS, new int [] {1, 18} },
+            {DeviceKeys.TAB, new int [] {2, 0} },
+            {DeviceKeys.Q, new int [] {2, 1} },
+            {DeviceKeys.W, new int [] {2, 2} },
+            {DeviceKeys.E, new int [] {2, 3} },
+            {DeviceKeys.R, new int [] {2, 4} },
+            {DeviceKeys.T, new int [] {2, 5} },
+            {DeviceKeys.Y, new int [] {2, 6} },
+            {DeviceKeys.U, new int [] {2, 7} },
+            {DeviceKeys.I, new int [] {2, 8} },
+            {DeviceKeys.O, new int [] {2, 9} },
+            {DeviceKeys.P, new int [] {2, 10} },
+            {DeviceKeys.OPEN_BRACKET, new int [] {2, 11} },
+            {DeviceKeys.CLOSE_BRACKET, new int [] {2,12} },
+            {DeviceKeys.BACKSLASH, new int [] {2, 14} },
+            {DeviceKeys.NUM_SEVEN, new int [] {2, 15} },
+            {DeviceKeys.NUM_EIGHT, new int [] {2, 16} },
+            {DeviceKeys.NUM_NINE, new int [] {2, 17} },
+            {DeviceKeys.NUM_PLUS, new int [] {2, 18} },
+            {DeviceKeys.CAPS_LOCK, new int [] {3, 0} },
+            {DeviceKeys.A, new int [] {3, 1} },
+            {DeviceKeys.S, new int [] {3, 2} },
+            {DeviceKeys.D, new int [] {3, 3} },
+            {DeviceKeys.F, new int [] {3, 4} },
+            {DeviceKeys.G, new int [] {3, 5} },
+            {DeviceKeys.H, new int [] {3, 6} },
+            {DeviceKeys.J, new int [] {3, 7} },
+            {DeviceKeys.K, new int [] {3, 8} },
+            {DeviceKeys.L, new int [] {3, 9} },
+            {DeviceKeys.SEMICOLON, new int [] {3, 10} },
+            {DeviceKeys.APOSTROPHE, new int [] {3, 11} },
+            {DeviceKeys.HASHTAG, new int [] {3, 12} },
+            {DeviceKeys.ENTER, new int [] {3, 14} },
+            {DeviceKeys.NUM_FOUR, new int [] {3, 15} },
+            {DeviceKeys.NUM_FIVE, new int [] {3, 16} },
+            {DeviceKeys.NUM_SIX, new int [] {3, 17} },
+            {DeviceKeys.LEFT_SHIFT, new int [] {4, 0} },
+            {DeviceKeys.BACKSLASH_UK, new int [] {4, 1} },
+            {DeviceKeys.Z, new int [] {4, 2} },
+            {DeviceKeys.X, new int [] {4, 3} },
+            {DeviceKeys.C, new int [] {4, 4} },
+            {DeviceKeys.V, new int [] {4, 5} },
+            {DeviceKeys.B, new int [] {4, 6} },
+            {DeviceKeys.N, new int [] {4, 7} },
+            {DeviceKeys.M, new int [] {4, 8} },
+            {DeviceKeys.COMMA, new int [] {4, 9} },
+            {DeviceKeys.PERIOD, new int [] {4, 10} },
+            {DeviceKeys.FORWARD_SLASH, new int [] {4, 11} },
+            {DeviceKeys.RIGHT_SHIFT, new int [] {4, 14} },
+            {DeviceKeys.NUM_ONE, new int [] {4, 15} },
+            {DeviceKeys.NUM_TWO, new int [] {4, 16} },
+            {DeviceKeys.NUM_THREE, new int [] {4, 17} },
+            {DeviceKeys.NUM_ENTER, new int [] {4, 18} },
+            {DeviceKeys.LEFT_CONTROL, new int [] {5, 0} },
+            {DeviceKeys.LEFT_WINDOWS, new int [] {5, 1} },
+            {DeviceKeys.LEFT_ALT, new int [] {5, 2} },
+            {DeviceKeys.SPACE, new int [] {5, 6} },
+            {DeviceKeys.RIGHT_ALT, new int [] {5, 10} },
+            {DeviceKeys.RIGHT_WINDOWS, new int [] {5, 11} },
+            {DeviceKeys.APPLICATION_SELECT, new int [] {5, 12} },
+            {DeviceKeys.RIGHT_CONTROL, new int [] {5, 14} },
+            {DeviceKeys.NUM_ZERO, new int [] {5, 15} },
+            {DeviceKeys.NUM_ZEROZERO, new int [] {5, 16} },
+            {DeviceKeys.NUM_PERIOD, new int [] {5, 17} }
+        };
+
+        public static readonly Dictionary<CoolerMasterSDK.DEVICE_INDEX, Dictionary<DeviceKeys, int[]>> KeyboardLayoutMapping = new Dictionary<CoolerMasterSDK.DEVICE_INDEX, Dictionary<DeviceKeys, int[]>>
+        {
+            { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M, ProMKeyCoords },
+            { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M_White, ProMKeyCoords }
         };
     }
 
     class CoolerMasterDevice : Device
     {
         private String devicename = "Cooler Master";
+        private List<CoolerMasterSDK.DEVICE_INDEX> InitializedDevices = new List<CoolerMasterSDK.DEVICE_INDEX>();
+        private CoolerMasterSDK.DEVICE_INDEX CurrentDevice;
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
@@ -154,68 +269,25 @@ namespace Aurora.Devices.CoolerMaster
             {
                 if (!isInitialized)
                 {
+                    
                     try
                     {
-                        CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_L);
-                        if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
+                        foreach (CoolerMasterSDK.DEVICE_INDEX device in Enum.GetValues(typeof(CoolerMasterSDK.DEVICE_INDEX)))
                         {
-                            isInitialized = true;
-                            return true;
-                        }
-                        else
-                        {
-                            CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_S);
-                            if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
+                            try
                             {
-                                isInitialized = true;
-                                return true;
-                            }
-                            else
-                            {
-                                CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_L_White);
-                                if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
+                                bool init = SwitchToDevice(device);
+                                if (init)
                                 {
+                                    InitializedDevices.Add(device);
                                     isInitialized = true;
-                                    return true;
-                                }
-                                else
-                                {
-                                    CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M_White);
-                                    if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
-                                    {
-                                        isInitialized = true;
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M);
-                                        if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
-                                        {
-                                            isInitialized = true;
-                                            return true;
-                                        }
-                                        else
-                                        {
-                                            CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_S_White);
-                                            if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
-                                            {
-                                                isInitialized = true;
-                                                return true;
-                                            }
-                                            else
-                                            {
-                                                Global.logger.LogLine("Cooler Master device control could not be initialized", Logging_Level.Error);
-
-                                                isInitialized = false;
-                                                return false;
-                                            }
-                                        }
-                                    }
                                 }
                             }
+                            catch (Exception exc)
+                            {
+                                Global.logger.LogLine("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc, Logging_Level.Error);
+                            }
                         }
-
-
                     }
                     catch (Exception exc)
                     {
@@ -225,8 +297,27 @@ namespace Aurora.Devices.CoolerMaster
                     }
                 }
 
+                if (!isInitialized)
+                    Global.logger.LogLine("No Cooler Master devices successfully Initialized!");
+
                 return isInitialized;
             }
+        }
+
+        protected bool SwitchToDevice(CoolerMasterSDK.DEVICE_INDEX device)
+        {
+            if (CurrentDevice == device)
+                return true;
+
+            bool init = false;
+            CoolerMasterSDK.SetControlDevice(device);
+            CurrentDevice = device;
+            if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
+            {
+                init = true;
+            }
+
+            return init;
         }
 
         public void Shutdown()
@@ -245,7 +336,14 @@ namespace Aurora.Devices.CoolerMaster
         {
             if (isInitialized)
             {
-                return devicename + ": Connected";
+                string devString = devicename + ": ";
+                foreach (var device in InitializedDevices)
+                {
+                    devString += device.GetDescription() + " ";
+                }
+
+                devString += "Connected";
+                return devString;
             }
             else
             {
@@ -288,6 +386,12 @@ namespace Aurora.Devices.CoolerMaster
             if (Global.Configuration.devices_disable_keyboard)
                 return;
 
+            List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
+            if (devices.Count > 0)
+                SwitchToDevice(devices.First());
+            else
+                return;
+
             color_matrix.KeyColor = key_colors;
             CoolerMasterSDK.SetAllLedColor(color_matrix);
             //previous_key_colors = key_colors;
@@ -314,18 +418,30 @@ namespace Aurora.Devices.CoolerMaster
 
                     DeviceKeys dev_key = key.Key;
 
-                    if (dev_key == DeviceKeys.ENTER && (
-                            Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk ||
-                            Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.ru
-                            )
-                        )
+                    if (dev_key == DeviceKeys.ENTER && Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us)
                         dev_key = DeviceKeys.BACKSLASH;
 
-
-                    if (CoolerMasterKeys.KeyCoords.TryGetValue(dev_key, out coordinates))
+                    if (Effects.possible_peripheral_keys.Contains(key.Key))
                     {
-                        SetOneKey(coordinates, (Color)key.Value);
+                        //Temp until mice support is added
+                        continue;
+                        
+                        //Move this to the SendColorsToMouse as they do not need to be set on every key, they only need to be directed to the correct method for setting key/light
+                        /*List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
+                        if (devices.Count > 0)
+                            SwitchToDevice(devices.First());
+                        else
+                            return false;*/
                     }
+
+                    var coords = CoolerMasterKeys.KeyCoords;
+
+                    if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
+                        coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice];
+
+
+                    if (coords.TryGetValue(dev_key, out coordinates))
+                        SetOneKey(coordinates, (Color)key.Value);
                 }
                 SendColorsToKeyboard(forced || !keyboard_updated);
                 return true;

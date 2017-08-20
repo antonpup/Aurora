@@ -132,7 +132,7 @@ namespace Aurora
         int pushedframes = 0;
         Timer fpsDebugTimer = new Timer(1000D);
 
-        private static Devices.DeviceKeys[] possible_peripheral_keys = {
+        public static Devices.DeviceKeys[] possible_peripheral_keys = {
                     Devices.DeviceKeys.Peripheral,
                     Devices.DeviceKeys.Peripheral_FrontLight,
                     Devices.DeviceKeys.Peripheral_ScrollWheel,
@@ -308,7 +308,7 @@ namespace Aurora
 
                 background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
 
-                if (Global.Configuration.use_volume_as_brightness)
+                if (Global.Configuration.UseVolumeAsBrightness)
                     background *= Global.Configuration.GlobalBrightness;
 
                 if (_forcedFrame != null)

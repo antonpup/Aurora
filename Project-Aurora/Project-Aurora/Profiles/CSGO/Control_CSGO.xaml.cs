@@ -55,12 +55,11 @@ namespace Aurora.Profiles.CSGO
         private void SetSettings()
         {
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
-
+            this.preview_team.Items.Clear();
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.Undefined);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.CT);
             this.preview_team.Items.Add(Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.T);
-
-            this.cz.ColorZonesList = (profile_manager.Profile as CSGOProfile).lighting_areas;
+            this.preview_team.SelectedItem = Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.Undefined;
         }
 
         private void preview_bomb_timer_Tick(object sender, EventArgs e)
@@ -115,6 +114,8 @@ namespace Aurora.Profiles.CSGO
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (this.preview_team.Items.Count == 0)
+                return;
             (profile_manager.Config.Event._game_state as GameState_CSGO).Player.Team = (Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
         }
 
@@ -272,15 +273,6 @@ namespace Aurora.Profiles.CSGO
             preview_killshs = 0;
 
             preview_kills_label.Text = String.Format("Kills: {0} Headshots: {1}", preview_kills, preview_killshs);
-        }
-
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Profile as CSGOProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
-                profile_manager.SaveProfiles();
-            }
         }
 
         private bool InstallGSI()

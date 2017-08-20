@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using static CoolerMaster.CoolerMasterSDK;
@@ -34,15 +36,39 @@ namespace CoolerMaster
 
         public enum DEVICE_INDEX
         {
+            [Description("MasterKeys Pro L")]
             DEV_MKeys_L = 0,
+            [Description("MasterKeys Pro S")]
             DEV_MKeys_S = 1,
+            [Description("MasterKeys Pro L White")]
             DEV_MKeys_L_White = 2,
+            [Description("MasterKeys Pro M White")]
             DEV_MKeys_M_White = 3,
+            [Description("MasterMouse Pro L")]
             DEV_MMouse_L = 4,
+            [Description("MasterMouse Pro S")]
             DEV_MMouse_S = 5,
+            [Description("MasterKeys Pro M")]
             DEV_MKeys_M = 6,
+            [Description("MasterKeys Pro S White")]
             DEV_MKeys_S_White = 7,
         }
+
+        public static List<DEVICE_INDEX> Mice = new List<DEVICE_INDEX>
+        {
+            DEVICE_INDEX.DEV_MMouse_L,
+            DEVICE_INDEX.DEV_MMouse_S
+        };
+
+        public static List<DEVICE_INDEX> Keyboards = new List<DEVICE_INDEX>
+        {
+            DEVICE_INDEX.DEV_MKeys_L,
+            DEVICE_INDEX.DEV_MKeys_L_White,
+            DEVICE_INDEX.DEV_MKeys_M,
+            DEVICE_INDEX.DEV_MKeys_M_White,
+            DEVICE_INDEX.DEV_MKeys_S,
+            DEVICE_INDEX.DEV_MKeys_S_White,
+        };
 
         public enum LAYOUT_KEYBOARD
         {

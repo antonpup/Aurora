@@ -61,11 +61,6 @@
                     <Label Content="(Note: In-game siren effect has a slightly different animation speed from this preview)" HorizontalAlignment="Left" Margin="149,41,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Color Zones">
-                <Grid>
-                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
-                </Grid>
-            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

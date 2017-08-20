@@ -189,11 +189,13 @@ namespace Aurora.Profiles
         {
             if (profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
             {
-                if (Profile.Equals(profile))
-                    SwitchToProfile(Profiles[Math.Max(Profiles.IndexOf(profile) -1, 0)]);
+                int profileIndex = Profiles.IndexOf(profile);
 
                 if (Profiles.Contains(profile))
                     Profiles.Remove(profile);
+
+                if (Profile.Equals(profile))
+                    SwitchToProfile(Profiles[Math.Max(profileIndex, 0)]);
 
                 if (File.Exists(profile.ProfileFilepath))
                 {
@@ -407,6 +409,7 @@ namespace Aurora.Profiles
                 try
                 {
                     string ext = Path.GetExtension(script);
+                    bool anyLoaded = false;
                     switch (ext)
                     {
                         case ".py":
@@ -423,6 +426,8 @@ namespace Aurora.Profiles
                                         {
                                             if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
                                                 Global.logger.LogLine($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}", Logging_Level.External);
+                                            else
+                                                anyLoaded = true;
                                         }
                                         else
                                             Global.logger.LogLine($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
@@ -442,14 +447,19 @@ namespace Aurora.Profiles
                                     IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
                                     if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
                                         Global.logger.LogLine(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName), Logging_Level.External);
+                                    else
+                                        anyLoaded = true;
                                 }
                             }
 
                             break;
                         default:
                             Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext), Logging_Level.External);
-                            break;
+                            continue;
                     }
+
+                    if (!anyLoaded)
+                        Global.logger.LogLine($"Script \"{script}\": No compatible effects found. Does this script need to be updated?", Logging_Level.External);
                 }
                 catch (Exception exc)
                 {

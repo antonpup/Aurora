@@ -259,35 +259,39 @@ namespace Aurora.Controls
 
         private void ColorPickerDrawing_control_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            SetValue(VariableObjectProperty, Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value));
+            ColorPicker picker = (sender as ColorPicker);
+            if (picker.SelectedColor == null)
+                picker.SelectedColor = Color.FromArgb(0, 0, 0, 0);
+
+            SetValue(VariableObjectProperty, Utils.ColorUtils.MediaColorToDrawingColor(picker.SelectedColor.Value));
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
         private void DoubleUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SetValue(VariableObjectProperty, (double)(sender as DoubleUpDown).Value);
+            SetValue(VariableObjectProperty, (double)((sender as DoubleUpDown).Value ?? 0.0));
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
         private void FloatUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SetValue(VariableObjectProperty, (float)(sender as DoubleUpDown).Value);
+            SetValue(VariableObjectProperty, (float)((sender as DoubleUpDown).Value ?? 0.0f));
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
         private void LongUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SetValue(VariableObjectProperty, (sender as LongUpDown).Value);
+            SetValue(VariableObjectProperty, (sender as LongUpDown).Value ?? 0L);
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
         private void IntUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SetValue(VariableObjectProperty, (sender as IntegerUpDown).Value);
+            SetValue(VariableObjectProperty, (sender as IntegerUpDown).Value ?? 0);
 
             VariableUpdated?.Invoke(this, VariableObject);
         }

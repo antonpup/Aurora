@@ -30,6 +30,14 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool DimBackground { get { return (Logic._DimBackground ?? _DimBackground) ?? false; } }
 
+        [JsonIgnore]
+        public bool? __MergeModifierKey { get; set; }
+
+        public bool? _MergeModifierKey { get { return __MergeModifierKey; } set { __MergeModifierKey = value; ShortcutKeysInvalidated = true; } }
+
+        [JsonIgnore]
+        public bool MergeModifierKey { get { return (Logic._MergeModifierKey ?? _MergeModifierKey) ?? default(bool); } }
+
         public Color? _DimColor { get; set; }
 
         [JsonIgnore]
@@ -63,7 +71,17 @@ namespace Aurora.Settings.Layers
                     _ShortcutKeysTree = new Tree<Keys>(Keys.None);
 
                     foreach (Keybind keyb in ShortcutKeys)
-                        _ShortcutKeysTree.AddBranch(keyb.ToArray());
+                    {
+                        Keys[] keys = keyb.ToArray();
+
+                        if (MergeModifierKey)
+                        {
+                            for (int i = 0; i < keys.Length; i++)
+                                keys[i] = KeyUtils.GetStandardKey(keys[i]);
+                        }
+
+                        _ShortcutKeysTree.AddBranch(keys);
+                    }
 
                     ShortcutKeysInvalidated = false;
                 }
@@ -87,6 +105,7 @@ namespace Aurora.Settings.Layers
             _DimBackground = true;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
             _PresentationType = ShortcutAssistantPresentationType.Default;
+            _MergeModifierKey = true;
         }
     }
 
@@ -106,14 +125,15 @@ namespace Aurora.Settings.Layers
         {
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
 
-            Keys[] heldKeys = Global.input_subscriptions.PressedKeys;
+            Keys[] heldKeys = Global.InputEvents.PressedKeys;
+
+            
 
             Tree<Keys> _childKeys = Properties.ShortcutKeysTree;
-
             foreach (var key in heldKeys)
             {
                 if(_childKeys != null)
-                    _childKeys = _childKeys.ContainsItem(key);
+                    _childKeys = _childKeys.ContainsItem(Properties.MergeModifierKey ? KeyUtils.GetStandardKey(key) : key);
             }
 
             if(_childKeys != null && _childKeys.Item != Keys.None)
@@ -130,8 +150,8 @@ namespace Aurora.Settings.Layers
                     if (Properties.DimBackground)
                         sc_assistant_layer.Fill(Properties.DimColor);
 
-                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(shortcutKeys), Properties.PrimaryColor);
-                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(heldKeys), Properties.PrimaryColor);
+                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(shortcutKeys, true, !Console.NumberLock), Properties.PrimaryColor);
+                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(heldKeys, true), Properties.PrimaryColor);
                 }
             }
 

@@ -44,7 +44,7 @@ namespace Aurora.Profiles.CSGO.Layers
                 this.ColorPicker_T.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOBackgroundLayerHandler).Properties._TColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_Default.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOBackgroundLayerHandler).Properties._DefaultColor ?? System.Drawing.Color.Empty);
                 this.Checkbox_DimEnabled.IsChecked = (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimEnabled;
-                this.TextBox_DimValue.Text = (int)(this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay + "s";
+                this.TextBox_DimValue.Content = (int)(this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay + "s";
                 this.Slider_DimSelector.Value = (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay.Value;
 
                 settingsset = true;
@@ -98,8 +98,7 @@ namespace Aurora.Profiles.CSGO.Layers
             {
                 (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay = (sender as Slider).Value;
 
-                if (this.TextBox_DimValue is TextBlock)
-                    this.TextBox_DimValue.Text = (int)(sender as Slider).Value + "s";
+                this.TextBox_DimValue.Content = (int)(sender as Slider).Value + "s";
             }
         }
     }
