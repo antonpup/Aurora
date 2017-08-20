@@ -7,10 +7,6 @@ namespace Aurora.Profiles.Serious_Sam_3
 {
     public class SSam3Profile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public SSam3Profile() : base()
         {
             
@@ -40,10 +36,6 @@ namespace Aurora.Profiles.Serious_Sam_3
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

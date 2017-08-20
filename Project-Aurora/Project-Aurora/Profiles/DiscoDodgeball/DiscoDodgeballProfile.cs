@@ -7,10 +7,6 @@ namespace Aurora.Profiles.DiscoDodgeball
 {
     public class DiscoDodgeballProfile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public DiscoDodgeballProfile() : base()
         {
             
@@ -31,10 +27,6 @@ namespace Aurora.Profiles.DiscoDodgeball
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

@@ -11,11 +11,5 @@ namespace Aurora.Profiles.BF3
         {
             _game_state = new GameState_Wrapper();
         }
-
-        protected override void UpdateExtraLights(Queue<EffectLayer> layers)
-        {
-            //ColorZones
-            layers.Enqueue(new EffectLayer("BF3 - Color Zones").DrawColorZones((this.Application.Profile as BF3Profile).lighting_areas.ToArray()));
-        }
     }
 }

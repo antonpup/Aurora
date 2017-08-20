@@ -10,12 +10,5 @@ namespace Aurora.Profiles.Magic_Duels_2012
         public GameEvent_MagicDuels2012()
         {
         }
-
-        protected override void UpdateExtraLights(Queue<EffectLayer> layers)
-        {
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Magic Duels 2012 - Color Zones").DrawColorZones((this.Application.Profile as MagicDuels2012Profile).lighting_areas.ToArray()));
-        }
-
     }
 }

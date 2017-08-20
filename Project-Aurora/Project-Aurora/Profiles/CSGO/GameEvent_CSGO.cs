@@ -33,9 +33,6 @@ namespace Aurora.Profiles.CSGO
             //Scripts
             this.Application.UpdateEffectScripts(layers, _game_state);
 
-            //ColorZones
-            layers.Enqueue(new EffectLayer("CSGO - Color Zones").DrawColorZones((this.Application.Profile as CSGOProfile).lighting_areas.ToArray()));
-
             frame.AddLayers(layers.ToArray());
         }
 

@@ -60,11 +60,6 @@
                     <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="This is a profile for Desktop effects. This profile will be active during non-gaming profiles."/><LineBreak/><Run/><LineBreak/><Run Text="This profile includes CPU and RAM usage indicators, a shortcuts assistant, color zones, and interactive effects."/></TextBlock>
                 </Grid>
             </TabItem>
-            <TabItem Header="Color Zones">
-                <Grid>
-                    <Controls:ColorZones x:Name="desktop_cz" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" ColorZonesListUpdated="desktop_cz_ColorZonesListUpdated" Margin="10,10,0,0"/>
-                </Grid>
-            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

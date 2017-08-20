@@ -7,10 +7,6 @@ namespace Aurora.Profiles.Metro_Last_Light
 {
     public class MetroLLProfile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public MetroLLProfile() : base()
         {
             
@@ -49,10 +45,6 @@ namespace Aurora.Profiles.Metro_Last_Light
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

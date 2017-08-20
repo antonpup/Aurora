@@ -29,9 +29,6 @@ namespace Aurora.Profiles.Payday_2
             //Scripts
             this.Application.UpdateEffectScripts(layers, _game_state);
 
-            //ColorZones
-            layers.Enqueue(new EffectLayer("PD2 - Color Zones").DrawColorZones((this.Application.Profile as PD2Profile).lighting_areas.ToArray()));
-
             frame.AddLayers(layers.ToArray());
         }
 

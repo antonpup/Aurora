@@ -10,11 +10,5 @@ namespace Aurora.Profiles.DiscoDodgeball
         public GameEvent_DiscoDodgeball()
         {
         }
-
-        protected override void UpdateExtraLights(Queue<EffectLayer> layers)
-        {
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Disco Dodgeball - Color Zones").DrawColorZones((this.Application.Profile as DiscoDodgeballProfile).lighting_areas.ToArray()));
-        }
     }
 }

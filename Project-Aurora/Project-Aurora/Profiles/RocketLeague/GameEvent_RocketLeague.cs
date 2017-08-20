@@ -110,9 +110,6 @@ namespace Aurora.Profiles.RocketLeague
             //Scripts
             this.Application.UpdateEffectScripts(layers);
 
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Rocket League - Color Zones").DrawColorZones((this.Application.Profile as RocketLeagueProfile).lighting_areas.ToArray()));
-
             frame.AddLayers(layers.ToArray());
         }
 

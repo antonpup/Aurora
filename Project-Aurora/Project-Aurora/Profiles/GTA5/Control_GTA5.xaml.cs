@@ -36,7 +36,6 @@ namespace Aurora.Profiles.GTA5
         private void SetSettings()
         {
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Profile as GTA5Profile).lighting_areas;
         }
 
         private void preview_state_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -79,15 +78,6 @@ namespace Aurora.Profiles.GTA5
                     preview_wantedlevel_timer.Interval = 600D - 50D * value;
                     (profile_manager.Config.Event._game_state as GameState_GTA5).HasCops = true;
                 }
-            }
-        }
-
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Profile as GTA5Profile).lighting_areas = (sender as ColorZones).ColorZonesList;
-                profile_manager.SaveProfiles();
             }
         }
 

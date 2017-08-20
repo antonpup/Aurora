@@ -7,10 +7,6 @@ namespace Aurora.Profiles.ShadowOfMordor
 {
     public class ShadowOfMordorProfile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public ShadowOfMordorProfile() : base()
         {
             
@@ -40,10 +36,6 @@ namespace Aurora.Profiles.ShadowOfMordor
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

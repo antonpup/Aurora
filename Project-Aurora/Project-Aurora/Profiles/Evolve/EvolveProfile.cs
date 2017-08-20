@@ -7,10 +7,6 @@ namespace Aurora.Profiles.Evolve
 {
     public class EvolveProfile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public EvolveProfile() : base()
         {
 
@@ -40,10 +36,6 @@ namespace Aurora.Profiles.Evolve
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

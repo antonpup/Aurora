@@ -7,10 +7,6 @@ namespace Aurora.Profiles.TheTalosPrinciple
 {
     public class TalosPrincipleProfile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public TalosPrincipleProfile() : base()
         {
             
@@ -40,10 +36,6 @@ namespace Aurora.Profiles.TheTalosPrinciple
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

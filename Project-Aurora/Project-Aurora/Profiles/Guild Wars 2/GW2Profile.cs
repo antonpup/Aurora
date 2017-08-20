@@ -7,10 +7,6 @@ namespace Aurora.Profiles.Guild_Wars_2
 {
     public class GW2Profile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public GW2Profile() : base()
         {
 
@@ -67,10 +63,6 @@ namespace Aurora.Profiles.Guild_Wars_2
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

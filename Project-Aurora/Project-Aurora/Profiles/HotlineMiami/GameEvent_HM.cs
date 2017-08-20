@@ -10,11 +10,5 @@ namespace Aurora.Profiles.HotlineMiami
         public GameEvent_HM()
         {
         }
-
-        protected override void UpdateExtraLights(Queue<EffectLayer> layers)
-        {
-            //ColorZones
-            layers.Enqueue(new EffectLayer("Hotline - Color Zones").DrawColorZones((this.Application.Profile as HMProfile).lighting_areas.ToArray()));
-        }
     }
 }

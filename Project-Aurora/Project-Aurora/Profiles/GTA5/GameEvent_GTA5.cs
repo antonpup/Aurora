@@ -30,9 +30,6 @@ namespace Aurora.Profiles.GTA5
             //Scripts
             this.Application.UpdateEffectScripts(layers, _game_state);
 
-            //ColorZones
-            layers.Enqueue(new EffectLayer("GTA 5 - Color Zones").DrawColorZones((this.Application.Profile as GTA5Profile).lighting_areas.ToArray()));
-
             frame.AddLayers(layers.ToArray());
         }
 

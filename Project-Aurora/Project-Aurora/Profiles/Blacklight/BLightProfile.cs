@@ -7,10 +7,6 @@ namespace Aurora.Profiles.Blacklight
 {
     public class BLightProfile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public BLightProfile() : base()
         {
             
@@ -31,10 +27,6 @@ namespace Aurora.Profiles.Blacklight
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

@@ -31,11 +31,6 @@
                     <Button x:Name="patch_drm_button" Content="Patch Hotline Miami manually" HorizontalAlignment="Left" Margin="157,131,0,0" VerticalAlignment="Top" Click="patch_drm_button_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Color Zones">
-                <Grid>
-                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
-                </Grid>
-            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

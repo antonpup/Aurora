@@ -7,10 +7,6 @@ namespace Aurora.Profiles.HotlineMiami
 {
     public class HMProfile : ApplicationProfile
     {
-        //Effects
-        //// Lighting Areas
-        public List<ColorZone> lighting_areas { get; set; }
-
         public HMProfile() : base()
         {
             
@@ -40,10 +36,6 @@ namespace Aurora.Profiles.HotlineMiami
                 }
                 )
             };
-
-            //Effects
-            //// Lighting Areas
-            lighting_areas = new List<ColorZone>();
         }
     }
 }

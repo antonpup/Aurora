@@ -85,10 +85,9 @@ namespace Aurora.Profiles.CSGO.Layers
                 if (csgostate.Player.State.Health == 100 && ((csgostate.Previously.Player.State.Health > -1 && csgostate.Previously.Player.State.Health < 100) || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined)) && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
                 {
                     isDimming = false;
-                    dim_bg_at = Utils.Time.GetMillisecondsSinceEpoch() + (Application.Profile as CSGOProfile).bg_dim_after * 1000L;
+                    dim_bg_at = Utils.Time.GetMillisecondsSinceEpoch() + (long)(this.Properties.DimDelay * 1000D);
                     dim_value = 1.0;
                 }
-
 
                 Color bg_color = this.Properties.DefaultColor;
 

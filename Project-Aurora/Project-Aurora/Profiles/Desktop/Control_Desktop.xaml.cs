@@ -34,9 +34,6 @@ namespace Aurora.Profiles.Desktop
         private void SetSettings()
         {
             this.profile_enabled.IsChecked = profile_manager.Settings.IsEnabled;
-
-            this.desktop_cz.ColorZonesList = (profile_manager.Profile as DesktopProfile).lighting_areas;
-
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -62,15 +59,6 @@ namespace Aurora.Profiles.Desktop
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
-        }
-
-        private void desktop_cz_ColorZonesListUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Profile as DesktopProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
-                profile_manager.SaveProfiles();
-            }
         }
     }
 }

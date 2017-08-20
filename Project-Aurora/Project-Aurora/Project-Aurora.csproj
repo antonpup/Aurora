@@ -291,7 +291,7 @@
     </Compile>
     <Compile Include="Profiles\BF3\GameEvent_BF3.cs" />
     <Compile Include="Profiles\Blacklight\BLightApplication.cs" />
-    <Compile Include="Profiles\Blacklight\BLightSettings.cs" />
+    <Compile Include="Profiles\Blacklight\BLightProfile.cs" />
     <Compile Include="Profiles\Blacklight\Control_BLight.xaml.cs">
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>

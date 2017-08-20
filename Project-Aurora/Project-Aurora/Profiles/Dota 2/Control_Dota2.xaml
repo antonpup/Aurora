@@ -59,11 +59,6 @@
                     <Label x:Name="preview_killstreak_label" Content="Killstreak: 0" HorizontalAlignment="Left" Margin="90,131,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Color Zones">
-                <Grid>
-                    <Controls:ColorZones x:Name="cz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="252" ColorZonesListUpdated="cz_ColorZonesListUpdated"/>
-                </Grid>
-            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>
