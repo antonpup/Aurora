@@ -37,7 +37,16 @@ namespace Aurora.Settings
             if (runRegistryPath.GetValue("Aurora") != null)
                 runRegistryPath.DeleteValue("Aurora");
             using (TaskService service = new TaskService()) {
-                this.run_at_win_startup.IsChecked = service.FindTask(StartupTaskID)?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
+                Microsoft.Win32.TaskScheduler.Task task = service.FindTask(StartupTaskID);
+                this.run_at_win_startup.IsChecked = task?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
+                if (task != null)
+                {
+                    //Update path of startup task
+                    string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    task.Definition.Actions.Clear();
+                    task.Definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
+                    service.RootFolder.RegisterTaskDefinition(StartupTaskID, task.Definition);
+                }
             }
 
             string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
