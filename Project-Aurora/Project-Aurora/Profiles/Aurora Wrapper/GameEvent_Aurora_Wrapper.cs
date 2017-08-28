@@ -402,12 +402,14 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
             float H = 0.0f;
             if (M == R)
-                H = (G - B) / C + 6;
+                H = (G - B) / C % 6;
             else if (M == G)
                 H = (B - R) / C + 2;
             else if (M == B)
                 H = (R - G) / C + 4;
             H *= 60.0f;
+            if (H < 0.0f)
+                H += 360.0f;
 
             float V = M;
             float S = 0;
