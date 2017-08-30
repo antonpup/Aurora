@@ -318,6 +318,9 @@ namespace Aurora.Settings
         private bool getDevReleases = false;
         public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
 
+        private bool highPriority = false;
+        public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
+
         private bool showDefaultLightingOnDisabled = false;
         public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
 

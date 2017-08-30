@@ -1064,5 +1064,10 @@ namespace Aurora.Settings
                 ConfigManager.Save(Global.Configuration);
             }
         }
+
+        private void chkHigherPriority_IsCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
+        }
     }
 }
