@@ -1,4 +1,5 @@
-﻿using Aurora.Profiles.Desktop;
+﻿using Aurora.Devices;
+using Aurora.Profiles.Desktop;
 using Aurora.Profiles.GTA5;
 using Aurora.Profiles.Payday_2.GSI.Nodes;
 using Aurora.Settings;
@@ -78,9 +79,36 @@ namespace Aurora.Utils
         }
     }
 
-    public class DeviceKeysToStringVC : EnumToStringVC
+    public class DeviceKeysToStringVC : IValueConverter
     {
-        public DeviceKeysToStringVC() : base(Devices.DeviceKeys.NONE) { }
+        protected Type EnumType = typeof(DeviceKeys);
+        protected Enum DefaultEnum = DeviceKeys.NONE;
+
+        public DeviceKeysToStringVC() { }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (EnumType == null)
+                return null;
+
+
+            if (value == null || string.IsNullOrEmpty(value.ToString()) || (value.GetType() != EnumType && value.GetType() != typeof(string)))
+                return DefaultEnum.GetDescription();
+
+            DeviceKeys key = (DeviceKeys)value;
+
+            return Global.kbLayout.KeyText.ContainsKey(key) ? Global.kbLayout.KeyText[key] : key.GetDescription();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (EnumType == null)
+                return null;
+
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return (Enum)Enum.Parse(EnumType, DefaultEnum.ToString());
+            return this.StringToEnum(EnumType, value.ToString());
+        }
     }
 
     public class KeysToStringVC : EnumToStringVC
