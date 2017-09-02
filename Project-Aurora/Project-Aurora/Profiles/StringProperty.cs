@@ -19,73 +19,78 @@ namespace Aurora.Profiles
     public class StringProperty<T> : IStringProperty
     {
         public static Dictionary<string, Tuple<Func<T, object>, Action<T, object>>> PropertyLookup { get; set; } = null;
+        public static object DictLock = new object();
 
         public StringProperty()
         {
-            if (PropertyLookup != null)
-                return;
-
-            PropertyLookup = new Dictionary<string, Tuple<Func<T, object>, Action<T, object>>>();
-
-            Type typ = typeof(T);
-            foreach (MemberInfo prop in typ.GetMembers())
+            lock (DictLock)
             {
-                ParameterExpression paramExpression = Expression.Parameter(typ);
-                Func<T, object> getp;
-                switch (prop.MemberType)
+                if (PropertyLookup != null)
+                    return;
+
+                PropertyLookup = new Dictionary<string, Tuple<Func<T, object>, Action<T, object>>>();
+
+                Type typ = typeof(T);
+                foreach (MemberInfo prop in typ.GetMembers())
                 {
-                    case MemberTypes.Property:
-                    case MemberTypes.Field:
-                        Type t = Expression.GetFuncType(typ, typeof(object));
+                    ParameterExpression paramExpression = Expression.Parameter(typ);
+                    Func<T, object> getp;
+                    switch (prop.MemberType)
+                    {
+                        case MemberTypes.Property:
+                        case MemberTypes.Field:
+                            Type t = Expression.GetFuncType(typ, typeof(object));
 
-                        LambdaExpression exp = Expression.Lambda(
-                            t,
-                            Expression.Convert(
-                                Expression.PropertyOrField(paramExpression, prop.Name),
-                                typeof(object)
-                            ),
-                            paramExpression
-                        );
+                            LambdaExpression exp = Expression.Lambda(
+                                t,
+                                Expression.Convert(
+                                    Expression.PropertyOrField(paramExpression, prop.Name),
+                                    typeof(object)
+                                ),
+                                paramExpression
+                            );
 
-                        getp = (Func<T, object>)exp.Compile();
-                        break;
-                    /*case MemberTypes.Property:
-                        getp = (Func<T, object>)Delegate.CreateDelegate(
-                            typeof(Func<T, object>),
-                            ((PropertyInfo)prop).GetMethod
-                        );
+                            getp = (Func<T, object>)exp.Compile();
+                            break;
+                        /*case MemberTypes.Property:
+                            getp = (Func<T, object>)Delegate.CreateDelegate(
+                                typeof(Func<T, object>),
+                                ((PropertyInfo)prop).GetMethod
+                            );
 
-                        break;*/
-                    default:
-                        continue;
+                            break;*/
+                        default:
+                            continue;
+                    }
+
+
+
+                    Action<T, object> setp = null;
+                    if (!(prop.MemberType == MemberTypes.Property && ((PropertyInfo)prop).SetMethod == null))
+                    {
+                        ParameterExpression paramExpression2 = Expression.Parameter(typeof(object));
+                        MemberExpression propertyGetterExpression = Expression.PropertyOrField(paramExpression, prop.Name);
+
+                        Type var_type;
+                        if (prop is PropertyInfo)
+                            var_type = ((PropertyInfo)prop).PropertyType;
+                        else
+                            var_type = ((FieldInfo)prop).FieldType;
+
+                        setp = Expression.Lambda<Action<T, object>>
+                        (
+                            Expression.Assign(propertyGetterExpression, Expression.ConvertChecked(paramExpression2, var_type)), paramExpression, paramExpression2
+                        ).Compile();
+                    }
+                    if (!PropertyLookup.ContainsKey(prop.Name))
+                    {
+                        PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>>(getp, setp));
+                    }
+
                 }
-
-
-                
-                Action<T, object> setp = null;
-                if (!(prop.MemberType == MemberTypes.Property && ((PropertyInfo)prop).SetMethod == null))
-                {
-                    ParameterExpression paramExpression2 = Expression.Parameter(typeof(object));
-                    MemberExpression propertyGetterExpression = Expression.PropertyOrField(paramExpression, prop.Name);
-
-                    Type var_type;
-                    if (prop is PropertyInfo)
-                        var_type = ((PropertyInfo)prop).PropertyType;
-                    else
-                        var_type = ((FieldInfo)prop).FieldType;
-
-                    setp = Expression.Lambda<Action<T, object>>
-                    (
-                        Expression.Assign(propertyGetterExpression, Expression.ConvertChecked(paramExpression2, var_type)), paramExpression, paramExpression2
-                    ).Compile();
-                }
-                if (!PropertyLookup.ContainsKey(prop.Name))
-                {
-                    PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>>(getp, setp));
-                }
-
             }
         }
+
         public object GetValueFromString(string name, object input = null)
         {
             if (PropertyLookup.ContainsKey(name))

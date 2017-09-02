@@ -288,6 +288,10 @@ namespace Aurora.Devices.CoolerMaster
                                 Global.logger.LogLine("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc, Logging_Level.Error);
                             }
                         }
+
+                        List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
+                        if (devices.Count > 0)
+                            SwitchToDevice(devices.First());
                     }
                     catch (Exception exc)
                     {
@@ -386,10 +390,7 @@ namespace Aurora.Devices.CoolerMaster
             if (Global.Configuration.devices_disable_keyboard)
                 return;
 
-            List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
-            if (devices.Count > 0)
-                SwitchToDevice(devices.First());
-            else
+            if (!CoolerMasterSDK.Keyboards.Contains(CurrentDevice))
                 return;
 
             color_matrix.KeyColor = key_colors;
@@ -438,7 +439,6 @@ namespace Aurora.Devices.CoolerMaster
 
                     if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
                         coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice];
-
 
                     if (coords.TryGetValue(dev_key, out coordinates))
                         SetOneKey(coordinates, (Color)key.Value);

@@ -592,16 +592,18 @@ namespace Aurora.Profiles
         {
             //Debug.WriteLine("Received gs!");
 
-            //Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
+//Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
 
-            //UpdateProcess();
+//UpdateProcess();
 
-            //string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
+//string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
 
-            //EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
-
+//EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
+#if DEBUG
+#else
             try
             {
+#endif
                 ILightEvent profile;// = this.GetProfileFromProcess(process_name);
 
                 JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
@@ -626,12 +628,14 @@ namespace Aurora.Profiles
                         profile.SetGameState(gs);
                     }
                 }
-
+#if DEBUG
+#else
             }
             catch (Exception e)
             {
                 Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);
             }
+#endif
         }
 
         public void ResetGameState(string process)

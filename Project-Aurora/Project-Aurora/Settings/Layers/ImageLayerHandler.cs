@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,8 @@ namespace Aurora.Settings.Layers
                 if (!_loaded_image_path.Equals(Properties.ImagePath))
                 {
                     //Not loaded, load it!
+                    if (!File.Exists(Properties.ImagePath))
+                        throw new FileNotFoundException("Could not find file specified for layer: " + Properties.ImagePath);
 
                     _loaded_image = new Bitmap(Properties.ImagePath);
                     _loaded_image_path = Properties.ImagePath;
