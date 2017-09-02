@@ -408,6 +408,8 @@ namespace Aurora.Profiles.Aurora_Wrapper
             else if (M == B)
                 H = (R - G) / C + 4;
             H *= 60.0f;
+            if (H < 0.0f)
+                H += 360.0f;
 
             float V = M;
             float S = 0;
@@ -428,8 +430,6 @@ namespace Aurora.Profiles.Aurora_Wrapper
             float[] rgb = new float[] { 0, 0, 0 };
 
             float X = (float)(C * (1 - Math.Abs(H % 2 - 1)));
-            Console.WriteLine("C> " + C);
-            Console.WriteLine("X> " + X);
 
             int i = (int)Math.Floor(H);
             switch (i)
