@@ -285,7 +285,7 @@ namespace Aurora.Devices.CoolerMaster
                             }
                             catch (Exception exc)
                             {
-                                Global.logger.LogLine("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc, Logging_Level.Error);
+                                Global.logger.Error("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc);
                             }
                         }
 
@@ -295,14 +295,14 @@ namespace Aurora.Devices.CoolerMaster
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine("There was an error initializing Cooler Master SDK.\r\n" + exc.Message, Logging_Level.Error);
+                        Global.logger.Error("There was an error initializing Cooler Master SDK.\r\n" + exc.Message);
 
                         return false;
                     }
                 }
 
                 if (!isInitialized)
-                    Global.logger.LogLine("No Cooler Master devices successfully Initialized!");
+                    Global.logger.Info("No Cooler Master devices successfully Initialized!");
 
                 return isInitialized;
             }
@@ -448,7 +448,7 @@ namespace Aurora.Devices.CoolerMaster
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Failed to Update Device" + e.ToString(), Logging_Level.Error);
+                Global.logger.Error("Failed to Update Device" + e.ToString());
                 return false;
             }
         }

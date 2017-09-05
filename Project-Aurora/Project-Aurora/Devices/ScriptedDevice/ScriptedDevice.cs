@@ -63,7 +63,7 @@ namespace Aurora.Devices.ScriptedDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Device script for {0} encountered an error during Initialization. Exception: {1}", devicename, exc), Logging_Level.External);
+                    Global.logger.Error(string.Format("Device script for {0} encountered an error during Initialization. Exception: {1}", devicename, exc));
                     crashed = true;
                     isInitialized = false;
 
@@ -109,7 +109,7 @@ namespace Aurora.Devices.ScriptedDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Device script for {0} encountered an error during Reset. Exception: {1}", devicename, exc), Logging_Level.External);
+                    Global.logger.Error(string.Format("Device script for {0} encountered an error during Reset. Exception: {1}", devicename, exc));
                     crashed = true;
                     isInitialized = false;
                 }
@@ -128,7 +128,7 @@ namespace Aurora.Devices.ScriptedDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Device script for {0} encountered an error during Shutdown. Exception: {1}", devicename, exc), Logging_Level.External);
+                    Global.logger.Error(string.Format("Device script for {0} encountered an error during Shutdown. Exception: {1}", devicename, exc));
                     crashed = true;
                     isInitialized = false;
                 }
@@ -145,7 +145,7 @@ namespace Aurora.Devices.ScriptedDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Device script for {0} encountered an error during UpdateDevice. Exception: {1}", devicename, exc), Logging_Level.External);
+                    Global.logger.Error(string.Format("Device script for {0} encountered an error during UpdateDevice. Exception: {1}", devicename, exc));
                     crashed = true;
                     isInitialized = false;
 

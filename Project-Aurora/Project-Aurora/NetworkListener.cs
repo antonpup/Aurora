@@ -132,7 +132,7 @@ namespace Aurora
                     if (exc.ErrorCode == 5)//Access Denied
                         System.Windows.MessageBox.Show($"Access error during start of network listener.\r\n\r\nTo fix this issue, please run the following commands as admin in Command Prompt:\r\n   netsh http add urlacl url=http://localhost:{Port}/ user=Everyone listen=yes\r\nand\r\n   netsh http add urlacl url=http://127.0.0.1:{Port}/ user=Everyone listen=yes", "Aurora - Error");
 
-                    Global.logger.LogLine(exc.ToString(), Logging_Level.Error);
+                    Global.logger.Error(exc.ToString());
 
                     return false;
                 }
@@ -272,10 +272,10 @@ namespace Aurora
                     {
                         wrapper_connected = false;
                         wrapped_process = "";
-                        Global.logger.LogLine(String.Format("[IPCServer] Pipe created {0}", IPCpipeStream?.GetHashCode()));
+                        Global.logger.Info(String.Format("[IPCServer] Pipe created {0}", IPCpipeStream?.GetHashCode()));
 
                         IPCpipeStream?.WaitForConnection();
-                        Global.logger.LogLine("[IPCServer] Pipe connection established");
+                        Global.logger.Info("[IPCServer] Pipe connection established");
 
                         using (StreamReader sr = new StreamReader(IPCpipeStream))
                         {
@@ -297,7 +297,7 @@ namespace Aurora
 
                     wrapper_connected = false;
                     wrapped_process = "";
-                    Global.logger.LogLine("[IPCServer] Pipe connection lost");
+                    Global.logger.Info("[IPCServer] Pipe connection lost");
                 }
                 catch (Exception exc)
                 {
@@ -305,7 +305,7 @@ namespace Aurora
 
                     wrapper_connected = false;
                     wrapped_process = "";
-                    Global.logger.LogLine("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);
+                    Global.logger.Info("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);
                 }
             }
         }
@@ -331,28 +331,28 @@ namespace Aurora
                     HandleInheritability.None
                     ))
                     {
-                        Global.logger.LogLine(String.Format("[AuroraCommandsServerIPC] Pipe created {0}", IPCCommandpipeStream?.GetHashCode()));
+                        Global.logger.Info(String.Format("[AuroraCommandsServerIPC] Pipe created {0}", IPCCommandpipeStream?.GetHashCode()));
 
                         IPCCommandpipeStream?.WaitForConnection();
-                        Global.logger.LogLine("[AuroraCommandsServerIPC] Pipe connection established");
+                        Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection established");
 
                         using (StreamReader sr = new StreamReader(IPCCommandpipeStream))
                         {
                             string temp;
                             while ((temp = sr.ReadLine()) != null)
                             {
-                                Global.logger.LogLine("[AuroraCommandsServerIPC] Recieved command: " + temp);
+                                Global.logger.Info("[AuroraCommandsServerIPC] Recieved command: " + temp);
                                 string[] split = temp.Contains(':') ? temp.Split(':') : new[] { temp };
                                 CommandRecieved.Invoke(split[0], split.Length > 1 ? split[1] : "");
                             }
                         }
                     }
 
-                    Global.logger.LogLine("[AuroraCommandsServerIPC] Pipe connection lost");
+                    Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection lost");
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("[AuroraCommandsServerIPC] Named Pipe Exception, " + exc, Logging_Level.Error);
+                    Global.logger.Info("[AuroraCommandsServerIPC] Named Pipe Exception, " + exc, Logging_Level.Error);
                 }
             }
         }
@@ -362,7 +362,7 @@ namespace Aurora
             switch (command)
             {
                 case "restore":
-                    Global.logger.LogLine("Initiating command restore");
+                    Global.logger.Info("Initiating command restore");
                     Program.WinApp.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());
                     break;
             }

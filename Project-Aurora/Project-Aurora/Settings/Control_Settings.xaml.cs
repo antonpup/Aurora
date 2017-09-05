@@ -144,7 +144,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                Global.logger.Warn(ex.ToString());
             }
         }
 
@@ -517,7 +517,7 @@ namespace Aurora.Settings
                 }
                 catch(Exception exc)
                 {
-                    Global.logger.LogLine("run_at_win_startup_Checked Exception: " + exc, Logging_Level.Error);
+                    Global.logger.Error("run_at_win_startup_Checked Exception: " + exc);
                 }
             }
 
@@ -854,7 +854,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during Logitech Wrapper install. Exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during Logitech Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for Logitech could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -883,7 +883,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during Razer Wrapper install. Exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during Razer Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for Razer could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -907,7 +907,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -931,7 +931,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -1039,7 +1039,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                Global.logger.Warn(ex.ToString());
             }
         }
 
@@ -1053,7 +1053,7 @@ namespace Aurora.Settings
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
-                System.Diagnostics.Process.Start(Global.logger.GetLogsDirectory());
+                System.Diagnostics.Process.Start(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora/Logs/"));
         }
 
         private void chkOverlayPreview_Checked(object sender, RoutedEventArgs e)

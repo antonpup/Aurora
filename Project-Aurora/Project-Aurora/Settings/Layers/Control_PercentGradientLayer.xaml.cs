@@ -53,7 +53,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
+                    Global.logger.Error("Could not set brush, exception: " + exc);
                 }
 
                 settingsset = true;

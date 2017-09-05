@@ -45,7 +45,7 @@ namespace Aurora.Controls
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                Global.logger.Warn(ex.ToString());
             }
         }
 

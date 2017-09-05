@@ -68,7 +68,7 @@ namespace Aurora.Devices.Corsair
                         else
                             CueSDK.Initialize(true);
 
-                        Global.logger.LogLine("Corsair device, Initialized with " + CueSDK.LoadedArchitecture + "-SDK", Logging_Level.Info);
+                        Global.logger.Info("Corsair device, Initialized with " + CueSDK.LoadedArchitecture + "-SDK");
 
                         keyboard = CueSDK.KeyboardSDK;
                         mouse = CueSDK.MouseSDK;
@@ -97,15 +97,15 @@ namespace Aurora.Devices.Corsair
                     }
                     catch (CUEException ex)
                     {
-                        Global.logger.LogLine("Corsair device, CUE Exception! ErrorCode: " + Enum.GetName(typeof(CorsairError), ex.Error), Logging_Level.Error);
+                        Global.logger.Error("Corsair device, CUE Exception! ErrorCode: " + Enum.GetName(typeof(CorsairError), ex.Error));
                     }
                     catch (WrapperException ex)
                     {
-                        Global.logger.LogLine("Corsair device, Wrapper Exception! Message: " + ex.Message, Logging_Level.Error);
+                        Global.logger.Error("Corsair device, Wrapper Exception! Message: " + ex.Message);
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.LogLine("Corsair device, Exception! Message: " + ex, Logging_Level.Error);
+                        Global.logger.Error("Corsair device, Exception! Message: " + ex);
                     }
 
                     isInitialized = false;
@@ -131,7 +131,7 @@ namespace Aurora.Devices.Corsair
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Corsair device, Exception during Shutdown. Message: " + exc, Logging_Level.Error);
+                    Global.logger.Error("Corsair device, Exception during Shutdown. Message: " + exc);
                     isInitialized = false;
                 }
             }
@@ -199,7 +199,7 @@ namespace Aurora.Devices.Corsair
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Corsair device, error when updating device. Error: " + e, Logging_Level.Error);
+                Global.logger.Error("Corsair device, error when updating device. Error: " + e);
                 Console.WriteLine(e);
                 return false;
             }

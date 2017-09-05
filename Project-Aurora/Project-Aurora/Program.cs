@@ -16,7 +16,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using SharpDX.RawInput;
+using NLog;
 using System.Reflection;
+using System.Text;
 
 namespace Aurora
 {
@@ -49,10 +51,33 @@ namespace Aurora
             }
         }
 
+
         /// <summary>
         /// Output logger for errors, warnings, and information
         /// </summary>
-        public static Logger logger;
+        public static NLog.Logger logger;
+        //public static Logger logger;
+
+        public static void LogLine(this NLog.Logger logger, string text, Logging_Level level = Logging_Level.None)
+        {
+            switch (level)
+            {
+                case Logging_Level.Debug:
+                    logger.Debug(text);
+                    break;
+                case Logging_Level.External:
+                case Logging_Level.Error:
+                    logger.Error(text);
+                    break;
+                case Logging_Level.None:
+                case Logging_Level.Info:
+                    logger.Info(text);
+                    break;
+                case Logging_Level.Warning:
+                    logger.Warn(text);
+                    break;
+            }
+        }
 
         /// <summary>
         /// Input event subscriptions
@@ -80,7 +105,7 @@ namespace Aurora
 
         public static void Initialize()
         {
-            logger = new Logger();
+            logger = LogManager.GetLogger("global");
         }
     }
 
@@ -107,6 +132,45 @@ namespace Aurora
                 Global.Initialize();
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
+                StringBuilder systeminfo_sb = new StringBuilder(string.Empty);
+                systeminfo_sb.Append("\r\n========================================\r\n");
+
+                try
+                {
+                    var win_reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                    string productName = (string)win_reg.GetValue("ProductName");
+
+                    systeminfo_sb.AppendFormat("Operation System: {0}\r\n", productName);
+                }
+                catch (Exception exc)
+                {
+                    systeminfo_sb.AppendFormat("Operation System: Could not be retrieved. [Exception: {0}]\r\n", exc.Message);
+                }
+
+                systeminfo_sb.AppendFormat("System Architecture: " + (Environment.Is64BitOperatingSystem ? "64 bit" : "32 bit") + "\r\n");
+
+                systeminfo_sb.AppendFormat("Environment OS Version: {0}\r\n", Environment.OSVersion);
+
+                systeminfo_sb.AppendFormat("System Directory: {0}\r\n", Environment.SystemDirectory);
+                systeminfo_sb.AppendFormat("Executing Directory: {0}\r\n", Global.ExecutingDirectory);
+                systeminfo_sb.AppendFormat("Launch Directory: {0}\r\n", Directory.GetCurrentDirectory());
+                systeminfo_sb.AppendFormat("Processor Count: {0}\r\n", Environment.ProcessorCount);
+                //systeminfo_sb.AppendFormat("User DomainName: {0}\r\n", Environment.UserDomainName);
+                systeminfo_sb.AppendFormat("User Name: {0}\r\n", Environment.UserName);
+
+                systeminfo_sb.AppendFormat("SystemPageSize: {0}\r\n", Environment.SystemPageSize);
+                systeminfo_sb.AppendFormat("Environment Version: {0}\r\n", Environment.Version);
+
+                System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+                System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
+                systeminfo_sb.AppendFormat("Is Elevated: {0}\r\n", principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator));
+                systeminfo_sb.AppendFormat("Aurora Assembly Version: {0}\r\n", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+                systeminfo_sb.AppendFormat("Aurora File Version: {0}\r\n", System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion);
+
+                systeminfo_sb.Append("========================================\r\n");
+
+                Global.logger.Info(systeminfo_sb.ToString());
+
                 string arg = "";
 
                 for (int arg_i = 0; arg_i < args.Length; arg_i++)
@@ -117,15 +181,15 @@ namespace Aurora
                     {
                         case ("-debug"):
                             Global.isDebug = true;
-                            Global.logger.LogLine("Program started in debug mode.", Logging_Level.Info);
+                            Global.logger.Info("Program started in debug mode.");
                             break;
                         case ("-silent"):
                             isSilent = true;
-                            Global.logger.LogLine("Program started with '-silent' parameter", Logging_Level.Info);
+                            Global.logger.Info("Program started with '-silent' parameter");
                             break;
                         case ("-ignore_update"):
                             ignore_update = true;
-                            Global.logger.LogLine("Program started with '-ignore_update' parameter", Logging_Level.Info);
+                            Global.logger.Info("Program started with '-ignore_update' parameter");
                             break;
                         case ("-delay"):
                             isDelayed = true;
@@ -135,11 +199,11 @@ namespace Aurora
                             else
                                 delayTime = 5000;
 
-                            Global.logger.LogLine("Program started with '-delay' parameter with delay of " + delayTime + " ms", Logging_Level.Info);
+                            Global.logger.Info("Program started with '-delay' parameter with delay of " + delayTime + " ms");
 
                             break;
                         case ("-install_logitech"):
-                            Global.logger.LogLine("Program started with '-install_logitech' parameter", Logging_Level.Info);
+                            Global.logger.Info("Program started with '-install_logitech' parameter");
 
                             try
                             {
@@ -193,14 +257,14 @@ namespace Aurora
                 Global.effengine = new Effects();
 
                 //Load config
-                Global.logger.LogLine("Loading Configuration", Logging_Level.Info);
+                Global.logger.Info("Loading Configuration");
                 try
                 {
                     Global.Configuration = ConfigManager.Load();
                 }
                 catch (Exception e)
                 {
-                    Global.logger.LogLine("Exception during ConfigManager.Load(). Error: " + e, Logging_Level.Error);
+                    Global.logger.Error("Exception during ConfigManager.Load(). Error: " + e);
                     System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
 
                     Global.Configuration = new Configuration();
@@ -223,19 +287,19 @@ namespace Aurora
                         }
                         catch (Exception exc)
                         {
-                            Global.logger.LogLine("Could not start Aurora Updater. Error: " + exc, Logging_Level.Error);
+                            Global.logger.Error("Could not start Aurora Updater. Error: " + exc);
                         }
                     }
                 }
 
-                Global.logger.LogLine("Loading Plugins", Logging_Level.Info);
+                Global.logger.Info("Loading Plugins");
                 (Global.PluginManager = new PluginManager()).Initialize();
 
-	            Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);
+	            Global.logger.Info("Loading KB Layouts");
 	            Global.kbLayout = new KeyboardLayoutManager();
 	            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
 
-				Global.logger.LogLine("Loading Input Hooking", Logging_Level.Info);
+				Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();
                 Global.InputEvents.KeyDown += InputEventsOnKeyDown;
                 Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
@@ -244,10 +308,10 @@ namespace Aurora
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
 
-                Global.logger.LogLine("Loading Applications", Logging_Level.Info);
+                Global.logger.Info("Loading Applications");
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
-                Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
+                Global.logger.Info("Loading Device Manager");
                 Global.dev_manager.RegisterVariables();
                 Global.dev_manager.Initialize();
 
@@ -263,7 +327,7 @@ namespace Aurora
                     return;
                 }*/
 
-                Global.logger.LogLine("Starting GameStateListener", Logging_Level.Info);
+                Global.logger.Info("Starting GameStateListener");
                 try
                 {
                     Global.net_listener = new NetworkListener(9088);
@@ -272,34 +336,32 @@ namespace Aurora
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("GameStateListener Exception, " + exc, Logging_Level.Error);
+                    Global.logger.Error("GameStateListener Exception, " + exc);
                     System.Windows.MessageBox.Show("GameStateListener Exception.\r\n" + exc);
                     Environment.Exit(0);
                 }
 
                 if (!Global.net_listener.Start())
                 {
-                    Global.logger.LogLine("GameStateListener could not start", Logging_Level.Error);
+                    Global.logger.Error("GameStateListener could not start");
                     System.Windows.MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
                     Environment.Exit(0);
                 }
 
-                Global.logger.LogLine("Listening for game integration calls...", Logging_Level.None);
+                Global.logger.Info("Listening for game integration calls...");
 
-                Global.logger.LogLine("Loading WinApp...", Logging_Level.None);
+                Global.logger.Info("Loading WinApp...");
                 WinApp = new System.Windows.Application();
-                Global.logger.LogLine("Loaded WinApp", Logging_Level.None);
+                Global.logger.Info("Loaded WinApp");
 
-                Global.logger.LogLine("Loading ResourceDictionaries...", Logging_Level.None);
-
+                Global.logger.Info("Loading ResourceDictionaries...");
                 WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
                 WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
-
-                Global.logger.LogLine("Loaded ResourceDictionaries", Logging_Level.None);
+                Global.logger.Info("Loaded ResourceDictionaries");
 
                 WinApp.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-                Global.logger.LogLine("Loading ConfigUI...", Logging_Level.None);
+                Global.logger.Info("Loading ConfigUI...");
 
                 MainWindow = new ConfigUI();
                 WinApp.MainWindow = MainWindow;
@@ -409,10 +471,10 @@ namespace Aurora
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
+                Global.logger.Error("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
             }
 
-            Global.logger.Dispose();
+            LogManager.Shutdown();
 
             //Environment.Exit(0);
             Process.GetCurrentProcess().Kill();
@@ -422,8 +484,8 @@ namespace Aurora
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception exc = (Exception)e.ExceptionObject;
-            Global.logger.LogLine("Fatal Exception caught : " + exc, Logging_Level.Error);
-            Global.logger.LogLine(String.Format("Runtime terminating: {0}", e.IsTerminating), Logging_Level.Error);
+            Global.logger.Error("Fatal Exception caught : " + exc);
+            Global.logger.Error(String.Format("Runtime terminating: {0}", e.IsTerminating));
 
             System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
 
@@ -441,7 +503,7 @@ namespace Aurora
 
             if (!isElevated)
             {
-                Global.logger.LogLine("Program does not have admin rights", Logging_Level.Error);
+                Global.logger.Error("Program does not have admin rights");
                 System.Windows.MessageBox.Show("Program does not have admin rights");
                 Environment.Exit(1);
             }
@@ -517,7 +579,7 @@ namespace Aurora
                 logitech_wrapper_64.Write(Properties.Resources.Aurora_LogiLEDWrapper64);
             }
 
-            Global.logger.LogLine("Logitech LED SDK patched successfully", Logging_Level.Info);
+            Global.logger.Info("Logitech LED SDK patched successfully");
             System.Windows.MessageBox.Show("Logitech LED SDK patched successfully");
 
             //Environment.Exit(0);
@@ -543,7 +605,7 @@ namespace Aurora
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during OnProcessExit(). Error: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during OnProcessExit(). Error: " + exc);
             }
         }
     }

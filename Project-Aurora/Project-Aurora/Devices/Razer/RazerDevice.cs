@@ -62,7 +62,7 @@ namespace Aurora.Devices.Razer
 
                         Chroma.Instance.Initialize();
 
-                        Global.logger.LogLine("Razer device, Initialized", Logging_Level.Info);
+                        Global.logger.Info("Razer device, Initialized");
 
                         keyboard = Chroma.Instance.Keyboard;
                         mouse = Chroma.Instance.Mouse;
@@ -100,7 +100,7 @@ namespace Aurora.Devices.Razer
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.LogLine("Razer device, Exception! Message:" + ex, Logging_Level.Error);
+                        Global.logger.Error("Razer device, Exception! Message:" + ex);
                     }
 
                     isInitialized = false;
@@ -125,7 +125,7 @@ namespace Aurora.Devices.Razer
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Razer device, Exception during Shutdown. Message: " + exc, Logging_Level.Error);
+                    Global.logger.Error("Razer device, Exception during Shutdown. Message: " + exc);
                     isInitialized = false;
                 }
             }
@@ -197,7 +197,7 @@ namespace Aurora.Devices.Razer
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Razer device, error when updating device. Error: " + e, Logging_Level.Error);
+                Global.logger.Error("Razer device, error when updating device. Error: " + e);
                 Console.WriteLine(e);
                 return false;
             }

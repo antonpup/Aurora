@@ -205,8 +205,8 @@ namespace Aurora.Profiles
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine($"Could not delete profile with path \"{profile.ProfileFilepath}\"", Logging_Level.Error);
-                        Global.logger.LogLine($"Exception: {exc}", Logging_Level.Error, false);
+                        Global.logger.Error($"Could not delete profile with path \"{profile.ProfileFilepath}\"");
+                        Global.logger.Error($"Exception: {exc}");
                     }
                 }
 
@@ -240,7 +240,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine(string.Format("Exception Resetting Profile, Exception: {0}", exc), Logging_Level.Error);
+                Global.logger.Error(string.Format("Exception Resetting Profile, Exception: {0}", exc));
             }
         }
 
@@ -295,7 +295,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
+                Global.logger.Error(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc));
                 if (Path.GetFileNameWithoutExtension(path).Equals("default"))
                 {
                     string newPath = path + ".corrupted";
@@ -337,7 +337,7 @@ namespace Aurora.Profiles
         {
             if (this.EffectScripts.ContainsKey(key))
             {
-                Global.logger.LogLine(string.Format("Effect script with key {0} already exists!", key), Logging_Level.External);
+                Global.logger.Warn(string.Format("Effect script with key {0} already exists!", key));
                 return false;
             }
 
@@ -425,12 +425,12 @@ namespace Aurora.Profiles
                                         if (obj != null)
                                         {
                                             if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                                Global.logger.LogLine($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}", Logging_Level.External);
+                                                Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
                                             else
                                                 anyLoaded = true;
                                         }
                                         else
-                                            Global.logger.LogLine($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
+                                            Global.logger.Error($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
                                     }
                                 }
                             }
@@ -446,7 +446,7 @@ namespace Aurora.Profiles
                                 {
                                     IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
                                     if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                        Global.logger.LogLine(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName), Logging_Level.External);
+                                        Global.logger.Warn(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName));
                                     else
                                         anyLoaded = true;
                                 }
@@ -454,16 +454,16 @@ namespace Aurora.Profiles
 
                             break;
                         default:
-                            Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext), Logging_Level.External);
+                            Global.logger.Warn(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext));
                             continue;
                     }
 
                     if (!anyLoaded)
-                        Global.logger.LogLine($"Script \"{script}\": No compatible effects found. Does this script need to be updated?", Logging_Level.External);
+                        Global.logger.Warn($"Script \"{script}\": No compatible effects found. Does this script need to be updated?");
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc, Logging_Level.External));
+                    Global.logger.Error(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc));
                     //Maybe MessageBox info dialog could be included.
                 }
             }
@@ -516,7 +516,7 @@ namespace Aurora.Profiles
             }
             else
             {
-                Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Config.Name), Logging_Level.Info, false);
+                Global.logger.Info(string.Format("Profiles directory for {0} does not exist.", Config.Name));
             }
 
             if (Profile == null)
@@ -542,7 +542,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
+                Global.logger.Error(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc));
             }
         }
 
@@ -569,7 +569,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during SaveProfiles, " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during SaveProfiles, " + exc);
             }
         }
 

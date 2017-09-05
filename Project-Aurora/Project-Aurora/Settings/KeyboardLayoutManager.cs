@@ -751,7 +751,7 @@ namespace Aurora.Settings
             }
             catch (Exception e)
             {
-                Global.logger.LogLine(e.ToString());
+                Global.logger.Error(e.ToString());
             }
 
             //Perform end of load functions

@@ -62,7 +62,7 @@ namespace Aurora.Devices.SteelSeries
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.LogLine("SteelSeries GameSense SDK could not be initialized: " + ex, Logging_Level.Error);
+                        Global.logger.Error("SteelSeries GameSense SDK could not be initialized: " + ex);
 
                         isInitialized = false;
                         return false;
@@ -88,7 +88,7 @@ namespace Aurora.Devices.SteelSeries
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.LogLine("There was an error shutting down SteelSeries GameSense SDK: " + ex, Logging_Level.Error);
+                    Global.logger.Error("There was an error shutting down SteelSeries GameSense SDK: " + ex);
                     isInitialized = false;
                 }
 
@@ -182,7 +182,7 @@ namespace Aurora.Devices.SteelSeries
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine("SteelSeries GameSense SDK, error when updating device: " + ex, Logging_Level.Error);
+                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
                 return false;
             }
         }
@@ -267,7 +267,7 @@ namespace Aurora.Devices.SteelSeries
                 else if (zone == DeviceKeys.Peripheral_FrontLight)
                 {
                     //NYI
-                    Global.logger.LogLine("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone, Logging_Level.Error);
+                    Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
                 }
                 /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
                 {

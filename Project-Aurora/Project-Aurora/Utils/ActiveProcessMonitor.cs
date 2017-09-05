@@ -159,7 +159,7 @@ namespace Aurora.Utils
 			}
 			catch (Exception exc)
 			{
-				Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
+				Global.logger.Error("Exception in GetActiveWindowsProcessname" + exc);
 			}
 
 			/*try

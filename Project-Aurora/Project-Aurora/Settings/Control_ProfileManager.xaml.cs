@@ -789,7 +789,7 @@ namespace Aurora.Settings
                                     else
                                     {
                                         //Null, it's unknown.
-                                        Global.logger.LogLine("Unknown CUE Layer Type");
+                                        Global.logger.Warn("Unknown CUE Layer Type");
                                     }
                                 }
 

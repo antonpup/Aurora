@@ -47,7 +47,7 @@ namespace Aurora.Devices.AtmoOrbDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Device {0} encountered an error during Connecting. Exception: {1}", devicename, exc), Logging_Level.External);
+                    Global.logger.Error(string.Format("Device {0} encountered an error during Connecting. Exception: {1}", devicename, exc));
                     isConnected = false;
 
                     return false;
