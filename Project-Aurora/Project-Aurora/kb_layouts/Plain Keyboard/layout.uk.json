@@ -1027,7 +1027,7 @@
         "enabled": true
       },
       {
-        "visualName": "\"",
+        "visualName": "'",
         "tag": 70,
         "line_break": false,
         "margin_left": 7.0,

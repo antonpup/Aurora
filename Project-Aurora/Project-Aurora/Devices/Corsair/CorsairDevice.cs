@@ -546,6 +546,8 @@ namespace Aurora.Devices.Corsair
                     return CorsairLedId.SlashAndQuestionMark;
                 case (DeviceKeys.OEM8):
                     return CorsairLedId.SlashAndQuestionMark;
+                case (DeviceKeys.OEM102):
+                    return CorsairLedId.International1;
                 case (DeviceKeys.RIGHT_SHIFT):
                     return CorsairLedId.RightShift;
                 case (DeviceKeys.ARROW_UP):

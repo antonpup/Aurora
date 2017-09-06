@@ -529,6 +529,9 @@ namespace Aurora.Settings
                         case PreferredKeyboardLocalization.swiss:
                             culture = "de-CH";
                             break;
+                        case PreferredKeyboardLocalization.abnt2:
+                            culture = "pt-BR";
+                            break;
                     }
 
                     switch (culture)
@@ -583,10 +586,15 @@ namespace Aurora.Settings
                             _loaded_localization = PreferredKeyboardLocalization.nordic;
                             LoadCulture("nordic");
                             break;
+                        case ("pt-BR"):
+                            _loaded_localization = PreferredKeyboardLocalization.abnt2;
+                            LoadCulture("abnt2");
+                            break;
                         default:
                             _loaded_localization = PreferredKeyboardLocalization.intl;
                             LoadCulture("intl");
                             break;
+
                     }
                 }
 
