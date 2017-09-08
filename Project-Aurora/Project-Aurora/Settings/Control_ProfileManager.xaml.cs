@@ -84,6 +84,9 @@ namespace Aurora.Settings
         public void UpdateProfiles(object sender, EventArgs e)
         {
             this.lstProfiles.ItemsSource = this.FocusedApplication?.Profiles;
+            lstProfiles.Items.SortDescriptions.Add(
+            new System.ComponentModel.SortDescription("ProfileName",
+            System.ComponentModel.ListSortDirection.Ascending));
             this.lstProfiles.SelectedItem = this.FocusedApplication?.Profiles.First((profile) => System.IO.Path.GetFileNameWithoutExtension(profile.ProfileFilepath).Equals(this.FocusedApplication?.Settings.SelectedProfile));
         }
 
@@ -158,7 +161,7 @@ namespace Aurora.Settings
                     ApplicationProfile prof = (ApplicationProfile)((ApplicationProfile)Global.Clipboard)?.Clone();
                     prof.ProfileName += " - Copy";
 
-                    FocusedApplication.Profiles.Insert(0, prof);
+                    FocusedApplication.AddProfile(prof);
 
                     FocusedApplication.SaveProfiles();
                 }

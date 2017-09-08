@@ -163,6 +163,12 @@ namespace Aurora.Profiles
             return profile;
         }
 
+        public void AddProfile(ApplicationProfile profile)
+        {
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            this.Profiles.Add(profile);
+        }
+
         protected void CreateDefaultProfile()
         {
             ApplicationProfile _newProfile = CreateNewProfile("default");
@@ -195,7 +201,7 @@ namespace Aurora.Profiles
                     Profiles.Remove(profile);
 
                 if (Profile.Equals(profile))
-                    SwitchToProfile(Profiles[Math.Max(profileIndex, 0)]);
+                    SwitchToProfile(Profiles[Math.Min(profileIndex, Profiles.Count - 1)]);
 
                 if (File.Exists(profile.ProfileFilepath))
                 {
