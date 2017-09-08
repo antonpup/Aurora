@@ -233,17 +233,17 @@ namespace Aurora
             //Global.logger.LogLine("Received gs!");
             //Global.logger.LogLine(gs_data);
 
-            GameState_Wrapper new_state = new GameState_Wrapper(gs_data); //GameState_Wrapper 
-
-            wrapper_connected = true;
-            wrapped_process = new_state.Provider.Name.ToLowerInvariant();
-
             var task = new System.Threading.Tasks.Task(() =>
                 {
+                    GameState_Wrapper new_state = new GameState_Wrapper(gs_data); //GameState_Wrapper 
+
+                    wrapper_connected = true;
+                    wrapped_process = new_state.Provider.Name.ToLowerInvariant();
+
                     //if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
-                        //CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
+                    //CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
                     //else
-                        CurrentGameState = new_state;
+                    CurrentGameState = new_state;
                 }
             );
             task.Start();
@@ -283,9 +283,16 @@ namespace Aurora
                             while ((temp = sr.ReadLine()) != null)
                             {
                                 //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
+                                try
+                                {
+                                    //Begin handling the game state outside this loop
+                                    HandleNewIPCGameState(temp);
+                                }
+                                catch(Exception exc)
+                                {
+                                    Global.logger.Error("[IPCServer] HandleNewIPCGameState Exception, " + exc);
 
-                                //Begin handling the game state outside this loop
-                                HandleNewIPCGameState(temp);
+                                }
 
                                 //var task = new System.Threading.Tasks.Task(() => HandleNewIPCGameState(temp));
                                 //task.Start();
@@ -301,11 +308,14 @@ namespace Aurora
                 }
                 catch (Exception exc)
                 {
+                    IPCpipeStream?.Close();
+                    IPCpipeStream?.Dispose();
+
                     WrapperConnectionClosed?.Invoke(wrapped_process);
 
                     wrapper_connected = false;
                     wrapped_process = "";
-                    Global.logger.Info("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);
+                    Global.logger.Info("[IPCServer] Named Pipe Exception, " + exc);
                 }
             }
         }

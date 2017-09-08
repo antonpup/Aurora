@@ -24,7 +24,7 @@ namespace Aurora.Profiles.Generic_Application
             ObservableCollection<Layer> timeLayers = settings.Layers;
 
             //Scripts
-            this.Application.UpdateEffectScripts(layers);
+            //this.Application.UpdateEffectScripts(layers);
 
             if ((Global.Configuration.nighttime_enabled &&
                 Utils.Time.IsCurrentTimeBetween(Global.Configuration.nighttime_start_hour, Global.Configuration.nighttime_start_minute, Global.Configuration.nighttime_end_hour, Global.Configuration.nighttime_end_minute)) ||
