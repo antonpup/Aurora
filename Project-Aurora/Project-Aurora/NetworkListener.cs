@@ -291,7 +291,8 @@ namespace Aurora
                                 catch(Exception exc)
                                 {
                                     Global.logger.Error("[IPCServer] HandleNewIPCGameState Exception, " + exc);
-
+                                    //if (Global.isDebug)
+                                        Global.logger.Info("Recieved data that caused error:\n\r"+temp);
                                 }
 
                                 //var task = new System.Threading.Tasks.Task(() => HandleNewIPCGameState(temp));

@@ -36,17 +36,26 @@ namespace Aurora.Settings
 
             if (runRegistryPath.GetValue("Aurora") != null)
                 runRegistryPath.DeleteValue("Aurora");
-            using (TaskService service = new TaskService()) {
-                Microsoft.Win32.TaskScheduler.Task task = service.FindTask(StartupTaskID);
-                this.run_at_win_startup.IsChecked = task?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
-                if (task != null)
+
+            try
+            {
+                using (TaskService service = new TaskService())
                 {
-                    //Update path of startup task
-                    string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                    task.Definition.Actions.Clear();
-                    task.Definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
-                    service.RootFolder.RegisterTaskDefinition(StartupTaskID, task.Definition);
+                    Microsoft.Win32.TaskScheduler.Task task = service.FindTask(StartupTaskID);
+                    this.run_at_win_startup.IsChecked = task?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
+                    if (task != null)
+                    {
+                        //Update path of startup task
+                        string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                        task.Definition.Actions.Clear();
+                        task.Definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
+                        service.RootFolder.RegisterTaskDefinition(StartupTaskID, task.Definition);
+                    }
                 }
+            }
+            catch(Exception exc)
+            {
+                Global.logger.Error("Error caught when updating startup task. Error: " + exc.ToString());
             }
 
             string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
@@ -473,11 +482,6 @@ namespace Aurora.Settings
             {
                 try
                 {
-                    /*if ((sender as CheckBox).IsChecked.Value)
-                        runRegistryPath.SetValue("Aurora", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\" -silent");
-                    else
-                        runRegistryPath.DeleteValue("Aurora");*/
-
                     using (TaskService ts = new TaskService())
                     {
                         //Find existing task
