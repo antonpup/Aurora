@@ -1,8 +1,8 @@
 ﻿using Aurora.Settings;
 
-namespace Aurora.Profiles.WormsWMD
+namespace Aurora.Profiles
 {
-    public class WormsWMDProfile : ApplicationProfile
+    public class ColorEnhanceProfile : ApplicationProfile
     {
         //Effects
         //// Color Enhancing
@@ -12,9 +12,9 @@ namespace Aurora.Profiles.WormsWMD
         public float colorEnhance_color_hsv_sine;
         public float colorEnhance_color_hsv_gamma;
 
-        public WormsWMDProfile() : base()
+        public ColorEnhanceProfile() : base()
         {
-            
+
         }
 
         public override void Reset()

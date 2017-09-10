@@ -288,6 +288,12 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
+    <Compile Include="Profiles\Generic\ColorEnhanceProfile.cs" />
+    <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
+      <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\ROT Tomb Raider\GameEvent_ROTTombRaider.cs" />
+    <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
@@ -1187,6 +1193,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Worms_WMD\Control_WormsWMD.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1506,6 +1516,7 @@
     <Resource Include="Resources\Save_Icon.png" />
     <Resource Include="Resources\FreeForm_ManualColor.png" />
     <Resource Include="Resources\Borderlands2_256x256.png" />
+    <Resource Include="Resources\rot_tombraider.png" />
     <Content Include="Resources\SteelSeriesInstall\Step1.png" />
     <Content Include="Resources\SteelSeriesInstall\Step2.png" />
     <Content Include="SDKDLL.dll">

@@ -121,7 +121,8 @@ namespace Aurora.Profiles
                 new Guild_Wars_2.GW2(),
                 new WormsWMD.WormsWMD(),
                 new Blade_and_Soul.BnS(),
-                new Event_SkypeOverlay()
+                new Event_SkypeOverlay(),
+                new ROTTombRaider.ROTTombRaider()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

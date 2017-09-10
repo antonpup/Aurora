@@ -13,7 +13,7 @@ namespace Aurora.Profiles.WormsWMD
     public class WormsWMD : Application
     {
         public WormsWMD()
-            : base(new LightEventConfig { Name = "Worms W.M.D", ID = "worms_wmd", ProcessNames = new[] { "Worms W.M.D.exe" }, ProfileType = typeof(WormsWMDProfile), OverviewControlType = typeof(Control_WormsWMD), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_WormsWMD(), IconURI = "Resources/worms_wmd.png" })
+            : base(new LightEventConfig { Name = "Worms W.M.D", ID = "worms_wmd", ProcessNames = new[] { "Worms W.M.D.exe" }, ProfileType = typeof(ColorEnhanceProfile), OverviewControlType = typeof(Control_WormsWMD), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_WormsWMD(), IconURI = "Resources/worms_wmd.png" })
         {
         }
     }

@@ -24,14 +24,14 @@ namespace Aurora.Profiles.Overwatch
         private void SetSettings()
         {
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
-            this.ce_enabled.IsChecked = (profile_manager.Profile as OverwatchProfile).colorEnhance_Enabled;
-            this.ce_mode.SelectedIndex = (profile_manager.Profile as OverwatchProfile).colorEnhance_Mode;
-            this.ce_color_factor.Value = (profile_manager.Profile as OverwatchProfile).colorEnhance_color_factor;
-            this.ce_color_factor_label.Text = (profile_manager.Profile as OverwatchProfile).colorEnhance_color_factor.ToString();
-            this.ce_color_hsv_sine.Value = (profile_manager.Profile as OverwatchProfile).colorEnhance_color_hsv_sine;
-            this.ce_color_hsv_sine_label.Text = (profile_manager.Profile as OverwatchProfile).colorEnhance_color_hsv_sine.ToString();
-            this.ce_color_hsv_gamma.Value = (profile_manager.Profile as OverwatchProfile).colorEnhance_color_hsv_gamma;
-            this.ce_color_hsv_gamma_label.Text = (profile_manager.Profile as OverwatchProfile).colorEnhance_color_hsv_gamma.ToString();
+            this.ce_enabled.IsChecked = (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_Enabled;
+            this.ce_mode.SelectedIndex = (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_Mode;
+            this.ce_color_factor.Value = (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_factor;
+            this.ce_color_factor_label.Text = (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_factor.ToString();
+            this.ce_color_hsv_sine.Value = (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_hsv_sine;
+            this.ce_color_hsv_sine_label.Text = (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_hsv_sine.ToString();
+            this.ce_color_hsv_gamma.Value = (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_hsv_gamma;
+            this.ce_color_hsv_gamma_label.Text = (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_hsv_gamma.ToString();
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -76,7 +76,7 @@ namespace Aurora.Profiles.Overwatch
         {
             if (IsLoaded)
             {
-                (profile_manager.Profile as OverwatchProfile).colorEnhance_Enabled = (this.ce_enabled.IsChecked.HasValue) ? this.ce_enabled.IsChecked.Value : false;
+                (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_Enabled = (this.ce_enabled.IsChecked.HasValue) ? this.ce_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
@@ -85,7 +85,7 @@ namespace Aurora.Profiles.Overwatch
         {
             if (IsLoaded)
             {
-                (profile_manager.Profile as OverwatchProfile).colorEnhance_Mode = (int)this.ce_mode.SelectedIndex;
+                (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_Mode = (int)this.ce_mode.SelectedIndex;
                 profile_manager.SaveProfiles();
             }
         }
@@ -94,7 +94,7 @@ namespace Aurora.Profiles.Overwatch
         {
             if (IsLoaded)
             {
-                (profile_manager.Profile as OverwatchProfile).colorEnhance_color_factor = (int)this.ce_color_factor.Value;
+                (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_factor = (int)this.ce_color_factor.Value;
                 this.ce_color_factor_label.Text = ((int)this.ce_color_factor.Value).ToString();
                 profile_manager.SaveProfiles();
             }
@@ -104,7 +104,7 @@ namespace Aurora.Profiles.Overwatch
         {
             if (IsLoaded)
             {
-                (profile_manager.Profile as OverwatchProfile).colorEnhance_color_hsv_sine = (float)this.ce_color_hsv_sine.Value;
+                (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_hsv_sine = (float)this.ce_color_hsv_sine.Value;
                 this.ce_color_hsv_sine_label.Text = ((float)this.ce_color_hsv_sine.Value).ToString();
                 profile_manager.SaveProfiles();
             }
@@ -114,7 +114,7 @@ namespace Aurora.Profiles.Overwatch
         {
             if (IsLoaded)
             {
-                (profile_manager.Profile as OverwatchProfile).colorEnhance_color_hsv_gamma = (float)this.ce_color_hsv_gamma.Value;
+                (profile_manager.Profile as ColorEnhanceProfile).colorEnhance_color_hsv_gamma = (float)this.ce_color_hsv_gamma.Value;
                 this.ce_color_hsv_gamma_label.Text = ((float)this.ce_color_hsv_gamma.Value).ToString();
                 profile_manager.SaveProfiles();
             }

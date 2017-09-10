@@ -442,7 +442,7 @@ namespace Aurora
             Exception exc = (Exception)e.ExceptionObject;
             Global.logger.Error("Fatal Exception caught : " + exc);
             Global.logger.Error(String.Format("Runtime terminating: {0}", e.IsTerminating));
-
+            
             System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
             //Perform exit operations
             System.Windows.Application.Current.Shutdown();
@@ -452,7 +452,7 @@ namespace Aurora
         {
             Exception exc = (Exception)e.Exception;
             Global.logger.Error("Fatal Exception caught : " + exc);
-
+            e.Handled = true;
             System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
             //Perform exit operations
             System.Windows.Application.Current.Shutdown();

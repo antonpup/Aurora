@@ -5,12 +5,17 @@ using System.Linq;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.Aurora_Wrapper;
 
-namespace Aurora.Profiles.Overwatch
+namespace Aurora.Profiles.ROTTombRaider
 {
-    public class GameEvent_Overwatch : GameEvent_Aurora_Wrapper
+    public class GameEvent_ROTTombRaider : GameEvent_Aurora_Wrapper
     {
-        public GameEvent_Overwatch()
+        public GameEvent_ROTTombRaider()
         {
+        }
+
+        public new bool IsEnabled
+        {
+            get { return this.Application.Settings.IsEnabled; }
         }
 
         protected override void UpdateExtraLights(Queue<EffectLayer> layers)
