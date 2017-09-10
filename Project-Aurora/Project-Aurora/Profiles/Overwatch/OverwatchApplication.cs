@@ -13,7 +13,7 @@ namespace Aurora.Profiles.Overwatch
     public class Overwatch : Application
     {
         public Overwatch()
-            : base(new LightEventConfig { Name = "Overwatch", ID = "overwatch", ProcessNames = new[] { "overwatch.exe" }, ProfileType = typeof(OverwatchProfile), OverviewControlType = typeof(Control_Overwatch), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Overwatch(), IconURI = "Resources/overwatch_icon.png" })
+            : base(new LightEventConfig { Name = "Overwatch", ID = "overwatch", ProcessNames = new[] { "overwatch.exe" }, ProfileType = typeof(ColorEnhanceProfile), OverviewControlType = typeof(Control_Overwatch), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Overwatch(), IconURI = "Resources/overwatch_icon.png" })
         {
             
         }

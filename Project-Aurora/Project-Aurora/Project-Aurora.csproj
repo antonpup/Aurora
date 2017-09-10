@@ -411,7 +411,6 @@
     </Compile>
     <Compile Include="Profiles\Blade and Soul\GameEvent_BnS.cs" />
     <Compile Include="Profiles\Blade and Soul\BnSApplication.cs" />
-    <Compile Include="Profiles\Blade and Soul\BnSProfile.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
@@ -468,13 +467,11 @@
     </Compile>
     <Compile Include="Profiles\Worms_WMD\GameEvent_WormsWMD.cs" />
     <Compile Include="Profiles\Worms_WMD\WormsWMDApplication.cs" />
-    <Compile Include="Profiles\Worms_WMD\WormsWMDProfile.cs" />
     <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
       <DependentUpon>Control_Overwatch.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Overwatch\GameEvent_Overwatch.cs" />
     <Compile Include="Profiles\Overwatch\OverwatchApplication.cs" />
-    <Compile Include="Profiles\Overwatch\OverwatchProfile.cs" />
     <Compile Include="Profiles\Payday 2\Control_PD2.xaml.cs">
       <DependentUpon>Control_PD2.xaml</DependentUpon>
     </Compile>
