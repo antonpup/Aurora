@@ -85,7 +85,7 @@ namespace Aurora.Profiles.GTA5
         {
             try
             {
-                Program.InstallLogitech();
+                App.InstallLogitech();
             }
             catch (Exception exc)
             {

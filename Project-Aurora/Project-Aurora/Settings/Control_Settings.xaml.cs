@@ -854,7 +854,7 @@ namespace Aurora.Settings
         {
             try
             {
-                Program.InstallLogitech();
+                App.InstallLogitech();
             }
             catch (Exception exc)
             {

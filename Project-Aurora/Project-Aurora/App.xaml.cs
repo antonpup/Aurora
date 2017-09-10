@@ -109,11 +109,12 @@ namespace Aurora
         }
     }
 
-    static class Program
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : System.Windows.Application
     {
         private static readonly Mutex mutex = new Mutex(true, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
-        public static System.Windows.Application WinApp { get; private set; }
-        public static Window MainWindow;
         private static InputInterceptor InputInterceptor;
 
         public static bool isSilent = false;
@@ -121,9 +122,9 @@ namespace Aurora
         private static int delayTime = 5000;
         private static bool ignore_update = false;
 
-        [STAThread]
-        static void Main(string[] args)
+        protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
 #if DEBUG
@@ -156,7 +157,7 @@ namespace Aurora
                 systeminfo_sb.AppendFormat("Launch Directory: {0}\r\n", Directory.GetCurrentDirectory());
                 systeminfo_sb.AppendFormat("Processor Count: {0}\r\n", Environment.ProcessorCount);
                 //systeminfo_sb.AppendFormat("User DomainName: {0}\r\n", Environment.UserDomainName);
-                systeminfo_sb.AppendFormat("User Name: {0}\r\n", Environment.UserName);
+                //systeminfo_sb.AppendFormat("User Name: {0}\r\n", Environment.UserName);
 
                 systeminfo_sb.AppendFormat("SystemPageSize: {0}\r\n", Environment.SystemPageSize);
                 systeminfo_sb.AppendFormat("Environment Version: {0}\r\n", Environment.Version);
@@ -173,9 +174,9 @@ namespace Aurora
 
                 string arg = "";
 
-                for (int arg_i = 0; arg_i < args.Length; arg_i++)
+                for (int arg_i = 0; arg_i < e.Args.Length; arg_i++)
                 {
-                    arg = args[arg_i];
+                    arg = e.Args[arg_i];
 
                     switch (arg)
                     {
@@ -194,7 +195,7 @@ namespace Aurora
                         case ("-delay"):
                             isDelayed = true;
 
-                            if (arg_i + 1 < args.Length && int.TryParse(args[arg_i + 1], out delayTime))
+                            if (arg_i + 1 < e.Args.Length && int.TryParse(e.Args[arg_i + 1], out delayTime))
                                 arg_i++;
                             else
                                 delayTime = 5000;
@@ -223,33 +224,10 @@ namespace Aurora
                 if (!Global.isDebug)
                     currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-                //Make sure there is only one instance of Aurora
-                /*Process[] processes;
-                if ((processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName)).Length > 1)
-                {
-                    try
-                    {
-                        NamedPipeClientStream client = new NamedPipeClientStream(".", "aurora\\interface", PipeDirection.Out);
-                        client.Connect(30);
-                        if (!client.IsConnected)
-                            throw new Exception();
-                        byte[] command = System.Text.Encoding.ASCII.GetBytes("restore");
-                        client.Write(command, 0, command.Length);
-                        client.Close();
-                    }
-                    catch
-                    {
-                        Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
-                        System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
-                    }
-                    Environment.Exit(0);
-                }*/
-
-
                 if (isDelayed)
                     System.Threading.Thread.Sleep((int)delayTime);
 
-                AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+                //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
                 Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
 
@@ -262,10 +240,10 @@ namespace Aurora
                 {
                     Global.Configuration = ConfigManager.Load();
                 }
-                catch (Exception e)
+                catch (Exception exc)
                 {
-                    Global.logger.Error("Exception during ConfigManager.Load(). Error: " + e);
-                    System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + e.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
+                    Global.logger.Error("Exception during ConfigManager.Load(). Error: " + exc);
+                    System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + exc.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
 
                     Global.Configuration = new Configuration();
                 }
@@ -295,11 +273,11 @@ namespace Aurora
                 Global.logger.Info("Loading Plugins");
                 (Global.PluginManager = new PluginManager()).Initialize();
 
-	            Global.logger.Info("Loading KB Layouts");
-	            Global.kbLayout = new KeyboardLayoutManager();
-	            Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.logger.Info("Loading KB Layouts");
+                Global.kbLayout = new KeyboardLayoutManager();
+                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
 
-				Global.logger.Info("Loading Input Hooking");
+                Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();
                 Global.InputEvents.KeyDown += InputEventsOnKeyDown;
                 Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
@@ -314,10 +292,6 @@ namespace Aurora
                 Global.logger.Info("Loading Device Manager");
                 Global.dev_manager.RegisterVariables();
                 Global.dev_manager.Initialize();
-
-
-
-
 
                 /*Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
                 Global.geh = new GameEventHandler();
@@ -350,28 +324,12 @@ namespace Aurora
 
                 Global.logger.Info("Listening for game integration calls...");
 
-                Global.logger.Info("Loading WinApp...");
-                WinApp = new System.Windows.Application();
-                Global.logger.Info("Loaded WinApp");
-
-                Global.logger.Info("Loading ResourceDictionaries...");
-                WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
-                WinApp.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
-                Global.logger.Info("Loaded ResourceDictionaries");
-
-                WinApp.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
                 Global.logger.Info("Loading ConfigUI...");
 
                 MainWindow = new ConfigUI();
-                WinApp.MainWindow = MainWindow;
                 ((ConfigUI)MainWindow).Display();
-
-                WinApp.Run();
-
-                ConfigManager.Save(Global.Configuration);
-
-                Exit();
             }
             else
             {
@@ -422,31 +380,28 @@ namespace Aurora
         private static void InterceptVolumeAsBrightness(object sender, InputInterceptor.InputEventData e)
         {
             var keys = (Keys)e.Data.VirtualKeyCode;
-            
+
             if ((keys.HasFlag(Keys.VolumeDown) || keys.HasFlag(Keys.VolumeUp))
                 && Global.InputEvents.Alt)
             {
                 e.Intercepted = true;
                 Task.Factory.StartNew(() =>
+                {
+                    if (e.KeyDown)
                     {
-                        if (e.KeyDown)
-                        {
-                            float brightness = Global.Configuration.GlobalBrightness;
-                            brightness += keys == Keys.VolumeUp ? 0.05f : -0.05f;
-                            Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
+                        float brightness = Global.Configuration.GlobalBrightness;
+                        brightness += keys == Keys.VolumeUp ? 0.05f : -0.05f;
+                        Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
 
-                            ConfigManager.Save(Global.Configuration);
-                        }
+                        ConfigManager.Save(Global.Configuration);
                     }
+                }
                 );
             }
         }
-
-        /// <summary>
-        /// Executes exit operations
-        /// </summary>
-        public static void Exit()
+        protected override void OnExit(ExitEventArgs e)
         {
+            base.OnExit(e);
             Global.LightingStateManager.SaveAll();
             Global.PluginManager.SaveSettings();
 
@@ -475,10 +430,6 @@ namespace Aurora
             }
 
             LogManager.Shutdown();
-
-            //Environment.Exit(0);
-            Process.GetCurrentProcess().Kill();
-            //System.Windows.Application.Current.Shutdown();
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -488,9 +439,18 @@ namespace Aurora
             Global.logger.Error(String.Format("Runtime terminating: {0}", e.IsTerminating));
 
             System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
-
             //Perform exit operations
-            Exit();
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            Exception exc = (Exception)e.Exception;
+            Global.logger.Error("Fatal Exception caught : " + exc);
+
+            System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
+            //Perform exit operations
+            System.Windows.Application.Current.Shutdown();
         }
 
         public static void InstallLogitech()
@@ -542,7 +502,7 @@ namespace Aurora
 
             using (BinaryWriter logitech_wrapper_86 = new BinaryWriter(new FileStream(logitech_path, FileMode.Create, FileAccess.Write)))
             {
-                logitech_wrapper_86.Write(Properties.Resources.Aurora_LogiLEDWrapper86);
+                logitech_wrapper_86.Write(global::Aurora.Properties.Resources.Aurora_LogiLEDWrapper86);
             }
 
             //Patch 64-bit
@@ -576,37 +536,13 @@ namespace Aurora
 
             using (BinaryWriter logitech_wrapper_64 = new BinaryWriter(new FileStream(logitech_path_64, FileMode.Create, FileAccess.Write)))
             {
-                logitech_wrapper_64.Write(Properties.Resources.Aurora_LogiLEDWrapper64);
+                logitech_wrapper_64.Write(global::Aurora.Properties.Resources.Aurora_LogiLEDWrapper64);
             }
 
             Global.logger.Info("Logitech LED SDK patched successfully");
             System.Windows.MessageBox.Show("Logitech LED SDK patched successfully");
 
             //Environment.Exit(0);
-        }
-
-        static void OnProcessExit(object sender, EventArgs e)
-        {
-            try
-            {
-                Global.net_listener?.Stop();
-
-                Global.dev_manager?.Shutdown();
-                Global.dev_manager?.Dispose();
-
-
-
-                //Kill all Skype Integrations on Exit
-                foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
-                {
-                    proc.Kill();
-                }
-
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Exception during OnProcessExit(). Error: " + exc);
-            }
         }
     }
 }

@@ -107,7 +107,7 @@ namespace Aurora
 
         internal void Display()
         {
-            if (Program.isSilent || Global.Configuration.start_silently)
+            if (App.isSilent || Global.Configuration.start_silently)
             {
                 this.Visibility = Visibility.Hidden;
                 this.WindowStyle = WindowStyle.None;
@@ -315,7 +315,7 @@ namespace Aurora
         {
             trayicon.Visibility = Visibility.Hidden;
             virtual_keyboard_timer?.Stop();
-            Program.Exit();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void minimizeApp()

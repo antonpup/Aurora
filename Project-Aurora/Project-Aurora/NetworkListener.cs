@@ -123,6 +123,7 @@ namespace Aurora
             if (!isRunning)
             {
                 ListenerThread = new Thread(new ThreadStart(Run));
+                ListenerThread.IsBackground = true;
                 try
                 {
                     net_Listener.Start();
@@ -140,8 +141,10 @@ namespace Aurora
                 ListenerThread.Start();
 
                 ServerThread = new Thread(IPCServerThread);
+                ServerThread.IsBackground = true;
                 ServerThread.Start();
                 CommandThread = new Thread(AuroraCommandsServerIPC);
+                CommandThread.IsBackground = true;
                 CommandThread.Start();
                 return true;
             }
@@ -374,7 +377,7 @@ namespace Aurora
             {
                 case "restore":
                     Global.logger.Info("Initiating command restore");
-                    Program.WinApp.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());
+                    System.Windows.Application.Current.Dispatcher.Invoke(() => ((ConfigUI)System.Windows.Application.Current.MainWindow).ShowWindow());
                     break;
             }
         }
