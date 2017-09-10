@@ -22,7 +22,7 @@
 
     <Grid>
         <TabControl>
-            <TabItem Header="Overview for Worms W.M.D">
+            <TabItem Header="Overview for Rise of the Tomb Raider">
                 <Grid>
                     <StackPanel>
                         <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Rise of the Tomb Raider" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
