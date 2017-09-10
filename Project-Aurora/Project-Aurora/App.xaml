@@ -4,12 +4,12 @@
     DispatcherUnhandledException="App_DispatcherUnhandledException"
     >
     <Application.Resources>
-        <ResourceDictionary>
+        <!--<ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>
                 <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        </ResourceDictionary>-->
     </Application.Resources>
 
 </Application>

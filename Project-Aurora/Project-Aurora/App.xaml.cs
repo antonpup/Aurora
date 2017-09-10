@@ -324,6 +324,11 @@ namespace Aurora
 
                 Global.logger.Info("Listening for game integration calls...");
 
+                Global.logger.Info("Loading ResourceDictionaries...");
+                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
+                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
+                Global.logger.Info("Loaded ResourceDictionaries");
+
                 this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
                 Global.logger.Info("Loading ConfigUI...");
