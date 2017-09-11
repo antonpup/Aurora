@@ -228,7 +228,11 @@ namespace Aurora.Settings
         [Description("Swiss")]
         swiss = 10,
         [Description("Portuguese (Brazilian ABNT2)")]
-        abnt2 = 11
+        abnt2 = 11,
+        [Description("DVORAK (US)")]
+        dvorak = 12,
+        [Description("DVORAK (INT)")]
+        dvorak_int = 13
     }
 
     public enum PreferredMouse

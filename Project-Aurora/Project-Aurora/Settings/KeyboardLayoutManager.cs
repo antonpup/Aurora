@@ -532,6 +532,12 @@ namespace Aurora.Settings
                         case PreferredKeyboardLocalization.abnt2:
                             culture = "pt-BR";
                             break;
+                        case PreferredKeyboardLocalization.dvorak:
+                            culture = "dvorak";
+                            break;
+                        case PreferredKeyboardLocalization.dvorak_int:
+                            culture = "dvorak_int";
+                            break;
                     }
 
                     switch (culture)
@@ -589,6 +595,14 @@ namespace Aurora.Settings
                         case ("pt-BR"):
                             _loaded_localization = PreferredKeyboardLocalization.abnt2;
                             LoadCulture("abnt2");
+                            break;
+                        case ("dvorak"):
+                            _loaded_localization = PreferredKeyboardLocalization.dvorak;
+                            LoadCulture("dvorak");
+                            break;
+                        case ("dvorak_int"):
+                            _loaded_localization = PreferredKeyboardLocalization.dvorak_int;
+                            LoadCulture("dvorak_int");
                             break;
                         default:
                             _loaded_localization = PreferredKeyboardLocalization.intl;
