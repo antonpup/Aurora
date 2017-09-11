@@ -2,6 +2,8 @@
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Aurora.Profiles.Serious_Sam_3
 {
@@ -10,6 +12,13 @@ namespace Aurora.Profiles.Serious_Sam_3
         public SSam3Profile() : base()
         {
             
+        }
+
+        [OnDeserialized]
+        void OnDeserialized(StreamingContext context)
+        {
+            if (!Layers.Any(lyr => lyr.Handler.GetType().Equals(typeof(Aurora.Settings.Layers.WrapperLightsLayerHandler))))
+                Layers.Add(new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()));
         }
 
         public override void Reset()
@@ -33,8 +42,8 @@ namespace Aurora.Profiles.Serious_Sam_3
                         _PrimaryColor = Color.Orange,
                         _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.R, Devices.DeviceKeys.Q, Devices.DeviceKeys.E, Devices.DeviceKeys.LEFT_SHIFT })
                     }
-                }
-                )
+                }),
+                new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),
             };
         }
     }

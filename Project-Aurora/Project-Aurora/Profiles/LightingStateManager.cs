@@ -1,5 +1,4 @@
-﻿using Aurora.Profiles.Aurora_Wrapper;
-using Aurora.Profiles.Desktop;
+﻿using Aurora.Profiles.Desktop;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Settings;
@@ -21,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
+using Aurora.Profiles.Aurora_Wrapper;
 
 namespace Aurora.Profiles
 {
@@ -144,8 +144,10 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Ambilight", "Ambilight Layer", typeof(AmbilightLayerHandler) ),
                 new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
                 new LayerHandlerEntry("Glitch", "Glitch Effect Layer", typeof(GlitchLayerHandler) ),
-                new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
+                new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) )
             }, true);
+
+            RegisterLayerHandler(new LayerHandlerEntry("WrapperLights", "Wrapper Lighting Layer", typeof(WrapperLightsLayerHandler)), false);
 
             #endregion
 
@@ -607,13 +609,19 @@ namespace Aurora.Profiles
             {
 #endif
                 ILightEvent profile;// = this.GetProfileFromProcess(process_name);
+                
 
                 JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
                 string appid = provider.GetValue("appid").ToString();
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
                 if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
-                    profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json));
+                {
+                    IGameState gameState = gs;
+                    if (profile.Config.GameStateType != null)
+                        gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json);
+                    profile.SetGameState(gameState);
+                }
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();

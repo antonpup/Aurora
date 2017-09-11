@@ -18,6 +18,7 @@ using System.IO;
 using Aurora.Settings.Keycaps;
 using Aurora.Profiles;
 using Aurora.Settings.Layers;
+using Aurora.Profiles.Aurora_Wrapper;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
@@ -638,27 +639,31 @@ namespace Aurora
 
                 if (Global.LightingStateManager.Events.ContainsKey(filename))
                 {
-                    MessageBox.Show("Profile for this application already exists.");
-                }
-                else
-                {
-                    GenericApplication gen_app_pm = new GenericApplication(filename);
-
-                    System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(exe_filedlg.FileName.ToLowerInvariant());
-
-                    if (!System.IO.Directory.Exists(gen_app_pm.GetProfileFolderPath()))
-                        System.IO.Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
-
-                    using (var icon_asbitmap = ico.ToBitmap())
+                    if (Global.LightingStateManager.Events[filename] is GameEvent_Aurora_Wrapper)
+                        Global.LightingStateManager.Events.Remove(filename);
+                    else
                     {
-                        icon_asbitmap.Save(Path.Combine(gen_app_pm.GetProfileFolderPath(), "icon.png"), System.Drawing.Imaging.ImageFormat.Png);
+                        MessageBox.Show("Profile for this application already exists.");
+                        return;
                     }
-                    ico.Dispose();
-
-                    Global.LightingStateManager.RegisterEvent(gen_app_pm);
-                    ConfigManager.Save(Global.Configuration);
-                    GenerateProfileStack(filename);
                 }
+
+                GenericApplication gen_app_pm = new GenericApplication(filename);
+
+                System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(exe_filedlg.FileName.ToLowerInvariant());
+
+                if (!System.IO.Directory.Exists(gen_app_pm.GetProfileFolderPath()))
+                    System.IO.Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
+
+                using (var icon_asbitmap = ico.ToBitmap())
+                {
+                    icon_asbitmap.Save(Path.Combine(gen_app_pm.GetProfileFolderPath(), "icon.png"), System.Drawing.Imaging.ImageFormat.Png);
+                }
+                ico.Dispose();
+
+                Global.LightingStateManager.RegisterEvent(gen_app_pm);
+                ConfigManager.Save(Global.Configuration);
+                GenerateProfileStack(filename);
             }
         }
 

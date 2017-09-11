@@ -9,7 +9,7 @@ using Aurora.Settings.Layers;
 
 namespace Aurora.Profiles.Generic_Application
 {
-    public class Event_GenericApplication : LightEvent
+    public class Event_GenericApplication : GameEvent_Generic
     {
         public Event_GenericApplication()
         {
@@ -48,11 +48,6 @@ namespace Aurora.Profiles.Generic_Application
             this.Application = profile;
 
             UpdateLights(frame);
-        }
-
-        public override void SetGameState(IGameState new_game_state)
-        {
-            throw new NotImplementedException();
         }
     }
 }

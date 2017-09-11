@@ -1,5 +1,4 @@
-﻿using Aurora.Profiles.Aurora_Wrapper;
-using Aurora.Settings;
+﻿using Aurora.Settings;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -13,8 +12,9 @@ namespace Aurora.Profiles.ROTTombRaider
     public class ROTTombRaider : Application
     {
         public ROTTombRaider()
-            : base(new LightEventConfig { Name = "Rise of the Tomb Raider", ID = "rot_tombraider", ProcessNames = new[] { "ROTTR.exe" }, ProfileType = typeof(ColorEnhanceProfile), OverviewControlType = typeof(Control_ROTTombRaider), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_ROTTombRaider(), IconURI = "Resources/rot_tombraider.png" })
+            : base(new LightEventConfig { Name = "Rise of the Tomb Raider", ID = "rot_tombraider", ProcessNames = new[] { "ROTTR.exe" }, ProfileType = typeof(WrapperProfile), OverviewControlType = typeof(Control_ROTTombRaider), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Generic(), IconURI = "Resources/rot_tombraider.png" })
         {
+            Config.ExtraAvailableLayers.Add("WrapperLights");
         }
     }
 }

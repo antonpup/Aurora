@@ -110,9 +110,11 @@ namespace Aurora.Profiles
             Config = config;
             SettingsSavePath = Path.Combine(GetProfileFolderPath(), "settings.json");
             config.Event.Application = this;
+            config.Event.ResetGameState();
             Profiles = new ObservableCollection<ApplicationProfile>();
             EffectScripts = new Dictionary<string, IEffectScript>();
-            ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
+            if (config.GameStateType != null)
+                ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
         }
 
         public bool Initialize()

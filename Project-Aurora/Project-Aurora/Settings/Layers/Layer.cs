@@ -298,5 +298,10 @@ namespace Aurora.Settings.Layers
                     new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
                     );
         }
+
+        public void SetGameState(IGameState new_game_state)
+        {
+            Handler.SetGameState(new_game_state);
+        }
     }
 }

@@ -3,6 +3,7 @@ using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
 using Aurora.Settings;
+using Aurora.Settings.Layers;
 using Aurora.Utils;
 using System;
 using System.Collections.Generic;
@@ -11,18 +12,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aurora.Profiles.Dota_2
+namespace Aurora.Profiles
 {
-    public class GameEvent_Dota2 : LightEvent
+    public class GameEvent_Generic : LightEvent
     {
-        public GameEvent_Dota2() : base()
+        public GameEvent_Generic() : base()
         {
         }
 
         public override void UpdateLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
-            Dota2Profile settings = (Dota2Profile)this.Application.Profile;
+            ApplicationProfile settings = this.Application.Profile;
             
             foreach (var layer in Application.Profile.Layers.Reverse().ToArray())
             {
@@ -30,25 +31,28 @@ namespace Aurora.Profiles.Dota_2
                     layers.Enqueue(layer.Render(_game_state));
             }
 
-            //Scripts
-            this.Application.UpdateEffectScripts(layers, _game_state);
-
             frame.AddLayers(layers.ToArray());
         }
 
         public override void SetGameState(IGameState new_game_state)
         {
-            if (new_game_state is GameState_Dota2)
-            {
-                _game_state = new_game_state;
+            if (this.Application.Config.GameStateType != null && !new_game_state.GetType().Equals(this.Application.Config.GameStateType))
+                return;
 
-                //UpdateLights(frame);
-            }
+            ApplicationProfile settings = this.Application.Profile;
+
+            _game_state = new_game_state;
+
+            foreach (Layer lyr in settings.Layers)
+                lyr.SetGameState(new_game_state);
         }
 
         public override void ResetGameState()
         {
-            _game_state = new GameState_Dota2();
+            if (this.Application?.Config?.GameStateType != null)
+                _game_state = (IGameState)Activator.CreateInstance(this.Application.Config.GameStateType);
+            else
+                _game_state = null;
         }
     }
 }

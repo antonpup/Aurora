@@ -107,6 +107,7 @@ namespace Aurora.Settings.Layers
         EffectLayer PostRenderFX(EffectLayer layer_render);
 
         void SetApplication(Application profile);
+        void SetGameState(IGameState gamestate);
     }
 
     public abstract class LayerHandler<TProperty> : ILayerHandler where TProperty : LayerHandlerProperties<TProperty>
@@ -181,6 +182,11 @@ namespace Aurora.Settings.Layers
             return new EffectLayer();
         }
 
+        public virtual void SetGameState(IGameState gamestate)
+        {
+
+        }
+
         public EffectLayer PostRenderFX(EffectLayer rendered_layer)
         {
             EffectLayer returnLayer = new EffectLayer(rendered_layer);
@@ -216,7 +222,7 @@ namespace Aurora.Settings.Layers
         {
             return new Control_DefaultLayer();
         }
-    }
+            }
 
     public class LayerHandler : LayerHandler<LayerHandlerProperties>
     {

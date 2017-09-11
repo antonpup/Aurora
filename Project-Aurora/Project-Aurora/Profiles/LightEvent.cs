@@ -39,7 +39,7 @@ namespace Aurora.Profiles
 
         public LightEvent()
         {
-            this.ResetGameState();
+
         }
 
         public LightEvent(LightEventConfig config) : this()
@@ -62,7 +62,7 @@ namespace Aurora.Profiles
         /// <param name="new_game_state">GameState instance which will be processed before adding new layers</param>
         public virtual void SetGameState(IGameState new_game_state)
         {
-
+            _game_state = new_game_state;
         }
 
         /// <summary>

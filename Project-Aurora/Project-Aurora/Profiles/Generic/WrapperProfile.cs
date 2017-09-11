@@ -1,16 +1,19 @@
 ﻿using Aurora.Settings;
 using Aurora.Settings.Layers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Aurora.Profiles.LeagueOfLegends
+namespace Aurora.Profiles
 {
-    public class LoLProfile : ApplicationProfile
+    public class WrapperProfile : ApplicationProfile
     {
-        public LoLProfile() : base()
+        public WrapperProfile() : base()
         {
-            
+
         }
 
         [OnDeserialized]
@@ -20,20 +23,11 @@ namespace Aurora.Profiles.LeagueOfLegends
                 Layers.Add(new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()));
         }
 
-
         public override void Reset()
         {
             base.Reset();
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
-                new Layer("Actions", new SolidColorLayerHandler()
-                {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = System.Drawing.Color.Blue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.R })
-                    }
-                }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),
             };
         }
