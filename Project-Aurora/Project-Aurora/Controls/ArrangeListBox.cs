@@ -145,7 +145,7 @@ namespace Aurora.Controls
 
                 index = Math.Min(index, Children.Count - 1);
             }
-            //Global.logger.LogLine("Setting order to " + index);
+            //if (Global.writeLogFile) Global.logger.LogLine("Setting order to " + index);
             bool order_Changed;
             if (order_Changed = index != GetOrder(_dragging))
                 SetOrder(_dragging, index);
@@ -201,7 +201,7 @@ namespace Aurora.Controls
             Rect position = GetArrangement(d);
             if (double.IsNaN(position.X))
             {
-                //Global.logger.LogLine("No anim for me");
+                //if (Global.writeLogFile) Global.logger.LogLine("No anim for me");
                 SetArrangement(d, desiredPosition);
                 InvalidateArrange();
                 return;
@@ -217,7 +217,7 @@ namespace Aurora.Controls
 
         private void ReorderOthers()
         {
-            //Global.logger.LogLine("Reorder others");
+            //if (Global.writeLogFile) Global.logger.LogLine("Reorder others");
             int s = GetOrder(_dragging);
             int i = 0;
             foreach (var child in Children.OfType<UIElement>().OrderBy(GetOrder))

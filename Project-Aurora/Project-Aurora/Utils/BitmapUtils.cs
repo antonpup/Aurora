@@ -53,7 +53,7 @@ namespace Aurora.Utils
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("BitmapUtils.GetRegionColor() Exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("BitmapUtils.GetRegionColor() Exception: " + exc, Logging_Level.Error);
 
                 return Color.FromArgb(0, 0, 0);
             }

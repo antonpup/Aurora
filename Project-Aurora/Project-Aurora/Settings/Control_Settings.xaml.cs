@@ -108,6 +108,8 @@ namespace Aurora.Settings
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
+
+            this.write_log_file.IsChecked = Global.Configuration.write_log_file;
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -135,7 +137,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                if (Global.writeLogFile) Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
             }
         }
 
@@ -508,7 +510,7 @@ namespace Aurora.Settings
                 }
                 catch(Exception exc)
                 {
-                    Global.logger.LogLine("run_at_win_startup_Checked Exception: " + exc, Logging_Level.Error);
+                    if (Global.writeLogFile) Global.logger.LogLine("run_at_win_startup_Checked Exception: " + exc, Logging_Level.Error);
                 }
             }
 
@@ -845,7 +847,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during Logitech Wrapper install. Exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Exception during Logitech Wrapper install. Exception: " + exc, Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for Logitech could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -874,7 +876,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during Razer Wrapper install. Exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Exception during Razer Wrapper install. Exception: " + exc, Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for Razer could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -898,7 +900,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -922,7 +924,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -1030,7 +1032,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                if (Global.writeLogFile) Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
             }
         }
 
@@ -1052,6 +1054,16 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.OverlaysInPreview = (this.chkOverlayPreview.IsChecked.HasValue) ? this.chkOverlayPreview.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
+
+        private void write_log_file_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.write_log_file = (this.write_log_file.IsChecked.HasValue) ? this.write_log_file.IsChecked.Value : false;
+                Global.writeLogFile = (this.write_log_file.IsChecked.HasValue) ? this.write_log_file.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }

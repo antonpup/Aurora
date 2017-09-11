@@ -131,7 +131,6 @@
                     <TextBlock x:Name="lblKeyboardBrightness" HorizontalAlignment="Left" Margin="333,95,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
                     <Slider x:Name="sldKeyboardBrightness" HorizontalAlignment="Left" Margin="178,95,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding KeyboardBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblKeyboardBrightness, Path=.}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,116,0,0" TextWrapping="Wrap" Text="Peripheral brightness modifier: " VerticalAlignment="Top"/>
-                    <TextBlock x:Name="lblPeripheralBrightness" HorizontalAlignment="Left" Margin="333,116,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
                     <Slider x:Name="sldPeripheralBrightness" HorizontalAlignment="Left" Margin="178,116,0,0" VerticalAlignment="Top" Width="148" ValueChanged="sliderPercentages_ValueChanged" Maximum="1" Value="{Binding PeripheralBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblPeripheralBrightness, Path=.}"/>
                     <xctk:IntegerUpDown x:Name="timed_dimming_start_hour_updown" HorizontalAlignment="Left" Height="24" Margin="118,179,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_hour_updown_ValueChanged"/>
                     <xctk:IntegerUpDown x:Name="timed_dimming_start_minute_updown" HorizontalAlignment="Left" Height="24" Margin="180,179,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_minute_updown_ValueChanged"/>
@@ -159,6 +158,7 @@
                     <TextBlock x:Name="lblGlobalBrightness" HorizontalAlignment="Left" Margin="333,74,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
                     <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="178,74,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblGlobalBrightness, Path=.}"/>
                     <CheckBox x:Name="chkShowDefaultLighting" Content="Show Default lighting(CUE, LGS, etc) when Desktop is disabled" HorizontalAlignment="Left" Margin="10,257,0,0" VerticalAlignment="Top"  IsChecked="{Binding ShowDefaultLightingOnDisabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="write_log_file" Content="Write log file" HorizontalAlignment="Left" Margin="349,10,0,0" VerticalAlignment="Top" Unchecked="write_log_file_Checked" Checked="write_log_file_Checked" IsChecked="True"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">

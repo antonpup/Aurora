@@ -346,7 +346,7 @@ namespace Aurora.Profiles
             if (EventProcesses.ContainsKey(process))
             {
                 if (!Events.ContainsKey(EventProcesses[process]))
-                    Global.logger.LogLine($"GetProfileFromProcess: The process '{process}' exists in EventProcesses but subsequently '{EventProcesses[process]}' does not in Events!", Logging_Level.Warning);
+                    if (Global.writeLogFile) Global.logger.LogLine($"GetProfileFromProcess: The process '{process}' exists in EventProcesses but subsequently '{EventProcesses[process]}' does not in Events!", Logging_Level.Warning);
 
                 return Events[EventProcesses[process]];
             }
@@ -361,7 +361,7 @@ namespace Aurora.Profiles
             if (EventAppIDs.ContainsKey(appid))
             {
                 if (!Events.ContainsKey(EventAppIDs[appid]))
-                    Global.logger.LogLine($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs but subsequently '{EventAppIDs[appid]}' does not in Events!", Logging_Level.Warning);
+                    if (Global.writeLogFile) Global.logger.LogLine($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs but subsequently '{EventAppIDs[appid]}' does not in Events!", Logging_Level.Warning);
                 return Events[EventAppIDs[appid]];
             }
             else if (Events.ContainsKey(appid))
@@ -446,7 +446,7 @@ namespace Aurora.Profiles
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine("ProfilesManager.Update() Exception, " + exc, Logging_Level.Error);
+                        if (Global.writeLogFile) Global.logger.LogLine("ProfilesManager.Update() Exception, " + exc, Logging_Level.Error);
                     }
                 }
 
@@ -511,7 +511,7 @@ namespace Aurora.Profiles
             ILightEvent profile = null;
             ILightEvent tempProfile = null;
             bool preview = false;
-            //Global.logger.LogLine(process_name);
+            //if (Global.writeLogFile) Global.logger.LogLine(process_name);
             
             //TODO: GetProfile that checks based on event type
             if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
@@ -592,7 +592,7 @@ namespace Aurora.Profiles
         {
             //Debug.WriteLine("Received gs!");
 
-            //Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
+            //if (Global.writeLogFile) Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
 
             //UpdateProcess();
 
@@ -630,7 +630,7 @@ namespace Aurora.Profiles
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);
+                if (Global.writeLogFile) Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);
             }
         }
 

@@ -789,7 +789,7 @@ namespace Aurora.Settings
                                     else
                                     {
                                         //Null, it's unknown.
-                                        Global.logger.LogLine("Unknown CUE Layer Type");
+                                        if (Global.writeLogFile) Global.logger.LogLine("Unknown CUE Layer Type");
                                     }
                                 }
 
@@ -802,7 +802,7 @@ namespace Aurora.Settings
                 }
             }
 
-            //Global.logger.LogLine(rootElement.ToString());
+            //if (Global.writeLogFile) Global.logger.LogLine(rootElement.ToString());
         }
     }
 }

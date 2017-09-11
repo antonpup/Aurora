@@ -741,7 +741,7 @@ namespace Aurora
 
         public void ShowWindow()
         {
-            Global.logger.LogLine("Show Window called");
+            if (Global.writeLogFile) Global.logger.LogLine("Show Window called");
             this.Visibility = Visibility.Visible;
             this.WindowStyle = WindowStyle.SingleBorderWindow;
             this.ShowInTaskbar = true;

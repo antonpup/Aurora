@@ -380,7 +380,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 }
                 else
                 {
-                    Global.logger.LogLine("Unknown Wrapper Command: " + ngw_state.Command, Logging_Level.Info, false);
+                    if (Global.writeLogFile) Global.logger.LogLine("Unknown Wrapper Command: " + ngw_state.Command, Logging_Level.Info, false);
                 }
             }
         }

@@ -353,7 +353,7 @@ namespace Aurora.Settings.Layers
         void FftCalculated(object sender, FftEventArgs e)
         {
             // Do something with e.result!
-            //Global.logger.LogLine($"{e.Result.ToString()}");
+            //if (Global.writeLogFile) Global.logger.LogLine($"{e.Result.ToString()}");
 
             _ffts_prev = new List<Complex>(_ffts).ToArray();
             _ffts = new List<Complex>(e.Result).ToArray();

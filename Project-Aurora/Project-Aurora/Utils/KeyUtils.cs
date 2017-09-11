@@ -55,7 +55,7 @@ namespace Aurora.Utils
         public static DeviceKeys GetDeviceKey(Keys forms_key, int scanCode = 0, bool isExtendedKey = false)
         {
             DeviceKeys key = getDeviceKey(forms_key, scanCode, isExtendedKey);
-            //Global.logger.LogLine(key.ToString() + ":" + ((int)key).ToString());
+            //if (Global.writeLogFile) Global.logger.LogLine(key.ToString() + ":" + ((int)key).ToString());
             if (Global.kbLayout.LayoutKeyConversion.ContainsKey(key))
                 return Global.kbLayout.LayoutKeyConversion[key];
 

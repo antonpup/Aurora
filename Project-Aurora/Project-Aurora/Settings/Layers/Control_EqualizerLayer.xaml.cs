@@ -59,7 +59,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
+                    if (Global.writeLogFile) Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
                 }
 
                 this.updown_max_amplitude_value.Value = (int)(this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude;
@@ -113,7 +113,7 @@ namespace Aurora.Settings.Layers
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
             }
         }
 
@@ -128,7 +128,7 @@ namespace Aurora.Settings.Layers
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
             }
         }
 
@@ -270,7 +270,7 @@ namespace Aurora.Settings.Layers
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                if (Global.writeLogFile) Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
             }
         }
     }

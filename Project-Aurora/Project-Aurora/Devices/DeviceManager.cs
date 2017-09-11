@@ -67,7 +67,7 @@ namespace Aurora.Devices
                                     devices.Add(scripted_device);
                                 }
                                 else
-                                    Global.logger.LogLine(string.Format("Script \"{0}\" does not contain a public 'main' class", device_script), Logging_Level.External);
+                                    if (Global.writeLogFile) Global.logger.LogLine(string.Format("Script \"{0}\" does not contain a public 'main' class", device_script), Logging_Level.External);
 
                                 break;
                             case ".cs":
@@ -83,13 +83,13 @@ namespace Aurora.Devices
 
                                 break;
                             default:
-                                Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext), Logging_Level.External);
+                                if (Global.writeLogFile) Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext), Logging_Level.External);
                                 break;
                         }
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine(string.Format("An error occured while trying to load script {0}. Exception: {1}", device_script, exc, Logging_Level.External));
+                        if (Global.writeLogFile) Global.logger.LogLine(string.Format("An error occured while trying to load script {0}. Exception: {1}", device_script, exc, Logging_Level.External));
                     }
                 }
             }
@@ -115,7 +115,7 @@ namespace Aurora.Devices
                 else
                     devicesToRetryNo++;
 
-                Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
+                if (Global.writeLogFile) Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
             }
 
             NewDevicesInitialized?.Invoke(this, new EventArgs());
@@ -135,7 +135,7 @@ namespace Aurora.Devices
         {
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
-                Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);
+                if (Global.writeLogFile) Global.logger.LogLine("Retrying Device Initialization", Logging_Level.Info);
                 int devicesAttempted = 0;
                 bool _anyInitialized = false;
                 foreach (Device device in devices)
@@ -147,7 +147,7 @@ namespace Aurora.Devices
                     if (device.Initialize())
                         _anyInitialized = true;
 
-                    Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
+                    if (Global.writeLogFile) Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized", Logging_Level.Info);
                 }
 
                 retryAttemptsLeft--;
@@ -200,7 +200,7 @@ namespace Aurora.Devices
                 if (device.IsInitialized())
                 {
                     device.Shutdown();
-                    Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was shutdown", Logging_Level.Info);
+                    if (Global.writeLogFile) Global.logger.LogLine("Device, " + device.GetDeviceName() + ", was shutdown", Logging_Level.Info);
                 }
             }
 

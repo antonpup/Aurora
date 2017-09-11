@@ -480,7 +480,7 @@ namespace Aurora.Settings
             {
                 //System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
 
-                //Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
+                //if (Global.writeLogFile) Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
 
                 //Load keyboard layout
                 if (Directory.Exists(layoutsPath))
@@ -743,7 +743,7 @@ namespace Aurora.Settings
             }
             catch (Exception e)
             {
-                Global.logger.LogLine(e.ToString());
+                if (Global.writeLogFile) Global.logger.LogLine(e.ToString());
             }
 
             //Perform end of load functions

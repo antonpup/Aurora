@@ -329,7 +329,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Interative layer exception, " + exc, Logging_Level.Error);
+                    if (Global.writeLogFile) Global.logger.LogLine("Interative layer exception, " + exc, Logging_Level.Error);
                 }
             }
 
@@ -350,7 +350,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Interative layer exception, " + exc, Logging_Level.Error);
+                    if (Global.writeLogFile) Global.logger.LogLine("Interative layer exception, " + exc, Logging_Level.Error);
                 }
             }
 

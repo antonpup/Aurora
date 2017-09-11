@@ -506,7 +506,7 @@ namespace Aurora.EffectsEngine
                 if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
                     keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
                 {
-                    Global.logger.LogLine("Coudln't set key color " + key.ToString(), Logging_Level.Warning);
+                    if (Global.writeLogFile) Global.logger.LogLine("Coudln't set key color " + key.ToString(), Logging_Level.Warning);
                     return this; ;
                 }
                 else
@@ -581,7 +581,7 @@ namespace Aurora.EffectsEngine
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("EffectLayer.Get() Exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("EffectLayer.Get() Exception: " + exc, Logging_Level.Error);
 
                 return Color.FromArgb(0, 0, 0);
             }
