@@ -45,7 +45,7 @@ namespace Aurora.Settings
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine($"Exception occured while loading \"{this.GetType().Name}\" Settings.\nException:" + exc, Logging_Level.Error);
+                    if (Global.writeLogFile) Global.logger.LogLine($"Exception occured while loading \"{this.GetType().Name}\" Settings.\nException:" + exc, Logging_Level.Error);
                     SaveSettings(settingsType);
                 }
             }

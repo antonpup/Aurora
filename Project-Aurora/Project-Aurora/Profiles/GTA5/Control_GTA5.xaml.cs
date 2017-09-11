@@ -89,7 +89,7 @@ namespace Aurora.Profiles.GTA5
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Could not start Aurora Logitech Patcher. Error: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Could not start Aurora Logitech Patcher. Error: " + exc, Logging_Level.Error);
             }
         }
 

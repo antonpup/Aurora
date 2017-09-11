@@ -30,7 +30,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Could not start Skype Integration. Error: " + exc, Logging_Level.Error);
+                    if (Global.writeLogFile) Global.logger.LogLine("Could not start Skype Integration. Error: " + exc, Logging_Level.Error);
                 }
             }
         }
@@ -113,8 +113,8 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
                 }
                 catch (Exception e)
                 {
-                    Global.logger.LogLine("Exception during OnNewGameState. Error: " + e, Logging_Level.Error);
-                    Global.logger.LogLine(state.ToString(), Logging_Level.None);
+                    if (Global.writeLogFile) Global.logger.LogLine("Exception during OnNewGameState. Error: " + e, Logging_Level.Error);
+                    if (Global.writeLogFile) Global.logger.LogLine(state.ToString(), Logging_Level.None);
                 }
             }
         }

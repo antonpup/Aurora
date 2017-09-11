@@ -176,7 +176,7 @@ namespace Aurora.Devices.Logitech
                     {
                         if (!LogitechGSDK.LogiLedInit())
                         {
-                            Global.logger.LogLine("Logitech LED SDK could not be initialized.", Logging_Level.Error);
+                            if (Global.writeLogFile) Global.logger.LogLine("Logitech LED SDK could not be initialized.", Logging_Level.Error);
 
                             isInitialized = false;
                             return false;
@@ -198,7 +198,7 @@ namespace Aurora.Devices.Logitech
                         }
                         else
                         {
-                            Global.logger.LogLine("Logitech LED SDK could not be initialized. (LogiLedSetTargetDevice or LogiLedSaveCurrentLighting failed)", Logging_Level.Error);
+                            if (Global.writeLogFile) Global.logger.LogLine("Logitech LED SDK could not be initialized. (LogiLedSetTargetDevice or LogiLedSaveCurrentLighting failed)", Logging_Level.Error);
 
                             isInitialized = false;
                             return false;
@@ -208,7 +208,7 @@ namespace Aurora.Devices.Logitech
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine("There was an error initializing Logitech LED SDK.\r\n" + exc.Message, Logging_Level.Error);
+                        if (Global.writeLogFile) Global.logger.LogLine("There was an error initializing Logitech LED SDK.\r\n" + exc.Message, Logging_Level.Error);
 
                         return false;
                     }
@@ -405,7 +405,7 @@ namespace Aurora.Devices.Logitech
             }
             catch (Exception e)
             {
-                Global.logger.LogLine(e.ToString(), Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine(e.ToString(), Logging_Level.Error);
                 return false;
             }
         }

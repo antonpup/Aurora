@@ -367,6 +367,8 @@ namespace Aurora.Settings
         public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
 
+        public bool write_log_file;
+
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
         public Configuration()
@@ -430,6 +432,8 @@ namespace Aurora.Settings
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
+
+            write_log_file = true;
 
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 

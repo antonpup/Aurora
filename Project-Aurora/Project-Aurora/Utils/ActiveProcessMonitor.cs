@@ -159,7 +159,7 @@ namespace Aurora.Utils
 			}
 			catch (Exception exc)
 			{
-				Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
+				if (Global.writeLogFile) Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
 			}
 
 			/*try
@@ -182,13 +182,13 @@ namespace Aurora.Utils
             }
             catch (ArgumentException aex)
             {
-                Global.logger.LogLine("Argument Exception: " + aex, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Argument Exception: " + aex, Logging_Level.Error);
                 //if (Global.isDebug)
                     //throw aex;
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
                 //if (Global.isDebug)
                     //throw exc;
             }*/

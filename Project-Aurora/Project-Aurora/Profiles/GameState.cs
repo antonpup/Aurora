@@ -216,7 +216,7 @@ namespace Aurora.Profiles
         {
             get
             {
-                //Global.logger.LogLine($"_CPUUsage = {_CPUUsage}\t\t_SmoothCPUUsage = {_SmoothCPUUsage}");
+                //if (Global.writeLogFile) Global.logger.LogLine($"_CPUUsage = {_CPUUsage}\t\t_SmoothCPUUsage = {_SmoothCPUUsage}");
 
                 if (_SmoothCPUUsage < _CPUUsage)
                     _SmoothCPUUsage += (_CPUUsage - _SmoothCPUUsage) / 10.0f;
@@ -245,7 +245,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("PerformanceCounter exception: " + exc, Logging_Level.Error);
+                if (Global.writeLogFile) Global.logger.LogLine("PerformanceCounter exception: " + exc, Logging_Level.Error);
             }
         }
     }

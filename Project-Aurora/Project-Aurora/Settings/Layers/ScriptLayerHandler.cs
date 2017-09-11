@@ -89,7 +89,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch(Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error. Exception: {1}", this.Properties.Script, exc), Logging_Level.External);
+                    if (Global.writeLogFile) Global.logger.LogLine(string.Format("Effect script with key {0} encountered an error. Exception: {1}", this.Properties.Script, exc), Logging_Level.External);
                     ScriptException = exc;
                 }
             }

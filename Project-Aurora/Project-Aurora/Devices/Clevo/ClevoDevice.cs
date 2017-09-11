@@ -80,7 +80,7 @@ namespace Aurora.Devices.Clevo
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.LogLine("Clevo device, Exception! Message:" + ex, Logging_Level.Error);
+                    if (Global.writeLogFile) Global.logger.LogLine("Clevo device, Exception! Message:" + ex, Logging_Level.Error);
                 }
 
                 // Mark Initialized = FALSE
@@ -222,7 +222,7 @@ namespace Aurora.Devices.Clevo
             }
             catch (Exception exception)
             {
-                Global.logger.LogLine("Clevo device, error when updating device. Error: " + exception, Logging_Level.Error, true);
+                if (Global.writeLogFile) Global.logger.LogLine("Clevo device, error when updating device. Error: " + exception, Logging_Level.Error, true);
                 update_result = false;
             }
 
