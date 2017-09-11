@@ -78,12 +78,12 @@ namespace Aurora.Profiles.DyingLight
         private bool InstallWrapper(string installpath = "")
         {
             if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(241930);
+                installpath = Utils.SteamUtils.GetGamePath(239140);
 
 
             if (!String.IsNullOrWhiteSpace(installpath))
             {
-                string path = System.IO.Path.Combine(installpath, "x64", "LightFX.dll");
+                string path = System.IO.Path.Combine(installpath, "LightFX.dll");
 
                 if (!File.Exists(path))
                     Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
@@ -103,10 +103,10 @@ namespace Aurora.Profiles.DyingLight
 
         private bool UninstallWrapper()
         {
-            String installpath = Utils.SteamUtils.GetGamePath(241930);
+            String installpath = Utils.SteamUtils.GetGamePath(239140);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
-                string path = System.IO.Path.Combine(installpath, "x64", "LightFX.dll");
+                string path = System.IO.Path.Combine(installpath, "LightFX.dll");
 
                 if (File.Exists(path))
                     File.Delete(path);

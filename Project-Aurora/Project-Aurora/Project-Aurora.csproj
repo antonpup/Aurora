@@ -288,6 +288,7 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
+    <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
     <Compile Include="Profiles\Generic\ColorEnhanceProfile.cs" />
     <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
@@ -512,6 +513,11 @@
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\TheDivision\TheDivisionApplication.cs" />
+    <Compile Include="Profiles\DyingLight\Control_DyingLight.xaml.cs">
+      <DependentUpon>Control_DyingLight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DyingLight\GameEvent_DyingLight.cs" />
+    <Compile Include="Profiles\DyingLight\DyingLightApplication.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
       <DependentUpon>Control_TalosPrinciple.xaml</DependentUpon>
     </Compile>
@@ -1194,6 +1200,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\DyingLight\Control_DyingLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Worms_WMD\Control_WormsWMD.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1514,6 +1524,7 @@
     <Resource Include="Resources\FreeForm_ManualColor.png" />
     <Resource Include="Resources\Borderlands2_256x256.png" />
     <Resource Include="Resources\rot_tombraider.png" />
+    <Resource Include="Resources\dl_128x128.png" />
     <Content Include="Resources\SteelSeriesInstall\Step1.png" />
     <Content Include="Resources\SteelSeriesInstall\Step2.png" />
     <Content Include="SDKDLL.dll">

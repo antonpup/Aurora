@@ -122,7 +122,8 @@ namespace Aurora.Profiles
                 new WormsWMD.WormsWMD(),
                 new Blade_and_Soul.BnS(),
                 new Event_SkypeOverlay(),
-                new ROTTombRaider.ROTTombRaider()
+                new ROTTombRaider.ROTTombRaider(),
+				new DyingLight.DyingLight()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
