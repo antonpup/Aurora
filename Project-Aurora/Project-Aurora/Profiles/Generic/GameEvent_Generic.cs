@@ -39,12 +39,18 @@ namespace Aurora.Profiles
             if (this.Application.Config.GameStateType != null && !new_game_state.GetType().Equals(this.Application.Config.GameStateType))
                 return;
 
-            ApplicationProfile settings = this.Application.Profile;
-
             _game_state = new_game_state;
+            UpdateLayerGameStates();
+        }
+
+        private void UpdateLayerGameStates()
+        {
+            ApplicationProfile settings = this.Application.Profile;
+            if (settings == null)
+                return;
 
             foreach (Layer lyr in settings.Layers)
-                lyr.SetGameState(new_game_state);
+                lyr.SetGameState(_game_state);
         }
 
         public override void ResetGameState()
@@ -53,6 +59,8 @@ namespace Aurora.Profiles
                 _game_state = (IGameState)Activator.CreateInstance(this.Application.Config.GameStateType);
             else
                 _game_state = null;
+
+            UpdateLayerGameStates();
         }
     }
 }
