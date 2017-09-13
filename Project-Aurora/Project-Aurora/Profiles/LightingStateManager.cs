@@ -334,12 +334,14 @@ namespace Aurora.Profiles
                 if (!(Events[key] is GenericApplication))
                     return;
                 GenericApplication profile = (GenericApplication)Events[key];
+                Events.Remove(key);
+                Global.Configuration.ProfileOrder.Remove(key);
+
+                profile.Dispose();
+
                 string path = profile.GetProfileFolderPath();
                 if (Directory.Exists(path))
                     Directory.Delete(path, true);
-
-                Events.Remove(key);
-                Global.Configuration.ProfileOrder.Remove(key);
 
                 //SaveSettings();
             }

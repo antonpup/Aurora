@@ -25,8 +25,8 @@
             <TabItem Header="General Settings">
                 <Grid>
                     <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Application Name:" VerticalAlignment="Top"/>
-                    <TextBox x:Name="app_name_textbox" HorizontalAlignment="Left" Height="23" Margin="113,29,0,0" VerticalAlignment="Top" Width="172" TextChanged="app_name_textbox_TextChanged"/>
-                    <CheckBox x:Name="profile_enabled" Content="Enable Aurora to provide lighting effects with this profile" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="profile_enabled_Checked" Unchecked="profile_enabled_Checked"/>
+                    <TextBox x:Name="app_name_textbox" HorizontalAlignment="Left" Height="23" Margin="113,29,0,0" VerticalAlignment="Top" Width="172" Text="{Binding Settings.ApplicationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="profile_enabled" Content="Enable Aurora to provide lighting effects with this profile" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="{Binding Settings.IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <CheckBox x:Name="profile_nighttime_check" Content="Preview profile during nighttime setting" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Checked="profile_nighttime_check_Checked" Unchecked="profile_nighttime_check_Checked"/>
                 </Grid>
             </TabItem>

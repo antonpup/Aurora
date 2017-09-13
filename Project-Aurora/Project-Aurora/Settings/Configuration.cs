@@ -485,8 +485,6 @@ namespace Aurora.Settings
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
-
-            Global.LightingStateManager.SaveAll();
         }
 
         private static Configuration CreateDefaultConfigurationFile()

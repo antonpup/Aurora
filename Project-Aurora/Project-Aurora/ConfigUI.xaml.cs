@@ -377,18 +377,18 @@ namespace Aurora
                 if (!Global.LightingStateManager.Events.ContainsKey(profile_k))
                     continue;
 
-                Profiles.Application profile = (Profiles.Application)Global.LightingStateManager.Events[profile_k];
-                ImageSource icon = profile.GetIcon();
-                UserControl control = profile.GetUserControl();
+                Profiles.Application application = (Profiles.Application)Global.LightingStateManager.Events[profile_k];
+                ImageSource icon = application.GetIcon();
+                UserControl control = application.GetUserControl();
                 if (icon != null && control != null)
                 {
                     Image profile_image;
-                    if (profile is GenericApplication)
+                    if (application is GenericApplication)
                     {
-                        GenericApplicationProfile settings = (profile.Profile as GenericApplicationProfile);
+                        GenericApplicationSettings settings = (application.Settings as GenericApplicationSettings);
                         profile_image = new Image
                         {
-                            Tag = profile,
+                            Tag = application,
                             Source = icon,
                             ToolTip = settings.ApplicationName + " Settings",
                             Margin = new Thickness(0, 5, 0, 0)
@@ -428,19 +428,19 @@ namespace Aurora
 
                         profile_image = new Image
                         {
-                            Tag = profile,
+                            Tag = application,
                             Source = icon,
-                            ToolTip = profile.Config.Name + " Settings",
+                            ToolTip = application.Config.Name + " Settings",
                             Margin = new Thickness(0, 5, 0, 0),
-                            Visibility = profile.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
+                            Visibility = application.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
                         };
                         profile_image.MouseDown += ProfileImage_MouseDown;
                         this.profiles_stack.Children.Add(profile_image);
                     }
 
-                    if (profile.Config.ID.Equals(focusedKey))
+                    if (application.Config.ID.Equals(focusedKey))
                     {
-                        this.FocusedApplication = profile;
+                        this.FocusedApplication = application;
                         this.TransitionToProfile(profile_image);
                     }
                 }
@@ -553,6 +553,7 @@ namespace Aurora
 
         private void TransitionToProfile(Image source)
         {
+            this.FocusedApplication = source.Tag as Profiles.Application;
             var bitmap = (BitmapSource)source.Source;
             var color = Utils.ColorUtils.GetAverageColor(bitmap);
 
@@ -570,11 +571,7 @@ namespace Aurora
             if (image != null && image.Tag != null && image.Tag is Profiles.Application)
             {
                 if (e == null || e.LeftButton == MouseButtonState.Pressed)
-                {
-                    this.FocusedApplication = image.Tag as Profiles.Application;
                     this.TransitionToProfile(image);
-                    
-                }
                 else if (e.RightButton == MouseButtonState.Pressed)
                 {
                     this.cmenuProfiles.PlacementTarget = (Image)sender;
@@ -614,11 +611,13 @@ namespace Aurora
 
                 if (Global.LightingStateManager.Events.ContainsKey(name))
                 {
-                    if (MessageBox.Show("Are you sure you want to delete profile for " + (((Profiles.Application)Global.LightingStateManager.Events[name]).Profile as GenericApplicationProfile).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if (MessageBox.Show("Are you sure you want to delete profile for " + (((Profiles.Application)Global.LightingStateManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
+                        var eventList = Global.Configuration.ProfileOrder;
+                        string prevProfile = eventList[eventList.FindIndex(s => s.Equals(name)) - 1];
                         Global.LightingStateManager.RemoveGenericProfile(name);
                         //ConfigManager.Save(Global.Configuration);
-                        this.GenerateProfileStack();
+                        this.GenerateProfileStack(prevProfile);
                     }
                 }
             }
@@ -649,6 +648,8 @@ namespace Aurora
                 }
 
                 GenericApplication gen_app_pm = new GenericApplication(filename);
+                gen_app_pm.Initialize();
+                ((GenericApplicationSettings)gen_app_pm.Settings).ApplicationName = Path.GetFileNameWithoutExtension(filename);
 
                 System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(exe_filedlg.FileName.ToLowerInvariant());
 
