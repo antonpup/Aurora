@@ -452,7 +452,10 @@ namespace Aurora
         {
             Exception exc = (Exception)e.Exception;
             Global.logger.Error("Fatal Exception caught : " + exc);
-            e.Handled = true;
+            if (!Global.isDebug)
+                e.Handled = true;
+            else
+                throw exc;
             System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
             //Perform exit operations
             System.Windows.Application.Current.Shutdown();

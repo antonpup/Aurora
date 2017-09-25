@@ -1000,42 +1000,6 @@ namespace Aurora.Devices
         ADDITIONALLIGHT10 = 151,
 
         /// <summary>
-        /// Additional Light 11
-        /// </summary>
-        [Description("Additional Light 11")]
-        ADDITIONALLIGHT11 = 152,
-
-        /// <summary>
-        /// Additional Light 12
-        /// </summary>
-        [Description("Additional Light 12")]
-        ADDITIONALLIGHT12 = 153,
-
-        /// <summary>
-        /// Additional Light 13
-        /// </summary>
-        [Description("Additional Light 13")]
-        ADDITIONALLIGHT13 = 154,
-
-        /// <summary>
-        /// Additional Light 14
-        /// </summary>
-        [Description("Additional Light 14")]
-        ADDITIONALLIGHT14 = 155,
-
-        /// <summary>
-        /// Additional Light 15
-        /// </summary>
-        [Description("Additional Light 15")]
-        ADDITIONALLIGHT15 = 156,
-
-        /// <summary>
-        /// Additional Light 16
-        /// </summary>
-        [Description("Additional Light 16")]
-        ADDITIONALLIGHT16 = 157,
-
-        /// <summary>
         /// Peripheral Logo
         /// </summary>
         [Description("Peripheral Logo")]
@@ -1107,22 +1071,58 @@ namespace Aurora.Devices
         LEFT_FN = 171,
 
         /// <summary>
+        /// Additional Light 11
+        /// </summary>
+        [Description("Additional Light 11")]
+        ADDITIONALLIGHT11 = 172,
+
+        /// <summary>
+        /// Additional Light 12
+        /// </summary>
+        [Description("Additional Light 12")]
+        ADDITIONALLIGHT12 = 173,
+
+        /// <summary>
+        /// Additional Light 13
+        /// </summary>
+        [Description("Additional Light 13")]
+        ADDITIONALLIGHT13 = 174,
+
+        /// <summary>
+        /// Additional Light 14
+        /// </summary>
+        [Description("Additional Light 14")]
+        ADDITIONALLIGHT14 = 175,
+
+        /// <summary>
+        /// Additional Light 15
+        /// </summary>
+        [Description("Additional Light 15")]
+        ADDITIONALLIGHT15 = 176,
+
+        /// <summary>
+        /// Additional Light 16
+        /// </summary>
+        [Description("Additional Light 16")]
+        ADDITIONALLIGHT16 = 177,
+
+        /// <summary>
         /// Additional Light 17
         /// </summary>
         [Description("Additional Light 17")]
-        ADDITIONALLIGHT17 = 172,
+        ADDITIONALLIGHT17 = 178,
 
         /// <summary>
         /// Additional Light 18
         /// </summary>
         [Description("Additional Light 18")]
-        ADDITIONALLIGHT18 = 173,
+        ADDITIONALLIGHT18 = 179,
 
         /// <summary>
         /// Additional Light 19
         /// </summary>
         [Description("Additional Light 19")]
-        ADDITIONALLIGHT19 = 174,
+        ADDITIONALLIGHT19 = 180,
 
         /// <summary>
         /// None

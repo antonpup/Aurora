@@ -321,6 +321,8 @@ namespace Aurora
 
         private void minimizeApp()
         {
+            this.FocusedApplication.SaveAll();
+
             if (!shownHiddenMessage)
             {
                 trayicon.ShowBalloonTip("Aurora", "This program is now hidden in the tray.", BalloonIcon.None);
