@@ -140,7 +140,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
                 new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
                 new LayerHandlerEntry("ShortcutAssistant", "Shortcut Assistant Layer", typeof(ShortcutAssistantLayerHandler) ),
-                new LayerHandlerEntry("Equalizer", "Equalizer Layer", typeof(EqualizerLayerHandler) ),
+                new LayerHandlerEntry("Equalizer", "Audio Visualizer Layer", typeof(EqualizerLayerHandler) ),
                 new LayerHandlerEntry("Ambilight", "Ambilight Layer", typeof(AmbilightLayerHandler) ),
                 new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
                 new LayerHandlerEntry("Glitch", "Glitch Effect Layer", typeof(GlitchLayerHandler) ),
