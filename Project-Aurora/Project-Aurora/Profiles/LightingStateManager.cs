@@ -689,6 +689,9 @@ namespace Aurora.Profiles
         {
             updateTimer.Dispose();
             updateTimer = null;
+
+            foreach (var app in this.Events)
+                app.Value.Dispose();
         }
     }
 }

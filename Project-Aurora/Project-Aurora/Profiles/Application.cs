@@ -61,7 +61,7 @@ namespace Aurora.Profiles
         }
     }
 
-    public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent
+    public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, IDisposable
     {
         #region Public Properties
         public bool Initialized { get; protected set; } = false;
@@ -653,6 +653,8 @@ namespace Aurora.Profiles
             if (Disposed)
                 return;
 
+            foreach (ApplicationProfile profile in this.Profiles)
+                profile.Dispose();
 
             Disposed = true;
         }

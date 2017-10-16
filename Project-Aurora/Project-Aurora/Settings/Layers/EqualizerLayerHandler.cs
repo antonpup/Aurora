@@ -404,6 +404,12 @@ namespace Aurora.Settings.Layers
             else
                 return new SolidBrush(Properties.PrimaryColor);
         }
+
+        public override void Dispose()
+        {
+            waveIn?.Dispose();
+            waveIn = null;
+        }
     }
 
     public class SampleAggregator

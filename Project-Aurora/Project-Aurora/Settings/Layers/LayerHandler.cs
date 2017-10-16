@@ -86,7 +86,7 @@ namespace Aurora.Settings.Layers
         public LayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
     }
 
-    public interface ILayerHandler
+    public interface ILayerHandler : IDisposable
     {
         UserControl Control { get; }
 
@@ -108,6 +108,7 @@ namespace Aurora.Settings.Layers
 
         void SetApplication(Application profile);
         void SetGameState(IGameState gamestate);
+        void Dispose();
     }
 
     public abstract class LayerHandler<TProperty> : ILayerHandler where TProperty : LayerHandlerProperties<TProperty>
@@ -222,7 +223,12 @@ namespace Aurora.Settings.Layers
         {
             return new Control_DefaultLayer();
         }
-            }
+
+        public virtual void Dispose()
+        {
+
+        }
+    }
 
     public class LayerHandler : LayerHandler<LayerHandlerProperties>
     {

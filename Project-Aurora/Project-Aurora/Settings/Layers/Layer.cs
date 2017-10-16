@@ -129,7 +129,7 @@ namespace Aurora.Settings.Layers
     /// <summary>
     /// A class representing a default settings layer
     /// </summary>
-    public class Layer : ICloneable
+    public class Layer : ICloneable, IDisposable
     {
         private Application _application;
 
@@ -302,6 +302,11 @@ namespace Aurora.Settings.Layers
         public void SetGameState(IGameState new_game_state)
         {
             Handler.SetGameState(new_game_state);
+        }
+
+        public void Dispose()
+        {
+            this.Handler.Dispose();
         }
     }
 }
