@@ -321,7 +321,7 @@ namespace Aurora
 
         private void minimizeApp()
         {
-            this.FocusedApplication.SaveAll();
+            this.FocusedApplication?.SaveAll();
 
             if (!shownHiddenMessage)
             {

@@ -50,7 +50,7 @@ end;
 
 procedure InitializeWizard();
 begin
-    idpAddFileSize('http://aurora.modworkshop.net/download-latest.php', ExpandConstant('{tmp}\binary.zip'), 7942524);
+    idpAddFileSize('http://project-aurora.com/download-latest.php', ExpandConstant('{tmp}\binary.zip'), 7942524);
 
     idpDownloadAfter(wpReady);
 end;
