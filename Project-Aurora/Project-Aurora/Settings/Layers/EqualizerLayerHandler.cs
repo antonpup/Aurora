@@ -189,7 +189,7 @@ namespace Aurora.Settings.Layers
                 //current_device.Dispose();
                 MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
 
-                if (default_device == null || default_device.ID != current_device.ID)
+                if (((WasapiLoopbackCapture)waveIn)?.CaptureState == CaptureState.Stopped || default_device == null || default_device.ID != current_device.ID)
                     UpdateAudioCapture(current_device);
                 else
                     current_device.Dispose();
