@@ -36,6 +36,8 @@ namespace CoolerMaster
 
         public enum DEVICE_INDEX
         {
+            [Description("None")]
+            None = -1,
             [Description("MasterKeys Pro L")]
             DEV_MKeys_L = 0,
             [Description("MasterKeys Pro S")]
