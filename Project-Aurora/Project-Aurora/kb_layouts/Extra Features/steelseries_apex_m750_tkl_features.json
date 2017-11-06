@@ -5,17 +5,17 @@
     {
       "visualName": "LOGO",
       "tag": 128,
-      "margin_left": -141.0,
-      "margin_top": 5.0,
-      "width": 140.0,
-      "height": 20.0,
+      "margin_left": -105.0,
+      "margin_top": 115.0,
+      "width": 105.0,
+      "height": 15.0,
       "font_size": 9.0,
       "width_bits": 3,
       "height_bits": 3,
       "margin_left_bits": -12,
       "margin_top_bits": 0,
       "image": "SteelSeries_Apex_logo.png",
-      "enabled": true,
+      "enabled": false,
       "absolute_location": true
     }
   ]

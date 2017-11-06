@@ -648,6 +648,10 @@ namespace Aurora.Settings
                 //    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
                 else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
                     layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m800.json");
+                else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750)
+                    layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750.json");
+                else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750_TKL)
+                    layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750_tkl.json");
                 else
                 {
                     LoadNone();
