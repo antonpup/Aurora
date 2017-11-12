@@ -15,7 +15,7 @@
       "margin_left_bits": -12,
       "margin_top_bits": 0,
       "image": "SteelSeries_Apex_logo.png",
-      "enabled": true,
+      "enabled": false,
       "absolute_location": true
     }
   ]
