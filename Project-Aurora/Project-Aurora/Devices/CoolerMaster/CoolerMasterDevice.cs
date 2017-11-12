@@ -242,7 +242,7 @@ namespace Aurora.Devices.CoolerMaster
     {
         private String devicename = "Cooler Master";
         private List<CoolerMasterSDK.DEVICE_INDEX> InitializedDevices = new List<CoolerMasterSDK.DEVICE_INDEX>();
-        private CoolerMasterSDK.DEVICE_INDEX CurrentDevice;
+        private CoolerMasterSDK.DEVICE_INDEX CurrentDevice = CoolerMasterSDK.DEVICE_INDEX.None;
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
@@ -274,19 +274,23 @@ namespace Aurora.Devices.CoolerMaster
                     {
                         foreach (CoolerMasterSDK.DEVICE_INDEX device in Enum.GetValues(typeof(CoolerMasterSDK.DEVICE_INDEX)))
                         {
-                            try
+                            if (device != CoolerMasterSDK.DEVICE_INDEX.None)
                             {
-                                bool init = SwitchToDevice(device);
-                                if (init)
+                                try
                                 {
-                                    InitializedDevices.Add(device);
-                                    isInitialized = true;
+                                    bool init = SwitchToDevice(device);
+                                    if (init)
+                                    {
+                                        InitializedDevices.Add(device);
+                                        isInitialized = true;
+                                    }
+                                }
+                                catch (Exception exc)
+                                {
+                                    Global.logger.Error("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc);
                                 }
                             }
-                            catch (Exception exc)
-                            {
-                                Global.logger.Error("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc);
-                            }
+                           
                         }
 
                         List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
