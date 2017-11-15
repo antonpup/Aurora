@@ -275,7 +275,7 @@ namespace Aurora
                     {
                         wrapper_connected = false;
                         wrapped_process = "";
-                        Global.logger.Info(String.Format("[IPCServer] Pipe created {0}", IPCpipeStream?.GetHashCode()));
+                        Global.logger.Info("[IPCServer] Pipe created {0}", IPCpipeStream?.GetHashCode());
 
                         IPCpipeStream?.WaitForConnection();
                         Global.logger.Info("[IPCServer] Pipe connection established");
@@ -345,7 +345,7 @@ namespace Aurora
                     HandleInheritability.None
                     ))
                     {
-                        Global.logger.Info(String.Format("[AuroraCommandsServerIPC] Pipe created {0}", IPCCommandpipeStream?.GetHashCode()));
+                        Global.logger.Info("[AuroraCommandsServerIPC] Pipe created {0}", IPCCommandpipeStream?.GetHashCode());
 
                         IPCCommandpipeStream?.WaitForConnection();
                         Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection established");

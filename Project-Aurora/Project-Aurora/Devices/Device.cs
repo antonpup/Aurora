@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices
 {
@@ -1134,8 +1136,9 @@ namespace Aurora.Devices
     /// <summary>
     /// Struct representing color settings being sent to devices
     /// </summary>
-    public struct DeviceColorComposition
+    public class DeviceColorComposition
     {
+        public readonly object bitmapLock = new object();
         public Dictionary<DeviceKeys, Color> keyColors;
         public Bitmap keyBitmap;
     }
@@ -1221,7 +1224,7 @@ namespace Aurora.Devices
         /// <param name="keyColors">A dictionary of DeviceKeys their corresponding Colors</param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false);
+        bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false);
 
         /// <summary>
         /// Updates the device with a specified color composition.
@@ -1229,6 +1232,6 @@ namespace Aurora.Devices
         /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false);
+        bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false);
     }
 }

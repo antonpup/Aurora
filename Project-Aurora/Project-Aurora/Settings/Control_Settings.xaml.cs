@@ -42,7 +42,7 @@ namespace Aurora.Settings
                 using (TaskService service = new TaskService())
                 {
                     Microsoft.Win32.TaskScheduler.Task task = service.FindTask(StartupTaskID);
-                    Microsoft.Win32.TaskScheduler.TaskDefinition definition = task.Definition;
+                    TaskDefinition definition = task.Definition;
                     this.run_at_win_startup.IsChecked = task?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
                     if (task != null)
                     {

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices.CoolerMaster
 {
@@ -269,7 +271,7 @@ namespace Aurora.Devices.CoolerMaster
             {
                 if (!isInitialized)
                 {
-                    
+
                     try
                     {
                         foreach (CoolerMasterSDK.DEVICE_INDEX device in Enum.GetValues(typeof(CoolerMasterSDK.DEVICE_INDEX)))
@@ -290,7 +292,7 @@ namespace Aurora.Devices.CoolerMaster
                                     Global.logger.Error("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc);
                                 }
                             }
-                           
+
                         }
 
                         List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
@@ -413,24 +415,28 @@ namespace Aurora.Devices.CoolerMaster
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
         {
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
+
                     int[] coordinates = new int[2];
 
                     DeviceKeys dev_key = key.Key;
 
-                    if (dev_key == DeviceKeys.ENTER && (Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us || Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.dvorak))
+                    if (dev_key == DeviceKeys.ENTER &&
+                        (Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us ||
+                         Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.dvorak))
                         dev_key = DeviceKeys.BACKSLASH;
 
                     if (Effects.possible_peripheral_keys.Contains(key.Key))
                     {
                         //Temp until mice support is added
                         continue;
-                        
+
                         //Move this to the SendColorsToMouse as they do not need to be set on every key, they only need to be directed to the correct method for setting key/light
                         /*List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
                         if (devices.Count > 0)
@@ -447,6 +453,7 @@ namespace Aurora.Devices.CoolerMaster
                     if (coords.TryGetValue(dev_key, out coordinates))
                         SetOneKey(coordinates, (Color)key.Value);
                 }
+                if (token.IsCancellationRequested) return false;
                 SendColorsToKeyboard(forced || !keyboard_updated);
                 return true;
             }
@@ -457,11 +464,11 @@ namespace Aurora.Devices.CoolerMaster
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

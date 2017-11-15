@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using Aurora.Settings;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using SteelSeries.GameSenseSDK;
 
 namespace Aurora.Devices.SteelSeries
@@ -138,29 +140,38 @@ namespace Aurora.Devices.SteelSeries
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
         {
+            if (token.IsCancellationRequested) return false;
+
             try
             {
                 // workaround for heartbeat/keepalive events every 10sec
                 SendKeepalive();
+
+                if (token.IsCancellationRequested) return false;
 
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
                     //CorsairLedId localKey = ToCorsair(key.Key);
 
                     Color color = (Color)key.Value;
                     //Apply and strip Alpha
-                    color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+                    color = Color.FromArgb(255,
+                        Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
+                    if (token.IsCancellationRequested) return false;
                     if (key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(color, forced);
                     }
-                    else if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_FrontLight || key.Key == DeviceKeys.Peripheral_ScrollWheel)
+                    else if (key.Key == DeviceKeys.Peripheral_Logo ||
+                             key.Key == DeviceKeys.Peripheral_FrontLight ||
+                             key.Key == DeviceKeys.Peripheral_ScrollWheel)
                     {
                         SendColorToPeripheralZone(key.Key, color);
                     }
@@ -176,6 +187,7 @@ namespace Aurora.Devices.SteelSeries
                     }
                 }
 
+                if (token.IsCancellationRequested) return false;
                 SendColorsToKeyboard(hids, colors);
 
                 return true;
@@ -187,11 +199,11 @@ namespace Aurora.Devices.SteelSeries
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
