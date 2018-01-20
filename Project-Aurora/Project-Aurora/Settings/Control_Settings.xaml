@@ -263,7 +263,7 @@
                     <Button x:Name="updates_check" Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>
                     <CheckBox x:Name="updates_autocheck_on_start" Content="Automatically check for updates on program start" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Checked="updates_autocheck_on_start_Checked" Unchecked="updates_autocheck_on_start_Checked"/>
                     <CheckBox x:Name="updates_background_install_minor" Content="Allow minor updates to be installed in the background" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Checked="updates_background_install_minor_Checked" Unchecked="updates_background_install_minor_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Aurora's website "/><Hyperlink NavigateUri="http://aurora.lastbullet.net/history.php" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Aurora's website "/><Hyperlink NavigateUri="http://project-aurora.com/history.php" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
                 </Grid>
             </TabItem>
             <TabItem Header="About">
