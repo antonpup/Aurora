@@ -227,6 +227,7 @@ namespace Aurora
                 if (isDelayed)
                     System.Threading.Thread.Sleep((int)delayTime);
 
+                this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
                 Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
@@ -329,7 +330,6 @@ namespace Aurora
                 this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
                 Global.logger.Info("Loaded ResourceDictionaries");
 
-                this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
                 Global.logger.Info("Loading ConfigUI...");
 
