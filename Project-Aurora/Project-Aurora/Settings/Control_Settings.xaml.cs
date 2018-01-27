@@ -126,7 +126,6 @@ namespace Aurora.Settings
             this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
-            this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -593,7 +592,6 @@ namespace Aurora.Settings
                 {
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.FileName = updater_path;
-                    startInfo.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor" : "";
                     Process.Start(startInfo);
                 }
                 else
@@ -608,15 +606,6 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.updates_check_on_start_up = (this.updates_autocheck_on_start.IsChecked.HasValue) ? this.updates_autocheck_on_start.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void updates_background_install_minor_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.updates_allow_silent_minor = (this.updates_background_install_minor.IsChecked.HasValue) ? this.updates_background_install_minor.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }

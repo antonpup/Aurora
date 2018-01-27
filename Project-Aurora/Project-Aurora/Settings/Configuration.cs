@@ -335,7 +335,6 @@ namespace Aurora.Settings
         public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
 
         public bool updates_check_on_start_up;
-        public bool updates_allow_silent_minor;
         public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
@@ -400,7 +399,6 @@ namespace Aurora.Settings
             KeyboardBrightness = 1.0f;
             peripheralBrightness = 1.0f;
             updates_check_on_start_up = true;
-            updates_allow_silent_minor = true;
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
