@@ -16,6 +16,8 @@ init:
       }
 
 before_build:
+- ps: >-
+    (Get-Content Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs) -replace '\[assembly: AssemblyFileVersion\("(.*)"\)\]', "[assembly: AssemblyFileVersion(`"$($env:APPVEYOR_BUILD_VERSION)`")]" | Set-Content Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs
 - cmd: >-
     more "Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs"
     
@@ -24,12 +26,6 @@ before_build:
     cd Project-Aurora
     
     nuget restore
-
-assembly_info:
-  patch: true
-  file: Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs
-  assembly_version: $(appveyor_build_version)
-  assembly_file_version: $(appveyor_build_version)
 
 build:
   project: Project-Aurora\Project-Aurora.sln
