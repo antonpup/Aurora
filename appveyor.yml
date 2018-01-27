@@ -17,7 +17,7 @@ init:
 
 before_build:
 - cmd: >-
-    Get-Content -Path "Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs"
+    more "Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs"
     
     git submodule update --init --recursive
     
