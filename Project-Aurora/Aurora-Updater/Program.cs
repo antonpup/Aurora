@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Principal;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace Aurora_Updater
 {
@@ -99,18 +100,19 @@ namespace Aurora_Updater
 
                 if (!String.IsNullOrWhiteSpace(_maj))
                 {
+                    UpdateVersion latestV = new UpdateVersion(StaticStorage.Manager.LatestRelease.TagName.TrimStart('v'));
                     versionMajor = new UpdateVersion(_maj);
 
-                    if (!(StaticStorage.Manager.response.Major.Version <= versionMajor))
+                    if (!(latestV <= versionMajor))
                     {
                         UpdateInfoForm userResult = new UpdateInfoForm()
                         {
-                            changelog = StaticStorage.Manager.response.Major.Changelog,
-                            updateDescription = StaticStorage.Manager.response.Major.Description,
-                            updateVersion = StaticStorage.Manager.response.Major.Version.ToString(),
+                            changelog = StaticStorage.Manager.LatestRelease.Body,
+                            updateDescription = StaticStorage.Manager.LatestRelease.Name,
+                            updateVersion = latestV.ToString(),
                             currentVersion = versionMajor.ToString(),
-                            updateSize = StaticStorage.Manager.response.Major.FileSize,
-                            preRelease = StaticStorage.Manager.response.Major.PreRelease
+                            updateSize = StaticStorage.Manager.LatestRelease.Assets.First(s => s.Name.StartsWith("release") || s.Name.StartsWith("Aurora-v")).Size,
+                            preRelease = StaticStorage.Manager.LatestRelease.Prerelease
                         };
 
                         userResult.ShowDialog();
@@ -164,7 +166,7 @@ namespace Aurora_Updater
                             MessageBoxButtons.OK);
                 }
 
-                string _min = "";
+                /*string _min = "";
 
                 if (File.Exists(Path.Combine(exePath, "ver_minor.txt")))
                     _min = File.ReadAllText(Path.Combine(exePath, "ver_minor.txt"));
@@ -240,7 +242,7 @@ namespace Aurora_Updater
                             "Application launched incorrectly, no version was specified.\r\nPlease use Aurora if you want to check for updates.\r\nOptions -> \"Updates\" \"Check for Updates\"",
                             "Aurora Updater",
                             MessageBoxButtons.OK);
-                }
+                }*/
             }
         }
     }
