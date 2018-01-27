@@ -42,7 +42,6 @@ namespace Aurora.Settings
                 using (TaskService service = new TaskService())
                 {
                     Microsoft.Win32.TaskScheduler.Task task = service.FindTask(StartupTaskID);
-                    this.run_at_win_startup.IsChecked = task?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
                     if (task != null)
                     {
                         TaskDefinition definition = task.Definition;
@@ -51,6 +50,26 @@ namespace Aurora.Settings
                         definition.Actions.Clear();
                         definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
                         service.RootFolder.RegisterTaskDefinition(StartupTaskID, definition);
+                        this.run_at_win_startup.IsChecked = task.Enabled;
+                    }
+                    else
+                    {
+                        TaskDefinition td = service.NewTask();
+                        td.RegistrationInfo.Description = "Start Aurora on Startup";
+
+                        td.Triggers.Add(new LogonTrigger { Enabled = true });
+
+                        string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+                        td.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
+
+                        td.Principal.RunLevel = TaskRunLevel.Highest;
+                        td.Settings.DisallowStartIfOnBatteries = false;
+                        td.Settings.DisallowStartOnRemoteAppSession = false;
+                        td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
+
+                        service.RootFolder.RegisterTaskDefinition(StartupTaskID, td);
+                        this.run_at_win_startup.IsChecked = true;
                     }
                 }
             }
@@ -486,37 +505,7 @@ namespace Aurora.Settings
                     {
                         //Find existing task
                         var task = ts.FindTask(StartupTaskID);
-                        if ((sender as CheckBox).IsChecked.Value)
-                        {
-                            if (task != null)
-                            {
-                                task.Enabled = true;
-                            }
-                            else
-                            {
-                                TaskDefinition td = ts.NewTask();
-                                td.RegistrationInfo.Description = "Start Aurora on Startup";
-
-                                td.Triggers.Add(new LogonTrigger { Enabled = true });
-
-                                string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
-                                td.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
-
-                                td.Principal.RunLevel = TaskRunLevel.Highest;
-                                td.Settings.DisallowStartIfOnBatteries = false;
-                                td.Settings.DisallowStartOnRemoteAppSession = false;
-                                td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
-
-                                ts.RootFolder.RegisterTaskDefinition(StartupTaskID, td);
-                            }
-                        }
-                        else
-                        {
-                            if (task != null)
-                                task.Enabled = false;
-                            //ts.RootFolder.DeleteTask(StartupTaskID);
-                        }
+                        task.Enabled = (sender as CheckBox).IsChecked.Value;
                     }
                 }
                 catch(Exception exc)
