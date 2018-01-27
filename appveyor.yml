@@ -27,7 +27,7 @@ before_build:
 assembly_info:
   patch: true
   file: Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs
-  assembly_file_version: '{version}'
+  assembly_file_version: $(appveyor_build_version)
 
 build:
   project: Project-Aurora\Project-Aurora.sln
