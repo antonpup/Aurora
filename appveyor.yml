@@ -9,7 +9,6 @@ configuration: Release
 platform: x64
 
 init:
-  # Set "build version number" to "short-commit-hash" or when tagged to "tag name" (Travis style)
   - ps: >-
       if ($env:APPVEYOR_REPO_TAG -eq "true")
       {
@@ -27,6 +26,7 @@ before_build:
 assembly_info:
   patch: true
   file: Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs
+  assembly_version: $(appveyor_build_version)
   assembly_file_version: $(appveyor_build_version)
 
 build:
