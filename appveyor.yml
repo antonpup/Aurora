@@ -18,3 +18,8 @@ before_build:
 build:
   project: Project-Aurora\Project-Aurora.sln
   verbosity: minimal
+
+artifacts:
+  - path: Build\Release
+    name: ReleaseBuild
+    type: zip
