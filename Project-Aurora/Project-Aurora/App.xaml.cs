@@ -261,7 +261,7 @@ namespace Aurora
                         {
                             ProcessStartInfo updaterProc = new ProcessStartInfo();
                             updaterProc.FileName = updater_path;
-                            updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
+                            updaterProc.Arguments = "-silent";
                             Process.Start(updaterProc);
                         }
                         catch (Exception exc)
