@@ -13,7 +13,7 @@ init:
   - ps: >-
       if ($env:APPVEYOR_REPO_TAG -eq "true")
       {
-        Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_TAG_NAME.remove(0,1))"
+        Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v"))"
       }
 
 before_build:
@@ -43,7 +43,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: BawzLen0V83DjFE11VqpdO3eDPMDDsrWTaQsswrLcKcn2DF/hviRKkdTbGOX6kSL
-  artifact: Build\*.zip          
+  artifact: Build\Aurora-v$(appveyor_build_version).zip          
   draft: true
   prerelease: false
   on:
