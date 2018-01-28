@@ -43,5 +43,5 @@ deploy:
   draft: true
   prerelease: false
   on:
-    branch: dev
+  on:
     appveyor_repo_tag: true
