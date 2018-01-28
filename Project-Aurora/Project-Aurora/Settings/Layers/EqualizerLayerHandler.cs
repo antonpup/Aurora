@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using NAudio.Dsp;
 using NAudio.Wave;
@@ -159,6 +160,7 @@ namespace Aurora.Settings.Layers
             return new Control_EqualizerLayer(this);
         }
 
+        long startTime;
         private void UpdateAudioCapture(MMDevice defaultDevice)
         {
             if (waveIn != null)
@@ -174,12 +176,30 @@ namespace Aurora.Settings.Layers
             // There are many options in NAudio and you can use other streams/files.
             // Note that the code varies for each different source.
             waveIn = new WasapiLoopbackCapture(default_device);
-
+            
             waveIn.DataAvailable += OnDataAvailable;
 
             waveIn.StartRecording();
+            startTime = Time.GetSecondsSinceEpoch();
         }
 
+        private void CheckForDeviceChange()
+        {
+            MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+
+            if (((WasapiLoopbackCapture)waveIn)?.CaptureState == CaptureState.Stopped
+                || default_device == null
+                || default_device.ID != current_device.ID
+                || (((WasapiLoopbackCapture)waveIn)?.CaptureState != CaptureState.Capturing && (Time.GetSecondsSinceEpoch() - startTime) > 20)) //Check if it has taken over 20 seconds to start the capture which may indicate that there has been an issue
+            {
+                Global.logger.LogLine($"CaptureState is {((WasapiLoopbackCapture)waveIn)?.CaptureState}");
+                UpdateAudioCapture(current_device);
+            }
+            else
+                current_device.Dispose();
+
+            current_device = null;
+        }
 
         public override EffectLayer Render(IGameState gamestate)
         {
@@ -187,14 +207,7 @@ namespace Aurora.Settings.Layers
             {
                 //if (current_device != null)
                 //current_device.Dispose();
-                MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-
-                if (((WasapiLoopbackCapture)waveIn)?.CaptureState == CaptureState.Stopped || default_device == null || default_device.ID != current_device.ID)
-                    UpdateAudioCapture(current_device);
-                else
-                    current_device.Dispose();
-
-                current_device = null;
+                CheckForDeviceChange();
 
                 // The system sound as a value between 0.0 and 1.0
                 float system_sound_normalized = default_device.AudioEndpointVolume.MasterVolumeLevelScalar;
