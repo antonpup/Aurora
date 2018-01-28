@@ -156,7 +156,11 @@ namespace Aurora.Settings
                             {
                                 using (MemoryStream memory = new MemoryStream())
                                 {
-                                    map.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                                    //Fix conflict with AtomOrb due to async
+                                    lock (map)
+                                    {
+                                        map.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                                    }
                                     memory.Position = 0;
                                     BitmapImage bitmapimage = new BitmapImage();
                                     bitmapimage.BeginInit();

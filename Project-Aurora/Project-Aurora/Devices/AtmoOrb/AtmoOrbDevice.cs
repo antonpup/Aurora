@@ -176,11 +176,16 @@ namespace Aurora.Devices.AtmoOrbDevice
                 Color averageColor;
                 lock (colorComposition.bitmapLock)
                 {
-                    averageColor = Utils.BitmapUtils.GetRegionColor(
-                        (Bitmap)colorComposition.keyBitmap,
-                        new BitmapRectangle(0, 0, colorComposition.keyBitmap.Width,
-                            colorComposition.keyBitmap.Height)
-                    );
+                    //Fix conflict with debug bitmap
+                    lock (colorComposition.keyBitmap)
+                    {
+
+                        averageColor = Utils.BitmapUtils.GetRegionColor(
+                            (Bitmap)colorComposition.keyBitmap,
+                            new BitmapRectangle(0, 0, colorComposition.keyBitmap.Width,
+                                colorComposition.keyBitmap.Height)
+                        );
+                    }
                 }
 
                 SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, token);
@@ -202,7 +207,7 @@ namespace Aurora.Devices.AtmoOrbDevice
 
         public void SendColorsToOrb(byte red, byte green, byte blue, CancellationToken? token = null)
         {
-            token?.ThrowIfCancellationRequested();
+            if (token?.IsCancellationRequested ?? false) return;
             if (!isConnected)
             {
                 Reconnect();
@@ -220,11 +225,11 @@ namespace Aurora.Devices.AtmoOrbDevice
                 orbIDs = new List<string>() { "1" };
             }
 
-            token?.ThrowIfCancellationRequested();
+            if (token?.IsCancellationRequested ?? false) return;
 
             foreach (var orbID in orbIDs)
             {
-                token?.ThrowIfCancellationRequested();
+                if (token?.IsCancellationRequested ?? false) return;
                 if (String.IsNullOrWhiteSpace(orbID))
                     continue;
 
@@ -255,7 +260,7 @@ namespace Aurora.Devices.AtmoOrbDevice
                     bytes[6] = green;
                     bytes[7] = blue;
 
-                    token?.ThrowIfCancellationRequested();
+                    if (token?.IsCancellationRequested ?? false) return;
                     socket.Send(bytes, bytes.Length, SocketFlags.None);
                 }
                 catch (Exception)
