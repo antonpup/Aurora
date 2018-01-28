@@ -23,10 +23,6 @@ Project Aurora is a utility that unifies RGB lighting devices across different b
 3. Extract the archive anywhere on your computer. Preferably keep it in a location you can easily access.
 4. Run "Aurora.exe", from that point, Aurora should provide you with further instructions and options.
 
-## Run this program in the background at windows start
-You can set Aurora to run on Windows Startup. Go into Settings and check "Start with Windows".
-![Aurora Settings](https://puu.sh/tfKss/22603982e9.png)
-
 ## Natively Supported Games
 * Dota 2
 * CS:GO
