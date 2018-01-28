@@ -12,8 +12,9 @@ namespace Aurora.Profiles.TheDivision
     public class TheDivision : Application
     {
         public TheDivision()
-            : base(new LightEventConfig { Name = "The Division", ID = "the_division", ProcessNames = new[] { "thedivision.exe" }, OverviewControlType = typeof(Control_TheDivision), GameStateType = typeof(GameState_Wrapper), Event = new Aurora_Wrapper.GameEvent_Aurora_Wrapper(), IconURI = "Resources/division_64x64.png" })
+            : base(new LightEventConfig { Name = "The Division", ID = "the_division", ProcessNames = new[] { "thedivision.exe" }, OverviewControlType = typeof(Control_TheDivision), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Generic(), IconURI = "Resources/division_64x64.png" })
         {
+            Config.ExtraAvailableLayers.Add("WrapperLights");
         }
     }
 }

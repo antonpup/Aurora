@@ -312,7 +312,16 @@ namespace Aurora.Controls
             if (e.NewValue is bool)
             {
                 if ((bool)e.NewValue)
+                {
                     sequence_updateToLayerEditor();
+                    if (Sequence != null)
+                    {
+                        //this.keys_keysequence.InvalidateVisual();
+                        this.keys_keysequence.Items.Clear();
+                        foreach (var key in Sequence.keys)
+                            this.keys_keysequence.Items.Add(key);
+                    }
+                }
                 else
                     sequence_removeFromLayerEditor();
             }

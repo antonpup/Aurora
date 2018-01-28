@@ -164,7 +164,7 @@ namespace Aurora.Utils
             }
             catch(Exception exc)
             {
-                Global.logger.LogLine($"Exception: {exc}", Logging_Level.Error);
+                Global.logger.Error($"Exception: {exc}");
                 return null;
             }
         }

@@ -75,7 +75,7 @@
                                 <BitmapCache EnableClearType="True"/>
                             </Grid.CacheMode>
                         </Grid>
-                        <Label x:Name="keyboard_record_message" Content="Please select key(s) you want to assign" HorizontalAlignment="Right" Foreground="Red" Height="26" VerticalAlignment="Top" Margin="0,0,10,0" Grid.Column="1" Padding="0"/>
+                        <Label x:Name="keyboard_record_message" Content="Please select key(s) you want to assign" HorizontalAlignment="Right" Foreground="Red" Height="26" VerticalAlignment="Top" Margin="0,0,10,0" Grid.Column="1" Padding="0" IsHitTestVisible="False"  />
                     </Grid>
                 </Border>
             </Viewbox>

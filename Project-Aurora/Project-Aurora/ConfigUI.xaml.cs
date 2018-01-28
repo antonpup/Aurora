@@ -18,6 +18,7 @@ using System.IO;
 using Aurora.Settings.Keycaps;
 using Aurora.Profiles;
 using Aurora.Settings.Layers;
+using Aurora.Profiles.Aurora_Wrapper;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
@@ -107,7 +108,7 @@ namespace Aurora
 
         internal void Display()
         {
-            if (Program.isSilent || Global.Configuration.start_silently)
+            if (App.isSilent || Global.Configuration.start_silently)
             {
                 this.Visibility = Visibility.Hidden;
                 this.WindowStyle = WindowStyle.None;
@@ -315,11 +316,13 @@ namespace Aurora
         {
             trayicon.Visibility = Visibility.Hidden;
             virtual_keyboard_timer?.Stop();
-            Program.Exit();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void minimizeApp()
         {
+            this.FocusedApplication?.SaveAll();
+
             if (!shownHiddenMessage)
             {
                 trayicon.ShowBalloonTip("Aurora", "This program is now hidden in the tray.", BalloonIcon.None);
@@ -376,18 +379,18 @@ namespace Aurora
                 if (!Global.LightingStateManager.Events.ContainsKey(profile_k))
                     continue;
 
-                Profiles.Application profile = (Profiles.Application)Global.LightingStateManager.Events[profile_k];
-                ImageSource icon = profile.GetIcon();
-                UserControl control = profile.GetUserControl();
+                Profiles.Application application = (Profiles.Application)Global.LightingStateManager.Events[profile_k];
+                ImageSource icon = application.GetIcon();
+                UserControl control = application.GetUserControl();
                 if (icon != null && control != null)
                 {
                     Image profile_image;
-                    if (profile is GenericApplication)
+                    if (application is GenericApplication)
                     {
-                        GenericApplicationProfile settings = (profile.Profile as GenericApplicationProfile);
+                        GenericApplicationSettings settings = (application.Settings as GenericApplicationSettings);
                         profile_image = new Image
                         {
-                            Tag = profile,
+                            Tag = application,
                             Source = icon,
                             ToolTip = settings.ApplicationName + " Settings",
                             Margin = new Thickness(0, 5, 0, 0)
@@ -427,19 +430,19 @@ namespace Aurora
 
                         profile_image = new Image
                         {
-                            Tag = profile,
+                            Tag = application,
                             Source = icon,
-                            ToolTip = profile.Config.Name + " Settings",
+                            ToolTip = application.Config.Name + " Settings",
                             Margin = new Thickness(0, 5, 0, 0),
-                            Visibility = profile.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
+                            Visibility = application.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
                         };
                         profile_image.MouseDown += ProfileImage_MouseDown;
                         this.profiles_stack.Children.Add(profile_image);
                     }
 
-                    if (profile.Config.ID.Equals(focusedKey))
+                    if (application.Config.ID.Equals(focusedKey))
                     {
-                        this.FocusedApplication = profile;
+                        this.FocusedApplication = application;
                         this.TransitionToProfile(profile_image);
                     }
                 }
@@ -552,6 +555,7 @@ namespace Aurora
 
         private void TransitionToProfile(Image source)
         {
+            this.FocusedApplication = source.Tag as Profiles.Application;
             var bitmap = (BitmapSource)source.Source;
             var color = Utils.ColorUtils.GetAverageColor(bitmap);
 
@@ -569,11 +573,7 @@ namespace Aurora
             if (image != null && image.Tag != null && image.Tag is Profiles.Application)
             {
                 if (e == null || e.LeftButton == MouseButtonState.Pressed)
-                {
-                    this.FocusedApplication = image.Tag as Profiles.Application;
                     this.TransitionToProfile(image);
-                    
-                }
                 else if (e.RightButton == MouseButtonState.Pressed)
                 {
                     this.cmenuProfiles.PlacementTarget = (Image)sender;
@@ -613,11 +613,13 @@ namespace Aurora
 
                 if (Global.LightingStateManager.Events.ContainsKey(name))
                 {
-                    if (MessageBox.Show("Are you sure you want to delete profile for " + (((Profiles.Application)Global.LightingStateManager.Events[name]).Profile as GenericApplicationProfile).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if (MessageBox.Show("Are you sure you want to delete profile for " + (((Profiles.Application)Global.LightingStateManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
+                        var eventList = Global.Configuration.ProfileOrder;
+                        string prevProfile = eventList[eventList.FindIndex(s => s.Equals(name)) - 1];
                         Global.LightingStateManager.RemoveGenericProfile(name);
                         //ConfigManager.Save(Global.Configuration);
-                        this.GenerateProfileStack();
+                        this.GenerateProfileStack(prevProfile);
                     }
                 }
             }
@@ -638,27 +640,33 @@ namespace Aurora
 
                 if (Global.LightingStateManager.Events.ContainsKey(filename))
                 {
-                    MessageBox.Show("Profile for this application already exists.");
-                }
-                else
-                {
-                    GenericApplication gen_app_pm = new GenericApplication(filename);
-
-                    System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(exe_filedlg.FileName.ToLowerInvariant());
-
-                    if (!System.IO.Directory.Exists(gen_app_pm.GetProfileFolderPath()))
-                        System.IO.Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
-
-                    using (var icon_asbitmap = ico.ToBitmap())
+                    if (Global.LightingStateManager.Events[filename] is GameEvent_Aurora_Wrapper)
+                        Global.LightingStateManager.Events.Remove(filename);
+                    else
                     {
-                        icon_asbitmap.Save(Path.Combine(gen_app_pm.GetProfileFolderPath(), "icon.png"), System.Drawing.Imaging.ImageFormat.Png);
+                        MessageBox.Show("Profile for this application already exists.");
+                        return;
                     }
-                    ico.Dispose();
-
-                    Global.LightingStateManager.RegisterEvent(gen_app_pm);
-                    ConfigManager.Save(Global.Configuration);
-                    GenerateProfileStack(filename);
                 }
+
+                GenericApplication gen_app_pm = new GenericApplication(filename);
+                gen_app_pm.Initialize();
+                ((GenericApplicationSettings)gen_app_pm.Settings).ApplicationName = Path.GetFileNameWithoutExtension(filename);
+
+                System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(exe_filedlg.FileName.ToLowerInvariant());
+
+                if (!System.IO.Directory.Exists(gen_app_pm.GetProfileFolderPath()))
+                    System.IO.Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
+
+                using (var icon_asbitmap = ico.ToBitmap())
+                {
+                    icon_asbitmap.Save(Path.Combine(gen_app_pm.GetProfileFolderPath(), "icon.png"), System.Drawing.Imaging.ImageFormat.Png);
+                }
+                ico.Dispose();
+
+                Global.LightingStateManager.RegisterEvent(gen_app_pm);
+                ConfigManager.Save(Global.Configuration);
+                GenerateProfileStack(filename);
             }
         }
 
@@ -741,7 +749,7 @@ namespace Aurora
 
         public void ShowWindow()
         {
-            Global.logger.LogLine("Show Window called");
+            Global.logger.Info("Show Window called");
             this.Visibility = Visibility.Visible;
             this.WindowStyle = WindowStyle.SingleBorderWindow;
             this.ShowInTaskbar = true;

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
 using System.Text;
+using Octokit;
 
 namespace Aurora_Updater
 {
@@ -63,7 +64,7 @@ namespace Aurora_Updater
     {
         private string infoUrl = @"http://project-aurora.com/vcheck.php";
         private string[] ignoreFiles = { };
-        public UpdateResponse response = new UpdateResponse();
+        //public UpdateResponse response = new UpdateResponse();
         private Queue<LogEntry> log = new Queue<LogEntry>();
         private float downloadProgess = 0.0f;
         private float extractProgess = 0.0f;
@@ -71,6 +72,8 @@ namespace Aurora_Updater
         private int downloadProgressCheck = 0;
         private int secondsLeft = 15;
         private Aurora.Settings.Configuration Config;
+        private GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-updater"));
+        public Release LatestRelease;
 
         public UpdateManager()
         {
@@ -108,20 +111,16 @@ namespace Aurora_Updater
 
         private bool FetchData()
         {
-            string sinfoUrl = infoUrl;
 
-            if (Config.GetDevReleases)
-                sinfoUrl += "?prerelease=1";
+            
 
-            if (String.IsNullOrWhiteSpace(sinfoUrl))
-                return false;
 
             try
             {
-                WebClient client = new WebClient();
-                string reply = client.DownloadString(sinfoUrl);
-
-                response = new UpdateResponse(reply);
+                if (Config.GetDevReleases)
+                    LatestRelease = gClient.Repository.Release.GetAll("antonpup", "Aurora", new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
+                else
+                    LatestRelease = gClient.Repository.Release.GetLatest("antonpup", "Aurora").Result;
 
                 //Console.WriteLine(reply);
             }
@@ -136,10 +135,12 @@ namespace Aurora_Updater
 
         public bool RetrieveUpdate(UpdateType type)
         {
-            string url = @"http://project-aurora.com/download.php?id=" + (type == UpdateType.Major ? response.Major.ID : response.Minor.ID);
-            updateState = UpdateStatus.InProgress;
+            //string url = @"http://project-aurora.com/download.php?id=" + (type == UpdateType.Major ? response.Major.ID : response.Minor.ID);
+            //updateState = UpdateStatus.InProgress;
             try
             {
+                string url = LatestRelease.Assets.First(s => s.Name.StartsWith("release") || s.Name.StartsWith("Aurora-v")).BrowserDownloadUrl;
+                
                 if (!String.IsNullOrWhiteSpace(url))
                 {
                     this.log.Enqueue(new LogEntry("Starting download... "));

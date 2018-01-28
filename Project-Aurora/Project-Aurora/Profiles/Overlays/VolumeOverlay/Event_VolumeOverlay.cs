@@ -15,7 +15,7 @@ namespace Aurora.Profiles.Overlays
         public Event_VolumeOverlay()
         {
             //We only need to get the default device once as a new instance of this class is created each time it is being displayed and we don't really need to worry about the device changing in the small amount of time this is being displayed.
-            defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+            //defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
         }
 
         public override bool IsEnabled
@@ -27,7 +27,9 @@ namespace Aurora.Profiles.Overlays
         {
             //if (Global.Configuration.volume_overlay_settings.enabled)
             //{
-                Queue<EffectLayer> layers = new Queue<EffectLayer>();
+            if (defaultDevice == null)
+                defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+            Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
                 if (Global.Configuration.volume_overlay_settings.dim_background)
                     layers.Enqueue(new EffectLayer("Overlay - Volume Base", Global.Configuration.volume_overlay_settings.dim_color));

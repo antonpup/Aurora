@@ -27,7 +27,7 @@ namespace Aurora
 				{
 					if (!initResult.TrySetResult(e))
 					{
-						Global.logger.LogLine("Exception in dedicated message pump thread. Exception: " + e, Logging_Level.Error);
+						Global.logger.Error("Exception in dedicated message pump thread. Exception: " + e);
 					}
 				}
 			});

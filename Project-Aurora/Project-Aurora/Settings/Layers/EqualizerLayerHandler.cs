@@ -183,151 +183,159 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            //if (current_device != null)
-            //current_device.Dispose();
-            MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-
-            if (default_device == null || default_device.ID != current_device.ID)
-                UpdateAudioCapture(current_device);
-            else
-                current_device.Dispose();
-
-            current_device = null;
-
-            // The system sound as a value between 0.0 and 1.0
-            float system_sound_normalized = default_device.AudioEndpointVolume.MasterVolumeLevelScalar;
-
-            // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
-            // Replaces all Properties.MaxAmplitude calls with the scaled value
-            float scaled_max_amplitude = Properties.MaxAmplitude * (Properties.ScaleWithSystemVolume ? system_sound_normalized : 1);
-
-            float[] freqs = Properties.Frequencies.ToArray(); //Defined Frequencies
-
-            double[] freq_results = new double[freqs.Length];
-
-            if (previous_freq_results == null || previous_freq_results.Length < freqs.Length)
-                previous_freq_results = new float[freqs.Length];
-
-            //Maintain local copies of fft, to prevent data overwrite
-            Complex[] _local_fft = new List<Complex>(_ffts).ToArray();
-            Complex[] _local_fft_previous = new List<Complex>(_ffts_prev).ToArray();
-
-            EffectLayer equalizer_layer = new EffectLayer();
-
-            if(Properties.DimBackgroundOnSound)
+            try
             {
-                bool hasSound = false;
-                foreach(var bin in _local_fft)
+                //if (current_device != null)
+                //current_device.Dispose();
+                MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+
+                if (((WasapiLoopbackCapture)waveIn)?.CaptureState == CaptureState.Stopped || default_device == null || default_device.ID != current_device.ID)
+                    UpdateAudioCapture(current_device);
+                else
+                    current_device.Dispose();
+
+                current_device = null;
+
+                // The system sound as a value between 0.0 and 1.0
+                float system_sound_normalized = default_device.AudioEndpointVolume.MasterVolumeLevelScalar;
+
+                // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
+                // Replaces all Properties.MaxAmplitude calls with the scaled value
+                float scaled_max_amplitude = Properties.MaxAmplitude * (Properties.ScaleWithSystemVolume ? system_sound_normalized : 1);
+
+                float[] freqs = Properties.Frequencies.ToArray(); //Defined Frequencies
+
+                double[] freq_results = new double[freqs.Length];
+
+                if (previous_freq_results == null || previous_freq_results.Length < freqs.Length)
+                    previous_freq_results = new float[freqs.Length];
+
+                //Maintain local copies of fft, to prevent data overwrite
+                Complex[] _local_fft = new List<Complex>(_ffts).ToArray();
+                Complex[] _local_fft_previous = new List<Complex>(_ffts_prev).ToArray();
+
+                EffectLayer equalizer_layer = new EffectLayer();
+
+                if (Properties.DimBackgroundOnSound)
                 {
-                    if(bin.X > 0.0005 || bin.X < -0.0005)
+                    bool hasSound = false;
+                    foreach (var bin in _local_fft)
                     {
-                        hasSound = true;
-                        break;
+                        if (bin.X > 0.0005 || bin.X < -0.0005)
+                        {
+                            hasSound = true;
+                            break;
+                        }
+                    }
+
+                    if (hasSound)
+                        equalizer_layer.Fill(Properties.DimColor);
+                }
+
+                using (Graphics g = equalizer_layer.GetGraphics())
+                {
+                    int wave_step_amount = _local_fft.Length / Effects.canvas_width;
+
+                    switch (Properties.EQType)
+                    {
+                        case EqualizerType.Waveform:
+                            for (int x = 0; x < Effects.canvas_width; x++)
+                            {
+                                float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
+
+                                Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
+
+                                g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val / scaled_max_amplitude * 500.0f);
+                            }
+                            break;
+                        case EqualizerType.Waveform_Bottom:
+                            for (int x = 0; x < Effects.canvas_width; x++)
+                            {
+                                float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
+
+                                Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
+
+                                g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f);
+                            }
+                            break;
+                        case EqualizerType.PowerBars:
+
+                            //Perform FFT again to get frequencies
+                            FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _local_fft);
+
+                            while (flux_array.Count < freqs.Length)
+                            {
+                                flux_array.Add(0.0f);
+                            }
+
+                            int startF = 0;
+                            int endF = 0;
+
+                            float threshhold = 300.0f;
+
+                            for (int x = 0; x < freqs.Length - 1; x++)
+                            {
+                                startF = freqToBin(freqs[x]);
+                                endF = freqToBin(freqs[x + 1]);
+
+                                float flux = 0.0f;
+
+                                for (int j = startF; j <= endF; j++)
+                                {
+                                    float curr_fft = (float)Math.Sqrt(_local_fft[j].X * _local_fft[j].X + _local_fft[j].Y * _local_fft[j].Y);
+                                    float prev_fft = (float)Math.Sqrt(_local_fft_previous[j].X * _local_fft_previous[j].X + _local_fft_previous[j].Y * _local_fft_previous[j].Y);
+
+                                    float value = curr_fft - prev_fft;
+                                    float flux_calc = (value + Math.Abs(value)) / 2;
+                                    if (flux < flux_calc)
+                                        flux = flux_calc;
+
+                                    flux = flux > threshhold ? 0.0f : flux;
+                                }
+
+                                flux_array[x] = flux;
+                            }
+
+                            //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
+
+                            float bar_width = Effects.canvas_width / (float)(freqs.Length - 1);
+
+                            for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
+                            {
+                                float fft_val = flux_array[f_x] / scaled_max_amplitude;
+
+                                fft_val = Math.Min(1.0f, fft_val);
+
+                                if (previous_freq_results[f_x] - fft_val > 0.10)
+                                    fft_val = previous_freq_results[f_x] - 0.15f;
+
+                                float x = f_x * bar_width;
+                                float y = Effects.canvas_height;
+                                float width = bar_width;
+                                float height = fft_val * Effects.canvas_height;
+
+                                previous_freq_results[f_x] = fft_val;
+
+                                Brush brush = GetBrush(-(f_x % 2), f_x, freq_results.Length - 1);
+
+                                g.FillRectangle(brush, x, y - height, width, height);
+                            }
+
+                            break;
                     }
                 }
 
-                if(hasSound)
-                    equalizer_layer.Fill(Properties.DimColor);
-            }
+                var hander = NewLayerRender;
+                if (hander != null)
+                    hander.Invoke(equalizer_layer.GetBitmap());
+                return equalizer_layer;
 
-            using (Graphics g = equalizer_layer.GetGraphics())
+            }
+            catch(Exception exc)
             {
-                int wave_step_amount = _local_fft.Length / Effects.canvas_width;
-
-                switch (Properties.EQType)
-                {
-                    case EqualizerType.Waveform:
-                        for (int x = 0; x < Effects.canvas_width; x++)
-                        {
-                            float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
-
-                            Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
-
-                            g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val / scaled_max_amplitude * 500.0f);
-                        }
-                        break;
-                    case EqualizerType.Waveform_Bottom:
-                        for (int x = 0; x < Effects.canvas_width; x++) 
-                        {
-                            float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount ].X : 0.0f;
-
-                            Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
-
-                            g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f);
-                        }
-                        break;
-                    case EqualizerType.PowerBars:
-
-                        //Perform FFT again to get frequencies
-                        FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _local_fft);
-
-                        while (flux_array.Count < freqs.Length)
-                        {
-                            flux_array.Add(0.0f);
-                        }
-
-                        int startF = 0;
-                        int endF = 0;
-
-                        float threshhold = 300.0f;
-
-                        for (int x = 0; x < freqs.Length - 1; x++)
-                        {
-                            startF = freqToBin(freqs[x]);
-                            endF = freqToBin(freqs[x + 1]);
-
-                            float flux = 0.0f;
-
-                            for (int j = startF; j <= endF; j++)
-                            {
-                                float curr_fft = (float)Math.Sqrt(_local_fft[j].X * _local_fft[j].X + _local_fft[j].Y * _local_fft[j].Y);
-                                float prev_fft = (float)Math.Sqrt(_local_fft_previous[j].X * _local_fft_previous[j].X + _local_fft_previous[j].Y * _local_fft_previous[j].Y);
-
-                                float value = curr_fft - prev_fft;
-                                float flux_calc = (value + Math.Abs(value)) / 2;
-                                if (flux < flux_calc)
-                                    flux = flux_calc;
-
-                                flux = flux > threshhold ? 0.0f : flux;
-                            }
-
-                            flux_array[x] = flux;
-                        }
-
-                        //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
-
-                        float bar_width = Effects.canvas_width / (float)(freqs.Length - 1);
-
-                        for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
-                        {
-                            float fft_val = flux_array[f_x] / scaled_max_amplitude;
-
-                            fft_val = Math.Min(1.0f, fft_val);
-
-                            if (previous_freq_results[f_x] - fft_val > 0.10)
-                                fft_val = previous_freq_results[f_x] - 0.15f;
-
-                            float x = f_x * bar_width;
-                            float y = Effects.canvas_height;
-                            float width = bar_width;
-                            float height = fft_val * Effects.canvas_height;
-
-                            previous_freq_results[f_x] = fft_val;
-
-                            Brush brush = GetBrush(-(f_x % 2), f_x, freq_results.Length - 1);
-
-                            g.FillRectangle(brush, x, y - height, width, height);
-                        }
-
-                        break;
-                }
+                Global.logger.Error("Error encountered in the Equalizer layer. Exception: " + exc.ToString());
+                return new EffectLayer();
             }
-
-            var hander = NewLayerRender;
-            if (hander != null)
-                hander.Invoke(equalizer_layer.GetBitmap());
-
-            return equalizer_layer;
         }
 
         void OnDataAvailable(object sender, WaveInEventArgs e)
@@ -395,6 +403,12 @@ namespace Aurora.Settings.Layers
             }
             else
                 return new SolidBrush(Properties.PrimaryColor);
+        }
+
+        public override void Dispose()
+        {
+            waveIn?.Dispose();
+            waveIn = null;
         }
     }
 

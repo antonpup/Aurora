@@ -462,13 +462,13 @@ BOOL WINAPI DllMain(HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		write_text_to_log_file("\r\nDLL_PROCESS_ATTACH");
+		write_text_to_log_file("DLL_PROCESS_ATTACH");
 	case DLL_THREAD_ATTACH:
-		write_text_to_log_file("\r\nDLL_THREAD_ATTACH");
+		write_text_to_log_file("DLL_THREAD_ATTACH");
 	case DLL_THREAD_DETACH:
-		write_text_to_log_file("\r\nDLL_THREAD_DETACH");
+		write_text_to_log_file("DLL_THREAD_DETACH");
 	case DLL_PROCESS_DETACH:
-		write_text_to_log_file("\r\nDLL_PROCESS_DETACH");
+		write_text_to_log_file("DLL_PROCESS_DETACH");
 		break;
 	}
 	return TRUE;
@@ -1393,6 +1393,7 @@ extern "C" {
 
 	__declspec(dllexport) RZRESULT UnInit()
 	{
+		write_text_to_log_file("Call, UnInit()");
 		if (isInitialized && (hPipe != NULL && hPipe != INVALID_HANDLE_VALUE))
 			CloseHandle(hPipe);
 
@@ -1402,6 +1403,8 @@ extern "C" {
 
 	__declspec(dllexport) RZRESULT CreateEffect(RZDEVICEID DeviceId, ChromaSDK::EFFECT_TYPE Effect, PRZPARAM pParam, RZEFFECTID *pEffectId)
 	{
+		write_text_to_log_file("Call, CreateEffect()");
+		
 		if (isInitialized)
 		{
 			WRAPPER_EFFECT createdEffect;

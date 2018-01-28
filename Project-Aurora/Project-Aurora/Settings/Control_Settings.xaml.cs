@@ -36,8 +36,46 @@ namespace Aurora.Settings
 
             if (runRegistryPath.GetValue("Aurora") != null)
                 runRegistryPath.DeleteValue("Aurora");
-            using (TaskService service = new TaskService()) {
-                this.run_at_win_startup.IsChecked = service.FindTask(StartupTaskID)?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
+
+            try
+            {
+                using (TaskService service = new TaskService())
+                {
+                    Microsoft.Win32.TaskScheduler.Task task = service.FindTask(StartupTaskID);
+                    if (task != null)
+                    {
+                        TaskDefinition definition = task.Definition;
+                        //Update path of startup task
+                        string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                        definition.Actions.Clear();
+                        definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
+                        service.RootFolder.RegisterTaskDefinition(StartupTaskID, definition);
+                        this.run_at_win_startup.IsChecked = task.Enabled;
+                    }
+                    else
+                    {
+                        TaskDefinition td = service.NewTask();
+                        td.RegistrationInfo.Description = "Start Aurora on Startup";
+
+                        td.Triggers.Add(new LogonTrigger { Enabled = true });
+
+                        string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+                        td.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
+
+                        td.Principal.RunLevel = TaskRunLevel.Highest;
+                        td.Settings.DisallowStartIfOnBatteries = false;
+                        td.Settings.DisallowStartOnRemoteAppSession = false;
+                        td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
+
+                        service.RootFolder.RegisterTaskDefinition(StartupTaskID, td);
+                        this.run_at_win_startup.IsChecked = true;
+                    }
+                }
+            }
+            catch(Exception exc)
+            {
+                Global.logger.Error("Error caught when updating startup task. Error: " + exc.ToString());
             }
 
             string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
@@ -107,7 +145,6 @@ namespace Aurora.Settings
             this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
-            this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -119,7 +156,11 @@ namespace Aurora.Settings
                             {
                                 using (MemoryStream memory = new MemoryStream())
                                 {
-                                    map.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                                    //Fix conflict with AtomOrb due to async
+                                    lock (map)
+                                    {
+                                        map.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                                    }
                                     memory.Position = 0;
                                     BitmapImage bitmapimage = new BitmapImage();
                                     bitmapimage.BeginInit();
@@ -135,7 +176,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                Global.logger.Warn(ex.ToString());
             }
         }
 
@@ -464,51 +505,16 @@ namespace Aurora.Settings
             {
                 try
                 {
-                    /*if ((sender as CheckBox).IsChecked.Value)
-                        runRegistryPath.SetValue("Aurora", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\" -silent");
-                    else
-                        runRegistryPath.DeleteValue("Aurora");*/
-
                     using (TaskService ts = new TaskService())
                     {
                         //Find existing task
                         var task = ts.FindTask(StartupTaskID);
-                        if ((sender as CheckBox).IsChecked.Value)
-                        {
-                            if (task != null)
-                            {
-                                task.Enabled = true;
-                            }
-                            else
-                            {
-                                TaskDefinition td = ts.NewTask();
-                                td.RegistrationInfo.Description = "Start Aurora on Startup";
-
-                                td.Triggers.Add(new LogonTrigger { Enabled = true });
-
-                                string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
-                                td.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
-
-                                td.Principal.RunLevel = TaskRunLevel.Highest;
-                                td.Settings.DisallowStartIfOnBatteries = false;
-                                td.Settings.DisallowStartOnRemoteAppSession = false;
-                                td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
-
-                                ts.RootFolder.RegisterTaskDefinition(StartupTaskID, td);
-                            }
-                        }
-                        else
-                        {
-                            if (task != null)
-                                task.Enabled = false;
-                            //ts.RootFolder.DeleteTask(StartupTaskID);
-                        }
+                        task.Enabled = (sender as CheckBox).IsChecked.Value;
                     }
                 }
                 catch(Exception exc)
                 {
-                    Global.logger.LogLine("run_at_win_startup_Checked Exception: " + exc, Logging_Level.Error);
+                    Global.logger.Error("run_at_win_startup_Checked Exception: " + exc);
                 }
             }
 
@@ -579,7 +585,6 @@ namespace Aurora.Settings
                 {
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.FileName = updater_path;
-                    startInfo.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor" : "";
                     Process.Start(startInfo);
                 }
                 else
@@ -594,15 +599,6 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.updates_check_on_start_up = (this.updates_autocheck_on_start.IsChecked.HasValue) ? this.updates_autocheck_on_start.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void updates_background_install_minor_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.updates_allow_silent_minor = (this.updates_background_install_minor.IsChecked.HasValue) ? this.updates_background_install_minor.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -841,11 +837,11 @@ namespace Aurora.Settings
         {
             try
             {
-                Program.InstallLogitech();
+                App.InstallLogitech();
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during Logitech Wrapper install. Exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during Logitech Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for Logitech could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -874,7 +870,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during Razer Wrapper install. Exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during Razer Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for Razer could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -898,7 +894,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -922,7 +918,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
@@ -1030,7 +1026,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                Global.logger.Warn(ex.ToString());
             }
         }
 
@@ -1044,7 +1040,7 @@ namespace Aurora.Settings
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
-                System.Diagnostics.Process.Start(Global.logger.GetLogsDirectory());
+                System.Diagnostics.Process.Start(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora/Logs/"));
         }
 
         private void chkOverlayPreview_Checked(object sender, RoutedEventArgs e)
@@ -1054,6 +1050,11 @@ namespace Aurora.Settings
                 Global.Configuration.OverlaysInPreview = (this.chkOverlayPreview.IsChecked.HasValue) ? this.chkOverlayPreview.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
+        }
+
+        private void chkHigherPriority_IsCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
         }
     }
 }

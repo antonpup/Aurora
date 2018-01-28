@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices.CoolerMaster
 {
@@ -89,9 +91,9 @@ namespace Aurora.Devices.CoolerMaster
             {DeviceKeys.APOSTROPHE, new int [] {3, 11} },
             {DeviceKeys.HASHTAG, new int [] {3, 12} },
             {DeviceKeys.ENTER, new int [] {3, 14} },
-            {DeviceKeys.NUM_FOUR, new int [] {3, 17} },
-            {DeviceKeys.NUM_FIVE, new int [] {3, 18} },
-            {DeviceKeys.NUM_SIX, new int [] {3, 19} },
+            {DeviceKeys.NUM_FOUR, new int [] {3, 18} },
+            {DeviceKeys.NUM_FIVE, new int [] {3, 19} },
+            {DeviceKeys.NUM_SIX, new int [] {3, 20} },
             {DeviceKeys.LEFT_SHIFT, new int [] {4, 0} },
             {DeviceKeys.BACKSLASH_UK, new int [] {4, 1} },
             {DeviceKeys.Z, new int [] {4, 2} },
@@ -242,7 +244,7 @@ namespace Aurora.Devices.CoolerMaster
     {
         private String devicename = "Cooler Master";
         private List<CoolerMasterSDK.DEVICE_INDEX> InitializedDevices = new List<CoolerMasterSDK.DEVICE_INDEX>();
-        private CoolerMasterSDK.DEVICE_INDEX CurrentDevice;
+        private CoolerMasterSDK.DEVICE_INDEX CurrentDevice = CoolerMasterSDK.DEVICE_INDEX.None;
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
@@ -269,36 +271,44 @@ namespace Aurora.Devices.CoolerMaster
             {
                 if (!isInitialized)
                 {
-                    
+
                     try
                     {
                         foreach (CoolerMasterSDK.DEVICE_INDEX device in Enum.GetValues(typeof(CoolerMasterSDK.DEVICE_INDEX)))
                         {
-                            try
+                            if (device != CoolerMasterSDK.DEVICE_INDEX.None)
                             {
-                                bool init = SwitchToDevice(device);
-                                if (init)
+                                try
                                 {
-                                    InitializedDevices.Add(device);
-                                    isInitialized = true;
+                                    bool init = SwitchToDevice(device);
+                                    if (init)
+                                    {
+                                        InitializedDevices.Add(device);
+                                        isInitialized = true;
+                                    }
+                                }
+                                catch (Exception exc)
+                                {
+                                    Global.logger.Error("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc);
                                 }
                             }
-                            catch (Exception exc)
-                            {
-                                Global.logger.LogLine("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc, Logging_Level.Error);
-                            }
+
                         }
+
+                        List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
+                        if (devices.Count > 0)
+                            SwitchToDevice(devices.First());
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine("There was an error initializing Cooler Master SDK.\r\n" + exc.Message, Logging_Level.Error);
+                        Global.logger.Error("There was an error initializing Cooler Master SDK.\r\n" + exc.Message);
 
                         return false;
                     }
                 }
 
                 if (!isInitialized)
-                    Global.logger.LogLine("No Cooler Master devices successfully Initialized!");
+                    Global.logger.Info("No Cooler Master devices successfully Initialized!");
 
                 return isInitialized;
             }
@@ -386,10 +396,7 @@ namespace Aurora.Devices.CoolerMaster
             if (Global.Configuration.devices_disable_keyboard)
                 return;
 
-            List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
-            if (devices.Count > 0)
-                SwitchToDevice(devices.First());
-            else
+            if (!CoolerMasterSDK.Keyboards.Contains(CurrentDevice))
                 return;
 
             color_matrix.KeyColor = key_colors;
@@ -408,24 +415,28 @@ namespace Aurora.Devices.CoolerMaster
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
         {
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
+
                     int[] coordinates = new int[2];
 
                     DeviceKeys dev_key = key.Key;
 
-                    if (dev_key == DeviceKeys.ENTER && Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us)
+                    if (dev_key == DeviceKeys.ENTER &&
+                        (Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us ||
+                         Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.dvorak))
                         dev_key = DeviceKeys.BACKSLASH;
 
                     if (Effects.possible_peripheral_keys.Contains(key.Key))
                     {
                         //Temp until mice support is added
                         continue;
-                        
+
                         //Move this to the SendColorsToMouse as they do not need to be set on every key, they only need to be directed to the correct method for setting key/light
                         /*List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
                         if (devices.Count > 0)
@@ -439,25 +450,25 @@ namespace Aurora.Devices.CoolerMaster
                     if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
                         coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice];
 
-
                     if (coords.TryGetValue(dev_key, out coordinates))
                         SetOneKey(coordinates, (Color)key.Value);
                 }
+                if (token.IsCancellationRequested) return false;
                 SendColorsToKeyboard(forced || !keyboard_updated);
                 return true;
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Failed to Update Device" + e.ToString(), Logging_Level.Error);
+                Global.logger.Error("Failed to Update Device" + e.ToString());
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

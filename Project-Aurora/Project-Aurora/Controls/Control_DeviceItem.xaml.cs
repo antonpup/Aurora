@@ -25,13 +25,13 @@ namespace Aurora.Controls
     public partial class Control_DeviceItem : UserControl
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(Device), typeof(Control_DeviceItem));
+        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceContainer), typeof(Control_DeviceItem));
 
-        public Device Device
+        public DeviceContainer Device
         {
             get
             {
-                return (Device)GetValue(DeviceProperty);
+                return (DeviceContainer)GetValue(DeviceProperty);
             }
             set
             {
@@ -58,7 +58,7 @@ namespace Aurora.Controls
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+                Global.logger.Warn(ex.ToString());
             }
         }
 
@@ -66,10 +66,10 @@ namespace Aurora.Controls
         {
             if(sender is Button)
             {
-                if(Device.IsInitialized())
-                    Device.Shutdown();
+                if(Device.Device.IsInitialized())
+                    Device.Device.Shutdown();
                 else
-                    Device.Initialize();
+                    Device.Device.Initialize();
 
                 UpdateControls();
             }
@@ -77,10 +77,13 @@ namespace Aurora.Controls
 
         private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
         {
-            if (Global.Configuration.devices_disabled.Contains(Device.GetType()))
-                Global.Configuration.devices_disabled.Remove(Device.GetType());
+            if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
+                Global.Configuration.devices_disabled.Remove(Device.Device.GetType());
             else
-                Global.Configuration.devices_disabled.Add(Device.GetType());
+            {
+                Global.Configuration.devices_disabled.Add(Device.Device.GetType());
+                Device.Device.Shutdown();
+            }
 
             UpdateControls();
         }
@@ -92,19 +95,19 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            if (Device.IsInitialized())
+            if (Device.Device.IsInitialized())
                 btnToggleOnOff.Content = "Stop";
             else
                 btnToggleOnOff.Content = "Start";
 
-            txtblk_DeviceStatus.Text = Device.GetDeviceDetails().TrimEnd(' ');
-            txtblk_DevicePerformance.Text = Device.GetDeviceUpdatePerformance();
+            txtblk_DeviceStatus.Text = Device.Device.GetDeviceDetails().TrimEnd(' ');
+            txtblk_DevicePerformance.Text = Device.Device.GetDeviceUpdatePerformance();
 
             if(Device is Devices.ScriptedDevice.ScriptedDevice)
                 btnToggleEnableDisable.IsEnabled = false;
             else
             {
-                if (Global.Configuration.devices_disabled.Contains(Device.GetType()))
+                if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
                 {
                     btnToggleEnableDisable.Content = "Enable";
                     btnToggleOnOff.IsEnabled = false;
@@ -116,16 +119,16 @@ namespace Aurora.Controls
                 }
             }
 
-            if(Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
+            if(Device.Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
                 btnViewOptions.IsEnabled = false;
         }
 
         private void btnViewOptions_Click(object sender, RoutedEventArgs e)
         {
             Window_VariableRegistryEditor options_window = new Window_VariableRegistryEditor();
-            options_window.Title = $"{Device.GetDeviceName()} - Options";
+            options_window.Title = $"{Device.Device.GetDeviceName()} - Options";
             options_window.SizeToContent = SizeToContent.WidthAndHeight;
-            options_window.VarRegistryEditor.RegisteredVariables = Device.GetRegisteredVariables();
+            options_window.VarRegistryEditor.RegisteredVariables = Device.Device.GetRegisteredVariables();
 
             options_window.ShowDialog();
         }

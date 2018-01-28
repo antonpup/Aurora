@@ -1,5 +1,4 @@
-﻿using Aurora.Profiles.Aurora_Wrapper;
-using Aurora.Profiles.Desktop;
+﻿using Aurora.Profiles.Desktop;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Settings;
@@ -21,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
+using Aurora.Profiles.Aurora_Wrapper;
 
 namespace Aurora.Profiles
 {
@@ -121,7 +121,9 @@ namespace Aurora.Profiles
                 new Guild_Wars_2.GW2(),
                 new WormsWMD.WormsWMD(),
                 new Blade_and_Soul.BnS(),
-                new Event_SkypeOverlay()
+                new Event_SkypeOverlay(),
+                new ROTTombRaider.ROTTombRaider(),
+				new DyingLight.DyingLight()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -138,12 +140,14 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
                 new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
                 new LayerHandlerEntry("ShortcutAssistant", "Shortcut Assistant Layer", typeof(ShortcutAssistantLayerHandler) ),
-                new LayerHandlerEntry("Equalizer", "Equalizer Layer", typeof(EqualizerLayerHandler) ),
+                new LayerHandlerEntry("Equalizer", "Audio Visualizer Layer", typeof(EqualizerLayerHandler) ),
                 new LayerHandlerEntry("Ambilight", "Ambilight Layer", typeof(AmbilightLayerHandler) ),
                 new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
                 new LayerHandlerEntry("Glitch", "Glitch Effect Layer", typeof(GlitchLayerHandler) ),
-                new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
+                new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) )
             }, true);
+
+            RegisterLayerHandler(new LayerHandlerEntry("WrapperLights", "Wrapper Lighting Layer", typeof(WrapperLightsLayerHandler)), false);
 
             #endregion
 
@@ -330,12 +334,14 @@ namespace Aurora.Profiles
                 if (!(Events[key] is GenericApplication))
                     return;
                 GenericApplication profile = (GenericApplication)Events[key];
+                Events.Remove(key);
+                Global.Configuration.ProfileOrder.Remove(key);
+
+                profile.Dispose();
+
                 string path = profile.GetProfileFolderPath();
                 if (Directory.Exists(path))
                     Directory.Delete(path, true);
-
-                Events.Remove(key);
-                Global.Configuration.ProfileOrder.Remove(key);
 
                 //SaveSettings();
             }
@@ -346,7 +352,7 @@ namespace Aurora.Profiles
             if (EventProcesses.ContainsKey(process))
             {
                 if (!Events.ContainsKey(EventProcesses[process]))
-                    Global.logger.LogLine($"GetProfileFromProcess: The process '{process}' exists in EventProcesses but subsequently '{EventProcesses[process]}' does not in Events!", Logging_Level.Warning);
+                    Global.logger.Warn($"GetProfileFromProcess: The process '{process}' exists in EventProcesses but subsequently '{EventProcesses[process]}' does not in Events!");
 
                 return Events[EventProcesses[process]];
             }
@@ -361,7 +367,7 @@ namespace Aurora.Profiles
             if (EventAppIDs.ContainsKey(appid))
             {
                 if (!Events.ContainsKey(EventAppIDs[appid]))
-                    Global.logger.LogLine($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs but subsequently '{EventAppIDs[appid]}' does not in Events!", Logging_Level.Warning);
+                    Global.logger.Warn($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs but subsequently '{EventAppIDs[appid]}' does not in Events!");
                 return Events[EventAppIDs[appid]];
             }
             else if (Events.ContainsKey(appid))
@@ -446,7 +452,7 @@ namespace Aurora.Profiles
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine("ProfilesManager.Update() Exception, " + exc, Logging_Level.Error);
+                        Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
                     }
                 }
 
@@ -592,24 +598,32 @@ namespace Aurora.Profiles
         {
             //Debug.WriteLine("Received gs!");
 
-            //Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
+//Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
 
-            //UpdateProcess();
+//UpdateProcess();
 
-            //string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
+//string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
 
-            //EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
-
+//EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
+#if DEBUG
+#else
             try
             {
+#endif
                 ILightEvent profile;// = this.GetProfileFromProcess(process_name);
+                
 
                 JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
                 string appid = provider.GetValue("appid").ToString();
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
                 if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
-                    profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json));
+                {
+                    IGameState gameState = gs;
+                    if (profile.Config.GameStateType != null)
+                        gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json);
+                    profile.SetGameState(gameState);
+                }
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
@@ -626,12 +640,14 @@ namespace Aurora.Profiles
                         profile.SetGameState(gs);
                     }
                 }
-
+#if DEBUG
+#else
             }
             catch (Exception e)
             {
                 Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);
             }
+#endif
         }
 
         public void ResetGameState(string process)
@@ -673,6 +689,9 @@ namespace Aurora.Profiles
         {
             updateTimer.Dispose();
             updateTimer = null;
+
+            foreach (var app in this.Events)
+                app.Value.Dispose();
         }
     }
 }

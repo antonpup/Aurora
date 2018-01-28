@@ -28,7 +28,7 @@ namespace Aurora.Profiles.TheDivision
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
         {
-            Program.InstallLogitech();
+            App.InstallLogitech();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

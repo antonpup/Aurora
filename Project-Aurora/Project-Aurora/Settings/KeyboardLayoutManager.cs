@@ -112,6 +112,8 @@ namespace Aurora.Settings
 
         public List<KeyboardKey> grouped_keys = new List<KeyboardKey>();
 
+        public Dictionary<DeviceKeys, string> KeyText = new Dictionary<DeviceKeys, string>();
+
         private RectangleF _region = new RectangleF(0, 0, 0, 0);
 
         public RectangleF Region { get { return _region; } }
@@ -143,6 +145,7 @@ namespace Aurora.Settings
             foreach (var key in keys)
             {
                 grouped_keys.Add(key);
+                KeyText.Add(key.tag, key.visualName);
 
                 if (key.width + key.margin_left > 0)
                     current_width += key.width.Value + key.margin_left.Value;
@@ -235,6 +238,7 @@ namespace Aurora.Settings
                 key.margin_top_bits += location_y_bit;
 
                 grouped_keys.Add(key);
+                KeyText.Add(key.tag, key.visualName);
 
                 if (key.width + key.margin_left > _region.Width)
                     _region.Width += (float)(key.width + key.margin_left - location_x);
@@ -343,6 +347,8 @@ namespace Aurora.Settings
 
             foreach (var key in applicable_keys)
             {
+                if (KeyText.ContainsKey(key.tag))
+                    KeyText[key.tag] = key.visualName;
                 key.UpdateFromOtherKey(keys[key.tag]);
             }
         }
@@ -426,6 +432,8 @@ namespace Aurora.Settings
         private bool _virtualKBInvalid = true;
 
         private Grid _virtualKeyboard = new Grid();
+
+        public Dictionary<DeviceKeys, string> KeyText { get { return virtualKeyboardGroup.KeyText; } }
 
         public Grid Virtual_keyboard
         {
@@ -521,6 +529,15 @@ namespace Aurora.Settings
                         case PreferredKeyboardLocalization.swiss:
                             culture = "de-CH";
                             break;
+                        case PreferredKeyboardLocalization.abnt2:
+                            culture = "pt-BR";
+                            break;
+                        case PreferredKeyboardLocalization.dvorak:
+                            culture = "dvorak";
+                            break;
+                        case PreferredKeyboardLocalization.dvorak_int:
+                            culture = "dvorak_int";
+                            break;
                     }
 
                     switch (culture)
@@ -575,10 +592,23 @@ namespace Aurora.Settings
                             _loaded_localization = PreferredKeyboardLocalization.nordic;
                             LoadCulture("nordic");
                             break;
+                        case ("pt-BR"):
+                            _loaded_localization = PreferredKeyboardLocalization.abnt2;
+                            LoadCulture("abnt2");
+                            break;
+                        case ("dvorak"):
+                            _loaded_localization = PreferredKeyboardLocalization.dvorak;
+                            LoadCulture("dvorak");
+                            break;
+                        case ("dvorak_int"):
+                            _loaded_localization = PreferredKeyboardLocalization.dvorak_int;
+                            LoadCulture("dvorak_int");
+                            break;
                         default:
                             _loaded_localization = PreferredKeyboardLocalization.intl;
                             LoadCulture("intl");
                             break;
+
                     }
                 }
 
@@ -618,6 +648,10 @@ namespace Aurora.Settings
                 //    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
                 else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
                     layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m800.json");
+                else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750)
+                    layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750.json");
+                else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750_TKL)
+                    layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750_tkl.json");
                 else
                 {
                     LoadNone();
@@ -743,7 +777,7 @@ namespace Aurora.Settings
             }
             catch (Exception e)
             {
-                Global.logger.LogLine(e.ToString());
+                Global.logger.Error(e.ToString());
             }
 
             //Perform end of load functions
@@ -751,6 +785,54 @@ namespace Aurora.Settings
             _virtualKBInvalid = true;
             CalculateBitmap();
             CreateUserControl();
+
+            //Better description for these keys by using the DeviceKeys description instead
+            Dictionary<DeviceKeys, string> keytext = KeyText;
+            keytext.Remove(DeviceKeys.NUM_ASTERISK);
+            keytext.Remove(DeviceKeys.NUM_EIGHT);
+            keytext.Remove(DeviceKeys.NUM_ENTER);
+            keytext.Remove(DeviceKeys.NUM_FIVE);
+            keytext.Remove(DeviceKeys.NUM_FOUR);
+            keytext.Remove(DeviceKeys.NUM_MINUS);
+            keytext.Remove(DeviceKeys.NUM_NINE);
+            keytext.Remove(DeviceKeys.NUM_ONE);
+            keytext.Remove(DeviceKeys.NUM_PERIOD);
+            keytext.Remove(DeviceKeys.NUM_PLUS);
+            keytext.Remove(DeviceKeys.NUM_SEVEN);
+            keytext.Remove(DeviceKeys.NUM_SIX);
+            keytext.Remove(DeviceKeys.NUM_SLASH);
+            keytext.Remove(DeviceKeys.NUM_THREE);
+            keytext.Remove(DeviceKeys.NUM_TWO);
+            keytext.Remove(DeviceKeys.NUM_ZERO);
+            keytext.Remove(DeviceKeys.NUM_ZEROZERO);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT1);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT2);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT3);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT4);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT5);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT6);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT7);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT8);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT9);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT10);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT11);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT12);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT13);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT14);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT15);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT16);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT17);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT18);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT19);
+            keytext.Remove(DeviceKeys.LEFT_CONTROL);
+            keytext.Remove(DeviceKeys.LEFT_WINDOWS);
+            keytext.Remove(DeviceKeys.LEFT_ALT);
+            keytext.Remove(DeviceKeys.LEFT_SHIFT);
+            keytext.Remove(DeviceKeys.RIGHT_ALT);
+            keytext.Remove(DeviceKeys.FN_Key);
+            keytext.Remove(DeviceKeys.RIGHT_WINDOWS);
+            keytext.Remove(DeviceKeys.RIGHT_CONTROL);
+            keytext.Remove(DeviceKeys.RIGHT_SHIFT);
 
             KeyboardLayoutUpdated?.Invoke(this);
         }

@@ -245,7 +245,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("PerformanceCounter exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("PerformanceCounter exception: " + exc);
             }
         }
     }

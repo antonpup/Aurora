@@ -12,7 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Aurora.Settings;
+using Microsoft.Win32.TaskScheduler;
 
 namespace Aurora.Devices.Corsair
 {
@@ -68,7 +71,7 @@ namespace Aurora.Devices.Corsair
                         else
                             CueSDK.Initialize(true);
 
-                        Global.logger.LogLine("Corsair device, Initialized with " + CueSDK.LoadedArchitecture + "-SDK", Logging_Level.Info);
+                        Global.logger.Info("Corsair device, Initialized with " + CueSDK.LoadedArchitecture + "-SDK");
 
                         keyboard = CueSDK.KeyboardSDK;
                         mouse = CueSDK.MouseSDK;
@@ -97,15 +100,15 @@ namespace Aurora.Devices.Corsair
                     }
                     catch (CUEException ex)
                     {
-                        Global.logger.LogLine("Corsair device, CUE Exception! ErrorCode: " + Enum.GetName(typeof(CorsairError), ex.Error), Logging_Level.Error);
+                        Global.logger.Error("Corsair device, CUE Exception! ErrorCode: " + Enum.GetName(typeof(CorsairError), ex.Error));
                     }
                     catch (WrapperException ex)
                     {
-                        Global.logger.LogLine("Corsair device, Wrapper Exception! Message: " + ex.Message, Logging_Level.Error);
+                        Global.logger.Error("Corsair device, Wrapper Exception! Message: " + ex.Message);
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.LogLine("Corsair device, Exception! Message: " + ex, Logging_Level.Error);
+                        Global.logger.Error("Corsair device, Exception! Message: " + ex);
                     }
 
                     isInitialized = false;
@@ -131,7 +134,7 @@ namespace Aurora.Devices.Corsair
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Corsair device, Exception during Shutdown. Message: " + exc, Logging_Level.Error);
+                    Global.logger.Error("Corsair device, Exception during Shutdown. Message: " + exc);
                     isInitialized = false;
                 }
             }
@@ -163,17 +166,21 @@ namespace Aurora.Devices.Corsair
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
         {
+            if (token.IsCancellationRequested) return false;
             CorsairLedId keyindex = CorsairLedId.Invalid;
 
             try
             {
+                if (token.IsCancellationRequested) return false;
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
                     CorsairLedId localKey = ToCorsair(key.Key);
 
-                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo || localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
+                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo ||
+                        localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToMouse(CorsairLedId.B1, (Color)(key.Value));
                         SendColorToPeripheral((Color)(key.Value), forced);
@@ -194,22 +201,23 @@ namespace Aurora.Devices.Corsair
                     keyindex = localKey;
                 }
 
+                if (token.IsCancellationRequested) return false;
                 SendColorsToKeyboard(forced);
                 return true;
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Corsair device, error when updating device. Error: " + e, Logging_Level.Error);
+                Global.logger.Error("Corsair device, error when updating device. Error: " + e);
                 Console.WriteLine(e);
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
@@ -509,7 +517,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.SEMICOLON):
                     return CorsairLedId.SemicolonAndColon;
                 case (DeviceKeys.APOSTROPHE):
-                    return  CorsairLedId.ApostropheAndDoubleQuote;
+                    return CorsairLedId.ApostropheAndDoubleQuote;
                 case (DeviceKeys.HASHTAG):
                     return CorsairLedId.NonUsTilde;
                 case (DeviceKeys.ENTER):
@@ -546,6 +554,8 @@ namespace Aurora.Devices.Corsair
                     return CorsairLedId.SlashAndQuestionMark;
                 case (DeviceKeys.OEM8):
                     return CorsairLedId.SlashAndQuestionMark;
+                case (DeviceKeys.OEM102):
+                    return CorsairLedId.International1;
                 case (DeviceKeys.RIGHT_SHIFT):
                     return CorsairLedId.RightShift;
                 case (DeviceKeys.ARROW_UP):

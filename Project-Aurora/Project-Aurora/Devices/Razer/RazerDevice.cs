@@ -2,6 +2,8 @@
 using Corale.Colore.Razer.Keyboard;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Aurora.Settings;
 using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
 
@@ -9,7 +11,7 @@ namespace Aurora.Devices.Razer
 {
     class RazerDevice : Device
     {
-        
+
 
         private String devicename = "Razer";
         private bool isInitialized = false;
@@ -62,7 +64,7 @@ namespace Aurora.Devices.Razer
 
                         Chroma.Instance.Initialize();
 
-                        Global.logger.LogLine("Razer device, Initialized", Logging_Level.Info);
+                        Global.logger.Info("Razer device, Initialized");
 
                         keyboard = Chroma.Instance.Keyboard;
                         mouse = Chroma.Instance.Mouse;
@@ -100,7 +102,7 @@ namespace Aurora.Devices.Razer
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.LogLine("Razer device, Exception! Message:" + ex, Logging_Level.Error);
+                        Global.logger.Error("Razer device, Exception! Message:" + ex);
                     }
 
                     isInitialized = false;
@@ -125,7 +127,7 @@ namespace Aurora.Devices.Razer
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Razer device, Exception during Shutdown. Message: " + exc, Logging_Level.Error);
+                    Global.logger.Error("Razer device, Exception during Shutdown. Message: " + exc);
                     isInitialized = false;
                 }
             }
@@ -168,12 +170,14 @@ namespace Aurora.Devices.Razer
             return null;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, CancellationToken token, bool forced = false)
         {
+            if (token.IsCancellationRequested) return false;
             try
             {
                 foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
                     //Key localKey = ToRazer(key.Key);
 
                     int[] coord = null;
@@ -181,7 +185,7 @@ namespace Aurora.Devices.Razer
                     {
                         SendColorToPeripheral(key.Value, forced);
                     }
-                    else if ((coord = GetKeyCoord(key.Key))!= null)
+                    else if ((coord = GetKeyCoord(key.Key)) != null)
                     {
                         SetOneKey(coord, key.Value);
                     }
@@ -192,22 +196,23 @@ namespace Aurora.Devices.Razer
                     }
                 }
 
+                if (token.IsCancellationRequested) return false;
                 SendColorsToKeyboard(forced);
                 return true;
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Razer device, error when updating device. Error: " + e, Logging_Level.Error);
+                Global.logger.Error("Razer device, error when updating device. Error: " + e);
                 Console.WriteLine(e);
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
@@ -240,7 +245,7 @@ namespace Aurora.Devices.Razer
                 if (!Global.Configuration.devices_disable_keyboard)
                     grid[key] = new Color(color.R, color.G, color.B);
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
 
             }

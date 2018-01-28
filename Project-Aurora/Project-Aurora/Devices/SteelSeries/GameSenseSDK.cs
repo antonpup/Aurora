@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 
 namespace SteelSeries.GameSenseSDK
 {
@@ -230,6 +231,7 @@ namespace SteelSeries.GameSenseSDK
         private void sendPostRequest(String address, String payload)
         {
             var httpWebRequest = (HttpWebRequest) WebRequest.Create(address);
+            httpWebRequest.ReadWriteTimeout = 30;
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -241,7 +243,7 @@ namespace SteelSeries.GameSenseSDK
             var httpResponse = (HttpWebResponse) httpWebRequest.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
-                var result = streamReader.ReadToEnd();
+                streamReader.ReadToEnd();
             }
         }
         

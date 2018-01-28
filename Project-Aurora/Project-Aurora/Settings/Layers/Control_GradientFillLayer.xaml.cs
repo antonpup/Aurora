@@ -50,7 +50,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
+                    Global.logger.Error("Could not set brush, exception: " + exc);
                 }
 
                 this.KeySequence_keys.Sequence = (this.DataContext as GradientFillLayerHandler).Properties._Sequence;
@@ -76,7 +76,7 @@ namespace Aurora.Settings.Layers
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Could not set brush, exception: " + exc);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Aurora.Settings.Layers
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Could not set brush, exception: " + exc, Logging_Level.Error);
+                Global.logger.Error("Could not set brush, exception: " + exc);
             }
         }
 

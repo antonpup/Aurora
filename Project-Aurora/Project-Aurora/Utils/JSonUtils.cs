@@ -44,6 +44,12 @@ namespace Aurora.Utils
                     return typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandlerProperties);
                 case "Aurora.Profiles.TheDivision.TheDivisionSettings":
                     return typeof(Settings.ApplicationProfile);
+                case "Aurora.Profiles.Overwatch.OverwatchProfile":
+                case "Aurora.Profiles.WormsWMD.WormsWMDProfile":
+                case "Aurora.Profiles.Blade_and_Soul.BnSProfile":
+                case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
+                case "Aurora.Profiles.ColorEnhanceProfile":
+                    return typeof(Profiles.WrapperProfile);
                 default:
                     if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
                         return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));

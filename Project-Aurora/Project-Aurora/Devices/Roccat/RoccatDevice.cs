@@ -12,6 +12,8 @@ using Roccat_Talk.RyosTalkFX;
 using Roccat_Talk.TalkFX;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Aurora.Settings;
 
 namespace Aurora.Devices.Roccat
@@ -76,7 +78,7 @@ namespace Aurora.Devices.Roccat
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.LogLine("Roccat device, Exception! Message:" + ex, Logging_Level.Error);
+                    Global.logger.Error("Roccat device, Exception! Message:" + ex);
                 }
 
                 isInitialized = false;
@@ -119,8 +121,9 @@ namespace Aurora.Devices.Roccat
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, CancellationToken token, bool forced = false)
         {
+            if (token.IsCancellationRequested) return false;
             if (RyosTalkFX == null || !RyosInitialized) //Not initialzied
                 return false;
 
@@ -128,6 +131,7 @@ namespace Aurora.Devices.Roccat
             {
                 foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
                     Roccat_Talk.RyosTalkFX.Key roc_key = ToRoccatKey(key.Key);
 
                     if (roc_key.Code != 255)
@@ -143,25 +147,33 @@ namespace Aurora.Devices.Roccat
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Roccat device, error when updating device. Error: " + e, Logging_Level.Error);
+                Global.logger.Error("Roccat device, error when updating device. Error: " + e);
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
             watch.Restart();
 
-            System.Drawing.Color averageColor = Utils.BitmapUtils.GetRegionColor(
+            if (token.IsCancellationRequested) return false;
+
+            System.Drawing.Color averageColor;
+            lock (colorComposition.bitmapLock)
+            {
+                averageColor = Utils.BitmapUtils.GetRegionColor(
                     colorComposition.keyBitmap,
                     new BitmapRectangle(0, 0, colorComposition.keyBitmap.Width, colorComposition.keyBitmap.Height)
-                    );
+                );
+            }
 
             talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Normal, ConvertToRoccatColor(averageColor));
             talkFX.SetLedRgb(Zone.Ambient, KeyEffect.On, Speed.Normal, ConvertToRoccatColor(averageColor));
 
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+            if (token.IsCancellationRequested) return false;
+
+            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

@@ -56,7 +56,7 @@ namespace Aurora.Profiles.RocketLeague
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(exc.Message, Logging_Level.Error);
+                    Global.logger.Error(exc.Message);
                     isInitialized = false;
                 }
 

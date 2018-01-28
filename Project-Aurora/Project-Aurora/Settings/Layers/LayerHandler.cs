@@ -86,7 +86,7 @@ namespace Aurora.Settings.Layers
         public LayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
     }
 
-    public interface ILayerHandler
+    public interface ILayerHandler : IDisposable
     {
         UserControl Control { get; }
 
@@ -107,6 +107,8 @@ namespace Aurora.Settings.Layers
         EffectLayer PostRenderFX(EffectLayer layer_render);
 
         void SetApplication(Application profile);
+        void SetGameState(IGameState gamestate);
+        void Dispose();
     }
 
     public abstract class LayerHandler<TProperty> : ILayerHandler where TProperty : LayerHandlerProperties<TProperty>
@@ -181,6 +183,11 @@ namespace Aurora.Settings.Layers
             return new EffectLayer();
         }
 
+        public virtual void SetGameState(IGameState gamestate)
+        {
+
+        }
+
         public EffectLayer PostRenderFX(EffectLayer rendered_layer)
         {
             EffectLayer returnLayer = new EffectLayer(rendered_layer);
@@ -215,6 +222,11 @@ namespace Aurora.Settings.Layers
         protected virtual UserControl CreateControl()
         {
             return new Control_DefaultLayer();
+        }
+
+        public virtual void Dispose()
+        {
+
         }
     }
 

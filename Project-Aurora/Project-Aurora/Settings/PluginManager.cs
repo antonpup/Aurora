@@ -187,7 +187,7 @@ namespace Aurora.Settings
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(exc.ToString(), Logging_Level.Error, true);
+                    Global.logger.Error(exc.ToString());
                     if (Global.isDebug)
                         throw exc;
                 }

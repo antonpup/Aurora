@@ -123,6 +123,7 @@ namespace Aurora
             if (!isRunning)
             {
                 ListenerThread = new Thread(new ThreadStart(Run));
+                ListenerThread.IsBackground = true;
                 try
                 {
                     net_Listener.Start();
@@ -132,7 +133,7 @@ namespace Aurora
                     if (exc.ErrorCode == 5)//Access Denied
                         System.Windows.MessageBox.Show($"Access error during start of network listener.\r\n\r\nTo fix this issue, please run the following commands as admin in Command Prompt:\r\n   netsh http add urlacl url=http://localhost:{Port}/ user=Everyone listen=yes\r\nand\r\n   netsh http add urlacl url=http://127.0.0.1:{Port}/ user=Everyone listen=yes", "Aurora - Error");
 
-                    Global.logger.LogLine(exc.ToString(), Logging_Level.Error);
+                    Global.logger.Error(exc.ToString());
 
                     return false;
                 }
@@ -140,8 +141,10 @@ namespace Aurora
                 ListenerThread.Start();
 
                 ServerThread = new Thread(IPCServerThread);
+                ServerThread.IsBackground = true;
                 ServerThread.Start();
                 CommandThread = new Thread(AuroraCommandsServerIPC);
+                CommandThread.IsBackground = true;
                 CommandThread.Start();
                 return true;
             }
@@ -233,17 +236,17 @@ namespace Aurora
             //Global.logger.LogLine("Received gs!");
             //Global.logger.LogLine(gs_data);
 
-            GameState_Wrapper new_state = new GameState_Wrapper(gs_data); //GameState_Wrapper 
-
-            wrapper_connected = true;
-            wrapped_process = new_state.Provider.Name.ToLowerInvariant();
-
             var task = new System.Threading.Tasks.Task(() =>
                 {
+                    GameState_Wrapper new_state = new GameState_Wrapper(gs_data); //GameState_Wrapper 
+
+                    wrapper_connected = true;
+                    wrapped_process = new_state.Provider.Name.ToLowerInvariant();
+
                     //if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
-                        //CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
+                    //CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
                     //else
-                        CurrentGameState = new_state;
+                    CurrentGameState = new_state;
                 }
             );
             task.Start();
@@ -272,10 +275,10 @@ namespace Aurora
                     {
                         wrapper_connected = false;
                         wrapped_process = "";
-                        Global.logger.LogLine(String.Format("[IPCServer] Pipe created {0}", IPCpipeStream?.GetHashCode()));
+                        Global.logger.Info("[IPCServer] Pipe created {0}", IPCpipeStream?.GetHashCode());
 
                         IPCpipeStream?.WaitForConnection();
-                        Global.logger.LogLine("[IPCServer] Pipe connection established");
+                        Global.logger.Info("[IPCServer] Pipe connection established");
 
                         using (StreamReader sr = new StreamReader(IPCpipeStream))
                         {
@@ -283,9 +286,17 @@ namespace Aurora
                             while ((temp = sr.ReadLine()) != null)
                             {
                                 //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
-
-                                //Begin handling the game state outside this loop
-                                HandleNewIPCGameState(temp);
+                                try
+                                {
+                                    //Begin handling the game state outside this loop
+                                    HandleNewIPCGameState(temp);
+                                }
+                                catch(Exception exc)
+                                {
+                                    Global.logger.Error("[IPCServer] HandleNewIPCGameState Exception, " + exc);
+                                    //if (Global.isDebug)
+                                        Global.logger.Info("Recieved data that caused error:\n\r"+temp);
+                                }
 
                                 //var task = new System.Threading.Tasks.Task(() => HandleNewIPCGameState(temp));
                                 //task.Start();
@@ -297,15 +308,18 @@ namespace Aurora
 
                     wrapper_connected = false;
                     wrapped_process = "";
-                    Global.logger.LogLine("[IPCServer] Pipe connection lost");
+                    Global.logger.Info("[IPCServer] Pipe connection lost");
                 }
                 catch (Exception exc)
                 {
+                    IPCpipeStream?.Close();
+                    IPCpipeStream?.Dispose();
+
                     WrapperConnectionClosed?.Invoke(wrapped_process);
 
                     wrapper_connected = false;
                     wrapped_process = "";
-                    Global.logger.LogLine("[IPCServer] Named Pipe Exception, " + exc, Logging_Level.Error);
+                    Global.logger.Info("[IPCServer] Named Pipe Exception, " + exc);
                 }
             }
         }
@@ -331,28 +345,28 @@ namespace Aurora
                     HandleInheritability.None
                     ))
                     {
-                        Global.logger.LogLine(String.Format("[AuroraCommandsServerIPC] Pipe created {0}", IPCCommandpipeStream?.GetHashCode()));
+                        Global.logger.Info("[AuroraCommandsServerIPC] Pipe created {0}", IPCCommandpipeStream?.GetHashCode());
 
                         IPCCommandpipeStream?.WaitForConnection();
-                        Global.logger.LogLine("[AuroraCommandsServerIPC] Pipe connection established");
+                        Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection established");
 
                         using (StreamReader sr = new StreamReader(IPCCommandpipeStream))
                         {
                             string temp;
                             while ((temp = sr.ReadLine()) != null)
                             {
-                                Global.logger.LogLine("[AuroraCommandsServerIPC] Recieved command: " + temp);
+                                Global.logger.Info("[AuroraCommandsServerIPC] Recieved command: " + temp);
                                 string[] split = temp.Contains(':') ? temp.Split(':') : new[] { temp };
                                 CommandRecieved.Invoke(split[0], split.Length > 1 ? split[1] : "");
                             }
                         }
                     }
 
-                    Global.logger.LogLine("[AuroraCommandsServerIPC] Pipe connection lost");
+                    Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection lost");
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine("[AuroraCommandsServerIPC] Named Pipe Exception, " + exc, Logging_Level.Error);
+                    Global.logger.Info("[AuroraCommandsServerIPC] Named Pipe Exception, " + exc, Logging_Level.Error);
                 }
             }
         }
@@ -362,8 +376,8 @@ namespace Aurora
             switch (command)
             {
                 case "restore":
-                    Global.logger.LogLine("Initiating command restore");
-                    Program.WinApp.Dispatcher.Invoke(() => ((ConfigUI)Program.MainWindow).ShowWindow());
+                    Global.logger.Info("Initiating command restore");
+                    System.Windows.Application.Current.Dispatcher.Invoke(() => ((ConfigUI)System.Windows.Application.Current.MainWindow).ShowWindow());
                     break;
             }
         }

@@ -38,7 +38,7 @@ namespace Aurora.Profiles.Evolve
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
         {
-            Program.InstallLogitech();
+            App.InstallLogitech();
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)

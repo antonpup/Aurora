@@ -3,6 +3,8 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using Aurora.Settings;
 
 namespace Aurora.Devices.Clevo
@@ -69,7 +71,8 @@ namespace Aurora.Devices.Clevo
                     }
 
                     // Update Lights on Logon (Clevo sometimes resets the lights when you Hibernate, this would fix wrong colors)
-                    if (updateLightsOnLogon) {
+                    if (updateLightsOnLogon)
+                    {
                         sseh = new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
                         SystemEvents.SessionSwitch += sseh;
                     }
@@ -80,7 +83,7 @@ namespace Aurora.Devices.Clevo
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.LogLine("Clevo device, Exception! Message:" + ex, Logging_Level.Error);
+                    Global.logger.Error("Clevo device, Exception! Message:" + ex);
                 }
 
                 // Mark Initialized = FALSE
@@ -95,7 +98,8 @@ namespace Aurora.Devices.Clevo
         // Handle Logon Event
         void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            if (this.IsInitialized() && e.Reason.Equals(SessionSwitchReason.SessionUnlock)) { // Only Update when Logged In
+            if (this.IsInitialized() && e.Reason.Equals(SessionSwitchReason.SessionUnlock))
+            { // Only Update when Logged In
                 this.SendColorsToKeyboard(true);
             }
         }
@@ -109,7 +113,8 @@ namespace Aurora.Devices.Clevo
                 clevo.Release();
 
                 // Uninstantiate Session Switch
-                if (sseh != null) {
+                if (sseh != null)
+                {
                     SystemEvents.SessionSwitch -= sseh;
                     sseh = null;
                 }
@@ -137,21 +142,24 @@ namespace Aurora.Devices.Clevo
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false) // Is this necessary?
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false) // Is this necessary?
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
+            if (token.IsCancellationRequested) return false;
             watch.Restart();
             bool update_result = false;
 
             Dictionary<DeviceKeys, Color> keyColors = colorComposition.keyColors;
+            if (token.IsCancellationRequested) return false;
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> pair in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
                     if (useGlobalPeriphericColors)
                     {
                         if (pair.Key == DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
@@ -166,48 +174,71 @@ namespace Aurora.Devices.Clevo
                     else
                     {
                         // TouchPad (It would be nice to have a Touchpad Peripheral)
-                        if (pair.Key == DeviceKeys.Peripheral) {
+                        if (pair.Key == DeviceKeys.Peripheral)
+                        {
                             ColorTouchpad = pair.Value;
                             ColorUpdated = true;
                         }
                     }
                 }
 
-                if (!useGlobalPeriphericColors) { // Clevo 3 region keyboard
+                if (token.IsCancellationRequested) return false;
+                if (!useGlobalPeriphericColors)
+                {
+                    // Clevo 3 region keyboard
 
                     // Left Side (From ESC to Half Spacebar)
                     BitmapRectangle keymap_esc = Effects.GetBitmappingFromDeviceKey(DeviceKeys.ESC);
                     BitmapRectangle keymap_space = Effects.GetBitmappingFromDeviceKey(DeviceKeys.SPACE);
                     PointF spacebar_center = keymap_space.Center; // Key Center
 
-                    int spacebar_x = (int) spacebar_center.X - keymap_esc.Left;
+                    int spacebar_x = (int)spacebar_center.X - keymap_esc.Left;
                     int height = (int)spacebar_center.Y - keymap_esc.Top;
 
-                    BitmapRectangle region_left = new BitmapRectangle(keymap_esc.Left, keymap_esc.Top, spacebar_x, height);
-                    Color RegionLeftColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_left);
+                    BitmapRectangle region_left =
+                        new BitmapRectangle(keymap_esc.Left, keymap_esc.Top, spacebar_x, height);
+
+                    Color RegionLeftColor;
+
+                    lock (colorComposition.bitmapLock)
+                        RegionLeftColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_left);
+
                     if (!ColorKBLeft.Equals(RegionLeftColor))
                     {
                         ColorKBLeft = RegionLeftColor;
                         ColorUpdated = true;
                     }
 
+                    if (token.IsCancellationRequested) return false;
+
                     // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
                     BitmapRectangle keymap_f11 = Effects.GetBitmappingFromDeviceKey(DeviceKeys.F11);
 
                     int f11_x_width = Convert.ToInt32(keymap_f11.Center.X - spacebar_x);
 
-                    BitmapRectangle region_center = new BitmapRectangle(spacebar_x, keymap_esc.Top, f11_x_width, height);
-                    Color RegionCenterColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_center);
+                    BitmapRectangle region_center =
+                        new BitmapRectangle(spacebar_x, keymap_esc.Top, f11_x_width, height);
+
+                    Color RegionCenterColor;
+                    lock (colorComposition.bitmapLock)
+                        RegionCenterColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_center);
+
                     if (!ColorKBCenter.Equals(RegionCenterColor))
                     {
                         ColorKBCenter = RegionCenterColor;
                         ColorUpdated = true;
                     }
 
+                    if (token.IsCancellationRequested) return false;
+
                     // Right Side
                     BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
-                    BitmapRectangle region_right = new BitmapRectangle(Convert.ToInt32(keymap_f11.Center.X), keymap_esc.Top, Convert.ToInt32(keymap_numenter.Center.X - keymap_f11.Center.X), height);
-                    Color RegionRightColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
+                    BitmapRectangle region_right = new BitmapRectangle(Convert.ToInt32(keymap_f11.Center.X),
+                        keymap_esc.Top, Convert.ToInt32(keymap_numenter.Center.X - keymap_f11.Center.X), height);
+
+                    Color RegionRightColor;
+                    lock (colorComposition.bitmapLock)
+                        RegionRightColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
 
                     if (!ColorKBRight.Equals(RegionRightColor))
                     {
@@ -217,12 +248,13 @@ namespace Aurora.Devices.Clevo
 
                 }
 
+                if (token.IsCancellationRequested) return false;
                 SendColorsToKeyboard(forced);
                 update_result = true;
             }
             catch (Exception exception)
             {
-                Global.logger.LogLine("Clevo device, error when updating device. Error: " + exception, Logging_Level.Error, true);
+                Global.logger.Error("Clevo device, error when updating device. Error: " + exception);
                 update_result = false;
             }
 
@@ -230,7 +262,6 @@ namespace Aurora.Devices.Clevo
             lastUpdateTime = watch.ElapsedMilliseconds;
 
             return update_result;
-
         }
 
         private void SendColorsToKeyboard(bool forced = false)

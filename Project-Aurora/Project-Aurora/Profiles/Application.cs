@@ -61,10 +61,11 @@ namespace Aurora.Profiles
         }
     }
 
-    public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent
+    public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, IDisposable
     {
         #region Public Properties
         public bool Initialized { get; protected set; } = false;
+        public bool Disposed { get; protected set; } = false;
         public ApplicationProfile Profile { get; set; }
         public ObservableCollection<ApplicationProfile> Profiles { get; set; }
         public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
@@ -110,9 +111,11 @@ namespace Aurora.Profiles
             Config = config;
             SettingsSavePath = Path.Combine(GetProfileFolderPath(), "settings.json");
             config.Event.Application = this;
+            config.Event.ResetGameState();
             Profiles = new ObservableCollection<ApplicationProfile>();
             EffectScripts = new Dictionary<string, IEffectScript>();
-            ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
+            if (config.GameStateType != null)
+                ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
         }
 
         public bool Initialize()
@@ -143,10 +146,17 @@ namespace Aurora.Profiles
 
         public void SwitchToProfile(ApplicationProfile newProfileSettings)
         {
-            if (newProfileSettings != null)
+            if (Disposed)
+                return;
+
+            if (newProfileSettings != null && Profile != newProfileSettings)
             {
                 if (Profile != null)
+                {
+                    this.SaveProfile();
                     Profile.PropertyChanged -= Profile_PropertyChanged;
+                }
+
                 Profile = newProfileSettings;
                 this.Settings.SelectedProfile = Path.GetFileNameWithoutExtension(Profile.ProfileFilepath);
                 Profile.PropertyChanged += Profile_PropertyChanged;
@@ -163,8 +173,20 @@ namespace Aurora.Profiles
             return profile;
         }
 
+        public void AddProfile(ApplicationProfile profile)
+        {
+            if (Disposed)
+                return;
+
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            this.Profiles.Add(profile);
+        }
+
         protected void CreateDefaultProfile()
         {
+            if (Disposed)
+                return;
+
             ApplicationProfile _newProfile = CreateNewProfile("default");
 
             Profiles.Add(_newProfile);
@@ -176,6 +198,9 @@ namespace Aurora.Profiles
 
         public void SaveDefaultProfile()
         {
+            if (Disposed)
+                return;
+
             ApplicationProfile _newProfile = CreateNewProfile($"Profile {Profiles.Count + 1}");
 
             Profiles.Add(_newProfile);
@@ -187,6 +212,9 @@ namespace Aurora.Profiles
 
         public void DeleteProfile(ApplicationProfile profile)
         {
+            if (Disposed)
+                return;
+
             if (profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
             {
                 int profileIndex = Profiles.IndexOf(profile);
@@ -195,7 +223,7 @@ namespace Aurora.Profiles
                     Profiles.Remove(profile);
 
                 if (Profile.Equals(profile))
-                    SwitchToProfile(Profiles[Math.Max(profileIndex, 0)]);
+                    SwitchToProfile(Profiles[Math.Min(profileIndex, Profiles.Count - 1)]);
 
                 if (File.Exists(profile.ProfileFilepath))
                 {
@@ -205,8 +233,8 @@ namespace Aurora.Profiles
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.LogLine($"Could not delete profile with path \"{profile.ProfileFilepath}\"", Logging_Level.Error);
-                        Global.logger.LogLine($"Exception: {exc}", Logging_Level.Error, false);
+                        Global.logger.Error($"Could not delete profile with path \"{profile.ProfileFilepath}\"");
+                        Global.logger.Error($"Exception: {exc}");
                     }
                 }
 
@@ -229,6 +257,9 @@ namespace Aurora.Profiles
 
         public void ResetProfile()
         {
+            if (Disposed)
+                return;
+
             try
             {
                 Profile.Reset();
@@ -240,12 +271,15 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine(string.Format("Exception Resetting Profile, Exception: {0}", exc), Logging_Level.Error);
+                Global.logger.Error(string.Format("Exception Resetting Profile, Exception: {0}", exc));
             }
         }
 
         internal ApplicationProfile LoadProfile(string path)
         {
+            if (Disposed)
+                return null;
+
             try
             {
                 if (File.Exists(path))
@@ -295,7 +329,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
+                Global.logger.Error(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc));
                 if (Path.GetFileNameWithoutExtension(path).Equals("default"))
                 {
                     string newPath = path + ".corrupted";
@@ -307,7 +341,7 @@ namespace Aurora.Profiles
                     }
 
                     File.Move(path, newPath);
-                    this.SaveProfile(path, (ApplicationProfile)Activator.CreateInstance(Config.ProfileType));
+                    this.SaveProfile((ApplicationProfile)Activator.CreateInstance(Config.ProfileType), path);
                     MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc.Message}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -330,14 +364,17 @@ namespace Aurora.Profiles
         private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (sender is ApplicationProfile)
-                SaveProfile((sender as ApplicationProfile).ProfileFilepath, sender as ApplicationProfile);
+                SaveProfile(sender as ApplicationProfile);
         }
 
         public bool RegisterEffect(string key, IEffectScript obj)
         {
+            if (Disposed)
+                return false;
+
             if (this.EffectScripts.ContainsKey(key))
             {
-                Global.logger.LogLine(string.Format("Effect script with key {0} already exists!", key), Logging_Level.External);
+                Global.logger.Warn(string.Format("Effect script with key {0} already exists!", key));
                 return false;
             }
 
@@ -348,16 +385,25 @@ namespace Aurora.Profiles
 
         public virtual void UpdateLights(EffectFrame frame)
         {
+            if (Disposed)
+                return;
+
             this.Config.Event.UpdateLights(frame);
         }
 
         public virtual void SetGameState(IGameState state)
         {
+            if (Disposed)
+                return;
+
             this.Config.Event.SetGameState(state);
         }
 
         public virtual void ResetGameState()
         {
+            if (Disposed)
+                return;
+
             Config.Event.ResetGameState();
         }
 
@@ -425,12 +471,12 @@ namespace Aurora.Profiles
                                         if (obj != null)
                                         {
                                             if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                                Global.logger.LogLine($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}", Logging_Level.External);
+                                                Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
                                             else
                                                 anyLoaded = true;
                                         }
                                         else
-                                            Global.logger.LogLine($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
+                                            Global.logger.Error($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
                                     }
                                 }
                             }
@@ -446,7 +492,7 @@ namespace Aurora.Profiles
                                 {
                                     IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
                                     if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                        Global.logger.LogLine(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName), Logging_Level.External);
+                                        Global.logger.Warn(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName));
                                     else
                                         anyLoaded = true;
                                 }
@@ -454,16 +500,16 @@ namespace Aurora.Profiles
 
                             break;
                         default:
-                            Global.logger.LogLine(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext), Logging_Level.External);
+                            Global.logger.Warn(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext));
                             continue;
                     }
 
                     if (!anyLoaded)
-                        Global.logger.LogLine($"Script \"{script}\": No compatible effects found. Does this script need to be updated?", Logging_Level.External);
+                        Global.logger.Warn($"Script \"{script}\": No compatible effects found. Does this script need to be updated?");
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc, Logging_Level.External));
+                    Global.logger.Error(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc));
                     //Maybe MessageBox info dialog could be included.
                 }
             }
@@ -516,7 +562,7 @@ namespace Aurora.Profiles
             }
             else
             {
-                Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Config.Name), Logging_Level.Info, false);
+                Global.logger.Info(string.Format("Profiles directory for {0} does not exist.", Config.Name));
             }
 
             if (Profile == null)
@@ -529,10 +575,18 @@ namespace Aurora.Profiles
 
         }
 
-        internal virtual void SaveProfile(string path, ApplicationProfile profile)
+        public virtual void SaveProfile()
         {
+            SaveProfile(this.Profile);
+        }
+
+        public virtual void SaveProfile(ApplicationProfile profile, string path = null)
+        {
+            if (Disposed)
+                return;
             try
             {
+                path = path ?? Path.Combine(GetProfileFolderPath(), profile.ProfileFilepath);
                 JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder };
                 string content = JsonConvert.SerializeObject(profile, Formatting.Indented, settings);
 
@@ -542,7 +596,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
+                Global.logger.Error(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc));
             }
         }
 
@@ -553,6 +607,9 @@ namespace Aurora.Profiles
 
         public virtual void SaveProfiles()
         {
+            if (Disposed)
+                return;
+
             try
             {
                 string profiles_path = GetProfileFolderPath();
@@ -564,17 +621,20 @@ namespace Aurora.Profiles
 
                 foreach (var profile in Profiles)
                 {
-                    SaveProfile(Path.Combine(profiles_path, profile.ProfileFilepath), profile);
+                    SaveProfile(profile, Path.Combine(profiles_path, profile.ProfileFilepath));
                 }
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Exception during SaveProfiles, " + exc, Logging_Level.Error);
+                Global.logger.Error("Exception during SaveProfiles, " + exc);
             }
         }
 
         public virtual void SaveAll()
         {
+            if (Disposed)
+                return;
+
             SaveSettings(Config.SettingsType);
             SaveProfiles();
         }
@@ -590,7 +650,13 @@ namespace Aurora.Profiles
 
         public void Dispose()
         {
+            if (Disposed)
+                return;
 
+            foreach (ApplicationProfile profile in this.Profiles)
+                profile.Dispose();
+
+            Disposed = true;
         }
     }
 }

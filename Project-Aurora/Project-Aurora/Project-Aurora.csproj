@@ -30,7 +30,8 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Aurora.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\aurora_icon.ico</ApplicationIcon>
@@ -140,6 +141,9 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Pranas.ScreenshotCapture, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Pranas.ScreenshotCapture.1.0.11\lib\net40\Pranas.ScreenshotCapture.dll</HintPath>
       <Private>True</Private>
@@ -188,6 +192,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigUI.xaml.cs">
       <DependentUpon>ConfigUI.xaml</DependentUpon>
     </Compile>
@@ -281,6 +288,18 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
+    <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
+    <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
+    <Compile Include="Profiles\Generic\WrapperProfile.cs" />
+    <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
+    <Compile Include="Settings\Layers\Control_WrapperLightsLayer.xaml.cs">
+      <DependentUpon>Control_WrapperLightsLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\WrapperLightsLayerHandler.cs" />
+    <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
+      <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
@@ -289,13 +308,11 @@
     <Compile Include="Profiles\BF3\Control_BF3.xaml.cs">
       <DependentUpon>Control_BF3.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\BF3\GameEvent_BF3.cs" />
     <Compile Include="Profiles\Blacklight\BLightApplication.cs" />
     <Compile Include="Profiles\Blacklight\BLightProfile.cs" />
     <Compile Include="Profiles\Blacklight\Control_BLight.xaml.cs">
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Application.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Pointers.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Profile.cs" />
@@ -336,7 +353,6 @@
     </Compile>
     <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballProfile.cs" />
     <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballApplication.cs" />
-    <Compile Include="Profiles\DiscoDodgeball\GameEvent_DiscoDodgeball.cs" />
     <Compile Include="Profiles\Dota 2\Dota2Application.cs" />
     <Compile Include="Profiles\Dota 2\Layers\Control_Dota2AbilityLayer.xaml.cs">
       <DependentUpon>Control_Dota2AbilityLayer.xaml</DependentUpon>
@@ -375,7 +391,6 @@
     </Compile>
     <Compile Include="Profiles\Evolve\EvolveApplication.cs" />
     <Compile Include="Profiles\Evolve\EvolveProfile.cs" />
-    <Compile Include="Profiles\Evolve\GameEvent_Evolve.cs" />
     <Compile Include="Profiles\Generic_Application\Control_GenericApplication.xaml.cs">
       <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
     </Compile>
@@ -390,38 +405,30 @@
     <Compile Include="Profiles\Guild Wars 2\Control_GW2.xaml.cs">
       <DependentUpon>Control_GW2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Guild Wars 2\GameEvent_GW2.cs" />
     <Compile Include="Profiles\Guild Wars 2\GW2Application.cs" />
     <Compile Include="Profiles\Guild Wars 2\GW2Profile.cs" />
     <Compile Include="Profiles\Blade and Soul\Control_BnS.xaml.cs">
       <DependentUpon>Control_BnS.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Blade and Soul\GameEvent_BnS.cs" />
     <Compile Include="Profiles\Blade and Soul\BnSApplication.cs" />
-    <Compile Include="Profiles\Blade and Soul\BnSProfile.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\HotlineMiami\GameEvent_HM.cs" />
     <Compile Include="Profiles\HotlineMiami\HMApplication.cs" />
     <Compile Include="Profiles\HotlineMiami\HMProfile.cs" />
     <Compile Include="Profiles\LeagueOfLegends\Control_LoL.xaml.cs">
       <DependentUpon>Control_LoL.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLApplication.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLProfile.cs" />
     <Compile Include="Profiles\Aurora Wrapper\GameEvent_Aurora_Wrapper.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml.cs">
       <DependentUpon>Control_MagicDuels2012.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Magic_Duels_2012\GameEvent_MagicDuels2012.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Application.cs" />
-    <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Profile.cs" />
     <Compile Include="Profiles\Metro Last Light\Control_MetroLL.xaml.cs">
       <DependentUpon>Control_MetroLL.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Metro Last Light\GameEvent_MetroLL.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
@@ -453,19 +460,14 @@
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Worms_WMD\GameEvent_WormsWMD.cs" />
     <Compile Include="Profiles\Worms_WMD\WormsWMDApplication.cs" />
-    <Compile Include="Profiles\Worms_WMD\WormsWMDProfile.cs" />
     <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
       <DependentUpon>Control_Overwatch.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Overwatch\GameEvent_Overwatch.cs" />
     <Compile Include="Profiles\Overwatch\OverwatchApplication.cs" />
-    <Compile Include="Profiles\Overwatch\OverwatchProfile.cs" />
     <Compile Include="Profiles\Payday 2\Control_PD2.xaml.cs">
       <DependentUpon>Control_PD2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Payday 2\GameEvent_PD2.cs" />
     <Compile Include="Profiles\Payday 2\GSI\GameState_PD2.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\GameNode.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\ItemNode.cs" />
@@ -489,29 +491,29 @@
     <Compile Include="Profiles\Serious Sam 3\Control_SSam3.xaml.cs">
       <DependentUpon>Control_SSam3.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Serious Sam 3\GameEvent_SSam3.cs" />
     <Compile Include="Profiles\Serious Sam 3\SSam3Application.cs" />
     <Compile Include="Profiles\Serious Sam 3\SSam3Profile.cs" />
     <Compile Include="Profiles\ShadowOfMordor\Control_ShadowOfMordor.xaml.cs">
       <DependentUpon>Control_ShadowOfMordor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\ShadowOfMordor\GameEvent_ShadowOfMordor.cs" />
     <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorApplication.cs" />
     <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorProfile.cs" />
     <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\TheDivision\TheDivisionApplication.cs" />
+    <Compile Include="Profiles\DyingLight\Control_DyingLight.xaml.cs">
+      <DependentUpon>Control_DyingLight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DyingLight\DyingLightApplication.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
       <DependentUpon>Control_TalosPrinciple.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\TheTalosPrinciple\GameEvent_TalosPrinciple.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleApplication.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleProfile.cs" />
     <Compile Include="Profiles\XCOM\Control_XCOM.xaml.cs">
       <DependentUpon>Control_XCOM.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\XCOM\GameEvent_XCOM.cs" />
     <Compile Include="Profiles\XCOM\XCOMApplication.cs" />
     <Compile Include="Profiles\XCOM\XCOMProfile.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -645,6 +647,12 @@
     <None Include="kb_layouts\Extra Features\steelseries_apex_m800_left_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\steelseries_apex_m750_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\steelseries_apex_m750_tkl_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\steelseries_apex_m800_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -658,6 +666,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.tr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.abnt2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.dvorak.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.dvorak_int.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\razer_blade.json">
@@ -729,7 +746,6 @@
       <DependentUpon>Control_CSGO.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\CSGO\CSGOProfile.cs" />
-    <Compile Include="Profiles\CSGO\GameEvent_CSGO.cs" />
     <Compile Include="Profiles\CSGO\GSI\GameState_CSGO.cs" />
     <Compile Include="Profiles\CSGO\GSI\Nodes\AllPlayersNode.cs" />
     <Compile Include="Profiles\CSGO\GSI\Nodes\AuthNode.cs" />
@@ -752,7 +768,6 @@
       <DependentUpon>Control_Dota2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Dota 2\Dota2Profile.cs" />
-    <Compile Include="Profiles\Dota 2\GameEvent_Dota2.cs" />
     <Compile Include="Profiles\Dota 2\GSI\GameState_Dota2.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Abilities.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Ability.cs" />
@@ -764,7 +779,6 @@
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Map.cs" />
     <Compile Include="Profiles\LightEvent.cs" />
     <Compile Include="Profiles\GameState_Wrapper.cs" />
-    <Compile Include="Profiles\GTA5\GameEvent_GTA5.cs" />
     <Compile Include="Profiles\GTA5\GSI\GameState_GTA5.cs" />
     <Compile Include="Profiles\GTA5\GTA5Profile.cs" />
     <Compile Include="Profiles\Node.cs" />
@@ -892,7 +906,6 @@
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -919,6 +932,16 @@
     <None Include="kb_layouts\steelseries_apex_m800.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\steelseries_apex_m750_tkl.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\steelseries_apex_m750.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -934,6 +957,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
     <Page Include="ConfigUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1170,6 +1197,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\DyingLight\Control_DyingLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Worms_WMD\Control_WormsWMD.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1299,6 +1334,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Layers\Control_ImageLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_WrapperLightsLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1469,7 +1508,7 @@
     <Content Include="kb_layouts\Extra Features\images\Sabre_scrollwheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Apex_M800_logo.png">
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Apex_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="LogitechLed.dll">
@@ -1489,6 +1528,8 @@
     <Resource Include="Resources\Save_Icon.png" />
     <Resource Include="Resources\FreeForm_ManualColor.png" />
     <Resource Include="Resources\Borderlands2_256x256.png" />
+    <Resource Include="Resources\rot_tombraider.png" />
+    <Resource Include="Resources\dl_128x128.png" />
     <Content Include="Resources\SteelSeriesInstall\Step1.png" />
     <Content Include="Resources\SteelSeriesInstall\Step2.png" />
     <Content Include="SDKDLL.dll">

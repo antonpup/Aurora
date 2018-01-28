@@ -71,7 +71,7 @@ namespace Aurora.Settings
         }
     }
 
-    public class ApplicationProfile : Settings
+    public class ApplicationProfile : Settings, IDisposable
     {
         #region Private Properties
         private string _ProfileName = "";
@@ -106,6 +106,12 @@ namespace Aurora.Settings
             _Layers = new ObservableCollection<Layer>();
             _ScriptSettings = new Dictionary<string, Aurora.Settings.ScriptSettings>();
             _triggerKeybind = new Keybind();
+        }
+
+        public virtual void Dispose()
+        {
+            foreach (Layer l in _Layers)
+                l.Dispose();
         }
     }
 }

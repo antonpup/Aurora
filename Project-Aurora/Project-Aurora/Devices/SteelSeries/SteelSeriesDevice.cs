@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using Aurora.Settings;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using SteelSeries.GameSenseSDK;
 
 namespace Aurora.Devices.SteelSeries
@@ -62,7 +64,7 @@ namespace Aurora.Devices.SteelSeries
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.LogLine("SteelSeries GameSense SDK could not be initialized: " + ex, Logging_Level.Error);
+                        Global.logger.Error("SteelSeries GameSense SDK could not be initialized: " + ex);
 
                         isInitialized = false;
                         return false;
@@ -88,7 +90,7 @@ namespace Aurora.Devices.SteelSeries
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.LogLine("There was an error shutting down SteelSeries GameSense SDK: " + ex, Logging_Level.Error);
+                    Global.logger.Error("There was an error shutting down SteelSeries GameSense SDK: " + ex);
                     isInitialized = false;
                 }
 
@@ -138,29 +140,38 @@ namespace Aurora.Devices.SteelSeries
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
         {
+            if (token.IsCancellationRequested) return false;
+
             try
             {
                 // workaround for heartbeat/keepalive events every 10sec
                 SendKeepalive();
+
+                if (token.IsCancellationRequested) return false;
 
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
                     //CorsairLedId localKey = ToCorsair(key.Key);
 
                     Color color = (Color)key.Value;
                     //Apply and strip Alpha
-                    color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+                    color = Color.FromArgb(255,
+                        Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
+                    if (token.IsCancellationRequested) return false;
                     if (key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(color, forced);
                     }
-                    else if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_FrontLight || key.Key == DeviceKeys.Peripheral_ScrollWheel)
+                    else if (key.Key == DeviceKeys.Peripheral_Logo ||
+                             key.Key == DeviceKeys.Peripheral_FrontLight ||
+                             key.Key == DeviceKeys.Peripheral_ScrollWheel)
                     {
                         SendColorToPeripheralZone(key.Key, color);
                     }
@@ -176,22 +187,23 @@ namespace Aurora.Devices.SteelSeries
                     }
                 }
 
+                if (token.IsCancellationRequested) return false;
                 SendColorsToKeyboard(hids, colors);
 
                 return true;
             }
             catch (Exception ex)
             {
-                Global.logger.LogLine("SteelSeries GameSense SDK, error when updating device: " + ex, Logging_Level.Error);
+                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
@@ -267,7 +279,7 @@ namespace Aurora.Devices.SteelSeries
                 else if (zone == DeviceKeys.Peripheral_FrontLight)
                 {
                     //NYI
-                    Global.logger.LogLine("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone, Logging_Level.Error);
+                    Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
                 }
                 /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
                 {

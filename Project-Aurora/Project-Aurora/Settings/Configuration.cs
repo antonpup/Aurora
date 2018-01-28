@@ -201,6 +201,10 @@ namespace Aurora.Settings
         //Steelseries range is 700-799
         [Description("SteelSeries Apex M800")]
         SteelSeries_Apex_M800 = 700,
+        [Description("SteelSeries Apex M750")]
+        SteelSeries_Apex_M750 = 701,
+        [Description("SteelSeries Apex M750 TKL")]
+        SteelSeries_Apex_M750_TKL = 702
     }
 
     public enum PreferredKeyboardLocalization
@@ -226,7 +230,13 @@ namespace Aurora.Settings
         [Description("Nordic")]
         nordic = 9,
         [Description("Swiss")]
-        swiss = 10
+        swiss = 10,
+        [Description("Portuguese (Brazilian ABNT2)")]
+        abnt2 = 11,
+        [Description("DVORAK (US)")]
+        dvorak = 12,
+        [Description("DVORAK (INT)")]
+        dvorak_int = 13
     }
 
     public enum PreferredMouse
@@ -318,11 +328,13 @@ namespace Aurora.Settings
         private bool getDevReleases = false;
         public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
 
+        private bool highPriority = false;
+        public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
+
         private bool showDefaultLightingOnDisabled = false;
         public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
 
         public bool updates_check_on_start_up;
-        public bool updates_allow_silent_minor;
         public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
@@ -387,7 +399,6 @@ namespace Aurora.Settings
             KeyboardBrightness = 1.0f;
             peripheralBrightness = 1.0f;
             updates_check_on_start_up = true;
-            updates_allow_silent_minor = true;
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
@@ -476,8 +487,6 @@ namespace Aurora.Settings
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
-
-            Global.LightingStateManager.SaveAll();
         }
 
         private static Configuration CreateDefaultConfigurationFile()

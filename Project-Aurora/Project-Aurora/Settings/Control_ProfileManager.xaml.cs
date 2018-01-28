@@ -56,13 +56,12 @@ namespace Aurora.Settings
             {
                 Profiles.Application prof = ((Profiles.Application)e.OldValue);
                 prof.ProfileChanged -= self.UpdateProfiles;
-                prof.SaveProfiles();
+                //prof.SaveProfiles();
 
                 if (self.LastSelectedProfile.ContainsKey(prof))
                     self.LastSelectedProfile.Remove(prof);
 
                 self.LastSelectedProfile.Add(prof, self.lstProfiles.SelectedItem as ApplicationProfile);
-
             }
             self.UpdateProfiles();
             if (e.NewValue != null)
@@ -84,6 +83,9 @@ namespace Aurora.Settings
         public void UpdateProfiles(object sender, EventArgs e)
         {
             this.lstProfiles.ItemsSource = this.FocusedApplication?.Profiles;
+            lstProfiles.Items.SortDescriptions.Add(
+            new System.ComponentModel.SortDescription("ProfileName",
+            System.ComponentModel.ListSortDirection.Ascending));
             this.lstProfiles.SelectedItem = this.FocusedApplication?.Profiles.First((profile) => System.IO.Path.GetFileNameWithoutExtension(profile.ProfileFilepath).Equals(this.FocusedApplication?.Settings.SelectedProfile));
         }
 
@@ -104,8 +106,6 @@ namespace Aurora.Settings
                 else
                     this.btnDeleteProfile.IsEnabled = false;
             }
-            else if (e.RemovedItems.Count > 0)
-                this.FocusedApplication?.SaveProfiles();
         }
 
         private void btnNewProfile_Click(object sender, RoutedEventArgs e)
@@ -158,7 +158,7 @@ namespace Aurora.Settings
                     ApplicationProfile prof = (ApplicationProfile)((ApplicationProfile)Global.Clipboard)?.Clone();
                     prof.ProfileName += " - Copy";
 
-                    FocusedApplication.Profiles.Insert(0, prof);
+                    FocusedApplication.AddProfile(prof);
 
                     FocusedApplication.SaveProfiles();
                 }
@@ -789,7 +789,7 @@ namespace Aurora.Settings
                                     else
                                     {
                                         //Null, it's unknown.
-                                        Global.logger.LogLine("Unknown CUE Layer Type");
+                                        Global.logger.Warn("Unknown CUE Layer Type");
                                     }
                                 }
 

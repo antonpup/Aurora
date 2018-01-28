@@ -1,6 +1,6 @@
-[submodule "NAudio"]
-	path = NAudio
-	url = https://github.com/naudio/NAudio.git
+[submodule "NAudio"] 
+  path = NAudio 
+  url = https://github.com/naudio/NAudio.git 
 [submodule "GlobalMouseKeyHook"]
 	path = GlobalMouseKeyHook
 	url = https://github.com/DogeAmazed/globalmousekeyhook.git

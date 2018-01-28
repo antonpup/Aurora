@@ -3,7 +3,7 @@
   "origin_region": 1,
   "grouped_keys": [
     {
-      "visualName": "G1",
+      "visualName": "M1",
       "tag": 108,
       "margin_left": -38.0,
       "margin_top": 37.0,
@@ -18,7 +18,7 @@
       "absolute_location": true
     },
     {
-      "visualName": "G2",
+      "visualName": "M2",
       "tag": 109,
       "margin_left": -38.0,
       "margin_top": 74.0,
@@ -33,7 +33,7 @@
       "absolute_location": true
     },
     {
-      "visualName": "G3",
+      "visualName": "M3",
       "tag": 110,
       "margin_left": -38.0,
       "margin_top": 111.0,
@@ -48,7 +48,7 @@
       "absolute_location": true
     },
     {
-      "visualName": "G4",
+      "visualName": "M4",
       "tag": 111,
       "margin_left": -38.0,
       "margin_top": 148.0,
@@ -63,7 +63,7 @@
       "absolute_location": true
     },
     {
-      "visualName": "G5",
+      "visualName": "M5",
       "tag": 112,
       "margin_left": -38.0,
       "margin_top": 185.0,

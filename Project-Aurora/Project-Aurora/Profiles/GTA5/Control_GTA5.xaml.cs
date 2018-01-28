@@ -85,11 +85,11 @@ namespace Aurora.Profiles.GTA5
         {
             try
             {
-                Program.InstallLogitech();
+                App.InstallLogitech();
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine("Could not start Aurora Logitech Patcher. Error: " + exc, Logging_Level.Error);
+                Global.logger.Error("Could not start Aurora Logitech Patcher. Error: " + exc);
             }
         }
 
