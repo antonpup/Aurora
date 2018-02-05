@@ -428,7 +428,7 @@ namespace Aurora.Devices.CoolerMaster
                     DeviceKeys dev_key = key.Key;
 
                     if (dev_key == DeviceKeys.ENTER &&
-                        (Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us ||
+                        (Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us &&
                          Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.dvorak))
                         dev_key = DeviceKeys.BACKSLASH;
 
