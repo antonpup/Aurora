@@ -228,8 +228,8 @@ namespace Aurora.EffectsEngine
                             (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height, Effects.canvas_height);
                         }
 
-                        (brush as LinearGradientBrush).TranslateTransform(shift, shift);
                         (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
+                        (brush as LinearGradientBrush).TranslateTransform(shift, shift);
                     }
                     else if (effect_config.brush.type == EffectBrush.BrushType.Radial)
                     {
