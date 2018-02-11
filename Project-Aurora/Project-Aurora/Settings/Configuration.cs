@@ -334,6 +334,9 @@ namespace Aurora.Settings
         private bool showDefaultLightingOnDisabled = false;
         public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
 
+        private int bitmapAccuracy = 12;
+        public int BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
+
         public bool updates_check_on_start_up;
         public bool start_silently;
         public AppExitMode close_mode;

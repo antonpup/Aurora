@@ -276,7 +276,7 @@ namespace Aurora
 
                 Global.logger.Info("Loading KB Layouts");
                 Global.kbLayout = new KeyboardLayoutManager();
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
 
                 Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();
