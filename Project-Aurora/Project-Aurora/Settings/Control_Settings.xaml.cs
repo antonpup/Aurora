@@ -991,8 +991,8 @@ namespace Aurora.Settings
 
                 winBitmapView = new Window();
                 winBitmapView.Closed += WinBitmapView_Closed;
-                winBitmapView.ResizeMode = ResizeMode.NoResize;
-                winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
+                winBitmapView.ResizeMode = ResizeMode.CanResize;
+                //winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
 
                 winBitmapView.Title = "Keyboard Bitmap View";
                 winBitmapView.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
@@ -1001,10 +1001,10 @@ namespace Aurora.Settings
                 imgBitmap.SnapsToDevicePixels = true;
                 imgBitmap.HorizontalAlignment = HorizontalAlignment.Stretch;
                 imgBitmap.VerticalAlignment = VerticalAlignment.Stretch;
+                /*imgBitmap.MinWidth = 0;
+                imgBitmap.MinHeight = 0;*/
                 imgBitmap.MinWidth = Effects.canvas_width;
                 imgBitmap.MinHeight = Effects.canvas_height;
-                imgBitmap.Width = Effects.canvas_width * 4;
-                imgBitmap.Height = Effects.canvas_height * 4;
 
                 winBitmapView.Content = imgBitmap;
 

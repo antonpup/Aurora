@@ -8,7 +8,7 @@
              xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
              xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
@@ -88,6 +88,16 @@
             <EnumValueConverters:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
             <DataTemplate x:Key="KeycapTypeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource KeycapTypeToStringVC}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="BitmapAccuracy" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:BitmapAccuracy" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
+            <DataTemplate x:Key="BitmapAccuracyTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource BitmapAccuracyToStringVC}}" />
             </DataTemplate>
 
             <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -245,9 +255,9 @@
                     <CheckBox x:Name="devices_disable_keyboard_lighting" Content="Disable Keyboard Lighting" Margin="465,106,215,146" Checked="devices_disable_keyboard_lighting_Checked" Unchecked="devices_disable_keyboard_lighting_Checked" />
                     <CheckBox x:Name="devices_disable_mouse_lighting" Content="Disable Mouse Lighting" Margin="465,127,215,125" Checked="devices_disable_mouse_lighting_Checked" Unchecked="devices_disable_mouse_lighting_Checked" />
                     <CheckBox x:Name="devices_disable_headset_lighting" Content="Disable Headset Lighting" Margin="465,148,215,104" Checked="devices_disable_headset_lighting_Checked" Unchecked="devices_disable_headset_lighting_Checked" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,161,0,0" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how close the bitmap (used for rendering effects over devices) is to the virutal layout. Lower will mean that freestyle will be more accurate at the cost of memory and cpu usage"/>
-                    <TextBlock x:Name="lblBitmapAccuracy" HorizontalAlignment="Left" Margin="298,161,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
-                    <Slider x:Name="sldBitmapAccuracy" HorizontalAlignment="Left" Margin="141,161,0,0" VerticalAlignment="Top" Width="150" Maximum="15" ValueChanged="slider_ValueChanged" Value="{Binding BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblBitmapAccuracy, Path=.}" Minimum="1" SmallChange="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,161,0,0" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
+                    <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="141,161,0,0" VerticalAlignment="Top" Width="218" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
                 </Grid>
             </TabItem>
             <TabItem Header="Device Manager">
@@ -280,7 +290,7 @@
             <TabItem Header="Debug">
                 <Grid>
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Current Keyboard bitmap:" VerticalAlignment="Top"/>
-                    <Image x:Name="debug_bitmap_preview" HorizontalAlignment="Left" Margin="152,10,0,0" VerticalAlignment="Top"/>
+                    <Image x:Name="debug_bitmap_preview" HorizontalAlignment="Left" Margin="152,10,0,0" VerticalAlignment="Top" MaxWidth="400" MaxHeight="400"/>
                     <Button x:Name="btnShowBitmapWindow" Content="Show Bitmap Window" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="btnShowBitmapWindow_Click"/>
                     <Button x:Name="btnShowLogsFolder" Content="Show Logs Folder" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Click="btnShowLogsFolder_Click"/>
                     <Button Content="Record" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" IsEnabled="False" Visibility="Collapsed"/>

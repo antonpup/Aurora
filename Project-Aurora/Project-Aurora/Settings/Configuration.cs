@@ -295,6 +295,15 @@ namespace Aurora.Settings
         ForegroroundApp = 1
     }
 
+    public enum BitmapAccuracy
+    {
+        Best = 1,
+        Great = 3,
+        Good = 6,
+        Okay = 9,
+        Fine = 12
+    }
+
     public class Configuration : Settings
     {
         //First Time Installs
@@ -334,8 +343,8 @@ namespace Aurora.Settings
         private bool showDefaultLightingOnDisabled = false;
         public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
 
-        private int bitmapAccuracy = 12;
-        public int BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
+        private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
+        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
 
         public bool updates_check_on_start_up;
         public bool start_silently;

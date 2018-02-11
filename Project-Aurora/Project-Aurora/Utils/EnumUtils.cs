@@ -150,6 +150,11 @@ namespace Aurora.Utils
         public MouseBrandToStringVC() : base(PreferredMouse.None) { }
     }
 
+    public class BitmapAccuracyToStringVC : EnumToStringVC
+    {
+        public BitmapAccuracyToStringVC() : base(BitmapAccuracy.Okay) { }
+    }
+
     public class MouseOrientationToStringVC : EnumToStringVC
     {
         public MouseOrientationToStringVC() : base(MouseOrientationType.RightHanded) { }
