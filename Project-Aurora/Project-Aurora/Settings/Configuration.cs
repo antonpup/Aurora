@@ -195,8 +195,8 @@ namespace Aurora.Settings
         Masterkeys_Pro_M = 502,
 
         //Roccat range is 600-699
-        //[Description("Roccat Ryos")]
-        //Roccat_Ryos = 600
+        [Description("Roccat Ryos")]
+        Roccat_Ryos = 600,
 
         //Steelseries range is 700-799
         [Description("SteelSeries Apex M800")]
