@@ -274,17 +274,23 @@ namespace Aurora.Devices.CoolerMaster
 
                     try
                     {
-                        foreach (CoolerMasterSDK.DEVICE_INDEX device in Enum.GetValues(typeof(CoolerMasterSDK.DEVICE_INDEX)))
+                        //foreach (CoolerMasterSDK.DEVICE_INDEX device in Enum.GetValues(typeof(CoolerMasterSDK.DEVICE_INDEX)))
+                        //Temporary switch to only take control of Keyboards until mice support is added
+                        foreach (CoolerMasterSDK.DEVICE_INDEX device in CoolerMasterSDK.Keyboards)
                         {
-                            if (device != CoolerMasterSDK.DEVICE_INDEX.None)
+                            if (device != CoolerMasterSDK.DEVICE_INDEX.None && device != CoolerMasterSDK.DEVICE_INDEX.DEV_DEFAULT)
                             {
                                 try
                                 {
-                                    bool init = SwitchToDevice(device);
-                                    if (init)
+                                    if (CoolerMasterSDK.IsDevicePlug(device))
                                     {
-                                        InitializedDevices.Add(device);
-                                        isInitialized = true;
+                                        if (CoolerMasterSDK.EnableLedControl(true, device))
+                                        {
+                                            InitializedDevices.Add(device);
+                                            isInitialized = true;
+                                            //Breaking to only get the first keyboard and leave any others to be controlled by the normal software
+                                            break;
+                                        }
                                     }
                                 }
                                 catch (Exception exc)
@@ -297,7 +303,7 @@ namespace Aurora.Devices.CoolerMaster
 
                         List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
                         if (devices.Count > 0)
-                            SwitchToDevice(devices.First());
+                            CoolerMasterSDK.SetControlDevice(devices.First());
                     }
                     catch (Exception exc)
                     {
@@ -314,21 +320,24 @@ namespace Aurora.Devices.CoolerMaster
             }
         }
 
-        protected bool SwitchToDevice(CoolerMasterSDK.DEVICE_INDEX device)
+        /*protected bool SwitchToDevice(CoolerMasterSDK.DEVICE_INDEX device)
         {
             if (CurrentDevice == device)
                 return true;
 
             bool init = false;
-            CoolerMasterSDK.SetControlDevice(device);
-            CurrentDevice = device;
-            if (CoolerMasterSDK.IsDevicePlug() && CoolerMasterSDK.EnableLedControl(true))
+            if (!CoolerMasterSDK.IsDevicePlug(device))
+                return false;
+
+            //CoolerMasterSDK.SetControlDevice(device);
+            if (CoolerMasterSDK.EnableLedControl(true, device))
             {
                 init = true;
+                CurrentDevice = device;
             }
 
             return init;
-        }
+        }*/
 
         public void Shutdown()
         {
