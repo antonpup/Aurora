@@ -109,7 +109,7 @@ namespace CoolerMaster
         [StructLayout(LayoutKind.Sequential)]
         public struct COLOR_MATRIX
         {
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.Struct)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_LED_ROW * MAX_LED_COLUMN, ArraySubType = UnmanagedType.Struct)]
             public KEY_COLOR[,] KeyColor;
         }
 
