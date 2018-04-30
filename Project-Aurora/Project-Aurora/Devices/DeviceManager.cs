@@ -28,7 +28,7 @@ namespace Aurora.Devices
             Worker.DoWork += WorkerOnDoWork;
             Worker.RunWorkerCompleted += (sender, args) =>
             {
-                if (newFrame)
+                if (newFrame && !Worker.IsBusy)
                     Worker.RunWorkerAsync();
             };
             Worker.WorkerSupportsCancellation = true;
