@@ -881,10 +881,6 @@ namespace Aurora.Settings
 
                 foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
                 {
-                    //Top left x and y
-                    if (key.tag == DeviceKeys.Profile_Key4)
-                        Console.WriteLine();
-
                     int width = PixelToByte(key.width.Value);
                     int height = PixelToByte(key.height.Value);
                     int x_offset = PixelToByte(key.margin_left.Value);
