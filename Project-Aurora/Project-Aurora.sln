@@ -31,8 +31,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorBox", "ColorBox\ColorB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin-Example", "Plugin-Example\Plugin-Example.csproj", "{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAudio", "..\NAudio\NAudio\NAudio.csproj", "{DA4F02E3-0B5E-42CD-B8D9-5583FA51D66E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseKeyHook", "..\GlobalMouseKeyHook\MouseKeyHook\MouseKeyHook.csproj", "{F52AA97E-180A-40ED-8F2B-09080171D6C7}"
 EndProject
 Global
@@ -77,10 +75,6 @@ Global
 		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Debug|x64.Build.0 = Debug|Any CPU
 		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|x64.ActiveCfg = Release|Any CPU
 		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|x64.Build.0 = Release|Any CPU
-		{DA4F02E3-0B5E-42CD-B8D9-5583FA51D66E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DA4F02E3-0B5E-42CD-B8D9-5583FA51D66E}.Debug|x64.Build.0 = Debug|Any CPU
-		{DA4F02E3-0B5E-42CD-B8D9-5583FA51D66E}.Release|x64.ActiveCfg = Release|Any CPU
-		{DA4F02E3-0B5E-42CD-B8D9-5583FA51D66E}.Release|x64.Build.0 = Release|Any CPU
 		{F52AA97E-180A-40ED-8F2B-09080171D6C7}.Debug|x64.ActiveCfg = Debug|x64
 		{F52AA97E-180A-40ED-8F2B-09080171D6C7}.Debug|x64.Build.0 = Debug|x64
 		{F52AA97E-180A-40ED-8F2B-09080171D6C7}.Release|x64.ActiveCfg = Release|x64
@@ -88,5 +82,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {490F6EB6-991A-412C-B8F2-336A989F162A}
 	EndGlobalSection
 EndGlobal

@@ -119,10 +119,6 @@ namespace Aurora.Settings
 
         public RectangleF Region { get { return _region; } }
 
-        private Rectangle _region_bitmap = new Rectangle(0, 0, 0, 0);
-
-        public Rectangle BitmapRegion { get { return _region_bitmap; } }
-
         [JsonProperty("key_conversion")]
         public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
 
@@ -138,10 +134,10 @@ namespace Aurora.Settings
             double current_height = 0;
             double current_width = 0;
 
-            int width_bit = 0;
+            /*int width_bit = 0;
             int height_bit = 0;
             int width_bit_max = 1;
-            int height_bit_max = 1;
+            int height_bit_max = 1;*/
 
             foreach (var key in keys)
             {
@@ -168,7 +164,7 @@ namespace Aurora.Settings
                     layout_height = current_height;
 
 
-                int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
+                /*int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
                 int key_tlx = KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + width_bit;
 
                 int key_bry = key_tly + KeyboardLayoutManager.PixelToByte(key.height.Value);
@@ -180,22 +176,22 @@ namespace Aurora.Settings
 
                 if (key.line_break.Value)
                 {
-                    height_bit += 3;
+                    height_bit += KeyboardLayoutManager.PixelToByte(37);
                     width_bit = 0;
                 }
                 else
                 {
                     width_bit = key_brx;
                     height_bit = key_tly;
-                }
+                }*/
 
             }
 
             _region.Width = (float)layout_width;
             _region.Height = (float)layout_height;
 
-            _region_bitmap.Width = width_bit_max;
-            _region_bitmap.Height = height_bit_max;
+            /*_region_bitmap.Width = width_bit_max;
+            _region_bitmap.Height = height_bit_max;*/
 
             //NormalizeKeys();
         }
@@ -210,25 +206,25 @@ namespace Aurora.Settings
             if (insertion_region == KeyboardRegion.TopRight)
             {
                 location_x = _region.Width;
-                location_x_bit = _region_bitmap.Width;
+                //location_x_bit = _region_bitmap.Width;
             }
             else if (insertion_region == KeyboardRegion.BottomLeft)
             {
                 location_y = _region.Height;
-                location_y_bit = _region_bitmap.Height;
+                //location_y_bit = _region_bitmap.Height;
             }
             else if (insertion_region == KeyboardRegion.BottomRight)
             {
                 location_x = _region.Width;
                 location_y = _region.Height;
-                location_x_bit = _region_bitmap.Width;
-                location_y_bit = _region_bitmap.Height;
+                //location_x_bit = _region_bitmap.Width;
+                //location_y_bit = _region_bitmap.Height;
             }
 
             float added_width = 0.0f;
             float added_height = 0.0f;
-            int added_width_bits = 0;
-            int added_height_bits = 0;
+            //int added_width_bits = 0;
+            //int added_height_bits = 0;
 
             foreach (var key in keys)
             {
@@ -258,7 +254,7 @@ namespace Aurora.Settings
                 }
 
 
-                if (KeyboardLayoutManager.PixelToByte(key.width.Value) + KeyboardLayoutManager.PixelToByte(key.margin_left.Value) > _region_bitmap.Width)
+                /*if (KeyboardLayoutManager.PixelToByte(key.width.Value) + KeyboardLayoutManager.PixelToByte(key.margin_left.Value) > _region_bitmap.Width)
                     _region_bitmap.Width += KeyboardLayoutManager.PixelToByte(key.width.Value) + KeyboardLayoutManager.PixelToByte(key.margin_left.Value) - location_x_bit;
                 else if (KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + added_width_bits < 0)
                 {
@@ -272,7 +268,7 @@ namespace Aurora.Settings
                 {
                     added_height_bits = -KeyboardLayoutManager.PixelToByte(key.margin_top.Value);
                     _region_bitmap.Height -= KeyboardLayoutManager.PixelToByte(key.margin_top.Value);
-                }
+                }*/
 
             }
 
@@ -338,7 +334,7 @@ namespace Aurora.Settings
         public void Clear()
         {
             _region = new RectangleF(0, 0, 0, 0);
-            _region_bitmap = new Rectangle(0, 0, 0, 0);
+            //_region_bitmap = new Rectangle(0, 0, 0, 0);
             grouped_keys.Clear();
         }
 
@@ -363,10 +359,10 @@ namespace Aurora.Settings
             double current_height = 0;
             double current_width = 0;
 
-            int width_bit = 0;
+            /*int width_bit = 0;
             int height_bit = 0;
             int width_bit_max = 1;
-            int height_bit_max = 1;
+            int height_bit_max = 1;*/
 
             foreach (var key in grouped_keys)
             {
@@ -390,7 +386,7 @@ namespace Aurora.Settings
                     layout_height = current_height;
 
 
-                int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
+                /*int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
                 int key_tlx = KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + width_bit;
 
                 int key_bry = key_tly + KeyboardLayoutManager.PixelToByte(key.height.Value);
@@ -409,15 +405,15 @@ namespace Aurora.Settings
                 {
                     width_bit = key_brx;
                     height_bit = key_tly;
-                }
+                }*/
 
             }
 
             _region.Width = (float)layout_width;
             _region.Height = (float)layout_height;
 
-            _region_bitmap.Width = width_bit_max;
-            _region_bitmap.Height = height_bit_max;
+            //_region_bitmap.Width = width_bit_max;
+            //_region_bitmap.Height = height_bit_max;
 
         }
     }
@@ -885,22 +881,31 @@ namespace Aurora.Settings
 
                 foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
                 {
-                    int key_tly = PixelToByte(key.margin_top.Value) + height_bit;
-                    int key_tlx = PixelToByte(key.margin_left.Value) + width_bit;
+                    //Top left x and y
+                    if (key.tag == DeviceKeys.Profile_Key4)
+                        Console.WriteLine();
 
-                    int key_bry = key_tly + PixelToByte(key.height.Value);
-                    int key_brx = key_tlx + PixelToByte(key.width.Value);
+                    int width = PixelToByte(key.width.Value);
+                    int height = PixelToByte(key.height.Value);
+                    int x_offset = PixelToByte(key.margin_left.Value);
+                    int y_offset = PixelToByte(key.margin_top.Value);
+                    int br_x, br_y;
 
                     if (key.absolute_location.Value)
-                        this.bitmap_map[key.tag] = new BitmapRectangle(PixelToByte(key.margin_left.Value), PixelToByte(key.margin_top.Value), key_brx - key_tlx, key_bry - key_tly);
-                    else
-                        this.bitmap_map[key.tag] = new BitmapRectangle(key_tlx, key_tly, key_brx - key_tlx, key_bry - key_tly);
-
-                    if (!key.absolute_location.Value)
                     {
-                        if (width_bit_max < key_brx) width_bit_max = key_brx;
-                        if (height_bit_max < key_bry) height_bit_max = key_bry;
+                        this.bitmap_map[key.tag] = new BitmapRectangle(x_offset, y_offset, width, height);
+                        br_x = (x_offset + width);
+                        br_y = (y_offset + height);
+                    }
+                    else
+                    {
+                        int x = x_offset + width_bit;
+                        int y = y_offset + height_bit;
 
+                        this.bitmap_map[key.tag] = new BitmapRectangle(x, y, width, height);
+
+                        br_x = (x + width);
+                        br_y = (y + height);
 
                         if (key.line_break.Value)
                         {
@@ -909,15 +914,17 @@ namespace Aurora.Settings
                         }
                         else
                         {
-                            width_bit = key_brx;
-                            if (key_tly > height_bit)
-                                height_bit = key_tly;
+                            width_bit = br_x;
+                            if (y > height_bit)
+                                height_bit = y;
                         }
                     }
+                    if (br_x > width_bit_max) width_bit_max = br_x;
+                    if (br_y > height_bit_max) height_bit_max = br_y;
                 }
 
                 _bitmapMapInvalid = false;
-                Global.effengine.SetCanvasSize(virtualKeyboardGroup.BitmapRegion.Width, virtualKeyboardGroup.BitmapRegion.Height);
+                Global.effengine.SetCanvasSize(width_bit_max, height_bit_max);
                 Global.effengine.SetBitmapping(this.bitmap_map);
             }
 

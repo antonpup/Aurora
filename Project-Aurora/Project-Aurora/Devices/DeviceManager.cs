@@ -63,7 +63,7 @@ namespace Aurora.Devices
         private bool anyInitialized = false;
         private bool retryActivated = false;
         private const int retryInterval = 5000;
-        private const int retryAttemps = 15;
+        private const int retryAttemps = 3;
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
 
@@ -164,17 +164,20 @@ namespace Aurora.Devices
                 Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
             }
 
-            NewDevicesInitialized?.Invoke(this, new EventArgs());
+
+            if (anyInitialized)
+            {
+                _InitializeOnceAllowed = true;
+                NewDevicesInitialized?.Invoke(this, new EventArgs());
+            }
 
             if (devicesToRetryNo > 0 && !retryActivated)
             {
+                retryActivated = true;
                 retryThread = new Thread(RetryInitialize);
                 retryThread.Start();
-
-                retryActivated = true;
+                return;
             }
-
-            _InitializeOnceAllowed = true;
         }
 
         private void RetryInitialize()
