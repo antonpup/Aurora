@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Aurora.Settings;
-using System.Diagnostics;
+
 using System.Threading;
 using System.Threading.Tasks;
 using HidLibrary;
@@ -14,14 +14,13 @@ namespace Aurora.Devices.SteelSeriesHID
     class SteelSeriesHIDDevice : Device
     {
         private String devicename = "SteelSeriesHID";
-        int mouseType; //Mouse type, 1 = Rival 300 , 2 = null , 3 = null . Support for other Rival mouses will come
         private bool isInitialized = false;
         private static HidDevice mouse;
+        private int mouseType;
         private bool peripheral_updated = false;
         private readonly object action_lock = new object();
-        private Stopwatch watch = new Stopwatch();
+        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
-
 
         public bool Initialize()
         {
@@ -95,7 +94,6 @@ namespace Aurora.Devices.SteelSeriesHID
         {
             if (this.IsInitialized() && (peripheral_updated))
             {
-
                 peripheral_updated = false;
             }
         }
@@ -112,35 +110,40 @@ namespace Aurora.Devices.SteelSeriesHID
 
         public bool IsInitialized()
         {
-
             return this.isInitialized;
         }
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
         {
             if (token.IsCancellationRequested) return false;
-
             try
             {
-                if (token.IsCancellationRequested) return false;
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    if (token.IsCancellationRequested) return false;
-
                     Color color = (Color)key.Value;
                     //Apply and strip Alpha
                     color = Color.FromArgb(255,
                         Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
                     if (token.IsCancellationRequested) return false;
-
-                    else if (key.Key == DeviceKeys.Peripheral_Logo ||
-                             key.Key == DeviceKeys.Peripheral_FrontLight ||
-                             key.Key == DeviceKeys.Peripheral_ScrollWheel)
+                    else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
                     {
-                        SendColorToPeripheralZone(key.Key, color);
+                        if (key.Key == DeviceKeys.Peripheral_Logo)
+                        {
+                            if (mouseType != 6 && mouseType != 7) { setMouseLogoColor(color.R, color.G, color.B); }
+                            if (mouseType == 6 && mouseType == 7) { setMouseColor(color.R, color.G, color.B); }
+                        }
+                        else if (key.Key == DeviceKeys.Peripheral_ScrollWheel && mouseType != 6 && mouseType != 7)
+                        {
+                            setMouseScrollWheelColor(color.R, color.G, color.B);
+                        }
+                        peripheral_updated = true;
+                    }
+                    else
+                    {
+                        peripheral_updated = false;
                     }
                 }
 
@@ -187,66 +190,111 @@ namespace Aurora.Devices.SteelSeriesHID
             return new VariableRegistry();
         }
 
-        private void SendColorToPeripheralZone(DeviceKeys zone, Color color)
-        {
-            if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
-            {
-                if (zone == DeviceKeys.Peripheral_Logo)
-                {
-                    setMouseLogoColor(color.R, color.G, color.B);
-                }
-                else if (zone == DeviceKeys.Peripheral_ScrollWheel)
-                {
-                    setMouseScrollWheelColor(color.R, color.G, color.B);
-                }
-                peripheral_updated = true;
-            }
-            else
-            {
-                peripheral_updated = false;
-            }
-        }
-
         private void setMouseScrollWheelColor(byte r, byte g, byte b)
         {
-            var report = mouse.CreateReport();
-            if (mouseType == 1)
-            {
-                report.ReportId = 0x02;
-                report.Data[0] = 0x08;
-                report.Data[1] = 0x02;
-                report.Data[2] = r;
-                report.Data[3] = g;
-                report.Data[4] = b;
-                mouse.WriteReport(report);
-            }
+            HidReport report = mouse.CreateReport();
+            report.Data[0] = 0x08;
+            report.Data[1] = 0x02;
+            report.Data[2] = r;
+            report.Data[3] = g;
+            report.Data[4] = b;
+            mouse.WriteReportAsync(report);
         }
 
         private void setMouseLogoColor(byte r, byte g, byte b)
         {
-            var report = mouse.CreateReport();
-            if (mouseType == 1)
-            {
-                report.ReportId = 0x02;
-                report.Data[0] = 0x08;
-                report.Data[1] = 0x01;
-                report.Data[2] = r;
-                report.Data[3] = g;
-                report.Data[4] = b;
-                mouse.WriteReport(report);
-            }
+            HidReport report = mouse.CreateReport();
+            report.Data[0] = 0x08;
+            report.Data[1] = 0x01;
+            report.Data[2] = r;
+            report.Data[3] = g;
+            report.Data[4] = b;
+            mouse.WriteReportAsync(report);
         }
+
+        private void setMouseColor(byte r, byte g, byte b)
+        {
+            HidReport report = mouse.CreateReport();
+            report.ReportId = 0x02;
+            report.Data[0] = 0x05;
+            report.Data[1] = 0x00;
+            report.Data[2] = r;
+            report.Data[3] = g;
+            report.Data[4] = b;
+            mouse.WriteReportAsync(report);
+        }
+
         private void init()
         {
-            mouse = HidDevices.Enumerate(0x1038, 0x1710).FirstOrDefault();
-            if (mouse != null)
+            if (HidDevices.Enumerate(0x1038, 0x1710).FirstOrDefault() != null)
             {
+                mouseType = 1; //SteelSeries Rival 300
+                mouse = HidDevices.Enumerate(0x1038, 0x1710).FirstOrDefault();
                 mouse.OpenDevice();
                 isInitialized = true;
-                mouseType = 1;
-                return;
+            }
+            else if (HidDevices.Enumerate(0x1038, 0x171A).FirstOrDefault() != null)
+            {
+                mouseType = 2; //SteelSeries Rival 300 CS:GO Hyperbeast Edition
+                mouse = HidDevices.Enumerate(0x1038, 0x171A).FirstOrDefault();
+                mouse.OpenDevice();
+                isInitialized = true;
+            }
+            else if (HidDevices.Enumerate(0x1038, 0x1394).FirstOrDefault() != null)
+            {
+                mouseType = 3; //SteelSeries Rival 300 CS:GO Fade Edition
+                mouse = HidDevices.Enumerate(0x1038, 0x1394).FirstOrDefault();
+                mouse.OpenDevice();
+                isInitialized = true;
+            }
+            /*else if (HidDevices.Enumerate(0x1038, 0x170E).FirstOrDefault() != null)
+            {
+                mouseType = 4; //SteelSeries Rival 500 (Experimental)
+                mouse = HidDevices.Enumerate(0x1038, 0x170E).FirstOrDefault();
+                mouse.OpenDevice();
+                isInitialized = true;
+            }*/
+            else if (HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault() != null)
+            {
+                mouseType = 5; //SteelSeries Rival
+                mouse = HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault();
+                mouse.OpenDevice();
+                isInitialized = true;
+            }
+            else if (HidDevices.Enumerate(0x1038, 0x1702).FirstOrDefault() != null)
+            {
+
+                mouseType = 6; //SteelSeries Rival 100 (only have 1 led)
+                mouse = HidDevices.Enumerate(0x1038, 0x1702).FirstOrDefault();
+                mouse.OpenDevice();
+                isInitialized = true;
+
+            }
+            else if (HidDevices.Enumerate(0x1038, 0x1729).FirstOrDefault() != null)
+            {
+                mouseType = 7; //SteelSeries Rival 110
+                mouse = HidDevices.Enumerate(0x1038, 0x1729).FirstOrDefault();
+                mouse.OpenDevice();
+                isInitialized = true;
+            }
+            /*else if (HidDevices.Enumerate(0x1038, 0x1720).FirstOrDefault() != null)
+            {
+                mouseType = 8; //SteelSeries Rival 310 (set_color not reverse engineered yet as I don't own this mouse)
+                mouse = HidDevices.Enumerate(0x1038, 0x1720).FirstOrDefault();
+            }*/
+            else if (HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault() != null)
+            {
+                mouseType = 9; //SteelSeries Rival
+                mouse = HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault();
+                mouse.OpenDevice();
+                isInitialized = true;
+            }
+            else
+            {
+                isInitialized = false;
             }
 
         }
     }
+
 }
