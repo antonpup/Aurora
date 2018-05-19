@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Aurora.Settings;
-
 using System.Threading;
 using System.Threading.Tasks;
 using HidLibrary;
@@ -21,6 +20,16 @@ namespace Aurora.Devices.SteelSeriesHID
         private readonly object action_lock = new object();
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
+        private bool HasScrollWheelLed = false;
+        private bool HasLogoLed = false;
+        private bool HasBacklightLed = false;
+        private byte[] LogoCommand;
+        private byte[] LogoCommandSuffix;
+        private byte[] ScrollCommand;
+        private byte[] ScrollCommandSuffix;
+        private byte[] BacklightCommand;
+        private byte[] BacklightCommandSuffix;
+        private byte ReportID;
 
         public bool Initialize()
         {
@@ -127,17 +136,20 @@ namespace Aurora.Devices.SteelSeriesHID
                     color = Color.FromArgb(255,
                         Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
+                    //Color to byte array
+                    byte[] colorArray = { color.R, color.G, color.B };
+
                     if (token.IsCancellationRequested) return false;
                     else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
                     {
                         if (key.Key == DeviceKeys.Peripheral_Logo)
                         {
-                            if (mouseType != 6 && mouseType != 7) { setMouseLogoColor(color.R, color.G, color.B); }
-                            if (mouseType == 6 && mouseType == 7) { setMouseColor(color.R, color.G, color.B); }
+                            if (HasLogoLed) { setMouseLogoColor(colorArray); }
+                            if (HasBacklightLed) { setMouseBackLightColor(colorArray); }
                         }
-                        else if (key.Key == DeviceKeys.Peripheral_ScrollWheel && mouseType != 6 && mouseType != 7)
+                        else if (key.Key == DeviceKeys.Peripheral_ScrollWheel && HasScrollWheelLed)
                         {
-                            setMouseScrollWheelColor(color.R, color.G, color.B);
+                            setMouseScrollWheelColor(colorArray);
                         }
                         peripheral_updated = true;
                     }
@@ -190,105 +202,167 @@ namespace Aurora.Devices.SteelSeriesHID
             return new VariableRegistry();
         }
 
-        private void setMouseScrollWheelColor(byte r, byte g, byte b)
+        private void setMouseScrollWheelColor(byte[] color)
         {
             HidReport report = mouse.CreateReport();
-            report.Data[0] = 0x08;
-            report.Data[1] = 0x02;
-            report.Data[2] = r;
-            report.Data[3] = g;
-            report.Data[4] = b;
+            report.ReportId = ReportID;
+            report.Data = ScrollCommand.Concat(color).Concat(ScrollCommandSuffix).ToArray();
             mouse.WriteReportAsync(report);
         }
 
-        private void setMouseLogoColor(byte r, byte g, byte b)
+        private void setMouseLogoColor(byte[] color)
         {
             HidReport report = mouse.CreateReport();
-            report.Data[0] = 0x08;
-            report.Data[1] = 0x01;
-            report.Data[2] = r;
-            report.Data[3] = g;
-            report.Data[4] = b;
+            report.ReportId = ReportID;
+            report.Data = LogoCommand.Concat(color).Concat(LogoCommandSuffix).ToArray();
             mouse.WriteReportAsync(report);
         }
 
-        private void setMouseColor(byte r, byte g, byte b)
+        private void setMouseBackLightColor(byte[] color)
         {
             HidReport report = mouse.CreateReport();
-            report.ReportId = 0x02;
-            report.Data[0] = 0x05;
-            report.Data[1] = 0x00;
-            report.Data[2] = r;
-            report.Data[3] = g;
-            report.Data[4] = b;
+            report.ReportId = ReportID;
+            report.Data = BacklightCommand.Concat(color).Concat(BacklightCommandSuffix).ToArray();
             mouse.WriteReportAsync(report);
         }
 
         private void init()
         {
-            if (HidDevices.Enumerate(0x1038, 0x1710).FirstOrDefault() != null)
+            if (HidDevices.Enumerate(0x1038, 0x1710).FirstOrDefault() != null) //SteelSeries Rival 300
             {
-                mouseType = 1; //SteelSeries Rival 300
+                devicename = "SteelSeries Rival 300";
+                HasScrollWheelLed = true;
+                HasLogoLed = true;
+                HasBacklightLed = false;
+                ReportID = 0x02;
+                ScrollCommand = new byte[] { 0x08, 0x02 };
+                ScrollCommandSuffix = new byte[] { 0x00 };
+                LogoCommand = new byte[] { 0x08, 0x01 };
+                LogoCommandSuffix = new byte[] { 0x00 };
+                //BacklightCommand = new byte[] { 0x00 };
+                //byte[] BacklightCommandSuffix = new byte[] { 0x00 };
+
                 mouse = HidDevices.Enumerate(0x1038, 0x1710).FirstOrDefault();
                 mouse.OpenDevice();
                 isInitialized = true;
+
             }
-            else if (HidDevices.Enumerate(0x1038, 0x171A).FirstOrDefault() != null)
+
+            else if (HidDevices.Enumerate(0x1038, 0x171A).FirstOrDefault() != null) //SteelSeries Rival 300 CS:GO Hyperbeast Edition
             {
-                mouseType = 2; //SteelSeries Rival 300 CS:GO Hyperbeast Edition
+                devicename = "SteelSeries Rival 300 CS:GO Hyperbeast Edition";
+                HasScrollWheelLed = true;
+                HasLogoLed = true;
+                HasBacklightLed = false;
+                ReportID = 0x02;
+                ScrollCommand = new byte[] { 0x08, 0x02 };
+                ScrollCommandSuffix = new byte[] { 0x00 };
+                LogoCommand = new byte[] { 0x08, 0x01 };
+                LogoCommandSuffix = new byte[] { 0x00 };
+                //BacklightCommand = new byte[] { 0x00 };
+                //BacklightCommandSuffix = new byte[] { 0x00 };
+
                 mouse = HidDevices.Enumerate(0x1038, 0x171A).FirstOrDefault();
                 mouse.OpenDevice();
                 isInitialized = true;
             }
-            else if (HidDevices.Enumerate(0x1038, 0x1394).FirstOrDefault() != null)
+
+            else if (HidDevices.Enumerate(0x1038, 0x1394).FirstOrDefault() != null) //SteelSeries Rival 300 CS:GO Fade Edition
             {
-                mouseType = 3; //SteelSeries Rival 300 CS:GO Fade Edition
+                devicename = "SteelSeries Rival 300 CS:GO Fade Edition";
+                HasScrollWheelLed = true;
+                HasLogoLed = true;
+                HasBacklightLed = false;
+                ReportID = 0x02;
+                byte[] ScrollCommand = new byte[] { 0x08, 0x02 };
+                byte[] ScrollCommandSuffix = new byte[] { 0x00 };
+                byte[] LogoCommand = new byte[] { 0x08, 0x01 };
+                byte[] LogoCommandSuffix = new byte[] { 0x00 };
+                //byte[] BacklightCommand = new byte[] { 0x00 };
+                //byte[] BacklightCommandSuffix = new byte[] { 0x00 };
+
                 mouse = HidDevices.Enumerate(0x1038, 0x1394).FirstOrDefault();
                 mouse.OpenDevice();
                 isInitialized = true;
             }
-            /*else if (HidDevices.Enumerate(0x1038, 0x170E).FirstOrDefault() != null)
+
+            else if (HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault() != null) //SteelSeries Rival
             {
-                mouseType = 4; //SteelSeries Rival 500 (Experimental)
-                mouse = HidDevices.Enumerate(0x1038, 0x170E).FirstOrDefault();
-                mouse.OpenDevice();
-                isInitialized = true;
-            }*/
-            else if (HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault() != null)
-            {
-                mouseType = 5; //SteelSeries Rival
+                devicename = "SteelSeries Rival";
+                HasScrollWheelLed = true;
+                HasLogoLed = true;
+                HasBacklightLed = false;
+                ReportID = 0x02;
+                byte[] ScrollCommand = new byte[] { 0x08, 0x02 };
+                byte[] ScrollCommandSuffix = new byte[] { 0x00 };
+                byte[] LogoCommand = new byte[] { 0x08, 0x01 };
+                byte[] LogoCommandSuffix = new byte[] { 0x00 };
+                //byte[] BacklightCommand = new byte[] { 0x00 };
+                //byte[] BacklightCommandSuffix = new byte[] { 0x00 };
+
                 mouse = HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault();
                 mouse.OpenDevice();
                 isInitialized = true;
             }
-            else if (HidDevices.Enumerate(0x1038, 0x1702).FirstOrDefault() != null)
-            {
 
-                mouseType = 6; //SteelSeries Rival 100 (only have 1 led)
+            else if (HidDevices.Enumerate(0x1038, 0x1702).FirstOrDefault() != null) //SteelSeries Rival 100
+            {
+                devicename = "SteelSeries Rival 100";
+                HasScrollWheelLed = false;
+                HasLogoLed = false;
+                HasBacklightLed = true;
+                ReportID = 0x02;
+                //byte[] ScrollCommand = new byte[] { 0x00 };
+                //byte[] ScrollCommandSuffix = new byte[] { 0x00 };
+                //byte[] LogoCommand = new byte[] { 0x00 };
+                //byte[] LogoCommandSuffix = new byte[] { 0x00 };
+                byte[] BacklightCommand = new byte[] { 0x05, 0x00 };
+                byte[] BacklightCommandSuffix = new byte[] { 0x00 };
+
                 mouse = HidDevices.Enumerate(0x1038, 0x1702).FirstOrDefault();
                 mouse.OpenDevice();
                 isInitialized = true;
 
             }
-            else if (HidDevices.Enumerate(0x1038, 0x1729).FirstOrDefault() != null)
+
+            else if (HidDevices.Enumerate(0x1038, 0x1729).FirstOrDefault() != null) //SteelSeries Rival 110
             {
-                mouseType = 7; //SteelSeries Rival 110
+                devicename = "SteelSeries Rival 110";
+                HasScrollWheelLed = false;
+                HasLogoLed = false;
+                HasBacklightLed = true;
+                ReportID = 0x02;
+                //byte[] ScrollCommand = new byte[] { 0x00 };
+                //byte[] ScrollCommandSuffix = new byte[] { 0x00 };
+                //byte[] LogoCommand = new byte[] { 0x00 };
+                //byte[] LogoCommandSuffix = new byte[] { 0x00 };
+                byte[] BacklightCommand = new byte[] { 0x05, 0x00 };
+                byte[] BacklightCommandSuffix = new byte[] { 0x00 };
+
                 mouse = HidDevices.Enumerate(0x1038, 0x1729).FirstOrDefault();
                 mouse.OpenDevice();
                 isInitialized = true;
             }
-            /*else if (HidDevices.Enumerate(0x1038, 0x1720).FirstOrDefault() != null)
+
+            else if (HidDevices.Enumerate(0x1038, 0x170e).FirstOrDefault() != null) //SteelSeries Rival 500
             {
-                mouseType = 8; //SteelSeries Rival 310 (set_color not reverse engineered yet as I don't own this mouse)
-                mouse = HidDevices.Enumerate(0x1038, 0x1720).FirstOrDefault();
-            }*/
-            else if (HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault() != null)
-            {
-                mouseType = 9; //SteelSeries Rival
-                mouse = HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault();
+                devicename = "SteelSeries Rival 500";
+                HasScrollWheelLed = true;
+                HasLogoLed = true;
+                HasBacklightLed = false;
+                ReportID = 0x03;
+                byte[] ScrollCommand = new byte[] { 0x05, 0x00, 0x01 };
+                byte[] ScrollCommandSuffix = new byte[] { 0xFF, 0x32, 0xC8, 0xC8, 0x00, 0x01, 0x01 };
+                byte[] LogoCommand = new byte[] { 0x05, 0x00, 0x00 };
+                byte[] LogoCommandSuffix = new byte[] { 0xFF, 0x32, 0xC8, 0xC8, 0x00, 0x00, 0x01 };
+                //byte[] BacklightCommand = new byte[] { 0x00 };
+                //byte[] BacklightCommandSuffix = new byte[] { 0x00 };
+
+                mouse = HidDevices.Enumerate(0x1038, 0x170e).FirstOrDefault();
                 mouse.OpenDevice();
                 isInitialized = true;
             }
+
             else
             {
                 isInitialized = false;
