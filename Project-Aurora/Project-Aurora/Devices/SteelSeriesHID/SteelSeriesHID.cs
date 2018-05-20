@@ -40,8 +40,6 @@ namespace Aurora.Devices.SteelSeriesHID
                         if (_rival100.Connect()) { rival100Found = true; isInitialized = true; }
                         if (_rival300.Connect()) { rival300Found = true; isInitialized = true; }
                         if (_rival500.Connect()) { rival500Found = true; isInitialized = true; }
-
-
                     }
                     catch (Exception e)
                     {
@@ -64,7 +62,9 @@ namespace Aurora.Devices.SteelSeriesHID
                 {
                     if (isInitialized)
                     {
-
+                        if (rival100Found) { _rival100.Disconnect(); }
+                        if (rival300Found) { _rival300.Disconnect(); }
+                        if (rival500Found) { _rival500.Disconnect(); }
                         this.Reset();
 
                         isInitialized = false;
@@ -106,7 +106,8 @@ namespace Aurora.Devices.SteelSeriesHID
 
         public bool Reconnect()
         {
-            throw new NotImplementedException();
+            Shutdown();
+            return Initialize();
         }
 
         public bool IsConnected()
@@ -241,7 +242,7 @@ namespace Aurora.Devices.SteelSeriesHID
             }
         }
 
-        private bool Disconnect()
+        public bool Disconnect()
         {
             try
             {
@@ -253,6 +254,7 @@ namespace Aurora.Devices.SteelSeriesHID
                 return false;
             }
         }
+
         public void SetLedColor1(byte r, byte g, byte b)
         {
             HidReport report = mouse.CreateReport();
@@ -336,6 +338,19 @@ namespace Aurora.Devices.SteelSeriesHID
             }
         }
 
+        public bool Disconnect()
+        {
+            try
+            {
+                mouse.CloseDevice();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public void SetLedColor2(byte r, byte g, byte b)
         {
             HidReport report = mouse.CreateReport();
@@ -383,6 +398,19 @@ namespace Aurora.Devices.SteelSeriesHID
                 }
             }
             else
+            {
+                return false;
+            }
+        }
+
+        public bool Disconnect()
+        {
+            try
+            {
+                mouse.CloseDevice();
+                return true;
+            }
+            catch
             {
                 return false;
             }
