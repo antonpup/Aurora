@@ -126,7 +126,8 @@ namespace Aurora.Profiles
                 new Blade_and_Soul.BnS(),
                 new Event_SkypeOverlay(),
                 new ROTTombRaider.ROTTombRaider(),
-				new DyingLight.DyingLight()
+				new DyingLight.DyingLight(),
+                new ETS2.ETS2()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

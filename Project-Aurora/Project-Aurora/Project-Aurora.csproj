@@ -295,6 +295,21 @@
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
     <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
+    <Compile Include="Profiles\ETS2\Control_ETS2.xaml.cs">
+      <DependentUpon>Control_ETS2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\ETS2\ETS2Application.cs" />
+    <Compile Include="Profiles\ETS2\ETS2MemoryStruct.cs" />
+    <Compile Include="Profiles\ETS2\ETS2Profile.cs" />
+    <Compile Include="Profiles\ETS2\GameEvent_ETS2.cs" />
+    <Compile Include="Profiles\ETS2\GSI\GameState_ETS2.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\GameNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\JobNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\NavigationNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\PlacementNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\TrailerNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\TruckNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\VectorNode.cs" />
     <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
@@ -1123,6 +1138,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\ETS2\Control_ETS2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\GTA5\Layers\Control_GTA5PoliceSirenLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1536,6 +1555,9 @@
     <Resource Include="Resources\Borderlands2_256x256.png" />
     <Resource Include="Resources\rot_tombraider.png" />
     <Resource Include="Resources\dl_128x128.png" />
+    <Resource Include="Resources\ets2_64x64.png" />
+    <Resource Include="Profiles\ETS2\GSI\ets2-telemetry-server-x64.dll" />
+    <Resource Include="Profiles\ETS2\GSI\ets2-telemetry-server-x86.dll" />
     <Content Include="Resources\SteelSeriesInstall\Step1.png" />
     <Content Include="Resources\SteelSeriesInstall\Step2.png" />
     <Content Include="SDKDLL.dll">
