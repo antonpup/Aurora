@@ -310,6 +310,10 @@
     <Compile Include="Profiles\ETS2\GSI\Nodes\TrailerNode.cs" />
     <Compile Include="Profiles\ETS2\GSI\Nodes\TruckNode.cs" />
     <Compile Include="Profiles\ETS2\GSI\Nodes\VectorNode.cs" />
+    <Compile Include="Profiles\ETS2\Layers\Control_ETS2BlinkerLayer.xaml.cs">
+      <DependentUpon>Control_ETS2BlinkerLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\ETS2\Layers\ETS2BlinkerLayerHandler.cs" />
     <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
@@ -1139,6 +1143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\ETS2\Control_ETS2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\ETS2\Layers\Control_ETS2BlinkerLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Profiles.ETS2.Layers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,15 @@ namespace Aurora.Profiles.ETS2 {
             GameStateType = typeof(GSI.GameState_ETS2),
             Event = new GameEvent_ETS2(),
             IconURI = "Resources/ets2_64x64.png"
-        }) { }
+        }) {
+
+            List<LayerHandlerEntry> ets2Layers = new List<LayerHandlerEntry> {
+                new LayerHandlerEntry("ETS2BlinkerIndicator", "ETS2 Blinker", typeof(ETS2BlinkerLayerHandler))
+            };
+
+            Global.LightingStateManager.RegisterLayerHandlers(ets2Layers, false);
+            foreach (var layer in ets2Layers)
+                Config.ExtraAvailableLayers.Add(layer.Key);
+        }
     }
 }

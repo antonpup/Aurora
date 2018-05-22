@@ -147,13 +147,14 @@
         /// <summary>Whether the dashboard backlight is on or off.</summary>
         public bool lightsDashboardOn => _memdat.lightsDashboard != 0;
 
-        /// <summary>Whether the left blinker is currently emitting light (will be true if the hazard lights are on).</summary>
-        public bool blinkerLeftActive => _memdat.blinkerLeftActive != 0;
-        /// <summary>Whether the right blinker is currently emitting light (will be true if the hazard lights are on).</summary>
-        public bool blinkerRightActive => _memdat.blinkerRightActive != 0;
+        
         /// <summary>Whether the left blinker is currently on or off (will not be true if the hazard light are on).</summary>
-        public bool blinkerLeftOn => _memdat.blinkerLeftOn != 0;
+        public bool blinkerLeftActive => _memdat.blinkerLeftActive != 0;
         /// <summary>Whether the right blinker is currently on or off (will not be true if the hazard light are on).</summary>
+        public bool blinkerRightActive => _memdat.blinkerRightActive != 0;
+        /// <summary>Whether the left blinker is currently emitting light (will be true if the hazard lights are on).</summary>
+        public bool blinkerLeftOn => _memdat.blinkerLeftOn != 0;
+        /// <summary>Whether the right blinker is currently emitting light (will be true if the hazard lights are on).</summary>
         public bool blinkerRightOn => _memdat.blinkerRightOn != 0;
 
         /// <summary>Whether the parking lights are active.</summary>
