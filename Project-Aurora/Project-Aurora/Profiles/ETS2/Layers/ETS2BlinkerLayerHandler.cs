@@ -58,15 +58,11 @@ namespace Aurora.Profiles.ETS2.Layers {
             if (gamestate is GameState_ETS2) {
                 // Left blinker
                 Color trgColor = ((GameState_ETS2)gamestate).Truck.blinkerLeftOn ? Properties.BlinkerOnColor : Properties.BlinkerOffColor;
-                foreach (var key in Properties.LeftBlinkerSequence.keys) {
-                    blinker_layer.Set(key, trgColor);
-                }
+                blinker_layer.Set(Properties.LeftBlinkerSequence, trgColor);
 
                 // Right blinker
                 trgColor = ((GameState_ETS2)gamestate).Truck.blinkerRightOn ? Properties.BlinkerOnColor : Properties.BlinkerOffColor;
-                foreach (var key in Properties.RightBlinkerSequence.keys) {
-                    blinker_layer.Set(key, trgColor);
-                }
+                blinker_layer.Set(Properties.RightBlinkerSequence, trgColor);
             }
             return blinker_layer;
         }
