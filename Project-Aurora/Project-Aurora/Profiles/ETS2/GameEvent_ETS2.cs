@@ -44,29 +44,32 @@ namespace Aurora.Profiles.ETS2 {
             }
         }
 
+        public override void ResetGameState() {
+            _game_state = new GameState_ETS2(default(ETS2MemoryStruct));
+        }
+
         public override void UpdateLights(EffectFrame frame) {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
             ETS2Profile settings = (ETS2Profile)this.Application.Profile;
 
-            // -- Below code adapted from the ETS2 Telemetry Server by Funbit (https://github.com/Funbit/ets2-telemetry-server) --
-            IntPtr memPtr = IntPtr.Zero;
+            if (Process.GetProcessesByName("eurotrucks2").Length > 0) {
+                // -- Below code adapted from the ETS2 Telemetry Server by Funbit (https://github.com/Funbit/ets2-telemetry-server) --
+                IntPtr memPtr = IntPtr.Zero;
 
-            try {
-                byte[] raw = new byte[Marshal.SizeOf(typeof(ETS2MemoryStruct))];
-                memAccessor.ReadArray(0, raw, 0, raw.Length);
+                try {
+                    byte[] raw = new byte[Marshal.SizeOf(typeof(ETS2MemoryStruct))];
+                    memAccessor.ReadArray(0, raw, 0, raw.Length);
 
-                memPtr = Marshal.AllocHGlobal(raw.Length);
-                Marshal.Copy(raw, 0, memPtr, raw.Length);
-                _game_state = new GameState_ETS2((ETS2MemoryStruct)Marshal.PtrToStructure(memPtr, typeof(ETS2MemoryStruct)));
+                    memPtr = Marshal.AllocHGlobal(raw.Length);
+                    Marshal.Copy(raw, 0, memPtr, raw.Length);
+                    _game_state = new GameState_ETS2((ETS2MemoryStruct)Marshal.PtrToStructure(memPtr, typeof(ETS2MemoryStruct)));
+                }
+                finally {
+                    if (memPtr != IntPtr.Zero)
+                        Marshal.FreeHGlobal(memPtr);
+                }
+                // -- End ETS2 Telemetry Server code --
             }
-            catch {
-                _game_state = new GameState_ETS2(default(ETS2MemoryStruct));
-            }
-            finally {
-                if (memPtr != IntPtr.Zero)
-                    Marshal.FreeHGlobal(memPtr);
-            }
-            // -- End ETS2 Telemetry Server code --
 
             foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
                 if (layer.Enabled && layer.LogicPass)
