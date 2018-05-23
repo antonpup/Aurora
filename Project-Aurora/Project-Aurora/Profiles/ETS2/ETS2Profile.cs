@@ -43,6 +43,46 @@ namespace Aurora.Profiles.ETS2 {
                     }
                 }),
 
+                new Layer("Fuel", new PercentGradientLayerHandler() {
+                    Properties = new PercentGradientLayerHandlerProperties() {
+                        _Gradient = new EffectBrush() {
+                            type = EffectBrush.BrushType.Linear,
+                            colorGradients = new SortedDictionary<float, Color> {
+                                { 0f, Color.FromArgb(255, 0, 0) },
+                                { 0.25f, Color.FromArgb(255, 0, 0) },
+                                { 0.375f, Color.FromArgb(255, 255, 0) },
+                                { 0.5f, Color.FromArgb(0, 255, 0) },
+                                { 1f, Color.FromArgb(0, 255, 0) }
+                            }
+                        },
+                        _Sequence = new KeySequence(new DeviceKeys[] {
+                            DeviceKeys.NUM_ONE, DeviceKeys.NUM_FOUR, DeviceKeys.NUM_SEVEN, DeviceKeys.NUM_LOCK
+                        }),
+                        _VariablePath = "Truck/fuel",
+                        _MaxVariablePath = "Truck/fuelCapacity"
+                    }
+                }),
+
+                new Layer("Air Pressure", new PercentGradientLayerHandler() {
+                    Properties = new PercentGradientLayerHandlerProperties() {
+                        _Gradient = new EffectBrush() {
+                            type = EffectBrush.BrushType.Linear,
+                            colorGradients = new SortedDictionary<float, Color> {
+                                { 0f, Color.FromArgb(255, 0, 0) },
+                                { 0.25f, Color.FromArgb(255, 0, 0) },
+                                { 0.375f, Color.FromArgb(255, 255, 0) },
+                                { 0.5f, Color.FromArgb(0, 255, 0) },
+                                { 1f, Color.FromArgb(0, 255, 0) }
+                            }
+                        },
+                        _Sequence = new KeySequence(new DeviceKeys[] {
+                            DeviceKeys.NUM_THREE, DeviceKeys.NUM_SIX, DeviceKeys.NUM_NINE, DeviceKeys.NUM_ASTERISK
+                        }),
+                        _VariablePath = "Truck/airPressure",
+                        _MaxVariablePath = "Truck/airPressureMax"
+                    }
+                }),
+
                 new Layer("Keys", new SolidColorLayerHandler() {
                     Properties = new LayerHandlerProperties() {
                         _PrimaryColor = Color.FromArgb(0, 255, 255),
