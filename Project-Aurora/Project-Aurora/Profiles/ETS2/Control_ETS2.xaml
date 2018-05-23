@@ -31,6 +31,66 @@
                     <Button x:Name="visit_ets2ts_button" Content="View ETS2 Telemetry Server on GitHub" HorizontalAlignment="Left" Margin="10,137,0,0" VerticalAlignment="Top" Click="visit_ets2ts_button_Click"/>
                 </Grid>
             </TabItem>
+
+            <TabItem Header="Preview">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition Width="28px"/>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left side -->
+                    <Label Content="Speed (KPH):" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" />
+                    <TextBox x:Name="speed" Text="0" Grid.Column="1" Grid.Row="0" Margin="0,4,60,4" PreviewTextInput="PreviewTextInput_Numeric" TextChanged="speed_TextChanged" />
+
+                    <Label Content="Speed limit (KPH):" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" />
+                    <TextBox x:Name="speedLimit" Text="0" Grid.Column="1" Grid.Row="1" Margin="0,4,60,4" PreviewTextInput="PreviewTextInput_Numeric" TextChanged="speedLimit_TextChanged" />
+
+                    <Label Content="Lights:" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" />
+                    <ComboBox x:Name="lights" Grid.Column="1" Grid.Row="3" Margin="0,4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="lights_SelectionChanged" />
+
+                    <Label Content="Auxiliary lights:" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" />
+                    <WrapPanel Grid.Column="1" Grid.Row="4" VerticalAlignment="Center">
+                        <CheckBox x:Name="frontAux" Content="Front" Grid.Column="1" Grid.Row="5" Checked="frontAux_Checked" Unloaded="frontAux_Checked" />
+                        <CheckBox x:Name="roofAux" Content="Roof" Grid.Column="1" Grid.Row="6" Margin="8,0,0,0" Checked="roofAux_Checked" Unchecked="roofAux_Checked" />
+                        <CheckBox x:Name="beacon" Content="Beacon" Grid.Column="1" Grid.Row="7" Margin="8,0,0,0" Checked="beacon_Checked" Unchecked="beacon_Checked" />
+                    </WrapPanel>
+
+
+                    <Label Content="Blinkers:" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" />
+                    <ComboBox x:Name="blinkers" Grid.Column="1" Grid.Row="5" Margin="0,4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="blinkers_SelectionChanged" />
+
+
+                    <!-- Right side -->
+                    <Label Content="Throttle:" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" />
+                    <Slider x:Name="throttleSlider" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" ValueChanged="throttleSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+
+                    <Label Content="Brakes:" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" />
+                    <Slider x:Name="brakeSlider" Grid.Column="4" Grid.Row="1" VerticalAlignment="Center" ValueChanged="brakeSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+
+                    <Label Content="Engine RPM:" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center" />
+                    <Slider x:Name="engineRpmSlider" Grid.Column="4" Grid.Row="2" VerticalAlignment="Center" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="engineRpmSlider_ValueChanged" />
+
+                    <Label Content="Fuel:" Grid.Column="3" Grid.Row="4" VerticalAlignment="Center" />
+                    <Slider x:Name="fuelSlider" TickPlacement="BottomRight" TickFrequency="0.1" Maximum="1" Grid.Column="4" Grid.Row="4" VerticalAlignment="Center" ValueChanged="fuelSlider_ValueChanged" LargeChange="0.1" SmallChange="0.05" />
+
+                    <Label Content="Air Pressure:" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center" />
+                    <Slider x:Name="airSlider" Grid.Column="4" Grid.Row="5" VerticalAlignment="Center" ValueChanged="airSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

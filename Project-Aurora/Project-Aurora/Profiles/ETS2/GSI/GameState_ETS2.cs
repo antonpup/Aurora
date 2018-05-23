@@ -9,7 +9,7 @@ namespace Aurora.Profiles.ETS2.GSI {
 
     public class GameState_ETS2 : GameState<GameState_ETS2> {
 
-        private ETS2MemoryStruct _memdat;
+        internal Box<ETS2MemoryStruct> _memdat;
         private GameNode _Game;
         private TruckNode _Truck;
         private TrailerNode _Trailer;
@@ -94,7 +94,14 @@ namespace Aurora.Profiles.ETS2.GSI {
         /// </summary>
         /// <param name="memdat">The struct the MemoryMappedFile data has been copied into.</param>
         internal GameState_ETS2(ETS2MemoryStruct memdat) : base() {
-            _memdat = memdat;
+            _memdat = new Box<ETS2MemoryStruct> { value = memdat };
         }
+    }
+
+    /// <summary>
+    /// Class to allow the structure to be passed and stored as a reference instead of value
+    /// </summary>
+    public class Box<T> {
+        public T value;
     }
 }

@@ -52,7 +52,7 @@ namespace Aurora.Profiles.ETS2 {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
             ETS2Profile settings = (ETS2Profile)this.Application.Profile;
 
-            if (Process.GetProcessesByName("eurotrucks2").Length > 0) {
+            if (Process.GetProcessesByName("eurotrucks2").Length > 0 && memAccessor != null) {
                 // -- Below code adapted from the ETS2 Telemetry Server by Funbit (https://github.com/Funbit/ets2-telemetry-server) --
                 IntPtr memPtr = IntPtr.Zero;
 
