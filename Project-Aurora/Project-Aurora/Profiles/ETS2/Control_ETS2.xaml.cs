@@ -199,7 +199,7 @@ namespace Aurora.Profiles.ETS2 {
         }
 
         private void airSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            gameState._memdat.value.airPressure = (float)(sender as Slider).Value;
+            gameState._memdat.value.airPressure = (float)(sender as Slider).Value * gameState.Truck.airPressureMax;
         }
 
         private byte boolToByte(bool? v) {

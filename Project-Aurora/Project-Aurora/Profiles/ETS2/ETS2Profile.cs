@@ -17,12 +17,12 @@ namespace Aurora.Profiles.ETS2 {
     public enum ETS2_BeaconStyle {
         [Description("Simple Flashing")]
         Simple_Flash,
-        [Description("2 halves that flash at opposite times")]
-        Two_Half,
+        [Description("Half Alternating")]
+        Half_Alternating,
         [Description("Fancy Flashing")]
         Fancy_Flash,
-        [Description("A light that flip-flops over the sequence")]
-        Flip_Flop
+        [Description("Side-to-Side")]
+        Side_To_Side
     }
 
     public class ETS2Profile : ApplicationProfile {

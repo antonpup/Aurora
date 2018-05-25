@@ -83,7 +83,7 @@ namespace Aurora.Profiles.ETS2.Layers {
                         break;
 
                     // Sets half the sequence on and half off, then swaps. If odd number of keys, first half will be bigger
-                    case ETS2_BeaconStyle.Two_Half:
+                    case ETS2_BeaconStyle.Half_Alternating:
                         List<DeviceKeys> half;
                         if (frame < 5)
                             // First half
@@ -98,7 +98,7 @@ namespace Aurora.Profiles.ETS2.Layers {
                         break;
                     
                     // The "on" key goes up and down the sequence
-                    case ETS2_BeaconStyle.Flip_Flop:
+                    case ETS2_BeaconStyle.Side_To_Side:
                         int keyCount = Properties.Sequence.keys.Count;
 
                         int light = Math.Abs(((frame/2 + 1) % (keyCount * 2 - 2)) - keyCount + 2);
