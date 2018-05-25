@@ -23,7 +23,8 @@ namespace Aurora.Profiles.ETS2 {
         }) {
 
             List<LayerHandlerEntry> ets2Layers = new List<LayerHandlerEntry> {
-                new LayerHandlerEntry("ETS2BlinkerIndicator", "ETS2 Blinker", typeof(ETS2BlinkerLayerHandler))
+                new LayerHandlerEntry("ETS2BlinkerIndicator", "ETS2 Blinker", typeof(ETS2BlinkerLayerHandler)),
+                new LayerHandlerEntry("ETS2Beacon", "ETS2 Beacon", typeof(ETS2BeaconLayerHandler))
             };
 
             Global.LightingStateManager.RegisterLayerHandlers(ets2Layers, false);

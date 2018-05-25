@@ -20,7 +20,6 @@ namespace Aurora.Profiles.ETS2.Layers {
     public partial class Control_ETS2BlinkerLayer : UserControl {
 
         private bool settingsset = false;
-        private bool profileset = false;
 
         public Control_ETS2BlinkerLayer() {
             InitializeComponent();
@@ -40,13 +39,6 @@ namespace Aurora.Profiles.ETS2.Layers {
                 this.LeftBlinker_keys.Sequence = context.Properties._LeftBlinkerSequence;
                 this.RightBlinker_keys.Sequence = context.Properties._RightBlinkerSequence;
                 settingsset = true;
-            }
-        }
-
-        internal void SetProfile(Application profile) {
-            if (profile != null && !profileset) {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-                profileset = true;
             }
         }
 

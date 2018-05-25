@@ -6,12 +6,24 @@ using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.ETS2 {
+
+    public enum ETS2_BeaconStyle {
+        [Description("Simple Flashing")]
+        Simple_Flash,
+        [Description("2 halves that flash at opposite times")]
+        Two_Half,
+        [Description("Fancy Flashing")]
+        Fancy_Flash,
+        [Description("A light that flip-flops over the sequence")]
+        Flip_Flop
+    }
 
     public class ETS2Profile : ApplicationProfile {
 
@@ -20,7 +32,15 @@ namespace Aurora.Profiles.ETS2 {
         public override void Reset() {
             base.Reset();
             Layers = new ObservableCollection<Layer>() {
-                new Layer("ETS2 Blinker", new ETS2BlinkerLayerHandler()),
+                new Layer("Blinkers", new ETS2BlinkerLayerHandler()),
+
+                new Layer("Beacon", new ETS2BeaconLayerHandler() {
+                    Properties = new ETS2BeaconLayerProperties() {
+                        _BeaconStyle = ETS2_BeaconStyle.Fancy_Flash,
+                        _PrimaryColor = Color.FromArgb(255, 128, 0),
+                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 })
+                    }
+                }),
 
                 new Layer("Throttle", new PercentGradientLayerHandler() {
                     Properties = new PercentGradientLayerHandlerProperties() {
