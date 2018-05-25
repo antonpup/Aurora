@@ -47,10 +47,10 @@ namespace Aurora.Profiles.ETS2.Layers {
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e) {
             SetSettings();
-            lightMode.Items.Add(ETS2_BeaconStyle.Simple_Flash);
+            /*lightMode.Items.Add(ETS2_BeaconStyle.Simple_Flash);
             lightMode.Items.Add(ETS2_BeaconStyle.Two_Half);
             lightMode.Items.Add(ETS2_BeaconStyle.Fancy_Flash);
-            lightMode.Items.Add(ETS2_BeaconStyle.Flip_Flop);
+            lightMode.Items.Add(ETS2_BeaconStyle.Flip_Flop);*/
             this.Loaded -= UserControl_Loaded;
         }
 

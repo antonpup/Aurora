@@ -249,4 +249,9 @@ namespace Aurora.Utils
     {
         public ShortcutAssistantPresentationTypeToStringVC() : base(ShortcutAssistantPresentationType.Default) { }
     }
+
+    public class ETS2_BeaconStyleToStringVC : EnumToStringVC
+    {
+        public ETS2_BeaconStyleToStringVC() : base(Profiles.ETS2.ETS2_BeaconStyle.Simple_Flash) { }
+    }
 }
