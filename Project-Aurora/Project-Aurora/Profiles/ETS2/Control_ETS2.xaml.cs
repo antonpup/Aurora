@@ -102,6 +102,10 @@ namespace Aurora.Profiles.ETS2 {
         // --- Preview Tab --- //
         // ------------------ //
         private void PopulateComboBoxes() {
+            this.truckPowerState.Items.Add(TruckPowerComboBoxStates.Off);
+            this.truckPowerState.Items.Add(TruckPowerComboBoxStates.Electric);
+            this.truckPowerState.Items.Add(TruckPowerComboBoxStates.Engine);
+
             this.lights.Items.Add(LightComboBoxStates.Off);
             this.lights.Items.Add(LightComboBoxStates.ParkingLights);
             this.lights.Items.Add(LightComboBoxStates.LowBeam);
@@ -113,17 +117,10 @@ namespace Aurora.Profiles.ETS2 {
             this.blinkers.Items.Add(BlinkerComboBoxStates.Hazard);
         }
 
-        private void PreviewTextInput_Numeric(object sender, System.Windows.Input.TextCompositionEventArgs e) {
-            // https://stackoverflow.com/a/1268648/1305670
-            e.Handled = new System.Text.RegularExpressions.Regex("[^0-9]+").IsMatch(e.Text);
-        }
-
-        private void speed_TextChanged(object sender, TextChangedEventArgs e) {
-            float.TryParse((sender as TextBox).Text, out gameState._memdat.value.speed);
-        }
-
-        private void speedLimit_TextChanged(object sender, TextChangedEventArgs e) {
-            float.TryParse((sender as TextBox).Text, out gameState._memdat.value.navigationSpeedLimit);
+        private void truckPowerState_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            TruckPowerComboBoxStates selected = (TruckPowerComboBoxStates)(sender as ComboBox).SelectedItem;
+            gameState._memdat.value.electricEnabled = boolToByte(selected != TruckPowerComboBoxStates.Off); // Electric is true for both electric and engine states
+            gameState._memdat.value.engineEnabled = boolToByte(selected == TruckPowerComboBoxStates.Engine);
         }
 
         private void lights_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -131,18 +128,6 @@ namespace Aurora.Profiles.ETS2 {
             gameState._memdat.value.lightsParking = boolToByte(selected == LightComboBoxStates.ParkingLights); // Parking light only comes on when the parking lights are on
             gameState._memdat.value.lightsBeamLow = boolToByte(selected == LightComboBoxStates.LowBeam || selected == LightComboBoxStates.HighBeam); // Low beam light is on when the low beam is on OR when high beam is on
             gameState._memdat.value.lightsBeamHigh = boolToByte(selected == LightComboBoxStates.HighBeam); // Highbeam only on when high beam is on
-        }
-
-        private void frontAux_Checked(object sender, RoutedEventArgs e) {
-            gameState._memdat.value.lightsAuxFront = boolToByte((sender as CheckBox).IsChecked);
-        }
-
-        private void roofAux_Checked(object sender, RoutedEventArgs e) {
-            gameState._memdat.value.lightsAuxRoof = boolToByte((sender as CheckBox).IsChecked);
-        }
-
-        private void beacon_Checked(object sender, RoutedEventArgs e) {
-            gameState._memdat.value.lightsBeacon = boolToByte((sender as CheckBox).IsChecked);
         }
 
         private void blinkers_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -180,6 +165,18 @@ namespace Aurora.Profiles.ETS2 {
             gameState._memdat.value.blinkerRightOn = (byte)(newState ? 1 : 0);
         }
 
+        private void beacon_Checked(object sender, RoutedEventArgs e) {
+            gameState._memdat.value.lightsBeacon = boolToByte((sender as CheckBox).IsChecked);
+        }
+
+        private void trailerAttached_Checked(object sender, RoutedEventArgs e) {
+            gameState._memdat.value.trailer_attached = boolToByte((sender as CheckBox).IsChecked);
+        }
+
+        private void cruiseControl_Checked(object sender, RoutedEventArgs e) {
+            gameState._memdat.value.cruiseControlSpeed = boolToByte((sender as CheckBox).IsChecked);
+        }
+
         private void throttleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             gameState._memdat.value.gameThrottle = (float)(sender as Slider).Value;
         }
@@ -191,6 +188,10 @@ namespace Aurora.Profiles.ETS2 {
         private void engineRpmSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             gameState._memdat.value.engineRpm = (float)(sender as Slider).Value;
             gameState._memdat.value.engineRpmMax = 1f;
+        }
+
+        private void handbrake_Checked(object sender, RoutedEventArgs e) {
+            gameState._memdat.value.parkBrake = boolToByte((sender as CheckBox).IsChecked);
         }
 
         private void fuelSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -205,6 +206,10 @@ namespace Aurora.Profiles.ETS2 {
         private byte boolToByte(bool? v) {
             return (byte)(v.HasValue && v.Value ? 1 : 0);
         }
+    }
+
+    enum TruckPowerComboBoxStates {
+        Off, Electric, Engine
     }
 
     enum LightComboBoxStates {

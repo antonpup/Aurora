@@ -41,6 +41,8 @@
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -53,42 +55,42 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Left side -->
-                    <Label Content="Speed (KPH):" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" />
-                    <TextBox x:Name="speed" Text="0" Grid.Column="1" Grid.Row="0" Margin="0,4,60,4" PreviewTextInput="PreviewTextInput_Numeric" TextChanged="speed_TextChanged" />
+                    <Label Content="Truck Power State:" Grid.Row="0" />
+                    <ComboBox x:Name="truckPowerState" Grid.Row="0" Grid.Column="1" Margin="4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="truckPowerState_SelectionChanged" />
 
-                    <Label Content="Speed limit (KPH):" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" />
-                    <TextBox x:Name="speedLimit" Text="0" Grid.Column="1" Grid.Row="1" Margin="0,4,60,4" PreviewTextInput="PreviewTextInput_Numeric" TextChanged="speedLimit_TextChanged" />
+                    <Label Content="Lights:" Grid.Row="2" />
+                    <ComboBox x:Name="lights" Grid.Row="2" Grid.Column="1" Margin="0,4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="lights_SelectionChanged" />
 
-                    <Label Content="Lights:" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" />
-                    <ComboBox x:Name="lights" Grid.Column="1" Grid.Row="3" Margin="0,4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="lights_SelectionChanged" />
+                    <Label Content="Beacon:" Grid.Row="4" VerticalAlignment="Center" />
+                    <CheckBox x:Name="beacon" Content="On" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0" Checked="beacon_Checked" Unchecked="beacon_Checked" />
 
-                    <Label Content="Auxiliary lights:" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" />
-                    <WrapPanel Grid.Column="1" Grid.Row="4" VerticalAlignment="Center">
-                        <CheckBox x:Name="frontAux" Content="Front" Grid.Column="1" Grid.Row="5" Checked="frontAux_Checked" Unloaded="frontAux_Checked" />
-                        <CheckBox x:Name="roofAux" Content="Roof" Grid.Column="1" Grid.Row="6" Margin="8,0,0,0" Checked="roofAux_Checked" Unchecked="roofAux_Checked" />
-                        <CheckBox x:Name="beacon" Content="Beacon" Grid.Column="1" Grid.Row="7" Margin="8,0,0,0" Checked="beacon_Checked" Unchecked="beacon_Checked" />
-                    </WrapPanel>
+                    <Label Content="Blinkers:" Grid.Row="3" />
+                    <ComboBox x:Name="blinkers" Grid.Row="3" Grid.Column="1" Margin="0,4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="blinkers_SelectionChanged" />
 
+                    <Label Content="Trailer Attached:" Grid.Row="6" />
+                    <CheckBox x:Name="trailerAttached" Content="Yes" Grid.Row="6" Grid.Column="1"  VerticalAlignment="Center" Margin="8,0,0,0" Checked="trailerAttached_Checked" Unchecked="trailerAttached_Checked" />
 
-                    <Label Content="Blinkers:" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" />
-                    <ComboBox x:Name="blinkers" Grid.Column="1" Grid.Row="5" Margin="0,4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="blinkers_SelectionChanged" />
-
+                    <Label Content="Cruise Control:" Grid.Row="7" />
+                    <CheckBox x:Name="cruiseControl" Content="On" Grid.Row="7" Grid.Column="1"  VerticalAlignment="Center" Margin="8,0,0,0" Checked="cruiseControl_Checked" Unchecked="cruiseControl_Checked" />
 
                     <!-- Right side -->
-                    <Label Content="Throttle:" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" />
-                    <Slider x:Name="throttleSlider" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" ValueChanged="throttleSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+                    <Label Content="Throttle:" Grid.Row="0" Grid.Column="3" />
+                    <Slider x:Name="throttleSlider" Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" ValueChanged="throttleSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
 
-                    <Label Content="Brakes:" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" />
-                    <Slider x:Name="brakeSlider" Grid.Column="4" Grid.Row="1" VerticalAlignment="Center" ValueChanged="brakeSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+                    <Label Content="Brakes:" Grid.Row="1" Grid.Column="3" />
+                    <Slider x:Name="brakeSlider" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" ValueChanged="brakeSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
 
-                    <Label Content="Engine RPM:" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center" />
-                    <Slider x:Name="engineRpmSlider" Grid.Column="4" Grid.Row="2" VerticalAlignment="Center" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="engineRpmSlider_ValueChanged" />
+                    <Label Content="Engine RPM:" Grid.Row="2" Grid.Column="3" />
+                    <Slider x:Name="engineRpmSlider" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="engineRpmSlider_ValueChanged" />
 
-                    <Label Content="Fuel:" Grid.Column="3" Grid.Row="4" VerticalAlignment="Center" />
-                    <Slider x:Name="fuelSlider" TickPlacement="BottomRight" TickFrequency="0.1" Maximum="1" Grid.Column="4" Grid.Row="4" VerticalAlignment="Center" ValueChanged="fuelSlider_ValueChanged" LargeChange="0.1" SmallChange="0.05" />
+                    <Label Content="Handbrake:" Grid.Row="3" Grid.Column="3" />
+                    <CheckBox x:Name="handbrake" Content="On" Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" Margin="8,0,0,0" Checked="handbrake_Checked" Unchecked="handbrake_Checked" />
 
-                    <Label Content="Air Pressure:" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center" />
-                    <Slider x:Name="airSlider" Grid.Column="4" Grid.Row="5" VerticalAlignment="Center" ValueChanged="airSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+                    <Label Content="Fuel:" Grid.Row="5" Grid.Column="3"  />
+                    <Slider x:Name="fuelSlider" Grid.Row="5" Grid.Column="4" TickPlacement="BottomRight" TickFrequency="0.1" Maximum="1" VerticalAlignment="Center" ValueChanged="fuelSlider_ValueChanged" LargeChange="0.1" SmallChange="0.05" />
+
+                    <Label Content="Air Pressure:" Grid.Row="6" Grid.Column="3" />
+                    <Slider x:Name="airSlider" Grid.Row="6" Grid.Column="4" VerticalAlignment="Center" ValueChanged="airSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
                 </Grid>
             </TabItem>
         </TabControl>
