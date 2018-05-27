@@ -658,6 +658,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750.json");
                 else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750_TKL)
                     layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750_tkl.json");
+                else if (keyboard_preference == PreferredKeyboard.Wooting_One)
+                    layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
                 else
                 {
                     LoadNone();
