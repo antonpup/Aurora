@@ -18,15 +18,12 @@ namespace Aurora.Devices.SteelSeriesHID
         private readonly object action_lock = new object();
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
-        private bool rival100Found;
-        private bool rival300Found;
-        private bool rival500Found;
-        private bool rival700Found;
-
-        Rival100 _rival100 = new Rival100();
-        Rival300 _rival300 = new Rival300();
-        Rival500 _rival500 = new Rival500();
-        Rival700 _rival700 = new Rival700();
+        List<ISSDevice> AllDevices = new List<ISSDevice> {
+            new Rival100(),
+            new Rival300(),
+            new Rival500()
+        };
+        List<ISSDevice> FoundDevices = new List<ISSDevice>();
 
         public bool Initialize()
         {
@@ -34,18 +31,23 @@ namespace Aurora.Devices.SteelSeriesHID
             {
                 if (!isInitialized)
                 {
+                    this.FoundDevices.Clear();
                     try
                     {
-
-                        if (_rival100.Connect()) { rival100Found = true; isInitialized = true; }
-                        if (_rival300.Connect()) { rival300Found = true; isInitialized = true; }
-                        if (_rival500.Connect()) { rival500Found = true; isInitialized = true; }
+                        foreach(ISSDevice dev in AllDevices)
+                        {
+                            if (dev.Connect())
+                                FoundDevices.Add(dev);
+                        }
+                        
                     }
                     catch (Exception e)
                     {
                         Global.logger.Error("SteelSeriesHID could not be initialized: " + e);
                         isInitialized = false;
                     }
+                    if (FoundDevices.Count > 0)
+                        isInitialized = true;
                 }
 
                 return isInitialized;
@@ -62,9 +64,11 @@ namespace Aurora.Devices.SteelSeriesHID
                 {
                     if (isInitialized)
                     {
-                        if (rival100Found) { _rival100.Disconnect(); }
-                        if (rival300Found) { _rival300.Disconnect(); }
-                        if (rival500Found) { _rival500.Disconnect(); }
+                        foreach (ISSDevice dev in FoundDevices)
+                        {
+                            dev.Disconnect();
+                        }
+                        this.FoundDevices.Clear();
                         this.Reset();
 
                         isInitialized = false;
@@ -136,16 +140,10 @@ namespace Aurora.Devices.SteelSeriesHID
                     if (token.IsCancellationRequested) return false;
                     else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
                     {
-                        if (key.Key == DeviceKeys.Peripheral_Logo)
+                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel)
                         {
-                            if (rival100Found) { _rival100.SetLedColor1(color.R, color.G, color.B); }
-                            if (rival300Found) { _rival300.SetLedColor1(color.R, color.G, color.B); }
-                            if (rival500Found) { _rival500.SetLedColor1(color.R, color.G, color.B); }
-                        }
-                        else if (key.Key == DeviceKeys.Peripheral_ScrollWheel)
-                        {
-                            if (rival300Found) { _rival300.SetLedColor2(color.R, color.G, color.B); }
-                            if (rival500Found) { _rival500.SetLedColor1(color.R, color.G, color.B); }
+                            foreach (ISSDevice device in FoundDevices)
+                                device.SetLEDColour(key.Key, color.R, color.G, color.B);
                         }
                         peripheral_updated = true;
                     }
@@ -200,53 +198,47 @@ namespace Aurora.Devices.SteelSeriesHID
 
     }
 
-
-    class Rival100
+    interface ISSDevice
     {
-        private static HidDevice mouse;
+        bool IsConnected { get; }
+        bool Connect();
+        bool Disconnect();
+        bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue);
+    }
 
-        public bool Connect()
+    abstract class RivalBase : ISSDevice
+    {
+        protected HidDevice device;
+        protected Dictionary<DeviceKeys, Func<byte, byte, byte, bool>> deviceKeyMap;
+        public bool IsConnected { get; protected set; } = false;
+
+        protected bool Connect(int vendorID, int[] productIDs)
         {
-            if (HidDevices.Enumerate(0x1038, 0x1702).FirstOrDefault() != null) //SteelSeries Rival 100
-            {
-                mouse = HidDevices.Enumerate(0x1038, 0x1702).FirstOrDefault();
+            IEnumerable<HidDevice> devices = HidDevices.Enumerate(vendorID, productIDs);
 
+            if (devices.Count() > 0)
+            {
+                device = devices.FirstOrDefault();
                 try
                 {
-                    mouse.OpenDevice();
-                    return true;
+                    device.OpenDevice();
+                    return (IsConnected = true);
                 }
-                catch
+                catch (Exception exc)
                 {
-                    return false;
-                }
-
-            }
-            else if (HidDevices.Enumerate(0x1038, 0x1729).FirstOrDefault() != null) //SteelSeries Rival 110
-            {
-                mouse = HidDevices.Enumerate(0x1038, 0x1729).FirstOrDefault();
-
-                try
-                {
-                    mouse.OpenDevice();
-                    return true;
-                }
-                catch
-                {
-                    return false;
+                    Global.logger.LogLine($"Error when attempting to open SteelSeries HID device:\n{exc}", Logging_Level.Error);
                 }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
-        public bool Disconnect()
+        public abstract bool Connect();
+
+        public virtual bool Disconnect()
         {
             try
             {
-                mouse.CloseDevice();
+                device.CloseDevice();
                 return true;
             }
             catch
@@ -255,170 +247,105 @@ namespace Aurora.Devices.SteelSeriesHID
             }
         }
 
-        public void SetLedColor1(byte r, byte g, byte b)
+        public bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue)
         {
-            HidReport report = mouse.CreateReport();
+            if (this.deviceKeyMap.TryGetValue(key, out Func<byte, byte, byte, bool> func))
+                return func.Invoke(red, green, blue);
+
+            return false;
+        }
+    }
+
+    class Rival100 : RivalBase
+    {
+        public Rival100()
+        {
+            deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            {
+                { DeviceKeys.Peripheral_Logo, SetLogo }
+            };
+        }
+
+        public override bool Connect()
+        {
+            return this.Connect(0x1038, new[] { 0x1702, 0x1729 });
+        }
+
+        public bool SetLogo(byte r, byte g, byte b)
+        {
+            HidReport report = device.CreateReport();
             report.ReportId = 0x02;
             report.Data[0] = 0x05;
             report.Data[1] = 0x00;
             report.Data[2] = r;
             report.Data[3] = g;
             report.Data[4] = b;
-            mouse.WriteReportAsync(report);
+            return device.WriteReport(report);
         }
     }
 
 
-    class Rival300
+    class Rival300 : RivalBase
     {
-        private static HidDevice mouse;
-
-        public bool Connect()
+        public Rival300()
         {
-            if (HidDevices.Enumerate(0x1038, 0x1710).FirstOrDefault() != null) //SteelSeries Rival 300
+            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
-                mouse = HidDevices.Enumerate(0x1038, 0x1710).FirstOrDefault();
-
-                try
-                {
-                    mouse.OpenDevice();
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-
-            }
-            else if (HidDevices.Enumerate(0x1038, 0x171A).FirstOrDefault() != null) //SteelSeries Rival 300 CS:GO Hyperbeast Edition
-            {
-                mouse = HidDevices.Enumerate(0x1038, 0x171A).FirstOrDefault();
-
-                try
-                {
-                    mouse.OpenDevice();
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            else if (HidDevices.Enumerate(0x1038, 0x1394).FirstOrDefault() != null) //SteelSeries Rival 300 CS:GO Fade Edition
-            {
-                mouse = HidDevices.Enumerate(0x1038, 0x1394).FirstOrDefault();
-
-                try
-                {
-                    mouse.OpenDevice();
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            else if (HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault() != null) //SteelSeries Rival
-            {
-                mouse = HidDevices.Enumerate(0x1038, 0x1384).FirstOrDefault();
-
-                try
-                {
-                    mouse.OpenDevice();
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
+                { DeviceKeys.Peripheral_Logo, SetLogo },
+                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }
+            };
         }
 
-        public bool Disconnect()
+        public override bool Connect()
         {
-            try
-            {
-                mouse.CloseDevice();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return this.Connect(0x1038, new[] { 0x1710, 0x171A, 0x1394, 0x1384 });
         }
 
-        public void SetLedColor2(byte r, byte g, byte b)
+        public bool SetScrollWheel(byte r, byte g, byte b)
         {
-            HidReport report = mouse.CreateReport();
+            HidReport report = device.CreateReport();
             report.ReportId = 0x02;
             report.Data[0] = 0x08;
             report.Data[1] = 0x02;
             report.Data[2] = r;
             report.Data[3] = g;
             report.Data[4] = b;
-            mouse.WriteReportAsync(report);
+            return device.WriteReport(report);
         }
 
-        public void SetLedColor1(byte r, byte g, byte b)
+        public bool SetLogo(byte r, byte g, byte b)
         {
-            HidReport report = mouse.CreateReport();
+            HidReport report = device.CreateReport();
             report.ReportId = 0x02;
             report.Data[0] = 0x08;
             report.Data[1] = 0x01;
             report.Data[2] = r;
             report.Data[3] = g;
             report.Data[4] = b;
-            mouse.WriteReportAsync(report);
+            return device.WriteReport(report);
         }
     }
 
 
-    class Rival500
+    class Rival500 : RivalBase
     {
-        private static HidDevice mouse;
-
-        public bool Connect()
+        public Rival500()
         {
-            if (HidDevices.Enumerate(0x1038, 0x170e).FirstOrDefault() != null) //SteelSeries Rival 500
+            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
-                mouse = HidDevices.Enumerate(0x1038, 0x170e).FirstOrDefault();
-
-                try
-                {
-                    mouse.OpenDevice();
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
+                { DeviceKeys.Peripheral_Logo, SetLogo },
+                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }
+            };
         }
 
-        public bool Disconnect()
+        public override bool Connect()
         {
-            try
-            {
-                mouse.CloseDevice();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return this.Connect(0x1038, new[] { 0x170e });
         }
 
-        public void setLedColor2(byte r, byte g, byte b)
+        public bool SetScrollWheel(byte r, byte g, byte b)
         {
-            HidReport report = mouse.CreateReport();
+            HidReport report = device.CreateReport();
             report.ReportId = 0x03;
             report.Data[0] = 0x05;
             report.Data[1] = 0x00;
@@ -433,12 +360,12 @@ namespace Aurora.Devices.SteelSeriesHID
             report.Data[10] = 0x00;
             report.Data[11] = 0x01;
             report.Data[12] = 0x01;
-            mouse.WriteReportAsync(report);
+            return device.WriteReport(report);
         }
 
-        public void SetLedColor1(byte r, byte g, byte b)
+        public bool SetLogo(byte r, byte g, byte b)
         {
-            HidReport report = mouse.CreateReport();
+            HidReport report = device.CreateReport();
             report.ReportId = 0x03;
             report.Data[0] = 0x05;
             report.Data[1] = 0x00;
@@ -454,7 +381,7 @@ namespace Aurora.Devices.SteelSeriesHID
             report.Data[11] = 0x00;
             report.Data[12] = 0x01;
 
-            mouse.WriteReportAsync(report);
+            return device.WriteReport(report);
         }
 
     }
