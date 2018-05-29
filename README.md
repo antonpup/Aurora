@@ -16,8 +16,12 @@ Project Aurora is a utility that unifies RGB lighting devices across different b
 
 [Bleeding-edge builds (decent chance they're going to have issues)](https://ci.appveyor.com/project/antonpup/aurora/build/artifacts)
 
+## Discord Server
+
+Having issues? Want to discuss changes or talk about possible features? Want to be involved in the development and design process of Aurora? Join our [Discord server](https://discord.gg/YAuBmg9) and get involved!
+
 ## How to Install
-1. First of all, make sure that your PC meets the requirements listed above. Also, make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653) installed.
+1. First of all, make sure that your PC meets the requirements listed above. Also, make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2017](https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads) and [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-gb/download/details.aspx?id=49981) installed.
 2. Download the latest release from above
 3. Extract the archive anywhere on your computer. Preferably keep it in a location you can easily access.
 4. Run "Aurora.exe", from that point, Aurora should provide you with further instructions and options.
