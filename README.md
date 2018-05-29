@@ -216,8 +216,8 @@ Secondary goal of Aurora is to integrate RGB lighting into popular games. RGB li
 
 
 ## Development Team
-* [Simon-Wh](https://github.com/simon-wh) Lead Developer (since May 2017), Developer (July 2016 - May 2017)
-* [AntonPup](https://github.com/antonpup) Owner, Lead Developer (until May 2017)
+* [simon-wh](https://github.com/simon-wh) Lead Developer (since May 2017), Developer (July 2016 - May 2017)
+* [Antonpup](https://github.com/antonpup) Owner, Lead Developer (until May 2017)
 
 ### Minor Announcement
 
