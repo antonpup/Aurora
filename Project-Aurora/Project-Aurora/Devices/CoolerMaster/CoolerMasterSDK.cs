@@ -111,15 +111,11 @@ namespace CoolerMaster
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_LED_ROW * MAX_LED_COLUMN, ArraySubType = UnmanagedType.Struct)]
             public KEY_COLOR[,] KeyColor;
-        }
+        } 
 
         public const int MAX_LED_ROW = 7;
 
         public const int MAX_LED_COLUMN = 24;
-
-        public const int DEFAULT_LED_ROW = 7;
-
-        public const int DEFAULT_LED_COLUMN = 24;
 
         public const string sdkDLL = @"SDKDLL.dll";
 

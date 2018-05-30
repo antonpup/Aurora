@@ -233,11 +233,11 @@ namespace Aurora.Devices.CoolerMaster
             {DeviceKeys.NUM_PERIOD, new int [] {5, 17} }
         };
 
-        public static readonly Dictionary<CoolerMasterSDK.DEVICE_INDEX, ((int,int), Dictionary<DeviceKeys, int[]>)> KeyboardLayoutMapping = new Dictionary<CoolerMasterSDK.DEVICE_INDEX, ((int, int), Dictionary<DeviceKeys, int[]>)>
+        public static readonly Dictionary<CoolerMasterSDK.DEVICE_INDEX, Dictionary<DeviceKeys, int[]>> KeyboardLayoutMapping = new Dictionary<CoolerMasterSDK.DEVICE_INDEX, Dictionary<DeviceKeys, int[]>>
         {
-            { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M, ((6,22), ProMKeyCoords) },
-            { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M_White, ((6,22), ProMKeyCoords) },
-            { CoolerMasterSDK.DEVICE_INDEX.DEV_MK750, ((7,24), KeyCoords) }
+            { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M, ProMKeyCoords },
+            { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M_White, ProMKeyCoords },
+            { CoolerMasterSDK.DEVICE_INDEX.DEV_MK750, KeyCoords }
         };
 
     }
@@ -259,7 +259,7 @@ namespace Aurora.Devices.CoolerMaster
 
         //Keyboard stuff
         private CoolerMasterSDK.COLOR_MATRIX color_matrix = new CoolerMasterSDK.COLOR_MATRIX();
-        private CoolerMasterSDK.KEY_COLOR[,] key_colors;
+        private CoolerMasterSDK.KEY_COLOR[,] key_colors = new CoolerMasterSDK.KEY_COLOR[CoolerMasterSDK.MAX_LED_ROW, CoolerMasterSDK.MAX_LED_COLUMN];
         //private Color peripheral_Color = Color.Black;
 
         //Previous data
@@ -287,13 +287,6 @@ namespace Aurora.Devices.CoolerMaster
                                     {
                                         InitializedDevices.Add(device);
                                         isInitialized = true;
-                                        if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(device))
-                                        {
-                                            var map = CoolerMasterKeys.KeyboardLayoutMapping[device];
-                                            key_colors = new CoolerMasterSDK.KEY_COLOR[map.Item1.Item1, map.Item1.Item2];
-                                        }
-                                        else
-                                            key_colors = new CoolerMasterSDK.KEY_COLOR[CoolerMasterSDK.DEFAULT_LED_ROW, CoolerMasterSDK.DEFAULT_LED_COLUMN];
                                         break;
                                     }
                                 }
@@ -429,6 +422,11 @@ namespace Aurora.Devices.CoolerMaster
         {
             try
             {
+                var coords = CoolerMasterKeys.KeyCoords;
+
+                if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
+                    coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice];
+                
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
                     if (token.IsCancellationRequested) return false;
@@ -455,10 +453,7 @@ namespace Aurora.Devices.CoolerMaster
                             return false;*/
                     }
 
-                    var coords = CoolerMasterKeys.KeyCoords;
-
-                    if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
-                        coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice].Item2;
+                    
 
                     if (coords.TryGetValue(dev_key, out coordinates))
                         SetOneKey(coordinates, (Color)key.Value);
