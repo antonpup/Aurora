@@ -155,7 +155,7 @@ namespace Aurora.Devices.Razer
             {DeviceKeys.ZERO, new int [] {1, 11} },
             {DeviceKeys.MINUS, new int [] {1, 12} },
             {DeviceKeys.EQUALS, new int [] {1, 13} },
-            {DeviceKeys.BACKSPACE, new int [] {1, 14} },
+            {DeviceKeys.BACKSPACE, new int [] {1, 15} },
             {DeviceKeys.TAB, new int [] {2, 1} },
             {DeviceKeys.Q, new int [] {2, 2} },
             {DeviceKeys.W, new int [] {2, 3} },
