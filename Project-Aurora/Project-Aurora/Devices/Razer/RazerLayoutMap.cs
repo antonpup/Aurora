@@ -128,8 +128,8 @@ namespace Aurora.Devices.Razer
         public static readonly Dictionary<DeviceKeys, int[]> Blade = new Dictionary<DeviceKeys, int[]>
         {
             {DeviceKeys.ESC, new int [] {0,1} },
-            {DeviceKeys.F1, new int [] {0, 1} },
-            {DeviceKeys.F2, new int [] {0, 2} },
+            {DeviceKeys.F1, new int [] {0, 2} },
+            {DeviceKeys.F2, new int [] {0, 3} },
             {DeviceKeys.F3, new int [] {0, 4} },
             {DeviceKeys.F4, new int [] {0, 5} },
             {DeviceKeys.F5, new int [] {0, 6} },
