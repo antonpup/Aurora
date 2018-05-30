@@ -204,8 +204,8 @@ namespace Aurora.Devices.Razer
             {DeviceKeys.FN_Key, new int [] {5, 10} },
             {DeviceKeys.RIGHT_CONTROL, new int [] {5, 11} },
             {DeviceKeys.ARROW_LEFT, new int [] {5, 12} },
-            {DeviceKeys.ARROW_UP, new int [] {5, 14} },
-            // {DeviceKeys.ARROW_DOWN, new int [] {5, 16} },
+            {DeviceKeys.ARROW_UP, new int [] {5, 13} },
+            {DeviceKeys.ARROW_DOWN, new int [] {5, 14} },
             {DeviceKeys.ARROW_RIGHT, new int [] {5, 15} }
         };
     }
