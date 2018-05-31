@@ -21,11 +21,8 @@ namespace Aurora.Devices.Wooting
 
         private readonly object action_lock = new object();
 
-        private KeyColour[,] colourMap = new KeyColour[RGBControl.MaxRGBRows, RGBControl.MaxRGBCols];
-
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
-
 
         public bool Initialize()
         {
