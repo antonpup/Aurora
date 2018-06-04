@@ -236,8 +236,10 @@ namespace Aurora.Devices.CoolerMaster
         public static readonly Dictionary<CoolerMasterSDK.DEVICE_INDEX, Dictionary<DeviceKeys, int[]>> KeyboardLayoutMapping = new Dictionary<CoolerMasterSDK.DEVICE_INDEX, Dictionary<DeviceKeys, int[]>>
         {
             { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M, ProMKeyCoords },
-            { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M_White, ProMKeyCoords }
+            { CoolerMasterSDK.DEVICE_INDEX.DEV_MKeys_M_White, ProMKeyCoords },
+            { CoolerMasterSDK.DEVICE_INDEX.DEV_MK750, KeyCoords }
         };
+
     }
 
     class CoolerMasterDevice : Device
@@ -285,6 +287,7 @@ namespace Aurora.Devices.CoolerMaster
                                     {
                                         InitializedDevices.Add(device);
                                         isInitialized = true;
+                                        break;
                                     }
                                 }
                                 catch (Exception exc)
@@ -419,6 +422,11 @@ namespace Aurora.Devices.CoolerMaster
         {
             try
             {
+                var coords = CoolerMasterKeys.KeyCoords;
+
+                if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
+                    coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice];
+                
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
                     if (token.IsCancellationRequested) return false;
@@ -428,7 +436,7 @@ namespace Aurora.Devices.CoolerMaster
                     DeviceKeys dev_key = key.Key;
 
                     if (dev_key == DeviceKeys.ENTER &&
-                        (Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us ||
+                        (Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us &&
                          Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.dvorak))
                         dev_key = DeviceKeys.BACKSLASH;
 
@@ -445,10 +453,7 @@ namespace Aurora.Devices.CoolerMaster
                             return false;*/
                     }
 
-                    var coords = CoolerMasterKeys.KeyCoords;
-
-                    if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
-                        coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice];
+                    
 
                     if (coords.TryGetValue(dev_key, out coordinates))
                         SetOneKey(coordinates, (Color)key.Value);

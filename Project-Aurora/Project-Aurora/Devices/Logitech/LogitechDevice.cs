@@ -273,10 +273,13 @@ namespace Aurora.Devices.Logitech
 
         private void SetOneKey(Logitech_keyboardBitmapKeys key, Color color)
         {
+            if (color.A != 255)
+                color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+
             bitmap[(int)key] = color.B;
             bitmap[(int)key + 1] = color.G;
             bitmap[(int)key + 2] = color.R;
-            bitmap[(int)key + 3] = color.A;
+            bitmap[(int)key + 3] = 255;
         }
 
 

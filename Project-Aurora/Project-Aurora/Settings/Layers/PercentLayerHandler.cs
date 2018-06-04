@@ -74,6 +74,8 @@ namespace Aurora.Settings.Layers
                 catch (Exception exc)
                 {
                     value = 0;
+                    if (Global.isDebug)
+                        throw exc;
                 }
             }
 
@@ -88,6 +90,8 @@ namespace Aurora.Settings.Layers
                 catch (Exception exc)
                 {
                     maxvalue = 0;
+                    if (Global.isDebug)
+                        throw exc;
                 }
             }
 

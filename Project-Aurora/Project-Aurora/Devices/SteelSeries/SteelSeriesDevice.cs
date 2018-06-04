@@ -276,11 +276,11 @@ namespace Aurora.Devices.SteelSeries
                 {
                     gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
                 }
-                else if (zone == DeviceKeys.Peripheral_FrontLight)
-                {
+                //else if (zone == DeviceKeys.Peripheral_FrontLight)
+                //{
                     //NYI
-                    Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
-                }
+                    //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
+                //}
                 /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
                 {
                     GameSenseSDK.setHeadsetColor(color.R, color.G, color.B);

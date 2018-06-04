@@ -79,6 +79,9 @@ namespace Aurora.Profiles
 
         public string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
 
+        public event EventHandler PreUpdate;
+        public event EventHandler PostUpdate;
+
         private ActiveProcessMonitor processMonitor;
 
         public LightingStateManager()
@@ -123,7 +126,8 @@ namespace Aurora.Profiles
                 new Blade_and_Soul.BnS(),
                 new Event_SkypeOverlay(),
                 new ROTTombRaider.ROTTombRaider(),
-				new DyingLight.DyingLight()
+				new DyingLight.DyingLight(),
+                new ETS2.ETS2()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -138,6 +142,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Script", "Script Layer", typeof(ScriptLayerHandler)),
                 new LayerHandlerEntry("Percent", "Percent Effect Layer", typeof(PercentLayerHandler)),
                 new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
+                new LayerHandlerEntry("Conditional", "Conditional Layer", typeof(ConditionalLayerHandler)),
                 new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
                 new LayerHandlerEntry("ShortcutAssistant", "Shortcut Assistant Layer", typeof(ShortcutAssistantLayerHandler) ),
                 new LayerHandlerEntry("Equalizer", "Audio Visualizer Layer", typeof(EqualizerLayerHandler) ),
@@ -497,6 +502,8 @@ namespace Aurora.Profiles
 
         private void Update()
         {
+            PreUpdate?.Invoke(this, null);
+
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
             if ((Global.Configuration.time_based_dimming_enabled &&
                Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
@@ -592,6 +599,8 @@ namespace Aurora.Profiles
             }
 
             Global.effengine.PushFrame(newFrame);
+
+            PostUpdate?.Invoke(this, null);
         }
 
         public void GameStateUpdate(IGameState gs)

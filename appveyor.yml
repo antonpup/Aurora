@@ -1,4 +1,4 @@
-version: 0.6.1-dev3-{build}
+version: 0.6.1-dev4-{build}
 pull_requests:
   do_not_increment_build_number: true
 branches:
@@ -7,6 +7,7 @@ branches:
 skip_branch_with_pr: true
 configuration: Release
 platform: x64
+image: Visual Studio 2017
 
 init:
   - ps: >-
@@ -43,5 +44,4 @@ deploy:
   draft: true
   prerelease: false
   on:
-    branch: dev
     appveyor_repo_tag: true

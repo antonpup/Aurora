@@ -204,7 +204,13 @@ namespace Aurora.Settings
         [Description("SteelSeries Apex M750")]
         SteelSeries_Apex_M750 = 701,
         [Description("SteelSeries Apex M750 TKL")]
-        SteelSeries_Apex_M750_TKL = 702
+        SteelSeries_Apex_M750_TKL = 702,
+
+        [Description("Wooting One")]
+        Wooting_One = 800,
+
+        [Description("Asus Strix Flare")]
+        Asus_Strix_Flare = 900,
     }
 
     public enum PreferredKeyboardLocalization
@@ -236,7 +242,9 @@ namespace Aurora.Settings
         [Description("DVORAK (US)")]
         dvorak = 12,
         [Description("DVORAK (INT)")]
-        dvorak_int = 13
+        dvorak_int = 13,
+        [Description("Hungarian")]
+        hu = 14
     }
 
     public enum PreferredMouse
@@ -263,13 +271,17 @@ namespace Aurora.Settings
 
         //Clevo range is 400-499
         [Description("Clevo - Touchpad")]
-        Clevo_Touchpad = 400
+        Clevo_Touchpad = 400,
 
         //Cooler Master range is 500-599
 
         //Roccat range is 600-699
 
         //Steelseries range is 700-799
+        [Description("SteelSeries - Rival 300")]
+        SteelSeries_Rival_300 = 700,
+        [Description("SteelSeries - Rival 300 HP OMEN Edition")]
+        SteelSeries_Rival_300_HP_OMEN_Edition = 701
     }
 
     public enum KeycapType
@@ -293,6 +305,15 @@ namespace Aurora.Settings
 
         [Description("Foreground App Scan")]
         ForegroroundApp = 1
+    }
+
+    public enum BitmapAccuracy
+    {
+        Best = 1,
+        Great = 3,
+        Good = 6,
+        Okay = 9,
+        Fine = 12
     }
 
     public class Configuration : Settings
@@ -334,6 +355,9 @@ namespace Aurora.Settings
         private bool showDefaultLightingOnDisabled = false;
         public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
 
+        private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
+        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
+
         public bool updates_check_on_start_up;
         public bool start_silently;
         public AppExitMode close_mode;
@@ -347,6 +371,7 @@ namespace Aurora.Settings
         public bool devices_disable_keyboard;
         public bool devices_disable_mouse;
         public bool devices_disable_headset;
+        public bool ss_hid_disabled = false;
         public HashSet<Type> devices_disabled;
         public bool OverlaysInPreview;
 
@@ -469,6 +494,12 @@ namespace Aurora.Settings
                 return CreateDefaultConfigurationFile();
 
             Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+
+            if (!config.ss_hid_disabled)
+            {
+                config.devices_disabled.Add(typeof(Devices.SteelSeriesHID.SteelSeriesHIDDevice));
+                config.ss_hid_disabled = true;
+            }
 
             return config;
         }

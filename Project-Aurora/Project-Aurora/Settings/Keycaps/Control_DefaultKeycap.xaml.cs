@@ -95,7 +95,10 @@ namespace Aurora.Settings.Keycaps
             {
                 if (!isImage)
                 {
-                    keyCap.Foreground = new SolidColorBrush(key_color);
+                    if (string.IsNullOrWhiteSpace(keyCap.Text))
+                        keyBorder.BorderBrush = new SolidColorBrush(key_color);
+                    else
+                        keyCap.Foreground = new SolidColorBrush(key_color);
                 }
                 else
                 {
@@ -112,7 +115,12 @@ namespace Aurora.Settings.Keycaps
                 if (keyBorder.IsEnabled)
                 {
                     if (!isImage)
-                        keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)30, (byte)30, (byte)30));
+                    {
+                        if (string.IsNullOrWhiteSpace(keyCap.Text))
+                            keyBorder.Background = new SolidColorBrush(Utils.ColorUtils.MultiplyColorByScalar(key_color, 0.6));
+                        else
+                            keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)30, (byte)30, (byte)30));
+                    }
                     else
                         keyBorder.Background = new SolidColorBrush(key_color);
                 }

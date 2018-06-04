@@ -499,6 +499,20 @@ namespace Aurora.Settings
             label.Text = (int)(sld.Value * 100) + " %";
         }
 
+        private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Slider sld = sender as Slider;
+            if (sld == null)
+                return;
+
+            TextBlock label = sld.Tag as TextBlock;
+
+            if (label == null)
+                return;
+
+            label.Text = sld.Value.ToString();
+        }
+
         private void run_at_win_startup_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded && sender is CheckBox)
@@ -655,7 +669,7 @@ namespace Aurora.Settings
                 Global.Configuration.keyboard_localization = (PreferredKeyboardLocalization)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_layout.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -666,7 +680,7 @@ namespace Aurora.Settings
                 Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboard), this.devices_kb_brand.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -677,7 +691,7 @@ namespace Aurora.Settings
                 Global.Configuration.mouse_preference = (PreferredMouse)Enum.Parse(typeof(PreferredMouse), this.devices_mouse_brand.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -688,7 +702,7 @@ namespace Aurora.Settings
                 Global.Configuration.mouse_orientation = (MouseOrientationType)Enum.Parse(typeof(MouseOrientationType), this.devices_mouse_orientation.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -699,7 +713,7 @@ namespace Aurora.Settings
                 Global.Configuration.virtualkeyboard_keycap_type = (KeycapType)Enum.Parse(typeof(KeycapType), this.ComboBox_virtualkeyboard_keycap_type.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -977,8 +991,8 @@ namespace Aurora.Settings
 
                 winBitmapView = new Window();
                 winBitmapView.Closed += WinBitmapView_Closed;
-                winBitmapView.ResizeMode = ResizeMode.NoResize;
-                winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
+                winBitmapView.ResizeMode = ResizeMode.CanResize;
+                //winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
 
                 winBitmapView.Title = "Keyboard Bitmap View";
                 winBitmapView.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
@@ -987,10 +1001,10 @@ namespace Aurora.Settings
                 imgBitmap.SnapsToDevicePixels = true;
                 imgBitmap.HorizontalAlignment = HorizontalAlignment.Stretch;
                 imgBitmap.VerticalAlignment = VerticalAlignment.Stretch;
+                /*imgBitmap.MinWidth = 0;
+                imgBitmap.MinHeight = 0;*/
                 imgBitmap.MinWidth = Effects.canvas_width;
                 imgBitmap.MinHeight = Effects.canvas_height;
-                imgBitmap.Width = Effects.canvas_width * 4;
-                imgBitmap.Height = Effects.canvas_height * 4;
 
                 winBitmapView.Content = imgBitmap;
 
