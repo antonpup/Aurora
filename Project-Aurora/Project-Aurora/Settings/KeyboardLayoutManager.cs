@@ -344,9 +344,14 @@ namespace Aurora.Settings
 
             foreach (var key in applicable_keys)
             {
+                KeyboardKey otherKey = keys[key.tag];
+                if (key.tag != otherKey.tag)
+                    KeyText.Remove(key.tag);
+                key.UpdateFromOtherKey(otherKey);
                 if (KeyText.ContainsKey(key.tag))
                     KeyText[key.tag] = key.visualName;
-                key.UpdateFromOtherKey(keys[key.tag]);
+                else
+                    KeyText.Add(key.tag, key.visualName);
             }
         }
 
@@ -385,6 +390,7 @@ namespace Aurora.Settings
                 if (layout_height < current_height)
                     layout_height = current_height;
 
+                KeyText.Remove(key.tag);
 
                 /*int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
                 int key_tlx = KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + width_bit;
@@ -490,8 +496,10 @@ namespace Aurora.Settings
 
         public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
         {
+#if !DEBUG
             try
             {
+#endif
                 //System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
 
                 //Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
@@ -797,11 +805,13 @@ namespace Aurora.Settings
                     }
 
                 }
+#if !DEBUG
             }
             catch (Exception e)
             {
                 Global.logger.Error(e.ToString());
             }
+#endif
 
             //Perform end of load functions
             _bitmapMapInvalid = true;
