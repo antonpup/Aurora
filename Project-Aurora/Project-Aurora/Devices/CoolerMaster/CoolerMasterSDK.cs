@@ -60,6 +60,12 @@ namespace CoolerMaster
             DEV_MM530 = 9,
             [Description("MasterKeys MK750")]
             DEV_MK750 = 10,
+            [Description("CK372")]
+            DEV_CK372 = 11,
+            [Description("CK552")]
+            DEV_CK550_552 = 12,
+            [Description("CK551")]
+            DEV_CK551 = 13,
             [Description("Default")]
             DEV_DEFAULT = 0xFFFF
         }
@@ -80,7 +86,10 @@ namespace CoolerMaster
             DEVICE_INDEX.DEV_MKeys_M_White,
             DEVICE_INDEX.DEV_MKeys_S,
             DEVICE_INDEX.DEV_MKeys_S_White,
-            DEVICE_INDEX.DEV_MK750
+            DEVICE_INDEX.DEV_MK750,
+            DEVICE_INDEX.DEV_CK372,
+            DEVICE_INDEX.DEV_CK550_552,
+            DEVICE_INDEX.DEV_CK551
         };
 
         public enum LAYOUT_KEYBOARD
