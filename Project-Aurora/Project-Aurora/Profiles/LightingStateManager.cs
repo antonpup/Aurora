@@ -127,7 +127,8 @@ namespace Aurora.Profiles
                 new Event_SkypeOverlay(),
                 new ROTTombRaider.ROTTombRaider(),
 				new DyingLight.DyingLight(),
-                new ETS2.ETS2()
+                new ETS2.ETS2(),
+                new ATS.ATS()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

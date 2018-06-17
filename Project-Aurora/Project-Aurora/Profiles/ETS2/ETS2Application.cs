@@ -18,7 +18,7 @@ namespace Aurora.Profiles.ETS2 {
             ProfileType = typeof(ETS2Profile),
             OverviewControlType = typeof(Control_ETS2),
             GameStateType = typeof(GSI.GameState_ETS2),
-            Event = new GameEvent_ETS2(),
+            Event = new GameEvent_ETS2("eurotrucks2"),
             IconURI = "Resources/ets2_64x64.png"
         }) {
 

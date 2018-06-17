@@ -392,6 +392,10 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
+    <Compile Include="Profiles\ATS\ATSApplication.cs" />
+    <Compile Include="Profiles\ATS\Control_ATS.xaml.cs">
+      <DependentUpon>Control_ATS.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
     <Compile Include="Profiles\ETS2\Control_ETS2.xaml.cs">
       <DependentUpon>Control_ETS2.xaml</DependentUpon>
@@ -1078,6 +1082,7 @@
     <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_scrollwheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\ats_64x64.png" />
     <Content Include="wooting-rgb-control.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1219,6 +1224,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\ATS\Control_ATS.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

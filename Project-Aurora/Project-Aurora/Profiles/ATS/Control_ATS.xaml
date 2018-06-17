@@ -1,0 +1,94 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             x:Class="Aurora.Profiles.ATS.Control_ATS"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
+            <DataTemplate x:Key="DeviceKeys">
+                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for American Truck Simulator">
+                <Grid>
+                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with American Truck Simulator" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"  />
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="824" Text="In order for American Truck Simulator support to work, the ATS Telemetry Server DLL (same as the ETS2 Telemetry Server DLL) must be installed so that Aurora can read the game variables. This file is not developed by the Aurora developers. Pressing &quot;Install DLL&quot; below will copy the 32-bit and 64-bit DLLs to the American Truck Simulator directory. The &quot;Uninstall DLL&quot; button will remove the DLLs."/>
+                    <Button x:Name="install_button" Content="Install DLL" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" Click="install_button_Click"/>
+                    <Button x:Name="uninstall_button" Content="Uninstall DLL" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Click="uninstall_button_Click"/>
+                    <Button x:Name="visit_ets2ts_button" Content="View ETS2 Telemetry Server on GitHub" HorizontalAlignment="Left" Margin="10,137,0,0" VerticalAlignment="Top" Click="visit_ets2ts_button_Click"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Preview">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition Width="28px"/>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left side -->
+                    <Label Content="Truck Power State:" Grid.Row="0" />
+                    <ComboBox x:Name="truckPowerState" Grid.Row="0" Grid.Column="1" Margin="4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="truckPowerState_SelectionChanged" />
+
+                    <Label Content="Lights:" Grid.Row="2" />
+                    <ComboBox x:Name="lights" Grid.Row="2" Grid.Column="1" Margin="0,4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="lights_SelectionChanged" />
+
+                    <Label Content="Beacon:" Grid.Row="4" VerticalAlignment="Center" />
+                    <CheckBox x:Name="beacon" Content="On" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0" Checked="beacon_Checked" Unchecked="beacon_Checked" />
+
+                    <Label Content="Blinkers:" Grid.Row="3" />
+                    <ComboBox x:Name="blinkers" Grid.Row="3" Grid.Column="1" Margin="0,4" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" SelectionChanged="blinkers_SelectionChanged" />
+
+                    <Label Content="Trailer Attached:" Grid.Row="6" />
+                    <CheckBox x:Name="trailerAttached" Content="Yes" Grid.Row="6" Grid.Column="1"  VerticalAlignment="Center" Margin="8,0,0,0" Checked="trailerAttached_Checked" Unchecked="trailerAttached_Checked" />
+
+                    <Label Content="Cruise Control:" Grid.Row="7" />
+                    <CheckBox x:Name="cruiseControl" Content="On" Grid.Row="7" Grid.Column="1"  VerticalAlignment="Center" Margin="8,0,0,0" Checked="cruiseControl_Checked" Unchecked="cruiseControl_Checked" />
+
+                    <!-- Right side -->
+                    <Label Content="Throttle:" Grid.Row="0" Grid.Column="3" />
+                    <Slider x:Name="throttleSlider" Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" ValueChanged="throttleSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+
+                    <Label Content="Brakes:" Grid.Row="1" Grid.Column="3" />
+                    <Slider x:Name="brakeSlider" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" ValueChanged="brakeSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+
+                    <Label Content="Engine RPM:" Grid.Row="2" Grid.Column="3" />
+                    <Slider x:Name="engineRpmSlider" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="engineRpmSlider_ValueChanged" />
+
+                    <Label Content="Handbrake:" Grid.Row="3" Grid.Column="3" />
+                    <CheckBox x:Name="handbrake" Content="On" Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" Margin="8,0,0,0" Checked="handbrake_Checked" Unchecked="handbrake_Checked" />
+
+                    <Label Content="Fuel:" Grid.Row="5" Grid.Column="3"  />
+                    <Slider x:Name="fuelSlider" Grid.Row="5" Grid.Column="4" TickPlacement="BottomRight" TickFrequency="0.1" Maximum="1" VerticalAlignment="Center" ValueChanged="fuelSlider_ValueChanged" LargeChange="0.1" SmallChange="0.05" />
+
+                    <Label Content="Air Pressure:" Grid.Row="6" Grid.Column="3" />
+                    <Slider x:Name="airSlider" Grid.Row="6" Grid.Column="4" VerticalAlignment="Center" ValueChanged="airSlider_ValueChanged" Maximum="1" LargeChange="0.1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
