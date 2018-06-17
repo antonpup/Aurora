@@ -53,6 +53,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Blade and Soul
 * Borderlands 2
 * Euro Truck Simulator 2
+* American Truck Simulator
 * Rise of the Tomb Raider
 * Dying Light
 
@@ -91,6 +92,7 @@ Robot Roller-Derby Disco Dodgeball Demo
 ![GTA 5 Settings](https://puu.sh/tfKWL/d72e10b288.png)
 ![Rocket League Settings](https://puu.sh/tfL4N/30f5b9cfea.png)
 ![Payday 2 Settings](https://puu.sh/tfLcn/4978a48199.png)
+![Euro Truck Simulator 2 / American Truck Simulator Settings](https://i.imgur.com/oaCpWd0.png)
 ![Skype Integration Settings](https://puu.sh/tfLfu/57b1df348a.png)
 
 
@@ -177,6 +179,15 @@ The Talos Principle features
 Borderlands 2 features
 
 * Health and Shield indicators
+
+Euro Truck Simulator 2 / American Truck Simulator features
+
+* Throttle/braking indicators
+* RPM meter
+* Blinkers
+* Beacons
+* Fuel/air pressure indicators
+* Ignition indicator
 
 ## F.A.Q.
 ### Can this give me a ban in a video game?
