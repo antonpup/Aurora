@@ -82,7 +82,7 @@ namespace Aurora.Profiles.ATS {
         }
 
         private void uninstall_button_Click(object sender, RoutedEventArgs e) {
-            string gamePath = Utils.SteamUtils.GetGamePath(227300);
+            string gamePath = Utils.SteamUtils.GetGamePath(270880);
             if (String.IsNullOrWhiteSpace(gamePath)) return;
             string x86Path = System.IO.Path.Combine(gamePath, "bin", "win_x86", "plugins", "ets2-telemetry-server.dll");
             string x64Path = System.IO.Path.Combine(gamePath, "bin", "win_x64", "plugins", "ets2-telemetry-server.dll");
