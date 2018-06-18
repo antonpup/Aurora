@@ -155,7 +155,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Roccat-Talk.1.0.0.0\lib\net45\Roccat-Talk.dll</HintPath>
+      <HintPath>.\Roccat-Talk.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
