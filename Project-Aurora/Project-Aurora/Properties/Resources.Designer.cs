@@ -71,6 +71,16 @@ namespace Aurora.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ats_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("ats_64x64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon aurora_icon {
@@ -496,16 +506,6 @@ namespace Aurora.Properties {
         internal static System.Drawing.Bitmap rot_tombraider {
             get {
                 object obj = ResourceManager.GetObject("rot_tombraider", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-		internal static System.Drawing.Bitmap dyinglight {
-            get {
-                object obj = ResourceManager.GetObject("DyingLight", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

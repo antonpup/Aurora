@@ -16,10 +16,15 @@ namespace Aurora.Profiles.ETS2 {
         /// <summary>Name of the mapped field that the ETS2 Telemetry Server DLL outputs to.</summary>
         private const string memoryMappedFileName = "Local\\Ets2TelemetryServer";
 
+        /// <summary>Target process name (so it can be changed for ATS).</summary>
+        private string processName;
+
         private MemoryMappedFile _memFile;
         private MemoryMappedViewAccessor _memAccessor;
 
-        public GameEvent_ETS2() : base() { }
+        public GameEvent_ETS2(string processName) : base() {
+            this.processName = processName;
+        }
 
         /// <summary>
         /// The MemoryMappedFile shared between this process and the ETS2 Telemetry Server.
@@ -52,7 +57,7 @@ namespace Aurora.Profiles.ETS2 {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
             ETS2Profile settings = (ETS2Profile)this.Application.Profile;
 
-            if (Process.GetProcessesByName("eurotrucks2").Length > 0 && memAccessor != null) {
+            if (Process.GetProcessesByName(processName).Length > 0 && memAccessor != null) {
                 // -- Below code adapted from the ETS2 Telemetry Server by Funbit (https://github.com/Funbit/ets2-telemetry-server) --
                 IntPtr memPtr = IntPtr.Zero;
 
