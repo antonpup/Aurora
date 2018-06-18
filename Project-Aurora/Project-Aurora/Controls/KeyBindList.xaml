@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="Aurora.Controls.KeyBindList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="150">
+    <Grid>
+        <ScrollViewer Margin="0,0,0,22">
+            <StackPanel x:Name="keyList" Background="#7F646464" />
+        </ScrollViewer>
+        <Button x:Name="addNew" Content="Add new" Width="80" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="addNew_Click" />
+    </Grid>
+</UserControl>

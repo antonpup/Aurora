@@ -343,6 +343,9 @@
     <Compile Include="Controls\EffectSettingsWindow.xaml.cs">
       <DependentUpon>EffectSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KeyBindList.xaml.cs">
+      <DependentUpon>KeyBindList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\KeySequence.xaml.cs">
       <DependentUpon>KeySequence.xaml</DependentUpon>
     </Compile>
@@ -423,9 +426,13 @@
     <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
       <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_ToggleKeyLayer.xaml.cs">
+      <DependentUpon>Control_ToggleKeyLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_WrapperLightsLayer.xaml.cs">
       <DependentUpon>Control_WrapperLightsLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\ToggleKeyLayerHandler.cs" />
     <Compile Include="Settings\Layers\WrapperLightsLayerHandler.cs" />
     <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
@@ -1194,6 +1201,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\KeyBindList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\KeySequence.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1513,6 +1524,10 @@
     <Page Include="Settings\Layers\Control_ImageLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_ToggleKeyLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_WrapperLightsLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
