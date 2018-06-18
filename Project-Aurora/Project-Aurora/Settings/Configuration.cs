@@ -187,11 +187,11 @@ namespace Aurora.Settings
         //Clevo range is 400-499
 
         //Cooler Master range is 500-599
-        [Description("Masterkeys Pro L")]
+        [Description("Cooler Master - Masterkeys Pro L")]
         Masterkeys_Pro_L = 500,
-        [Description("Masterkeys Pro S")]
+        [Description("Cooler Master - Masterkeys Pro S")]
         Masterkeys_Pro_S = 501,
-        [Description("Masterkeys Pro M")]
+        [Description("Cooler Master - Masterkeys Pro M")]
         Masterkeys_Pro_M = 502,
 
         //Roccat range is 600-699
