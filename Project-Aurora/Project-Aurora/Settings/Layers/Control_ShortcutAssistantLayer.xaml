@@ -31,7 +31,7 @@
         <CheckBox x:Name="chkDimBackground" Content="Dim the background keys to emphasize the shortcut keys" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._DimBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,0"/>
         <CheckBox x:Name="chkMergeKeys" Content="Trigger when any of the same modifier keys are pressed" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._MergeModifierKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="352,85,0,0"/>
         <TextBlock HorizontalAlignment="Left" Margin="352,3,0,0" TextWrapping="Wrap" Text="Dimming Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="clrDimBackground" Margin="440,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColor="{Binding Path=Properties._DimColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
+        <xctk:ColorPicker x:Name="clrDimBackground" Margin="440,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColor="{Binding Path=Properties._DimColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource colorConverter}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
         <TextBlock Text="Shortcuts" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,34,0,0"/>
         <Menu Margin="295,34,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="52">
             <MenuItem x:Name="menuPresets" Header="Presets"/>
