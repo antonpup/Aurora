@@ -45,6 +45,125 @@ namespace Aurora.Devices.Roccat
         private long lastUpdateTime = 0;
 
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
+        public static Dictionary<DeviceKeys, byte> DeviceKeysMap = new Dictionary<DeviceKeys, byte>
+        {
+            {DeviceKeys.ESC, 0 },
+            {DeviceKeys.F1, 1 },
+            {DeviceKeys.F2, 2 },
+            {DeviceKeys.F3, 3 },
+            {DeviceKeys.F4, 4 },
+            {DeviceKeys.F5, 5 },
+            {DeviceKeys.F6, 6 },
+            {DeviceKeys.F7, 7 },
+            {DeviceKeys.F8, 8 },
+            {DeviceKeys.F9, 9 },
+            {DeviceKeys.F10, 10 },
+            {DeviceKeys.F11, 11 },
+            {DeviceKeys.F12, 12 },
+            {DeviceKeys.PRINT_SCREEN, 13 },
+            {DeviceKeys.SCROLL_LOCK, 14 },
+            {DeviceKeys.PAUSE_BREAK, 15 },
+            {DeviceKeys.G1, 16 },
+            {DeviceKeys.TILDE, 17 },
+            {DeviceKeys.ONE, 18 },
+            {DeviceKeys.TWO, 19 },
+            {DeviceKeys.THREE, 20 },
+            {DeviceKeys.FOUR, 21 },
+            {DeviceKeys.FIVE, 22 },
+            {DeviceKeys.SIX, 23 },
+            {DeviceKeys.SEVEN, 24 },
+            {DeviceKeys.EIGHT, 25 },
+            {DeviceKeys.NINE, 26 },
+            {DeviceKeys.ZERO, 27 },
+            {DeviceKeys.MINUS, 28 },
+            {DeviceKeys.EQUALS, 29 },
+            {DeviceKeys.BACKSPACE, 30 },
+            {DeviceKeys.INSERT, 31 },
+            {DeviceKeys.HOME, 32 },
+            {DeviceKeys.PAGE_UP, 33 },
+            {DeviceKeys.NUM_LOCK, 34 },
+            {DeviceKeys.NUM_SLASH, 35 },
+            {DeviceKeys.NUM_ASTERISK, 36 },
+            {DeviceKeys.NUM_MINUS, 37 },
+            {DeviceKeys.G2, 38 },
+            {DeviceKeys.TAB, 39 },
+            {DeviceKeys.Q, 40 },
+            {DeviceKeys.W, 41 },
+            {DeviceKeys.E, 42 },
+            {DeviceKeys.R, 43 },
+            {DeviceKeys.T, 44 },
+            {DeviceKeys.Y, 45 },
+            {DeviceKeys.U, 46 },
+            {DeviceKeys.I, 47 },
+            {DeviceKeys.O, 48 },
+            {DeviceKeys.P, 49 },
+            {DeviceKeys.OPEN_BRACKET, 50 },
+            {DeviceKeys.CLOSE_BRACKET, 51 },
+            {DeviceKeys.BACKSLASH, 52 },
+            {DeviceKeys.DELETE, 53 },
+            {DeviceKeys.END, 54 },
+            {DeviceKeys.PAGE_DOWN, 55 },
+            {DeviceKeys.NUM_SEVEN, 56 },
+            {DeviceKeys.NUM_EIGHT, 57 },
+            {DeviceKeys.NUM_NINE, 58 },
+            {DeviceKeys.NUM_PLUS, 59 },
+            {DeviceKeys.G3, 60 },
+            {DeviceKeys.CAPS_LOCK, 61 },
+            {DeviceKeys.A, 62 },
+            {DeviceKeys.S, 63 },
+            {DeviceKeys.D, 64 },
+            {DeviceKeys.F, 65 },
+            {DeviceKeys.G, 66 },
+            {DeviceKeys.H, 67 },
+            {DeviceKeys.J, 68 },
+            {DeviceKeys.K, 69 },
+            {DeviceKeys.L, 70 },
+            {DeviceKeys.SEMICOLON, 71 },
+            {DeviceKeys.APOSTROPHE, 72 },
+            {DeviceKeys.ENTER, 73 },
+            {DeviceKeys.NUM_FOUR, 74 },
+            {DeviceKeys.NUM_FIVE, 75 },
+            {DeviceKeys.NUM_SIX, 76 },
+            {DeviceKeys.G4, 77 },
+            {DeviceKeys.LEFT_SHIFT, 78 },
+            {DeviceKeys.BACKSLASH_UK, 79 },
+            {DeviceKeys.Z, 80 },
+            {DeviceKeys.X, 81 },
+            {DeviceKeys.C, 82 },
+            {DeviceKeys.V, 83 },
+            {DeviceKeys.B, 84 },
+            {DeviceKeys.N, 85 },
+            {DeviceKeys.M, 86 },
+            {DeviceKeys.COMMA, 87 },
+            {DeviceKeys.PERIOD, 88 },
+            {DeviceKeys.FORWARD_SLASH, 89 },
+            {DeviceKeys.RIGHT_SHIFT, 90 },
+            {DeviceKeys.ARROW_UP, 91 },
+            {DeviceKeys.NUM_ONE, 92 },
+            {DeviceKeys.NUM_TWO, 93 },
+            {DeviceKeys.NUM_THREE, 94 },
+            {DeviceKeys.NUM_ENTER, 95 },
+            {DeviceKeys.G5, 96 },
+            {DeviceKeys.LEFT_CONTROL, 97 },
+            {DeviceKeys.LEFT_WINDOWS, 98 },
+            {DeviceKeys.LEFT_ALT, 99 },
+            {DeviceKeys.SPACE, 100 },
+            {DeviceKeys.RIGHT_ALT, 101 },
+            {DeviceKeys.FN_Key, 102 },
+            {DeviceKeys.APPLICATION_SELECT, 103 },
+            {DeviceKeys.RIGHT_CONTROL, 104 },
+            {DeviceKeys.ARROW_LEFT, 105 },
+            {DeviceKeys.ARROW_DOWN, 106 },
+            {DeviceKeys.ARROW_RIGHT, 107 },
+            {DeviceKeys.NUM_ZERO, 108 },
+            {DeviceKeys.NUM_PERIOD, 109 }
+        };
+        public enum DeviceLayout : byte
+        {
+            ISO = 0,
+            ANSI = 1,
+            JP = 2
+        }
 
         private byte layout = 0x01; //TALKFX_RYOS_LAYOUT_US
 
@@ -139,34 +258,47 @@ namespace Aurora.Devices.Roccat
             throw new NotImplementedException();
         }
 
+        byte[] stateStruct = new byte[110];
+        Roccat_Talk.TalkFX.Color[] colorStruct = new Roccat_Talk.TalkFX.Color[110];
         public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, CancellationToken token, bool forced = false)
         {
-            if (token.IsCancellationRequested) return false;
             if (RyosTalkFX == null || !RyosInitialized)
-            {
                 return false;
-            }
+
+            if (token.IsCancellationRequested) return false;
 
             try
             {
-                byte[] stateStruct = new byte[110];
-                Roccat_Talk.TalkFX.Color[] colorStruct = new Roccat_Talk.TalkFX.Color[110];
+                DeviceLayout layout = DeviceLayout.ISO;
+                if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.dvorak
+                    || Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.us
+                    || Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.ru)
+                    layout = DeviceLayout.ANSI;
+                else if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.jpn)
+                    layout = DeviceLayout.JP;
 
-                for(byte i=0; i<110; i++)
+                foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
                 {
                     if (token.IsCancellationRequested) return false;
-                    if (i==79) { //key no 79 is not available in US layout
-                        continue;
+                    DeviceKeys dev_key = key.Key;
+                    //Solution to slightly different mapping rather than giving a whole different dictionary
+                    if (layout == DeviceLayout.ANSI)
+                    {
+                        if (dev_key == DeviceKeys.ENTER)
+                            dev_key = DeviceKeys.BACKSLASH;
+                        if (dev_key == DeviceKeys.HASHTAG)
+                            dev_key = DeviceKeys.ENTER;
                     }
-                    DeviceKeys key = toAuroraKey(i);
-                    System.Drawing.Color color = keyColors[key];
-                    Global.logger.LogLine("Roccat update device: " + key + " , " + color);
-                    Roccat_Talk.TalkFX.Color roccatColor = ConvertToRoccatColor(color);
-                    stateStruct[i] = IsLedOn(roccatColor);
-                    colorStruct[i] = roccatColor;
+                    if (DeviceKeysMap.TryGetValue(dev_key, out byte i))
+                    { 
+                        //Global.logger.LogLine("Roccat update device: " + key + " , " + key.Value);
+                        Color roccatColor = ConvertToRoccatColor(key.Value);
+                        stateStruct[i] = IsLedOn(roccatColor);
+                        colorStruct[i] = roccatColor;
+                    }
                 }
 
-                RyosTalkFX.SetMkFxKeyboardState(stateStruct, colorStruct, layout);
+                RyosTalkFX.SetMkFxKeyboardState(stateStruct, colorStruct, (byte)layout);
 
                 return true;
             }
@@ -213,235 +345,6 @@ namespace Aurora.Devices.Roccat
         private Roccat_Talk.TalkFX.Color ConvertToRoccatColor(System.Drawing.Color color)
         {
             return new Roccat_Talk.TalkFX.Color(color.R, color.G, color.B);
-        }
-
-        public static DeviceKeys toAuroraKey(byte code)
-        {
-            switch (code)
-            {
-                case (0):
-                    return DeviceKeys.ESC;
-                case (1):
-                    return DeviceKeys.F1;
-                case (2):
-                    return DeviceKeys.F2;
-                case (3):
-                    return DeviceKeys.F3;
-                case (4):
-                    return DeviceKeys.F4;
-                case (5):
-                    return DeviceKeys.F5;
-                case (6):
-                    return DeviceKeys.F6;
-                case (7):
-                    return DeviceKeys.F7;
-                case (8):
-                    return DeviceKeys.F8;
-                case (9):
-                    return DeviceKeys.F9;
-                case (10):
-                    return DeviceKeys.F10;
-                case (11):
-                    return DeviceKeys.F11;
-                case (12):
-                    return DeviceKeys.F12;
-                case (13):
-                    return DeviceKeys.PRINT_SCREEN;
-                case (14):
-                    return DeviceKeys.SCROLL_LOCK;
-                case (15):
-                    return DeviceKeys.PAUSE_BREAK;
-                case (16):
-                    return DeviceKeys.G1;
-                case (17):
-                    return DeviceKeys.TILDE;
-                case (18):
-                    return DeviceKeys.ONE;
-                case (19):
-                    return DeviceKeys.TWO;
-                case (20):
-                    return DeviceKeys.THREE;
-                case (21):
-                    return DeviceKeys.FOUR;
-                case (22):
-                    return DeviceKeys.FIVE;
-                case (23):
-                    return DeviceKeys.SIX;
-                case (24):
-                    return DeviceKeys.SEVEN;
-                case (25):
-                    return DeviceKeys.EIGHT;
-                case (26):
-                    return DeviceKeys.NINE;
-                case (27):
-                    return DeviceKeys.ZERO;
-                case (28):
-                    return DeviceKeys.MINUS;
-                case (29):
-                    return DeviceKeys.EQUALS;
-                case (30):
-                    return DeviceKeys.BACKSPACE;
-                case (31):
-                    return DeviceKeys.INSERT;
-                case (32):
-                    return DeviceKeys.HOME;
-                case (33):
-                    return DeviceKeys.PAGE_UP;
-                case (34):
-                    return DeviceKeys.NUM_LOCK;
-                case (35):
-                    return DeviceKeys.NUM_SLASH;
-                case (36):
-                    return DeviceKeys.NUM_ASTERISK;
-                case (37):
-                    return DeviceKeys.NUM_MINUS;
-                case (38):
-                    return DeviceKeys.G2;
-                case (39):
-                    return DeviceKeys.TAB;
-                case (40):
-                    return DeviceKeys.Q;
-                case (41):
-                    return DeviceKeys.W;
-                case (42):
-                    return DeviceKeys.E;
-                case (43):
-                    return DeviceKeys.R;
-                case (44):
-                    return DeviceKeys.T;
-                case (45):
-                    return DeviceKeys.Y;
-                case (46):
-                    return DeviceKeys.U;
-                case (47):
-                    return DeviceKeys.I;
-                case (48):
-                    return DeviceKeys.O;
-                case (49):
-                    return DeviceKeys.P;
-                case (50):
-                    return DeviceKeys.OPEN_BRACKET;
-                case (51):
-                    return DeviceKeys.CLOSE_BRACKET;
-                case (52):
-                    return DeviceKeys.BACKSLASH;
-                case (53):
-                    return DeviceKeys.DELETE;
-                case (54):
-                    return DeviceKeys.END;
-                case (55):
-                    return DeviceKeys.PAGE_DOWN;
-                case (56):
-                    return DeviceKeys.NUM_SEVEN;
-                case (57):
-                    return DeviceKeys.NUM_EIGHT;
-                case (58):
-                    return DeviceKeys.NUM_NINE;
-                case (59):
-                    return DeviceKeys.NUM_PLUS;
-                case (60):
-                    return DeviceKeys.G3;
-                case (61):
-                    return DeviceKeys.CAPS_LOCK;
-                case (62):
-                    return DeviceKeys.A;
-                case (63):
-                    return DeviceKeys.S;
-                case (64):
-                    return DeviceKeys.D;
-                case (65):
-                    return DeviceKeys.F;
-                case (66):
-                    return DeviceKeys.G;
-                case (67):
-                    return DeviceKeys.H;
-                case (68):
-                    return DeviceKeys.J;
-                case (69):
-                    return DeviceKeys.K;
-                case (70):
-                    return DeviceKeys.L;
-                case (71):
-                    return DeviceKeys.SEMICOLON;
-                case (72):
-                    return DeviceKeys.APOSTROPHE;
-                case (73):
-                    return DeviceKeys.ENTER;
-                case (74):
-                    return DeviceKeys.NUM_FOUR;
-                case (75):
-                    return DeviceKeys.NUM_FIVE;
-                case (76):
-                    return DeviceKeys.NUM_SIX;
-                case (77):
-                    return DeviceKeys.G4;
-                case (78):
-                    return DeviceKeys.LEFT_SHIFT;
-                case (79):
-                    return DeviceKeys.BACKSLASH_UK;
-                case (80):
-                    return DeviceKeys.Z;
-                case (81):
-                    return DeviceKeys.X;
-                case (82):
-                    return DeviceKeys.C;
-                case (83):
-                    return DeviceKeys.V;
-                case (84):
-                    return DeviceKeys.B;
-                case (85):
-                    return DeviceKeys.N;
-                case (86):
-                    return DeviceKeys.M;
-                case (87):
-                    return DeviceKeys.COMMA;
-                case (88):
-                    return DeviceKeys.PERIOD;
-                case (89):
-                    return DeviceKeys.FORWARD_SLASH;
-                case (90):
-                    return DeviceKeys.RIGHT_SHIFT;
-                case (91):
-                    return DeviceKeys.ARROW_UP;
-                case (92):
-                    return DeviceKeys.NUM_ONE;
-                case (93):
-                    return DeviceKeys.NUM_TWO;
-                case (94):
-                    return DeviceKeys.NUM_THREE;
-                case (95):
-                    return DeviceKeys.NUM_ENTER;
-                case (96):
-                    return DeviceKeys.G5;
-                case (97):
-                    return DeviceKeys.LEFT_CONTROL;
-                case (98):
-                    return DeviceKeys.LEFT_WINDOWS;
-                case (99):
-                    return DeviceKeys.LEFT_ALT;
-                case (100):
-                    return DeviceKeys.SPACE;
-                case (101):
-                    return DeviceKeys.RIGHT_ALT;
-                case (102):
-                    return DeviceKeys.FN_Key;
-                case (103):
-                    return DeviceKeys.APPLICATION_SELECT;
-                case (104):
-                    return DeviceKeys.RIGHT_CONTROL;
-                case (105):
-                    return DeviceKeys.ARROW_LEFT;
-                case (106):
-                    return DeviceKeys.ARROW_DOWN;
-                case (107):
-                    return DeviceKeys.ARROW_RIGHT;
-                case (108):
-                    return DeviceKeys.NUM_ZERO;
-                case (109):
-                    return DeviceKeys.NUM_PERIOD;
-                default:
-                    return DeviceKeys.ESC;
-            }
         }
 
         public string GetDeviceUpdatePerformance()
