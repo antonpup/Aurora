@@ -78,7 +78,7 @@ namespace Aurora.Controls.EditorResources
                 //Vertical Collision
                 if (top_canvas + dragDelta.Y < 0)
                     Canvas.SetTop(designerItem, Canvas.GetTop(designerItem));
-                else if (top_canvas + Math.Abs(bounds.Height) + dragDelta.Y > parent_canvas.ActualHeight)
+                else if (top_canvas + Math.Abs(bounds.Height) + dragDelta.Y > parent_canvas.ActualHeight+5)
                     Canvas.SetTop(designerItem, Canvas.GetTop(designerItem));
                 else
                     Canvas.SetTop(designerItem, Canvas.GetTop(designerItem) + dragDelta.Y);
