@@ -182,6 +182,9 @@ namespace Aurora.Profiles
 
             this.InitUpdate();
 
+            // Listen for profile keybind triggers
+            Global.InputEvents.KeyDown += CheckProfileKeybinds;
+
             Initialized = true;
             return Initialized;
         }
@@ -511,50 +514,19 @@ namespace Aurora.Profiles
                Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
                 return;
 
+            string raw_process_name = Path.GetFileName(processMonitor.ProcessPath);
+
             UpdateProcess();
-
-            string raw_process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath);
-            string process_name = raw_process_name.ToLower();
-
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
-            
+
 
             //TODO: Move these IdleEffects to an event
             //this.UpdateIdleEffects(newFrame);
-
-            ILightEvent profile = null;
-            ILightEvent tempProfile = null;
-            bool preview = false;
-            //Global.logger.LogLine(process_name);
             
-            //TODO: GetProfile that checks based on event type
-            if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                profile = tempProfile;
-            else if ((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
-            {
-                profile = tempProfile;
-                preview = true;
-            }
-            else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.Config.ProcessNames.Contains(process_name) && tempProfile.IsEnabled)
-                profile = tempProfile;
-
-            profile = profile ?? DesktopProfile;
+            ILightEvent profile = GetCurrentProfile(out bool preview);
 
             timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
-
-            //Check if any keybinds have been triggered
-            if (profile is Application)
-            {
-                foreach (var prof in (profile as Application).Profiles)
-                {
-                    if (prof.TriggerKeybind.IsPressed() && !(profile as Application).Profile.ProfileName.Equals(prof.ProfileName))
-                    {
-                        (profile as Application).SwitchToProfile(prof);
-                        break;
-                    }
-                }
-            }
 
             if ((profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
@@ -604,6 +576,55 @@ namespace Aurora.Profiles
 
             PostUpdate?.Invoke(this, null);
         }
+
+        /// <summary>Gets the current application.</summary>
+        /// <param name="preview">Boolean indicating whether the application is selected because it is previewing (true) or because the process is open (false).</param>
+        public ILightEvent GetCurrentProfile(out bool preview) {
+            string process_name = Path.GetFileName(processMonitor.ProcessPath).ToLower();
+            ILightEvent profile = null;
+            ILightEvent tempProfile = null;
+            preview = false;
+
+            //TODO: GetProfile that checks based on event type
+            if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+                profile = tempProfile;
+            else if ((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
+            {
+                profile = tempProfile;
+                preview = true;
+            } else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.Config.ProcessNames.Contains(process_name) && tempProfile.IsEnabled)
+                profile = tempProfile;
+
+            profile = profile ?? DesktopProfile;
+
+            return profile;
+        }
+        /// <summary>Gets the current application.</summary>
+        public ILightEvent GetCurrentProfile() { return GetCurrentProfile(out bool _); }
+
+        /// <summary>KeyDown handler that checks the current application's profiles for keybinds.
+        /// In the case of multiple profiles matching the keybind, it will pick the next one as specified in the Application.Profile order.</summary>
+        public void CheckProfileKeybinds(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+            ILightEvent profile = GetCurrentProfile();
+
+            // Check profile is valid and do not switch profiles if the user is trying to enter a keybind
+            if (profile is Application && Controls.Control_Keybind._ActiveKeybind != null) {
+
+                // Find all profiles that have their keybinds pressed
+                List<ApplicationProfile> possibleProfiles = new List<ApplicationProfile>();
+                foreach (var prof in (profile as Application).Profiles)
+                    if (prof.TriggerKeybind.IsPressed())
+                        possibleProfiles.Add(prof);
+
+                // If atleast one profile has it's key pressed
+                if (possibleProfiles.Count > 0) {
+                    // The target profile is the NEXT valid profile after the currently selected one (or the first valid one if the currently selected one doesn't share this keybind)
+                    int trg = (possibleProfiles.IndexOf((profile as Application).Profile) + 1) % possibleProfiles.Count;
+                    (profile as Application).SwitchToProfile(possibleProfiles[trg]);
+                }
+            }
+        }
+
 
         public void GameStateUpdate(IGameState gs)
         {

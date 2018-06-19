@@ -48,7 +48,7 @@ namespace Aurora.Controls
 
         public event NewKeybindArgs KeybindUpdated;
 
-        private static Control_Keybind _ActiveKeybind = null; //Makes sure that only one keybind can be set at a time
+        public static Control_Keybind _ActiveKeybind { get; private set; } = null; //Makes sure that only one keybind can be set at a time
 
         public Control_Keybind()
         {
