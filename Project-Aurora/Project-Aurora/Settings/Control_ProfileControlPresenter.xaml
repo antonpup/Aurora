@@ -11,7 +11,7 @@
              mc:Ignorable="d" d:DesignWidth="602" d:DesignHeight="201.525">
     <Grid>
         <Border Background="#A5000000" CornerRadius="8" />
-        <Grid x:Name="grd_LayerControl">
+        <Grid x:Name="grd_LayerControl" IsVisibleChanged="grd_LayerControl_IsVisibleChanged">
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Profile name:" VerticalAlignment="Top" Margin="10,12,0,0"/>
             <TextBox x:Name="txtProfileName" HorizontalAlignment="Left" Height="23" Margin="84,9,0,0" TextWrapping="Wrap" Text="{Binding ProfileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="200"/>
             <Button x:Name="btnReset" Content="Reset Profile" HorizontalAlignment="Left" Margin="289,10,0,0" VerticalAlignment="Top" Width="75" Click="btnReset_Click" Visibility="Hidden"/>

@@ -12,8 +12,7 @@ namespace Aurora.Profiles.Generic_Application
 {
     public class GenericApplicationProfile : ApplicationProfile
     {
-        //Generic
-        public string ApplicationName;
+        
 
         [Newtonsoft.Json.JsonIgnore]
         public bool _simulateNighttime = false;
@@ -25,13 +24,7 @@ namespace Aurora.Profiles.Generic_Application
 
         public GenericApplicationProfile() : base()
         {
-            //Generic
-            ApplicationName = "New Application Profile";
-        }
 
-        public GenericApplicationProfile(string appname) : base()
-        {
-            ApplicationName = appname;
         }
 
         public override void Reset()

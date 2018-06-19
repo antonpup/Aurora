@@ -58,13 +58,12 @@ namespace Aurora.Settings
             {
                 Profiles.Application prof = ((Profiles.Application)e.OldValue);
                 prof.ProfileChanged -= self.UpdateLayers;
-                prof.SaveProfiles();
+                prof.SaveProfile();
 
                 if (self.LastSelectedLayer.ContainsKey(prof))
                     self.LastSelectedLayer.Remove(prof);
 
                 self.LastSelectedLayer.Add(prof, self.lstLayers.SelectedItem as Layers.Layer);
-
             }
             self.UpdateLayers();
             if (e.NewValue != null)
@@ -112,11 +111,10 @@ namespace Aurora.Settings
                     lyr.SetProfile(FocusedApplication);
 
                     hander?.Invoke(lyr);
-
                 }
             }
-            else if (e.RemovedItems.Count > 0)
-                this.FocusedApplication?.SaveProfiles();
+            else if (lstLayers.SelectedItem == null && lstLayers.Items.Count > 0)
+                lstLayers.SelectedIndex = 0;
         }
 
         private void add_layer_button_Click(object sender, RoutedEventArgs e)

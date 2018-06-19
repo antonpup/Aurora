@@ -202,7 +202,7 @@ namespace Aurora.Profiles
         /// </summary>
         public long MemoryTotal { get { return PerformanceInfo.GetTotalMemoryInMiB(); } }
 
-        private static PerformanceCounter _CPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+        private static PerformanceCounter _CPUCounter;
 
         private static float _CPUUsage = 0.0f;
         private static float _SmoothCPUUsage = 0.0f;
@@ -224,6 +224,17 @@ namespace Aurora.Profiles
                     _SmoothCPUUsage -= (_SmoothCPUUsage - _CPUUsage) / 10.0f;
 
                 return _SmoothCPUUsage;
+            }
+        }
+
+        static LocalPCInformation() {
+            try
+            {
+                _CPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            }
+            catch(Exception exc)
+            {
+                Global.logger.LogLine("Failed to create PerformanceCounter. Try: https://stackoverflow.com/a/34615451 Exception: " + exc);
             }
         }
 

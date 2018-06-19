@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aurora</RootNamespace>
     <AssemblyName>Aurora</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NuGetPackageImportStamp>
@@ -28,6 +28,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
@@ -71,78 +72,81 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Corale.Colore, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Colore.5.1.0\lib\net35\Corale.Colore.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Corale.Colore, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Colore.5.2.0\lib\net35\Corale.Colore.dll</HintPath>
     </Reference>
-    <Reference Include="CSScriptLibrary, Version=3.19.0.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
-      <HintPath>..\packages\CS-Script.bin.3.19.0.0\lib\net45\CSScriptLibrary.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CSScriptLibrary, Version=3.28.4.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
+      <HintPath>..\packages\CS-Script.bin.3.28.4.0\lib\net46\CSScriptLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="CUE.NET, Version=1.1.3.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CUE.NET.1.1.3.1\lib\net45\CUE.NET.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CUE.NET, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CUE.NET.1.2.0.1\lib\net45\CUE.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.11.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.11.0\lib\net20\DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="Gma.System.MouseKeyHook, Version=5.6.130.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MouseKeyHook.5.6.0\lib\net40\Gma.System.MouseKeyHook.dll</HintPath>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\packages\SignedBuild-Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net35\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip, Version=1.10.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.10.0\lib\net20\Ionic.Zip.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\hidlibrary.3.2.46.0\lib\HidLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.7\lib\Net45\IronPython.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="IronPython, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython.Modules, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.7\lib\Net45\IronPython.Modules.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="IronPython.Modules, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.Modules.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython.SQLite, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.7\lib\Net45\IronPython.SQLite.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="IronPython.SQLite, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython.Wpf, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\IronPython.2.7.7\lib\Net45\IronPython.Wpf.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="IronPython.Wpf, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\TaskScheduler.2.5.28\lib\net40\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="Microsoft.CodeAnalysis, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.8.2\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Dynamic, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Dynamic.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.2.8.2\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Scripting, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Scripting.2.8.2\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.Scripting.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Scripting.AspNet, Version=1.1.1.21, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.AspNet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.CodeAnalysis.Scripting, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Scripting.Common.2.8.2\lib\netstandard1.3\Microsoft.CodeAnalysis.Scripting.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.Metadata.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Dynamic, Version=1.2.0.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.2.1\lib\net45\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.2.0.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.2.1\lib\net45\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.2.0.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.2.1\lib\net45\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.5.28.0, Culture=neutral, PublicKeyToken=0d013ddd5178a2ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\TaskScheduler.2.5.28\lib\net40\Microsoft.Win32.TaskScheduler.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.CodeCoverage.Shim, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.2.1\lib\net45\Microsoft.VisualStudio.CodeCoverage.Shim.dll</HintPath>
     </Reference>
-    <Reference Include="MiscUtil, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d3c42c4bfacf7596, processorArchitecture=MSIL">
-      <HintPath>..\packages\JonSkeet.MiscUtil.0.1\lib\net35-Client\MiscUtil.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.1.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
+      <HintPath>..\packages\TaskScheduler.2.8.1\lib\net452\Microsoft.Win32.TaskScheduler.dll</HintPath>
+    </Reference>
+    <Reference Include="MiscUtil, Version=0.2.0.0, Culture=neutral, PublicKeyToken=d3c42c4bfacf7596, processorArchitecture=MSIL">
+      <HintPath>..\packages\JonSkeet.MiscUtil.0.2.0\lib\net35\MiscUtil.dll</HintPath>
     </Reference>
     <Reference Include="Mono.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\CS-Script.bin.3.19.0.0\lib\net45\Mono.CSharp.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\CS-Script.bin.3.28.4.0\lib\net46\Mono.CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.5.5\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="Pranas.ScreenshotCapture, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Pranas.ScreenshotCapture.1.0.11\lib\net40\Pranas.ScreenshotCapture.dll</HintPath>
@@ -151,7 +155,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Roccat-Talk.1.0.0.0\lib\net45\Roccat-Talk.dll</HintPath>
+      <HintPath>.\Roccat-Talk.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
@@ -161,9 +165,87 @@
       <HintPath>..\packages\SharpDX.RawInput.4.0.1\lib\net45\SharpDX.RawInput.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.4.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Console, Version=4.0.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Diagnostics.FileVersionInfo, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.FileVersionInfo.4.3.0\lib\net46\System.Diagnostics.FileVersionInfo.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.StackTrace.4.3.0\lib\net46\System.Diagnostics.StackTrace.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Management" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Reflection.Metadata, Version=1.4.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.1.5.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Text.Encoding.CodePages, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.4.4.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Thread, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -181,6 +263,26 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.XmlDocument, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.XmlDocument.4.3.0\lib\net46\System.Xml.XmlDocument.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.XPath.4.3.0\lib\net46\System.Xml.XPath.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.XPath.XDocument.4.3.0\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Infragistics.Themes.MetroDark.Wpf.1.0.0\lib\net40\WPFToolkit.dll</HintPath>
@@ -241,6 +343,9 @@
     <Compile Include="Controls\EffectSettingsWindow.xaml.cs">
       <DependentUpon>EffectSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KeyBindList.xaml.cs">
+      <DependentUpon>KeyBindList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\KeySequence.xaml.cs">
       <DependentUpon>KeySequence.xaml</DependentUpon>
     </Compile>
@@ -268,11 +373,13 @@
     <Compile Include="Devices\Razer\RazerLayoutMap.cs" />
     <Compile Include="Devices\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Include="Devices\SteelSeriesHID\SteelSeriesHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Wooting\WootingDevice.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
@@ -288,11 +395,52 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
-    <Compile Include="Profiles\Generic\ColorEnhanceProfile.cs" />
+    <Compile Include="Profiles\ATS\ATSApplication.cs" />
+    <Compile Include="Profiles\ATS\Control_ATS.xaml.cs">
+      <DependentUpon>Control_ATS.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
+    <Compile Include="Profiles\ETS2\Control_ETS2.xaml.cs">
+      <DependentUpon>Control_ETS2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\ETS2\ETS2Application.cs" />
+    <Compile Include="Profiles\ETS2\ETS2MemoryStruct.cs" />
+    <Compile Include="Profiles\ETS2\ETS2Profile.cs" />
+    <Compile Include="Profiles\ETS2\GameEvent_ETS2.cs" />
+    <Compile Include="Profiles\ETS2\GSI\GameState_ETS2.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\GameNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\JobNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\NavigationNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\PlacementNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\TrailerNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\TruckNode.cs" />
+    <Compile Include="Profiles\ETS2\GSI\Nodes\VectorNode.cs" />
+    <Compile Include="Profiles\ETS2\Layers\Control_ETS2BeaconLayer.xaml.cs">
+      <DependentUpon>Control_ETS2BeaconLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\ETS2\Layers\Control_ETS2BlinkerLayer.xaml.cs">
+      <DependentUpon>Control_ETS2BlinkerLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\ETS2\Layers\ETS2BlinkerLayerHandler.cs" />
+    <Compile Include="Profiles\ETS2\Layers\ETS2BeaconLayerHandler.cs" />
+    <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
+    <Compile Include="Profiles\Generic\WrapperProfile.cs" />
+    <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
+    <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
+      <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\Control_ToggleKeyLayer.xaml.cs">
+      <DependentUpon>Control_ToggleKeyLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\Control_WrapperLightsLayer.xaml.cs">
+      <DependentUpon>Control_WrapperLightsLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\ToggleKeyLayerHandler.cs" />
+    <Compile Include="Settings\Layers\WrapperLightsLayerHandler.cs" />
     <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\ROT Tomb Raider\GameEvent_ROTTombRaider.cs" />
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
@@ -302,13 +450,11 @@
     <Compile Include="Profiles\BF3\Control_BF3.xaml.cs">
       <DependentUpon>Control_BF3.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\BF3\GameEvent_BF3.cs" />
     <Compile Include="Profiles\Blacklight\BLightApplication.cs" />
     <Compile Include="Profiles\Blacklight\BLightProfile.cs" />
     <Compile Include="Profiles\Blacklight\Control_BLight.xaml.cs">
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Blacklight\GameEvent_BLight.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Application.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Pointers.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Profile.cs" />
@@ -349,7 +495,6 @@
     </Compile>
     <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballProfile.cs" />
     <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballApplication.cs" />
-    <Compile Include="Profiles\DiscoDodgeball\GameEvent_DiscoDodgeball.cs" />
     <Compile Include="Profiles\Dota 2\Dota2Application.cs" />
     <Compile Include="Profiles\Dota 2\Layers\Control_Dota2AbilityLayer.xaml.cs">
       <DependentUpon>Control_Dota2AbilityLayer.xaml</DependentUpon>
@@ -388,7 +533,6 @@
     </Compile>
     <Compile Include="Profiles\Evolve\EvolveApplication.cs" />
     <Compile Include="Profiles\Evolve\EvolveProfile.cs" />
-    <Compile Include="Profiles\Evolve\GameEvent_Evolve.cs" />
     <Compile Include="Profiles\Generic_Application\Control_GenericApplication.xaml.cs">
       <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
     </Compile>
@@ -403,37 +547,30 @@
     <Compile Include="Profiles\Guild Wars 2\Control_GW2.xaml.cs">
       <DependentUpon>Control_GW2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Guild Wars 2\GameEvent_GW2.cs" />
     <Compile Include="Profiles\Guild Wars 2\GW2Application.cs" />
     <Compile Include="Profiles\Guild Wars 2\GW2Profile.cs" />
     <Compile Include="Profiles\Blade and Soul\Control_BnS.xaml.cs">
       <DependentUpon>Control_BnS.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Blade and Soul\GameEvent_BnS.cs" />
     <Compile Include="Profiles\Blade and Soul\BnSApplication.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\HotlineMiami\GameEvent_HM.cs" />
     <Compile Include="Profiles\HotlineMiami\HMApplication.cs" />
     <Compile Include="Profiles\HotlineMiami\HMProfile.cs" />
     <Compile Include="Profiles\LeagueOfLegends\Control_LoL.xaml.cs">
       <DependentUpon>Control_LoL.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLApplication.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLProfile.cs" />
     <Compile Include="Profiles\Aurora Wrapper\GameEvent_Aurora_Wrapper.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml.cs">
       <DependentUpon>Control_MagicDuels2012.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Magic_Duels_2012\GameEvent_MagicDuels2012.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Application.cs" />
-    <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Profile.cs" />
     <Compile Include="Profiles\Metro Last Light\Control_MetroLL.xaml.cs">
       <DependentUpon>Control_MetroLL.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Metro Last Light\GameEvent_MetroLL.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
     <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
@@ -465,17 +602,14 @@
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Worms_WMD\GameEvent_WormsWMD.cs" />
     <Compile Include="Profiles\Worms_WMD\WormsWMDApplication.cs" />
     <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
       <DependentUpon>Control_Overwatch.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Overwatch\GameEvent_Overwatch.cs" />
     <Compile Include="Profiles\Overwatch\OverwatchApplication.cs" />
     <Compile Include="Profiles\Payday 2\Control_PD2.xaml.cs">
       <DependentUpon>Control_PD2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Payday 2\GameEvent_PD2.cs" />
     <Compile Include="Profiles\Payday 2\GSI\GameState_PD2.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\GameNode.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\ItemNode.cs" />
@@ -499,29 +633,29 @@
     <Compile Include="Profiles\Serious Sam 3\Control_SSam3.xaml.cs">
       <DependentUpon>Control_SSam3.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Serious Sam 3\GameEvent_SSam3.cs" />
     <Compile Include="Profiles\Serious Sam 3\SSam3Application.cs" />
     <Compile Include="Profiles\Serious Sam 3\SSam3Profile.cs" />
     <Compile Include="Profiles\ShadowOfMordor\Control_ShadowOfMordor.xaml.cs">
       <DependentUpon>Control_ShadowOfMordor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\ShadowOfMordor\GameEvent_ShadowOfMordor.cs" />
     <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorApplication.cs" />
     <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorProfile.cs" />
     <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\TheDivision\TheDivisionApplication.cs" />
+    <Compile Include="Profiles\DyingLight\Control_DyingLight.xaml.cs">
+      <DependentUpon>Control_DyingLight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DyingLight\DyingLightApplication.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
       <DependentUpon>Control_TalosPrinciple.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\TheTalosPrinciple\GameEvent_TalosPrinciple.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleApplication.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleProfile.cs" />
     <Compile Include="Profiles\XCOM\Control_XCOM.xaml.cs">
       <DependentUpon>Control_XCOM.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\XCOM\GameEvent_XCOM.cs" />
     <Compile Include="Profiles\XCOM\XCOMApplication.cs" />
     <Compile Include="Profiles\XCOM\XCOMProfile.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -561,6 +695,9 @@
     </None>
     <None Include="app.manifest">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="kb_layouts\asus_strix_flare.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\corsair_k65.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -655,13 +792,28 @@
     <None Include="kb_layouts\Extra Features\steelseries_apex_m800_left_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\steelseries_apex_m750_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\steelseries_apex_m750_tkl_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\steelseries_apex_m800_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\steelseries_rival_300_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\steelseries_rival_300_hp_omen_edition_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g410.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g810.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.hu.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.swiss.json">
@@ -671,6 +823,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.abnt2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.dvorak.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.dvorak_int.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\razer_blade.json">
@@ -724,9 +882,6 @@
     <None Include="kb_layouts\masterkeys_pro_m.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="Scripting.evaluator.cs" />
-    <Compile Include="Scripting.Extensions.cs" />
-    <Compile Include="Scripting.native.cs" />
     <Compile Include="Settings\ColorZone.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Devices\DeviceManager.cs" />
@@ -742,7 +897,6 @@
       <DependentUpon>Control_CSGO.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\CSGO\CSGOProfile.cs" />
-    <Compile Include="Profiles\CSGO\GameEvent_CSGO.cs" />
     <Compile Include="Profiles\CSGO\GSI\GameState_CSGO.cs" />
     <Compile Include="Profiles\CSGO\GSI\Nodes\AllPlayersNode.cs" />
     <Compile Include="Profiles\CSGO\GSI\Nodes\AuthNode.cs" />
@@ -765,7 +919,6 @@
       <DependentUpon>Control_Dota2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Dota 2\Dota2Profile.cs" />
-    <Compile Include="Profiles\Dota 2\GameEvent_Dota2.cs" />
     <Compile Include="Profiles\Dota 2\GSI\GameState_Dota2.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Abilities.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Ability.cs" />
@@ -777,7 +930,6 @@
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Map.cs" />
     <Compile Include="Profiles\LightEvent.cs" />
     <Compile Include="Profiles\GameState_Wrapper.cs" />
-    <Compile Include="Profiles\GTA5\GameEvent_GTA5.cs" />
     <Compile Include="Profiles\GTA5\GSI\GameState_GTA5.cs" />
     <Compile Include="Profiles\GTA5\GTA5Profile.cs" />
     <Compile Include="Profiles\Node.cs" />
@@ -925,16 +1077,44 @@
     <Compile Include="Utils\UIUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="kb_layouts\Extra Features\images\Omen_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_scrollwheel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\ats_64x64.png" />
+    <Content Include="wooting-rgb-control.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Profiles\Payday 2\GSI\PD2_GSI.zip" />
     <Resource Include="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
     <Resource Include="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
+    <None Include="kb_layouts\wooting_one.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\steelseries_apex_m800.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\steelseries_apex_m750_tkl.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\steelseries_apex_m750.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -1026,6 +1206,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\KeyBindList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\KeySequence.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1051,6 +1235,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\ATS\Control_ATS.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1107,6 +1295,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Dota 2\Layers\Control_Dota2AbilityLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\ETS2\Control_ETS2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\ETS2\Layers\Control_ETS2BeaconLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\ETS2\Layers\Control_ETS2BlinkerLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1194,6 +1394,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\DyingLight\Control_DyingLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Worms_WMD\Control_WormsWMD.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1274,6 +1478,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Settings\Layers\Control_ConditionalLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Settings\Layers\Control_EqualizerLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1323,6 +1531,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Layers\Control_ImageLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_ToggleKeyLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_WrapperLightsLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1493,7 +1709,7 @@
     <Content Include="kb_layouts\Extra Features\images\Sabre_scrollwheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Apex_M800_logo.png">
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Apex_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="LogitechLed.dll">
@@ -1514,6 +1730,10 @@
     <Resource Include="Resources\FreeForm_ManualColor.png" />
     <Resource Include="Resources\Borderlands2_256x256.png" />
     <Resource Include="Resources\rot_tombraider.png" />
+    <Resource Include="Resources\dl_128x128.png" />
+    <Resource Include="Resources\ets2_64x64.png" />
+    <Resource Include="Profiles\ETS2\GSI\ets2-telemetry-server-x64.dll" />
+    <Resource Include="Profiles\ETS2\GSI\ets2-telemetry-server-x86.dll" />
     <Content Include="Resources\SteelSeriesInstall\Step1.png" />
     <Content Include="Resources\SteelSeriesInstall\Step2.png" />
     <Content Include="SDKDLL.dll">
@@ -1564,26 +1784,26 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GlobalMouseKeyHook\MouseKeyHook\MouseKeyHook.csproj">
-      <Project>{f52aa97e-180a-40ed-8f2b-09080171d6c7}</Project>
-      <Name>MouseKeyHook</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NAudio\NAudio\NAudio.csproj">
-      <Project>{da4f02e3-0b5e-42cd-b8d9-5583fa51d66e}</Project>
-      <Name>NAudio</Name>
+    <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj">
+      <Project>{fea699ae-db83-43dc-ab85-99f2e90c328f}</Project>
+      <Name>Wooting.NET</Name>
     </ProjectReference>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj">
       <Project>{40085232-aced-4cbe-945b-90ba8153c151}</Project>
       <Name>ColorBox</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\CUE.NET.1.1.3.1\build\net45\CUE.NET.targets" Condition="Exists('..\packages\CUE.NET.1.1.3.1\build\net45\CUE.NET.targets')" />
+  <Import Project="..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets" Condition="Exists('..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\CUE.NET.1.1.3.1\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.1.3.1\build\net45\CUE.NET.targets'))" />
+    <Error Condition="!Exists('..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 

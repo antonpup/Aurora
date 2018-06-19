@@ -1,5 +1,4 @@
-﻿using Aurora.Profiles.Aurora_Wrapper;
-using Aurora.Profiles.Desktop;
+﻿using Aurora.Profiles.Desktop;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Settings;
@@ -21,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
+using Aurora.Profiles.Aurora_Wrapper;
 
 namespace Aurora.Profiles
 {
@@ -79,6 +79,9 @@ namespace Aurora.Profiles
 
         public string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
 
+        public event EventHandler PreUpdate;
+        public event EventHandler PostUpdate;
+
         private ActiveProcessMonitor processMonitor;
 
         public LightingStateManager()
@@ -122,7 +125,10 @@ namespace Aurora.Profiles
                 new WormsWMD.WormsWMD(),
                 new Blade_and_Soul.BnS(),
                 new Event_SkypeOverlay(),
-                new ROTTombRaider.ROTTombRaider()
+                new ROTTombRaider.ROTTombRaider(),
+				new DyingLight.DyingLight(),
+                new ETS2.ETS2(),
+                new ATS.ATS()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -137,14 +143,18 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Script", "Script Layer", typeof(ScriptLayerHandler)),
                 new LayerHandlerEntry("Percent", "Percent Effect Layer", typeof(PercentLayerHandler)),
                 new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
+                new LayerHandlerEntry("Conditional", "Conditional Layer", typeof(ConditionalLayerHandler)),
                 new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
                 new LayerHandlerEntry("ShortcutAssistant", "Shortcut Assistant Layer", typeof(ShortcutAssistantLayerHandler) ),
-                new LayerHandlerEntry("Equalizer", "Equalizer Layer", typeof(EqualizerLayerHandler) ),
+                new LayerHandlerEntry("Equalizer", "Audio Visualizer Layer", typeof(EqualizerLayerHandler) ),
                 new LayerHandlerEntry("Ambilight", "Ambilight Layer", typeof(AmbilightLayerHandler) ),
                 new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
                 new LayerHandlerEntry("Glitch", "Glitch Effect Layer", typeof(GlitchLayerHandler) ),
                 new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
+                new LayerHandlerEntry("ToggleKey", "Toggle Key Layer", typeof(ToggleKeyLayerHandler))
             }, true);
+
+            RegisterLayerHandler(new LayerHandlerEntry("WrapperLights", "Wrapper Lighting Layer", typeof(WrapperLightsLayerHandler)), false);
 
             #endregion
 
@@ -331,12 +341,14 @@ namespace Aurora.Profiles
                 if (!(Events[key] is GenericApplication))
                     return;
                 GenericApplication profile = (GenericApplication)Events[key];
+                Events.Remove(key);
+                Global.Configuration.ProfileOrder.Remove(key);
+
+                profile.Dispose();
+
                 string path = profile.GetProfileFolderPath();
                 if (Directory.Exists(path))
                     Directory.Delete(path, true);
-
-                Events.Remove(key);
-                Global.Configuration.ProfileOrder.Remove(key);
 
                 //SaveSettings();
             }
@@ -492,6 +504,8 @@ namespace Aurora.Profiles
 
         private void Update()
         {
+            PreUpdate?.Invoke(this, null);
+
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
             if ((Global.Configuration.time_based_dimming_enabled &&
                Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
@@ -587,6 +601,8 @@ namespace Aurora.Profiles
             }
 
             Global.effengine.PushFrame(newFrame);
+
+            PostUpdate?.Invoke(this, null);
         }
 
         public void GameStateUpdate(IGameState gs)
@@ -606,13 +622,19 @@ namespace Aurora.Profiles
             {
 #endif
                 ILightEvent profile;// = this.GetProfileFromProcess(process_name);
+                
 
                 JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
                 string appid = provider.GetValue("appid").ToString();
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
                 if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
-                    profile.SetGameState((IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json));
+                {
+                    IGameState gameState = gs;
+                    if (profile.Config.GameStateType != null)
+                        gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json);
+                    profile.SetGameState(gameState);
+                }
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
@@ -678,6 +700,9 @@ namespace Aurora.Profiles
         {
             updateTimer.Dispose();
             updateTimer = null;
+
+            foreach (var app in this.Events)
+                app.Value.Dispose();
         }
     }
 }

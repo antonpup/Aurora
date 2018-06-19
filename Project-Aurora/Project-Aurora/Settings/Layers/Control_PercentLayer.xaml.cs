@@ -51,7 +51,7 @@ namespace Aurora.Settings.Layers
 
         internal void SetProfile(Profiles.Application profile)
         {
-            if (profile != null && !profileset)
+            if (profile != null && !profileset && profile.ParameterLookup != null)
             {
                 var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
 

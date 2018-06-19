@@ -150,6 +150,11 @@ namespace Aurora.Utils
         public MouseBrandToStringVC() : base(PreferredMouse.None) { }
     }
 
+    public class BitmapAccuracyToStringVC : EnumToStringVC
+    {
+        public BitmapAccuracyToStringVC() : base(BitmapAccuracy.Okay) { }
+    }
+
     public class MouseOrientationToStringVC : EnumToStringVC
     {
         public MouseOrientationToStringVC() : base(MouseOrientationType.RightHanded) { }
@@ -243,5 +248,10 @@ namespace Aurora.Utils
     public class ShortcutAssistantPresentationTypeToStringVC : EnumToStringVC
     {
         public ShortcutAssistantPresentationTypeToStringVC() : base(ShortcutAssistantPresentationType.Default) { }
+    }
+
+    public class ETS2_BeaconStyleToStringVC : EnumToStringVC
+    {
+        public ETS2_BeaconStyleToStringVC() : base(Profiles.ETS2.ETS2_BeaconStyle.Simple_Flash) { }
     }
 }

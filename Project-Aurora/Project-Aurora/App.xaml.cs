@@ -227,6 +227,7 @@ namespace Aurora
                 if (isDelayed)
                     System.Threading.Thread.Sleep((int)delayTime);
 
+                this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
                 Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
@@ -260,7 +261,7 @@ namespace Aurora
                         {
                             ProcessStartInfo updaterProc = new ProcessStartInfo();
                             updaterProc.FileName = updater_path;
-                            updaterProc.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor -silent" : "-silent";
+                            updaterProc.Arguments = "-silent";
                             Process.Start(updaterProc);
                         }
                         catch (Exception exc)
@@ -275,7 +276,7 @@ namespace Aurora
 
                 Global.logger.Info("Loading KB Layouts");
                 Global.kbLayout = new KeyboardLayoutManager();
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
 
                 Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();
@@ -329,7 +330,6 @@ namespace Aurora
                 this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
                 Global.logger.Info("Loaded ResourceDictionaries");
 
-                this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
                 Global.logger.Info("Loading ConfigUI...");
 
@@ -452,7 +452,10 @@ namespace Aurora
         {
             Exception exc = (Exception)e.Exception;
             Global.logger.Error("Fatal Exception caught : " + exc);
-            e.Handled = true;
+            if (!Global.isDebug)
+                e.Handled = true;
+            else
+                throw exc;
             System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
             //Perform exit operations
             System.Windows.Application.Current.Shutdown();

@@ -79,11 +79,13 @@ namespace Aurora.Controls
                 });
         }
 
+        private bool isRecording = false;
         public void Start()
         {
             if (_ActiveKeybind != null)
                 _ActiveKeybind.Stop();
 
+            isRecording = true;
             _ActiveKeybind = this;
 
             buttonToggleAssign.Content = "Stop";
@@ -92,16 +94,28 @@ namespace Aurora.Controls
         public void Stop()
         {
             buttonToggleAssign.Content = "Assign";
+            isRecording = false;
             _ActiveKeybind = null;
             KeybindUpdated?.Invoke(this, ContextKeybind);
         }
 
         private void buttonToggleAssign_Click(object sender, RoutedEventArgs e)
         {
-            if (this.Equals(_ActiveKeybind))
+            if (isRecording)
                 Stop();
             else
                 Start();
+        }
+
+        private void Grid_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Stop();
+        }
+
+        private void Grid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.Key.Equals(Key.Down) || e.Key.Equals(Key.Up) || e.Key.Equals(Key.Left) || e.Key.Equals(Key.Right)) && isRecording)
+                e.Handled = true;
         }
     }
 }

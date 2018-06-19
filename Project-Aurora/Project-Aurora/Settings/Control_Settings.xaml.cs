@@ -42,15 +42,34 @@ namespace Aurora.Settings
                 using (TaskService service = new TaskService())
                 {
                     Microsoft.Win32.TaskScheduler.Task task = service.FindTask(StartupTaskID);
-                    Microsoft.Win32.TaskScheduler.TaskDefinition definition = task.Definition;
-                    this.run_at_win_startup.IsChecked = task?.Enabled ?? false;//!(runRegistryPath.GetValue("Aurora", null) == null);
                     if (task != null)
                     {
+                        TaskDefinition definition = task.Definition;
                         //Update path of startup task
                         string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
                         definition.Actions.Clear();
                         definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
                         service.RootFolder.RegisterTaskDefinition(StartupTaskID, definition);
+                        this.run_at_win_startup.IsChecked = task.Enabled;
+                    }
+                    else
+                    {
+                        TaskDefinition td = service.NewTask();
+                        td.RegistrationInfo.Description = "Start Aurora on Startup";
+
+                        td.Triggers.Add(new LogonTrigger { Enabled = true });
+
+                        string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+                        td.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
+
+                        td.Principal.RunLevel = TaskRunLevel.Highest;
+                        td.Settings.DisallowStartIfOnBatteries = false;
+                        td.Settings.DisallowStartOnRemoteAppSession = false;
+                        td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
+
+                        service.RootFolder.RegisterTaskDefinition(StartupTaskID, td);
+                        this.run_at_win_startup.IsChecked = true;
                     }
                 }
             }
@@ -126,7 +145,6 @@ namespace Aurora.Settings
             this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
-            this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -138,7 +156,11 @@ namespace Aurora.Settings
                             {
                                 using (MemoryStream memory = new MemoryStream())
                                 {
-                                    map.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                                    //Fix conflict with AtomOrb due to async
+                                    lock (map)
+                                    {
+                                        map.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                                    }
                                     memory.Position = 0;
                                     BitmapImage bitmapimage = new BitmapImage();
                                     bitmapimage.BeginInit();
@@ -477,6 +499,20 @@ namespace Aurora.Settings
             label.Text = (int)(sld.Value * 100) + " %";
         }
 
+        private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Slider sld = sender as Slider;
+            if (sld == null)
+                return;
+
+            TextBlock label = sld.Tag as TextBlock;
+
+            if (label == null)
+                return;
+
+            label.Text = sld.Value.ToString();
+        }
+
         private void run_at_win_startup_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded && sender is CheckBox)
@@ -487,37 +523,7 @@ namespace Aurora.Settings
                     {
                         //Find existing task
                         var task = ts.FindTask(StartupTaskID);
-                        if ((sender as CheckBox).IsChecked.Value)
-                        {
-                            if (task != null)
-                            {
-                                task.Enabled = true;
-                            }
-                            else
-                            {
-                                TaskDefinition td = ts.NewTask();
-                                td.RegistrationInfo.Description = "Start Aurora on Startup";
-
-                                td.Triggers.Add(new LogonTrigger { Enabled = true });
-
-                                string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
-                                td.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
-
-                                td.Principal.RunLevel = TaskRunLevel.Highest;
-                                td.Settings.DisallowStartIfOnBatteries = false;
-                                td.Settings.DisallowStartOnRemoteAppSession = false;
-                                td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
-
-                                ts.RootFolder.RegisterTaskDefinition(StartupTaskID, td);
-                            }
-                        }
-                        else
-                        {
-                            if (task != null)
-                                task.Enabled = false;
-                            //ts.RootFolder.DeleteTask(StartupTaskID);
-                        }
+                        task.Enabled = (sender as CheckBox).IsChecked.Value;
                     }
                 }
                 catch(Exception exc)
@@ -593,7 +599,6 @@ namespace Aurora.Settings
                 {
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.FileName = updater_path;
-                    startInfo.Arguments = Global.Configuration.updates_allow_silent_minor ? "-silent_minor" : "";
                     Process.Start(startInfo);
                 }
                 else
@@ -608,15 +613,6 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.updates_check_on_start_up = (this.updates_autocheck_on_start.IsChecked.HasValue) ? this.updates_autocheck_on_start.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void updates_background_install_minor_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.updates_allow_silent_minor = (this.updates_background_install_minor.IsChecked.HasValue) ? this.updates_background_install_minor.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -673,7 +669,7 @@ namespace Aurora.Settings
                 Global.Configuration.keyboard_localization = (PreferredKeyboardLocalization)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_layout.SelectedIndex.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -684,7 +680,7 @@ namespace Aurora.Settings
                 Global.Configuration.keyboard_brand = (PreferredKeyboard)Enum.Parse(typeof(PreferredKeyboard), this.devices_kb_brand.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -695,7 +691,7 @@ namespace Aurora.Settings
                 Global.Configuration.mouse_preference = (PreferredMouse)Enum.Parse(typeof(PreferredMouse), this.devices_mouse_brand.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -706,7 +702,7 @@ namespace Aurora.Settings
                 Global.Configuration.mouse_orientation = (MouseOrientationType)Enum.Parse(typeof(MouseOrientationType), this.devices_mouse_orientation.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -717,7 +713,7 @@ namespace Aurora.Settings
                 Global.Configuration.virtualkeyboard_keycap_type = (KeycapType)Enum.Parse(typeof(KeycapType), this.ComboBox_virtualkeyboard_keycap_type.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
 
-                Global.kbLayout.LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                Global.kbLayout.LoadBrandDefault();
             }
         }
 
@@ -995,8 +991,8 @@ namespace Aurora.Settings
 
                 winBitmapView = new Window();
                 winBitmapView.Closed += WinBitmapView_Closed;
-                winBitmapView.ResizeMode = ResizeMode.NoResize;
-                winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
+                winBitmapView.ResizeMode = ResizeMode.CanResize;
+                //winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
 
                 winBitmapView.Title = "Keyboard Bitmap View";
                 winBitmapView.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
@@ -1005,10 +1001,10 @@ namespace Aurora.Settings
                 imgBitmap.SnapsToDevicePixels = true;
                 imgBitmap.HorizontalAlignment = HorizontalAlignment.Stretch;
                 imgBitmap.VerticalAlignment = VerticalAlignment.Stretch;
+                /*imgBitmap.MinWidth = 0;
+                imgBitmap.MinHeight = 0;*/
                 imgBitmap.MinWidth = Effects.canvas_width;
                 imgBitmap.MinHeight = Effects.canvas_height;
-                imgBitmap.Width = Effects.canvas_width * 4;
-                imgBitmap.Height = Effects.canvas_height * 4;
 
                 winBitmapView.Content = imgBitmap;
 

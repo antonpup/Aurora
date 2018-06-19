@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Aurora.Utils;
+using Microsoft.Win32;
 using SharpDX.Multimedia;
 using SharpDX.RawInput;
 
@@ -50,12 +51,19 @@ namespace Aurora
             try
             {
                 thread.Start(MessagePumpInit);
+                SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
             }
             catch
             {
                 Dispose();
                 throw;
             }
+        }
+
+        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (e.Reason == SessionSwitchReason.SessionLock || e.Reason == SessionSwitchReason.SessionUnlock)
+                this.pressedKeySequence.Clear();
         }
 
         private void MessagePumpInit()

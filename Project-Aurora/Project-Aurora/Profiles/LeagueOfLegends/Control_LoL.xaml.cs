@@ -33,8 +33,6 @@ namespace Aurora.Profiles.LeagueOfLegends
         private void SetSettings()
         {
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
-            this.cz.ColorZonesList = (profile_manager.Profile as LoLProfile).lighting_areas;
-            this.cz_disable_on_dark.IsChecked = (profile_manager.Profile as LoLProfile).disable_cz_on_dark;
         }
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
@@ -58,24 +56,6 @@ namespace Aurora.Profiles.LeagueOfLegends
             if (IsLoaded)
             {
                 profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Profile as LoLProfile).lighting_areas = (sender as ColorZones).ColorZonesList;
-                profile_manager.SaveProfiles();
-            }
-        }
-
-        private void cz_disable_on_dark_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Profile as LoLProfile).disable_cz_on_dark = (this.cz_disable_on_dark.IsChecked.HasValue) ? this.cz_disable_on_dark.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }

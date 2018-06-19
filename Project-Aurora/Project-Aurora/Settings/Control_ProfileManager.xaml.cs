@@ -56,13 +56,12 @@ namespace Aurora.Settings
             {
                 Profiles.Application prof = ((Profiles.Application)e.OldValue);
                 prof.ProfileChanged -= self.UpdateProfiles;
-                prof.SaveProfiles();
+                //prof.SaveProfiles();
 
                 if (self.LastSelectedProfile.ContainsKey(prof))
                     self.LastSelectedProfile.Remove(prof);
 
                 self.LastSelectedProfile.Add(prof, self.lstProfiles.SelectedItem as ApplicationProfile);
-
             }
             self.UpdateProfiles();
             if (e.NewValue != null)
@@ -107,8 +106,6 @@ namespace Aurora.Settings
                 else
                     this.btnDeleteProfile.IsEnabled = false;
             }
-            else if (e.RemovedItems.Count > 0)
-                this.FocusedApplication?.SaveProfiles();
         }
 
         private void btnNewProfile_Click(object sender, RoutedEventArgs e)

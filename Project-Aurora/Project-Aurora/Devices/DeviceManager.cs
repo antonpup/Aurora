@@ -2,22 +2,68 @@
 using CSScriptLibrary;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
 
 namespace Aurora.Devices
 {
+    public class DeviceContainer
+    {
+        public Device Device { get; set; }
+
+        public BackgroundWorker Worker = new BackgroundWorker();
+        public Thread UpdateThread { get; set; } = null;
+
+        public CancellationTokenSource UpdateTaskCancellationTokenSource { get; set; } = null;
+
+        private Tuple<DeviceColorComposition, bool> currentComp = null;
+        private bool newFrame = false;
+
+        public DeviceContainer(Device device)
+        {
+            this.Device = device;
+            Worker.DoWork += WorkerOnDoWork;
+            Worker.RunWorkerCompleted += (sender, args) =>
+            {
+                if (newFrame && !Worker.IsBusy)
+                    Worker.RunWorkerAsync();
+            };
+            Worker.WorkerSupportsCancellation = true;
+        }
+
+        private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        {
+            newFrame = false;
+            UpdateTaskCancellationTokenSource = new CancellationTokenSource();
+            Device.UpdateDevice(currentComp.Item1, UpdateTaskCancellationTokenSource.Token,
+                currentComp.Item2);
+        }
+
+        public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
+        {
+            UpdateTaskCancellationTokenSource?.Cancel();
+
+            newFrame = true;
+            currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
+
+            if (!Worker.IsBusy)
+                Worker.RunWorkerAsync();
+        }
+    }
+
     public class DeviceManager : IDisposable
     {
-        private List<Device> devices = new List<Device>();
+        private List<DeviceContainer> devices = new List<DeviceContainer>();
 
-        public Device[] Devices { get { return devices.ToArray(); } }
+        public DeviceContainer[] Devices { get { return devices.ToArray(); } }
 
         private bool anyInitialized = false;
         private bool retryActivated = false;
         private const int retryInterval = 5000;
-        private const int retryAttemps = 15;
+        private const int retryAttemps = 3;
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
 
@@ -34,15 +80,16 @@ namespace Aurora.Devices
 
         public DeviceManager()
         {
-            devices.Add(new Devices.Logitech.LogitechDevice());         // Logitech Device
-            devices.Add(new Devices.Corsair.CorsairDevice());           // Corsair Device
-            devices.Add(new Devices.Razer.RazerDevice());               // Razer Device
-            //devices.Add(new Devices.Roccat.RoccatDevice());             // Roccat Device
-            devices.Add(new Devices.Clevo.ClevoDevice());               // Clevo Device
-            devices.Add(new Devices.CoolerMaster.CoolerMasterDevice()); // CoolerMaster Device
-            devices.Add(new Devices.AtmoOrbDevice.AtmoOrbDevice());     // AtmoOrb Ambilight Device
-            devices.Add(new Devices.SteelSeries.SteelSeriesDevice());   // SteelSeries Device
-
+            devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
+            devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
+            devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
+            devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
+            devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
+            devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
+            devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
+            devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
+            devices.Add(new DeviceContainer(new Devices.SteelSeriesHID.SteelSeriesHIDDevice()));   // SteelSeriesHID Device
+            devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
 
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
@@ -64,32 +111,32 @@ namespace Aurora.Devices
 
                                     Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
-                                    devices.Add(scripted_device);
+                                    devices.Add(new DeviceContainer(scripted_device));
                                 }
                                 else
-                                    Global.logger.Error(string.Format("Script \"{0}\" does not contain a public 'main' class", device_script));
+                                    Global.logger.Error("Script \"{0}\" does not contain a public 'main' class", device_script);
 
                                 break;
                             case ".cs":
-                                System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(device_script);
+                                System.Reflection.Assembly script_assembly = CSScript.LoadFile(device_script);
                                 foreach (Type typ in script_assembly.ExportedTypes)
                                 {
                                     dynamic script = Activator.CreateInstance(typ);
 
                                     Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
-                                    devices.Add(scripted_device);
+                                    devices.Add(new DeviceContainer(scripted_device));
                                 }
 
                                 break;
                             default:
-                                Global.logger.Error(string.Format("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext));
+                                Global.logger.Error("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext);
                                 break;
                         }
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error(string.Format("An error occured while trying to load script {0}. Exception: {1}", device_script, exc));
+                        Global.logger.Error("An error occured while trying to load script {0}. Exception: {1}", device_script, exc);
                     }
                 }
             }
@@ -99,36 +146,39 @@ namespace Aurora.Devices
         {
             //Register any variables
             foreach (var device in devices)
-                Global.Configuration.VarRegistry.Combine(device.GetRegisteredVariables());
+                Global.Configuration.VarRegistry.Combine(device.Device.GetRegisteredVariables());
         }
 
         public void Initialize()
         {
             int devicesToRetryNo = 0;
-            foreach (Device device in devices)
+            foreach (DeviceContainer device in devices)
             {
-                if (device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.GetType()))
+                if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
                     continue;
 
-                if (device.Initialize())
+                if (device.Device.Initialize())
                     anyInitialized = true;
                 else
                     devicesToRetryNo++;
 
-                Global.logger.Info("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized");
+                Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
             }
 
-            NewDevicesInitialized?.Invoke(this, new EventArgs());
+
+            if (anyInitialized)
+            {
+                _InitializeOnceAllowed = true;
+                NewDevicesInitialized?.Invoke(this, new EventArgs());
+            }
 
             if (devicesToRetryNo > 0 && !retryActivated)
             {
+                retryActivated = true;
                 retryThread = new Thread(RetryInitialize);
                 retryThread.Start();
-
-                retryActivated = true;
+                return;
             }
-
-            _InitializeOnceAllowed = true;
         }
 
         private void RetryInitialize()
@@ -138,16 +188,16 @@ namespace Aurora.Devices
                 Global.logger.Info("Retrying Device Initialization");
                 int devicesAttempted = 0;
                 bool _anyInitialized = false;
-                foreach (Device device in devices)
+                foreach (DeviceContainer device in devices)
                 {
-                    if (device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.GetType()))
+                    if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
                         continue;
 
                     devicesAttempted++;
-                    if (device.Initialize())
+                    if (device.Device.Initialize())
                         _anyInitialized = true;
 
-                    Global.logger.Info("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized");
+                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
                 }
 
                 retryAttemptsLeft--;
@@ -182,11 +232,11 @@ namespace Aurora.Devices
         {
             List<Device> ret = new List<Device>();
 
-            foreach (Device device in devices)
+            foreach (DeviceContainer device in devices)
             {
-                if (device.IsInitialized())
+                if (device.Device.IsInitialized())
                 {
-                    ret.Add(device);
+                    ret.Add(device.Device);
                 }
             }
 
@@ -195,12 +245,12 @@ namespace Aurora.Devices
 
         public void Shutdown()
         {
-            foreach (Device device in devices)
+            foreach (DeviceContainer device in devices)
             {
-                if (device.IsInitialized())
+                if (device.Device.IsInitialized())
                 {
-                    device.Shutdown();
-                    Global.logger.Info("Device, " + device.GetDeviceName() + ", was shutdown");
+                    device.Device.Shutdown();
+                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was shutdown");
                 }
             }
 
@@ -209,44 +259,39 @@ namespace Aurora.Devices
 
         public void ResetDevices()
         {
-            foreach (Device device in devices)
+            foreach (DeviceContainer device in devices)
             {
-                if (device.IsInitialized())
+                if (device.Device.IsInitialized())
                 {
-                    device.Reset();
+                    device.Device.Reset();
                 }
             }
         }
 
-        public bool UpdateDevices(DeviceColorComposition composition, bool forced = false)
+        public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
         {
-            bool anyUpdated = false;
-
-            foreach (Device device in devices)
+            foreach (DeviceContainer device in devices)
             {
-                if (device.IsInitialized())
+                if (device.Device.IsInitialized())
                 {
-                    if (Global.Configuration.devices_disabled.Contains(device.GetType()))
+                    if (Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
                     {
                         //Initialized when it's supposed to be disabled? SMACK IT!
-                        device.Shutdown();
+                        device.Device.Shutdown();
                         continue;
                     }
-
-                    if (device.UpdateDevice(composition, forced))
-                        anyUpdated = true;
+                    
+                    device.UpdateDevice(composition, forced);
                 }
             }
-
-            return anyUpdated;
         }
 
         public string GetDevices()
         {
             string devices_info = "";
 
-            foreach (Device device in devices)
-                devices_info += device.GetDeviceDetails() + "\r\n";
+            foreach (DeviceContainer device in devices)
+                devices_info += device.Device.GetDeviceDetails() + "\r\n";
 
             if (retryAttemptsLeft > 0)
                 devices_info += "Retries: " + retryAttemptsLeft + "\r\n";

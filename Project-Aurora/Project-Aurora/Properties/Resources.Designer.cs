@@ -71,6 +71,16 @@ namespace Aurora.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ats_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("ats_64x64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon aurora_icon {
@@ -217,6 +227,36 @@ namespace Aurora.Properties {
             get {
                 object obj = ResourceManager.GetObject("dota2_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DyingLight {
+            get {
+                object obj = ResourceManager.GetObject("DyingLight", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] ets2_telemetry_server_x64 {
+            get {
+                object obj = ResourceManager.GetObject("ets2_telemetry_server_x64", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] ets2_telemetry_server_x86 {
+            get {
+                object obj = ResourceManager.GetObject("ets2_telemetry_server_x86", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

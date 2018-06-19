@@ -187,20 +187,30 @@ namespace Aurora.Settings
         //Clevo range is 400-499
 
         //Cooler Master range is 500-599
-        [Description("Masterkeys Pro L")]
+        [Description("Cooler Master - Masterkeys Pro L")]
         Masterkeys_Pro_L = 500,
-        [Description("Masterkeys Pro S")]
+        [Description("Cooler Master - Masterkeys Pro S")]
         Masterkeys_Pro_S = 501,
-        [Description("Masterkeys Pro M")]
+        [Description("Cooler Master - Masterkeys Pro M")]
         Masterkeys_Pro_M = 502,
 
         //Roccat range is 600-699
-        //[Description("Roccat Ryos")]
-        //Roccat_Ryos = 600
+        [Description("Roccat Ryos")]
+        Roccat_Ryos = 600,
 
         //Steelseries range is 700-799
         [Description("SteelSeries Apex M800")]
         SteelSeries_Apex_M800 = 700,
+        [Description("SteelSeries Apex M750")]
+        SteelSeries_Apex_M750 = 701,
+        [Description("SteelSeries Apex M750 TKL")]
+        SteelSeries_Apex_M750_TKL = 702,
+
+        [Description("Wooting One")]
+        Wooting_One = 800,
+
+        [Description("Asus Strix Flare")]
+        Asus_Strix_Flare = 900,
     }
 
     public enum PreferredKeyboardLocalization
@@ -228,7 +238,13 @@ namespace Aurora.Settings
         [Description("Swiss")]
         swiss = 10,
         [Description("Portuguese (Brazilian ABNT2)")]
-        abnt2 = 11
+        abnt2 = 11,
+        [Description("DVORAK (US)")]
+        dvorak = 12,
+        [Description("DVORAK (INT)")]
+        dvorak_int = 13,
+        [Description("Hungarian")]
+        hu = 14
     }
 
     public enum PreferredMouse
@@ -255,13 +271,17 @@ namespace Aurora.Settings
 
         //Clevo range is 400-499
         [Description("Clevo - Touchpad")]
-        Clevo_Touchpad = 400
+        Clevo_Touchpad = 400,
 
         //Cooler Master range is 500-599
 
         //Roccat range is 600-699
 
         //Steelseries range is 700-799
+        [Description("SteelSeries - Rival 300")]
+        SteelSeries_Rival_300 = 700,
+        [Description("SteelSeries - Rival 300 HP OMEN Edition")]
+        SteelSeries_Rival_300_HP_OMEN_Edition = 701
     }
 
     public enum KeycapType
@@ -285,6 +305,15 @@ namespace Aurora.Settings
 
         [Description("Foreground App Scan")]
         ForegroroundApp = 1
+    }
+
+    public enum BitmapAccuracy
+    {
+        Best = 1,
+        Great = 3,
+        Good = 6,
+        Okay = 9,
+        Fine = 12
     }
 
     public class Configuration : Settings
@@ -326,8 +355,10 @@ namespace Aurora.Settings
         private bool showDefaultLightingOnDisabled = false;
         public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
 
+        private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
+        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
+
         public bool updates_check_on_start_up;
-        public bool updates_allow_silent_minor;
         public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
@@ -340,6 +371,7 @@ namespace Aurora.Settings
         public bool devices_disable_keyboard;
         public bool devices_disable_mouse;
         public bool devices_disable_headset;
+        public bool ss_hid_disabled = false;
         public HashSet<Type> devices_disabled;
         public bool OverlaysInPreview;
 
@@ -392,7 +424,6 @@ namespace Aurora.Settings
             KeyboardBrightness = 1.0f;
             peripheralBrightness = 1.0f;
             updates_check_on_start_up = true;
-            updates_allow_silent_minor = true;
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
@@ -464,6 +495,12 @@ namespace Aurora.Settings
 
             Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
 
+            if (!config.ss_hid_disabled)
+            {
+                config.devices_disabled.Add(typeof(Devices.SteelSeriesHID.SteelSeriesHIDDevice));
+                config.ss_hid_disabled = true;
+            }
+
             return config;
         }
 
@@ -481,8 +518,6 @@ namespace Aurora.Settings
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
-
-            Global.LightingStateManager.SaveAll();
         }
 
         private static Configuration CreateDefaultConfigurationFile()

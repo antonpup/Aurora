@@ -12,7 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Aurora.Settings;
+using Microsoft.Win32.TaskScheduler;
 
 namespace Aurora.Devices.Corsair
 {
@@ -74,6 +77,7 @@ namespace Aurora.Devices.Corsair
                         mouse = CueSDK.MouseSDK;
                         headset = CueSDK.HeadsetSDK;
                         mousemat = CueSDK.MousematSDK;
+                        keyboard.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
 
 
                         if (keyboard == null && mouse == null && headset == null && mousemat == null)
@@ -163,17 +167,21 @@ namespace Aurora.Devices.Corsair
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
         {
+            if (token.IsCancellationRequested) return false;
             CorsairLedId keyindex = CorsairLedId.Invalid;
 
             try
             {
+                if (token.IsCancellationRequested) return false;
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
+                    if (token.IsCancellationRequested) return false;
                     CorsairLedId localKey = ToCorsair(key.Key);
 
-                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo || localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
+                    if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo ||
+                        localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToMouse(CorsairLedId.B1, (Color)(key.Value));
                         SendColorToPeripheral((Color)(key.Value), forced);
@@ -194,6 +202,7 @@ namespace Aurora.Devices.Corsair
                     keyindex = localKey;
                 }
 
+                if (token.IsCancellationRequested) return false;
                 SendColorsToKeyboard(forced);
                 return true;
             }
@@ -205,11 +214,11 @@ namespace Aurora.Devices.Corsair
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
@@ -509,7 +518,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.SEMICOLON):
                     return CorsairLedId.SemicolonAndColon;
                 case (DeviceKeys.APOSTROPHE):
-                    return  CorsairLedId.ApostropheAndDoubleQuote;
+                    return CorsairLedId.ApostropheAndDoubleQuote;
                 case (DeviceKeys.HASHTAG):
                     return CorsairLedId.NonUsTilde;
                 case (DeviceKeys.ENTER):
