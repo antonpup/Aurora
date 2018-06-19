@@ -97,7 +97,7 @@ namespace Aurora.Profiles.RocketLeague
 
                     (_game_state as GameState_RocketLeague).Match.OrangeTeam_Score = memread.ReadInt(pointers.Orange_score.baseAddress, pointers.Orange_score.pointers);
                     (_game_state as GameState_RocketLeague).Match.BlueTeam_Score = memread.ReadInt(pointers.Blue_score.baseAddress, pointers.Blue_score.pointers);
-                    (_game_state as GameState_RocketLeague).Player.BoostAmount = memread.ReadFloat(pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers);
+                    (_game_state as GameState_RocketLeague).Player.BoostAmount = memread.ReadLong(pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers) / 4294967297;
                 }
             }
 
