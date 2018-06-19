@@ -380,8 +380,8 @@ namespace Aurora
                     continue;
 
                 Profiles.Application application = (Profiles.Application)Global.LightingStateManager.Events[profile_k];
-                ImageSource icon = application.GetIcon();
-                UserControl control = application.GetUserControl();
+                ImageSource icon = application.Icon;
+                UserControl control = application.Control;
                 if (icon != null && control != null)
                 {
                     Image profile_image;
@@ -600,7 +600,7 @@ namespace Aurora
             th.content_grid.MinHeight = ((UserControl)element).MinHeight;
             th.content_grid.Children.Add(element);
             th.content_grid.UpdateLayout();*/
-            th.content_grid.Content = value.GetUserControl();
+            th.content_grid.Content = value.Control;
             th.content_grid.UpdateLayout();
 
         }
@@ -797,7 +797,7 @@ namespace Aurora
         private void ctrlLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!sender.Equals(_selectedManager))
-                this.content_grid.Content = this.FocusedApplication.Profile.Layers.Count > 0 ? layercontrol_presenter : this.FocusedApplication.GetUserControl();
+                this.content_grid.Content = this.FocusedApplication.Profile.Layers.Count > 0 ? layercontrol_presenter : this.FocusedApplication.Control;
             UpdateManagerStackFocus(sender);
         }
 
@@ -806,6 +806,12 @@ namespace Aurora
             if (!sender.Equals(_selectedManager))
                 this.content_grid.Content = profilecontrol_presenter;
             UpdateManagerStackFocus(sender);
+        }
+
+        private void brdOverview_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.content_grid.Content = this._selectedManager = this.FocusedApplication.Control;
+
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

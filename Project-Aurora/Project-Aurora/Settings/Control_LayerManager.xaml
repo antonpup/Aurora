@@ -14,22 +14,22 @@
     </UserControl.Resources>
     <Grid>
         <Border Background="#A5000000" CornerRadius="8" />
-        <Border Background="#54A8A8A8" CornerRadius="8" VerticalAlignment="Top" Height="25" />
-        <Button x:Name="btnProfileOverview" Content="Show Profile Overview/Options" Margin="0,30,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfileOverview_Click" ToolTip="Go back to profile overview page"/>
-        <TextBlock TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="10,3,10,0"/>
-        <Button x:Name="btnAddLayer" Margin="0,55,81,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="add_layer_button_Click" ToolTip="Add a new layer" Height="24">
+        <Border Background="#54A8A8A8" CornerRadius="8" VerticalAlignment="Top" Height="25">
+            <TextBlock TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="10,3,10,0"/>
+        </Border>
+        <Button x:Name="btnAddLayer" Margin="0,30,78,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="add_layer_button_Click" ToolTip="Add a new layer" Height="24">
             <DockPanel Margin="2,0">
                 <Image Source="/Aurora;component/Resources/Layers_Add.png" Width="18" Height="18"/>
                 <TextBlock>Add</TextBlock>
             </DockPanel>
         </Button>
-        <Button x:Name="btnRemoveLayer" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,55,5,0" Click="btnRemoveLayer_Click" IsEnabled="False" ToolTip="Remove selected layer" Height="24">
+        <Button x:Name="btnRemoveLayer" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,30,5,0" Click="btnRemoveLayer_Click" IsEnabled="False" ToolTip="Remove selected layer" Height="24">
             <DockPanel Margin="2,0">
                 <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" />
                 <TextBlock>Remove</TextBlock>
             </DockPanel>
         </Button>
-        <DockPanel Margin="0,84,0,0">
+        <DockPanel Margin="0,59,0,0">
             <Grid x:Name="grid_timeselection" Height="23" VerticalAlignment="Top" DockPanel.Dock="Top" Visibility="Collapsed">
                 <RadioButton x:Name="radiobtn_daytime" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Daytime" Checked="radiobtn_daytime_Checked">
                     <Grid>

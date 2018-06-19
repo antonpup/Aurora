@@ -89,17 +89,15 @@ namespace Aurora.Profiles
                 InvokePropertyChanged(old, newVal);
             }
         }
-        public ImageSource Icon
-        {
-            get {
-                return GetIcon();
-            }
-        }
         #endregion
 
         #region Internal Properties
-        internal ImageSource icon { get; set; }
-        internal UserControl Control { get; set; }
+        protected ImageSource icon;
+        public virtual ImageSource Icon => icon ?? (icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
+
+        protected UserControl control;
+        public virtual UserControl Control { get { return control ?? (control = (UserControl)Activator.CreateInstance(this.Config.OverviewControlType, this)); } }
+
         internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
 
@@ -132,16 +130,6 @@ namespace Aurora.Profiles
         protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedExEventArgs(propertyName, oldValue, newValue));
-        }
-
-        public virtual UserControl GetUserControl()
-        {
-            return Control ?? (Control = (UserControl)Activator.CreateInstance(this.Config.OverviewControlType, this));
-        }
-
-        public virtual ImageSource GetIcon()
-        {
-            return icon ?? (icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
         }
 
         public void SwitchToProfile(ApplicationProfile newProfileSettings)
