@@ -114,7 +114,7 @@ namespace Aurora.Settings
                 }
             }
             else if (lstLayers.SelectedItem == null && lstLayers.Items.Count > 0)
-                lstLayers.SelectedItem = 0;
+                lstLayers.SelectedIndex = -1;
         }
 
         private void add_layer_button_Click(object sender, RoutedEventArgs e)
