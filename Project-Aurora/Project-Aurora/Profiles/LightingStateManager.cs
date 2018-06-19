@@ -608,7 +608,7 @@ namespace Aurora.Profiles
             ILightEvent profile = GetCurrentProfile();
 
             // Check profile is valid and do not switch profiles if the user is trying to enter a keybind
-            if (profile is Application && Controls.Control_Keybind._ActiveKeybind != null) {
+            if (profile is Application && Controls.Control_Keybind._ActiveKeybind == null) {
 
                 // Find all profiles that have their keybinds pressed
                 List<ApplicationProfile> possibleProfiles = new List<ApplicationProfile>();

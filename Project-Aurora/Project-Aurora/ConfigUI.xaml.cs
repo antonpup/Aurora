@@ -139,7 +139,8 @@ namespace Aurora
         {
             layercontrol_presenter.Layer = layer;
 
-            this.content_grid.Content = layercontrol_presenter;
+            if (_selectedManager.Equals(this.ctrlLayerManager))
+                this.content_grid.Content = layercontrol_presenter;
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
