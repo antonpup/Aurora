@@ -1,0 +1,78 @@
+body{
+background: url('images/index_optimized.png') 50% 50% no-repeat fixed black;
+min-width: 700px;
+}
+
+a{
+color: orange;
+}
+
+.bartest{
+position: absolute;
+bottom: 4px;
+width: inherit;
+height: auto;
+right: 0px;
+left: 0px;
+font-family: arial;
+font-weight:bold;
+color:white;
+text-decoration:none;
+padding-top: 120px;
+}
+
+.mountainhl:hover{
+background-position: center -142px !important;
+}
+.lbhl:hover{
+background-position: center -142px !important;
+}
+.githl:hover{
+background-position: center -142px !important;
+}
+.homehl:hover{
+background-position: center -142px !important;
+}
+.helphl:hover{
+background-position: center -142px !important;
+}
+.trellohl:hover{
+background-position: center -142px !important;
+}
+
+#logo{
+float: left;
+width: 0px;
+clear: both;
+margin: 0px 0px 20px 25px;
+opacity: 0.35;
+}
+.buttonkeygameicon, .buttonkeyrazer, .buttonkeylogitech{
+border: 3px solid #323232;
+border-radius: 10px;
+width: 150px;
+padding: 10px;
+background: linear-gradient(to bottom, rgb(32, 32, 32) 0%, rgb(8, 8, 8) 40%, rgb(8, 8, 8) 60%, rgb(32, 32, 32) 100%);
+}
+
+.devicelogo{
+border: 3px solid #323232;
+border-radius: 10px;
+padding: 10px;
+background: rgb(255,255,255);
+}
+
+.gamelogo{
+border: 3px solid #323232;
+border-radius: 10px;
+padding: 10px;
+background: linear-gradient(to bottom, rgb(32, 32, 32) 0%, rgb(8, 8, 8) 40%, rgb(8, 8, 8) 60%, rgb(32, 32, 32) 100%);
+}
+
+.content{
+font-family:arial;
+}
+.auto-style1 {
+	text-align: left;
+	padding-left: 20%;
+}
