@@ -450,8 +450,6 @@ namespace Aurora.Settings
 
         private FrameworkElement last_selected_element;
 
-        private static double bitmap_one_pixel = 3.0; // 12 pixels = 1 byte
-
         private Dictionary<Devices.DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<Devices.DeviceKeys, BitmapRectangle>();
 
         private bool _bitmapMapInvalid = true;
@@ -890,54 +888,56 @@ namespace Aurora.Settings
         {
             if (_bitmapMapInvalid)
             {
-                int width_bit = 0;
-                int height_bit = 0;
-                int width_bit_max = 1;
-                int height_bit_max = 1;
+                double cur_width = 0;
+                double cur_height = 0;
+                double width_max = 1;
+                double height_max = 1;
                 bitmap_map.Clear();
 
                 foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
                 {
-                    int width = PixelToByte(key.width.Value);
-                    int height = PixelToByte(key.height.Value);
-                    int x_offset = PixelToByte(key.margin_left.Value);
-                    int y_offset = PixelToByte(key.margin_top.Value);
-                    int br_x, br_y;
+                    double width = key.width.Value;
+                    int width_bit = PixelToByte(width);
+                    double height = key.height.Value;
+                    int height_bit = PixelToByte(height);
+                    double x_offset = key.margin_left.Value;
+                    double y_offset = key.margin_top.Value;
+                    double br_x, br_y;
 
                     if (key.absolute_location.Value)
                     {
-                        this.bitmap_map[key.tag] = new BitmapRectangle(x_offset, y_offset, width, height);
+                        this.bitmap_map[key.tag] = new BitmapRectangle(PixelToByte(x_offset), PixelToByte(y_offset), width_bit, height_bit);
                         br_x = (x_offset + width);
                         br_y = (y_offset + height);
                     }
                     else
                     {
-                        int x = x_offset + width_bit;
-                        int y = y_offset + height_bit;
+                        double x = x_offset + cur_width;
+                        double y = y_offset + cur_height;
 
-                        this.bitmap_map[key.tag] = new BitmapRectangle(x, y, width, height);
+                        this.bitmap_map[key.tag] = new BitmapRectangle(PixelToByte(x), PixelToByte(y), width_bit, height_bit);
 
                         br_x = (x + width);
                         br_y = (y + height);
 
                         if (key.line_break.Value)
                         {
-                            height_bit += PixelToByte(37);
-                            width_bit = 0;
+                            cur_height += 37;
+                            cur_width = 0;
                         }
                         else
                         {
-                            width_bit = br_x;
-                            if (y > height_bit)
-                                height_bit = y;
+                            cur_width = br_x;
+                            if (y > cur_height)
+                                cur_height = y;
                         }
                     }
-                    if (br_x > width_bit_max) width_bit_max = br_x;
-                    if (br_y > height_bit_max) height_bit_max = br_y;
+                    if (br_x > width_max) width_max = br_x;
+                    if (br_y > height_max) height_max = br_y;
                 }
 
                 _bitmapMapInvalid = false;
-                Global.effengine.SetCanvasSize(width_bit_max, height_bit_max);
+                Global.effengine.SetCanvasSize(PixelToByte(width_max), PixelToByte(height_max));
                 Global.effengine.SetBitmapping(this.bitmap_map);
             }
 
