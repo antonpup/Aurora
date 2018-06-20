@@ -203,6 +203,9 @@ namespace Aurora.Profiles
             if (Disposed)
                 return;
 
+            if (Profiles.Count == 1)
+                return;
+
             if (profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
             {
                 int profileIndex = Profiles.IndexOf(profile);

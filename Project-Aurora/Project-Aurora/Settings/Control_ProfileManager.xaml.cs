@@ -119,6 +119,12 @@ namespace Aurora.Settings
         {
             if (this.lstProfiles.SelectedIndex > -1)
             {
+                if (this.FocusedApplication.Profiles.Count == 1)
+                {
+                    MessageBox.Show("You cannot delete the last profile!");
+                    return;
+                }
+
                 if (MessageBox.Show($"Are you sure you want to delete Profile '{((ApplicationProfile)lstProfiles.SelectedItem).ProfileName}'", "Confirm action", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                 {
                     int index = this.lstProfiles.SelectedIndex;
