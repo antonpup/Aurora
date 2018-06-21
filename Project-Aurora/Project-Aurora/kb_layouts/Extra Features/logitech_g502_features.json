@@ -1,0 +1,35 @@
+{
+  "group_tag": "mouse",
+  "origin_region": 4,
+  "grouped_keys": [
+  {
+      "tag": -1,
+      "margin_left": 10.0,
+      "margin_top": -232.0,
+      "width": 143.0,
+      "height": 232.0,
+      "margin_left_bits": 1,
+      "margin_top_bits": -19,
+      "width_bits": 10,
+      "height_bits": 19,
+      "image": "Logi_G502_outline.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Logo",
+      "tag": 160,
+      "margin_left": 40.0,
+      "margin_top": -125.0,
+      "width": 45.0,
+      "height": 65.0,
+      "width_bits": 2,
+      "height_bits": 2,
+      "margin_left_bits": 5,
+      "margin_top_bits": -5,
+      "image": "Logi_G502_logo.png",
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}
