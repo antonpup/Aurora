@@ -206,8 +206,14 @@ namespace Aurora
 
             this.UpdateLayout();
 
-
-            this.ProfileImage_MouseDown(this.profiles_stack.Children[0], null);
+            foreach (Image child in this.profiles_stack.Children)
+            {
+                if (child.Visibility == Visibility.Visible)
+                {
+                    this.ProfileImage_MouseDown(child, null);
+                    break;
+                }
+            }
         }
 
         public static bool ApplicationIsActivated()
@@ -428,7 +434,6 @@ namespace Aurora
                     }
                     else
                     {
-
                         profile_image = new Image
                         {
                             Tag = application,
