@@ -56,5 +56,11 @@ namespace Aurora.Settings.Layers
             ScriptPropertiesEditor.Visibility = varReg == null || varReg.Count == 0 ? Visibility.Hidden : Visibility.Visible;
             ScriptPropertiesEditor.VarRegistrySource = handler.IsScriptValid ? handler.Properties._ScriptProperties : null;
         }
+
+        private void refreshScriptList_Click(object sender, RoutedEventArgs e) {
+            Application.ForceScriptReload();
+            cboScripts.Items.Refresh();
+            cboScripts.IsEnabled = Application.EffectScripts.Keys.Count > 0;
+        }
     }
 }
