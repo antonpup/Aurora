@@ -430,12 +430,16 @@
     <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
       <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_TimerLayer.xaml.cs">
+      <DependentUpon>Control_TimerLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_ToggleKeyLayer.xaml.cs">
       <DependentUpon>Control_ToggleKeyLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\Control_WrapperLightsLayer.xaml.cs">
       <DependentUpon>Control_WrapperLightsLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\TimerLayerHandler.cs" />
     <Compile Include="Settings\Layers\ToggleKeyLayerHandler.cs" />
     <Compile Include="Settings\Layers\WrapperLightsLayerHandler.cs" />
     <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
@@ -1560,6 +1564,10 @@
     <Page Include="Settings\Layers\Control_ImageLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_TimerLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_ToggleKeyLayer.xaml">
       <SubType>Designer</SubType>
