@@ -12,14 +12,34 @@
             <utils:ExceptionToStringConverter x:Key="ExceptionToStringConv"/>
         </ResourceDictionary>
     </UserControl.Resources>
+
     <Grid>
-        <Label Content="Script:" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" Padding="0"/>
-        <ComboBox x:Name="cboScripts" HorizontalAlignment="Left" Margin="48,14,0,0" VerticalAlignment="Top" Width="130" IsEditable="False" SelectionChanged="cboScripts_SelectionChanged" SelectedValue="{Binding Path=Properties._Script, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <DockPanel>
-            <Border x:Name="brdScriptPropertiesEditor" Margin="10,41,0,0" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Stretch" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" BorderThickness="1" DockPanel.Dock="Left">
-                <controls:Control_VariableRegistryEditor x:Name="ScriptPropertiesEditor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            </Border>
-            <TextBlock x:Name="txtError" Text="{Binding Path=ScriptException, Converter={StaticResource ExceptionToStringConv}}" Foreground="Red" Padding="0" Margin="5,41,0,0" TextWrapping="Wrap"/>
-        </DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" MaxWidth="450" />
+                <ColumnDefinition Width="1px" />
+                <ColumnDefinition Width="1*" MaxWidth="450" />
+                <ColumnDefinition Width="0*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="34" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <Label Content="Script:" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cboScripts" Width="160" Margin="5" VerticalAlignment="Center" IsEditable="False" SelectionChanged="cboScripts_SelectionChanged" SelectedValue="{Binding Path=Properties._Script, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button x:Name="refreshScriptList" VerticalAlignment="Center" Content="Reload Scripts" ToolTip="Reloads the scripts, updating an existing scripts and showing newly added ones" Margin="5" Click="refreshScriptList_Click" />
+            </StackPanel>
+
+            <controls:Control_VariableRegistryEditor x:Name="ScriptPropertiesEditor" Grid.Row="1" Margin="20,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+            <Rectangle Grid.Row="1" Grid.Column="1" Margin="0.10" HorizontalAlignment="Center" VerticalAlignment="Stretch" Stroke="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" />
+
+            <StackPanel Grid.Row="1" Grid.Column="2" Margin="20,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Label Content="If an error occurs, it will be shown here:" />
+                <TextBlock x:Name="txtError" Text="{Binding Path=ScriptException, Converter={StaticResource ExceptionToStringConv}}" Foreground="Red" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>
