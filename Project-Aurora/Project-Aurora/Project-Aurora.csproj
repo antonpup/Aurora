@@ -436,11 +436,15 @@
     <Compile Include="Settings\Layers\Control_ToggleKeyLayer.xaml.cs">
       <DependentUpon>Control_ToggleKeyLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_ToolbarLayer.xaml.cs">
+      <DependentUpon>Control_ToolbarLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_WrapperLightsLayer.xaml.cs">
       <DependentUpon>Control_WrapperLightsLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\TimerLayerHandler.cs" />
     <Compile Include="Settings\Layers\ToggleKeyLayerHandler.cs" />
+    <Compile Include="Settings\Layers\ToolbarLayerHandler.cs" />
     <Compile Include="Settings\Layers\WrapperLightsLayerHandler.cs" />
     <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
@@ -1571,6 +1575,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_ToggleKeyLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_ToolbarLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
