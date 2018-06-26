@@ -903,6 +903,9 @@ namespace Aurora.Settings
 
                 foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
                 {
+                    if (key.tag.Equals(DeviceKeys.NONE))
+                        continue;
+
                     double width = key.width.Value;
                     int width_bit = PixelToByte(width);
                     double height = key.height.Value;
