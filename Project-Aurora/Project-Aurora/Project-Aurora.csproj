@@ -430,13 +430,21 @@
     <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
       <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_TimerLayer.xaml.cs">
+      <DependentUpon>Control_TimerLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_ToggleKeyLayer.xaml.cs">
       <DependentUpon>Control_ToggleKeyLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\Control_ToolbarLayer.xaml.cs">
+      <DependentUpon>Control_ToolbarLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\Control_WrapperLightsLayer.xaml.cs">
       <DependentUpon>Control_WrapperLightsLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\TimerLayerHandler.cs" />
     <Compile Include="Settings\Layers\ToggleKeyLayerHandler.cs" />
+    <Compile Include="Settings\Layers\ToolbarLayerHandler.cs" />
     <Compile Include="Settings\Layers\WrapperLightsLayerHandler.cs" />
     <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
@@ -687,6 +695,7 @@
     <Compile Include="Settings\PluginManager.cs" />
     <Compile Include="Devices\SteelSeries\USBHIDCodes.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
+    <Compile Include="Utils\MouseUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
     <None Include="App.config">
@@ -721,6 +730,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\corsair_k65_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\logitech_gpro_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\masterkeys_mk750_bottom_features.json">
@@ -823,6 +835,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g810.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_gpro.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\masterkeys_mk750.json">
@@ -1555,7 +1570,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Settings\Layers\Control_TimerLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Layers\Control_ToggleKeyLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_ToolbarLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

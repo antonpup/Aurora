@@ -506,6 +506,10 @@ namespace Aurora.Profiles
             }
         }
 
+        public void ForceScriptReload() {
+            LoadScripts(GetProfileFolderPath(), true);
+        }
+
         protected void InitalizeScriptSettings(ApplicationProfile profile_settings, bool ignore_removal = false)
         {
             foreach (string id in this.EffectScripts.Keys)

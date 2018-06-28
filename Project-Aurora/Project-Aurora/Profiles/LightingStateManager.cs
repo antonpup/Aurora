@@ -151,7 +151,9 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
                 new LayerHandlerEntry("Glitch", "Glitch Effect Layer", typeof(GlitchLayerHandler) ),
                 new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
-                new LayerHandlerEntry("ToggleKey", "Toggle Key Layer", typeof(ToggleKeyLayerHandler))
+                new LayerHandlerEntry("ToggleKey", "Toggle Key Layer", typeof(ToggleKeyLayerHandler)),
+                new LayerHandlerEntry("Timer", "Timer Layer", typeof(TimerLayerHandler)),
+                new LayerHandlerEntry("Toolbar", "Toolbar Layer", typeof(ToolbarLayerHandler))
             }, true);
 
             RegisterLayerHandler(new LayerHandlerEntry("WrapperLights", "Wrapper Lighting Layer", typeof(WrapperLightsLayerHandler)), false);
