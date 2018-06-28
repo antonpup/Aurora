@@ -680,10 +680,10 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed);
+                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed, blink_background);
             else
                 PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flash_past, flash_reversed);
 
@@ -699,7 +699,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
                 PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed);
@@ -719,7 +719,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -729,11 +729,17 @@ namespace Aurora.EffectsEngine
 
             double progress = progress_total * keys.Count();
 
+            Console.WriteLine("blnkbacckground: " + blink_background);
+            Console.WriteLine("direction: " + flash_reversed);
+
             if (flash_past > 0.0)
             {
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
-                    foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                    if (!blink_background)
+                        foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                    if (blink_background)
+                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
             }
 
@@ -838,7 +844,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0 || Double.IsNaN(progress_total))
@@ -850,7 +856,10 @@ namespace Aurora.EffectsEngine
             {
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
-                    foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                    if(!blink_background)
+                        foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                    if(blink_background)
+                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
             }
 

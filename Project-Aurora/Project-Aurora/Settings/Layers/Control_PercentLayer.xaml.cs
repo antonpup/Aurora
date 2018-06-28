@@ -127,5 +127,13 @@ namespace Aurora.Settings.Layers
                 (this.DataContext as PercentLayerHandler).Properties._BlinkDirection = (sender as CheckBox).IsChecked.Value;
             }
         }
+
+        private void CheckBox_blinkbackground_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+            {
+                (this.DataContext as PercentLayerHandler).Properties._BlinkBackground = (sender as CheckBox).IsChecked.Value;
+            }
+        }
     }
 }
