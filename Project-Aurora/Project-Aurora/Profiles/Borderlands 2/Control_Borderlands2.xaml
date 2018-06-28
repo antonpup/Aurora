@@ -19,10 +19,10 @@
                 <Grid>
                     <Label Content="Health amount:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <Slider x:Name="preview_health" HorizontalAlignment="Left" Margin="110,15,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_health_amount_ValueChanged"/>
-                    <TextBlock x:Name="preview_health_amount_label" HorizontalAlignment="Left" Margin="230,15,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="preview_health_amount_label" HorizontalAlignment="Left" Margin="235,15,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
                     <Label Content="Shield amount:" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top"/>
                     <Slider x:Name="preview_shield" HorizontalAlignment="Left" Margin="110,35,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_shield_amount_ValueChanged"/>
-                    <TextBlock x:Name="preview_shield_amount_label" HorizontalAlignment="Left" Margin="230,35,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="preview_shield_amount_label" HorizontalAlignment="Left" Margin="235,35,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
         </TabControl>
