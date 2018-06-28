@@ -729,9 +729,6 @@ namespace Aurora.EffectsEngine
 
             double progress = progress_total * keys.Count();
 
-            Console.WriteLine("blnkbacckground: " + blink_background);
-            Console.WriteLine("direction: " + flash_reversed);
-
             if (flash_past > 0.0)
             {
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
