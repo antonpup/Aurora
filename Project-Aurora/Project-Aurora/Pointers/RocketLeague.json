@@ -1,21 +1,21 @@
-﻿{
+{
   "Team": {
     "baseAddress": "23761212",
     "pointers": [ "64", "244", "36", "1472", "908" ]
   },
 
   "Orange_score": {
-    "baseAddress": "23406064",
-    "pointers": [ "84", "792", "1116", "4", "496" ]
+    "baseAddress": "26469788",
+    "pointers": [ "524" ]
   },
 
   "Blue_score": {
-    "baseAddress": "23406064",
-    "pointers": [ "84", "792", "1116", "0", "496" ]
+    "baseAddress": "26469792",
+    "pointers": [ "524" ]
   },
 
   "Boost_amount": {
-    "baseAddress": "26445056",
-    "pointers": [ "76", "468", "176", "996" ]
+    "baseAddress": "26454332",
+    "pointers": [ "84" ]
   }
 }
