@@ -947,7 +947,8 @@ namespace Aurora.Settings
                 }
 
                 _bitmapMapInvalid = false;
-                Global.effengine.SetCanvasSize(PixelToByte(width_max), PixelToByte(height_max));
+                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
+                Global.effengine.SetCanvasSize(PixelToByte(width_max)+1, PixelToByte(height_max)+1);
                 Global.effengine.SetBitmapping(this.bitmap_map);
             }
 
