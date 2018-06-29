@@ -14,8 +14,8 @@
     "pointers": [ "84", "792", "1116", "0", "496" ]
   },
 
-  "Boost_amount": {
-    "baseAddress": "26445056",
-    "pointers": [ "76", "468", "176", "996" ]
-  }
+    "Boost_amount": {
+        "baseAddress": "26679652",
+        "pointers": [ "188", "76", "160", "324" ]
+    }
 }

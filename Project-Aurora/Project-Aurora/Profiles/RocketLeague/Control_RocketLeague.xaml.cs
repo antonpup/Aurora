@@ -66,7 +66,7 @@ namespace Aurora.Profiles.RocketLeague
                 this.preview_boost_amount_label.Text = (int)((sender as Slider).Value)+"%";
 
                 if(IsLoaded)
-                    (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.BoostAmount = (float)((sender as Slider).Value) / 100.0f;
+                    (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.BoostAmount = (long)((sender as Slider).Value) / 100;
             }
         }
 
