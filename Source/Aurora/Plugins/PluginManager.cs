@@ -30,7 +30,7 @@ namespace Aurora.Plugins
         }
 
         //TODO: Rename this to something better
-        public void CallAccept(IPluginConsumer consumer)
+        public void CallVisit(IPluginConsumer consumer)
         {
             foreach (PluginBase plugin in Plugins)
                 consumer.Visit(plugin);

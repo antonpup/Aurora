@@ -23,7 +23,7 @@ namespace Aurora
             Debug.Assert(Logger.Initialize(), "Logger failed to initialize!");
 
             PluginManager.LoadPlugins();
-            PluginManager.CallAccept(this);
+            PluginManager.CallVisit(this);
 
             return (Initialized = true);
         }
