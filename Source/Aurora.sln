@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuroraUI", "AuroraUI\AuroraUI.csproj", "{C052A774-55E9-4D3F-BEBA-DFB413F81561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurora", "Aurora\Aurora.csproj", "{90317FD8-FAC6-4B60-83F6-0A3BFF2FD376}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C052A774-55E9-4D3F-BEBA-DFB413F81561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C052A774-55E9-4D3F-BEBA-DFB413F81561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C052A774-55E9-4D3F-BEBA-DFB413F81561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C052A774-55E9-4D3F-BEBA-DFB413F81561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90317FD8-FAC6-4B60-83F6-0A3BFF2FD376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90317FD8-FAC6-4B60-83F6-0A3BFF2FD376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90317FD8-FAC6-4B60-83F6-0A3BFF2FD376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90317FD8-FAC6-4B60-83F6-0A3BFF2FD376}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5552E0F0-8C06-46E3-90F8-97AE7035802D}
+	EndGlobalSection
+EndGlobal
