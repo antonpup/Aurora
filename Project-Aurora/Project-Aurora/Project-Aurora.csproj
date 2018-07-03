@@ -1126,7 +1126,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\ats_64x64.png" />
-    <Content Include="wooting-rgb-control.dll">
+    <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Profiles\Payday 2\GSI\PD2_GSI.zip" />
