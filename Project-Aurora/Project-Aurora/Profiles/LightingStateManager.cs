@@ -128,7 +128,8 @@ namespace Aurora.Profiles
                 new ROTTombRaider.ROTTombRaider(),
 				new DyingLight.DyingLight(),
                 new ETS2.ETS2(),
-                new ATS.ATS()
+                new ATS.ATS(),
+                new QuantumConumdrum.QuantumConumdrum()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
