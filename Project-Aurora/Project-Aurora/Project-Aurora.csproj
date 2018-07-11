@@ -561,10 +561,10 @@
       <DependentUpon>Control_BnS.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Blade and Soul\BnSApplication.cs" />
-    <Compile Include="Profiles\Move or Die\Control_BnS.xaml.cs">
+    <Compile Include="Profiles\Move or Die\Control_MoD.xaml.cs">
       <DependentUpon>Control_MoD.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Move or Die\BnSApplication.cs" />
+    <Compile Include="Profiles\Move or Die\MoDApplication.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
