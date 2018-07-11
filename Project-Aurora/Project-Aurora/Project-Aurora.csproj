@@ -1394,7 +1394,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    
     <Page Include="Profiles\Blade and Soul\Control_BnS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Move or Die\Control_MoD.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1815,6 +1820,7 @@
     <Resource Include="Resources\metro_ll_48x48.png" />
     <Resource Include="Resources\gw2_48x48.png" />
     <Resource Include="Resources\bns_48x48.png" />
+    <Resource Include="Resources\MoD.png" />
     <Resource Include="Resources\keycap_backglow.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
