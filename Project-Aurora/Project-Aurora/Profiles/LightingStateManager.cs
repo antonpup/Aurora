@@ -129,7 +129,8 @@ namespace Aurora.Profiles
 				new DyingLight.DyingLight(),
                 new ETS2.ETS2(),
                 new ATS.ATS(),
-                new QuantumConumdrum.QuantumConumdrum()
+                new QuantumConumdrum.QuantumConumdrum(),
+                new Battlefield1.Battlefield1()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
