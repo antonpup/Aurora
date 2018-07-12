@@ -426,6 +426,11 @@
     <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
+    <Compile Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml.cs">
+      <DependentUpon>Control_QuantumConumdrum.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumApplication.cs" />
+    <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumProfile.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
       <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
@@ -1130,6 +1135,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\ats_64x64.png" />
+    <Resource Include="Resources\qc_256x256.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1428,6 +1434,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Payday 2\Layers\Control_PD2BackgroundLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
