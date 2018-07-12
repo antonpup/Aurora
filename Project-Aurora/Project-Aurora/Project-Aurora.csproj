@@ -399,6 +399,9 @@
     <Compile Include="Profiles\ATS\Control_ATS.xaml.cs">
       <DependentUpon>Control_ATS.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Battlefield1\Control_Battlefield1.xaml.cs">
+      <DependentUpon>Control_Battlefield1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
     <Compile Include="Profiles\ETS2\Control_ETS2.xaml.cs">
       <DependentUpon>Control_ETS2.xaml</DependentUpon>
@@ -426,6 +429,12 @@
     <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
+    <Compile Include="Profiles\Battlefield1\Battlefield1Application.cs" />
+    <Compile Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml.cs">
+      <DependentUpon>Control_QuantumConumdrum.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumApplication.cs" />
+    <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumProfile.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
       <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
@@ -561,6 +570,10 @@
       <DependentUpon>Control_BnS.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Blade and Soul\BnSApplication.cs" />
+    <Compile Include="Profiles\Move or Die\Control_MoD.xaml.cs">
+      <DependentUpon>Control_MoD.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Move or Die\MoDApplication.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
@@ -1126,6 +1139,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\ats_64x64.png" />
+    <Resource Include="Resources\qc_256x256.png" />
+    <Resource Include="Resources\bf1_128x128.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1278,6 +1293,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\Battlefield1\Control_Battlefield1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\BF3\Control_BF3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1390,7 +1409,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    
     <Page Include="Profiles\Blade and Soul\Control_BnS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Move or Die\Control_MoD.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1419,6 +1443,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Payday 2\Layers\Control_PD2BackgroundLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1811,6 +1839,7 @@
     <Resource Include="Resources\metro_ll_48x48.png" />
     <Resource Include="Resources\gw2_48x48.png" />
     <Resource Include="Resources\bns_48x48.png" />
+    <Resource Include="Resources\MoD.png" />
     <Resource Include="Resources\keycap_backglow.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
