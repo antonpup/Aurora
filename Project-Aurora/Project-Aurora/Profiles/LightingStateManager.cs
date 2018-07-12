@@ -130,7 +130,8 @@ namespace Aurora.Profiles
                 new ETS2.ETS2(),
                 new ATS.ATS(),
                 new Move_or_Die.MoD(),
-                new QuantumConumdrum.QuantumConumdrum()
+                new QuantumConumdrum.QuantumConumdrum(),
+                new Battlefield1.Battlefield1()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

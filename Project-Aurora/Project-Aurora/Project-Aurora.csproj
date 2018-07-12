@@ -399,6 +399,9 @@
     <Compile Include="Profiles\ATS\Control_ATS.xaml.cs">
       <DependentUpon>Control_ATS.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Battlefield1\Control_Battlefield1.xaml.cs">
+      <DependentUpon>Control_Battlefield1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
     <Compile Include="Profiles\ETS2\Control_ETS2.xaml.cs">
       <DependentUpon>Control_ETS2.xaml</DependentUpon>
@@ -426,6 +429,7 @@
     <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
+    <Compile Include="Profiles\Battlefield1\Battlefield1Application.cs" />
     <Compile Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml.cs">
       <DependentUpon>Control_QuantumConumdrum.xaml</DependentUpon>
     </Compile>
@@ -1136,6 +1140,7 @@
     </Content>
     <Resource Include="Resources\ats_64x64.png" />
     <Resource Include="Resources\qc_256x256.png" />
+    <Resource Include="Resources\bf1_128x128.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1285,6 +1290,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\ATS\Control_ATS.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Battlefield1\Control_Battlefield1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
