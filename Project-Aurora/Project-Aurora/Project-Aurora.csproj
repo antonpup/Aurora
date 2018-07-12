@@ -570,6 +570,10 @@
       <DependentUpon>Control_BnS.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Blade and Soul\BnSApplication.cs" />
+    <Compile Include="Profiles\Move or Die\Control_MoD.xaml.cs">
+      <DependentUpon>Control_MoD.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Move or Die\MoDApplication.cs" />
     <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
       <DependentUpon>Control_HM.xaml</DependentUpon>
     </Compile>
@@ -1405,7 +1409,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    
     <Page Include="Profiles\Blade and Soul\Control_BnS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Move or Die\Control_MoD.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1830,6 +1839,7 @@
     <Resource Include="Resources\metro_ll_48x48.png" />
     <Resource Include="Resources\gw2_48x48.png" />
     <Resource Include="Resources\bns_48x48.png" />
+    <Resource Include="Resources\MoD.png" />
     <Resource Include="Resources\keycap_backglow.png" />
     <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
