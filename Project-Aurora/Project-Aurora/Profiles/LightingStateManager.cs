@@ -131,7 +131,8 @@ namespace Aurora.Profiles
                 new ATS.ATS(),
                 new Move_or_Die.MoD(),
                 new QuantumConumdrum.QuantumConumdrum(),
-                new Battlefield1.Battlefield1()
+                new Battlefield1.Battlefield1(),
+                new Dishonored.Dishonored()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

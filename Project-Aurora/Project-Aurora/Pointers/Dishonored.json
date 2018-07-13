@@ -1,0 +1,21 @@
+﻿{
+  "ManaPots": {
+    "baseAddress": "17191300",
+    "pointers": [ "940", "8", "1220", "0", "536" ]
+  },
+
+  "HealthPots": {
+    "baseAddress": "16738900",
+    "pointers": [ "1956", "348", "1420", "84", "212" ]
+  },
+
+  "CurrentHealth": {
+    "baseAddress": "17199500",
+    "pointers": [ "1040", "2020", "1556", "1992", "1008" ]
+  },
+
+  "CurrentMana": {
+    "baseAddress": "17199500",
+    "pointers": [ "1040", "2020", "1788", "1688", "1024" ]
+  }
+}
