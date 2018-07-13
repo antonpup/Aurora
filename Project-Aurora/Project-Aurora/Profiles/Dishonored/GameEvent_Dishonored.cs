@@ -25,13 +25,13 @@ namespace Aurora.Profiles.Dishonored
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.Path = System.IO.Path.Combine(Global.ExecutingDirectory, "Pointers");
-            watcher.Changed += RLPointers_Changed;
+            watcher.Changed += DHPointers_Changed;
             watcher.EnableRaisingEvents = true;
 
             ReloadPointers();
         }
 
-        private void RLPointers_Changed(object sender, FileSystemEventArgs e)
+        private void DHPointers_Changed(object sender, FileSystemEventArgs e)
         {
             if (e.Name.Equals("Dishonored.json") && e.ChangeType == WatcherChangeTypes.Changed)
                 ReloadPointers();
@@ -90,12 +90,12 @@ namespace Aurora.Profiles.Dishonored
             {
                 using (MemoryReader memread = new MemoryReader(process_search[0]))
                 {
-
-                    //TODO: Find Adresses for Max health, there's an upgrade that changes the amount
-                    //Not sure about mana though
+                    //TODO: Find Adresses for Max health and Mana, there's an upgrade that changes the amount
                     (_game_state as GameState_Dishonored).Player.MaximumHealth = 90;
+                    //(_game_state as GameState_Dishonored).Player.MaximumHealth = memread.ReadInt(pointers.MaximumHealth.baseAddress, pointers.CurrentHealth.pointers)
                     (_game_state as GameState_Dishonored).Player.CurrentHealth = memread.ReadInt(pointers.CurrentHealth.baseAddress, pointers.CurrentHealth.pointers);
                     (_game_state as GameState_Dishonored).Player.MaximumMana = 100;
+                    //(_game_state as GameState_Dishonored).Player.MaximumMana = memread.ReadInt(pointers.MaximumMana.baseAddress, pointers.CurrentHealth.pointers)
                     (_game_state as GameState_Dishonored).Player.CurrentMana = memread.ReadInt(pointers.CurrentMana.baseAddress, pointers.CurrentMana.pointers);
                     (_game_state as GameState_Dishonored).Player.ManaPots = memread.ReadInt(pointers.ManaPots.baseAddress, pointers.ManaPots.pointers);
                     (_game_state as GameState_Dishonored).Player.HealthPots = memread.ReadInt(pointers.HealthPots.baseAddress, pointers.HealthPots.pointers);
