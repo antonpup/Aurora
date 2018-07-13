@@ -24,11 +24,9 @@
                     <Slider x:Name="preview_mana" HorizontalAlignment="Left" Margin="110,35,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_mana_amount_ValueChanged"/>
                     <TextBlock x:Name="preview_mana_amount_label" HorizontalAlignment="Left" Margin="235,35,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
                     <Label Content="Mana Potions:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="preview_manapots" HorizontalAlignment="Left" Margin="110,55,0,0" VerticalAlignment="Top" Width="40" Maximum="100" ValueChanged="preview_manapots_ValueChanged"/>
-                    <TextBlock x:Name="preview_manapots_label" HorizontalAlignment="Left" Margin="100,55,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="preview_manapots" HorizontalAlignment="Left" Margin="110,55,0,0" VerticalAlignment="Top" Width="40" DefaultValue="0" Value="0" Minimum="0" Maximum="20" ValueChanged="preview_manapots_ValueChanged"/>
                     <Label Content="Health Potions:" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="preview_healthpots" HorizontalAlignment="Left" Margin="110,75,0,0" VerticalAlignment="Top" Width="40" Maximum="100" ValueChanged="preview_healthpots_ValueChanged"/>
-                    <TextBlock x:Name="preview_healthpots_label" HorizontalAlignment="Left" Margin="100,75,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="preview_healthpots" HorizontalAlignment="Left" Margin="110,75,0,0" VerticalAlignment="Top" Width="40" DefaultValue="0" Value="0" Minimum="0" Maximum="20" ValueChanged="preview_healthpots_ValueChanged"/>
                 </Grid>
             </TabItem>
         </TabControl>
