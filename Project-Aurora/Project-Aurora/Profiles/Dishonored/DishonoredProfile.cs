@@ -24,7 +24,7 @@ namespace Aurora.Profiles.Dishonored
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _SecondaryColor = Color.DarkRed,
+                        _SecondaryColor = Color.FromArgb(255,70,0,0),
                         _PercentType = PercentEffectType.Progressive_Gradual,
                         _Sequence = new KeySequence(new Devices.DeviceKeys[] {
                             Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR, Devices.DeviceKeys.FIVE,
@@ -34,7 +34,7 @@ namespace Aurora.Profiles.Dishonored
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
                         _VariablePath = "Player/CurrentHealth",
-                        _MaxVariablePath = "90"
+                        _MaxVariablePath = "Player/MaximumHealth"
                     },
                 }),
                 new Layer("Mana Indicator", new PercentLayerHandler()
@@ -42,7 +42,7 @@ namespace Aurora.Profiles.Dishonored
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PrimaryColor =  Color.Blue,
-                        _SecondaryColor = Color.DarkBlue,
+                        _SecondaryColor = Color.FromArgb(255,0,0,70),
                         _PercentType = PercentEffectType.Progressive_Gradual,
                         _Sequence = new KeySequence(new Devices.DeviceKeys[] {
                             Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4,
@@ -52,7 +52,7 @@ namespace Aurora.Profiles.Dishonored
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
                         _VariablePath = "Player/CurrentMana",
-                        _MaxVariablePath = "100"
+                        _MaxVariablePath = "Player/MaximumMana"
                     },
                 }),
                 new Layer("Mana Potions", new PercentLayerHandler()
@@ -60,7 +60,7 @@ namespace Aurora.Profiles.Dishonored
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PrimaryColor =  Color.Blue,
-                        _SecondaryColor = Color.DarkBlue,
+                        _SecondaryColor = Color.FromArgb(255,0,0,70),
                         _PercentType = PercentEffectType.Progressive,
                         _Sequence = new KeySequence(new Devices.DeviceKeys[] {
                             Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN,
@@ -78,7 +78,7 @@ namespace Aurora.Profiles.Dishonored
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PrimaryColor =  Color.Red,
-                        _SecondaryColor = Color.DarkRed,
+                        _SecondaryColor = Color.FromArgb(255,70,0,0),
                         _PercentType = PercentEffectType.Progressive,
                         _Sequence = new KeySequence(new Devices.DeviceKeys[] {
                             Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_FOUR,
