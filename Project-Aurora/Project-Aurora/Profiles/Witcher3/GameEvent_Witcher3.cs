@@ -19,11 +19,43 @@ namespace Aurora.Profiles.Witcher3
     {
         private bool isInitialized = false;
         private readonly Regex _configRegex;
-        private readonly Stopwatch _updateSw;
+        private string configContent;
         //Most of this code, and the mod was taken from https://github.com/SpoinkyNL/Artemis/, with Spoinky's permission
         public GameEvent_Witcher3() : base()
         {
             _configRegex = new Regex("\\[Artemis\\](.+?)\\[", RegexOptions.Singleline);
+
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\The Witcher 3";
+            watcher.Changed += dataFile_Changed;
+            watcher.EnableRaisingEvents = true;
+
+            ReloadData();
+        }
+
+        private void dataFile_Changed(object sender, FileSystemEventArgs e)
+        {
+            if (e.Name.Equals("user.settings") && e.ChangeType == WatcherChangeTypes.Changed)
+                ReloadData();
+        }
+
+        private void ReloadData()
+        {
+            string dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "The Witcher 3", "user.settings");
+
+            if (File.Exists(dataPath))
+            {
+                var reader = new StreamReader(File.Open(dataPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                configContent = reader.ReadToEnd();
+                reader.Close();
+                reader.Dispose();
+
+                isInitialized = true;
+            }
+            else
+            {
+                isInitialized = false;
+            }
         }
 
         public override void ResetGameState()
@@ -40,14 +72,9 @@ namespace Aurora.Profiles.Witcher3
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
             var dataPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\The Witcher 3\\user.settings";
-            
+
             if (File.Exists(dataPath))
             {
-                var reader = new StreamReader(File.Open(dataPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-                var configContent = reader.ReadToEnd();
-                reader.Close();
-                reader.Dispose();
-
                 var signRes = _configRegex.Match(configContent);
                 var parts = signRes.Value.Split('\n').Skip(1).Select(v => v.Replace("\r", "")).ToList();
                 parts.RemoveAt(parts.Count - 1);
@@ -120,6 +147,5 @@ namespace Aurora.Profiles.Witcher3
 
             frame.AddLayers(layers.ToArray());
         }
-
     }
 }

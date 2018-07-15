@@ -32,7 +32,6 @@ namespace Aurora.Profiles.Witcher3
 
             if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
             {
-                //InstallMod();
                 (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
             }
 
@@ -56,7 +55,7 @@ namespace Aurora.Profiles.Witcher3
         private void install_mod_button_Click(object sender, RoutedEventArgs e)
         {
             String installpath = Utils.SteamUtils.GetGamePath(292030);
-            if (String.IsNullOrWhiteSpace(installpath))
+            if (!String.IsNullOrWhiteSpace(installpath))
             {
                 if (Directory.Exists(installpath))
                 {
@@ -81,7 +80,7 @@ namespace Aurora.Profiles.Witcher3
             }
             else
             {
-                System.Windows.MessageBox.Show("Witcher 3 was not installed through steam, pick the path manually");
+                System.Windows.MessageBox.Show("Witcher 3 was not installed through steam, please pick the path manually");
                 var dialog = new System.Windows.Forms.FolderBrowserDialog();
                 System.Windows.Forms.DialogResult result = dialog.ShowDialog();
 
@@ -96,7 +95,6 @@ namespace Aurora.Profiles.Witcher3
                                 entry.Extract(dialog.SelectedPath, ExtractExistingFileAction.OverwriteSilently);
                             }
                         }
-
                     }
                 }
             }
@@ -105,48 +103,30 @@ namespace Aurora.Profiles.Witcher3
         private void uninstall_mod_button_Click(object sender, RoutedEventArgs e)
         {
             String installpath = Utils.SteamUtils.GetGamePath(292030);
-            if (String.IsNullOrWhiteSpace(installpath))
+            if (!String.IsNullOrWhiteSpace(installpath))
             {
                 if (Directory.Exists(installpath))
                 {
-                    using (MemoryStream w3_mod = new MemoryStream(Properties.Resources.witcher3_mod))
-                    {
-                        using (ZipFile zip = ZipFile.Read(w3_mod))
-                        {
-                            foreach (ZipEntry entry in zip)
-                            {
-                                entry.Extract(installpath, ExtractExistingFileAction.OverwriteSilently);
-                            }
-                        }
-
-                    }
-
-                    System.Windows.MessageBox.Show("Witcher 3 mod installed.");
+                    Directory.Delete(System.IO.Path.Combine(installpath, "mods", "modArtemis"), true);
+                    File.Delete(System.IO.Path.Combine(installpath, "bin", "config", "r4game", "user_config_matrix", "pc", "artemis.xml"));
+                    System.Windows.MessageBox.Show("Witcher 3 mod removed.");
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("Witcher 3 directory is not found.\r\nCould not install the mod.");
+                    System.Windows.MessageBox.Show("Witcher 3 directory is not found.\r\nCould not uninstall the mod.");
                 }
             }
             else
             {
-                System.Windows.MessageBox.Show("Witcher 3 was not installed through steam, pick the path manually");
+                System.Windows.MessageBox.Show("Witcher 3 was not installed through steam, please pick the path manually");
                 var dialog = new System.Windows.Forms.FolderBrowserDialog();
                 System.Windows.Forms.DialogResult result = dialog.ShowDialog();
 
                 if (result == System.Windows.Forms.DialogResult.OK)
                 {
-                    using (MemoryStream w3_mod = new MemoryStream(Properties.Resources.witcher3_mod))
-                    {
-                        using (ZipFile zip = ZipFile.Read(w3_mod))
-                        {
-                            foreach (ZipEntry entry in zip)
-                            {
-                                entry.Extract(dialog.SelectedPath, ExtractExistingFileAction.OverwriteSilently);
-                            }
-                        }
-
-                    }
+                    Directory.Delete(System.IO.Path.Combine(installpath, "mods", "modArtemis"), true);
+                    File.Delete(System.IO.Path.Combine(installpath, "bin", "config", "r4game", "user_config_matrix", "pc", "artemis.xml"));
+                    System.Windows.MessageBox.Show("Witcher 3 mod removed.");
                 }
             }
         }

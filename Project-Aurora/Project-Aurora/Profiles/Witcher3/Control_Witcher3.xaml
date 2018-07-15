@@ -36,9 +36,9 @@
             <TabItem Header="Overview for Witcher 3">
                 <Grid>
                     <TextBlock Margin="10,30,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for Witcher 3 support to work, you have to install a mod made by SpoinkyNL for https://github.com/SpoinkyNL/Artemis/ by pressing the &quot;Install Mod&quot; button."/>
-                    <Run Text="&#x0a;If you wish to uninstall the mod, you can press &quot;Uninstall mod&quot;. Uninstalling the mod will prevent the game from sending information, such as HP and the active sign, to Aurora.&#x0a;If you wish to re-install the mod at a later time, you can press &quot;Install mod&quot;."/></TextBlock>
+                    <Run Text="&#x0a;If you wish to uninstall the mod, you can press &quot;Uninstall mod&quot;. Uninstalling the mod will prevent the game from sending information, such as HP and the active sign, to Aurora."/></TextBlock>
                     <Button x:Name="install_mod_button" Content="Install Mod" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Click="install_mod_button_Click" Width="100"/>
-                    <!--<Button x:Name="uninstall_mod_button" Content="Uninstall Mod" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" Click="uninstall_mod_button_Click" Width="100"/>-->
+                    <Button x:Name="uninstall_mod_button" Content="Uninstall Mod" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" Click="uninstall_mod_button_Click" Width="100"/>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with The Witcher 3" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
                 </Grid>
             </TabItem>
