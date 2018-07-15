@@ -444,6 +444,23 @@
     </Compile>
     <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumApplication.cs" />
     <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumProfile.cs" />
+    <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
+      <DependentUpon>Control_Witcher3.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Witcher3\GameEvent_Witcher3.cs" />
+    <Compile Include="Profiles\Witcher3\Layers\Control_Witcher3BackgroundLayer.xaml.cs">
+      <DependentUpon>Control_Witcher3BackgroundLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Witcher3\Layers\Witcher3BackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\Witcher3\Witcher3Application.cs" />
+    <Compile Include="Profiles\Witcher3\Witcher3Profile.cs" />
+    <Compile Include="Profiles\Witcher3\GSI\GameState_Witcher3.cs" />
+    <Compile Include="Profiles\Witcher3\GSI\Nodes\Player.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
       <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
@@ -688,11 +705,6 @@
     </Compile>
     <Compile Include="Profiles\XCOM\XCOMApplication.cs" />
     <Compile Include="Profiles\XCOM\XCOMProfile.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Settings\ApplicationSettings.cs" />
     <Compile Include="Settings\Control_ProfileControlPresenter.xaml.cs">
       <DependentUpon>Control_ProfileControlPresenter.xaml</DependentUpon>
@@ -1151,6 +1163,7 @@
     <Resource Include="Resources\qc_256x256.png" />
     <Resource Include="Resources\bf1_128x128.png" />
     <Resource Include="Resources\dh_128x128.png" />
+    <Resource Include="Resources\witcher3_256x256.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1188,6 +1201,7 @@
     <None Include="Pointers\RocketLeague.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Resource Include="Profiles\Witcher3\GSI\Resources\witcher3-mod.zip" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1475,6 +1489,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\DyingLight\Control_DyingLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Witcher3\Control_Witcher3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Witcher3\Layers\Control_Witcher3BackgroundLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
