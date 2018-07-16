@@ -402,6 +402,15 @@
     <Compile Include="Profiles\Battlefield1\Control_Battlefield1.xaml.cs">
       <DependentUpon>Control_Battlefield1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Dishonored\DishonoredApplication.cs" />
+    <Compile Include="Profiles\Dishonored\DishonoredPointers.cs" />
+    <Compile Include="Profiles\Dishonored\DishonoredProfile.cs" />
+    <Compile Include="Profiles\Dishonored\Control_Dishonored.xaml.cs">
+      <DependentUpon>Control_Dishonored.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Dishonored\GameEvent_Dishonored.cs" />
+    <Compile Include="Profiles\Dishonored\GSI\GameState_Dishonored.cs" />
+    <Compile Include="Profiles\Dishonored\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
     <Compile Include="Profiles\ETS2\Control_ETS2.xaml.cs">
       <DependentUpon>Control_ETS2.xaml</DependentUpon>
@@ -1141,6 +1150,7 @@
     <Resource Include="Resources\ats_64x64.png" />
     <Resource Include="Resources\qc_256x256.png" />
     <Resource Include="Resources\bf1_128x128.png" />
+    <Resource Include="Resources\dh_128x128.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1168,6 +1178,9 @@
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Pointers\Dishonored.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Pointers\Borderlands2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1305,6 +1318,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\Dishonored\Control_Dishonored.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Borderlands 2\Control_Borderlands2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1409,7 +1426,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    
     <Page Include="Profiles\Blade and Soul\Control_BnS.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
