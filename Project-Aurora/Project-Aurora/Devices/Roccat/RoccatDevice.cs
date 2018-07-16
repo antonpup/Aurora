@@ -22,6 +22,8 @@
  * - talkfx-c.dll (from: https://github.com/mwasilak/talkfx-c-wrapper , branch feature-ryos-mk-fx)
  */
 
+
+
 using Roccat_Talk.RyosTalkFX;
 using Roccat_Talk.TalkFX;
 using System;
@@ -226,7 +228,8 @@ namespace Aurora.Devices.Roccat
         {
             if (talkFX != null)
             {
-                talkFX.RestoreLedRgb();
+                talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(0, 0, 255)); //Workaround to prevent random color
+                talkFX.RestoreLedRgb(); //Does not Work
             }
 
             if (RyosTalkFX != null)
@@ -289,6 +292,18 @@ namespace Aurora.Devices.Roccat
                         if (dev_key == DeviceKeys.HASHTAG)
                             dev_key = DeviceKeys.ENTER;
                     }
+                    
+                    if (key.Key == DeviceKeys.Peripheral)
+                    {
+                        if (!previous_peripheral_Color.Equals(key.Value))
+                        {
+                            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(key.Value.R, key.Value.G, key.Value.B));
+                            //talkFX.RestoreLedRgb(); //Does not even here work
+
+                        previous_peripheral_Color = key.Value;
+                        }
+                    }
+                    
                     if (DeviceKeysMap.TryGetValue(dev_key, out byte i))
                     { 
                         //Global.logger.LogLine("Roccat update device: " + key + " , " + key.Value);
