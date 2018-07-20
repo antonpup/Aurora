@@ -34,7 +34,7 @@
         /// <summary>
         /// Player's boost amount [0.0f, 1.0f]
         /// </summary>
-        public long BoostAmount = 0;
+        public float BoostAmount = 0;
 
         /// <summary>
         /// Player's current team
