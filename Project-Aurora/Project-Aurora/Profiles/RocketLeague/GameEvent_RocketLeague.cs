@@ -97,7 +97,7 @@ namespace Aurora.Profiles.RocketLeague
 
 
                     // Goal explosion preperation
-                    ( _game_state as GameState_RocketLeague ).Match.YourTeam_LastScore = parsed_team == 0 ? ( _game_state as GameState_RocketLeague ).Match.BlueTeam_Score 
+                    ( _game_state as GameState_RocketLeague ).Match.YourTeam_LastScore = parsed_team == PlayerTeam.Blue ? ( _game_state as GameState_RocketLeague ).Match.BlueTeam_Score 
                                                                                                           : ( _game_state as GameState_RocketLeague ).Match.OrangeTeam_Score;
 
                         float fBoost = (float)memread.ReadInt( pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers );
