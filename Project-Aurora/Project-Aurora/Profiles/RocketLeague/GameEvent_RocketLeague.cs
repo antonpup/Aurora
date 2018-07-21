@@ -95,7 +95,12 @@ namespace Aurora.Profiles.RocketLeague
                     if(Enum.TryParse<PlayerTeam>(memread.ReadInt(pointers.Team.baseAddress, pointers.Team.pointers).ToString(), out parsed_team))
                         (_game_state as GameState_RocketLeague).Player.Team = parsed_team;
 
-                    float fBoost = (float)memread.ReadInt( pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers );
+
+                    // Goal explosion preperation
+                    ( _game_state as GameState_RocketLeague ).Match.YourTeam_LastScore = parsed_team == 0 ? ( _game_state as GameState_RocketLeague ).Match.BlueTeam_Score 
+                                                                                                          : ( _game_state as GameState_RocketLeague ).Match.OrangeTeam_Score;
+
+                        float fBoost = (float)memread.ReadInt( pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers );
                     // Evil math here - stay away!
                     float fA = ( fBoost - 1102015000 ) * -( fBoost - 1102015000 );
                     float fB = ( 2 * 6878230 * ( long ) 6878230 );
@@ -105,6 +110,7 @@ namespace Aurora.Profiles.RocketLeague
                     ( _game_state as GameState_RocketLeague).Match.OrangeTeam_Score = memread.ReadInt(pointers.Orange_score.baseAddress, pointers.Orange_score.pointers);
                     (_game_state as GameState_RocketLeague).Match.BlueTeam_Score = memread.ReadInt(pointers.Blue_score.baseAddress, pointers.Blue_score.pointers);
                     (_game_state as GameState_RocketLeague).Player.BoostAmount = fBoost;
+
                 }
             }
 
