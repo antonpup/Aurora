@@ -75,11 +75,16 @@ namespace Aurora
                 Global.logger.Debug(String.Format("Timeout of {0}ms exceeded while acquiring next frame", timeout));
                 return null;
             }
-            catch (SharpDXException e) when (e.ResultCode.Failure)
+            catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessLost)
             {
                 // Can happen when going fullscreen / exiting fullscreen
                 Global.logger.Warn(e.Message);
                 throw e;
+            }
+            catch (SharpDXException e) when (e.ResultCode.Failure)
+            {
+                Global.logger.Warn(e.Message);
+                return null;
             }
 
             using (desktopResource)

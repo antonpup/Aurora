@@ -163,7 +163,7 @@ namespace Aurora.Settings.Layers
             Bitmap newscreen;
             try
             {
-                newscreen = desktopDuplicator.Capture(1000);
+                newscreen = desktopDuplicator.Capture(5000);
             } catch (SharpDXException err)
             {
                 Global.logger.Error("Failed to capture screen, reinitializing. Error was: " + err.Message);
