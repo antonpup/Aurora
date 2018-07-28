@@ -25,12 +25,16 @@ namespace Aurora.Profiles.Witcher3
         {
             _configRegex = new Regex("\\[Artemis\\](.+?)\\[", RegexOptions.Singleline);
 
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\The Witcher 3";
-            watcher.Changed += dataFile_Changed;
-            watcher.EnableRaisingEvents = true;
+            String settingsFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\The Witcher 3";
+            if (File.Exists(settingsFolder))
+            {
+                FileSystemWatcher watcher = new FileSystemWatcher();
+                watcher.Path = settingsFolder;
+                watcher.Changed += dataFile_Changed;
+                watcher.EnableRaisingEvents = true;
 
-            ReloadData();
+                ReloadData();
+            }
         }
 
         private void dataFile_Changed(object sender, FileSystemEventArgs e)
