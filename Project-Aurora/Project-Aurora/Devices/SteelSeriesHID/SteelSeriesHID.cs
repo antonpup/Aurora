@@ -6,6 +6,7 @@ using Aurora.Settings;
 using System.Threading;
 using System.Threading.Tasks;
 using HidLibrary;
+using System.ComponentModel;
 
 namespace Aurora.Devices.SteelSeriesHID
 {
@@ -124,9 +125,9 @@ namespace Aurora.Devices.SteelSeriesHID
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
             try
             {
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
@@ -137,7 +138,7 @@ namespace Aurora.Devices.SteelSeriesHID
                     //Apply and strip Alpha
                     color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
                     {
                         if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel)
@@ -163,11 +164,11 @@ namespace Aurora.Devices.SteelSeriesHID
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

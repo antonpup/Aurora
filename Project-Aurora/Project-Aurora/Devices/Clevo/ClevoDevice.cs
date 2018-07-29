@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
+using System.ComponentModel;
 
 namespace Aurora.Devices.Clevo
 {
@@ -142,24 +143,24 @@ namespace Aurora.Devices.Clevo
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false) // Is this necessary?
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) // Is this necessary?
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
             watch.Restart();
             bool update_result = false;
 
             Dictionary<DeviceKeys, Color> keyColors = colorComposition.keyColors;
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> pair in keyColors)
                 {
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     if (useGlobalPeriphericColors)
                     {
                         if (pair.Key == DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
@@ -182,7 +183,7 @@ namespace Aurora.Devices.Clevo
                     }
                 }
 
-                if (token.IsCancellationRequested) return false;
+                if (e.Cancel) return false;
                 if (!useGlobalPeriphericColors)
                 {
                     // Clevo 3 region keyboard
@@ -209,7 +210,7 @@ namespace Aurora.Devices.Clevo
                         ColorUpdated = true;
                     }
 
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
 
                     // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
                     BitmapRectangle keymap_f11 = Effects.GetBitmappingFromDeviceKey(DeviceKeys.F11);
@@ -229,7 +230,7 @@ namespace Aurora.Devices.Clevo
                         ColorUpdated = true;
                     }
 
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
 
                     // Right Side
                     BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
@@ -248,7 +249,7 @@ namespace Aurora.Devices.Clevo
 
                 }
 
-                if (token.IsCancellationRequested) return false;
+                if (e.Cancel) return false;
                 SendColorsToKeyboard(forced);
                 update_result = true;
             }
