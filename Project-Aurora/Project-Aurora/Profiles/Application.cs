@@ -89,17 +89,15 @@ namespace Aurora.Profiles
                 InvokePropertyChanged(old, newVal);
             }
         }
-        public ImageSource Icon
-        {
-            get {
-                return GetIcon();
-            }
-        }
         #endregion
 
         #region Internal Properties
-        internal ImageSource icon { get; set; }
-        internal UserControl Control { get; set; }
+        protected ImageSource icon;
+        public virtual ImageSource Icon => icon ?? (icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
+
+        protected UserControl control;
+        public virtual UserControl Control { get { return control ?? (control = (UserControl)Activator.CreateInstance(this.Config.OverviewControlType, this)); } }
+
         internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
 
@@ -134,16 +132,6 @@ namespace Aurora.Profiles
             PropertyChanged?.Invoke(this, new PropertyChangedExEventArgs(propertyName, oldValue, newValue));
         }
 
-        public virtual UserControl GetUserControl()
-        {
-            return Control ?? (Control = (UserControl)Activator.CreateInstance(this.Config.OverviewControlType, this));
-        }
-
-        public virtual ImageSource GetIcon()
-        {
-            return icon ?? (icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
-        }
-
         public void SwitchToProfile(ApplicationProfile newProfileSettings)
         {
             if (Disposed)
@@ -161,7 +149,7 @@ namespace Aurora.Profiles
                 this.Settings.SelectedProfile = Path.GetFileNameWithoutExtension(Profile.ProfileFilepath);
                 Profile.PropertyChanged += Profile_PropertyChanged;
 
-                ProfileChanged?.Invoke(this, new EventArgs());
+                App.Current.Dispatcher.Invoke(() => ProfileChanged?.Invoke(this, new EventArgs()));
             }
         }
 
@@ -213,6 +201,9 @@ namespace Aurora.Profiles
         public void DeleteProfile(ApplicationProfile profile)
         {
             if (Disposed)
+                return;
+
+            if (Profiles.Count == 1)
                 return;
 
             if (profile != null && !String.IsNullOrWhiteSpace(profile.ProfileFilepath))
@@ -484,7 +475,7 @@ namespace Aurora.Profiles
 
                             break;
                         case ".cs":
-                            Assembly script_assembly = CSScript.LoadCodeFrom(script);
+                            Assembly script_assembly = CSScript.LoadFile(script);
                             Type effectType = typeof(IEffectScript);
                             foreach (Type typ in script_assembly.ExportedTypes)
                             {
@@ -513,6 +504,10 @@ namespace Aurora.Profiles
                     //Maybe MessageBox info dialog could be included.
                 }
             }
+        }
+
+        public void ForceScriptReload() {
+            LoadScripts(GetProfileFolderPath(), true);
         }
 
         protected void InitalizeScriptSettings(ApplicationProfile profile_settings, bool ignore_removal = false)

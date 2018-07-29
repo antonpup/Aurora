@@ -64,16 +64,15 @@ namespace CSScriptEvaluatorApi
             {
                 Action<Action, string> run = (action, name) => { action(); Console.WriteLine(name + " - OK"); };
 
-                //if you are using C#6 "nameof(CompileMethod_Instance)" would be a better approach
-                run(CompileMethod_Instance, "CompileMethod_Instance");
-                run(CompileMethod_Static, "CompileMethod_Static");
-                run(CreateDelegate, "CreateDelegate");
-                run(LoadDelegate, "LoadDelegate");
-                run(LoadCode, "LoadCode");
-                run(LoadMethod, "LoadMethod");
-                run(LoadMethodWithInterface, "LoadMethodWithInterface");
-                run(LoadCode_WithInterface, "LoadCode_WithInterface");
-                run(LoadCode_WithDuckTypedInterface, "LoadCode_WithDuckTypedInterface");
+                run(CompileMethod_Instance, nameof(CompileMethod_Instance));
+                run(CompileMethod_Static, nameof(CompileMethod_Static));
+                run(CreateDelegate, nameof(CreateDelegate));
+                run(LoadDelegate, nameof(LoadDelegate));
+                run(LoadCode, nameof(LoadCode));
+                run(LoadMethod, nameof(LoadMethod));
+                run(LoadMethodWithInterface, nameof(LoadMethodWithInterface));
+                run(LoadCode_WithInterface, nameof(LoadCode_WithInterface));
+                run(LoadCode_WithDuckTypedInterface, nameof(LoadCode_WithDuckTypedInterface));
             }
 
             public void CompileMethod_Instance()
@@ -310,7 +309,7 @@ namespace CSScriptEvaluatorApi
             Action runAll = () =>
             {
                 Console.WriteLine("\n---------------------------------------------");
-                Console.WriteLine("Caching enabled: " + preventCaching + "\n");
+                Console.WriteLine($"Caching enabled: {!preventCaching}\n");
 
                 CSScript.EvaluatorConfig.Engine = EvaluatorEngine.Mono;
                 run();

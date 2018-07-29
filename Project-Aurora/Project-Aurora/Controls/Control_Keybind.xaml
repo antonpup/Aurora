@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Controls"
              mc:Ignorable="d">
-    <Grid MaxHeight="20" MinHeight="20" MinWidth="120">
+    <Grid MaxHeight="20" MinHeight="20" MinWidth="120" LostFocus="Grid_LostFocus" KeyDown="Grid_KeyDown">
         <Button x:Name="buttonToggleAssign" Content="Assign" Height="20" HorizontalAlignment="Right" Width="75" VerticalAlignment="Top" Click="buttonToggleAssign_Click"/>
         <TextBox x:Name="textBoxKeybind" VerticalAlignment="Top" Margin="0,1,80,0" IsEnabled="False"/>
     </Grid>

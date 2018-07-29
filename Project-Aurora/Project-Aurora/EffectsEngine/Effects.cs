@@ -303,12 +303,13 @@ namespace Aurora
                         peripehralColors.Add(key, background.Get(key));
                 }
 
+                background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
+
                 foreach (Devices.DeviceKeys key in possible_peripheral_keys)
                     background.Set(key, Utils.ColorUtils.BlendColors(peripehralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
 
-                background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
 
-                if (Global.Configuration.UseVolumeAsBrightness)
+                //if (Global.Configuration.UseVolumeAsBrightness)
                     background *= Global.Configuration.GlobalBrightness;
 
                 if (_forcedFrame != null)

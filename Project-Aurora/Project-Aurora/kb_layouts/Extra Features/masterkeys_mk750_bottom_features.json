@@ -1,0 +1,204 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 3,
+  "grouped_keys": [
+    {
+      "visualName": "",
+      "tag": 146,
+      "margin_left": 43.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 147,
+      "margin_left": 87,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 148,
+      "margin_left": 131.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 149,
+      "margin_left": 175.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 150,
+      "margin_left": 219.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 151,
+      "margin_left": 263.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 172,
+      "margin_left": 307.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 173,
+      "margin_left": 351.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 174,
+      "margin_left": 395.0,
+      "margin_top": 5.0,
+      "width": 15.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 175,
+      "margin_left": 410.0,
+      "margin_top": 5.0,
+      "width": 15.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 176,
+      "margin_left": 425.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 177,
+      "margin_left": 469.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 178,
+      "margin_left": 513.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 179,
+      "margin_left": 557.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 180,
+      "margin_left": 601.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 181,
+      "margin_left": 645.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 182,
+      "margin_left": 689.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 183,
+      "margin_left": 733.0,
+      "margin_top": 5.0,
+      "width": 44.0,
+      "height": 10.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

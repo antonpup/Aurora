@@ -8,6 +8,20 @@
  * The SDK also only allows for individual LEDs to be either ON or OFF, no per-key color lighting.
  */
 
+/* 2018 Update:
+ * Completed support for Ryos MK FX
+ * Per-key color lighting is now supported, all leds are set in one SetMkFxKeyboardState() call
+ * Only US layout is currently supported.
+ *
+ * REQUIREMENTS:
+ * Roccat Talk FX must be installed and running (there should be an icon in system tray)
+ * Download: https://www.roccat.org/en-US/Products/Gaming-Software/Talk-FX/
+ *
+ * 3rd party DLLs:
+ * - Roccat-Talk.dll (from: https://github.com/mwasilak/roccat-talk-csharp , branch feature-ryos-mk-fx)
+ * - talkfx-c.dll (from: https://github.com/mwasilak/talkfx-c-wrapper , branch feature-ryos-mk-fx)
+ */
+
 using Roccat_Talk.RyosTalkFX;
 using Roccat_Talk.TalkFX;
 using System;
@@ -31,6 +45,127 @@ namespace Aurora.Devices.Roccat
         private long lastUpdateTime = 0;
 
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
+        public static Dictionary<DeviceKeys, byte> DeviceKeysMap = new Dictionary<DeviceKeys, byte>
+        {
+            {DeviceKeys.ESC, 0 },
+            {DeviceKeys.F1, 1 },
+            {DeviceKeys.F2, 2 },
+            {DeviceKeys.F3, 3 },
+            {DeviceKeys.F4, 4 },
+            {DeviceKeys.F5, 5 },
+            {DeviceKeys.F6, 6 },
+            {DeviceKeys.F7, 7 },
+            {DeviceKeys.F8, 8 },
+            {DeviceKeys.F9, 9 },
+            {DeviceKeys.F10, 10 },
+            {DeviceKeys.F11, 11 },
+            {DeviceKeys.F12, 12 },
+            {DeviceKeys.PRINT_SCREEN, 13 },
+            {DeviceKeys.SCROLL_LOCK, 14 },
+            {DeviceKeys.PAUSE_BREAK, 15 },
+            {DeviceKeys.G1, 16 },
+            {DeviceKeys.TILDE, 17 },
+            {DeviceKeys.ONE, 18 },
+            {DeviceKeys.TWO, 19 },
+            {DeviceKeys.THREE, 20 },
+            {DeviceKeys.FOUR, 21 },
+            {DeviceKeys.FIVE, 22 },
+            {DeviceKeys.SIX, 23 },
+            {DeviceKeys.SEVEN, 24 },
+            {DeviceKeys.EIGHT, 25 },
+            {DeviceKeys.NINE, 26 },
+            {DeviceKeys.ZERO, 27 },
+            {DeviceKeys.MINUS, 28 },
+            {DeviceKeys.EQUALS, 29 },
+            {DeviceKeys.BACKSPACE, 30 },
+            {DeviceKeys.INSERT, 31 },
+            {DeviceKeys.HOME, 32 },
+            {DeviceKeys.PAGE_UP, 33 },
+            {DeviceKeys.NUM_LOCK, 34 },
+            {DeviceKeys.NUM_SLASH, 35 },
+            {DeviceKeys.NUM_ASTERISK, 36 },
+            {DeviceKeys.NUM_MINUS, 37 },
+            {DeviceKeys.G2, 38 },
+            {DeviceKeys.TAB, 39 },
+            {DeviceKeys.Q, 40 },
+            {DeviceKeys.W, 41 },
+            {DeviceKeys.E, 42 },
+            {DeviceKeys.R, 43 },
+            {DeviceKeys.T, 44 },
+            {DeviceKeys.Y, 45 },
+            {DeviceKeys.U, 46 },
+            {DeviceKeys.I, 47 },
+            {DeviceKeys.O, 48 },
+            {DeviceKeys.P, 49 },
+            {DeviceKeys.OPEN_BRACKET, 50 },
+            {DeviceKeys.CLOSE_BRACKET, 51 },
+            {DeviceKeys.BACKSLASH, 52 },
+            {DeviceKeys.DELETE, 53 },
+            {DeviceKeys.END, 54 },
+            {DeviceKeys.PAGE_DOWN, 55 },
+            {DeviceKeys.NUM_SEVEN, 56 },
+            {DeviceKeys.NUM_EIGHT, 57 },
+            {DeviceKeys.NUM_NINE, 58 },
+            {DeviceKeys.NUM_PLUS, 59 },
+            {DeviceKeys.G3, 60 },
+            {DeviceKeys.CAPS_LOCK, 61 },
+            {DeviceKeys.A, 62 },
+            {DeviceKeys.S, 63 },
+            {DeviceKeys.D, 64 },
+            {DeviceKeys.F, 65 },
+            {DeviceKeys.G, 66 },
+            {DeviceKeys.H, 67 },
+            {DeviceKeys.J, 68 },
+            {DeviceKeys.K, 69 },
+            {DeviceKeys.L, 70 },
+            {DeviceKeys.SEMICOLON, 71 },
+            {DeviceKeys.APOSTROPHE, 72 },
+            {DeviceKeys.ENTER, 73 },
+            {DeviceKeys.NUM_FOUR, 74 },
+            {DeviceKeys.NUM_FIVE, 75 },
+            {DeviceKeys.NUM_SIX, 76 },
+            {DeviceKeys.G4, 77 },
+            {DeviceKeys.LEFT_SHIFT, 78 },
+            {DeviceKeys.BACKSLASH_UK, 79 },
+            {DeviceKeys.Z, 80 },
+            {DeviceKeys.X, 81 },
+            {DeviceKeys.C, 82 },
+            {DeviceKeys.V, 83 },
+            {DeviceKeys.B, 84 },
+            {DeviceKeys.N, 85 },
+            {DeviceKeys.M, 86 },
+            {DeviceKeys.COMMA, 87 },
+            {DeviceKeys.PERIOD, 88 },
+            {DeviceKeys.FORWARD_SLASH, 89 },
+            {DeviceKeys.RIGHT_SHIFT, 90 },
+            {DeviceKeys.ARROW_UP, 91 },
+            {DeviceKeys.NUM_ONE, 92 },
+            {DeviceKeys.NUM_TWO, 93 },
+            {DeviceKeys.NUM_THREE, 94 },
+            {DeviceKeys.NUM_ENTER, 95 },
+            {DeviceKeys.G5, 96 },
+            {DeviceKeys.LEFT_CONTROL, 97 },
+            {DeviceKeys.LEFT_WINDOWS, 98 },
+            {DeviceKeys.LEFT_ALT, 99 },
+            {DeviceKeys.SPACE, 100 },
+            {DeviceKeys.RIGHT_ALT, 101 },
+            {DeviceKeys.FN_Key, 102 },
+            {DeviceKeys.APPLICATION_SELECT, 103 },
+            {DeviceKeys.RIGHT_CONTROL, 104 },
+            {DeviceKeys.ARROW_LEFT, 105 },
+            {DeviceKeys.ARROW_DOWN, 106 },
+            {DeviceKeys.ARROW_RIGHT, 107 },
+            {DeviceKeys.NUM_ZERO, 108 },
+            {DeviceKeys.NUM_PERIOD, 109 }
+        };
+        public enum DeviceLayout : byte
+        {
+            ISO = 0,
+            ANSI = 1,
+            JP = 2
+        }
+
+        private byte layout = 0x01; //TALKFX_RYOS_LAYOUT_US
 
         public string GetDeviceName()
         {
@@ -64,9 +199,8 @@ namespace Aurora.Devices.Roccat
                         RyosInitialized = RyosInitialized && RyosTalkFX.EnterSdkMode();
                     }
 
-
-                    if (talkFX == null &&
-                        RyosTalkFX == null &&
+                    if (talkFX == null ||
+                        RyosTalkFX == null ||
                         !RyosInitialized
                         )
                     {
@@ -91,11 +225,14 @@ namespace Aurora.Devices.Roccat
         public void Shutdown()
         {
             if (talkFX != null)
+            {
                 talkFX.RestoreLedRgb();
+            }
 
             if (RyosTalkFX != null)
+            {
                 RyosTalkFX.ExitSdkMode();
-
+            }
         }
 
         public void Reset()
@@ -121,27 +258,47 @@ namespace Aurora.Devices.Roccat
             throw new NotImplementedException();
         }
 
+        byte[] stateStruct = new byte[110];
+        Roccat_Talk.TalkFX.Color[] colorStruct = new Roccat_Talk.TalkFX.Color[110];
         public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, CancellationToken token, bool forced = false)
         {
-            if (token.IsCancellationRequested) return false;
-            if (RyosTalkFX == null || !RyosInitialized) //Not initialzied
+            if (RyosTalkFX == null || !RyosInitialized)
                 return false;
+
+            if (token.IsCancellationRequested) return false;
 
             try
             {
+                DeviceLayout layout = DeviceLayout.ISO;
+                if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.dvorak
+                    || Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.us
+                    || Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.ru)
+                    layout = DeviceLayout.ANSI;
+                else if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.jpn)
+                    layout = DeviceLayout.JP;
+
                 foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
                 {
                     if (token.IsCancellationRequested) return false;
-                    Roccat_Talk.RyosTalkFX.Key roc_key = ToRoccatKey(key.Key);
-
-                    if (roc_key.Code != 255)
+                    DeviceKeys dev_key = key.Key;
+                    //Solution to slightly different mapping rather than giving a whole different dictionary
+                    if (layout == DeviceLayout.ANSI)
                     {
-                        if (Utils.ColorUtils.IsColorDark(key.Value))
-                            RyosTalkFX.SetLedOff(roc_key);
-                        else
-                            RyosTalkFX.SetLedOn(roc_key);
+                        if (dev_key == DeviceKeys.ENTER)
+                            dev_key = DeviceKeys.BACKSLASH;
+                        if (dev_key == DeviceKeys.HASHTAG)
+                            dev_key = DeviceKeys.ENTER;
+                    }
+                    if (DeviceKeysMap.TryGetValue(dev_key, out byte i))
+                    { 
+                        //Global.logger.LogLine("Roccat update device: " + key + " , " + key.Value);
+                        Color roccatColor = ConvertToRoccatColor(key.Value);
+                        stateStruct[i] = IsLedOn(roccatColor);
+                        colorStruct[i] = roccatColor;
                     }
                 }
+
+                RyosTalkFX.SetMkFxKeyboardState(stateStruct, colorStruct, (byte)layout);
 
                 return true;
             }
@@ -158,21 +315,6 @@ namespace Aurora.Devices.Roccat
 
             if (token.IsCancellationRequested) return false;
 
-            System.Drawing.Color averageColor;
-            lock (colorComposition.bitmapLock)
-            {
-                averageColor = Utils.BitmapUtils.GetRegionColor(
-                    colorComposition.keyBitmap,
-                    new BitmapRectangle(0, 0, colorComposition.keyBitmap.Width, colorComposition.keyBitmap.Height)
-                );
-            }
-
-            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Normal, ConvertToRoccatColor(averageColor));
-            talkFX.SetLedRgb(Zone.Ambient, KeyEffect.On, Speed.Normal, ConvertToRoccatColor(averageColor));
-
-
-            if (token.IsCancellationRequested) return false;
-
             bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
 
             watch.Stop();
@@ -181,9 +323,13 @@ namespace Aurora.Devices.Roccat
             return update_result;
         }
 
-        private void SendColorToPeripheral(System.Drawing.Color color)
+        private byte IsLedOn(Roccat_Talk.TalkFX.Color roccatColor)
         {
-            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Normal, ConvertToRoccatColor(color));
+            if (roccatColor.Red == 0 && roccatColor.Green == 0 && roccatColor.Blue == 0)
+            {
+                return 0;
+            }
+            return 1;
         }
 
         public bool IsKeyboardConnected()
@@ -199,239 +345,6 @@ namespace Aurora.Devices.Roccat
         private Roccat_Talk.TalkFX.Color ConvertToRoccatColor(System.Drawing.Color color)
         {
             return new Roccat_Talk.TalkFX.Color(color.R, color.G, color.B);
-        }
-
-        public static Roccat_Talk.RyosTalkFX.Key ToRoccatKey(DeviceKeys key)
-        {
-            switch (key)
-            {
-                case (DeviceKeys.ESC):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.ESC;
-                case (DeviceKeys.F1):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F1;
-                case (DeviceKeys.F2):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F2;
-                case (DeviceKeys.F3):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F3;
-                case (DeviceKeys.F4):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F4;
-                case (DeviceKeys.F5):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F5;
-                case (DeviceKeys.F6):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F6;
-                case (DeviceKeys.F7):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F7;
-                case (DeviceKeys.F8):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F8;
-                case (DeviceKeys.F9):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F9;
-                case (DeviceKeys.F10):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F10;
-                case (DeviceKeys.F11):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F11;
-                case (DeviceKeys.F12):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F12;
-                case (DeviceKeys.PRINT_SCREEN):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.PRINT_SCREEN;
-                case (DeviceKeys.SCROLL_LOCK):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.SCROLL_LOCK;
-                case (DeviceKeys.PAUSE_BREAK):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.PAUSE;
-                case (DeviceKeys.TILDE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.GRAVE;
-                case (DeviceKeys.ONE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.ONE;
-                case (DeviceKeys.TWO):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.TWO;
-                case (DeviceKeys.THREE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.THREE;
-                case (DeviceKeys.FOUR):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.FOUR;
-                case (DeviceKeys.FIVE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.FIVE;
-                case (DeviceKeys.SIX):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.SIX;
-                case (DeviceKeys.SEVEN):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.SEVEN;
-                case (DeviceKeys.EIGHT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.EIGHT;
-                case (DeviceKeys.NINE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.NINE;
-                case (DeviceKeys.ZERO):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.ZERO;
-                case (DeviceKeys.MINUS):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.HYPHEN;
-                case (DeviceKeys.EQUALS):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.EQUALS;
-                case (DeviceKeys.BACKSPACE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.BACKSPACE;
-                case (DeviceKeys.INSERT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.INSERT;
-                case (DeviceKeys.HOME):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.HOME;
-                case (DeviceKeys.PAGE_UP):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.PAGE_UP;
-                case (DeviceKeys.NUM_LOCK):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.NUM_LOCK;
-                case (DeviceKeys.NUM_SLASH):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_SLASH;
-                case (DeviceKeys.NUM_ASTERISK):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_ASTERISK;
-                case (DeviceKeys.NUM_MINUS):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_HYPHEN;
-                case (DeviceKeys.TAB):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.TAB;
-                case (DeviceKeys.Q):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.Q;
-                case (DeviceKeys.W):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.W;
-                case (DeviceKeys.E):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.E;
-                case (DeviceKeys.R):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.R;
-                case (DeviceKeys.T):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.T;
-                case (DeviceKeys.Y):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.Y;
-                case (DeviceKeys.U):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.U;
-                case (DeviceKeys.I):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.I;
-                case (DeviceKeys.O):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.O;
-                case (DeviceKeys.P):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.P;
-                case (DeviceKeys.OPEN_BRACKET):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.LEFT_BRACKET;
-                case (DeviceKeys.CLOSE_BRACKET):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.RIGHT_BRACKET;
-                case (DeviceKeys.BACKSLASH):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.BACKSLASH;
-                case (DeviceKeys.DELETE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.DELETE;
-                case (DeviceKeys.END):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.END;
-                case (DeviceKeys.PAGE_DOWN):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.PAGE_DOWN;
-                case (DeviceKeys.NUM_SEVEN):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_SEVEN;
-                case (DeviceKeys.NUM_EIGHT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_EIGHT;
-                case (DeviceKeys.NUM_NINE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_NINE;
-                case (DeviceKeys.NUM_PLUS):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_PLUS;
-                case (DeviceKeys.CAPS_LOCK):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.CAPS_LOCK;
-                case (DeviceKeys.A):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.A;
-                case (DeviceKeys.S):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.S;
-                case (DeviceKeys.D):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.D;
-                case (DeviceKeys.F):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.F;
-                case (DeviceKeys.G):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.G;
-                case (DeviceKeys.H):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.H;
-                case (DeviceKeys.J):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.J;
-                case (DeviceKeys.K):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.K;
-                case (DeviceKeys.L):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.L;
-                case (DeviceKeys.SEMICOLON):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.SEMI_COLON;
-                case (DeviceKeys.APOSTROPHE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.APOSTROPHE;
-                //case (DeviceKeys.HASHTAG):
-                //    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.HASHTAG;
-                case (DeviceKeys.ENTER):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.ENTER;
-                case (DeviceKeys.NUM_FOUR):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_FOUR;
-                case (DeviceKeys.NUM_FIVE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_FIVE;
-                case (DeviceKeys.NUM_SIX):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_SIX;
-                case (DeviceKeys.LEFT_SHIFT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.LEFT_SHIFT;
-                case (DeviceKeys.BACKSLASH_UK):
-                    return new Roccat_Talk.RyosTalkFX.Key(79);
-                case (DeviceKeys.Z):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.Z;
-                case (DeviceKeys.X):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.X;
-                case (DeviceKeys.C):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.C;
-                case (DeviceKeys.V):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.V;
-                case (DeviceKeys.B):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.B;
-                case (DeviceKeys.N):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.N;
-                case (DeviceKeys.M):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.M;
-                case (DeviceKeys.COMMA):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.COMMA;
-                case (DeviceKeys.PERIOD):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.PERIOD;
-                case (DeviceKeys.FORWARD_SLASH):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.FORWARD_SLASH;
-                case (DeviceKeys.RIGHT_SHIFT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.RIGHT_SHIFT;
-                case (DeviceKeys.ARROW_UP):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.UP;
-                case (DeviceKeys.NUM_ONE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_ONE;
-                case (DeviceKeys.NUM_TWO):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_TWO;
-                case (DeviceKeys.NUM_THREE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_THREE;
-                case (DeviceKeys.NUM_ENTER):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_ENTER;
-                case (DeviceKeys.LEFT_CONTROL):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.LEFT_CTRL;
-                case (DeviceKeys.LEFT_WINDOWS):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.WIN;
-                case (DeviceKeys.LEFT_ALT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.LEFT_ALT;
-                case (DeviceKeys.SPACE):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.SPACE;
-                case (DeviceKeys.RIGHT_ALT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.RIGHT_ALT;
-                case (DeviceKeys.FN_Key):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.FN;
-                case (DeviceKeys.APPLICATION_SELECT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.MENU;
-                case (DeviceKeys.RIGHT_CONTROL):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.RIGHT_CTRL;
-                case (DeviceKeys.ARROW_LEFT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.LEFT;
-                case (DeviceKeys.ARROW_DOWN):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.DOWN;
-                case (DeviceKeys.ARROW_RIGHT):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.RIGHT;
-                case (DeviceKeys.NUM_ZERO):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_ZERO;
-                case (DeviceKeys.NUM_PERIOD):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.KP_PERIOD;
-
-                case (DeviceKeys.G1):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.M1;
-                case (DeviceKeys.G2):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.M2;
-                case (DeviceKeys.G3):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.M3;
-                case (DeviceKeys.G4):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.M4;
-                case (DeviceKeys.G5):
-                    return Roccat_Talk.RyosTalkFX.KeyboardLayouts.KeyboardLayout_EN.M5;
-
-                default:
-                    return new Roccat_Talk.RyosTalkFX.Key(255);
-            }
         }
 
         public string GetDeviceUpdatePerformance()

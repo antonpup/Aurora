@@ -1,0 +1,30 @@
+﻿{
+  "ManaPots": {
+    "baseAddress": "17116648",
+    "pointers": [ "1436", "216" ]
+  },
+
+  "HealthPots": {
+    "baseAddress": "17116648",
+    "pointers": [ "1436", "212" ]
+  },
+
+  "CurrentHealth": {
+    "baseAddress": "17116648",
+    "pointers": [ "836" ]
+  },
+
+  "CurrentMana": {
+    "baseAddress": "17116648",
+    "pointers": [ "1520", "252", "4", "188" ]
+  },
+  "MaximumHealth": {
+    "baseAddress": "17116648",
+    "pointers": [ "840" ]
+  },
+
+  "MaximumMana": {
+    "baseAddress": "17116648",
+    "pointers": [ "1520", "252", "4", "192" ]
+  }
+}

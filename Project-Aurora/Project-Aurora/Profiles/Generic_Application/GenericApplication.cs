@@ -13,8 +13,34 @@ namespace Aurora.Profiles.Generic_Application
 {
     public class GenericApplication : Application
     {
+        public override ImageSource Icon
+        {
+            get
+            {
+                if (icon == null)
+                {
+                    string icon_path = Path.Combine(GetProfileFolderPath(), "icon.png");
+
+                    if (File.Exists(icon_path))
+                    {
+                        var memStream = new MemoryStream(File.ReadAllBytes(icon_path));
+                        BitmapImage b = new BitmapImage();
+                        b.BeginInit();
+                        b.StreamSource = memStream;
+                        b.EndInit();
+
+                        icon = b;
+                    }
+                    else
+                        icon = new BitmapImage(new Uri(@"Resources/unknown_app_icon.png", UriKind.Relative));
+                }
+
+                return icon;
+            }
+        }
+
         public GenericApplication(string process_name)
-            : base(new LightEventConfig { Name="Generic Application", ID=process_name, ProcessNames= new[] { process_name }, SettingsType = typeof(GenericApplicationSettings), ProfileType= typeof(GenericApplicationProfile), OverviewControlType= typeof(Control_GenericApplication), GameStateType= null, Event= new Event_GenericApplication() })
+            : base(new LightEventConfig { Name="Generic Application", ID=process_name, ProcessNames= new[] { process_name }, SettingsType = typeof(GenericApplicationSettings), ProfileType= typeof(GenericApplicationProfile), OverviewControlType= typeof(Control_GenericApplication), GameStateType= typeof(GameState), Event= new Event_GenericApplication() })
         {
             Config.ExtraAvailableLayers.Add("WrapperLights");
         }
@@ -22,29 +48,6 @@ namespace Aurora.Profiles.Generic_Application
         public override string GetProfileFolderPath()
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles", Config.ID);
-        }
-
-        public override ImageSource GetIcon()
-        {
-            if (icon == null)
-            {
-                string icon_path = Path.Combine(GetProfileFolderPath(), "icon.png");
-
-                if (System.IO.File.Exists(icon_path))
-                {
-                    var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(icon_path));
-                    BitmapImage b = new BitmapImage();
-                    b.BeginInit();
-                    b.StreamSource = memStream;
-                    b.EndInit();
-
-                    icon = b;
-                }
-                else
-                    icon = new BitmapImage(new Uri(@"Resources/unknown_app_icon.png", UriKind.Relative));
-            }
-
-            return icon;
         }
 
         protected override ApplicationProfile CreateNewProfile(string profileName)

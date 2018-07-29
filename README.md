@@ -6,10 +6,9 @@
 [![Latest Version](https://img.shields.io/github/release/antonpup/aurora.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Total Downloads](https://img.shields.io/github/downloads/antonpup/aurora/total.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Build status](https://ci.appveyor.com/api/projects/status/jh44k7r5ewelxiss?svg=true)](https://ci.appveyor.com/project/antonpup/aurora) ![Build status](https://img.shields.io/badge/language-C%23-178600.svg)
 
 
-
 Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games.
 
-# Download
+## Download
 
 [Latest stable release](https://github.com/antonpup/Aurora/releases/latest)
 
@@ -17,17 +16,19 @@ Project Aurora is a utility that unifies RGB lighting devices across different b
 
 [Bleeding-edge builds (decent chance they're going to have issues)](https://ci.appveyor.com/project/antonpup/aurora/build/artifacts)
 
-# How to Install
-1. First of all, make sure that your PC meets the requirements listed above. Also, make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) and [Microsoft .NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653) installed.
+## Discord Server
+
+Having issues? Want to discuss changes or talk about possible features? Want to be involved in the development and design process of Aurora? Join our [Discord server](https://discord.gg/YAuBmg9) and get involved!
+
+## How to Install
+1. First of all, make sure that your PC meets the requirements listed above. Also, make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2017](https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads) and [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-gb/download/details.aspx?id=49981) installed.
 2. Download the latest release from above
 3. Extract the archive anywhere on your computer. Preferably keep it in a location you can easily access.
 4. Run "Aurora.exe", from that point, Aurora should provide you with further instructions and options.
 
-## Run this program in the background at windows start
-You can set Aurora to run on Windows Startup. Go into Settings and check "Start with Windows".
-![Aurora Settings](https://puu.sh/tfKss/22603982e9.png)
 
 ## Natively Supported Games
+
 * Dota 2
 * CS:GO
 * Grand Theft Auto V
@@ -51,6 +52,10 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * Worms W.M.D
 * Blade and Soul
 * Borderlands 2
+* Euro Truck Simulator 2
+* American Truck Simulator
+* Rise of the Tomb Raider
+* Dying Light
 
 ## Natively Supported Devices
 * Logitech
@@ -60,6 +65,7 @@ You can set Aurora to run on Windows Startup. Go into Settings and check "Start 
 * Cooler Master
 * AtmoOrb
 * SteelSeries devices
+* Wooting One
 
 ## Video demonstrations
 Dota 2 Demo
@@ -86,19 +92,13 @@ Robot Roller-Derby Disco Dodgeball Demo
 ![GTA 5 Settings](https://puu.sh/tfKWL/d72e10b288.png)
 ![Rocket League Settings](https://puu.sh/tfL4N/30f5b9cfea.png)
 ![Payday 2 Settings](https://puu.sh/tfLcn/4978a48199.png)
+![Euro Truck Simulator 2 / American Truck Simulator Settings](https://i.imgur.com/oaCpWd0.png)
 ![Skype Integration Settings](https://puu.sh/tfLfu/57b1df348a.png)
 
 
 ## In-depth features
 General
 
-* Support for per-key Logitech devices
-* Support for Razer Chroma devices
-* Support for per-key Corsair devices
-* Support for Cooler Master devices
-* Support for Clevo devices
-* Support for AtmoOrb
-* Support for popular online games: Dota 2, CS:GO, GTA 5, Rocket League, and Overwatch
 * Display volume percentage on the keyboard
 * Display CPU and Memory usage on the keyboard
 * Layering system for effects
@@ -180,12 +180,24 @@ Borderlands 2 features
 
 * Health and Shield indicators
 
-# F.A.Q.
+Euro Truck Simulator 2 / American Truck Simulator features
+
+* Throttle/braking indicators
+* RPM meter
+* Blinkers
+* Beacons
+* Fuel/air pressure indicators
+* Ignition indicator
+
+## F.A.Q.
 ### Can this give me a ban in a video game?
 Support for all included games is tested to be sure not to trigger any anti-cheats or produce any suspicious behavior. With that said, the software is to be used at your own risk. We cannot prevent game developers from adding anti-cheats or blocking ways Aurora retrieves information from the game.
 
 ### Are you going to support more devices?
 Yes, we are going to support anything that has an SDK.
+
+### I can't find an option for my Device in the settings!
+Those listed are purely different layouts, if your device is made by a brand that is supported, try selecting a device that has a similar layout to yours and see if that works! If not, check if the integration is connected under 'Device Manager', if you can't get it to connect, check if there is an issue open for your device, if not, feel free to open one.
 
 ### Are you going to support more games?
 Yes, we will be looking into requested games. You can suggest/request game support  [here](https://github.com/antonpup/Aurora/issues).
@@ -200,10 +212,10 @@ You can make suggestions by posting an issue [here](https://github.com/antonpup/
 It means that changes to those keys are not currently possible. When it's possible to change those keys via SDK, then their support will be added.
 
 ### Aurora is constantly crashing! Help!
-You can report crashes and other issues on [Github](https://github.com/antonpup/Aurora/issues). Please include a brief explanation of how to reproduce the crash and include the most recent log file. Log files can be located in the "*Aurora Location*/logs" directory.
+You can report crashes and other issues on [Github](https://github.com/antonpup/Aurora/issues). Please include a brief explanation of how to reproduce the crash and include the most recent log file. Log files can be located in the "%appdata%/Aurora/Logs" directory, or by going to Settings -> Debug and clicking 'Show Logs Folder'.
 
 ### I have found a bug. How do I report it?
-You can report bugs here, by creating a new Issue [here](https://github.com/antonpup/Aurora/issues).
+You can report bugs here, by creating a new Issue [here](https://github.com/antonpup/Aurora/issues). Before posting an issue, please try and see if there is an issue the same as yours that has already been posted, if not, then feel free to post a new one.
 
 ### I wish to expand this, fix bugs, and add my own features.
 Feel free to fork this repo and make pull requests with your own code. I am open for suggestions for both features and optimization. :)
@@ -214,24 +226,23 @@ The main goal of Aurora is to allow RGB peripheral devices to work alongside oth
 Secondary goal of Aurora is to integrate RGB lighting into popular games. RGB lighting is a nifty feature that is often underused, and as a result gamers with RGB gear are unable to utilize the lighting effects that they paid for.
 
 
-# Development Team
-* [Simon-Wh](https://github.com/simon-wh) Lead Developer (since May 2017), Developer (July 2016 - May 2017)
-* [AntonPup](https://github.com/antonpup) Owner, Lead Developer (until May 2017)
+## Development Team
+* [simon-wh](https://github.com/simon-wh) Lead Developer (since May 2017), Developer (July 2016 - May 2017)
+* [Antonpup](https://github.com/antonpup) Owner, Lead Developer (until May 2017)
 
-## Minor Announcement
+### Minor Announcement
 
 I ([@Antonpup](https://github.com/antonpup)) will no longer be able to develop this project further due to my new future job. I have handed over the project development to [@Simon W](https://github.com/simon-wh). He has access to everything in order to push new updates and upkeep the project. I will keep this project on my Github account, as it is part of my portfolio. I hope you enjoy the work Simon will be putting into this project. Some of you will see my work again in the near future.
+## Support the Project
 
-# Support the Project
-
-## Contribute
+### Contribute
 If you're a developer or just a software user you can help the project by:
 * [Opening an issue](https://github.com/antonpup/Aurora/issues) to report any bugs you experience (please see if an issue already exists before opening an issue)
 * Trying to find where the problem lies with a particular issue (regardless of your skill level, information is always helpful)
 * Fixing issues, if you spot an [issue](https://github.com/antonpup/Aurora/issues) you think you can fix, please make a fork and submit a pull request that solves the issue. Any contributions are welcome!
-  * Right now we don't have a very fixed code styling due to the amount of inconsistency in the project. At some point I'm going to go through and make it all consistent, but it'll probably be camelCase or a slight variation of it that'll be used.
+  * Right now we don't have a very fixed code styling due to the amount of inconsistency in the project. At some point I'm going to go through and make it all consistent, but it'll probably be CamelCase or a slight variation of it that'll be used.
 
-## Donations
+### Donations
 If you want to help this project rapidly grow, you can donate via PayPal to help further develop Aurora. While being a university student, Aurora does not take my monetary priority. Games and RGB hardware are not cheap, and as a result, support for not owned products will take more time to develop. The donations will be used to purchase hardware and video games with intent to add support for them with Aurora. Alternatively you can gift games directly to me via Steam.
 
 I do not have any intent in charging money for Aurora, it will always be a free and open source project. 
@@ -240,15 +251,7 @@ I do not have any intent in charging money for Aurora, it will always be a free 
 | ---------------------------------------- | ---------------------------------------- |
 | [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/SimonWhyte) | [![](http://steamsignature.com/status/default/76561198044898225.png)](http://steamcommunity.com/id/SimonWhyte) |
 
-If you want to donate using crypto then here are some options:
-
-**Bitcoin**: 1A4d9mdRTW5gtmnG4FG8Q1RYZGzPRuvNm4
-
-**Ethereum**: 0xe54F36b8a429b531483f3C18799fcE01E70BF9c3
-
-**Litecoin**: LiLnCr2FQCwExmL3vBSkWCqZuv63hP3N2v
-
-# Credits
+## Credits
 
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) - Used for JSON parsing
 * [Colore](https://github.com/CoraleStudios/Colore) - Used for Razer suppport
@@ -266,11 +269,11 @@ If you want to donate using crypto then here are some options:
 * [SharpDX](http://sharpdx.org/) - Used for Raw Input for nonblocking input reading for key binds and interactive effects
 
 
-# Special thanks to these people:
-## Contributions
+## Special thanks to these people:
+### Contributions
 Thanks to all the brilliant people that made contributions to this project. See everyone [here](https://github.com/antonpup/Aurora/graphs/contributors)
 
-## Testing
+### Testing
 * Casper
 * dirty_thomas
 * Dustmuffins

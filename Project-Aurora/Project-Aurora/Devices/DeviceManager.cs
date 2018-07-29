@@ -28,7 +28,7 @@ namespace Aurora.Devices
             Worker.DoWork += WorkerOnDoWork;
             Worker.RunWorkerCompleted += (sender, args) =>
             {
-                if (newFrame)
+                if (newFrame && !Worker.IsBusy)
                     Worker.RunWorkerAsync();
             };
             Worker.WorkerSupportsCancellation = true;
@@ -63,7 +63,7 @@ namespace Aurora.Devices
         private bool anyInitialized = false;
         private bool retryActivated = false;
         private const int retryInterval = 5000;
-        private const int retryAttemps = 15;
+        private const int retryAttemps = 3;
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
 
@@ -83,12 +83,13 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
             devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
             devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
-            //devices.Add(new Devices.Roccat.RoccatDevice());             // Roccat Device
+            devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
             devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
             devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
             devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
             devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
-
+            devices.Add(new DeviceContainer(new Devices.SteelSeriesHID.SteelSeriesHIDDevice()));   // SteelSeriesHID Device
+            devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
 
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
@@ -117,7 +118,7 @@ namespace Aurora.Devices
 
                                 break;
                             case ".cs":
-                                System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(device_script);
+                                System.Reflection.Assembly script_assembly = CSScript.LoadFile(device_script);
                                 foreach (Type typ in script_assembly.ExportedTypes)
                                 {
                                     dynamic script = Activator.CreateInstance(typ);
@@ -164,17 +165,20 @@ namespace Aurora.Devices
                 Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
             }
 
-            NewDevicesInitialized?.Invoke(this, new EventArgs());
+
+            if (anyInitialized)
+            {
+                _InitializeOnceAllowed = true;
+                NewDevicesInitialized?.Invoke(this, new EventArgs());
+            }
 
             if (devicesToRetryNo > 0 && !retryActivated)
             {
+                retryActivated = true;
                 retryThread = new Thread(RetryInitialize);
                 retryThread.Start();
-
-                retryActivated = true;
+                return;
             }
-
-            _InitializeOnceAllowed = true;
         }
 
         private void RetryInitialize()

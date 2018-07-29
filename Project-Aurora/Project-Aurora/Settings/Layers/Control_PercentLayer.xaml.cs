@@ -51,7 +51,7 @@ namespace Aurora.Settings.Layers
 
         internal void SetProfile(Profiles.Application profile)
         {
-            if (profile != null && !profileset)
+            if (profile != null && !profileset && profile.ParameterLookup != null)
             {
                 var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
 
@@ -125,6 +125,14 @@ namespace Aurora.Settings.Layers
             if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
                 (this.DataContext as PercentLayerHandler).Properties._BlinkDirection = (sender as CheckBox).IsChecked.Value;
+            }
+        }
+
+        private void CheckBox_blinkbackground_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is PercentLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+            {
+                (this.DataContext as PercentLayerHandler).Properties._BlinkBackground = (sender as CheckBox).IsChecked.Value;
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Aurora.Utils;
+using Microsoft.Win32;
 using SharpDX.Multimedia;
 using SharpDX.RawInput;
 
@@ -26,11 +27,32 @@ namespace Aurora
         /// </summary>
         public event EventHandler<KeyboardInputEventArgs> KeyUp;
 
+        /// <summary>
+        /// Event that fires when a mouse button is pressed down.
+        /// </summary>
+        public event EventHandler<MouseInputEventArgs> MouseButtonDown;
+
+        /// <summary>
+        /// Event that fires when a mouse button is released.
+        /// </summary>
+        public event EventHandler<MouseInputEventArgs> MouseButtonUp;
+
+        /// <summary>
+        /// Event that fires when the mouse scroll wheel is scrolled.
+        /// </summary>
+        public event EventHandler<MouseInputEventArgs> Scroll;
+
         private readonly List<Keys> pressedKeySequence = new List<Keys>();
+
+        private readonly List<MouseButtons> pressedMouseButtons = new List<MouseButtons>();
 
         public Keys[] PressedKeys
         {
             get { return pressedKeySequence.ToArray(); }
+        }
+
+        public MouseButtons[] PressedButtons {
+            get { return pressedMouseButtons.ToArray(); }
         }
 
         public bool Shift => new[] {Keys.ShiftKey, Keys.RShiftKey, Keys.LShiftKey}
@@ -50,6 +72,7 @@ namespace Aurora
             try
             {
                 thread.Start(MessagePumpInit);
+                SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
             }
             catch
             {
@@ -58,11 +81,17 @@ namespace Aurora
             }
         }
 
+        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (e.Reason == SessionSwitchReason.SessionLock || e.Reason == SessionSwitchReason.SessionUnlock)
+                this.pressedKeySequence.Clear();
+        }
+
         private void MessagePumpInit()
         {
             using (var dummyForm = new Form())
-            using (new DisposableRawInputHook(UsagePage.Generic, UsageId.GenericKeyboard,
-                DeviceFlags.InputSink, dummyForm.Handle, DeviceOnKeyboardInput))
+            using (new DisposableRawInputHook(UsagePage.Generic, UsageId.GenericKeyboard, UsageId.GenericMouse,
+                DeviceFlags.InputSink, dummyForm.Handle, DeviceOnKeyboardInput, DeviceOnMouseInput))
             {
                 thread.EnterMessageLoop();
             }
@@ -93,27 +122,55 @@ namespace Aurora
             }
         }
 
+        /// <summary>
+        /// Handles a SharpDX MouseInput event and fires the relevant InputEvents event (Scroll, MouseButtonDown or MouseButtonUp).
+        /// </summary>
+        private void DeviceOnMouseInput(object sender, MouseInputEventArgs e) {
+            if (e.WheelDelta != 0)
+                Scroll?.Invoke(sender, e);
+
+            if (e.IsMouseDownEvent()) {
+                if (!pressedMouseButtons.Contains(e.GetMouseButton()))
+                    pressedMouseButtons.Add(e.GetMouseButton());
+                MouseButtonDown?.Invoke(sender, e);
+
+            } else if (e.IsMouseUpEvent()) {
+                pressedMouseButtons.Remove(e.GetMouseButton());
+                MouseButtonUp?.Invoke(sender, e);
+            }
+        }
+
         private sealed class DisposableRawInputHook : IDisposable
         {
             private readonly UsagePage usagePage;
-            private readonly UsageId usageId;
-            private readonly EventHandler<KeyboardInputEventArgs> handler;
+            private readonly UsageId usageIdKeyboard;
+            private readonly UsageId usageIdMouse;
+            private readonly EventHandler<KeyboardInputEventArgs> keyHandler;
+            private readonly EventHandler<MouseInputEventArgs> mouseHandler;
 
-            public DisposableRawInputHook(UsagePage usagePage, UsageId usageId, DeviceFlags flags, IntPtr target,
-                EventHandler<KeyboardInputEventArgs> handler)
+            public DisposableRawInputHook(UsagePage usagePage, UsageId usageIdKeyboard, UsageId usageIdMouse, DeviceFlags flags, IntPtr target,
+                EventHandler<KeyboardInputEventArgs> keyHandler, EventHandler<MouseInputEventArgs> mouseHandler)
             {
                 this.usagePage = usagePage;
-                this.usageId = usageId;
-                this.handler = handler;
+                this.usageIdKeyboard = usageIdKeyboard;
+                this.usageIdMouse = usageIdMouse;
+                this.keyHandler = keyHandler;
+                this.mouseHandler = mouseHandler;
 
-                Device.RegisterDevice(usagePage, usageId, flags, target);
-                Device.KeyboardInput += handler;
+                Device.RegisterDevice(usagePage, usageIdKeyboard, flags, target);
+                Device.KeyboardInput += keyHandler;
+
+                Device.RegisterDevice(usagePage, usageIdMouse, flags, target);
+                Device.MouseInput += mouseHandler;
             }
 
             public void Dispose()
             {
-                Device.KeyboardInput -= handler;
-                Device.RegisterDevice(usagePage, usageId, DeviceFlags.Remove);
+                Device.KeyboardInput -= keyHandler;
+                Device.RegisterDevice(usagePage, usageIdKeyboard, DeviceFlags.Remove);
+
+                Device.MouseInput -= mouseHandler;
+                Device.RegisterDevice(usagePage, usageIdMouse, DeviceFlags.Remove);
             }
         }
 

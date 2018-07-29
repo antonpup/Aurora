@@ -9,7 +9,7 @@
              xmlns:Controls="clr-namespace:Aurora.Controls"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
              xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
+             mc:Ignorable="d" Loaded="UserControl_Loaded" d:DesignHeight="195.98">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -40,5 +40,6 @@
         <ComboBox x:Name="ComboBox_max_variable" HorizontalAlignment="Left" Margin="92,29,0,0" VerticalAlignment="Top" Width="175" IsEditable="True" TextBoxBase.TextChanged="ComboBox_max_variable_TextChanged" Height="22"/>
         <CheckBox x:Name="CheckBox_threshold_reverse" Content="Reverse blink threshold" HorizontalAlignment="Left" Margin="3,166,0,0" VerticalAlignment="Top" Checked="CheckBox_threshold_reverse_Checked" Unchecked="CheckBox_threshold_reverse_Checked"/>
         <Controls:KeySequence x:Name="KeySequence_keys" Margin="272,0,0,0" RecordingTag="PercentLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
+        <CheckBox x:Name="CheckBox_blinkbackground" Content="Blink background instead" HorizontalAlignment="Left" Margin="3,181,0,0" VerticalAlignment="Top" Checked="CheckBox_blinkbackground_Checked" Unchecked="CheckBox_blinkbackground_Checked"/>
     </Grid>
 </UserControl>

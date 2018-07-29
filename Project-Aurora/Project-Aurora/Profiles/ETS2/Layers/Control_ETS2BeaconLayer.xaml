@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="Aurora.Profiles.ETS2.Layers.Control_ETS2BeaconLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.ETS2.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:Controls="clr-namespace:Aurora.Controls"
+             xmlns:EnumETS2="clr-namespace:Aurora.Profiles.ETS2"
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="ETS2_BeaconStyle" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="EnumETS2:ETS2_BeaconStyle" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:ETS2_BeaconStyleToStringVC x:Key="ETS2_BeaconStyleToStringVC"/>
+            <DataTemplate x:Key="ETS2_BeaconStyleTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource ETS2_BeaconStyleToStringVC}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28px" />
+            <RowDefinition Height="28px" />
+            <RowDefinition Height="28px" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="115px" />
+            <ColumnDefinition Width="160px" />
+            <ColumnDefinition Width="14px" />
+            <ColumnDefinition Width="230px"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Light Mode" Grid.Row="0" />
+        <ComboBox x:Name="lightMode" Grid.Row="0" Grid.Column="1" Margin="4" SelectionChanged="lightMode_SelectionChanged" ItemsSource="{Binding Source={StaticResource ETS2_BeaconStyle}}" ItemTemplate="{Binding Source={StaticResource ETS2_BeaconStyleTemplate}}"/>
+
+        <Label Content="Speed (simple only)" Grid.Row="1" />
+        <Slider x:Name="speedSlider" Grid.Row="1" Grid.Column="1" Margin="4" Minimum="0.1" Maximum="5" ValueChanged="speedSlider_ValueChanged" />
+
+        <Label Content="Color" Grid.Row="2" />
+        <xctk:ColorPicker x:Name="beaconColorPicker" Grid.Row="2" Grid.Column="1" Margin="4"  UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="beaconColorPicker_SelectedColorChanged" />
+
+        <Controls:KeySequence x:Name="keyPicker" Grid.Column="3" Grid.RowSpan="4" Margin="0,4,0,0" Height="280px" VerticalAlignment="Top" RecordingTag="ETS2 - Beacon" Title="Affected Keys" HorizontalAlignment="Left" Width="230" SequenceUpdated="keyPicker_SequenceUpdated" />
+    </Grid>
+</UserControl>

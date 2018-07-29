@@ -25,8 +25,12 @@ namespace Aurora.Settings.Layers
 
         public bool? _BlinkDirection { get; set; }
 
+        public bool? _BlinkBackground { get; set; }
+
         [JsonIgnore]
         public bool BlinkDirection { get { return Logic._BlinkDirection ?? _BlinkDirection ?? false; } }
+
+        public bool BlinkBackground { get { return Logic._BlinkBackground ?? _BlinkBackground ?? false; } }
 
         public string _VariablePath { get; set; }
 
@@ -50,6 +54,7 @@ namespace Aurora.Settings.Layers
             this._PercentType = PercentEffectType.Progressive_Gradual;
             this._BlinkThreshold = 0.0;
             this._BlinkDirection = false;
+            this._BlinkBackground = false;
         }
     }
 
@@ -74,6 +79,8 @@ namespace Aurora.Settings.Layers
                 catch (Exception exc)
                 {
                     value = 0;
+                    if (Global.isDebug)
+                        throw exc;
                 }
             }
 
@@ -88,10 +95,11 @@ namespace Aurora.Settings.Layers
                 catch (Exception exc)
                 {
                     maxvalue = 0;
+                    if (Global.isDebug)
+                        throw exc;
                 }
             }
-
-            return new EffectLayer().PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
+            return new EffectLayer().PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection, Properties.BlinkBackground);
         }
 
         public override void SetApplication(Application profile)

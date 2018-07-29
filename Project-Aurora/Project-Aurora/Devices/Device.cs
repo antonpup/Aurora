@@ -1127,6 +1127,48 @@ namespace Aurora.Devices
         ADDITIONALLIGHT19 = 180,
 
         /// <summary>
+        /// Additional Light 20
+        /// </summary>
+        [Description("Additional Light 20")]
+        ADDITIONALLIGHT20 = 181,
+
+        /// <summary>
+        /// Additional Light 21
+        /// </summary>
+        [Description("Additional Light 21")]
+        ADDITIONALLIGHT21 = 182,
+
+        /// <summary>
+        /// Additional Light 22
+        /// </summary>
+        [Description("Additional Light 22")]
+        ADDITIONALLIGHT22 = 183,
+
+        /// <summary>
+        /// Additional Light 23
+        /// </summary>
+        [Description("Additional Light 23")]
+        ADDITIONALLIGHT23 = 184,
+
+        /// <summary>
+        /// Additional Light 24
+        /// </summary>
+        [Description("Additional Light 24")]
+        ADDITIONALLIGHT24 = 185,
+
+        /// <summary>
+        /// Additional Light 25
+        /// </summary>
+        [Description("Additional Light 25")]
+        ADDITIONALLIGHT25 = 186,
+
+        /// <summary>
+        /// Additional Light 26
+        /// </summary>
+        [Description("Additional Light 26")]
+        ADDITIONALLIGHT26 = 187,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]

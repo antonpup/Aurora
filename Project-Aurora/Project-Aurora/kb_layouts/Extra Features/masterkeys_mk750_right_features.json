@@ -1,0 +1,110 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 2,
+  "grouped_keys": [
+    {
+      "visualName": "Mute",
+      "tag": 139,
+      "margin_left": -141.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -12,
+      "margin_top_bits": 0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "PLAY",
+      "tag": 133,
+      "margin_left": -104.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -9,
+      "margin_top_bits": 0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "PREV",
+      "tag": 137,
+      "margin_left": -67.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -6,
+      "margin_top_bits": 0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "NEXT",
+      "tag": 138,
+      "margin_left": -30.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -3,
+      "margin_top_bits": 0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 184,
+      "margin_left": 5.0,
+      "margin_top": 30.0,
+      "width": 10.0,
+      "height": 47.5,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 185,
+      "margin_left": 5.0,
+      "margin_top": 77.5,
+      "width": 10.0,
+      "height": 47.5,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 186,
+      "margin_left": 5.0,
+      "margin_top": 125,
+      "width": 10.0,
+      "height": 47.5,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 187,
+      "margin_left": 5.0,
+      "margin_top": 172.5,
+      "width": 10.0,
+      "height": 47.5,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

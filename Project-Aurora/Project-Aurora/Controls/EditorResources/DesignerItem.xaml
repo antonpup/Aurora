@@ -9,8 +9,8 @@
 
     <!-- ContentControl style to move, resize and rotate items -->
     <Style x:Key="DesignerItemStyle" TargetType="ContentControl">
-        <Setter Property="MinHeight" Value="35"/>
-        <Setter Property="MinWidth" Value="35"/>
+        <Setter Property="MinHeight" Value="20"/>
+        <Setter Property="MinWidth" Value="20"/>
         <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="Template">

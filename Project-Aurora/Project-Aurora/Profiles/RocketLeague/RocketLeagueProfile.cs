@@ -33,7 +33,7 @@ namespace Aurora.Profiles.RocketLeague
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
                         _VariablePath = "Player/BoostAmount",
-                        _MaxVariablePath = "1.0",
+                        _MaxVariablePath = "100",
                     },
                 }),
                 new Layer("Boost Indicator (Peripheral)", new PercentGradientLayerHandler()
@@ -46,7 +46,7 @@ namespace Aurora.Profiles.RocketLeague
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
                         _VariablePath = "Player/BoostAmount",
-                        _MaxVariablePath = "1.0"
+                        _MaxVariablePath = "100"
                     },
                 }),
                 new Layer("Rocket League Background", new Layers.RocketLeagueBackgroundLayerHandler())

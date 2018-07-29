@@ -56,8 +56,13 @@
 
         <Grid x:Name="gridManagers" Margin="5,5,0,5" HorizontalAlignment="Left" Width="200">
             <StackPanel x:Name="stackPanelManagers">
-                <Settings:Control_ProfileManager x:Name="ctrlProfileManager" FocusedApplication="{Binding FocusedApplication}" Height="25" Margin="0,0,0,3" Background="#00000000" PreviewMouseDown="ctrlProfileManager_PreviewMouseDown" />
-                <Settings:Control_LayerManager x:Name="ctrlLayerManager" FocusedApplication="{Binding FocusedApplication}" Background="#00000000" PreviewMouseDown="ctrlLayerManager_PreviewMouseDown" />
+                <Border x:Name="brdOverview" Background="#A5000000" CornerRadius="8" VerticalAlignment="Top" Height="25" PreviewMouseDown="brdOverview_PreviewMouseDown">
+                    <Border Background="#54A8A8A8" CornerRadius="8">
+                        <TextBlock TextWrapping="Wrap" Text="Overview" VerticalAlignment="Top" Margin="10,3,10,0"/>
+                    </Border>
+                </Border>
+                <Settings:Control_ProfileManager x:Name="ctrlProfileManager" FocusedApplication="{Binding FocusedApplication}" Height="25" Margin="0,3,0,0" Background="#00000000" PreviewMouseDown="ctrlProfileManager_PreviewMouseDown" />
+                <Settings:Control_LayerManager x:Name="ctrlLayerManager" FocusedApplication="{Binding FocusedApplication}" Margin="0,3,0,0" Background="#00000000" PreviewMouseDown="ctrlLayerManager_PreviewMouseDown" />
             </StackPanel>
         </Grid>
         

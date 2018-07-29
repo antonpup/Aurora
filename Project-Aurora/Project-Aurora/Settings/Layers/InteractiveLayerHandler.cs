@@ -180,7 +180,8 @@ namespace Aurora.Settings.Layers
                 PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
                 if (pt != new PointF(0, 0))
                 {
-                    TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
+                    lock (TimeOfLastPress)
+                        TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
 
                     _input_list.Add(CreateInputItem(device_key, pt));
                     previous_key = e.Key;
@@ -285,18 +286,16 @@ namespace Aurora.Settings.Layers
         {
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
-
-            foreach (var lengthPresses in TimeOfLastPress.ToList())
+            lock (TimeOfLastPress)
             {
-                if (currenttime - lengthPresses.Value > pressBuffer)
+                foreach (var lengthPresses in TimeOfLastPress.ToList())
                 {
-                    lock (TimeOfLastPress)
+                    if (currenttime - lengthPresses.Value > pressBuffer)
                     {
                         TimeOfLastPress.Remove(lengthPresses.Key);
                     }
                 }
             }
-
             EffectLayer interactive_layer = new EffectLayer("Interactive Effects");
 
             foreach (var input in _input_list.ToArray())
