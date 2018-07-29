@@ -132,7 +132,8 @@ namespace Aurora.Profiles
                 new Move_or_Die.MoD(),
                 new QuantumConumdrum.QuantumConumdrum(),
                 new Battlefield1.Battlefield1(),
-                new Dishonored.Dishonored()
+                new Dishonored.Dishonored(),
+                new Witcher3.Witcher3()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
