@@ -530,6 +530,7 @@ namespace Aurora.Devices.CoolerMaster
 
         private void SetOneKey(int[] key, Color color)
         {
+            color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
             CoolerMasterSDK.KEY_COLOR key_color = new CoolerMasterSDK.KEY_COLOR(color.R, color.G, color.B);
             color_matrix.KeyColor[key[0], key[1]] = key_color;
         }
