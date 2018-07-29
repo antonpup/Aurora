@@ -21,7 +21,7 @@ namespace Aurora.Settings.Keycaps
     /// </summary>
     public partial class Control_ColorizedKeycap : UserControl, IKeycap
     {
-        private Color current_color = Color.FromArgb(0, 0, 0, 0);
+        private Color? current_color = null;
         private Devices.DeviceKeys associatedKey = DeviceKeys.NONE;
         private bool isImage = false;
 
@@ -91,7 +91,7 @@ namespace Aurora.Settings.Keycaps
 
         public void SetColor(Color key_color)
         {
-            if (!current_color.Equals(key_color))
+            if (!key_color.Equals(current_color))
             {
                 if (!isImage)
                 {
