@@ -49,8 +49,11 @@ namespace Aurora.Devices
             newFrame = true;
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
 
-            if (!Worker.IsBusy)
-                Worker.RunWorkerAsync();
+            lock (Worker)
+            {
+                if (!Worker.IsBusy)
+                    Worker.RunWorkerAsync();
+            }
         }
     }
 
