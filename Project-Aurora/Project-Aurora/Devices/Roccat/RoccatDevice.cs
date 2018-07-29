@@ -249,7 +249,7 @@ namespace Aurora.Devices.Roccat
             }
         }
         
-        public void Restoregeneric()
+        private void Restoregeneric()
         {
             //Workaround
             //Global.logger.LogLine("restore Roccat generic");
@@ -262,6 +262,13 @@ namespace Aurora.Devices.Roccat
 
             //.RestoreLedRgb() Does not work 
             talkFX.RestoreLedRgb();
+        }
+        
+        private void send_to_roccat_generic(System.Drawing.Color color)
+        {
+            //Alpha necessary for Global Brightness modifier
+            color = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(color.R, color.G, color.B));;
         }
 
         public bool Reconnect()
@@ -320,7 +327,7 @@ namespace Aurora.Devices.Roccat
                             //Send to generic roccat device if color not equal or 1. time after generic got enabled
                             if (!previous_peripheral_Color.Equals(key.Value) || generic_activated_first_time == true)
                             {
-                                talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(key.Value.R, key.Value.G, key.Value.B));
+                                send_to_roccat_generic(key.Value);
                                 //talkFX.RestoreLedRgb(); //Does not even here work
 
                                 previous_peripheral_Color = key.Value;
