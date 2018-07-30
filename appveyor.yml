@@ -28,7 +28,7 @@ before_build:
     
 after_build:
 - cmd: >-
-    7za a -tzip Aurora-v%APPVEYOR_BUILD_VERSION%.zip  %APPVEYOR_BUILD_FOLDER%\Build\Release\*
+    7z a -tzip Aurora-v%APPVEYOR_BUILD_VERSION%.zip  %APPVEYOR_BUILD_FOLDER%\Build\Release\*
     
     set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
     
