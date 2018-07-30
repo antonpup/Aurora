@@ -1,7 +1,7 @@
-﻿/* Credit to https://github.com/horgeon 
- * for his initial developments in Roccat support
- * here: https://github.com/horgeon/Aurora/commits/dev
- */
+/* Credit to https://github.com/horgeon 
+* for his initial developments in Roccat support
+* here: https://github.com/horgeon/Aurora/commits/dev
+*/
 
 /* Side notes about this device:
  * SDK Docs state "Due to hardware and protocol limitations, the approximate latency for on/off events is currently about 20 to 30ms." So there might be a delay for Ryos lighting.
@@ -248,27 +248,28 @@ namespace Aurora.Devices.Roccat
                 Restoregeneric();
             }
         }
-        
+
         private void Restoregeneric()
         {
             //Workaround
             //Global.logger.LogLine("restore Roccat generic");
-            byte restore_fallback_red = (byte)Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_restore_fallback_red");
-            byte restore_fallback_green = (byte)Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_restore_fallback_green");
-            byte restore_fallback_blue = (byte)Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_restore_fallback_blue");
+            System.Drawing.Color restore_fallback = Global.Configuration.VarRegistry.GetVariable<Aurora.Utils.RealColor>($"{devicename}_restore_fallback").GetDrawingColor();
+            restore_fallback = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(restore_fallback, restore_fallback.A / 255.0D));
 
-            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(restore_fallback_red, restore_fallback_green, restore_fallback_blue));
-            previous_peripheral_Color = System.Drawing.Color.FromArgb(restore_fallback_red, restore_fallback_green, restore_fallback_blue);
+            Global.logger.LogLine("restore Roccat generic" + restore_fallback + restore_fallback.R + restore_fallback.G + restore_fallback.B);
+            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(restore_fallback.R, restore_fallback.G, restore_fallback.B));
+
+            previous_peripheral_Color = System.Drawing.Color.FromArgb(restore_fallback.R, restore_fallback.G, restore_fallback.B);
 
             //.RestoreLedRgb() Does not work 
             talkFX.RestoreLedRgb();
         }
-        
+
         private void send_to_roccat_generic(System.Drawing.Color color)
         {
             //Alpha necessary for Global Brightness modifier
             color = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(color.R, color.G, color.B));;
+            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(color.R, color.G, color.B)); ;
         }
 
         public bool Reconnect()
@@ -317,7 +318,7 @@ namespace Aurora.Devices.Roccat
                         if (dev_key == DeviceKeys.HASHTAG)
                             dev_key = DeviceKeys.ENTER;
                     }
-                    
+
                     //set peripheral color to Roccat generic peripheral if enabled
                     if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_enable_generic") == true)
                     {
@@ -338,29 +339,29 @@ namespace Aurora.Devices.Roccat
                     else
                     {
                         if (generic_deactivated_first_time == true)
-                            {
-                                Restoregeneric();
-                                generic_deactivated_first_time = false;
-                                //Global.logger.LogLine("first time");
-                            }
+                        {
+                            Restoregeneric();
+                            generic_deactivated_first_time = false;
+                            //Global.logger.LogLine("first time");
+                        }
                         generic_activated_first_time = true;
                     }
-                    
+
                     if (DeviceKeysMap.TryGetValue(dev_key, out byte i))
-                    { 
+                    {
                         //Global.logger.LogLine("Roccat update device: " + key + " , " + key.Value);
                         Color roccatColor = ConvertToRoccatColor(key.Value);
                         stateStruct[i] = IsLedOn(roccatColor);
                         colorStruct[i] = roccatColor;
                     }
                 }
-                
+
                 //send KeyboardState to Ryos only when enabled
                 if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_enable_ryos"))
                 {
                     RyosTalkFX.SetMkFxKeyboardState(stateStruct, colorStruct, (byte)layout);
                 }
-                
+
                 return true;
             }
             catch (Exception e)
@@ -417,12 +418,11 @@ namespace Aurora.Devices.Roccat
         {
             if (default_registry == null)
             {
+
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
                 default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
-                default_registry.Register($"{devicename}_restore_fallback_red", 0, "Red", 255, 0);
-                default_registry.Register($"{devicename}_restore_fallback_green", 0, "Green", 255, 0);
-                default_registry.Register($"{devicename}_restore_fallback_blue", 255, "Blue", 255, 0, "Set restore color for your generic roccat devices");
+                default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
             }
 
             return default_registry;
