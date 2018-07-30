@@ -26,10 +26,13 @@ namespace Aurora.Devices
             Worker.DoWork += WorkerOnDoWork;
             Worker.RunWorkerCompleted += (sender, args) =>
             {
-                if (newFrame && !Worker.IsBusy)
-                    Worker.RunWorkerAsync();
+                lock (Worker)
+                {
+                    if (newFrame && !Worker.IsBusy)
+                        Worker.RunWorkerAsync();
+                 }
             };
-            Worker.WorkerSupportsCancellation = true;
+            //Worker.WorkerSupportsCancellation = true;
         }
 
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
@@ -41,13 +44,16 @@ namespace Aurora.Devices
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
-            if (Worker.IsBusy)
-                Worker.CancelAsync();
-
             newFrame = true;
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-
             lock (Worker)
+            {
+                if (Worker.IsBusy)
+                    return;
+                else
+                    Worker.RunWorkerAsync();
+            }
+            /*lock (Worker)
             {
                 try
                 {
@@ -58,7 +64,7 @@ namespace Aurora.Devices
                 {
                     Global.logger.LogLine(e.ToString(), Logging_Level.Error);
                 }
-            }
+            }*/
         }
     }
 
