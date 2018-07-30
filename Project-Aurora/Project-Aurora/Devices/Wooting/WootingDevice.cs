@@ -3,6 +3,7 @@ using Aurora.Utils;
 using CoolerMaster;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -111,7 +112,7 @@ namespace Aurora.Devices.Wooting
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
@@ -123,7 +124,7 @@ namespace Aurora.Devices.Wooting
 
                     foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                     {
-                        if (token.IsCancellationRequested) return false;
+                        if (e.Cancel) return false;
 
 
                         Color clr = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
@@ -134,24 +135,24 @@ namespace Aurora.Devices.Wooting
                         //colourMap[coordinates.row, coordinates.column] = new KeyColour(clr.red, clr.green, clr.blue);
                         RGBControl.SetKey(devKey, clr.R, clr.G, clr.B);
                     }
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     //AlsoWootingRgbControl.SetFull(colourMap);
                     RGBControl.UpdateKeyboard();
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                Global.logger.Error("Failed to Update Device" + e.ToString());
+                Global.logger.Error("Failed to Update Device" + exc.ToString());
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
+using System.ComponentModel;
 
 namespace Aurora.Devices.Roccat
 {
@@ -260,12 +261,12 @@ namespace Aurora.Devices.Roccat
 
         byte[] stateStruct = new byte[110];
         Roccat_Talk.TalkFX.Color[] colorStruct = new Roccat_Talk.TalkFX.Color[110];
-        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (RyosTalkFX == null || !RyosInitialized)
                 return false;
 
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
 
             try
             {
@@ -279,7 +280,7 @@ namespace Aurora.Devices.Roccat
 
                 foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
                 {
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     DeviceKeys dev_key = key.Key;
                     //Solution to slightly different mapping rather than giving a whole different dictionary
                     if (layout == DeviceLayout.ANSI)
@@ -302,20 +303,20 @@ namespace Aurora.Devices.Roccat
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                Global.logger.Error("Roccat device, error when updating device. Error: " + e);
+                Global.logger.Error("Roccat device, error when updating device. Error: " + exc);
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

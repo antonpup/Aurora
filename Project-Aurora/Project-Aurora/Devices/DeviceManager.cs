@@ -17,8 +17,6 @@ namespace Aurora.Devices
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
 
-        public CancellationTokenSource UpdateTaskCancellationTokenSource { get; set; } = null;
-
         private Tuple<DeviceColorComposition, bool> currentComp = null;
         private bool newFrame = false;
 
@@ -37,22 +35,29 @@ namespace Aurora.Devices
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             newFrame = false;
-            UpdateTaskCancellationTokenSource = new CancellationTokenSource();
-            Device.UpdateDevice(currentComp.Item1, UpdateTaskCancellationTokenSource.Token,
+            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
                 currentComp.Item2);
         }
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
-            UpdateTaskCancellationTokenSource?.Cancel();
+            if (Worker.IsBusy)
+                Worker.CancelAsync();
 
             newFrame = true;
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
 
             lock (Worker)
             {
-                if (!Worker.IsBusy)
-                    Worker.RunWorkerAsync();
+                try
+                {
+                    if (!Worker.IsBusy)
+                        Worker.RunWorkerAsync();
+                }
+                catch(Exception e)
+                {
+                    Global.logger.LogLine(e.ToString(), Logging_Level.Error);
+                }
             }
         }
     }
