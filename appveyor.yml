@@ -28,8 +28,6 @@ before_build:
     
 after_build:
 - cmd: >-
-    7z a -tzip Aurora-v%APPVEYOR_BUILD_VERSION%.zip  %APPVEYOR_BUILD_FOLDER%\Build\Release\*
-    
     set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
     
     ISCC.exe /DEXTERNAL_VERSION=%APPVEYOR_BUILD_VERSION% %APPVEYOR_BUILD_FOLDER%\Installer\installer.iss
@@ -40,7 +38,9 @@ build:
   verbosity: minimal
 
 artifacts:
-  - path: Aurora-v$(appveyor_build_version).zip
+  - path: Build\Release
+    name: Aurora-v$(appveyor_build_version)
+    type: zip
   - path: Aurora-setup-v$(appveyor_build_version).exe
     
 deploy:
