@@ -167,8 +167,7 @@
                     <TextBlock HorizontalAlignment="Left" Margin="10,74,0,0" TextWrapping="Wrap" Text="Global brightness modifier: " VerticalAlignment="Top"/>
                     <TextBlock x:Name="lblGlobalBrightness" HorizontalAlignment="Left" Margin="333,74,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
                     <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="178,74,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblGlobalBrightness, Path=.}"/>
-                    <CheckBox x:Name="chkShowDefaultLighting" Content="Show Default lighting(CUE, LGS, etc) when Desktop is disabled" HorizontalAlignment="Left" Margin="10,257,0,0" VerticalAlignment="Top"  IsChecked="{Binding ShowDefaultLightingOnDisabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <CheckBox x:Name="chkHigherPriority" Content="Run Aurora at High priority" HorizontalAlignment="Left" Margin="370,257,0,0" VerticalAlignment="Top" IsChecked="{Binding HighPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkHigherPriority_IsCheckedChanged" Unchecked="chkHigherPriority_IsCheckedChanged"/>
+                    <CheckBox x:Name="chkHigherPriority" Content="Run Aurora at High priority" HorizontalAlignment="Left" Margin="12,257,0,0" VerticalAlignment="Top" IsChecked="{Binding HighPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkHigherPriority_IsCheckedChanged" Unchecked="chkHigherPriority_IsCheckedChanged"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">
@@ -274,7 +273,7 @@
                 <Grid>
                     <Button x:Name="updates_check" Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>
                     <CheckBox x:Name="updates_autocheck_on_start" Content="Automatically check for updates on program start" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Checked="updates_autocheck_on_start_Checked" Unchecked="updates_autocheck_on_start_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Aurora's website "/><Hyperlink NavigateUri="http://project-aurora.com/history.php" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Github "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/releases" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
                     <CheckBox x:Name="chkGetPrereleases" Content="Get Pre-release updates" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" IsChecked="{Binding GetDevReleases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </TabItem>

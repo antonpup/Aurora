@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using Microsoft.Win32.TaskScheduler;
+using System.ComponentModel;
 
 namespace Aurora.Devices.Corsair
 {
@@ -78,6 +79,9 @@ namespace Aurora.Devices.Corsair
                         headset = CueSDK.HeadsetSDK;
                         mousemat = CueSDK.MousematSDK;
                         keyboard.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        mouse.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        headset.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        mousemat.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
 
 
                         if (keyboard == null && mouse == null && headset == null && mousemat == null)
@@ -167,17 +171,17 @@ namespace Aurora.Devices.Corsair
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
             CorsairLedId keyindex = CorsairLedId.Invalid;
 
             try
             {
-                if (token.IsCancellationRequested) return false;
+                if (e.Cancel) return false;
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     CorsairLedId localKey = ToCorsair(key.Key);
 
                     if (localKey == CorsairLedId.Invalid && key.Key == DeviceKeys.Peripheral_Logo ||
@@ -202,23 +206,23 @@ namespace Aurora.Devices.Corsair
                     keyindex = localKey;
                 }
 
-                if (token.IsCancellationRequested) return false;
+                if (e.Cancel) return false;
                 SendColorsToKeyboard(forced);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                Global.logger.Error("Corsair device, error when updating device. Error: " + e);
-                Console.WriteLine(e);
+                Global.logger.Error("Corsair device, error when updating device. Error: " + exc);
+                Console.WriteLine(exc);
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

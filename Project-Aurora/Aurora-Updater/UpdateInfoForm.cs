@@ -44,7 +44,7 @@ namespace Aurora_Updater
             if(sender is LinkLabel)
             {
                 (sender as LinkLabel).LinkVisited = true;
-                System.Diagnostics.Process.Start("http://project-aurora.com/history.php");
+                System.Diagnostics.Process.Start("https://github.com/antonpup/Aurora/releases");
             }
         }
 

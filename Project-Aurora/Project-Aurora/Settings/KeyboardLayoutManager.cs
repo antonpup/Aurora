@@ -948,7 +948,7 @@ namespace Aurora.Settings
 
                 _bitmapMapInvalid = false;
                 //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
-                Global.effengine.SetCanvasSize(PixelToByte(width_max)+1, PixelToByte(height_max)+1);
+                Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width)+1, PixelToByte(virtualKeyboardGroup.Region.Height) +1);
                 Global.effengine.SetBitmapping(this.bitmap_map);
             }
 
@@ -1361,7 +1361,10 @@ namespace Aurora.Settings
             foreach (var kvp in _virtualKeyboardMap)
             {
                 if (keylights.ContainsKey(kvp.Key))
-                    kvp.Value.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(keylights[kvp.Key]));
+                {
+                    System.Drawing.Color key_color = keylights[kvp.Key];
+                    kvp.Value.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
+                }
             }
         }
     }

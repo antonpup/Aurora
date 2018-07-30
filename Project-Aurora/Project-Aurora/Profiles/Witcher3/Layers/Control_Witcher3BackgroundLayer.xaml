@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Aurora.Profiles.Witcher3.Layers.Control_Witcher3BackgroundLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.Witcher3.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <Grid>
+        <xctk:ColorPicker x:Name="ColorPicker_Aard" Margin="61,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="183" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Aard_SelectedColorChanged" />
+        <Label HorizontalAlignment="Left" Padding="0" Content="Aard Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <xctk:ColorPicker x:Name="ColorPicker_Igni" Margin="80,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="164" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Igni_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label HorizontalAlignment="Left" Padding="0" Content="Igni Color:" VerticalAlignment="Top" Margin="0,27,0,0"/>
+        <xctk:ColorPicker x:Name="ColorPicker_Quen" Margin="85,50,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Quen_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label HorizontalAlignment="Left" Margin="0,52,0,0" Padding="0" Content="Quen Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="ColorPicker_Yrden" Margin="85,75,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Yrden_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label HorizontalAlignment="Left" Margin="0,77,0,0" Padding="0" Content="Yrden Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="ColorPicker_Axii" Margin="85,100,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Axii_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label HorizontalAlignment="Left" Margin="0,102,0,0" Padding="0" Content="Axii Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,125,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label HorizontalAlignment="Left" Margin="0,127,0,0" Padding="0" Content="Default Color:" VerticalAlignment="Top"/>
+    </Grid>
+</UserControl>

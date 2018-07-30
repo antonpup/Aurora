@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using SteelSeries.GameSenseSDK;
+using System.ComponentModel;
 
 namespace Aurora.Devices.SteelSeries
 {
@@ -140,23 +141,23 @@ namespace Aurora.Devices.SteelSeries
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
 
             try
             {
                 // workaround for heartbeat/keepalive events every 10sec
                 SendKeepalive();
 
-                if (token.IsCancellationRequested) return false;
+                if (e.Cancel) return false;
 
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     //CorsairLedId localKey = ToCorsair(key.Key);
 
                     Color color = (Color)key.Value;
@@ -164,7 +165,7 @@ namespace Aurora.Devices.SteelSeries
                     color = Color.FromArgb(255,
                         Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     if (key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(color, forced);
@@ -187,7 +188,7 @@ namespace Aurora.Devices.SteelSeries
                     }
                 }
 
-                if (token.IsCancellationRequested) return false;
+                if (e.Cancel) return false;
                 SendColorsToKeyboard(hids, colors);
 
                 return true;
@@ -199,11 +200,11 @@ namespace Aurora.Devices.SteelSeries
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

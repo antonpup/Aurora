@@ -132,7 +132,8 @@ namespace Aurora.Profiles
                 new Move_or_Die.MoD(),
                 new QuantumConumdrum.QuantumConumdrum(),
                 new Battlefield1.Battlefield1(),
-                new Dishonored.Dishonored()
+                new Dishonored.Dishonored(),
+                new Witcher3.Witcher3()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -534,7 +535,7 @@ namespace Aurora.Profiles
 
             timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
-            if ((profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
+            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
                 Global.dev_manager.Shutdown();
                 Global.effengine.PushFrame(newFrame);

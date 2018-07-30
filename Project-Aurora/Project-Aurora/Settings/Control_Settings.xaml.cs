@@ -1024,17 +1024,20 @@ namespace Aurora.Settings
                 Dispatcher.Invoke(
                     () =>
                     {
-                        using (MemoryStream memory = new MemoryStream())
+                        lock (bitmap)
                         {
-                            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
-                            memory.Position = 0;
-                            BitmapImage bitmapimage = new BitmapImage();
-                            bitmapimage.BeginInit();
-                            bitmapimage.StreamSource = memory;
-                            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmapimage.EndInit();
+                            using (MemoryStream memory = new MemoryStream())
+                            {
+                                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                                memory.Position = 0;
+                                BitmapImage bitmapimage = new BitmapImage();
+                                bitmapimage.BeginInit();
+                                bitmapimage.StreamSource = memory;
+                                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                                bitmapimage.EndInit();
 
-                            imgBitmap.Source = bitmapimage;
+                                imgBitmap.Source = bitmapimage;
+                            }
                         }
                     });
             }

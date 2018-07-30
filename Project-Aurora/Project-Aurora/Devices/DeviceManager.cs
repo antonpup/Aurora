@@ -17,8 +17,6 @@ namespace Aurora.Devices
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
 
-        public CancellationTokenSource UpdateTaskCancellationTokenSource { get; set; } = null;
-
         private Tuple<DeviceColorComposition, bool> currentComp = null;
         private bool newFrame = false;
 
@@ -28,29 +26,45 @@ namespace Aurora.Devices
             Worker.DoWork += WorkerOnDoWork;
             Worker.RunWorkerCompleted += (sender, args) =>
             {
-                if (newFrame && !Worker.IsBusy)
-                    Worker.RunWorkerAsync();
+                lock (Worker)
+                {
+                    if (newFrame && !Worker.IsBusy)
+                        Worker.RunWorkerAsync();
+                 }
             };
-            Worker.WorkerSupportsCancellation = true;
+            //Worker.WorkerSupportsCancellation = true;
         }
 
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             newFrame = false;
-            UpdateTaskCancellationTokenSource = new CancellationTokenSource();
-            Device.UpdateDevice(currentComp.Item1, UpdateTaskCancellationTokenSource.Token,
+            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
                 currentComp.Item2);
         }
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
-            UpdateTaskCancellationTokenSource?.Cancel();
-
             newFrame = true;
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-
-            if (!Worker.IsBusy)
-                Worker.RunWorkerAsync();
+            lock (Worker)
+            {
+                if (Worker.IsBusy)
+                    return;
+                else
+                    Worker.RunWorkerAsync();
+            }
+            /*lock (Worker)
+            {
+                try
+                {
+                    if (!Worker.IsBusy)
+                        Worker.RunWorkerAsync();
+                }
+                catch(Exception e)
+                {
+                    Global.logger.LogLine(e.ToString(), Logging_Level.Error);
+                }
+            }*/
         }
     }
 
