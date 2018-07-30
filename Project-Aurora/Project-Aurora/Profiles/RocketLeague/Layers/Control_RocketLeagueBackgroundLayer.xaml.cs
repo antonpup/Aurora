@@ -45,6 +45,8 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 this.ColorPicker_Default.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as RocketLeagueBackgroundLayerHandler).Properties._DefaultColor ?? System.Drawing.Color.Empty);
                 this.Checkbox_ShowTeamScoreSplit.IsChecked = (this.DataContext as RocketLeagueBackgroundLayerHandler).Properties._ShowTeamScoreSplit ?? false;
                 this.Checkbox_ShowGoalExplosion.IsChecked = ( this.DataContext as RocketLeagueBackgroundLayerHandler ).Properties._ShowGoalExplosion ?? false;
+                this.Checkbox_ShowEnemyExplosion.IsChecked = (this.DataContext as RocketLeagueBackgroundLayerHandler).Properties._ShowGoalExplosion ?? false;
+
                 settingsset = true;
             }
         }
@@ -94,6 +96,12 @@ namespace Aurora.Profiles.RocketLeague.Layers
         {
             if ( IsLoaded && settingsset && this.DataContext is RocketLeagueBackgroundLayerHandler && sender is CheckBox && ( sender as CheckBox ).IsChecked.HasValue )
                 ( this.DataContext as RocketLeagueBackgroundLayerHandler ).Properties._ShowGoalExplosion = ( sender as CheckBox ).IsChecked.Value;
+        }
+
+        private void Checkbox_ShowEnemyExplosion_enabled_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is RocketLeagueBackgroundLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+                (this.DataContext as RocketLeagueBackgroundLayerHandler).Properties._ShowEnemyExplosion = (sender as CheckBox).IsChecked.Value;
         }
     }
 }
