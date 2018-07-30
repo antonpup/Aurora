@@ -26,12 +26,6 @@ before_build:
     
     nuget restore
     
-after_build:
-- cmd: >-
-    set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
-    
-    ISCC.exe /DEXTERNAL_VERSION=%APPVEYOR_BUILD_VERSION% %APPVEYOR_BUILD_FOLDER%\Installer\installer.iss
-
 
 build:
   project: Project-Aurora\Project-Aurora.sln
@@ -42,7 +36,15 @@ artifacts:
     name: Aurora-v$(appveyor_build_version)
     type: zip
   - path: Aurora-setup-v$(appveyor_build_version).exe
+  
+before_deploy:
+- cmd: >-
+    set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
     
+    ISCC.exe /DEXTERNAL_VERSION=%APPVEYOR_BUILD_VERSION% %APPVEYOR_BUILD_FOLDER%\Installer\installer.iss
+    
+    appveyor PushArtifact Aurora-setup-v%APPVEYOR_BUILD_VERSION%.exe
+  
 deploy:
   description: 'Release description'
   provider: GitHub
