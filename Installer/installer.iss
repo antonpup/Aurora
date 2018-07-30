@@ -1,27 +1,35 @@
+#define public Version "0.6.1"
+
+#ifdef EXTERNAL_VERSION
+ #if len(EXTERNAL_VERSION)>0
+     #define public Version EXTERNAL_VERSION
+ #endif
+#endif 
+
 [Setup]
 AppId={{9444602B-C5D8-4EF5-9D5B-E76D06B53C71}
 AppName=Aurora
-AppVersion=1.0.0
-AppVerName=Aurora Web Installer 1.0.0
+AppVersion=v{#Version}
+AppVerName=Aurora v{#Version}
 AppPublisher=Anton Pupkov
-AppPublisherURL=http://aurora.modworkshop.net/
+AppPublisherURL=http://www.project-aurora.com/
 AppSupportURL=https://github.com/antonpup/Aurora/issues/
-AppUpdatesURL=http://aurora.modworkshop.net/
+AppUpdatesURL=https://github.com/antonpup/Aurora/releases
 DefaultDirName={pf64}\Aurora
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
-OutputDir=output\
-OutputBaseFilename=Aurora-web-setup
+OutputDir=..\
+OutputBaseFilename=Aurora-setup-v{#Version}
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayIcon={app}\Aurora.exe
 SetupIconFile=Aurora_updater.ico
 WizardImageFile=Aurora-wizard.bmp
 
-#include <idp.iss>
+//#include <idp.iss>
 
 [Messages]
-WelcomeLabel2=This will install Aurora on your computer.%n%nThis installer will download the latest version of Aurora. Please make sure you have an internet connection, the installer will download approximately 10 MB of data.%n%nAurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support.
+WelcomeLabel2=This will install Aurora on your computer.%n%nAurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support.
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -31,9 +39,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "unzipper.dll"; Flags: dontcopy
-Source: "{tmp}\binary.zip"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs external deleteafterinstall; ExternalSize: 7942524; AfterInstall: ExtractMe('{app}\binary.zip', '{app}')
-Source: "vcredist_x86.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
-Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "..\Build\Aurora-v{#Version}.zip"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs deleteafterinstall; AfterInstall: ExtractMe('{app}\Aurora-v{#Version}.zip', '{app}')
+//Source: "vcredist_x86.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
+//Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 
 [Icons]
 Name: "{commonprograms}\Aurora"; Filename: "{app}\Aurora.exe"
@@ -48,12 +56,19 @@ begin
   unzip(ExpandConstant(src), ExpandConstant(target));
 end;
 
-procedure InitializeWizard();
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
-    idpAddFileSize('http://project-aurora.com/download-latest.php', ExpandConstant('{tmp}\binary.zip'), 7942524);
+  case CurUninstallStep of
+    usUninstall:
+      begin
+        if MsgBox(ExpandConstant('Do you want to remove all the settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
+          begin
+             DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
+          end
+      end;
+  end;
+end; 
 
-    idpDownloadAfter(wpReady);
-end;
 
 #IFDEF UNICODE
   #DEFINE AW "W"
@@ -146,8 +161,8 @@ end;
 
 [Run]
 Filename: "{app}\Aurora.exe"; Flags: nowait postinstall skipifsilent runascurrentuser; Description: "{cm:LaunchProgram,Aurora}"
-Filename: "{tmp}\vcredist_x86.exe"; Check: VCRedistNeedsInstall
-Filename: "{tmp}\vcredist_x64.exe"; Check: VCRedistNeedsInstall and IsWin64
+//Filename: "{tmp}\vcredist_x86.exe"; Check: VCRedistNeedsInstall
+//Filename: "{tmp}\vcredist_x64.exe"; Check: VCRedistNeedsInstall and IsWin64
 
 [UninstallDelete]
 ;This works only if it is installed in default location
