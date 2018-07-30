@@ -101,17 +101,10 @@ namespace Aurora.Profiles.RocketLeague
                                                                                                           : ( _game_state as GameState_RocketLeague ).Match.OrangeTeam_Score;
                     (_game_state as GameState_RocketLeague).Match.EnemyTeam_LastScore = parsed_team == PlayerTeam.Orange ? (_game_state as GameState_RocketLeague).Match.BlueTeam_Score
                                                                                                                               : (_game_state as GameState_RocketLeague).Match.OrangeTeam_Score;
-
-                    float fBoost = (float)memread.ReadInt( pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers );
-                    // Evil math here - stay away!
-                    float fA = ( fBoost - 1102015000 ) * -( fBoost - 1102015000 );
-                    float fB = ( 2 * 6878230 * ( long ) 6878230 );
-                    float fC = 8816.66f * ( float ) Math.Pow( 2.71828182846, fA / fB );
-
-                    fBoost = fC; 
+                    
                     ( _game_state as GameState_RocketLeague).Match.OrangeTeam_Score = memread.ReadInt(pointers.Orange_score.baseAddress, pointers.Orange_score.pointers);
                     (_game_state as GameState_RocketLeague).Match.BlueTeam_Score = memread.ReadInt(pointers.Blue_score.baseAddress, pointers.Blue_score.pointers);
-                    (_game_state as GameState_RocketLeague).Player.BoostAmount = fBoost;
+                    (_game_state as GameState_RocketLeague).Player.BoostAmount = memread.ReadInt(pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers);
                 }
             }
 
