@@ -39,7 +39,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "unzipper.dll"; Flags: dontcopy
-Source: "..\Build\Aurora-v{#Version}.zip"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs deleteafterinstall; AfterInstall: ExtractMe('{app}\Aurora-v{#Version}.zip', '{app}')
+Source: "..\Aurora-v{#Version}.zip"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs deleteafterinstall; AfterInstall: ExtractMe('{app}\Aurora-v{#Version}.zip', '{app}')
 //Source: "vcredist_x86.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 //Source: "vcredist_x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 
