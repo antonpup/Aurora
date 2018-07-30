@@ -35,7 +35,8 @@
         <TabControl>
             <TabItem Header="Overview for Witcher 3">
                 <Grid>
-                    <TextBlock Margin="10,30,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for Witcher 3 support to work, you have to install a mod made by SpoinkyNL for https://github.com/SpoinkyNL/Artemis/ by pressing the &quot;Install Mod&quot; button."/>
+                    <TextBlock Margin="10,30,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for Witcher 3 support to work, you have to install a mod made by SpoinkyNL for "/><Hyperlink NavigateUri="https://github.com/SpoinkyNL/Artemis" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Artemis"/></Hyperlink><Run Text=" by pressing the &quot;Install Mod&quot; button."/>
+                    <LineBreak></LineBreak><Run Text="If you have other witcher 3 mods installed, you might need to use "/><Hyperlink NavigateUri="https://www.nexusmods.com/witcher3/mods/484/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Witcher 3 Script Merger"/></Hyperlink><Run Text=" when installing and uninstalling Aurora's mod"/>
                     <Run Text="&#x0a;If you wish to uninstall the mod, you can press &quot;Uninstall mod&quot;. Uninstalling the mod will prevent the game from sending information, such as HP and the active sign, to Aurora."/></TextBlock>
                     <Button x:Name="install_mod_button" Content="Install Mod" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Click="install_mod_button_Click" Width="100"/>
                     <Button x:Name="uninstall_mod_button" Content="Uninstall Mod" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" Click="uninstall_mod_button_Click" Width="100"/>
