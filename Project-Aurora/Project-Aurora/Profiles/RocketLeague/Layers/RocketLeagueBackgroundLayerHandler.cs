@@ -61,6 +61,8 @@ namespace Aurora.Profiles.RocketLeague.Layers
             this._OrangeColor = Color.Orange;
             this._BlueColor = Color.Blue;
             this._ShowTeamScoreSplit = true;
+            this._ShowGoalExplosion = true;
+            this._ShowEnemyExplosion = true;
         }
 
     }
