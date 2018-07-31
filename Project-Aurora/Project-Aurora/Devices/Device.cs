@@ -1266,7 +1266,7 @@ namespace Aurora.Devices
         /// <param name="keyColors">A dictionary of DeviceKeys their corresponding Colors</param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false);
+        bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
 
         /// <summary>
         /// Updates the device with a specified color composition.
@@ -1274,6 +1274,6 @@ namespace Aurora.Devices
         /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false);
+        bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
     }
 }

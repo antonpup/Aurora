@@ -115,7 +115,7 @@ namespace Aurora.Devices.Clevo{
             
             RegistryKey hotkeyReg = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\hotkey\LEDKB");
 
-            if (hotkeyReg.GetValue("LEDKB_Status", "0").Equals("0"))
+            if (hotkeyReg?.GetValue("LEDKB_Status", "0")?.Equals("0") ?? true)
             {
                 // KB LED OFF
                 this.SetKBLEDMode(KBLEDMODE.KBLEDOFF);
@@ -239,8 +239,8 @@ namespace Aurora.Devices.Clevo{
             }
 
             // Cleanup
-            hotkeyReg.Close();
-            hotkeyReg.Dispose();
+            hotkeyReg?.Close();
+            hotkeyReg?.Dispose();
 
             return false;
         }

@@ -2,6 +2,7 @@
 using LedCSharp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -330,13 +331,13 @@ namespace Aurora.Devices.Logitech
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
 
                     Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key.Key);
 
@@ -420,24 +421,24 @@ namespace Aurora.Devices.Logitech
                     }
                 }
 
-                if (token.IsCancellationRequested) return false;
+                if (e.Cancel) return false;
 
                 if (!Global.Configuration.devices_disable_keyboard)
                     SendColorsToKeyboard(forced || !keyboard_updated);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                Global.logger.Error(e.ToString());
+                Global.logger.Error(exc.ToString());
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
