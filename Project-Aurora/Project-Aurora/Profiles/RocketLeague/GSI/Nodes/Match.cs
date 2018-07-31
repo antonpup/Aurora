@@ -15,6 +15,16 @@
         /// </summary>
         public int OrangeTeam_Score = 0;
 
+        /// <summary>
+        /// Your team's previous score
+        /// </summary>
+        public int YourTeam_LastScore = 0;
+
+        /// <summary>
+        /// Enemy team's previous score
+        /// </summary>
+        public int EnemyTeam_LastScore = 0;
+
         internal Match_RocketLeague(string json_data) : base(json_data)
         {
         }
