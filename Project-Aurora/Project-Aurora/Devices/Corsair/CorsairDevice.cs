@@ -78,10 +78,14 @@ namespace Aurora.Devices.Corsair
                         mouse = CueSDK.MouseSDK;
                         headset = CueSDK.HeadsetSDK;
                         mousemat = CueSDK.MousematSDK;
-                        keyboard.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
-                        mouse.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
-                        headset.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
-                        mousemat.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        if (keyboard != null)
+                            keyboard.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        if (mouse != null)
+                            mouse.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        if (headset != null)
+                            headset.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        if (mousemat != null)
+                            mousemat.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
 
 
                         if (keyboard == null && mouse == null && headset == null && mousemat == null)
