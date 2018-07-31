@@ -224,68 +224,69 @@ namespace Aurora.Profiles.RocketLeague.Layers
                         goal_explosion_mix.Clear();
                         showAnimation_Explosion = true;
                     }
-                    if (Properties.ShowEnemyExplosion)
+                }
+
+                if (Properties.ShowEnemyExplosion)
+                {
+                    if (rlstate.Match.EnemyTeam_LastScore < (rlstate.Player.Team == PlayerTeam.Orange ? rlstate.Match.BlueTeam_Score
+                                                                                 : rlstate.Match.OrangeTeam_Score))
                     {
-                        if (rlstate.Match.EnemyTeam_LastScore < (rlstate.Player.Team == PlayerTeam.Orange ? rlstate.Match.BlueTeam_Score
-                                                                                     : rlstate.Match.OrangeTeam_Score))
-                        {
-                            goal_explosion_track.SetFrame(0.0f,
-                                new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                            );
-                            goal_explosion_track.SetFrame(1.0f,
-                                new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                            );
+                        goal_explosion_track.SetFrame(0.0f,
+                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                        );
+                        goal_explosion_track.SetFrame(1.0f,
+                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                        );
 
-                            goal_explosion_track_1.SetFrame(0.0f,
-                               new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                           );
-                            goal_explosion_track_1.SetFrame(1.0f,
-                                new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                            );
+                        goal_explosion_track_1.SetFrame(0.0f,
+                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                       );
+                        goal_explosion_track_1.SetFrame(1.0f,
+                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                        );
 
-                            goal_explosion_track_2.SetFrame(0.0f,
-                               new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                           );
-                            goal_explosion_track_2.SetFrame(1.0f,
-                                new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                            );
+                        goal_explosion_track_2.SetFrame(0.0f,
+                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                       );
+                        goal_explosion_track_2.SetFrame(1.0f,
+                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                        );
 
-                            goal_explosion_track_3.SetFrame(0.0f,
-                               new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                           );
-                            goal_explosion_track_3.SetFrame(1.0f,
-                                new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                            );
+                        goal_explosion_track_3.SetFrame(0.0f,
+                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                       );
+                        goal_explosion_track_3.SetFrame(1.0f,
+                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                        );
 
-                            goal_explosion_track_4.SetFrame(0.0f,
-                               new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                           );
-                            goal_explosion_track_4.SetFrame(1.0f,
-                                new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                            );
+                        goal_explosion_track_4.SetFrame(0.0f,
+                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                       );
+                        goal_explosion_track_4.SetFrame(1.0f,
+                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                        );
 
-                            goal_explosion_mix.Clear();
-                            showAnimation_Explosion = true;
-                        }
+                        goal_explosion_mix.Clear();
+                        showAnimation_Explosion = true;
                     }
+                }
 
-                    if (showAnimation_Explosion)
+                if (showAnimation_Explosion)
+                {
+                    bg_layer.Fill(Color.FromArgb(0, 0, 0));
+                    goal_explosion_mix.AddTrack(goal_explosion_track);
+                    goal_explosion_mix.AddTrack(goal_explosion_track_1);
+                    goal_explosion_mix.AddTrack(goal_explosion_track_2);
+                    goal_explosion_mix.AddTrack(goal_explosion_track_3);
+                    goal_explosion_mix.AddTrack(goal_explosion_track_4);
+
+                    goal_explosion_mix.Draw(bg_layer.GetGraphics(), goalEffect_keyframe);
+                    goalEffect_keyframe += (currenttime - previoustime) / 1000.0f;
+
+                    if (goalEffect_keyframe >= goalEffect_animationTime)
                     {
-                        bg_layer.Fill(Color.FromArgb(0, 0, 0));
-                        goal_explosion_mix.AddTrack(goal_explosion_track);
-                        goal_explosion_mix.AddTrack(goal_explosion_track_1);
-                        goal_explosion_mix.AddTrack(goal_explosion_track_2);
-                        goal_explosion_mix.AddTrack(goal_explosion_track_3);
-                        goal_explosion_mix.AddTrack(goal_explosion_track_4);
-
-                        goal_explosion_mix.Draw(bg_layer.GetGraphics(), goalEffect_keyframe);
-                        goalEffect_keyframe += (currenttime - previoustime) / 1000.0f;
-
-                        if (goalEffect_keyframe >= goalEffect_animationTime)
-                        {
-                            showAnimation_Explosion = false;
-                            goalEffect_keyframe = 0;
-                        }
+                        showAnimation_Explosion = false;
+                        goalEffect_keyframe = 0;
                     }
                 }
             }

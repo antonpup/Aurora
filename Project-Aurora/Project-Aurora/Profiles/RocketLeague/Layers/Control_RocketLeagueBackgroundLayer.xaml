@@ -14,8 +14,8 @@
         <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,50,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="True" />
         <Label HorizontalAlignment="Left" Margin="0,52,0,0" Padding="0" Content="Ambient Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="Checkbox_ShowTeamScoreSplit" Content="Show team score split" HorizontalAlignment="Left" Margin="0,73,0,0" VerticalAlignment="Top" Checked="Checkbox_ShowTeamScoreSplit_enabled_Checked" Unchecked="Checkbox_ShowTeamScoreSplit_enabled_Checked"/>
-        <CheckBox x:Name="Checkbox_ShowGoalExplosion" Content="Show goal explosions" HorizontalAlignment="Left" Margin="0,88,0,-15" VerticalAlignment="Top" Checked="Checkbox_ShowGoalExplosion_enabled_Checked" Unchecked="Checkbox_ShowGoalExplosion_enabled_Checked"/>
-        <CheckBox x:Name="Checkbox_ShowEnemyExplosion" Content="Show enemy explosions" HorizontalAlignment="Left" Margin="0,103,0,-15" VerticalAlignment="Top" Checked="Checkbox_ShowEnemyExplosion_enabled_Checked" Unchecked="Checkbox_ShowEnemyExplosion_enabled_Checked"/>
+        <CheckBox x:Name="Checkbox_ShowGoalExplosion" Content="Show friendly goal explosions" HorizontalAlignment="Left" Margin="0,88,0,-15" VerticalAlignment="Top" Checked="Checkbox_ShowGoalExplosion_enabled_Checked" Unchecked="Checkbox_ShowGoalExplosion_enabled_Checked"/>
+        <CheckBox x:Name="Checkbox_ShowEnemyExplosion" Content="Show enemy goal explosions" HorizontalAlignment="Left" Margin="0,103,0,-15" VerticalAlignment="Top" Checked="Checkbox_ShowEnemyExplosion_enabled_Checked" Unchecked="Checkbox_ShowEnemyExplosion_enabled_Checked"/>
 
     </Grid>
 </UserControl>
