@@ -95,9 +95,16 @@ namespace Aurora.Profiles.RocketLeague
                     if(Enum.TryParse<PlayerTeam>(memread.ReadInt(pointers.Team.baseAddress, pointers.Team.pointers).ToString(), out parsed_team))
                         (_game_state as GameState_RocketLeague).Player.Team = parsed_team;
 
-                    (_game_state as GameState_RocketLeague).Match.OrangeTeam_Score = memread.ReadInt(pointers.Orange_score.baseAddress, pointers.Orange_score.pointers);
+
+                    // Goal explosion preperation
+                    ( _game_state as GameState_RocketLeague ).Match.YourTeam_LastScore = parsed_team == PlayerTeam.Blue ? ( _game_state as GameState_RocketLeague ).Match.BlueTeam_Score 
+                                                                                                          : ( _game_state as GameState_RocketLeague ).Match.OrangeTeam_Score;
+                    (_game_state as GameState_RocketLeague).Match.EnemyTeam_LastScore = parsed_team == PlayerTeam.Orange ? (_game_state as GameState_RocketLeague).Match.BlueTeam_Score
+                                                                                                                              : (_game_state as GameState_RocketLeague).Match.OrangeTeam_Score;
+                    
+                    ( _game_state as GameState_RocketLeague).Match.OrangeTeam_Score = memread.ReadInt(pointers.Orange_score.baseAddress, pointers.Orange_score.pointers);
                     (_game_state as GameState_RocketLeague).Match.BlueTeam_Score = memread.ReadInt(pointers.Blue_score.baseAddress, pointers.Blue_score.pointers);
-                    (_game_state as GameState_RocketLeague).Player.BoostAmount = memread.ReadLong(pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers) / 4294967297;
+                    (_game_state as GameState_RocketLeague).Player.BoostAmount = memread.ReadInt(pointers.Boost_amount.baseAddress, pointers.Boost_amount.pointers);
                 }
             }
 

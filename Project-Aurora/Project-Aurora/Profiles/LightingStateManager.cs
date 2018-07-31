@@ -535,7 +535,7 @@ namespace Aurora.Profiles
 
             timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
-            if ((profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
+            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
                 Global.dev_manager.Shutdown();
                 Global.effengine.PushFrame(newFrame);
