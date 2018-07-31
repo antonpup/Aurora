@@ -363,7 +363,7 @@ namespace Aurora.Utils
         }
     }
 
-    public class RealColor
+    public class RealColor : ICloneable
     {
         [JsonProperty]
         private System.Drawing.Color Color { get; set; }
@@ -401,6 +401,11 @@ namespace Aurora.Utils
         public void SetMediaColor(System.Windows.Media.Color clr)
         {
             this.Color = clr.ToDrawingColor();
+        }
+
+        public object Clone()
+        {
+            return new RealColor(this.Color.Clone());
         }
     }
 }
