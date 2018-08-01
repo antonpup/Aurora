@@ -56,17 +56,91 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * American Truck Simulator
 * Rise of the Tomb Raider
 * Dying Light
+* Quantum Conumdrum
+* Move or Die
+* Battlefield 1
+* Dishonored
+* The Witcher 3
 
 ## Natively Supported Devices
-* Logitech
-* Corsair
-* Razer
-* Clevo
-* Cooler Master
-* AtmoOrb
-* SteelSeries devices
-* Wooting One
 
+### Logitech
+#### Keyboards
+* G410
+* G512
+* G513
+* G810
+* G910
+* G PRO
+#### Mice
+* G203
+* G403
+* G502
+* G900
+* G903
+* G703
+* G PRO
+
+### Corsair
+#### Keyboards
+* K68
+* K65
+* K70 LUX
+* K95
+* K95 Platinum
+* STRAFE RGB
+#### Mice
+* Scimitar RGB
+* Dark Core RGB
+* M65 RGB
+* Glaive RGB
+
+### Razer
+#### Keyboards
+* Huntsman
+* Huntsman Elite
+* BlackWidow Chroma
+* Any other Chroma enabled Keyboard
+#### Mice
+* Abyssus Essential
+* Naga Hex/Trinity
+* Lancehead
+* Mamba & Elite
+* DeathAdder Elite
+* Basilisk
+#### Mousepads
+* Firefly (single color)
+### Cooler Master
+* Masterkeys Pro RGB
+* MK750
+* CK550
+* CK552
+* MS120
+* MS121
+
+### Roccat
+#### Keyboards
+* Ryos MK FX
+* Vulkan 100 & 120
+#### Mice
+* Kone Pure & SE
+
+### SteelSeries
+#### Keyboards
+* Apex M800
+* Apex M750
+* Apex M750 TKL
+#### Mice
+* Rival 600
+* Rival 700
+* Rival 310
+
+### Wooting
+* One
+### Clevo
+### AtmoOrb
+
+If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface!
 ## Video demonstrations
 Dota 2 Demo
 
@@ -149,6 +223,7 @@ Rocket League features
 * Team-based background lighting
 * Score-split for background effect
 * Boost indicator
+* Goal Explosions
 
 Overwatch features
 
@@ -188,6 +263,29 @@ Euro Truck Simulator 2 / American Truck Simulator features
 * Beacons
 * Fuel/air pressure indicators
 * Ignition indicator
+
+Quantum Conumdrum features
+
+* Changes color based on what dimension you are in.
+
+Move or Die features
+
+* Move or Die effects are controlled by the game itself.
+
+Battlefield 1 features
+
+* Flashes red when you take damage.
+* Lights up keybindings.
+
+Dishonored features
+
+* Health and Mana indicators.
+* Potion indicators.
+
+The Witcher 3 features
+
+* Current active sign as background.
+* Health, Toxicity, and Stamina indicators.
 
 ## F.A.Q.
 ### Can this give me a ban in a video game?
