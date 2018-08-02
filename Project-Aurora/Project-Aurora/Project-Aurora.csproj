@@ -439,6 +439,14 @@
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
     <Compile Include="Profiles\Battlefield1\Battlefield1Application.cs" />
+    <Compile Include="Profiles\Minecraft\Control_Minecraft.xaml.cs">
+      <DependentUpon>Control_Minecraft.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Minecraft\GSI\GameState_Minecraft.cs" />
+    <Compile Include="Profiles\Minecraft\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Minecraft\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Minecraft\MinecraftApplication.cs" />
+    <Compile Include="Profiles\Minecraft\MinecraftProfile.cs" />
     <Compile Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml.cs">
       <DependentUpon>Control_QuantumConumdrum.xaml</DependentUpon>
     </Compile>
@@ -1164,6 +1172,7 @@
     <Resource Include="Resources\bf1_128x128.png" />
     <Resource Include="Resources\dh_128x128.png" />
     <Resource Include="Resources\witcher3_256x256.png" />
+    <Resource Include="Resources\minecraft_128x128.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1441,6 +1450,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Blade and Soul\Control_BnS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Minecraft\Control_Minecraft.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

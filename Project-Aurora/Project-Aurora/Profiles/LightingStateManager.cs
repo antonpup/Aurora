@@ -133,7 +133,8 @@ namespace Aurora.Profiles
                 new QuantumConumdrum.QuantumConumdrum(),
                 new Battlefield1.Battlefield1(),
                 new Dishonored.Dishonored(),
-                new Witcher3.Witcher3()
+                new Witcher3.Witcher3(),
+                new Minecraft.Minecraft()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
