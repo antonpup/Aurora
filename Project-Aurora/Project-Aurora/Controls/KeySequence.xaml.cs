@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -161,6 +162,21 @@ namespace Aurora.Controls
                 List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
                 allowListRefresh = true;
             }
+
+        }
+        private void btnAddAll_Click(object sender, RoutedEventArgs e)
+        {
+            
+            allowListRefresh = false;
+            this.keys_keysequence.Items.Clear();
+            var keys = Enum.GetValues(typeof(Aurora.Devices.DeviceKeys)).Cast<Aurora.Devices.DeviceKeys>();
+
+            foreach (var item in keys)
+            {
+                this.keys_keysequence.Items.Add(item);
+            }
+            List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
+            allowListRefresh = true;
 
         }
 
@@ -326,6 +342,14 @@ namespace Aurora.Controls
                     sequence_removeFromLayerEditor();
             }
                 
+        }
+
+        private void btnRemoveAll_Click(object sender, RoutedEventArgs e)
+        {
+            allowListRefresh = false;
+            this.keys_keysequence.Items.Clear();
+            List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
+            allowListRefresh = true;
         }
     }
 }
