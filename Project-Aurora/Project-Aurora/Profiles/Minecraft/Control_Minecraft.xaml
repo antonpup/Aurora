@@ -5,8 +5,49 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Profiles.Minecraft"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="850" Height="Auto" Width="Auto">
     <Grid>
-        <Label Content="Minecraft lol" />
+        <TabControl>
+            <TabItem Header="Overview for Minecraft">
+                <Grid>
+                    <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with Minecraft. Ensure you have read the below text." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="824" Text="Support for Minecraft requires a mod so that Aurora is able to fetch the variables from the game. Currently this mod requires Forge mod loader, though other options may become available in future. This mod is not authored by the main Aurora developers and any issues with the mod should not be directed at them, but posted on the GitLab repo for the mod." />
+
+                    <!-- Latest mod version information -->
+                    <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,96,0,0" BorderBrush="Black" BorderThickness="1">
+                        <Border.Background>
+                            <SolidColorBrush Color="Black" Opacity=".3" />
+                        </Border.Background>
+                        <Grid Width="280" Height="119">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="28" />
+                                <RowDefinition Height="28" />
+                                <RowDefinition Height="22" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="91" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.RowSpan="3" Source="/Aurora;component/Resources/minecraft-aurora-gsi-logo_128x128.png" />
+                            <Label Grid.Row="0" Grid.Column="1" x:Name="ModLatestVersion" Content="v0.1.1" FontSize="18" FontWeight="SemiBold" />
+                            <Label Grid.Row="1" Grid.Column="1" x:Name="ModLatestDate" Content="Released on:" />
+                            <Label Grid.Row="2" Grid.Column="1" x:Name="ModLatestCheckDate" Content="Checked at:" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2">
+                                <TextBlock VerticalAlignment="Center">
+                                    <Run><!-- Spacer --></Run>
+                                    <Hyperlink Click="CheckForUpdatesNow_Click">Check now</Hyperlink>
+                                    <Run><!-- Spacer --></Run>
+                                    <Hyperlink Click="GoToReleasesPage_Click">Other releases</Hyperlink>
+                                    <Run><!-- Spacer --></Run>
+                                </TextBlock>
+                                <Button Click="GoToLatestDownloadPage_Click" Padding="6,0">Go to download page</Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>
