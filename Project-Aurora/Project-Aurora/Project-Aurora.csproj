@@ -445,6 +445,7 @@
     <Compile Include="Profiles\Minecraft\GSI\GameState_Minecraft.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Minecraft\GSI\Nodes\WorldNode.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftApplication.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftProfile.cs" />
     <Compile Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml.cs">

@@ -12,7 +12,11 @@ namespace Aurora.Profiles.Minecraft.GSI {
 
         private ProviderNode _Provider;
         private PlayerNode _Player;
+        private WorldNode _World;
 
+        /// <summary>
+        /// Provider node provides information about the data source so that Aurora can update the correct gamestate.
+        /// </summary>
         public ProviderNode Provider {
             get {
                 if (_Provider == null)
@@ -21,11 +25,25 @@ namespace Aurora.Profiles.Minecraft.GSI {
             }
         }
 
+        /// <summary>
+        /// Player node provides information about the player (e.g. health and hunger).
+        /// </summary>
         public PlayerNode Player {
             get {
                 if (_Player == null)
                     _Player = new PlayerNode(_ParsedData["player"]?.ToString() ?? "");
                 return _Player;
+            }
+        }
+
+        /// <summary>
+        /// World node provides information about the world (e.g. rain intensity and time).
+        /// </summary>
+        public WorldNode World {
+            get {
+                if (_World == null)
+                    _World = new WorldNode(_ParsedData["world"]?.ToString() ?? "");
+                return _World;
             }
         }
 
