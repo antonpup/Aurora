@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -79,9 +80,13 @@ namespace Aurora.Profiles.Minecraft {
 
         private void GameEnabled_Checked(object sender, RoutedEventArgs e) {
             if (IsLoaded) {
-                profile.Settings.IsEnabled = GameEnabled.IsChecked.HasValue ? GameEnabled.IsChecked.Value : false;
+                profile.Settings.IsEnabled = GameEnabled.IsChecked ?? false;
                 profile.SaveProfiles();
             }
+        }
+
+        private void GoToForgePage_Click(object sender, RoutedEventArgs e) {
+            Process.Start(@"https://files.minecraftforge.net/");
         }
 
         private void CheckForUpdatesNow_Click(object sender, RoutedEventArgs e) {
@@ -89,11 +94,11 @@ namespace Aurora.Profiles.Minecraft {
         }
 
         private void GoToReleasesPage_Click(object sender, RoutedEventArgs e) {
-            System.Diagnostics.Process.Start("https://gitlab.com/wibble199/aurora-gsi-minecraft/tags");
+            Process.Start(@"https://gitlab.com/wibble199/aurora-gsi-minecraft/tags");
         }
 
         private void GoToLatestDownloadPage_Click(object sender, RoutedEventArgs e) {
-            System.Diagnostics.Process.Start($"https://gitlab.com/wibble199/aurora-gsi-minecraft/tags/{latestModVersion.Name}");
+            Process.Start($"https://gitlab.com/wibble199/aurora-gsi-minecraft/tags/{latestModVersion.Name}");
         }
     }
 }

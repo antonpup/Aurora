@@ -13,8 +13,10 @@
                     <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with Minecraft. Ensure you have read the below text." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
                     <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="824" Text="Support for Minecraft requires a mod so that Aurora is able to fetch the variables from the game. Currently this mod requires Forge mod loader, though other options may become available in future. This mod is not authored by the main Aurora developers and any issues with the mod should not be directed at them, but posted on the GitLab repo for the mod." />
 
+                    <Button Content="Minecraft Forge can be downloaded here" Margin="0,96,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="10,2" Click="GoToForgePage_Click" />
+
                     <!-- Latest mod version information -->
-                    <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,96,0,0" BorderBrush="Black" BorderThickness="1">
+                    <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,132,0,0" BorderBrush="Black" BorderThickness="1">
                         <Border.Background>
                             <SolidColorBrush Color="Black" Opacity=".3" />
                         </Border.Background>
