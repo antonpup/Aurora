@@ -64,6 +64,8 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 
 ## Natively Supported Devices
 
+If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface! Devices from supported brands generally should work even if they aren't listed here.
+
 ### Logitech
 #### Keyboards
 * G410
@@ -88,7 +90,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * K70 LUX
 * K95
 * K95 Platinum
-* STRAFE RGB
+* STRAFE Non-RGB/RGB
 #### Mice
 * Scimitar RGB
 * Dark Core RGB
@@ -111,7 +113,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 #### Mousepads
 * Firefly (single color)
 ### Cooler Master
-* Masterkeys Pro RGB
+* Masterkeys Pro L, M and S RGB/White
 * MK750
 * CK550
 * CK552
@@ -134,13 +136,14 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Rival 600
 * Rival 700
 * Rival 310
+* Rival 300
 
 ### Wooting
 * One
 ### Clevo
 ### AtmoOrb
 
-If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface!
+
 ## Video demonstrations
 Dota 2 Demo
 
