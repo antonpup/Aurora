@@ -36,7 +36,7 @@ namespace Aurora.Profiles.DyingLight
                     }
                 }
                 ),
-                 new Layer("Actions", new SolidColorLayerHandler()
+                new Layer("Actions", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
                     {
@@ -71,7 +71,13 @@ namespace Aurora.Profiles.DyingLight
                         _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.T})
                     }
                 }),
-                new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler())
+                new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()
+                {
+                    Properties = new WrapperLightsLayerHandlerProperties()
+                    {
+                        _ColorEnhanceMode = 1            
+                    }
+                })
             };
         }
     }
