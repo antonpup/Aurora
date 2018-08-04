@@ -446,6 +446,11 @@
     <Compile Include="Profiles\Minecraft\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\ProviderNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Minecraft\Layers\Control_NoOptions.xaml.cs">
+      <DependentUpon>Control_NoOptions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Minecraft\Layers\MinecraftBurnLayerHandler.cs" />
+    <Compile Include="Profiles\Minecraft\Layers\MinecraftRainLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftApplication.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftProfile.cs" />
     <Compile Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml.cs">
@@ -1456,6 +1461,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Minecraft\Control_Minecraft.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Minecraft\Layers\Control_NoOptions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

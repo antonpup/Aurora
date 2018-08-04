@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Profiles.Minecraft.Layers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,16 @@ namespace Aurora.Profiles.Minecraft {
             GameStateType = typeof(GSI.GameState_Minecraft),
             Event = new GameEvent_Generic(),
             IconURI = "Resources/minecraft_128x128.png"
-        }) { }
+        }) {
+
+            List<LayerHandlerEntry> minecraftLayers = new List<LayerHandlerEntry> {
+                new LayerHandlerEntry("MinecraftRainLayer", "Minecraft Rain Layer", typeof(MinecraftRainLayerHandler)),
+                new LayerHandlerEntry("MinecraftBurningLayer", "Minecraft Burning Layer", typeof(MinecraftBurnLayerHandler))
+            };
+
+            Global.LightingStateManager.RegisterLayerHandlers(minecraftLayers, false);
+            foreach (var layer in minecraftLayers)
+                Config.ExtraAvailableLayers.Add(layer.Key);
+        }
     }
 }
