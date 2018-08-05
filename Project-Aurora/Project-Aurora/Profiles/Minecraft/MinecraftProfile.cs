@@ -70,16 +70,18 @@ namespace Aurora.Profiles.Minecraft {
 
                 new Layer("Raining", new MinecraftRainLayerHandler()),
 
-                new Layer("Grass Block Top", new SolidColorLayerHandler() {
-                    Properties = new LayerHandlerProperties() {
+                new Layer("Grass Block Top", new MinecraftBackgroundLayerHandler() {
+                    Properties = new MinecraftBackgroundLayerHandlerProperties() {
                         _PrimaryColor = Color.FromArgb(44, 168, 32),
+                        _SecondaryColor = Color.FromArgb(30, 80, 25),
                         _Sequence = new KeySequence(new FreeFormObject(0, -60, 900, 128))
                     }
                 }),
 
-                new Layer("Grass Block Side", new SolidFillLayerHandler() {
-                    Properties = new SolidFillLayerHandlerProperties() {
-                        _PrimaryColor = Color.FromArgb(102, 59, 20)
+                new Layer("Grass Block Side", new MinecraftBackgroundLayerHandler() {
+                    Properties = new MinecraftBackgroundLayerHandlerProperties() {
+                        _PrimaryColor = Color.FromArgb(125, 70, 15),//(102, 59, 20),
+                        _SecondaryColor = Color.FromArgb(80, 50, 25)
                     }
                 })
             };

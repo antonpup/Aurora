@@ -22,6 +22,7 @@ namespace Aurora.Profiles.Minecraft {
         }) {
 
             List<LayerHandlerEntry> minecraftLayers = new List<LayerHandlerEntry> {
+                new LayerHandlerEntry("MinecraftBackgroundLayer", "Minecraft Background Layer", typeof(MinecraftBackgroundLayerHandler)),
                 new LayerHandlerEntry("MinecraftRainLayer", "Minecraft Rain Layer", typeof(MinecraftRainLayerHandler)),
                 new LayerHandlerEntry("MinecraftBurningLayer", "Minecraft Burning Layer", typeof(MinecraftBurnLayerHandler))
             };

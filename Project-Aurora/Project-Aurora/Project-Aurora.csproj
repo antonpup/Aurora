@@ -446,9 +446,13 @@
     <Compile Include="Profiles\Minecraft\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\ProviderNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftBackgroundLayer.xaml.cs">
+      <DependentUpon>Control_MinecraftBackgroundLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\Minecraft\Layers\Control_NoOptions.xaml.cs">
       <DependentUpon>Control_NoOptions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Minecraft\Layers\MinecraftBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\Layers\MinecraftBurnLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\Layers\MinecraftRainLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftApplication.cs" />
@@ -1180,6 +1184,8 @@
     <Resource Include="Resources\witcher3_256x256.png" />
     <Resource Include="Resources\minecraft_128x128.png" />
     <Resource Include="Resources\minecraft-aurora-gsi-logo_128x128.png" />
+    <Resource Include="Resources\mc_clock_day.png" />
+    <Resource Include="Resources\mc_clock_night.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1461,6 +1467,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Minecraft\Control_Minecraft.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftBackgroundLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

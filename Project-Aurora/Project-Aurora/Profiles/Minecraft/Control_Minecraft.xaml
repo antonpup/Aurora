@@ -111,8 +111,45 @@
                     <Label Content="Rain Strength:" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" />
                     <Slider Grid.Row="1" Grid.Column="4" Margin="0,4" ValueChanged="RainStrengthSlider_ValueChanged" Minimum="0" Maximum="1" />
 
-                    <Label Content="World time:" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" />
-                    <Slider Grid.Row="2" Grid.Column="4" Margin="0,4" ValueChanged="WorldTimeSlider_ValueChanged" Minimum="0" Maximum="1" />
+                    <Label Content="World time:" Grid.Row="2" Grid.RowSpan="2" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" VerticalAlignment="Center" />
+                    <Slider Grid.Row="2" Grid.Column="4" Margin="0,4" ValueChanged="WorldTimeSlider_ValueChanged" Minimum="0" Maximum="1" TickFrequency="0.04166666666" TickPlacement="BottomRight" />
+
+                    <Grid Grid.Row="3" Grid.Column="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="8px" />
+                            <!-- Padding due to slider -->
+                            <ColumnDefinition Width="1*" />
+                            <!-- End of sunrise -->
+                            <ColumnDefinition Width="1px" />
+                            <ColumnDefinition Width="10*" />
+                            <!-- Day -->
+                            <ColumnDefinition Width="1px" />
+                            <ColumnDefinition Width="3*" />
+                            <!-- Sunset -->
+                            <ColumnDefinition Width="1px" />
+                            <ColumnDefinition Width="8*" />
+                            <!-- Night -->
+                            <ColumnDefinition Width="1px" />
+                            <ColumnDefinition Width="2*" />
+                            <!-- Start of sunrise -->
+                            <ColumnDefinition Width="8px" />
+                            <!-- Padding due to slider -->
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="18px" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Rectangle Grid.Column="2" Fill="#BABABA" />
+                        <Rectangle Grid.Column="3" Fill="#55FFFF00" />
+                        <Image Grid.Column="3" Source="/Aurora;component/Resources/mc_clock_day.png" Margin="1" />
+                        <Rectangle Grid.Column="4" Fill="#BABABA" />
+                        <Rectangle Grid.Column="6" Fill="#BABABA" />
+                        <Rectangle Grid.Column="7" Fill="#55000000" />
+                        <Image Grid.Column="7" Source="/Aurora;component/Resources/mc_clock_night.png" Margin="1" />
+                        <Rectangle Grid.Column="8" Fill="#BABABA" />
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>
