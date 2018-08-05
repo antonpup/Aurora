@@ -191,6 +191,14 @@ namespace Aurora.Devices.Dualshock
             ds4color.blue = newColor.B;
             ds4color.red = newColor.R;
             state.LightBarColor = ds4color;
+            if (ds4color.Equals(System.Drawing.Color.Black))
+            {
+                state.LightBarExplicitlyOff = false;
+            }
+            else
+            {
+                state.LightBarExplicitlyOff = true;
+            }
             device.pushHapticState(state);
         }
     }
