@@ -18,6 +18,10 @@ namespace Aurora.Profiles.Minecraft {
 
         public override void Reset() {
             base.Reset();
+
+            // Keys that do something and should be highlighted in a static color
+            DK[] controlKeys = new[] { DK.W, DK.A, DK.S, DK.D, DK.E, DK.SPACE, DK.LEFT_SHIFT, DK.LEFT_CONTROL };
+
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>() {
                 new Layer("Health Bar", new PercentLayerHandler() {
                     Properties = new PercentLayerHandlerProperties() {
@@ -54,15 +58,40 @@ namespace Aurora.Profiles.Minecraft {
                         })
                     }
                 }),
+                
+                new Layer("Water keys", new ConditionalLayerHandler() {
+                    Properties = new ConditionalLayerProperties() {
+                        _ConditionPath = "Player/IsInWater",
+                        _PrimaryColor = Color.Blue,
+                        _SecondaryColor = Color.Transparent,
+                        _Sequence = new KeySequence(controlKeys)
+                    }
+                }),
+
+                new Layer("Sneaking Keys", new ConditionalLayerHandler() {
+                    Properties = new ConditionalLayerProperties() {
+                        _ConditionPath = "Player/IsSneaking",
+                        _PrimaryColor = Color.FromArgb(45, 90, 90),
+                        _SecondaryColor = Color.Transparent,
+                        _Sequence = new KeySequence(controlKeys)
+                    }
+                }),
+
+                new Layer("Horse keys", new ConditionalLayerHandler() {
+                    Properties = new ConditionalLayerProperties() {
+                        _ConditionPath = "Player/IsRidingHorse",
+                        _PrimaryColor = Color.Orange,
+                        _SecondaryColor = Color.Transparent,
+                        _Sequence = new KeySequence(controlKeys)
+                    }
+                }),
 
                 new Layer("Keys", new ConditionalLayerHandler() {
                     Properties = new ConditionalLayerProperties() {
                         _ConditionPath = "Player/InGame",
-                        _PrimaryColor = Color.FromArgb(0, 255, 255),
+                        _PrimaryColor = Color.White,
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
-                            DK.W, DK.A, DK.S, DK.D, DK.E, DK.SPACE, DK.LEFT_SHIFT
-                        })
+                        _Sequence = new KeySequence(controlKeys)
                     }
                 }),
 
