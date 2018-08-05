@@ -61,7 +61,7 @@ namespace Aurora.Profiles.Minecraft {
                         _PrimaryColor = Color.FromArgb(0, 255, 255),
                         _SecondaryColor = Color.Transparent,
                         _Sequence = new KeySequence(new[] {
-                            DK.W, DK.A, DK.S, DK.D, DK.E, DK.SPACE, DK.LEFT_SHIFT, DK.LEFT_CONTROL
+                            DK.W, DK.A, DK.S, DK.D, DK.E, DK.SPACE, DK.LEFT_SHIFT
                         })
                     }
                 }),
