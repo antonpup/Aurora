@@ -23,7 +23,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
         }
 
         protected override UserControl CreateControl() {
-            return new Control_NoOptions();
+            return new Control_MinecraftBurnLayer();
         }
 
         private void CreateFireParticle() {

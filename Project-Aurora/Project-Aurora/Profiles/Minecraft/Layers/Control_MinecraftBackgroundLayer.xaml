@@ -17,6 +17,6 @@
         <xctk:ColorPicker x:Name="ColorPicker_NightTime" Margin="109,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="135" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_NightTime_SelectedColorChanged" />
 
         <Label HorizontalAlignment="Left" Margin="254,4,0,0" Padding="0" Content="Left Blinker Keys:" VerticalAlignment="Top"/>
-        <Controls:KeySequence x:Name="KeySequence_Keys" Margin="254,25,0,0" RecordingTag="ETS2 - Left Blinker" Title="Affected Keys" HorizontalAlignment="Left" Width="230" SequenceUpdated="KeySequence_Keys_SequenceUpdated"/>
+        <Controls:KeySequence x:Name="KeySequence_Keys" Margin="254,25,0,0" RecordingTag="Minecraft Background Layer" Title="Affected Keys" HorizontalAlignment="Left" Width="230" SequenceUpdated="KeySequence_Keys_SequenceUpdated"/>
     </Grid>
 </UserControl>

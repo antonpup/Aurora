@@ -449,8 +449,11 @@
     <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftBackgroundLayer.xaml.cs">
       <DependentUpon>Control_MinecraftBackgroundLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\Minecraft\Layers\Control_NoOptions.xaml.cs">
-      <DependentUpon>Control_NoOptions.xaml</DependentUpon>
+    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftBurnLayer.xaml.cs">
+      <DependentUpon>Control_MinecraftBurnLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftRainLayer.xaml.cs">
+      <DependentUpon>Control_MinecraftRainLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Minecraft\Layers\MinecraftBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\Layers\MinecraftBurnLayerHandler.cs" />
@@ -1474,7 +1477,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Profiles\Minecraft\Layers\Control_NoOptions.xaml">
+    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftBurnLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftRainLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -2,6 +2,7 @@
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.Minecraft.GSI;
 using Aurora.Settings.Layers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +13,28 @@ using System.Windows.Controls;
 
 namespace Aurora.Profiles.Minecraft.Layers {
 
-    public class MinecraftRainLayerHandler : LayerHandler<LayerHandlerProperties> {
+    public class MinecraftRainLayerHandlerProperties : LayerHandlerProperties<MinecraftRainLayerHandlerProperties> {
+
+        [JsonIgnore]
+        public int MinimumInterval => _MinimumInterval ?? 30;
+        public int? _MinimumInterval { get; set; }
+
+        [JsonIgnore]
+        public int MaximumInterval => _MaximumInterval ?? 30;
+        public int? _MaximumInterval { get; set; }
+
+        public MinecraftRainLayerHandlerProperties() : base() { }
+        public MinecraftRainLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
+
+        public override void Default() {
+            base.Default();
+            _PrimaryColor = Color.Cyan;
+            _MinimumInterval = 30;
+            _MaximumInterval = 1;
+        }
+    }
+
+    public class MinecraftRainLayerHandler : LayerHandler<MinecraftRainLayerHandlerProperties> {
 
         private List<Droplet> raindrops = new List<Droplet>();
         private Random rnd = new Random();
@@ -23,7 +45,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
         }
 
         protected override UserControl CreateControl() {
-            return new Control_NoOptions();
+            return new Control_MinecraftRainLayer(this);
         }
 
         private void CreateRainDrop() {
@@ -31,8 +53,8 @@ namespace Aurora.Profiles.Minecraft.Layers {
             raindrops.Add(new Droplet() {
                 mix = new AnimationMix(new[] {
                     new AnimationTrack("raindrop", 0)
-                        .SetFrame(0, new AnimationFilledRectangle(randomX, 0, 3, 6, Color.Cyan))
-                        .SetFrame(1, new AnimationFilledRectangle(randomX + 5, Effects.canvas_height, 2, 4, Color.Cyan))
+                        .SetFrame(0, new AnimationFilledRectangle(randomX, 0, 3, 6, Properties.PrimaryColor))
+                        .SetFrame(1, new AnimationFilledRectangle(randomX + 5, Effects.canvas_height, 2, 4, Properties.PrimaryColor))
                 }),
                 time = 0
             });
@@ -48,7 +70,8 @@ namespace Aurora.Profiles.Minecraft.Layers {
             if (strength > 0) {
                 if (frame <= 0) {
                     // calculate time (in frames) until next droplet is created
-                    frame = (int)(30f - (29 * strength)); // At minimum strength, 30 frames between drops, at maxmimum strength one frame between drops
+                    float min = Properties.MinimumInterval, max = Properties.MaximumInterval; // Store as floats so C# doesn't prematurely round numbers
+                    frame = (int)Math.Round(min - ((min - max) * strength)); // https://www.desmos.com/calculator/uak73e5eub
                     CreateRainDrop();
                 } else
                     frame--;

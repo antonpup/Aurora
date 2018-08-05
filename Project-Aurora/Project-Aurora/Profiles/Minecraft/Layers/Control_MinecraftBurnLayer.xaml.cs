@@ -17,8 +17,8 @@ namespace Aurora.Profiles.Minecraft.Layers {
     /// <summary>
     /// Interaction logic for Control_NoOptions.xaml
     /// </summary>
-    public partial class Control_NoOptions : UserControl {
-        public Control_NoOptions() {
+    public partial class Control_MinecraftBurnLayer : UserControl {
+        public Control_MinecraftBurnLayer() {
             InitializeComponent();
         }
     }
