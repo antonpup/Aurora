@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Aurora.Profiles.Minecraft.GSI;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -78,6 +79,7 @@ namespace Aurora.Profiles.Minecraft {
             ModLatestCheckDate.Content = "Checked at: " + lastChecked.ToString();
         }
 
+        #region Overview handlers
         private void GameEnabled_Checked(object sender, RoutedEventArgs e) {
             if (IsLoaded) {
                 profile.Settings.IsEnabled = GameEnabled.IsChecked ?? false;
@@ -100,5 +102,57 @@ namespace Aurora.Profiles.Minecraft {
         private void GoToLatestDownloadPage_Click(object sender, RoutedEventArgs e) {
             Process.Start($"https://gitlab.com/wibble199/aurora-gsi-minecraft/tags/{latestModVersion.Name}");
         }
+        #endregion
+
+        #region Preview Handlers
+        private GameState_Minecraft State => profile.Config.Event._game_state as GameState_Minecraft;
+
+        private void InGameCh_Checked(object sender, RoutedEventArgs e) {
+            State.Player.InGame = (sender as CheckBox).IsChecked ?? false;
+        }
+
+        private void HealthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            State.Player.Health = (float)e.NewValue;
+            State.Player.HealthMax = 20f;
+        }
+
+        private void HungerSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            State.Player.FoodLevel = (int)e.NewValue;
+        }
+
+        private void ArmorSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            State.Player.Armor = (int)e.NewValue;
+        }
+
+        private void ExperienceSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            State.Player.Experience = (float)e.NewValue;
+        }
+
+        private void IsBurningCh_Checked(object sender, RoutedEventArgs e) {
+            State.Player.IsBurning = (sender as CheckBox).IsChecked ?? false;
+        }
+
+        private void IsInWaterCh_Checked(object sender, RoutedEventArgs e) {
+            State.Player.IsInWater = (sender as CheckBox).IsChecked ?? false;
+        }
+
+        private void IsSneakingCh_Checked(object sender, RoutedEventArgs e) {
+            State.Player.IsSneaking = (sender as CheckBox).IsChecked ?? false;
+        }
+
+        private void IsRidingCh_Checked(object sender, RoutedEventArgs e) {
+            State.Player.IsRidingHorse = (sender as CheckBox).IsChecked ?? false;
+        }
+
+        private void RainStrengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            State.World.RainStrength = (float)e.NewValue;
+            State.World.IsRaining = e.NewValue > 0;
+        }
+
+        private void WorldTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            State.World.WorldTime = (long)(e.NewValue * 24000); // 24000 is max time in Minecraft before next day
+            State.World.IsDayTime = e.NewValue <= 0.5; // At half point, it becomes night time?
+        }
+        #endregion
     }
 }

@@ -46,12 +46,12 @@ namespace Aurora.Profiles.Minecraft.Layers {
             // Add more droplets based on the intensity
             float strength = (gamestate as GameState_Minecraft).World.RainStrength;
             if (strength > 0) {
-                frame++;
-                if (frame > (1 - strength) * 10) {
+                if (frame <= 0) {
+                    // calculate time (in frames) until next droplet is created
+                    frame = (int)(30f - (29 * strength)); // At minimum strength, 30 frames between drops, at maxmimum strength one frame between drops
                     CreateRainDrop();
-                    if (strength > 0.8) CreateRainDrop(); // Create 2 per frame if it's very intense rain
-                    frame = 0;
-                }
+                } else
+                    frame--;
             }
 
             // Render all droplets

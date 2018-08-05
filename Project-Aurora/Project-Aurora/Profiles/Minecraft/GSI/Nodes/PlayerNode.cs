@@ -14,6 +14,7 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
         public float HealthMax;
         public bool IsDead;
         public int Armor;
+        public int ArmorMax = 20;
 
         public int ExperienceLevel;
         public float Experience;

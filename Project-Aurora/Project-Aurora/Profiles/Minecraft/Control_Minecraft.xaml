@@ -50,6 +50,71 @@
                     </Border>
                 </Grid>
             </TabItem>
+
+            <TabItem Header="Preview">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px"/>
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition Width="28px"/>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Player-based variables -->
+                    <Label Content="Player" FontWeight="SemiBold" HorizontalAlignment="Center" Grid.ColumnSpan="2" />
+
+                    <Label Content="In Game:" Grid.Row="1" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="1" Grid.Column="1" Margin="0,4" Checked="InGameCh_Checked" Unchecked="InGameCh_Checked" />
+                    
+                    <Label Content="Health:" Grid.Row="2" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="2" Grid.Column="1" Margin="0,4" ValueChanged="HealthSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
+
+                    <Label Content="Food:" Grid.Row="3" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="3" Grid.Column="1" Margin="0,4" ValueChanged="HungerSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
+
+                    <Label Content="Armor:" Grid.Row="4" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="4" Grid.Column="1" Margin="0,4" ValueChanged="ArmorSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True"  />
+
+                    <Label Content="Experience:" Grid.Row="5" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="5" Grid.Column="1" Margin="0,4" ValueChanged="ExperienceSlider_ValueChanged" Minimum="0" Maximum="1" />
+
+                    <Label Content="Burning:" Grid.Row="6" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="6" Grid.Column="1" Margin="0,4" Checked="IsBurningCh_Checked" Unchecked="IsBurningCh_Checked" />
+
+                    <Label Content="In Water:" Grid.Row="7" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="7" Grid.Column="1" Margin="0,4" Checked="IsInWaterCh_Checked" Unchecked="IsInWaterCh_Checked" />
+
+                    <Label Content="Sneaking:" Grid.Row="8" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="8" Grid.Column="1" Margin="0,4" Checked="IsSneakingCh_Checked" Unchecked="IsSneakingCh_Checked" />
+
+                    <Label Content="Riding Horse:" Grid.Row="9" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="9" Grid.Column="1" Margin="0,4" Checked="IsRidingCh_Checked" Unchecked="IsRidingCh_Checked" />
+
+                    <!--World-based variables-->
+                    <Label Content="World" Grid.Column="3" FontWeight="SemiBold" HorizontalAlignment="Center" Grid.ColumnSpan="2" />
+
+                    <Label Content="Rain Strength:" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="1" Grid.Column="4" Margin="0,4" ValueChanged="RainStrengthSlider_ValueChanged" Minimum="0" Maximum="1" />
+
+                    <Label Content="World time:" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="2" Grid.Column="4" Margin="0,4" ValueChanged="WorldTimeSlider_ValueChanged" Minimum="0" Maximum="1" />
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>
