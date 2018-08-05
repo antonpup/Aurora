@@ -111,10 +111,8 @@
                     <Label Content="Rain Strength:" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" />
                     <Slider Grid.Row="1" Grid.Column="4" Margin="0,4" ValueChanged="RainStrengthSlider_ValueChanged" Minimum="0" Maximum="1" />
 
-                    <Label Content="World time:" Grid.Row="2" Grid.RowSpan="2" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" VerticalAlignment="Center" />
-                    <Slider Grid.Row="2" Grid.Column="4" Margin="0,4" ValueChanged="WorldTimeSlider_ValueChanged" Minimum="0" Maximum="1" TickFrequency="0.04166666666" TickPlacement="BottomRight" />
-
-                    <Grid Grid.Row="3" Grid.Column="4">
+                    <Label Content="World time:" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" VerticalAlignment="Center" />
+                    <Grid Grid.Row="2" Grid.RowSpan="2" Grid.Column="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="8px" />
                             <!-- Padding due to slider -->
@@ -137,19 +135,21 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="18px" />
+                            <RowDefinition Height="8px" />
+                            <RowDefinition Height="36px" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <Rectangle Grid.Column="2" Fill="#BABABA" />
-                        <Rectangle Grid.Column="3" Fill="#55FFFF00" />
-                        <Image Grid.Column="3" Source="/Aurora;component/Resources/mc_clock_day.png" Margin="1" />
-                        <Rectangle Grid.Column="4" Fill="#BABABA" />
-                        <Rectangle Grid.Column="6" Fill="#BABABA" />
-                        <Rectangle Grid.Column="7" Fill="#55000000" />
-                        <Image Grid.Column="7" Source="/Aurora;component/Resources/mc_clock_night.png" Margin="1" />
-                        <Rectangle Grid.Column="8" Fill="#BABABA" />
+                        <Rectangle Grid.Column="2" Grid.Row="1" Fill="#BABABA" />
+                        <Rectangle Grid.Column="3" Grid.Row="1" Fill="#55FFFF00" />
+                        <Image Grid.Column="3" Grid.Row="1" Source="/Aurora;component/Resources/mc_clock_day.png" Height="16" VerticalAlignment="Bottom" Margin="1" />
+                        <Rectangle Grid.Column="4" Grid.Row="1" Fill="#BABABA" />
+                        <Rectangle Grid.Column="6" Grid.Row="1" Fill="#BABABA" />
+                        <Rectangle Grid.Column="7" Grid.Row="1" Fill="#55000000" />
+                        <Image Grid.Column="7" Grid.Row="1" Source="/Aurora;component/Resources/mc_clock_night.png" Height="16" VerticalAlignment="Bottom" Margin="1" />
+                        <Rectangle Grid.Column="8" Grid.Row="1" Fill="#BABABA" />
                     </Grid>
+                    <Slider Grid.Row="2" Grid.RowSpan="2" Grid.Column="4" Margin="0,4" ValueChanged="WorldTimeSlider_ValueChanged" Minimum="0" Maximum="1" TickFrequency="0.04166666666" TickPlacement="TopLeft" />
                 </Grid>
             </TabItem>
         </TabControl>
