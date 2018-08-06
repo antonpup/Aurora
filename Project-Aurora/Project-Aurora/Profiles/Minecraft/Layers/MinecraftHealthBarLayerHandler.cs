@@ -50,6 +50,10 @@ namespace Aurora.Profiles.Minecraft.Layers {
         public Color BackgroundColor => _BackgroundColor ?? Color.Empty;
         public Color? _BackgroundColor { get; set; }
 
+        [JsonIgnore]
+        public bool GradualProgress => _GradualProgress ?? false;
+        public bool? _GradualProgress { get; set; }
+
 
         public MinecraftHealthBarLayerHandlerProperties() : base() { }
         public MinecraftHealthBarLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
@@ -63,6 +67,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
             _WitherHealthColor = Color.FromArgb(70, 5, 5);
             _BackgroundColor = Color.Transparent;
             _EnableAbsorptionHealthColor = _EnableRegenerationHealthColor = _EnablePoisonHealthColor = _EnableWitherHealthColor = true;
+            _GradualProgress = false;
         }
     }
 
@@ -96,7 +101,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
             // If absorption is enabled, overlay the absorption display on the top of the original healthbar
             if (Properties.EnableAbsorptionHealthColor)
-                layer.PercentEffect(Properties.AbsorptionHealthColor, Properties.BackgroundColor, Properties.Sequence, state.Player.Absorption, state.Player.AbsorptionMax, Settings.PercentEffectType.Progressive);
+                layer.PercentEffect(Properties.AbsorptionHealthColor, Properties.BackgroundColor, Properties.Sequence, state.Player.Absorption, state.Player.AbsorptionMax, Properties.GradualProgress ? Settings.PercentEffectType.Progressive_Gradual : Settings.PercentEffectType.Progressive);
 
             return layer;
         }

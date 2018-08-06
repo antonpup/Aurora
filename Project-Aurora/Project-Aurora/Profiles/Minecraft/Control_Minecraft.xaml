@@ -56,6 +56,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="28px"/>
+                        <RowDefinition Height="28px"/>
+                        <RowDefinition Height="28px" />
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="28px" />
@@ -80,30 +82,49 @@
 
                     <Label Content="In Game:" Grid.Row="1" HorizontalAlignment="Right" Margin="8,0" />
                     <CheckBox Content="Yes" Grid.Row="1" Grid.Column="1" Margin="0,4" Checked="InGameCh_Checked" Unchecked="InGameCh_Checked" />
-                    
+
                     <Label Content="Health:" Grid.Row="2" HorizontalAlignment="Right" Margin="8,0" />
                     <Slider Grid.Row="2" Grid.Column="1" Margin="0,4" ValueChanged="HealthSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
+                    
+                    <Label Content="Absorption:" Grid.Row="3" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="3" Grid.Column="1" Margin="0,4" ValueChanged="Slider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
 
-                    <Label Content="Food:" Grid.Row="3" HorizontalAlignment="Right" Margin="8,0" />
-                    <Slider Grid.Row="3" Grid.Column="1" Margin="0,4" ValueChanged="HungerSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
+                    <Label Content="Food:" Grid.Row="4" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="4" Grid.Column="1" Margin="0,4" ValueChanged="HungerSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
 
-                    <Label Content="Armor:" Grid.Row="4" HorizontalAlignment="Right" Margin="8,0" />
-                    <Slider Grid.Row="4" Grid.Column="1" Margin="0,4" ValueChanged="ArmorSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True"  />
+                    <Label Content="Armor:" Grid.Row="5" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="5" Grid.Column="1" Margin="0,4" ValueChanged="ArmorSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True"  />
 
-                    <Label Content="Experience:" Grid.Row="5" HorizontalAlignment="Right" Margin="8,0" />
-                    <Slider Grid.Row="5" Grid.Column="1" Margin="0,4" ValueChanged="ExperienceSlider_ValueChanged" Minimum="0" Maximum="1" />
+                    <Label Content="Experience:" Grid.Row="6" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="6" Grid.Column="1" Margin="0,4" ValueChanged="ExperienceSlider_ValueChanged" Minimum="0" Maximum="1" />
 
-                    <Label Content="Burning:" Grid.Row="6" HorizontalAlignment="Right" Margin="8,0" />
-                    <CheckBox Content="Yes" Grid.Row="6" Grid.Column="1" Margin="0,4" Checked="IsBurningCh_Checked" Unchecked="IsBurningCh_Checked" />
+                    <Label Content="Burning:" Grid.Row="7" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="7" Grid.Column="1" Margin="0,4" Checked="IsBurningCh_Checked" Unchecked="IsBurningCh_Checked" />
 
-                    <Label Content="In Water:" Grid.Row="7" HorizontalAlignment="Right" Margin="8,0" />
-                    <CheckBox Content="Yes" Grid.Row="7" Grid.Column="1" Margin="0,4" Checked="IsInWaterCh_Checked" Unchecked="IsInWaterCh_Checked" />
+                    <Label Content="In Water:" Grid.Row="8" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="8" Grid.Column="1" Margin="0,4" Checked="IsInWaterCh_Checked" Unchecked="IsInWaterCh_Checked" />
 
-                    <Label Content="Sneaking:" Grid.Row="8" HorizontalAlignment="Right" Margin="8,0" />
-                    <CheckBox Content="Yes" Grid.Row="8" Grid.Column="1" Margin="0,4" Checked="IsSneakingCh_Checked" Unchecked="IsSneakingCh_Checked" />
+                    <Label Content="Sneaking:" Grid.Row="9" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="9" Grid.Column="1" Margin="0,4" Checked="IsSneakingCh_Checked" Unchecked="IsSneakingCh_Checked" />
 
-                    <Label Content="Riding Horse:" Grid.Row="9" HorizontalAlignment="Right" Margin="8,0" />
-                    <CheckBox Content="Yes" Grid.Row="9" Grid.Column="1" Margin="0,4" Checked="IsRidingCh_Checked" Unchecked="IsRidingCh_Checked" />
+                    <Label Content="Riding Horse:" Grid.Row="10" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="10" Grid.Column="1" Margin="0,4" Checked="IsRidingCh_Checked" Unchecked="IsRidingCh_Checked" />
+
+                    <Label Content="Player effects:" Grid.Row="11" HorizontalAlignment="Right" Margin="8,0" />
+                    <Grid Grid.Row="11" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28px" />
+                        </Grid.RowDefinitions>
+
+                        <CheckBox Content="Wither" Grid.Row="0" Grid.Column="0" Margin="0,4" Checked="HasWitherCh_Checked" Unchecked="HasWitherCh_Checked" />
+                        <CheckBox Content="Poison" Grid.Row="0" Grid.Column="1" Margin="0,4" Checked="HasPoisonCh_Checked" Unchecked="HasPoisonCh_Checked" />
+                        <CheckBox Content="Regen" Grid.Row="0" Grid.Column="2" Margin="0,4" Checked="HasRegenCh_Checked" Unchecked="HasRegenCh_Checked" />
+                    </Grid>
 
                     <!--World-based variables-->
                     <Label Content="World" Grid.Column="3" FontWeight="SemiBold" HorizontalAlignment="Center" Grid.ColumnSpan="2" />

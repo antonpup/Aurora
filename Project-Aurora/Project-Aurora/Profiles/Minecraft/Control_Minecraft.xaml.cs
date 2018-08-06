@@ -116,6 +116,10 @@ namespace Aurora.Profiles.Minecraft {
             State.Player.HealthMax = 20f;
         }
 
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            State.Player.Absorption = (float)e.NewValue;
+        }
+
         private void HungerSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             State.Player.FoodLevel = (int)e.NewValue;
         }
@@ -142,6 +146,18 @@ namespace Aurora.Profiles.Minecraft {
 
         private void IsRidingCh_Checked(object sender, RoutedEventArgs e) {
             State.Player.IsRidingHorse = (sender as CheckBox).IsChecked ?? false;
+        }
+
+        private void HasWitherCh_Checked(object sender, RoutedEventArgs e) {
+            State.Player.PlayerEffects.HasWither = (sender as CheckBox).IsChecked ?? false;
+        }
+
+        private void HasPoisonCh_Checked(object sender, RoutedEventArgs e) {
+            State.Player.PlayerEffects.HasPoison = (sender as CheckBox).IsChecked ?? false;
+        }
+
+        private void HasRegenCh_Checked(object sender, RoutedEventArgs e) {
+            State.Player.PlayerEffects.HasRegeneration = (sender as CheckBox).IsChecked ?? false;
         }
 
         private void RainStrengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {

@@ -26,6 +26,7 @@
             <RowDefinition Height="28px" />
             <RowDefinition Height="28px" />
             <RowDefinition Height="28px" />
+            <RowDefinition Height="28px" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -50,6 +51,9 @@
 
         <Label Content="Background:" Grid.Row="5" Margin="4,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
         <xctk:ColorPicker x:Name="Background_ColorPicker" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="4,2" Height="24" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="Background_ColorPicker_SelectedColorChanged" />
+
+        <Label Content="Gradual:" Grid.Row="6" Margin="4,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <CheckBox x:Name="ProgressGradualCh" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Checked="ProgressGradualCh_Checked" Unchecked="ProgressGradualCh_Checked" />
 
         <Controls:KeySequence x:Name="KeySequence_Keys" Grid.Column="4" Grid.RowSpan="7" Margin="0,4,0,0" Height="280px" VerticalAlignment="Top" RecordingTag="Minecraft Health Bar Layer" Title="Affected Keys" SequenceUpdated="KeySequence_Keys_SequenceUpdated" />
     </Grid>

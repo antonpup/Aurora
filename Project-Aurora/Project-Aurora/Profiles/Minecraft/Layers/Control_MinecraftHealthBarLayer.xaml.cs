@@ -49,7 +49,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
                 WitherHealth_ColorPicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(Context.Properties._WitherHealthColor ?? System.Drawing.Color.Empty);
 
                 Background_ColorPicker.SelectedColor = ColorUtils.DrawingColorToMediaColor(Context.Properties._BackgroundColor ?? System.Drawing.Color.Empty);
-
+                ProgressGradualCh.IsChecked = Context.Properties._GradualProgress;
                 KeySequence_Keys.Sequence = Context.Properties._Sequence;
 
                 settingSet = true;
@@ -107,9 +107,14 @@ namespace Aurora.Profiles.Minecraft.Layers {
                 Context.Properties._BackgroundColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
+        private void ProgressGradualCh_Checked(object sender, RoutedEventArgs e) {
+            if (CanSet && (sender as CheckBox).IsChecked.HasValue)
+                Context.Properties._GradualProgress = (sender as CheckBox).IsChecked.Value;
+        }
+
         private void KeySequence_Keys_SequenceUpdated(object sender, EventArgs e) {
             if (CanSet)
                 Context.Properties._Sequence = (sender as KeySequence).Sequence;
-        }        
+        }
     }
 }
