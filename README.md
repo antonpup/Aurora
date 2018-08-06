@@ -52,6 +52,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Worms W.M.D
 * Blade and Soul
 * Borderlands 2
+* Minecraft
 * Euro Truck Simulator 2
 * American Truck Simulator
 * Rise of the Tomb Raider
@@ -254,6 +255,14 @@ The Talos Principle features
 Borderlands 2 features
 
 * Health and Shield indicators
+
+Minecraft features
+* Healthbar
+* XP bar
+* Armor and hunger bars (not on the default profile but can easily be added)
+* Flame effect when player burns
+* Raindrops when world is raining
+* Background based on time-of-day
 
 Euro Truck Simulator 2 / American Truck Simulator features
 
