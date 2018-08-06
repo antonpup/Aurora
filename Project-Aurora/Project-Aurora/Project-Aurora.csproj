@@ -443,6 +443,7 @@
       <DependentUpon>Control_Minecraft.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Minecraft\GSI\GameState_Minecraft.cs" />
+    <Compile Include="Profiles\Minecraft\GSI\Nodes\PlayerEffectsNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\ProviderNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\WorldNode.cs" />
@@ -452,11 +453,15 @@
     <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftBurnLayer.xaml.cs">
       <DependentUpon>Control_MinecraftBurnLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftHealthBarLayer.xaml.cs">
+      <DependentUpon>Control_MinecraftHealthBarLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftRainLayer.xaml.cs">
       <DependentUpon>Control_MinecraftRainLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Minecraft\Layers\MinecraftBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\Layers\MinecraftBurnLayerHandler.cs" />
+    <Compile Include="Profiles\Minecraft\Layers\MinecraftHealthBarLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\Layers\MinecraftRainLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftApplication.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftProfile.cs" />
@@ -1478,6 +1483,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Minecraft\Layers\Control_MinecraftBurnLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftHealthBarLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

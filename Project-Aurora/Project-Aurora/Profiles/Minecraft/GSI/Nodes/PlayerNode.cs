@@ -12,6 +12,8 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
 
         public float Health;
         public float HealthMax;
+        public float Absorption;
+        public float AbsorptionMax = 20;
         public bool IsDead;
         public int Armor;
         public int ArmorMax = 20;
@@ -30,11 +32,20 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
         public bool IsBurning;
         public bool IsInWater;
 
+        private PlayerEffectsNode _playerEffects;
+        public PlayerEffectsNode PlayerEffects {
+            get {
+                _playerEffects = _playerEffects ?? new PlayerEffectsNode(_ParsedData["playerEffects"]?.ToString() ?? "");
+                return _playerEffects;
+            }
+        }
+        
         internal PlayerNode(string json) : base(json) {
             InGame = GetBool("inGame");
 
             Health = GetFloat("health");
             HealthMax = GetFloat("maxHealth");
+            Absorption = GetFloat("absorption");
             IsDead = GetBool("isDead");
             Armor = GetInt("armor");
 

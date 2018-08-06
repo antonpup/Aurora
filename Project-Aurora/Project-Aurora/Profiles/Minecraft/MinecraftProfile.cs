@@ -23,12 +23,8 @@ namespace Aurora.Profiles.Minecraft {
             DK[] controlKeys = new[] { DK.W, DK.A, DK.S, DK.D, DK.E, DK.SPACE, DK.LEFT_SHIFT, DK.LEFT_CONTROL };
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>() {
-                new Layer("Health Bar", new PercentLayerHandler() {
-                    Properties = new PercentLayerHandlerProperties() {
-                        _VariablePath = "Player/Health",
-                        _MaxVariablePath = "Player/HealthMax",
-                        _PrimaryColor = Color.Red,
-                        _SecondaryColor = Color.Transparent,
+                new Layer("Health Bar", new MinecraftHealthBarLayerHandler() {
+                    Properties = new MinecraftHealthBarLayerHandlerProperties() {
                         _Sequence = new KeySequence(new[] {
                             DK.Z, DK.X, DK.C, DK.V, DK.B, DK.N, DK.M, DK.COMMA, DK.PERIOD, DK.FORWARD_SLASH
                         })
