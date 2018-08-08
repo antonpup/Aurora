@@ -98,9 +98,13 @@ namespace Aurora.Devices.Dualshock
                         break;
                 }
 
+                string charging;
+                if (device.isCharging())
+                    charging = " ⚡";
+                else
+                    charging = " ";
 
-                return devicename + ": Connected" + DS4ConnectionType + " Delay: " + device.Latency.ToString("0.00") + " ms";
-
+                return devicename + ": Connected" + DS4ConnectionType + charging + "🔋" + device.getBattery() + "%" + " Delay: " + device.Latency.ToString("0.00") + " ms";
 
             }
             else
