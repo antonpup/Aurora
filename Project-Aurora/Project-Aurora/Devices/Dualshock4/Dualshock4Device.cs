@@ -60,6 +60,11 @@ namespace Aurora.Devices.Dualshock
             {
                 if (isInitialized)
                 {
+                    if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_disconnect_when_stop"))
+                    {
+                        device.DisconnectBT();
+                        device.DisconnectDongle();
+                    }
                     RestoreColor();
                     DS4Devices.stopControllers();
                     isInitialized = false;
@@ -76,7 +81,27 @@ namespace Aurora.Devices.Dualshock
         {
             if (isInitialized)
             {
-                return devicename + ": Connected";
+                string DS4ConnectionType;
+                switch (device.getConnectionType())
+                {
+                    case ConnectionType.BT:
+                        DS4ConnectionType = " over Bluetooth";
+                        break;
+                    case ConnectionType.USB:
+                        DS4ConnectionType = " over USB";
+                        break;
+                    case ConnectionType.SONYWA:
+                        DS4ConnectionType = " over DS4 Wireless adapter";
+                        break;
+                    default:
+                        DS4ConnectionType = "";
+                        break;
+                }
+
+
+                return devicename + ": Connected" + DS4ConnectionType + " Delay: " + device.Latency.ToString("0.00") + " ms";
+
+
             }
             else
             {
@@ -110,6 +135,10 @@ namespace Aurora.Devices.Dualshock
 
         public bool IsInitialized()
         {
+            if (isInitialized && device.isDisconnectingStatus())
+            {
+                Shutdown();
+            }
             return this.isInitialized;
         }
 
@@ -170,10 +199,11 @@ namespace Aurora.Devices.Dualshock
 
         public VariableRegistry GetRegisteredVariables()
         {
-            if(default_registry==null)
+            if (default_registry == null)
             {
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_restore_dualshock", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your DS4 Controller");
+                default_registry.Register($"{devicename}_disconnect_when_stop", false, "Disconnect when Stopping");
             }
             return default_registry;
         }
