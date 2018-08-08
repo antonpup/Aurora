@@ -137,7 +137,8 @@ namespace Aurora.Profiles
                 new Battlefield1.Battlefield1(),
                 new Dishonored.Dishonored(),
                 new Witcher3.Witcher3(),
-                new Minecraft.Minecraft()
+                new Minecraft.Minecraft(),
+                new KillingFloor2.KillingFloor2()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

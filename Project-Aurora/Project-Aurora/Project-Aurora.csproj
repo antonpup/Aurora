@@ -465,6 +465,10 @@
     <Compile Include="Profiles\Minecraft\Layers\MinecraftRainLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftApplication.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftProfile.cs" />
+    <Compile Include="Profiles\KillingFloor2\Control_KillingFloor2.xaml.cs">
+      <DependentUpon>Control_KillingFloor2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\KillingFloor2\KillingFloor2Application.cs" />
     <Compile Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml.cs">
       <DependentUpon>Control_QuantumConumdrum.xaml</DependentUpon>
     </Compile>
@@ -1194,6 +1198,7 @@
     <Resource Include="Resources\minecraft-aurora-gsi-logo_128x128.png" />
     <Resource Include="Resources\mc_clock_day.png" />
     <Resource Include="Resources\mc_clock_night.png" />
+    <Resource Include="Resources\kf2.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1523,6 +1528,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Payday 2\Layers\Control_PD2BackgroundLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\KillingFloor2\Control_KillingFloor2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
