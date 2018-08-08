@@ -173,7 +173,7 @@ namespace Aurora.Devices.Dualshock
             if(default_registry==null)
             {
                 default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_restore_dualshock", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
+                default_registry.Register($"{devicename}_restore_dualshock", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your DS4 Controller");
             }
             return default_registry;
         }
@@ -191,6 +191,14 @@ namespace Aurora.Devices.Dualshock
             ds4color.blue = newColor.B;
             ds4color.red = newColor.R;
             state.LightBarColor = ds4color;
+            if (ds4color.Equals(System.Drawing.Color.Black))
+            {
+                state.LightBarExplicitlyOff = false;
+            }
+            else
+            {
+                state.LightBarExplicitlyOff = true;
+            }
             device.pushHapticState(state);
         }
     }
