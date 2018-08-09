@@ -13,9 +13,10 @@ namespace Aurora.Devices.Dualshock
 
     class DualshockDevice : Device
     {
-        private string devicename = "Dualshock";
+        private string devicename = "Sony DualShock 4(PS4)";
         private bool isInitialized = false;
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private System.Diagnostics.Stopwatch cooldown = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
         private VariableRegistry default_registry = null;
         DS4HapticState state;
@@ -66,6 +67,7 @@ namespace Aurora.Devices.Dualshock
                         device.DisconnectDongle();
                     }
                     RestoreColor();
+                    device.StopUpdate();
                     DS4Devices.stopControllers();
                     isInitialized = false;
                 }
@@ -139,6 +141,31 @@ namespace Aurora.Devices.Dualshock
 
         public bool IsInitialized()
         {
+            bool isdisabled = Global.Configuration.devices_disabled.Contains(typeof(DualshockDevice));
+            int auto_connect_cooldown = 3000;
+            bool auto_connect_enabled = Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_auto_connect");
+
+            //Global.logger.Info("cooldown is running: " + cooldown.IsRunning);
+            //Global.logger.Info("isDisabled: " + isdisabled);
+
+            if ((isdisabled || isInitialized) && cooldown.IsRunning)
+            {
+                cooldown.Stop();
+                //Global.logger.Info("Cooldown Stop");
+            }
+
+            if (!isdisabled && auto_connect_enabled && !isInitialized && !cooldown.IsRunning)
+            {
+                cooldown.Start();
+                //Global.logger.Info("Cooldown Start");
+            }
+
+            if (!isInitialized && auto_connect_enabled && (cooldown.ElapsedMilliseconds > auto_connect_cooldown))
+            {
+                //Global.logger.Info("Initialize");
+                Initialize();
+                cooldown.Restart();
+            }
             if (isInitialized && device.isDisconnectingStatus())
             {
                 Shutdown();
@@ -208,6 +235,7 @@ namespace Aurora.Devices.Dualshock
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_restore_dualshock", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your DS4 Controller");
                 default_registry.Register($"{devicename}_disconnect_when_stop", false, "Disconnect when Stopping");
+                default_registry.Register($"{devicename}_auto_connect", true, "Auto connect");
             }
             return default_registry;
         }
