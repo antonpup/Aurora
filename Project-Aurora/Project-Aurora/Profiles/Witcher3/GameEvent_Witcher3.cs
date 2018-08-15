@@ -81,61 +81,64 @@ namespace Aurora.Profiles.Witcher3
                 {
                     var signRes = _configRegex.Match(configContent);
                     var parts = signRes.Value.Split('\n').Skip(1).Select(v => v.Replace("\r", "")).ToList();
-                    parts.RemoveAt(parts.Count - 1);
-
-                    // Update sign
-                    var sign = parts.FirstOrDefault(p => p.Contains("ActiveSign="));
-                    if (sign != null)
+                    if (parts.Count != 0)
                     {
-                        var signString = sign.Split('=')[1];
-                        switch (signString)
+                        parts.RemoveAt(parts.Count - 1);
+
+                        // Update sign
+                        var sign = parts.FirstOrDefault(p => p.Contains("ActiveSign="));
+                        if (sign != null)
                         {
-                            case "ST_Aard":
-                                (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Aard;
-                                break;
-                            case "ST_Yrden":
-                                (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Yrden;
-                                break;
-                            case "ST_Igni":
-                                (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Igni;
-                                break;
-                            case "ST_Quen":
-                                (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Quen;
-                                break;
-                            case "ST_Axii":
-                                (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Axii;
-                                break;
+                            var signString = sign.Split('=')[1];
+                            switch (signString)
+                            {
+                                case "ST_Aard":
+                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Aard;
+                                    break;
+                                case "ST_Yrden":
+                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Yrden;
+                                    break;
+                                case "ST_Igni":
+                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Igni;
+                                    break;
+                                case "ST_Quen":
+                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Quen;
+                                    break;
+                                case "ST_Axii":
+                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Axii;
+                                    break;
+                            }
                         }
-                    }
 
-                    // Update max health
-                    var maxHealth = parts.FirstOrDefault(p => p.Contains("MaxHealth="));
-                    if (maxHealth != null)
-                    {
-                        var maxHealthInt = int.Parse(maxHealth.Split('=')[1].Split('.')[0]);
-                        (_game_state as GameState_Witcher3).Player.MaximumHealth = maxHealthInt;
-                    }
-                    // Update health
-                    var health = parts.FirstOrDefault(p => p.Contains("CurrHealth="));
-                    if (health != null)
-                    {
-                        var healthInt = int.Parse(health.Split('=')[1].Split('.')[0]);
-                        (_game_state as GameState_Witcher3).Player.CurrentHealth = healthInt;
-                    }
-                    // Update stamina
-                    var stamina = parts.FirstOrDefault(p => p.Contains("Stamina="));
-                    if (stamina != null)
-                    {
-                        var staminaInt = int.Parse(stamina.Split('=')[1].Split('.')[0]);
-                        (_game_state as GameState_Witcher3).Player.Stamina = staminaInt;
-                    }
-                    // Update Toxicity
-                    var toxicity = parts.FirstOrDefault(p => p.Contains("Toxicity="));
-                    if (toxicity != null)
-                    {
-                        var toxicityInt = int.Parse(toxicity.Split('=')[1].Split('.')[0]);
-                        (_game_state as GameState_Witcher3).Player.Toxicity = toxicityInt;
-                    }
+                        // Update max health
+                        var maxHealth = parts.FirstOrDefault(p => p.Contains("MaxHealth="));
+                        if (maxHealth != null)
+                        {
+                            var maxHealthInt = int.Parse(maxHealth.Split('=')[1].Split('.')[0]);
+                            (_game_state as GameState_Witcher3).Player.MaximumHealth = maxHealthInt;
+                        }
+                        // Update health
+                        var health = parts.FirstOrDefault(p => p.Contains("CurrHealth="));
+                        if (health != null)
+                        {
+                            var healthInt = int.Parse(health.Split('=')[1].Split('.')[0]);
+                            (_game_state as GameState_Witcher3).Player.CurrentHealth = healthInt;
+                        }
+                        // Update stamina
+                        var stamina = parts.FirstOrDefault(p => p.Contains("Stamina="));
+                        if (stamina != null)
+                        {
+                            var staminaInt = int.Parse(stamina.Split('=')[1].Split('.')[0]);
+                            (_game_state as GameState_Witcher3).Player.Stamina = staminaInt;
+                        }
+                        // Update Toxicity
+                        var toxicity = parts.FirstOrDefault(p => p.Contains("Toxicity="));
+                        if (toxicity != null)
+                        {
+                            var toxicityInt = int.Parse(toxicity.Split('=')[1].Split('.')[0]);
+                            (_game_state as GameState_Witcher3).Player.Toxicity = toxicityInt;
+                        }
+                    }                   
                 }
             }
             //Artemis code
