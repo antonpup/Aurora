@@ -1089,9 +1089,9 @@ WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZ
 			break;
 		}
 	}
-	else if (Effect == ChromaSDK::Keyboard::CHROMA_STARLIGHT)
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_RESERVED)
 	{
-		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_STARLIGHT" << "\"";
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_RESERVED" << "\"";
 	}
 	else
 	{
@@ -1436,8 +1436,8 @@ extern "C" {
 				case ChromaSDK::CHROMA_CUSTOM:
 					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_CUSTOM;
 					break;
-				case ChromaSDK::CHROMA_STARLIGHT:
-					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_STARLIGHT;
+				case ChromaSDK::CHROMA_RESERVED:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_RESERVED;
 					break;
 				default:
 					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_INVALID;
@@ -1668,6 +1668,43 @@ extern "C" {
 				break;
 			default:
 				break;
+			}
+			*/
+			return RZRESULT_SUCCESS;
+		}
+		else
+		{
+			return RZRESULT_INVALID;
+		}
+	}
+
+	__declspec(dllexport) RZRESULT CreateChromaLinkEffect(ChromaSDK::ChromaLink::EFFECT_TYPE Effect, PRZPARAM pParam, RZEFFECTID *pEffectId)
+	{
+		if (isInitialized)
+		{
+			// Not Implemented
+
+			/*
+			switch (Effect)
+			{
+			case ChromaSDK::Keypad::CHROMA_NONE:
+			break;
+			case ChromaSDK::Keypad::CHROMA_BREATHING:
+			break;
+			case ChromaSDK::Keypad::CHROMA_CUSTOM:
+			break;
+			case ChromaSDK::Keypad::CHROMA_REACTIVE:
+			break;
+			case ChromaSDK::Keypad::CHROMA_SPECTRUMCYCLING:
+			break;
+			case ChromaSDK::Keypad::CHROMA_STATIC:
+			break;
+			case ChromaSDK::Keypad::CHROMA_WAVE:
+			break;
+			case ChromaSDK::Keypad::CHROMA_INVALID:
+			break;
+			default:
+			break;
 			}
 			*/
 			return RZRESULT_SUCCESS;
