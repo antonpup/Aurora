@@ -474,6 +474,10 @@
     </Compile>
     <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumApplication.cs" />
     <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumProfile.cs" />
+    <Compile Include="Profiles\DOOM\Control_ROTTombRaider.xaml.cs">
+      <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DOOM\DOOMApplication.cs" />
     <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
       <DependentUpon>Control_Witcher3.xaml</DependentUpon>
     </Compile>
@@ -1205,6 +1209,7 @@
     <Resource Include="Resources\mc_clock_day.png" />
     <Resource Include="Resources\mc_clock_night.png" />
     <Resource Include="Resources\kf2.png" />
+    <Resource Include="Resources\doom_256x256.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1546,6 +1551,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\DOOM\Control_ROTTombRaider.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
