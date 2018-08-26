@@ -443,6 +443,7 @@ namespace Aurora.Settings
             devices_disable_mouse = false;
             devices_disable_headset = false;
             devices_disabled = new HashSet<Type>();
+            devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             OverlaysInPreview = false;
 
             //Blackout and Night theme
