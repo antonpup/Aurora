@@ -368,6 +368,9 @@
     <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
     <Compile Include="Devices\Dualshock4\Dualshock4Device.cs" />
+    <Compile Include="Devices\Dualshock4\DS4InstallInstructions.xaml.cs">
+      <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -1146,7 +1149,9 @@
     <Compile Include="Utils\UIUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DS4WindowsApi.dll" />
+    <Content Include="DS4WindowsApi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="kb_layouts\Extra Features\images\Logi_G502_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1307,6 +1312,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Devices\Corsair\CorsairInstallInstructions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\Dualshock4\DS4InstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

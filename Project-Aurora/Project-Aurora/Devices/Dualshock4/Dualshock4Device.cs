@@ -52,7 +52,17 @@ namespace Aurora.Devices.Dualshock
                     isInitialized = false;
                 }
                 if (device != null)
+                {
                     isInitialized = true;
+                    if (Global.Configuration.dualshock_first_time)
+                    {
+                        DualshockInstallInstructions instructions = new DualshockInstallInstructions();
+                        instructions.ShowDialog();
+
+                        Global.Configuration.dualshock_first_time = false;
+                        Settings.ConfigManager.Save(Global.Configuration);
+                    }
+                }
             }
 
             return isInitialized;
