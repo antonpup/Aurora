@@ -411,6 +411,15 @@
     <Compile Include="Profiles\Dishonored\GameEvent_Dishonored.cs" />
     <Compile Include="Profiles\Dishonored\GSI\GameState_Dishonored.cs" />
     <Compile Include="Profiles\Dishonored\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml.cs">
+      <DependentUpon>Control_QuakeChampions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\QuakeChampions\QuakeChampionsProfile.cs" />
+    <Compile Include="Profiles\QuakeChampions\QuakeChampionsApplication.cs" />
+    <Compile Include="Profiles\Factorio\Control_Factorio.xaml.cs">
+      <DependentUpon>Control_Factorio.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Factorio\FactorioApplication.cs" />
     <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
     <Compile Include="Profiles\ETS2\Control_ETS2.xaml.cs">
       <DependentUpon>Control_ETS2.xaml</DependentUpon>
@@ -474,8 +483,8 @@
     </Compile>
     <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumApplication.cs" />
     <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumProfile.cs" />
-    <Compile Include="Profiles\DOOM\Control_ROTTombRaider.xaml.cs">
-      <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
+    <Compile Include="Profiles\DOOM\Control_DOOM.xaml.cs">
+      <DependentUpon>Control_DOOM.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\DOOM\DOOMApplication.cs" />
     <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
@@ -1210,6 +1219,8 @@
     <Resource Include="Resources\mc_clock_night.png" />
     <Resource Include="Resources\kf2.png" />
     <Resource Include="Resources\doom_256x256.png" />
+    <Resource Include="Resources\factorio_64x64.png" />
+    <Resource Include="Resources\quakechampions_195x195.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1422,6 +1433,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Factorio\Control_Factorio.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Dota 2\Control_Dota2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1554,7 +1573,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Profiles\DOOM\Control_ROTTombRaider.xaml">
+    <Page Include="Profiles\DOOM\Control_DOOM.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
