@@ -411,6 +411,10 @@
     <Compile Include="Profiles\Dishonored\GameEvent_Dishonored.cs" />
     <Compile Include="Profiles\Dishonored\GSI\GameState_Dishonored.cs" />
     <Compile Include="Profiles\Dishonored\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\Diablo3\Control_Diablo3.xaml.cs">
+      <DependentUpon>Control_Diablo3.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Diablo3\Diablo3Application.cs" />
     <Compile Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml.cs">
       <DependentUpon>Control_QuakeChampions.xaml</DependentUpon>
     </Compile>
@@ -1221,6 +1225,7 @@
     <Resource Include="Resources\doom_256x256.png" />
     <Resource Include="Resources\factorio_64x64.png" />
     <Resource Include="Resources\quakechampions_195x195.png" />
+    <Resource Include="Resources\diablo3_120x120.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1432,6 +1437,10 @@
     <Page Include="Profiles\DiscoDodgeball\Control_DiscoDodgeball.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Diablo3\Control_Diablo3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml">
       <Generator>MSBuild:Compile</Generator>
