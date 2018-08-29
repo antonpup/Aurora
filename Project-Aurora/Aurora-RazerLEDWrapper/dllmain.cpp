@@ -896,21 +896,27 @@ WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZ
 
 		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM" << "\"";
 	}
-	else if (Effect == ChromaSDK::Keyboard::CHROMA_CUSTOM_KEY)
-	{
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_CUSTOM_KEY) {
+		write_text_to_log_file("\nChroma Custom Key ");
 		struct ChromaSDK::Keyboard::CUSTOM_KEY_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Keyboard::CUSTOM_KEY_EFFECT_TYPE *)pParam;
 
-		for (int row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++)
-		{
-			for (int col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++)
-			{
+		for (int row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++) {
+			for (int col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++) {
 				Logitech_keyboardBitmapKeys bitmap_pos = ToLogitechBitmap(row, col);
 
-				if (bitmap_pos != Logitech_keyboardBitmapKeys::UNKNOWN)
-				{
+				if (bitmap_pos != Logitech_keyboardBitmapKeys::UNKNOWN) {
 					unsigned char blue = GetBValue(custom_effect->Key[row][col]);
+					if (blue == 0) {
+						blue = GetBValue(custom_effect->Color[row][col]);
+					}
 					unsigned char green = GetGValue(custom_effect->Key[row][col]);
+					if (green == 0) {
+						green = GetGValue(custom_effect->Color[row][col]);
+					}
 					unsigned char red = GetRValue(custom_effect->Key[row][col]);
+					if (red == 0) {
+						red = GetRValue(custom_effect->Color[row][col]);
+					}
 
 
 					if (bitmap_pos == Logitech_keyboardBitmapKeys::LOGO)
@@ -1089,9 +1095,9 @@ WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZ
 			break;
 		}
 	}
-	else if (Effect == ChromaSDK::Keyboard::CHROMA_STARLIGHT)
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_RESERVED)
 	{
-		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_STARLIGHT" << "\"";
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_RESERVED" << "\"";
 	}
 	else
 	{
@@ -1436,8 +1442,8 @@ extern "C" {
 				case ChromaSDK::CHROMA_CUSTOM:
 					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_CUSTOM;
 					break;
-				case ChromaSDK::CHROMA_STARLIGHT:
-					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_STARLIGHT;
+				case ChromaSDK::CHROMA_RESERVED:
+					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_RESERVED;
 					break;
 				default:
 					kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_INVALID;
@@ -1668,6 +1674,43 @@ extern "C" {
 				break;
 			default:
 				break;
+			}
+			*/
+			return RZRESULT_SUCCESS;
+		}
+		else
+		{
+			return RZRESULT_INVALID;
+		}
+	}
+
+	__declspec(dllexport) RZRESULT CreateChromaLinkEffect(ChromaSDK::ChromaLink::EFFECT_TYPE Effect, PRZPARAM pParam, RZEFFECTID *pEffectId)
+	{
+		if (isInitialized)
+		{
+			// Not Implemented
+
+			/*
+			switch (Effect)
+			{
+			case ChromaSDK::Keypad::CHROMA_NONE:
+			break;
+			case ChromaSDK::Keypad::CHROMA_BREATHING:
+			break;
+			case ChromaSDK::Keypad::CHROMA_CUSTOM:
+			break;
+			case ChromaSDK::Keypad::CHROMA_REACTIVE:
+			break;
+			case ChromaSDK::Keypad::CHROMA_SPECTRUMCYCLING:
+			break;
+			case ChromaSDK::Keypad::CHROMA_STATIC:
+			break;
+			case ChromaSDK::Keypad::CHROMA_WAVE:
+			break;
+			case ChromaSDK::Keypad::CHROMA_INVALID:
+			break;
+			default:
+			break;
 			}
 			*/
 			return RZRESULT_SUCCESS;

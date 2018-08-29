@@ -138,7 +138,10 @@ namespace Aurora.Profiles
                 new Dishonored.Dishonored(),
                 new Witcher3.Witcher3(),
                 new Minecraft.Minecraft(),
-                new KillingFloor2.KillingFloor2()
+                new KillingFloor2.KillingFloor2(),
+                new DOOM.DOOM(),
+                new Factorio.Factorio(),
+                new QuakeChampions.QuakeChampions()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
