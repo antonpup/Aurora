@@ -896,21 +896,27 @@ WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZ
 
 		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM" << "\"";
 	}
-	else if (Effect == ChromaSDK::Keyboard::CHROMA_CUSTOM_KEY)
-	{
+	else if (Effect == ChromaSDK::Keyboard::CHROMA_CUSTOM_KEY) {
+		write_text_to_log_file("\nChroma Custom Key ");
 		struct ChromaSDK::Keyboard::CUSTOM_KEY_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Keyboard::CUSTOM_KEY_EFFECT_TYPE *)pParam;
 
-		for (int row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++)
-		{
-			for (int col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++)
-			{
+		for (int row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++) {
+			for (int col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++) {
 				Logitech_keyboardBitmapKeys bitmap_pos = ToLogitechBitmap(row, col);
 
-				if (bitmap_pos != Logitech_keyboardBitmapKeys::UNKNOWN)
-				{
+				if (bitmap_pos != Logitech_keyboardBitmapKeys::UNKNOWN) {
 					unsigned char blue = GetBValue(custom_effect->Key[row][col]);
+					if (blue == 0) {
+						blue = GetBValue(custom_effect->Color[row][col]);
+					}
 					unsigned char green = GetGValue(custom_effect->Key[row][col]);
+					if (green == 0) {
+						green = GetGValue(custom_effect->Color[row][col]);
+					}
 					unsigned char red = GetRValue(custom_effect->Key[row][col]);
+					if (red == 0) {
+						red = GetRValue(custom_effect->Color[row][col]);
+					}
 
 
 					if (bitmap_pos == Logitech_keyboardBitmapKeys::LOGO)
