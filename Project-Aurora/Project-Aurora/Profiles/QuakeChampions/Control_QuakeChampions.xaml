@@ -22,16 +22,16 @@
 
     <Grid>
         <TabControl>
-            <TabItem Header="Overview for QuakeChampions">
+            <TabItem Header="Overview for Quake Champions">
                 <Grid>
                     <StackPanel>
-                        <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with QuakeChampions" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
-                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for QuakeChampions support to work, you have to apply the Aurora Wrapper Patch for Razer in order for Aurora to receive lighting information. Press the &quot;Patch QuakeChampions&quot; button to install automatically to the detected game directory. To choose manually press the &quot;Patch "/><Run Text="QuakeChampions "/><Run Text="Manually&quot; button and navigate to the "/><Run Text="QuakeChampions "/><Run Text="install directory. This should not trigger any anti-cheat, but it should be used at your own risk. P.S. You can actually apply this patch to any Razer Chroma supported game, and Aurora will work with it."/></TextBlock>
+                        <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Quake Champions" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for Quake Champions support to work, you have to apply the Aurora Wrapper Patch for Razer in order for Aurora to receive lighting information. Press the &quot;Patch Quake Champions&quot; button to install automatically to the detected game directory. To choose manually press the &quot;Patch "/><Run Text="Quake Champions "/><Run Text="Manually&quot; button and navigate to the "/><Run Text="Quake Champions "/><Run Text="install directory. This should not trigger any anti-cheat, but it should be used at your own risk. P.S. You can actually apply this patch to any Razer Chroma supported game, and Aurora will work with it."/></TextBlock>
                         <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
-                            <Button x:Name="patch_button" Content="Patch QuakeChampions" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="patch_button_Click"/>
-                            <Button x:Name="patch_button_manually" Content="Patch QuakeChampions Manually" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="patch_button_manually_Click"/>
+                            <Button x:Name="patch_button" Content="Patch Quake Champions" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="patch_button_Click"/>
+                            <Button x:Name="patch_button_manually" Content="Patch Quake Champions Manually" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="patch_button_manually_Click"/>
                         </StackPanel>
-                        <Button x:Name="unpatch_button" Content="Unpatch QuakeChampions" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                        <Button x:Name="unpatch_button" Content="Unpatch Quake Champions" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
