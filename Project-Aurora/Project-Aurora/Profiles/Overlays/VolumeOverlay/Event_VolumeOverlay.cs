@@ -55,8 +55,8 @@ namespace Aurora.Profiles.Overlays
 
         public override void Dispose()
         {
-            this.defaultDevice.Dispose();
-            this.devEnum.Dispose();
+            this.defaultDevice?.Dispose();
+            this.devEnum?.Dispose();
         }
     }
 }
