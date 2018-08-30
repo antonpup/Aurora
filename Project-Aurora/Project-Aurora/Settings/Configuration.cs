@@ -332,6 +332,7 @@ namespace Aurora.Settings
         public bool corsair_first_time;
         public bool razer_first_time;
         public bool steelseries_first_time;
+        public bool dualshock_first_time;
 
         //General Program Settings
         public bool allow_peripheral_devices;
@@ -419,6 +420,7 @@ namespace Aurora.Settings
             corsair_first_time = true;
             razer_first_time = true;
             steelseries_first_time = true;
+            dualshock_first_time = true;
 
             //General Program Settings
             allow_peripheral_devices = true;
@@ -443,6 +445,7 @@ namespace Aurora.Settings
             devices_disable_mouse = false;
             devices_disable_headset = false;
             devices_disabled = new HashSet<Type>();
+            devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             OverlaysInPreview = false;
 
             //Blackout and Night theme
