@@ -385,7 +385,6 @@ namespace Aurora
         private static void InterceptVolumeAsBrightness(object sender, InputInterceptor.InputEventData e)
         {
             var keys = (Keys)e.Data.VirtualKeyCode;
-            Console.WriteLine($"Alt: {Global.InputEvents.Alt}, Key: {keys}");
             if ((keys.Equals(Keys.VolumeDown) || keys.Equals(Keys.VolumeUp))
                 && Global.InputEvents.Alt)
             {
