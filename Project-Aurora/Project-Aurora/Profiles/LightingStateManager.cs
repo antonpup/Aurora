@@ -141,7 +141,8 @@ namespace Aurora.Profiles
                 new KillingFloor2.KillingFloor2(),
                 new DOOM.DOOM(),
                 new Factorio.Factorio(),
-                new QuakeChampions.QuakeChampions()
+                new QuakeChampions.QuakeChampions(),
+                new Diablo3.Diablo3()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
