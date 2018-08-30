@@ -443,38 +443,39 @@ namespace Aurora.Devices.LightFX
                         // Global.logger.Info("RGB Codes: " + key.Value.R + " : " + key.Value.G + " : " + key.Value.B);
 
                         //left
-                        if ((key.Key == DeviceKeys.ESC || key.Key == DeviceKeys.LEFT_FN || key.Key == DeviceKeys.TILDE || key.Key == DeviceKeys.TAB || key.Key == DeviceKeys.CAPS_LOCK || key.Key == DeviceKeys.LEFT_SHIFT
+                        if ((key.Key == DeviceKeys.ESC || key.Key == DeviceKeys.TAB || key.Key == DeviceKeys.LEFT_FN || key.Key == DeviceKeys.CAPS_LOCK || key.Key == DeviceKeys.LEFT_SHIFT
                             || key.Key == DeviceKeys.LEFT_CONTROL || key.Key == DeviceKeys.F1 || key.Key == DeviceKeys.ONE || key.Key == DeviceKeys.Q
                             || key.Key == DeviceKeys.A || key.Key == DeviceKeys.Z || key.Key == DeviceKeys.LEFT_WINDOWS || key.Key == DeviceKeys.F2
-                            || key.Key == DeviceKeys.W || key.Key == DeviceKeys.S || key.Key == DeviceKeys.X || key.Key == DeviceKeys.LEFT_ALT
+                            || key.Key == DeviceKeys.W || key.Key == DeviceKeys.E || key.Key == DeviceKeys.D || key.Key == DeviceKeys.S || key.Key == DeviceKeys.X || key.Key == DeviceKeys.LEFT_ALT
                             || key.Key == DeviceKeys.F3 || key.Key == DeviceKeys.THREE) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
                             //Global.logger.Debug("Key pressed: " + key);
                             leftColor.Add(key.Value);
 
                         } //middle left
-                        if ((key.Key == DeviceKeys.F4 || key.Key == DeviceKeys.FOUR || key.Key == DeviceKeys.E || key.Key == DeviceKeys.D || key.Key == DeviceKeys.C
+                        if ((key.Key == DeviceKeys.F4 || key.Key == DeviceKeys.FOUR || key.Key == DeviceKeys.C
                             || key.Key == DeviceKeys.F5 || key.Key == DeviceKeys.FIVE || key.Key == DeviceKeys.R || key.Key == DeviceKeys.F || key.Key == DeviceKeys.V
                             || key.Key == DeviceKeys.F6 || key.Key == DeviceKeys.SIX || key.Key == DeviceKeys.T || key.Key == DeviceKeys.G || key.Key == DeviceKeys.B
-                            || key.Key == DeviceKeys.Y || key.Key == DeviceKeys.H || key.Key == DeviceKeys.SEVEN) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                           || key.Key == DeviceKeys.F7 || key.Key == DeviceKeys.SEVEN || key.Key == DeviceKeys.Y || key.Key == DeviceKeys.H|| key.Key == DeviceKeys.N) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             midleftColor.Add(key.Value);
 
-                        }//right */
-                        if ((key.Key == DeviceKeys.F11 || key.Key == DeviceKeys.HOME || key.Key == DeviceKeys.END || key.Key == DeviceKeys.DELETE || key.Key == DeviceKeys.BACKSPACE
-                                     || key.Key == DeviceKeys.APOSTROPHE || key.Key == DeviceKeys.RIGHT_SHIFT || key.Key == DeviceKeys.ARROW_UP || key.Key == DeviceKeys.ARROW_DOWN
-
-                                     || key.Key == DeviceKeys.ARROW_RIGHT || key.Key == DeviceKeys.ARROW_LEFT || key.Key == DeviceKeys.MINUS || key.Key == DeviceKeys.FORWARD_SLASH || key.Key == DeviceKeys.ENTER || key.Key == DeviceKeys.PAGE_DOWN
-                                     || key.Key == DeviceKeys.PAGE_UP || key.Key == DeviceKeys.RIGHT_CONTROL || key.Key == DeviceKeys.PAGE_DOWN || key.Key == DeviceKeys.CLOSE_BRACKET) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
-
-                            rightColor.Add(key.Value);
-
-                        } //middle right
-                        if ((key.Key == DeviceKeys.F8 || key.Key == DeviceKeys.F9 || key.Key == DeviceKeys.H || key.Key == DeviceKeys.B || key.Key == DeviceKeys.U || key.Key == DeviceKeys.J || key.Key == DeviceKeys.SEMICOLON
-                             || key.Key == DeviceKeys.N || key.Key == DeviceKeys.I || key.Key == DeviceKeys.K || key.Key == DeviceKeys.M || key.Key == DeviceKeys.O || key.Key == DeviceKeys.PERIOD
-                             || key.Key == DeviceKeys.L || key.Key == DeviceKeys.COMMA || key.Key == DeviceKeys.F10 || key.Key == DeviceKeys.F11 || key.Key == DeviceKeys.EIGHT || key.Key == DeviceKeys.NINE || key.Key == DeviceKeys.ZERO
-                             || key.Key == DeviceKeys.RIGHT_CONTROL || key.Key == DeviceKeys.RIGHT_ALT || key.Key == DeviceKeys.BACKSLASH || key.Key == DeviceKeys.OPEN_BRACKET) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        }//middle right
+                        if ((key.Key == DeviceKeys.F8 || key.Key == DeviceKeys.F9 || key.Key == DeviceKeys.F10 || key.Key == DeviceKeys.F11 || key.Key == DeviceKeys.F12 || key.Key == DeviceKeys.HOME
+                         || key.Key == DeviceKeys.EIGHT || key.Key == DeviceKeys.NINE || key.Key == DeviceKeys.ZERO || key.Key == DeviceKeys.MINUS
+                             || key.Key == DeviceKeys.U || key.Key == DeviceKeys.I || key.Key == DeviceKeys.O || key.Key == DeviceKeys.P || key.Key == DeviceKeys.OPEN_BRACKET
+                           || key.Key == DeviceKeys.J || key.Key == DeviceKeys.K || key.Key == DeviceKeys.L || key.Key == DeviceKeys.SEMICOLON || key.Key == DeviceKeys.APOSTROPHE
+                         || key.Key == DeviceKeys.M || key.Key == DeviceKeys.COMMA || key.Key == DeviceKeys.PERIOD || key.Key == DeviceKeys.FORWARD_SLASH
+                             || key.Key == DeviceKeys.RIGHT_CONTROL || key.Key == DeviceKeys.RIGHT_ALT) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             midRightColor.Add(key.Value);
+
+                        }//right */
+                        if ((key.Key == DeviceKeys.END || key.Key == DeviceKeys.DELETE || key.Key == DeviceKeys.BACKSPACE || key.Key == DeviceKeys.BACKSLASH
+                                      || key.Key == DeviceKeys.RIGHT_SHIFT || key.Key == DeviceKeys.ARROW_UP || key.Key == DeviceKeys.ARROW_DOWN
+                                     || key.Key == DeviceKeys.ARROW_RIGHT || key.Key == DeviceKeys.ARROW_LEFT || key.Key == DeviceKeys.ENTER || key.Key == DeviceKeys.PAGE_DOWN
+                                     || key.Key == DeviceKeys.PAGE_UP || key.Key == DeviceKeys.PAGE_DOWN || key.Key == DeviceKeys.CLOSE_BRACKET) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+
+                            rightColor.Add(key.Value);
 
                         }
 
