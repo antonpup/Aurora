@@ -62,6 +62,12 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Battlefield 1
 * Dishonored
 * The Witcher 3
+* Minecraft
+* Killing Floor 2
+* DOOM (2016)
+* Factorio
+* Quake Champions
+* Diablo III
 
 ## Natively Supported Devices
 
@@ -97,6 +103,9 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * Dark Core RGB
 * M65 RGB
 * Glaive RGB
+#### Other Peripherals
+* ST100 Headset Stand
+* MM800 Mousepad
 
 ### Razer
 #### Keyboards
@@ -143,6 +152,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * One
 ### Clevo
 ### AtmoOrb
+### Dualshock 4 (PS4 Controller)
 
 
 ## Video demonstrations
@@ -298,6 +308,38 @@ The Witcher 3 features
 
 * Current active sign as background.
 * Health, Toxicity, and Stamina indicators.
+
+Minecraft features
+
+* Health, hunger, experience, and other indicators
+* Day/Night indicator
+* Rain and Fire indicator
+
+
+Killing Floor 2 features
+
+* Killing Floor 2 effects are controlled by the game itself
+
+
+DOOM features
+
+* DOOM effects are controlled by the game itself
+
+
+Quake Champions features
+
+* Quake Champions effects are controlled by the game itself
+
+
+Factorio features
+
+* Factorio effects are controlled by the game itself
+
+
+Diablo III features
+
+* Diablo III effects are controlled by the game itself
+
 
 ## F.A.Q.
 ### Can this give me a ban in a video game?
