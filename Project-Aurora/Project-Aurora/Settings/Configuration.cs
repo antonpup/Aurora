@@ -140,6 +140,9 @@ namespace Aurora.Settings
     {
         [Description("None")]
         None = 0,
+
+        [Description("Generic Laptop")]
+        GenericLaptop = 1,
         /*
         [Description("Logitech")]
         Logitech = 1,
