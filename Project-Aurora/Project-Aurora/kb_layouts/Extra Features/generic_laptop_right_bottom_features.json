@@ -1,0 +1,21 @@
+﻿{
+  "group_tag": "keyboard",
+  "origin_region": 4,
+  "grouped_keys": [
+    {
+      "visualName": "↓",
+      "tag": 103,
+      "margin_left": -61.5,
+      "margin_top": -21.0,
+      "width": 30.0,
+      "height": 14.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 1,
+      "margin_left_bits": -6,
+      "margin_top_bits": -2,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

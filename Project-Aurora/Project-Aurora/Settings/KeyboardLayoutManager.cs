@@ -681,6 +681,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
                 else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Flare)
                     layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
+                else if (keyboard_preference == PreferredKeyboard.GenericLaptop)
+                    layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
                 else
                 {
                     LoadNone();
