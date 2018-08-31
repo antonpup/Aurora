@@ -137,14 +137,17 @@ namespace Aurora.Devices.LightFX
             lock (action_lock) {
                 if (!isInitialized) {
                     try {
-                        if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_custom_hid")) {
+                        if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_custom_pid")) {
                             int pid = Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_pid");
-                            Global.logger.Debug("PID: " + pid);
-                            if (LightFXSDK.HIDInitialize(0x187c, pid)) {
-                                if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_length"))
+                            String product = "0x" + pid.ToString();
+                            Global.logger.Debug("PID: " + product + " |Len: " + length);
+                            pid = int.Parse(product, System.Globalization.NumberStyles.HexNumber);
+                            if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_length"))
                                     length = 12;
+                            if (LightFXSDK.HIDInitialize(0x187c, pid)) {
                                 usingHID = true;
                             }
+                           
                         } else if (LightFXSDK.HIDInitialize(0x187c, 0x511)) {
                             //AREA_51_M15X
                             usingHID = true;
@@ -154,6 +157,9 @@ namespace Aurora.Devices.LightFX
                         } else if (LightFXSDK.HIDInitialize(0x187c, 0x514)) {
                             //ALL_POWERFULL_M11X
                             usingHID = true;
+                        } else if (LightFXSDK.HIDInitialize(0x187c, 0x524)) {
+                            //M17X
+                            usingHID = true;
                         } else if (LightFXSDK.HIDInitialize(0x187c, 0x528)) {
                             //AW15R1/17R2
                             usingHID = true;
@@ -161,21 +167,21 @@ namespace Aurora.Devices.LightFX
                             //AW13R3
                             length = 12;
                             usingHID = true;
-                        } else if (LightFXSDK.HIDInitialize(0x187c, 0x531)) {
+                        } else if (LightFXSDK.HIDInitialize(0x187c, 0x530)) {
                             //AW15R3/17R4
                             length = 12;
                             usingHID = true;
                         } else {
                             //Placeholder if in future, I need to use SDK instead of HID
-
+                            /*
                             LFXInit();
-                           
+                            */
                         }
                         if (usingHID) {
                             AlienfxWaitForBusy();
                             Reset(0x03);
                             AlienfxWaitForReady();
-                            setColor(1, (int) BITMASK.leftZone, 255, 255, 255);
+                            setColor(1, (int)BITMASK.leftZone, 255, 255, 255);
                             isInitialized = true;
                         }
 
@@ -365,7 +371,6 @@ namespace Aurora.Devices.LightFX
                         } else {
                             Thread.Sleep(50);
                             // continue;
-                            Global.logger.Debug("Else false");
                             return false;
                         }
                     }
@@ -376,11 +381,11 @@ namespace Aurora.Devices.LightFX
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors) {
                     if (e.Cancel) return false;
                     if (isInitialized) {
-                        
+
 
                         //left
                         if (Array.Exists(leftZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
-                           
+
                             leftColor.Add(key.Value);
 
                         } //middle left
@@ -394,7 +399,7 @@ namespace Aurora.Devices.LightFX
                             midRightColor.Add(key.Value);
 
                         }//right */
-                if (Array.Exists(rightZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(rightZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             rightColor.Add(key.Value);
 
@@ -403,10 +408,10 @@ namespace Aurora.Devices.LightFX
 
                         if (key.Key == DeviceKeys.Peripheral_Logo) {
 
-                            setColor(1, (int) BITMASK.AlienFrontLogo, key.Value.R, key.Value.G, key.Value.B);
+                            setColor(1, (int)BITMASK.AlienFrontLogo, key.Value.R, key.Value.G, key.Value.B);
                             if (!usingHID) {
                                 LightFXSDK.setColorRGB(LightFXSDK.color, key.Value.R, key.Value.G, key.Value.B);
-                              
+
                                 LightFXSDK.LFX_SetLightColor(1, 5, ref LightFXSDK.color);
                             }
                         }
@@ -425,10 +430,10 @@ namespace Aurora.Devices.LightFX
                     setColor(3, (int)BITMASK.LeftPanelTop, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(4, (int)BITMASK.leftZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     if (!usingHID) {
-                       
+
                         LightFXSDK.LFX_SetLightColor(1, 0, ref LightFXSDK.color4);
                     }
-                    
+
                 } else {
                     setColor(3, (int)BITMASK.LeftPanelTop, 0, 0, 0);
                     setColor(4, (int)BITMASK.leftZone, 0, 0, 0);
@@ -552,7 +557,7 @@ namespace Aurora.Devices.LightFX
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
                 default_registry.Register($"{devicename}_pid", 0, "Device PID");
-                default_registry.Register($"{devicename}_length", false, "Use byte length 9 instead of 12");
+                default_registry.Register($"{devicename}_length", true, "Use 12 byte length instead of 9");
             }
             return default_registry;
         }
