@@ -444,17 +444,17 @@ namespace Aurora.Devices.LightFX
 
                         //left
                         if ((key.Key == DeviceKeys.ESC || key.Key == DeviceKeys.TAB || key.Key == DeviceKeys.LEFT_FN || key.Key == DeviceKeys.CAPS_LOCK || key.Key == DeviceKeys.LEFT_SHIFT
-                            || key.Key == DeviceKeys.LEFT_CONTROL || key.Key == DeviceKeys.F1 || key.Key == DeviceKeys.ONE || key.Key == DeviceKeys.Q
-                            || key.Key == DeviceKeys.A || key.Key == DeviceKeys.Z || key.Key == DeviceKeys.LEFT_WINDOWS || key.Key == DeviceKeys.F2
+                            || key.Key == DeviceKeys.LEFT_CONTROL || key.Key == DeviceKeys.LEFT_FN || key.Key == DeviceKeys.F1 || key.Key == DeviceKeys.ONE || key.Key == DeviceKeys.TWO || key.Key == DeviceKeys.Q
+                            || key.Key == DeviceKeys.A || key.Key == DeviceKeys.Z || key.Key == DeviceKeys.LEFT_WINDOWS || key.Key == DeviceKeys.F2 || key.Key == DeviceKeys.TILDE
                             || key.Key == DeviceKeys.W || key.Key == DeviceKeys.E || key.Key == DeviceKeys.D || key.Key == DeviceKeys.S || key.Key == DeviceKeys.X || key.Key == DeviceKeys.LEFT_ALT
                             || key.Key == DeviceKeys.F3 || key.Key == DeviceKeys.THREE) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
                             //Global.logger.Debug("Key pressed: " + key);
                             leftColor.Add(key.Value);
 
                         } //middle left
-                        if ((key.Key == DeviceKeys.F4 || key.Key == DeviceKeys.FOUR || key.Key == DeviceKeys.C
+                        if ((key.Key == DeviceKeys.F4 || key.Key == DeviceKeys.FOUR || key.Key == DeviceKeys.C || key.Key == DeviceKeys.SPACE
                             || key.Key == DeviceKeys.F5 || key.Key == DeviceKeys.FIVE || key.Key == DeviceKeys.R || key.Key == DeviceKeys.F || key.Key == DeviceKeys.V
-                            || key.Key == DeviceKeys.F6 || key.Key == DeviceKeys.SIX || key.Key == DeviceKeys.T || key.Key == DeviceKeys.G || key.Key == DeviceKeys.B
+                            || key.Key == DeviceKeys.F6 || key.Key == DeviceKeys.SIX || key.Key == DeviceKeyfs.T || key.Key == DeviceKeys.G || key.Key == DeviceKeys.B
                            || key.Key == DeviceKeys.F7 || key.Key == DeviceKeys.SEVEN || key.Key == DeviceKeys.Y || key.Key == DeviceKeys.H|| key.Key == DeviceKeys.N) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             midleftColor.Add(key.Value);
