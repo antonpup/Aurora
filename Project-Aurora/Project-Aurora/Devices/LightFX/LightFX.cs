@@ -454,7 +454,7 @@ namespace Aurora.Devices.LightFX
                         } //middle left
                         if ((key.Key == DeviceKeys.F4 || key.Key == DeviceKeys.FOUR || key.Key == DeviceKeys.C || key.Key == DeviceKeys.SPACE
                             || key.Key == DeviceKeys.F5 || key.Key == DeviceKeys.FIVE || key.Key == DeviceKeys.R || key.Key == DeviceKeys.F || key.Key == DeviceKeys.V
-                            || key.Key == DeviceKeys.F6 || key.Key == DeviceKeys.SIX || key.Key == DeviceKeyfs.T || key.Key == DeviceKeys.G || key.Key == DeviceKeys.B
+                            || key.Key == DeviceKeys.F6 || key.Key == DeviceKeys.SIX || key.Key == DeviceKeys.T || key.Key == DeviceKeys.G || key.Key == DeviceKeys.B
                            || key.Key == DeviceKeys.F7 || key.Key == DeviceKeys.SEVEN || key.Key == DeviceKeys.Y || key.Key == DeviceKeys.H|| key.Key == DeviceKeys.N) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             midleftColor.Add(key.Value);
