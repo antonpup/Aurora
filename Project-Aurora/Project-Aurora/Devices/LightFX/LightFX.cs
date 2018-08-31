@@ -482,12 +482,11 @@ namespace Aurora.Devices.LightFX
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors) {
                     if (e.Cancel) return false;
                     if (isInitialized) {
-                        //int total = key.Value.R + key.Value.G + key.Value.B;
-                        // Global.logger.Info("RGB Codes: " + key.Value.R + " : " + key.Value.G + " : " + key.Value.B);
+                        
 
                         //left
                         if (Array.Exists(leftZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
-                            //Global.logger.Debug("Key pressed: " + key);
+                           
                             leftColor.Add(key.Value);
 
                         } //middle left
@@ -518,10 +517,6 @@ namespace Aurora.Devices.LightFX
                                 color.brightness = 255;
                                 LFX_SetLightColor(1, 5, ref color);
                             }
-                        }// touchpad
-                        if (key.Key == DeviceKeys.SPACE) {
-                            // setColor(2, TouchPad, key.Value.R, key.Value.G, key.Value.B);
-
                         }
                     }
 
