@@ -95,10 +95,10 @@ namespace Aurora.Devices.LightFX
 
         [DllImport("LightFX_SDK.dll", CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static extern bool HIDWrite(byte[] Buffer);
+        public static extern bool HIDWrite(byte[] Buffer, int len);
 
         [DllImport("LightFX_SDK.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int HIDRead(byte[] Buffer);
+        public static extern int HIDRead(byte[] Buffer, int len);
 
 
 
@@ -155,11 +155,17 @@ namespace Aurora.Devices.LightFX
 
         public int deviceStatus()
         {
-            if (HID) {
-                byte[] Buffer = { 0x02, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-                bool write = HIDWrite(Buffer);
+            if (usingHID) {
+
+                byte[] Buffer = new byte[length];
+
+                Buffer[0] = 0x02;
+                Buffer[1] = 0x06;
+
+
+                bool write = HIDWrite(Buffer, Buffer.Length);
                 Buffer[0] = 0x01;
-                int status = HIDRead(Buffer);
+                int status = HIDRead(Buffer, Buffer.Length);
                 bool read = getReadStatus();
                 if (!read) {
                     Global.logger.Info("Error Code: " + Marshal.GetLastWin32Error());
@@ -176,8 +182,9 @@ namespace Aurora.Devices.LightFX
 
         public void setColor(byte index, int bitmask, byte r, byte g, byte b)
         {
-            if (HID) {
-                byte[] Buffer = { 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            if (usingHID) {
+                byte[] Buffer = new byte[length];
+                Buffer[0] = 0x02;
                 Buffer[1] = 0x03;
                 Buffer[2] = index;
                 Buffer[3] = (byte)((bitmask & 0xFF0000) >> 16);
@@ -186,9 +193,8 @@ namespace Aurora.Devices.LightFX
                 Buffer[6] = r;
                 Buffer[7] = g;
                 Buffer[8] = b;
-                Buffer[9] = 255;
                 // bool result = DeviceIoControl(devHandle, 0xb0195, Buffer, (uint)Buffer.Length, IntPtr.Zero, 0, ref writtenByteLength, IntPtr.Zero);
-                bool result = HIDWrite(Buffer);
+                bool result = HIDWrite(Buffer, Buffer.Length);
                 Loop();
             }
             //bool result2 = ExecuteColors();
@@ -198,19 +204,23 @@ namespace Aurora.Devices.LightFX
 
         public void Loop()
         {
-            if (HID) {
-                byte[] Buffer = { 0x02, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-                bool result = HIDWrite(Buffer);
+            if (usingHID) {
+                byte[] Buffer = new byte[length];
+                Buffer[0] = 0x02;
+                Buffer[1] = 0x04;
+                bool result = HIDWrite(Buffer, Buffer.Length);
             }
         }
 
         public bool ExecuteColors()
         {
-            if (HID) {
+            if (usingHID) {
 
-                byte[] Buffer = { 0x02, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+                byte[] Buffer = new byte[length];
+                Buffer[0] = 0x02;
+                Buffer[1] = 0x05;
 
-                bool result = HIDWrite(Buffer);
+                bool result = HIDWrite(Buffer, Buffer.Length);
                 return result;
             }
             return false;
@@ -218,60 +228,71 @@ namespace Aurora.Devices.LightFX
 
         public void Reset(int status)
         {
-            if (HID) {
-                byte[] Buffer = { 0x02, 0x07, (byte)status, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-                bool read = HIDWrite(Buffer);
+            if (usingHID) {
+                byte[] Buffer = new byte[length];
+                Buffer[0] = 0x02;
+                Buffer[1] = 0x07;
+                Buffer[2] = (byte)status;
+                bool read = HIDWrite(Buffer, Buffer.Length);
             }
         }
 
-
-        bool HID;
-
+        int length = 9;
+        bool usingHID;
         public bool Initialize()
         {
             lock (action_lock) {
                 if (!isInitialized) {
                     try {
-
-                        HID = HIDInitialize(0x187c, 0x530);
-                        //HID = HIDInitialize(0x04F2, 0x1566);
-                        Global.logger.Debug("HID: " + HID);
-                        if (!HID) {
-
+                        if (HIDInitialize(0x187c, 0x511)) {
+                            //AREA_51_M15X
+                            usingHID = true;
+                        } else if (HIDInitialize(0x187c, 0x512)) {
+                            //ALL_POWERFULL_M15X/ALL_POWERFULL_M17X
+                            usingHID = true;
+                        } else if (HIDInitialize(0x187c, 0x514)) {
+                            //ALL_POWERFULL_M11X
+                            usingHID = true;
+                        } else if (HIDInitialize(0x187c, 0x528)) {
+                            //AW15R1/17R2
+                            usingHID = true;
+                        } else if (HIDInitialize(0x187c, 0x529)) {
+                            //AW13R3
+                            length = 12;
+                            usingHID = true;
+                        } else if (HIDInitialize(0x187c, 0x530)) {
+                            //AW15R3/17R4
+                            length = 12;
+                            usingHID = true;
+                        } else {
+                            //Placeholder if in future, I need to use SDK instead of HID
+                            /*
                             uint val = LFX_Initialize();
-                            val = 2;
                             Global.logger.Debug("LFX: " + val);
                             if (val == LFX_SUCCESS) {
                                 LFX_Reset();
                                 LFX_SetTiming(40);
                                 uint numDevice = 0;
                                 isInitialized = true;
-
+                                usingHID = false;
                                 LFX_GetNumDevices(ref numDevice);
-                                /*for (uint devIndex = 0; devIndex < numDevices; devIndex++) {
+                                for (uint devIndex = 0; devIndex < numDevices; devIndex++) {
                                     uint descSize = 255;
                                     char* description = new char[descSize];
                                     byte devType = 0;
                                     LFX_GetDeviceDescription(devIndex, description, descSize, &devType);
-                                }*/
-                                return true;
-                            }
-
-                            return false;
-
-
-                        } else {
-
+                                }
+                              }*/
+                        }
+                        if (usingHID) {
                             AlienfxWaitForBusy();
                             Reset(0x03);
-                            Thread.Sleep(3);
                             AlienfxWaitForReady();
                             setColor(1, leftZone, 255, 255, 255);
-                            Global.logger.Info("Handler value : " + HID);
-                            isInitialized = HID;
-                            return HID;
+                            isInitialized = true;
                         }
 
+                        return isInitialized;
                     } catch (Exception ex) {
                         Global.logger.Error("LIGHTFX device, Exception! Message: " + ex);
                         isInitialized = false;
@@ -288,7 +309,7 @@ namespace Aurora.Devices.LightFX
                 try {
                     if (isInitialized) {
                         this.Reset();
-                        if (HID)
+                        if (usingHID)
                             HIDClose();
                         //LFX_Release();
                         isInitialized = false;
@@ -356,6 +377,28 @@ namespace Aurora.Devices.LightFX
             return status;
         }
 
+        DeviceKeys[] leftZoneKeys = {DeviceKeys.ESC , DeviceKeys.TAB , DeviceKeys.LEFT_FN, DeviceKeys.CAPS_LOCK, DeviceKeys.LEFT_SHIFT,
+                            DeviceKeys.LEFT_CONTROL, DeviceKeys.LEFT_FN , DeviceKeys.F1 , DeviceKeys.ONE , DeviceKeys.TWO  ,DeviceKeys.Q,
+                            DeviceKeys.A , DeviceKeys.Z,  DeviceKeys.LEFT_WINDOWS,  DeviceKeys.F2 , DeviceKeys.TILDE,
+                            DeviceKeys.W , DeviceKeys.E , DeviceKeys.D  ,DeviceKeys.S , DeviceKeys.X, DeviceKeys.LEFT_ALT,
+                            DeviceKeys.F3 ,DeviceKeys.THREE };
+
+        DeviceKeys[] midLeftZoneKeys = {  DeviceKeys.F4 ,  DeviceKeys.FOUR ,  DeviceKeys.C ,  DeviceKeys.SPACE
+                            ,  DeviceKeys.F5 ,  DeviceKeys.FIVE ,  DeviceKeys.R ,  DeviceKeys.F ,  DeviceKeys.V
+                            ,  DeviceKeys.F6 ,  DeviceKeys.SIX ,  DeviceKeys.T ,  DeviceKeys.G ,  DeviceKeys.B
+                           ,  DeviceKeys.F7 ,  DeviceKeys.SEVEN ,  DeviceKeys.Y, DeviceKeys.H ,  DeviceKeys.N};
+
+        DeviceKeys[] midRightZoneKeys = { DeviceKeys.F8 ,  DeviceKeys.F9 ,  DeviceKeys.F10 ,  DeviceKeys.F11 ,  DeviceKeys.F12 ,  DeviceKeys.HOME
+                         ,  DeviceKeys.EIGHT ,  DeviceKeys.NINE ,  DeviceKeys.ZERO ,  DeviceKeys.MINUS
+                             ,  DeviceKeys.U ,  DeviceKeys.I ,  DeviceKeys.O ,  DeviceKeys.P ,  DeviceKeys.OPEN_BRACKET
+                           ,  DeviceKeys.J ,  DeviceKeys.K ,  DeviceKeys.L ,  DeviceKeys.SEMICOLON ,  DeviceKeys.APOSTROPHE
+                         ,  DeviceKeys.M ,  DeviceKeys.COMMA ,  DeviceKeys.PERIOD ,  DeviceKeys.FORWARD_SLASH
+                             ,  DeviceKeys.RIGHT_CONTROL ,  DeviceKeys.RIGHT_ALT };
+
+        DeviceKeys[] rightZoneKeys = { DeviceKeys.END ,  DeviceKeys.DELETE ,  DeviceKeys.BACKSPACE ,  DeviceKeys.BACKSLASH
+                                      ,  DeviceKeys.RIGHT_SHIFT ,  DeviceKeys.ARROW_UP ,  DeviceKeys.ARROW_DOWN
+                                     ,  DeviceKeys.ARROW_RIGHT ,  DeviceKeys.ARROW_LEFT ,  DeviceKeys.ENTER ,  DeviceKeys.PAGE_DOWN
+                                     ,  DeviceKeys.PAGE_UP ,  DeviceKeys.PAGE_DOWN ,  DeviceKeys.CLOSE_BRACKET };
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
@@ -388,7 +431,7 @@ namespace Aurora.Devices.LightFX
                 color5.blue = 0;
                 color5.red = 0;
 
-                if (HID) {
+                if (usingHID) {
                     int status = AlienfxWaitForBusy();
 
                     if (status == ALIENFX_DEVICE_RESET) {
@@ -443,37 +486,22 @@ namespace Aurora.Devices.LightFX
                         // Global.logger.Info("RGB Codes: " + key.Value.R + " : " + key.Value.G + " : " + key.Value.B);
 
                         //left
-                        if ((key.Key == DeviceKeys.ESC || key.Key == DeviceKeys.TAB || key.Key == DeviceKeys.LEFT_FN || key.Key == DeviceKeys.CAPS_LOCK || key.Key == DeviceKeys.LEFT_SHIFT
-                            || key.Key == DeviceKeys.LEFT_CONTROL || key.Key == DeviceKeys.LEFT_FN || key.Key == DeviceKeys.F1 || key.Key == DeviceKeys.ONE || key.Key == DeviceKeys.TWO || key.Key == DeviceKeys.Q
-                            || key.Key == DeviceKeys.A || key.Key == DeviceKeys.Z || key.Key == DeviceKeys.LEFT_WINDOWS || key.Key == DeviceKeys.F2 || key.Key == DeviceKeys.TILDE
-                            || key.Key == DeviceKeys.W || key.Key == DeviceKeys.E || key.Key == DeviceKeys.D || key.Key == DeviceKeys.S || key.Key == DeviceKeys.X || key.Key == DeviceKeys.LEFT_ALT
-                            || key.Key == DeviceKeys.F3 || key.Key == DeviceKeys.THREE) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(leftZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
                             //Global.logger.Debug("Key pressed: " + key);
                             leftColor.Add(key.Value);
 
                         } //middle left
-                        if ((key.Key == DeviceKeys.F4 || key.Key == DeviceKeys.FOUR || key.Key == DeviceKeys.C || key.Key == DeviceKeys.SPACE
-                            || key.Key == DeviceKeys.F5 || key.Key == DeviceKeys.FIVE || key.Key == DeviceKeys.R || key.Key == DeviceKeys.F || key.Key == DeviceKeys.V
-                            || key.Key == DeviceKeys.F6 || key.Key == DeviceKeys.SIX || key.Key == DeviceKeys.T || key.Key == DeviceKeys.G || key.Key == DeviceKeys.B
-                           || key.Key == DeviceKeys.F7 || key.Key == DeviceKeys.SEVEN || key.Key == DeviceKeys.Y || key.Key == DeviceKeys.H|| key.Key == DeviceKeys.N) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(midLeftZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             midleftColor.Add(key.Value);
 
                         }//middle right
-                        if ((key.Key == DeviceKeys.F8 || key.Key == DeviceKeys.F9 || key.Key == DeviceKeys.F10 || key.Key == DeviceKeys.F11 || key.Key == DeviceKeys.F12 || key.Key == DeviceKeys.HOME
-                         || key.Key == DeviceKeys.EIGHT || key.Key == DeviceKeys.NINE || key.Key == DeviceKeys.ZERO || key.Key == DeviceKeys.MINUS
-                             || key.Key == DeviceKeys.U || key.Key == DeviceKeys.I || key.Key == DeviceKeys.O || key.Key == DeviceKeys.P || key.Key == DeviceKeys.OPEN_BRACKET
-                           || key.Key == DeviceKeys.J || key.Key == DeviceKeys.K || key.Key == DeviceKeys.L || key.Key == DeviceKeys.SEMICOLON || key.Key == DeviceKeys.APOSTROPHE
-                         || key.Key == DeviceKeys.M || key.Key == DeviceKeys.COMMA || key.Key == DeviceKeys.PERIOD || key.Key == DeviceKeys.FORWARD_SLASH
-                             || key.Key == DeviceKeys.RIGHT_CONTROL || key.Key == DeviceKeys.RIGHT_ALT) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(midRightZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             midRightColor.Add(key.Value);
 
                         }//right */
-                        if ((key.Key == DeviceKeys.END || key.Key == DeviceKeys.DELETE || key.Key == DeviceKeys.BACKSPACE || key.Key == DeviceKeys.BACKSLASH
-                                      || key.Key == DeviceKeys.RIGHT_SHIFT || key.Key == DeviceKeys.ARROW_UP || key.Key == DeviceKeys.ARROW_DOWN
-                                     || key.Key == DeviceKeys.ARROW_RIGHT || key.Key == DeviceKeys.ARROW_LEFT || key.Key == DeviceKeys.ENTER || key.Key == DeviceKeys.PAGE_DOWN
-                                     || key.Key == DeviceKeys.PAGE_UP || key.Key == DeviceKeys.PAGE_DOWN || key.Key == DeviceKeys.CLOSE_BRACKET) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(rightZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             rightColor.Add(key.Value);
 
@@ -483,7 +511,7 @@ namespace Aurora.Devices.LightFX
                         if (key.Key == DeviceKeys.Peripheral_Logo) {
 
                             setColor(1, AlienFrontLogo, key.Value.R, key.Value.G, key.Value.B);
-                            if (!HID) {
+                            if (!usingHID) {
                                 color.red = key.Value.R;
                                 color.blue = key.Value.B;
                                 color.green = key.Value.G;
@@ -512,14 +540,14 @@ namespace Aurora.Devices.LightFX
                     color4.brightness = 255;
                     setColor(3, LeftPanelTop, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(4, leftZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
-                    if (!HID) {
+                    if (!usingHID) {
                         LFX_SetLightColor(1, 0, ref color4);
                     }
                     //Global.logger.Info("Left Codes: " + color4.red + " : " + color4.green + " : " + color4.blue);
                 } else {
                     setColor(3, LeftPanelTop, 0, 0, 0);
                     setColor(4, leftZone, 0, 0, 0);
-                    if (!HID) {
+                    if (!usingHID) {
                         color1.brightness = 0;
                         LFX_SetLightColor(1, 0, ref color1);
                     }
@@ -536,7 +564,7 @@ namespace Aurora.Devices.LightFX
                     color3.brightness = 255;
                     setColor(5, LeftPanelBottom, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(6, leftMiddleZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
-                    if (!HID) {
+                    if (!usingHID) {
 
                         LFX_SetLightColor(1, 2, ref color3);
                     }
@@ -544,7 +572,7 @@ namespace Aurora.Devices.LightFX
                 } else {
                     setColor(5, LeftPanelBottom, 0, 0, 0);
                     setColor(6, leftMiddleZone, 0, 0, 0);
-                    if (!HID) {
+                    if (!usingHID) {
                         color3.brightness = 0;
                         LFX_SetLightColor(1, 2, ref color3);
                     }
@@ -562,11 +590,11 @@ namespace Aurora.Devices.LightFX
                     color1.brightness = 255;
                     setColor(7, RightPanelTop, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(8, rightZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
-                    if (!HID) {
+                    if (!usingHID) {
                         LFX_SetLightColor(1, 3, ref color1);
                     }
                 } else {
-                    if (!HID) {
+                    if (!usingHID) {
                         color1.brightness = 0;
                         LFX_SetLightColor(1, 3, ref color1);
                     }
@@ -586,12 +614,12 @@ namespace Aurora.Devices.LightFX
                     color2.brightness = 255;
                     setColor(9, RightPanelBottom, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(10, rightMiddleZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
-                    if (!HID) {
+                    if (!usingHID) {
                         LFX_SetLightColor(1, 4, ref color2);
                     }
                     //Global.logger.Info("Mid Right Codes: " + color2.red + " : " + color2.green + " : " + color2.blue);
                 } else {
-                    if (!HID) {
+                    if (!usingHID) {
                         color1.brightness = 0;
                         LFX_SetLightColor(1, 4, ref color1);
                     }
@@ -601,7 +629,7 @@ namespace Aurora.Devices.LightFX
                 // setColor(1, TouchPad, color5.red, color5.green, color5.blue);
 
                 ExecuteColors();
-                if (!HID)
+                if (!usingHID)
                     LFX_Update();
                 leftColor.Clear();
                 midleftColor.Clear();
