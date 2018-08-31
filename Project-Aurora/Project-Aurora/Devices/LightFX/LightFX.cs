@@ -35,6 +35,7 @@ namespace Aurora.Devices.LightFX
         private int RightPanelTop = 0x2000;
         private int RightPanelBottom = 0x800;
         private int TouchPad = 0x80;
+        private VariableRegistry default_registry = null;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct LFX_COLOR
@@ -244,7 +245,17 @@ namespace Aurora.Devices.LightFX
             lock (action_lock) {
                 if (!isInitialized) {
                     try {
-                        if (HIDInitialize(0x187c, 0x511)) {
+                        if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_custom_hid"))
+                        {
+                            int pid = Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_pid");
+
+                            if (HIDInitialize(0x187c, pid))
+                            {
+                                if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_length"))
+                                    length = 12;
+                                usingHID = true;
+                            }
+                        } else if (HIDInitialize(0x187c, 0x511)) {
                             //AREA_51_M15X
                             usingHID = true;
                         } else if (HIDInitialize(0x187c, 0x512)) {
@@ -668,7 +679,14 @@ namespace Aurora.Devices.LightFX
 
         public VariableRegistry GetRegisteredVariables()
         {
-            return new VariableRegistry();
+            if (default_registry == null)
+            {
+                default_registry = new VariableRegistry();
+                default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
+                default_registry.Register($"{devicename}_pid", 0, "Device PID");
+                default_registry.Register($"{devicename}_length", false, "Use byte length 9 instead of 12");
+            }
+            return default_registry;
         }
     }
 }
