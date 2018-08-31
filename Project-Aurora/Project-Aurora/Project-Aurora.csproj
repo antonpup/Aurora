@@ -1214,7 +1214,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\ats_64x64.png" />
-    <Resource Include="Resources\gta5_64x64.png" />
     <Resource Include="Resources\qc_256x256.png" />
     <Resource Include="Resources\bf1_128x128.png" />
     <Resource Include="Resources\dh_128x128.png" />
@@ -1224,13 +1223,13 @@
     <Resource Include="Resources\mc_clock_day.png" />
     <Resource Include="Resources\mc_clock_night.png" />
     <Resource Include="Resources\kf2.png" />
+    <Resource Include="Resources\doom_256x256.png" />
+    <Resource Include="Resources\factorio_64x64.png" />
+    <Resource Include="Resources\quakechampions_195x195.png" />
+    <Resource Include="Resources\diablo3_120x120.png" />
     <Content Include="LightFX_SDK.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\diablo3_120x120.png" />
-    <Content Include="Resources\doom_256x256.png" />
-    <Content Include="Resources\factorio_64x64.png" />
-    <Content Include="Resources\quakechampions_195x195.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1855,6 +1854,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\aurora_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\gta5_64x64.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
