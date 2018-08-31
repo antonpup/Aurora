@@ -460,7 +460,7 @@ namespace Aurora.Settings
             time_based_dimming_end_hour = 8;
             time_based_dimming_end_minute = 0;
 
-            nighttime_enabled = true;
+            nighttime_enabled = false;
             nighttime_start_hour = 20;
             nighttime_start_minute = 0;
             nighttime_end_hour = 7;
