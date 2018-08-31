@@ -372,6 +372,7 @@
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\LightFX\LightFX.cs" />
+    <Compile Include="Devices\LightFX\LightFXSDK.cs" />
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
