@@ -1223,6 +1223,9 @@
     <Resource Include="Resources\mc_clock_day.png" />
     <Resource Include="Resources\mc_clock_night.png" />
     <Resource Include="Resources\kf2.png" />
+    <Content Include="LightFX_SDK.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
