@@ -105,6 +105,8 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.SteelSeriesHID.SteelSeriesHIDDevice()));   // SteelSeriesHID Device
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
             devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));
+            devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
+
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
