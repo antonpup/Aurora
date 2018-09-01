@@ -139,15 +139,13 @@ namespace Aurora.Devices.LightFX
                     try {
                         if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_custom_pid")) {
                             int pid = Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_pid");
-                            String product = "0x" + pid.ToString();
-                            Global.logger.Debug("PID: " + product + " |Len: " + length);
-                            pid = int.Parse(product, System.Globalization.NumberStyles.HexNumber);
+                          
                             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_length"))
                                     length = 12;
                             if (LightFXSDK.HIDInitialize(0x187c, pid)) {
                                 usingHID = true;
                             }
-                           
+                            Global.logger.Debug("PID: " + pid + " |Len: " + length);
                         } else if (LightFXSDK.HIDInitialize(0x187c, 0x511)) {
                             //AREA_51_M15X
                             usingHID = true;
@@ -167,7 +165,7 @@ namespace Aurora.Devices.LightFX
                             //AW13R3
                             length = 12;
                             usingHID = true;
-                        } else if (LightFXSDK.HIDInitialize(0x187c, 0x530)) {
+                        } else if (LightFXSDK.HIDInitialize(0x187c, 0x531)) {
                             //AW15R3/17R4
                             length = 12;
                             usingHID = true;
@@ -223,8 +221,10 @@ namespace Aurora.Devices.LightFX
                 try {
                     if (isInitialized) {
                         this.Reset();
-                        if (usingHID)
+                        if (usingHID) {
+                            usingHID = false;
                             LightFXSDK.HIDClose();
+                        }
                         //LFX_Release();
                         isInitialized = false;
                     }
@@ -557,7 +557,7 @@ namespace Aurora.Devices.LightFX
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
                 default_registry.Register($"{devicename}_pid", 0, "Device PID: 0x", flags: VariableFlags.UseHEX);
-                default_registry.Register($"{devicename}_length", true, "Use 12 byte length instead of 9");
+                default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
             }
             return default_registry;
         }
