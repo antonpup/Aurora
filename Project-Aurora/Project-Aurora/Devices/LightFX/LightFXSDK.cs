@@ -113,6 +113,8 @@ namespace LightFXAPI
         [DllImport("LightFX_SDK.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int HIDRead(byte[] Buffer, int len);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        public static extern short GetKeyState(int keyCode);
 
         public const int LFX_SUCCESS = 0;
         // Success

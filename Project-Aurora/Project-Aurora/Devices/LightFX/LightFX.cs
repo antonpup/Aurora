@@ -325,6 +325,15 @@ namespace Aurora.Devices.LightFX
                                       ,  DeviceKeys.RIGHT_SHIFT ,  DeviceKeys.ARROW_UP ,  DeviceKeys.ARROW_DOWN
                                      ,  DeviceKeys.ARROW_RIGHT ,  DeviceKeys.ARROW_LEFT ,  DeviceKeys.ENTER ,  DeviceKeys.PAGE_DOWN
                                      ,  DeviceKeys.PAGE_UP ,  DeviceKeys.PAGE_DOWN ,  DeviceKeys.CLOSE_BRACKET };
+
+        DeviceKeys[] numpadZone = { DeviceKeys.NUM_ONE ,  DeviceKeys.NUM_TWO ,  DeviceKeys.NUM_THREE ,  DeviceKeys.NUM_FOUR
+                                      ,  DeviceKeys.NUM_FIVE ,  DeviceKeys.NUM_SIX ,  DeviceKeys.NUM_SEVEN
+                                     ,  DeviceKeys.NUM_EIGHT ,  DeviceKeys.NUM_NINE ,  DeviceKeys.NUM_ZERO ,  DeviceKeys.NUM_PERIOD
+                                     ,  DeviceKeys.NUM_LOCK ,  DeviceKeys.NUM_ENTER ,  DeviceKeys.NUM_ASTERISK, DeviceKeys.NUM_SLASH};
+
+
+        bool NumLock = (((ushort)LightFXSDK.GetKeyState(0x90)) & 0xffff) != 0;
+
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
@@ -336,6 +345,8 @@ namespace Aurora.Devices.LightFX
             List<Color> midRightColor = new List<Color>();
 
             List<Color> rightColor = new List<Color>();
+
+            List<Color> numpadColor = new List<Color>();
 
 
             try {
@@ -390,11 +401,10 @@ namespace Aurora.Devices.LightFX
                 } else {
                     LightFXSDK.LFX_Reset();
                 }
+
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors) {
                     if (e.Cancel) return false;
                     if (isInitialized) {
-
-
                         //left
                         if (Array.Exists(leftZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
@@ -417,6 +427,11 @@ namespace Aurora.Devices.LightFX
 
                         }
 
+                        if (Array.Exists(numpadZone, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+
+                            numpadColor.Add(key.Value);
+
+                        }
 
                         if (key.Key == DeviceKeys.Peripheral_Logo) {
 
@@ -429,9 +444,12 @@ namespace Aurora.Devices.LightFX
                         }
                     }
 
+                }
 
-
-
+                if (NumLock) {
+                    midRightColor.AddRange(rightColor);
+                    rightColor.Clear();
+                    rightColor = numpadColor;
                 }
                 if (leftColor.Any()) {
                     var mostUsed = leftColor.GroupBy(item => item)
