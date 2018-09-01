@@ -143,6 +143,9 @@ namespace Aurora.Settings
 
         [Description("Generic Laptop")]
         GenericLaptop = 1,
+
+        [Description("Generic Laptop (Numpad)")]
+        GenericLaptopNumpad = 2,
         /*
         [Description("Logitech")]
         Logitech = 1,
