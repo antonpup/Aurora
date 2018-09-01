@@ -31,35 +31,30 @@ namespace LightFXAPI
             public byte blue;
 
             public byte brightness;
+
+            public void Reset()
+            {
+                this.SetRGB(0, 0, 0);
+            }
+
+            public void SetRGB(byte r, byte g, byte b, byte brightness = 255)
+            {
+                this.brightness = 255;
+                this.red = r;
+                this.green = g;
+                this.blue = b;
+            }
         };
 
         public static LFX_COLOR color, color1, color2, color3, color4, color5 = new LFX_COLOR();
 
-        public static void resetColors()
+        public static void ResetColors()
         {
-            color1.green = 0;
-            color1.blue = 0;
-            color1.red = 0;
-            color2.green = 0;
-            color2.blue = 0;
-            color2.red = 0;
-            color3.green = 0;
-            color3.blue = 0;
-            color3.red = 0;
-            color4.green = 0;
-            color4.blue = 0;
-            color4.red = 0;
-            color5.green = 0;
-            color5.blue = 0;
-            color5.red = 0;
-        }
-
-        public static void setColorRGB(LFX_COLOR color, byte r, byte g, byte b)
-        {
-            color.brightness = 255;
-            color.red = r;
-            color.green = g;
-            color.blue = b;
+            color1.Reset();
+            color2.Reset();
+            color3.Reset();
+            color4.Reset();
+            color5.Reset();
         }
 
         [DllImport("LightFX.dll")]
