@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -114,17 +115,29 @@ namespace Aurora.Controls
             }
             else if (var_type == typeof(int))
             {
-                IntegerUpDown intUpDown_control = new IntegerUpDown();
-                intUpDown_control.Value = VarRegistry.GetVariable<int>(VariableName);
-                int max_val, min_val = 0;
-                if (VarRegistry.GetVariableMax<int>(VariableName, out max_val))
-                    intUpDown_control.Maximum = max_val;
-                if (VarRegistry.GetVariableMin<int>(VariableName, out min_val))
-                    intUpDown_control.Minimum = min_val;
+                if (VarRegistry.GetFlags(VariableName).HasFlag(VariableFlags.UseHEX))
+                {
+                    TextBox hexBox = new TextBox();
+                    hexBox.PreviewTextInput += HexBoxOnPreviewTextInput;
+                    hexBox.Text = string.Format("{0:X}", VarRegistry.GetVariable<int>(VariableName));
+                    hexBox.TextChanged += HexBox_TextChanged;
+                    grd_control.Children.Add(hexBox);
+                }
+                else
+                {
+                    IntegerUpDown intUpDown_control = new IntegerUpDown();
 
-                intUpDown_control.ValueChanged += IntUpDown_control_ValueChanged;
+                    intUpDown_control.Value = VarRegistry.GetVariable<int>(VariableName);
+                    int max_val, min_val = 0;
+                    if (VarRegistry.GetVariableMax<int>(VariableName, out max_val))
+                        intUpDown_control.Maximum = max_val;
+                    if (VarRegistry.GetVariableMin<int>(VariableName, out min_val))
+                        intUpDown_control.Minimum = min_val;
 
-                grd_control.Children.Add(intUpDown_control);
+                    intUpDown_control.ValueChanged += IntUpDown_control_ValueChanged;
+
+                    grd_control.Children.Add(intUpDown_control);
+                }
             }
             else if (var_type == typeof(long))
             {
@@ -193,6 +206,20 @@ namespace Aurora.Controls
         private void Txtbx_control_TextChanged(object sender, TextChangedEventArgs e)
         {
             VarRegistry.SetVariable(VariableName, (sender as TextBox).Text);
+        }
+
+        private void HexBoxOnPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out int number);
+        }
+
+        private void HexBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string text = (sender as TextBox).Text;
+            //Hacky fix to stop error when nothing is entered
+            if (string.IsNullOrWhiteSpace(text))
+                text = "0";
+            VarRegistry.SetVariable(VariableName, int.Parse(text, NumberStyles.HexNumber, CultureInfo.CurrentCulture));
         }
 
         private void Chkbx_control_VarChanged(object sender, RoutedEventArgs e)

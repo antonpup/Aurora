@@ -73,8 +73,6 @@ namespace Aurora.Devices.LightFX
             //Marshal.FreeHGlobal(unmanagedPointer);
         }
 
-       
-
         public void setColor(byte index, int bitmask, byte r, byte g, byte b)
         {
             if (usingHID) {
@@ -143,7 +141,7 @@ namespace Aurora.Devices.LightFX
                             int pid = Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_pid");
                             String product = "0x" + pid.ToString();
                             Global.logger.Debug("PID: " + product + " |Len: " + length);
-                            pid = int.Parse(product);
+                            pid = int.Parse(product, System.Globalization.NumberStyles.HexNumber);
                             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_length"))
                                     length = 12;
                             if (LightFXSDK.HIDInitialize(0x187c, pid)) {
@@ -331,7 +329,7 @@ namespace Aurora.Devices.LightFX
             try {
                 if (e.Cancel) return false;
 
-                LightFXSDK.resetColors();
+                LightFXSDK.ResetColors();
 
                 if (usingHID) {
                     int status = AlienfxWaitForBusy();
@@ -412,7 +410,7 @@ namespace Aurora.Devices.LightFX
 
                             setColor(1, (int)BITMASK.AlienFrontLogo, key.Value.R, key.Value.G, key.Value.B);
                             if (!usingHID) {
-                                LightFXSDK.setColorRGB(LightFXSDK.color, key.Value.R, key.Value.G, key.Value.B);
+                                LightFXSDK.color.SetRGB(key.Value.R, key.Value.G, key.Value.B);
 
                                 LightFXSDK.LFX_SetLightColor(1, 5, ref LightFXSDK.color);
                             }
@@ -428,7 +426,7 @@ namespace Aurora.Devices.LightFX
                                      .OrderByDescending(item => item.Count())
                                      .Select(item => new { Color = item.Key, Count = item.Count() })
                                      .First();
-                    LightFXSDK.setColorRGB(LightFXSDK.color4, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
+                    LightFXSDK.color4.SetRGB(mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(3, (int)BITMASK.LeftPanelTop, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(4, (int)BITMASK.leftZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     if (!usingHID) {
@@ -450,7 +448,7 @@ namespace Aurora.Devices.LightFX
                     var mostUsed = midleftColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                     .Select(item => new { Color = item.Key, Count = item.Count() })
                                     .First();
-                    LightFXSDK.setColorRGB(LightFXSDK.color3, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
+                    LightFXSDK.color3.SetRGB(mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(5, (int)BITMASK.LeftPanelBottom, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(6, (int)BITMASK.leftMiddleZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     if (!usingHID) {
@@ -472,7 +470,7 @@ namespace Aurora.Devices.LightFX
                                        .OrderByDescending(item => item.Count())
                                        .Select(item => new { Color = item.Key, Count = item.Count() })
                                        .First();
-                    LightFXSDK.setColorRGB(LightFXSDK.color1, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
+                    LightFXSDK.color1.SetRGB(mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(7, (int)BITMASK.RightPanelTop, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(8, (int)BITMASK.rightZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     if (!usingHID) {
@@ -493,7 +491,7 @@ namespace Aurora.Devices.LightFX
                                     .Select(item => new { Color = item.Key, Count = item.Count() })
                                     .First();
 
-                    LightFXSDK.setColorRGB(LightFXSDK.color2, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
+                    LightFXSDK.color2.SetRGB(mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(9, (int)BITMASK.RightPanelBottom, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     setColor(10, (int)BITMASK.rightMiddleZone, mostUsed.Color.R, mostUsed.Color.G, mostUsed.Color.B);
                     if (!usingHID) {
@@ -558,8 +556,8 @@ namespace Aurora.Devices.LightFX
             if (default_registry == null) {
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
-                default_registry.Register($"{devicename}_pid", 0, "Device PID");
-                default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
+                default_registry.Register($"{devicename}_pid", 0, "Device PID: 0x", flags: VariableFlags.UseHEX);
+                default_registry.Register($"{devicename}_length", true, "Use 12 byte length instead of 9");
             }
             return default_registry;
         }
