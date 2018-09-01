@@ -73,6 +73,8 @@ namespace Aurora.Devices.LightFX
             //Marshal.FreeHGlobal(unmanagedPointer);
         }
 
+       
+
         public void setColor(byte index, int bitmask, byte r, byte g, byte b)
         {
             if (usingHID) {
@@ -141,7 +143,7 @@ namespace Aurora.Devices.LightFX
                             int pid = Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_pid");
                             String product = "0x" + pid.ToString();
                             Global.logger.Debug("PID: " + product + " |Len: " + length);
-                            pid = int.Parse(product, System.Globalization.NumberStyles.HexNumber);
+                            pid = int.Parse(product);
                             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_length"))
                                     length = 12;
                             if (LightFXSDK.HIDInitialize(0x187c, pid)) {
@@ -557,7 +559,7 @@ namespace Aurora.Devices.LightFX
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
                 default_registry.Register($"{devicename}_pid", 0, "Device PID");
-                default_registry.Register($"{devicename}_length", true, "Use 12 byte length instead of 9");
+                default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
             }
             return default_registry;
         }
