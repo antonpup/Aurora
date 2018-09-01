@@ -50,7 +50,7 @@ namespace Aurora.Devices.LightFX
         {
             if (usingHID) {
 
-                byte[] Buffer = new byte[length];
+                byte[] Buffer = new byte[byteDataLength];
 
                 Buffer[0] = 0x02;
                 Buffer[1] = 0x06;
@@ -76,7 +76,7 @@ namespace Aurora.Devices.LightFX
         public void setColor(byte index, int bitmask, byte r, byte g, byte b)
         {
             if (usingHID) {
-                byte[] Buffer = new byte[length];
+                byte[] Buffer = new byte[byteDataLength];
                 Buffer[0] = 0x02;
                 Buffer[1] = 0x03;
                 Buffer[2] = index;
@@ -98,7 +98,7 @@ namespace Aurora.Devices.LightFX
         public void Loop()
         {
             if (usingHID) {
-                byte[] Buffer = new byte[length];
+                byte[] Buffer = new byte[byteDataLength];
                 Buffer[0] = 0x02;
                 Buffer[1] = 0x04;
                 bool result = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
@@ -109,7 +109,7 @@ namespace Aurora.Devices.LightFX
         {
             if (usingHID) {
 
-                byte[] Buffer = new byte[length];
+                byte[] Buffer = new byte[byteDataLength];
                 Buffer[0] = 0x02;
                 Buffer[1] = 0x05;
 
@@ -122,7 +122,7 @@ namespace Aurora.Devices.LightFX
         public void Reset(int status)
         {
             if (usingHID) {
-                byte[] Buffer = new byte[length];
+                byte[] Buffer = new byte[byteDataLength];
                 Buffer[0] = 0x02;
                 Buffer[1] = 0x07;
                 Buffer[2] = (byte)status;
@@ -130,18 +130,29 @@ namespace Aurora.Devices.LightFX
             }
         }
 
-        int length = 9;
+        int byteDataLength = 9;
         bool usingHID;
         public bool Initialize()
         {
             lock (action_lock) {
                 if (!isInitialized) {
                     try {
+                        int result = LightFXSDK.LightFXInitialize(0x187c);
+                        if (result != -1) {
+                            byteDataLength = result;
+                            usingHID = true;
+                        } else {
+                            //Placeholder if in future, I need to use SDK instead of HID
+                            /*
+                            LFXInit();
+                            */
+                        }
+                        /*
                         if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_custom_pid")) {
                             int pid = Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_pid");
-                          
+
                             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_length"))
-                                    length = 12;
+                                length = 12;
                             if (LightFXSDK.HIDInitialize(0x187c, pid)) {
                                 usingHID = true;
                             }
@@ -154,6 +165,9 @@ namespace Aurora.Devices.LightFX
                             usingHID = true;
                         } else if (LightFXSDK.HIDInitialize(0x187c, 0x514)) {
                             //ALL_POWERFULL_M11X
+                            usingHID = true;
+                        } else if (LightFXSDK.HIDInitialize(0x187c, 0x515)) {
+                            //M15X
                             usingHID = true;
                         } else if (LightFXSDK.HIDInitialize(0x187c, 0x524)) {
                             //M17X
@@ -169,12 +183,10 @@ namespace Aurora.Devices.LightFX
                             //AW15R3/17R4
                             length = 12;
                             usingHID = true;
-                        } else {
+                        }else {
                             //Placeholder if in future, I need to use SDK instead of HID
-                            /*
-                            LFXInit();
-                            */
-                        }
+                            //LFXInit();    
+                        }*/
                         if (usingHID) {
                             AlienfxWaitForBusy();
                             Reset(0x03);

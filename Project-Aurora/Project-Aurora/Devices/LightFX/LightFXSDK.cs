@@ -91,6 +91,10 @@ namespace LightFXAPI
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool HIDInitialize(int vid, int pid);
 
+        [DllImport("LightFX_SDK.dll", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I4)]
+        public static extern int LightFXInitialize(int vid);
+
         [DllImport("LightFX_SDK.dll")]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool HIDClose();
