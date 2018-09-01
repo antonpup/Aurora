@@ -165,7 +165,7 @@ namespace Aurora.Devices.LightFX
                             //AW13R3
                             length = 12;
                             usingHID = true;
-                        } else if (LightFXSDK.HIDInitialize(0x187c, 0x531)) {
+                        } else if (LightFXSDK.HIDInitialize(0x187c, 0x530)) {
                             //AW15R3/17R4
                             length = 12;
                             usingHID = true;
