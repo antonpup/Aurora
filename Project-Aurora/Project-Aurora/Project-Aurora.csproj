@@ -501,6 +501,10 @@
       <DependentUpon>Control_DOOM.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\DOOM\DOOMApplication.cs" />
+    <Compile Include="Profiles\DeadCells\Control_DeadCells.xaml.cs">
+      <DependentUpon>Control_DeadCells.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DeadCells\DeadCellsApplication.cs" />
     <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
       <DependentUpon>Control_Witcher3.xaml</DependentUpon>
     </Compile>
@@ -1266,6 +1270,7 @@
     <Content Include="LightFX_SDK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\deadcells_128x128.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1627,6 +1632,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\DOOM\Control_DOOM.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\DeadCells\Control_DeadCells.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
