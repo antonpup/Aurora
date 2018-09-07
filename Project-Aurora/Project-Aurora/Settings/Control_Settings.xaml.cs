@@ -571,6 +571,12 @@ namespace Aurora.Settings
             instructions.ShowDialog();
         }
 
+        private void devices_view_first_time_dualshock_Click(object sender, RoutedEventArgs e)
+        {
+            Devices.Dualshock.DualshockInstallInstructions instructions = new Devices.Dualshock.DualshockInstallInstructions();
+            instructions.ShowDialog();
+        }
+
         private void devices_view_first_time_roccat_Click(object sender, RoutedEventArgs e)
         {
             Devices.Roccat.RoccatInstallInstructions instructions = new Devices.Roccat.RoccatInstallInstructions();
