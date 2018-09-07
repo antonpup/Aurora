@@ -571,6 +571,12 @@ namespace Aurora.Settings
             instructions.ShowDialog();
         }
 
+        private void devices_view_first_time_roccat_Click(object sender, RoutedEventArgs e)
+        {
+            Devices.Roccat.RoccatInstallInstructions instructions = new Devices.Roccat.RoccatInstallInstructions();
+            instructions.ShowDialog();
+        }
+
         private void devices_enable_logitech_color_enhance_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
