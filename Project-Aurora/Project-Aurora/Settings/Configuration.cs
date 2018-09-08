@@ -120,7 +120,7 @@ namespace Aurora.Settings
 
     public enum AppExitMode
     {
-        [Description("Let user decide to minimize or exit")]
+        [Description("Always Ask")]
         Ask = 0,
         [Description("Always Minimize")]
         Minimize = 1,
