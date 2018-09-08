@@ -1,0 +1,12 @@
+﻿<Window x:Class="Aurora.Devices.Roccat.RoccatInstallInstructions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Devices.Roccat"
+             mc:Ignorable="d" Height="120" Width="250" WindowStyle="ToolWindow" ResizeMode="NoResize" Title="First-time Roccat Setup Instructions" Background="Transparent">
+    <Grid Margin="0,0,0,0">
+        <TextBlock x:Name="Roccat_text" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="202" Foreground="White"><Run Text="If you want to use Aurora with your Roccat peripherials Roccat Talk Fx must be installed and running."/></TextBlock>
+        <Button Click="GoToTalkFXPage_Click" Padding="6,0" Margin="0,36,0,0" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="130">Go to download page</Button>
+    </Grid>
+</Window>
