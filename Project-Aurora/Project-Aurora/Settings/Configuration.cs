@@ -143,6 +143,9 @@ namespace Aurora.Settings
 
         [Description("Generic Laptop")]
         GenericLaptop = 1,
+
+        [Description("Generic Laptop (Numpad)")]
+        GenericLaptopNumpad = 2,
         /*
         [Description("Logitech")]
         Logitech = 1,
@@ -338,6 +341,7 @@ namespace Aurora.Settings
         public bool razer_first_time;
         public bool steelseries_first_time;
         public bool dualshock_first_time;
+        public bool roccat_first_time;
 
         //General Program Settings
         public bool allow_peripheral_devices;

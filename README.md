@@ -159,6 +159,9 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ### Wooting
 * One
+
+### Alienware
+* Most devices should work
 ### Clevo
 ### AtmoOrb
 ### Dualshock 4 (PS4 Controller)

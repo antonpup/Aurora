@@ -371,6 +371,8 @@
     <Compile Include="Devices\Dualshock4\DS4InstallInstructions.xaml.cs">
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\LightFX\LightFX.cs" />
+    <Compile Include="Devices\LightFX\LightFXSDK.cs" />
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -380,6 +382,9 @@
     <Compile Include="Devices\Razer\RazerDevice.cs" />
     <Compile Include="Devices\Razer\RazerLayoutMap.cs" />
     <Compile Include="Devices\Roccat\RoccatDevice.cs" />
+    <Compile Include="Devices\Roccat\RoccatInstallInstructions.xaml.cs">
+      <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
     <Compile Include="Devices\SteelSeriesHID\SteelSeriesHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
@@ -499,6 +504,10 @@
       <DependentUpon>Control_DOOM.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\DOOM\DOOMApplication.cs" />
+    <Compile Include="Profiles\DeadCells\Control_DeadCells.xaml.cs">
+      <DependentUpon>Control_DeadCells.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DeadCells\DeadCellsApplication.cs" />
     <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
       <DependentUpon>Control_Witcher3.xaml</DependentUpon>
     </Compile>
@@ -827,6 +836,15 @@
     <None Include="kb_layouts\Extra Features\corsair_k68_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\generic_laptop_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\generic_laptop_numpad_right_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\generic_laptop_numpad_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\logitech_gpro_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -933,6 +951,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\steelseries_rival_300_hp_omen_edition_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\generic_laptop_numpad.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g410.json">
@@ -1249,6 +1270,10 @@
     <Resource Include="Resources\factorio_64x64.png" />
     <Resource Include="Resources\quakechampions_195x195.png" />
     <Resource Include="Resources\diablo3_120x120.png" />
+    <Content Include="LightFX_SDK.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\deadcells_128x128.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1400,6 +1425,10 @@
     <Page Include="Devices\Razer\RazerInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\Roccat\RoccatInstallInstructions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1610,6 +1639,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\DOOM\Control_DOOM.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\DeadCells\Control_DeadCells.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace Aurora.Devices
 {
@@ -104,8 +105,8 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
             devices.Add(new DeviceContainer(new Devices.SteelSeriesHID.SteelSeriesHIDDevice()));   // SteelSeriesHID Device
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
+            devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
             devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
-
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
@@ -154,6 +155,23 @@ namespace Aurora.Devices
                         Global.logger.Error("An error occured while trying to load script {0}. Exception: {1}", device_script, exc);
                     }
                 }
+            }
+
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Suspend:
+                    Global.logger.Info("Suspending Devices");
+                    this.Shutdown();
+                    break;
+                case PowerModes.Resume:
+                    Global.logger.Info("Resuming Devices");
+                    this.InitializeOnce();
+                    break;
             }
         }
 
