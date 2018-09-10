@@ -37,6 +37,10 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\aurora_icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\Build\Debug\</OutputPath>
@@ -382,6 +386,9 @@
     <Compile Include="Devices\Razer\RazerDevice.cs" />
     <Compile Include="Devices\Razer\RazerLayoutMap.cs" />
     <Compile Include="Devices\Roccat\RoccatDevice.cs" />
+    <Compile Include="Devices\Roccat\RoccatInstallInstructions.xaml.cs">
+      <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
     <Compile Include="Devices\SteelSeriesHID\SteelSeriesHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
@@ -1422,6 +1429,10 @@
     <Page Include="Devices\Razer\RazerInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\Roccat\RoccatInstallInstructions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
