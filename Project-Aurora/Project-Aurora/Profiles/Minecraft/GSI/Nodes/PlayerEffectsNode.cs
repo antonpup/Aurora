@@ -20,16 +20,16 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
 
         internal PlayerEffectsNode() : base() { }
         internal PlayerEffectsNode(string json) : base(json) {
-            HasAbsorption = GetBool("effect.absorption");
-            HasBlindness = GetBool("effect.blindness");
-            HasFireResistance = GetBool("effect.fireResistance");
-            HasInvisibility = GetBool("effect.invisibility");
-            HasNausea = GetBool("effect.confusion");
-            HasPoison = GetBool("effect.poison");
-            HasRegeneration = GetBool("effect.regeneration");
-            HasSlowness = GetBool("effect.moveSlowdown");
-            HasSpeed = GetBool("effect.moveSpeed");
-            HasWither = GetBool("effect.wither");
+            HasAbsorption = GetBool("absorption");
+            HasBlindness = GetBool("blindness");
+            HasFireResistance = GetBool("fireResistance");
+            HasInvisibility = GetBool("invisibility");
+            HasNausea = GetBool("confusion");
+            HasPoison = GetBool("poison");
+            HasRegeneration = GetBool("regeneration");
+            HasSlowness = GetBool("moveSlowdown");
+            HasSpeed = GetBool("moveSpeed");
+            HasWither = GetBool("wither");
         }
     }
 }
