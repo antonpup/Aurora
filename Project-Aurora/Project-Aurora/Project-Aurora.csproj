@@ -1266,7 +1266,6 @@
     <Resource Include="Resources\dh_128x128.png" />
     <Resource Include="Resources\witcher3_256x256.png" />
     <Resource Include="Resources\minecraft_128x128.png" />
-    <Resource Include="Resources\minecraft-aurora-gsi-logo_128x128.png" />
     <Resource Include="Resources\mc_clock_day.png" />
     <Resource Include="Resources\mc_clock_night.png" />
     <Resource Include="Resources\kf2.png" />
