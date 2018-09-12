@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
@@ -24,12 +25,16 @@ namespace Aurora.Profiles.Minecraft {
     public partial class Control_Minecraft : UserControl {
 
         private Application profile;
+        private ObservableCollection<ModDetails> ModList = new ObservableCollection<ModDetails>();
 
         public Control_Minecraft(Application profile) {
             this.profile = profile;
 
             InitializeComponent();
             SetSettings();
+            
+            ModListControl.ItemsSource = ModList;
+            PopulateModList();
 
             profile.ProfileChanged += (sender, e) => SetSettings();
         }
@@ -52,6 +57,43 @@ namespace Aurora.Profiles.Minecraft {
 
         private void GoToReleasesPage_Click(object sender, RoutedEventArgs e) {
             Process.Start(@"https://gitlab.com/aurora-gsi-minecraft");
+        }
+
+        private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e) {
+            Process.Start(((sender as Button).DataContext as ModDetails).Link);
+        }
+
+        private async void PopulateModList() {
+            ModList.Clear();
+            try {
+                HttpClient client = new HttpClient();
+
+                // Fetch all the data for the 'Aurora GSI Minecraft' group
+                string groupDataResponse = await client.GetStringAsync(@"https://gitlab.com/api/v4/groups/aurora-gsi-minecraft/");
+                JObject groupData = JObject.Parse(groupDataResponse);
+
+                // For each project that is in this group
+                foreach (var project in groupData["projects"]) {
+                    // Get the project tags (which contains the releases)
+                    string projectTagsResponse = await client.GetStringAsync($"{project["_links"]["self"]}/repository/tags?order_by=updated&sort=desc");
+                    JArray projectTags = JArray.Parse(projectTagsResponse);
+
+                    string versionStr = projectTags[0]["name"].ToString();
+
+                    // Add an entry to the mod details list
+                    ModList.Add(new ModDetails {
+                        Name = project["name"].ToString(), // Get the project name (includes MC version)
+                        Version = versionStr, // Get the version string (e.g. "v0.1.2")
+                        Link = $"{project["web_url"].ToString()}/tags/{versionStr}", // Generate a link to the download page (e.g. "https://gitlab.com/aurora-gsi-minecraft/mc1.7.10/tags/v0.1.2")
+                        Date = DateTime.Parse(projectTags[0]["commit"]["created_at"].ToString()).ToShortDateString() // Show the date the latest version of the mod was released.
+                    });
+                }
+                
+            } catch { }
+        }
+
+        private void RefreshModList_Click(object sender, RoutedEventArgs e) {
+            PopulateModList();
         }
         #endregion
 
@@ -121,5 +163,12 @@ namespace Aurora.Profiles.Minecraft {
             State.World.IsDayTime = e.NewValue <= 0.5; // At half point, it becomes night time?
         }
         #endregion
+    }
+
+    class ModDetails {
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public string Link { get; set; }
+        public string Date { get; set; }
     }
 }

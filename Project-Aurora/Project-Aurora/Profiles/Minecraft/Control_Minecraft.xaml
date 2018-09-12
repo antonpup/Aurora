@@ -12,15 +12,44 @@
                 <StackPanel Margin="10">
                     <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with Minecraft. Ensure you have read the below text." Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
                     <TextBlock HorizontalAlignment="Left" Margin="0,10" TextWrapping="Wrap" MaxWidth="824">
-                        <Run Text="Support for Minecraft requires a mod so that Aurora is able to fetch the variables from the game. Currently this mod requires Forge mod loader, though other options may become available in future. Check the downloads page to find out the currently supported Minecraft versions." />
+                        <Run Text="Support for Minecraft requires a mod so that Aurora is able to fetch the variables from the game. Currently this mod requires Forge mod loader, though other options may become available in future." />
                         <LineBreak /><LineBreak />
-                        <Run Text="This mod is not authored by the main Aurora developers and any issues with the mod should not be directed at them, but posted on the GitLab repo for the mod." />
+                        <Run Text="These mods are not authored by the main Aurora developers and any issues with these mods should not be directed at them, but posted on the relevant GitLab repo for the mod." />
                     </TextBlock>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="Minecraft Forge download" HorizontalAlignment="Left" Padding="10,2" Click="GoToForgePage_Click" />
-                        <Button Content="Aurora GSI mods downloads" Margin="10,0,0,0" HorizontalAlignment="Left" Padding="10,2" Click="GoToReleasesPage_Click" />
-                    </StackPanel>
+                    <Button Content="Minecraft Forge download" HorizontalAlignment="Left" Padding="10,2" Click="GoToForgePage_Click" />
+
+                    <TextBlock Margin="0,10,0,0" Text="Supported versions:" FontSize="13" FontWeight="Bold" />
+
+                    <ItemsControl x:Name="ModListControl" HorizontalAlignment="Left" Margin="0,5">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Width="480" IsItemsHost="True" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="{Binding Path=Name}" FontWeight="SemiBold" HorizontalAlignment="Stretch" Grid.Column="0" />
+                                    <TextBlock Grid.Column="1">
+                                        <Run Text="{Binding Path=Version}" />
+                                        <Run Text=" (" />
+                                        <Run Text="{Binding Path=Date}" FontStyle="Italic" />
+                                        <Run Text=")" />
+                                    </TextBlock>
+                                    <Button Content="Download" Margin="10,0,0,0" Padding="5,0" Grid.Column="2" Click="GoToModDownloadPage_Click" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Content="Refresh" Padding="5,0" FontSize="10" HorizontalAlignment="Left" Click="RefreshModList_Click" />
                 </StackPanel>
             </TabItem>
 
