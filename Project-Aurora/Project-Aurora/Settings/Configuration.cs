@@ -120,7 +120,7 @@ namespace Aurora.Settings
 
     public enum AppExitMode
     {
-        [Description("Let user decide to minimize or exit")]
+        [Description("Always Ask")]
         Ask = 0,
         [Description("Always Minimize")]
         Minimize = 1,
@@ -339,6 +339,7 @@ namespace Aurora.Settings
         public bool razer_first_time;
         public bool steelseries_first_time;
         public bool dualshock_first_time;
+        public bool roccat_first_time;
 
         //General Program Settings
         public bool allow_peripheral_devices;

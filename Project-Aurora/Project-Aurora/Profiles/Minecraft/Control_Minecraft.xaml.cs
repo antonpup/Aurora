@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
@@ -24,59 +25,22 @@ namespace Aurora.Profiles.Minecraft {
     public partial class Control_Minecraft : UserControl {
 
         private Application profile;
-        private (string Name, DateTime Date) latestModVersion;
+        private ObservableCollection<ModDetails> ModList = new ObservableCollection<ModDetails>();
 
         public Control_Minecraft(Application profile) {
             this.profile = profile;
 
             InitializeComponent();
             SetSettings();
-            PrintLatestMCModVersion();
+            
+            ModListControl.ItemsSource = ModList;
+            PopulateModList();
 
             profile.ProfileChanged += (sender, e) => SetSettings();
         }
 
         private void SetSettings() {
             GameEnabled.IsChecked = profile.Settings.IsEnabled;
-        }
-
-        /// <summary>
-        /// Sends a request to the GitLab API to fetch the tags (releases) for the Minecraft mod.
-        /// </summary>
-        private async Task GetLatestMCModVersion() {
-            try {
-                // URL to send the request to
-                string requestUrl = @"https://gitlab.com/api/v4/projects/wibble199%2Faurora-gsi-minecraft/repository/tags?order_by=updated&sort=desc";
-
-                // Send request
-                HttpClient client = new HttpClient();
-                string response = await client.GetStringAsync(requestUrl);
-
-                // Parse JSON response
-                JArray json = JArray.Parse(response);
-
-                // Store the name/date of the latest version
-                latestModVersion = (
-                    Name: json[0]["name"].ToString(),
-                    Date: DateTime.Parse(json[0]["commit"]["created_at"].ToString())
-                );
-
-            } catch (Exception ex) {
-                // In case of error (e.g. API unavailable) mark as unknown.
-                latestModVersion = (Name: "Unknown", Date: DateTime.MinValue);
-                Global.logger.Error("Exception occured while attempting to fetch latest Minecraft GSI mod information" + ex);
-            }
-        }
-
-        /// <summary>
-        /// Fetchs latest Minecraft mod version from GitLab and updates the labels on the control.
-        /// </summary>
-        private async void PrintLatestMCModVersion() {
-            DateTime lastChecked = DateTime.Now;
-            await GetLatestMCModVersion();
-            ModLatestVersion.Content = latestModVersion.Name;
-            ModLatestDate.Content = "Released on: " + latestModVersion.Date.ToString();
-            ModLatestCheckDate.Content = "Checked at: " + lastChecked.ToString();
         }
 
         #region Overview handlers
@@ -91,16 +55,45 @@ namespace Aurora.Profiles.Minecraft {
             Process.Start(@"https://files.minecraftforge.net/");
         }
 
-        private void CheckForUpdatesNow_Click(object sender, RoutedEventArgs e) {
-            PrintLatestMCModVersion();
-        }
-
         private void GoToReleasesPage_Click(object sender, RoutedEventArgs e) {
-            Process.Start(@"https://gitlab.com/wibble199/aurora-gsi-minecraft/tags");
+            Process.Start(@"https://gitlab.com/aurora-gsi-minecraft");
         }
 
-        private void GoToLatestDownloadPage_Click(object sender, RoutedEventArgs e) {
-            Process.Start($"https://gitlab.com/wibble199/aurora-gsi-minecraft/tags/{latestModVersion.Name}");
+        private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e) {
+            Process.Start(((sender as Button).DataContext as ModDetails).Link);
+        }
+
+        private async void PopulateModList() {
+            ModList.Clear();
+            try {
+                HttpClient client = new HttpClient();
+
+                // Fetch all the data for the 'Aurora GSI Minecraft' group
+                string groupDataResponse = await client.GetStringAsync(@"https://gitlab.com/api/v4/groups/aurora-gsi-minecraft/");
+                JObject groupData = JObject.Parse(groupDataResponse);
+
+                // For each project that is in this group
+                foreach (var project in groupData["projects"]) {
+                    // Get the project tags (which contains the releases)
+                    string projectTagsResponse = await client.GetStringAsync($"{project["_links"]["self"]}/repository/tags?order_by=updated&sort=desc");
+                    JArray projectTags = JArray.Parse(projectTagsResponse);
+
+                    string versionStr = projectTags[0]["name"].ToString();
+
+                    // Add an entry to the mod details list
+                    ModList.Add(new ModDetails {
+                        Name = project["name"].ToString(), // Get the project name (includes MC version)
+                        Version = versionStr, // Get the version string (e.g. "v0.1.2")
+                        Link = $"{project["web_url"].ToString()}/tags/{versionStr}", // Generate a link to the download page (e.g. "https://gitlab.com/aurora-gsi-minecraft/mc1.7.10/tags/v0.1.2")
+                        Date = DateTime.Parse(projectTags[0]["commit"]["created_at"].ToString()).ToShortDateString() // Show the date the latest version of the mod was released.
+                    });
+                }
+                
+            } catch { }
+        }
+
+        private void RefreshModList_Click(object sender, RoutedEventArgs e) {
+            PopulateModList();
         }
         #endregion
 
@@ -170,5 +163,12 @@ namespace Aurora.Profiles.Minecraft {
             State.World.IsDayTime = e.NewValue <= 0.5; // At half point, it becomes night time?
         }
         #endregion
+    }
+
+    class ModDetails {
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public string Link { get; set; }
+        public string Date { get; set; }
     }
 }

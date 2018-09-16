@@ -37,6 +37,10 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\aurora_icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\Build\Debug\</OutputPath>
@@ -382,6 +386,9 @@
     <Compile Include="Devices\Razer\RazerDevice.cs" />
     <Compile Include="Devices\Razer\RazerLayoutMap.cs" />
     <Compile Include="Devices\Roccat\RoccatDevice.cs" />
+    <Compile Include="Devices\Roccat\RoccatInstallInstructions.xaml.cs">
+      <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
     <Compile Include="Devices\SteelSeriesHID\SteelSeriesHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
@@ -501,6 +508,10 @@
       <DependentUpon>Control_DOOM.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\DOOM\DOOMApplication.cs" />
+    <Compile Include="Profiles\DeadCells\Control_DeadCells.xaml.cs">
+      <DependentUpon>Control_DeadCells.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\DeadCells\DeadCellsApplication.cs" />
     <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
       <DependentUpon>Control_Witcher3.xaml</DependentUpon>
     </Compile>
@@ -542,6 +553,9 @@
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
+    <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
+      <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
@@ -1255,7 +1269,6 @@
     <Resource Include="Resources\dh_128x128.png" />
     <Resource Include="Resources\witcher3_256x256.png" />
     <Resource Include="Resources\minecraft_128x128.png" />
-    <Resource Include="Resources\minecraft-aurora-gsi-logo_128x128.png" />
     <Resource Include="Resources\mc_clock_day.png" />
     <Resource Include="Resources\mc_clock_night.png" />
     <Resource Include="Resources\kf2.png" />
@@ -1266,6 +1279,7 @@
     <Content Include="LightFX_SDK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\deadcells_128x128.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1417,6 +1431,10 @@
     <Page Include="Devices\Razer\RazerInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\Roccat\RoccatInstallInstructions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1630,6 +1648,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\DeadCells\Control_DeadCells.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1829,6 +1851,10 @@
     <Page Include="Controls\Control_VariableRegistryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Window_ProcessSelection.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Window_VariableRegistryEditor.xaml">
       <SubType>Designer</SubType>
