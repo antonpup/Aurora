@@ -19,6 +19,7 @@ namespace Aurora.Devices.Wooting
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
+        private VariableRegistry default_registry = null;
 
         private readonly object action_lock = new object();
 
@@ -133,7 +134,10 @@ namespace Aurora.Devices.Wooting
                             continue;
                         //(byte row, byte column) coordinates = WootingRgbControl.KeyMap[devKey];
                         //colourMap[coordinates.row, coordinates.column] = new KeyColour(clr.red, clr.green, clr.blue);
-                        RGBControl.SetKey(devKey, clr.R, clr.G, clr.B);
+                        
+                        RGBControl.SetKey(devKey, (byte)(clr.R * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_r")/100),
+                                                  (byte)(clr.G * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_g")/100),
+                                                  (byte)(clr.B * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_b")/100));
                     }
                     if (e.Cancel) return false;
                     //AlsoWootingRgbControl.SetFull(colourMap);
@@ -177,7 +181,14 @@ namespace Aurora.Devices.Wooting
 
         public VariableRegistry GetRegisteredVariables()
         {
-            return new VariableRegistry();
+            if (default_registry == null)
+            {
+                default_registry = new VariableRegistry();
+                default_registry.Register($"{devicename}_scalar_r", 100, "Red Scalar", 100, 0);
+                default_registry.Register($"{devicename}_scalar_g", 100, "Green Scalar", 100, 0);
+                default_registry.Register($"{devicename}_scalar_b", 100, "Blue Scalar", 100, 0,"In percent");
+            }
+            return default_registry;
         }
 
         public static Dictionary<DeviceKeys, WootingKey.Keys> KeyMap = new Dictionary<DeviceKeys, WootingKey.Keys> {
