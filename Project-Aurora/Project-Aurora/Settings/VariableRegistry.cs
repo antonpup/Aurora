@@ -18,12 +18,13 @@ namespace Aurora.Settings
         public object Min = null;
         public string Title = "";
         public string Remark = "";
+        public VariableFlags Flags = VariableFlags.None;
 
         public VariableRegistryItem()
         {
         }
 
-        public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "")
+        public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
         {
             this.Value = defaultValue;
             this.Default = defaultValue;
@@ -36,6 +37,7 @@ namespace Aurora.Settings
 
             this.Title = title;
             this.Remark = remark;
+            this.Flags = flags;
         }
 
         public void SetVariable(object newvalue)
@@ -59,7 +61,14 @@ namespace Aurora.Settings
                 this.Value = Convert.ChangeType(this.Value, defaultType);
             else if (this.Value == null && !defaultType.Equals(typ))
                 this.Value = variableRegistryItem.Default;
+            this.Flags = variableRegistryItem.Flags;
         }
+    }
+
+    public enum VariableFlags
+    {
+        None = 0,
+        UseHEX = 1
     }
 
     public class VariableRegistry //Might want to implement something like IEnumerable here
@@ -106,10 +115,10 @@ namespace Aurora.Settings
             return _variables.Keys.ToArray();
         }
 
-        public void Register(string name, object defaultValue, string title = "", object max = null, object min = null, string remark = "")
+        public void Register(string name, object defaultValue, string title = "", object max = null, object min = null, string remark = "", VariableFlags flags = VariableFlags.None)
         {
             if (!_variables.ContainsKey(name))
-                _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark));
+                _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark, flags));
         }
 
         public void Register(string name, VariableRegistryItem varItem)
@@ -201,6 +210,14 @@ namespace Aurora.Settings
                 return _variables[name].Remark;
 
             return "";
+        }
+
+        public VariableFlags GetFlags(string name)
+        {
+            if (_variables.ContainsKey(name))
+                return _variables[name].Flags;
+
+            return VariableFlags.None;
         }
 
         public void RemoveVariable(string name)

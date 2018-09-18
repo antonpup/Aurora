@@ -1,0 +1,20 @@
+﻿{
+  "group_tag": "keyboard",
+  "origin_region": 2,
+  "grouped_keys": [
+    {
+      "visualName": "\\",
+      "tag": 51,
+      "margin_left": -195,
+      "margin_top": 74,
+      "width": 47.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ],
+  "key_conversion": {
+    77: 51
+  }
+}

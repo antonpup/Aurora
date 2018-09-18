@@ -1,0 +1,199 @@
+﻿{
+  "keys_to_remove": [
+    14,
+    15,
+    16,
+    32,
+    33,
+    53,
+    54,
+    51,
+    71,
+    77,
+    100,
+    103
+  ],
+  "key_modifications": {
+    "2": {
+      "tag": 2,
+      "margin_left": 7.0
+    },
+    "3": {
+      "tag": 3,
+      "margin_left": 7.0
+    },
+    "4": {
+      "tag": 4,
+      "margin_left": 7.0
+    },
+    "5": {
+      "tag": 5,
+      "margin_left": 7.0
+    },
+    "6": {
+      "tag": 6,
+      "margin_left": 7.0
+    },
+    "7": {
+      "tag": 7,
+      "margin_left": 7.0
+    },
+    "8": {
+      "tag": 8,
+      "margin_left": 7.0
+    },
+    "9": {
+      "tag": 9,
+      "margin_left": 7.0
+    },
+    "10": {
+      "tag": 10,
+      "margin_left": 7.0
+    },
+    "11": {
+      "tag": 11,
+      "margin_left": 7.0
+    },
+    "12": {
+      "tag": 12,
+      "margin_left": 7.0
+    },
+    "13": {
+      "tag": 13,
+      "margin_left": 7.0
+    },
+    "31": {
+      "tag": 14,
+      "margin_left": 7.0
+    },
+    "14": {
+      "visualName": "INSERT",
+      "tag": 31,
+      "margin_left": 7.0
+    },
+    "52": {
+      "tag": 15,
+      "margin_left": 7.0
+    },
+    "15": {
+      "visualName": "DEL",
+      "tag": 52,
+      "line_break": true,
+      "margin_left": 7.0
+    },
+    "34": {
+      "margin_left": 7.0
+    },
+    "37": {
+      "line_break": true
+    },
+    "50": {
+      "line_break": null,
+      "width": 30
+    },
+    "55": {
+      "margin_left": 60
+    },
+    "58": {
+      "line_break": true
+    },
+    "72": {
+      "tag": 72,
+      "line_break": null,
+      "margin_left": 7.0,
+      "margin_top": 0.0,
+      "width": 74.0,
+      "height": 30.0,
+      "font_size": 12.0
+    },
+    "73": {
+      "margin_left": 7
+    },
+    "75": {
+      "line_break": true
+    },
+    "76": {
+      "tag": 76,
+      "margin_left": 0.0,
+      "margin_top": 0.0,
+      "width": 78.0,
+      "height": 30.0,
+      "font_size": 12.0
+    },
+    "88": {
+      "tag": 88,
+      "line_break": null,
+      "width": 93
+    },
+    "90": {
+      "margin_left": 7.0
+    },
+    "93": {
+      "line_break": true
+    },
+    "94": {
+      "tag": 94,
+      "width": 41
+    },
+    "95": {
+      "tag": 95,
+      "margin_left": 44,
+      "width": 30
+    },
+    "96": {
+      "tag": 96,
+      "margin_left": 7,
+      "width": 30
+    },
+    "97": {
+      "tag": 97,
+      "width": 178
+    },
+    "98": {
+      "tag": 98,
+      "margin_left": 7,
+      "width": 30
+    },
+    "99": {
+      "visualName": "FN",
+      "tag": 107,
+      "margin_left": 7,
+      "width": 30
+    },
+    "101": {
+      "tag": 101,
+      "margin_left": 7,
+      "width": 30
+    },
+    "102": {
+      "tag": 102,
+      "margin_left": 7.0,
+      "width": 24.5
+    },
+    "89": {
+      "tag": 103
+    },
+    "103": {
+      "visualName": "↑",
+      "tag": 89,
+      "height": 14,
+      "font_size": 9
+    },
+    "104": {
+      "tag": 104,
+      "line_break": null,
+      "width": 24.5
+    },
+    "105": {
+      "margin_left": 7.0
+    },
+    "106": {
+      "line_break": true
+    }
+  },
+  "included_features": [
+    "generic_laptop_numpad_left_bottom_features.json",
+    "generic_laptop_numpad_right_bottom_features.json",
+    "generic_laptop_numpad_right_features.json"
+  ]
+}
