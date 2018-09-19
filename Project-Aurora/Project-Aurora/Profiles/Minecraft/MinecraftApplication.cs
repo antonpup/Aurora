@@ -25,7 +25,8 @@ namespace Aurora.Profiles.Minecraft {
                 new LayerHandlerEntry("MinecraftHealthBarLayer", "Minecraft Health Bar Layer", typeof(MinecraftHealthBarLayerHandler)),
                 new LayerHandlerEntry("MinecraftBackgroundLayer", "Minecraft Background Layer", typeof(MinecraftBackgroundLayerHandler)),
                 new LayerHandlerEntry("MinecraftRainLayer", "Minecraft Rain Layer", typeof(MinecraftRainLayerHandler)),
-                new LayerHandlerEntry("MinecraftBurningLayer", "Minecraft Burning Layer", typeof(MinecraftBurnLayerHandler))
+                new LayerHandlerEntry("MinecraftBurningLayer", "Minecraft Burning Layer", typeof(MinecraftBurnLayerHandler)),
+                new LayerHandlerEntry("MinecraftKeyConflictLayer", "Minecraft Key Conflict Layer", typeof(MinecraftKeyConflictLayerHandler))
             };
 
             Global.LightingStateManager.RegisterLayerHandlers(minecraftLayers, false);
