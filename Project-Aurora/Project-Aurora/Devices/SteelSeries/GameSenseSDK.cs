@@ -176,7 +176,6 @@ namespace SteelSeries.GameSenseSDK
                 (on-device ""rgb-3-zone"" show: color)
                 (on-device ""rgb-4-zone"" show: color)
                 (on-device ""rgb-5-zone"" show: color)
-                (on-device ""rgb-8-zone"" show: color)
                 (on-device ""rgb-12-zone"" show: color)))
 
         (when (mouse:? data)
@@ -206,7 +205,6 @@ namespace SteelSeries.GameSenseSDK
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-3-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-4-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-5-zone"")
-(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-8-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-12-zone"")
 (add-event-per-key-zone-use ""COLOR"" ""all"")
 ";
