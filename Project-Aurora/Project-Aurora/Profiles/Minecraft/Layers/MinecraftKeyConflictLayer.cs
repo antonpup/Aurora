@@ -43,7 +43,8 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer layer = new EffectLayer("Minecraft Key Conflict Layer");
-            if (gamestate is GameState_Minecraft) {
+            if (gamestate is GameState_Minecraft && (gamestate as GameState_Minecraft).Game.ControlsGuiOpen) {
+                layer.Fill(Color.Black); // Hide any other layers behind this one
                 // Set all keys in use by any binding to be the no-conflict colour
                 foreach (var kb in ((GameState_Minecraft)gamestate).Game.KeyBindings)
                     layer.Set(kb.AffectedKeys, Properties.PrimaryColor);
