@@ -11,8 +11,9 @@ namespace Aurora.Profiles.Minecraft.GSI {
     public class GameState_Minecraft : GameState<GameState_Minecraft> {
 
         private ProviderNode _Provider;
-        private PlayerNode _Player;
+        private GameNode _Game;
         private WorldNode _World;
+        private PlayerNode _Player;
 
         /// <summary>
         /// Provider node provides information about the data source so that Aurora can update the correct gamestate.
@@ -28,11 +29,11 @@ namespace Aurora.Profiles.Minecraft.GSI {
         /// <summary>
         /// Player node provides information about the player (e.g. health and hunger).
         /// </summary>
-        public PlayerNode Player {
+        public GameNode Game {
             get {
-                if (_Player == null)
-                    _Player = new PlayerNode(_ParsedData["player"]?.ToString() ?? "");
-                return _Player;
+                if (_Game == null)
+                    _Game = new GameNode(_ParsedData["game"]?.ToString() ?? "");
+                return _Game;
             }
         }
 
@@ -44,6 +45,17 @@ namespace Aurora.Profiles.Minecraft.GSI {
                 if (_World == null)
                     _World = new WorldNode(_ParsedData["world"]?.ToString() ?? "");
                 return _World;
+            }
+        }
+
+        /// <summary>
+        /// Player node provides information about the player (e.g. health and hunger).
+        /// </summary>
+        public PlayerNode Player {
+            get {
+                if (_Player == null)
+                    _Player = new PlayerNode(_ParsedData["player"]?.ToString() ?? "");
+                return _Player;
             }
         }
 
