@@ -50,30 +50,42 @@ namespace Aurora.Profiles.Minecraft.Layers {
                     layer.Set(kb.AffectedKeys, Properties.PrimaryColor);
 
                 // Override the keys for all conflicting keys
-                foreach (var (key, isHard) in CalculateConflicts((GameState_Minecraft)gamestate))
-                    layer.Set(key, isHard ? Properties.SecondaryColor : Properties.TertiaryColor);
+                foreach (var kvp in CalculateConflicts((GameState_Minecraft)gamestate))
+                    layer.Set(kvp.Key, kvp.Value ? Properties.TertiaryColor : Properties.SecondaryColor);
             }
             return layer;
         }
 
         /// <summary>
-        /// <para>Method that calculates the key conflicts based on the GameState's Game.KeyBindings property.
-        /// Returns an enumerable of all DeviceKeys with a conflict, and whether they are "hard" or "soft".
-        /// Forge shows hard conflicts in red and soft in orange on the in-game keys menu.</para>
-        /// See <see cref="GSI.Nodes.MinecraftKeyBinding.ConflictsWith(GSI.Nodes.MinecraftKeyBinding)"/> for how conflicts are calculated.
+        /// Method that calculates the key conflicts based on the GameState's Game.KeyBindings property.
+        /// Returns an enumerable of all DeviceKeys with a conflict, and whether they are only modifier conflicts (warning).
+        /// Forge shows modifier conflicts in red and soft in orange on the in-game keys menu.
         /// </summary>
-        private IEnumerable<(DeviceKeys[] keys, bool isHard)> CalculateConflicts(GameState_Minecraft state) {
+        private Dictionary<DeviceKeys, bool> CalculateConflicts(GameState_Minecraft state) {
+            Dictionary<DeviceKeys, bool> keys = new Dictionary<DeviceKeys, bool>();
             foreach (var bind in state.Game.KeyBindings) { // For every key binding
-                foreach (var otherBind in state.Game.KeyBindings) { // Check against every other key binding
-                    if (bind == otherBind) continue;
 
-                    var conflict = bind.ConflictsWith(otherBind); // Check for a conflict
-                    if (conflict != GSI.Nodes.MinecraftKeyBindingConflict.None) { // Return the key if it is conflicting
-                        yield return (bind.AffectedKeys, conflict == GSI.Nodes.MinecraftKeyBindingConflict.Hard);
-                        break;
+                // This code is based on the code from Minecraft in "GuiKeyBindingList.java" in the "drawEntry" method.
+                // It may not be the most efficient way of computing conflicts but I'm struggling to entirely follow
+                // the logic in the Minecraft code, so I've decided to replicate it to prevent conflicts
+                bool hasConflict = false;
+                bool isOnlyModifierConflict = true;
+
+                foreach (var otherBind in state.Game.KeyBindings) { // Check against every other key binding
+                    if (bind != otherBind && otherBind.ConflictsWith(bind)) {
+                        hasConflict = true;
+                        isOnlyModifierConflict &= otherBind.ModifierConflictsWith(bind);
                     }
                 }
+                // End replicated section
+
+                if (hasConflict)
+                    foreach (var affectedKey in bind.AffectedKeys) // For each key that is affected by this keybind
+                        keys[affectedKey] = keys.ContainsKey(affectedKey) // Check if this key is already flagged as a conflict
+                            ? keys[affectedKey] && isOnlyModifierConflict // If so, ensure it shows full conflicts over modifier conflicts 
+                            : isOnlyModifierConflict; // Else if not already flagged, simply set it.
             }
+            return keys;
         }
     }
 }
