@@ -46,7 +46,7 @@ namespace Aurora.Devices.Dualshock
                     device.StartUpdate();
                     Global.logger.Info("Initialized Dualshock");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Global.logger.Error("Could not initialize Dualshock" + e);
                     isInitialized = false;
@@ -199,18 +199,16 @@ namespace Aurora.Devices.Dualshock
             {
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    Color color = (Color)key.Value;
-                    //Apply and strip Alpha
-                    color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
                     if (e.Cancel) return false;
 
                     if (key.Key == DeviceKeys.Peripheral_Logo)
                     {
-                        newColor = color;                     
-                    }                   
+                        //Apply and strip Alpha
+                        newColor = CalculateAlpha((Color)key.Value);
+                    }
                 }
-           
+
                 return true;
             }
             catch (Exception ex)
@@ -256,6 +254,7 @@ namespace Aurora.Devices.Dualshock
                 default_registry.Register($"{devicename}_disconnect_when_stop", false, "Disconnect when Stopping");
                 default_registry.Register($"{devicename}_auto_connect", true, "Auto connect");
                 default_registry.Register($"{devicename}_LowBattery_threshold", 20, "Low battery threshold", 100, 0, "In percent. To deactivate set to 0");
+                default_registry.Register($"{devicename}_LowBattery_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 0, 0)), "Low battery color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
             }
             return default_registry;
         }
@@ -269,18 +268,13 @@ namespace Aurora.Devices.Dualshock
         public void SendColor(object sender, EventArgs e)
         {
             DS4Color ds4color;
-            Color newEffectColor = LowBatteryEffect();
-            if (newEffectColor.Equals(Color.Transparent) && setRestoreColor.Equals(Color.Transparent))
+            //calculate new Color out of KeyColor and Effect Color
+            Color newDS4Color = Color.FromArgb(255, Utils.ColorUtils.AddColors(newColor, LowBatteryEffect()));
+            if (setRestoreColor.Equals(Color.Transparent))
             {
-                ds4color.green = newColor.G;
-                ds4color.blue = newColor.B;
-                ds4color.red = newColor.R;
-            }
-            else if (setRestoreColor.Equals(Color.Transparent))
-            {
-                ds4color.green = newEffectColor.G;
-                ds4color.blue = newEffectColor.B;
-                ds4color.red = newEffectColor.R;
+                ds4color.green = newDS4Color.G;
+                ds4color.blue = newDS4Color.B;
+                ds4color.red = newDS4Color.R;
             }
             else
             {
@@ -288,7 +282,7 @@ namespace Aurora.Devices.Dualshock
                 ds4color.blue = setRestoreColor.B;
                 ds4color.red = setRestoreColor.R;
             }
-            
+
             state.LightBarColor = ds4color;
             if (ds4color.Equals(System.Drawing.Color.Black))
             {
@@ -301,12 +295,20 @@ namespace Aurora.Devices.Dualshock
             device.pushHapticState(state);
         }
 
+        private Color CalculateAlpha(Color input)
+            {
+            //Apply and strip Alpha
+            Color result = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(input, input.A / 255.0D));
+            return result;
+            }
+
         private Color LowBatteryEffect()
         {
             int flashlength = 100; 
             int pause = 50;
             int longpause = 4000;
             int LowBattery_threshold = Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_LowBattery_threshold");
+            System.Drawing.Color LowBattery_color = Global.Configuration.VarRegistry.GetVariable<Aurora.Utils.RealColor>($"{devicename}_LowBattery_color").GetDrawingColor();
 
             Color LowBatteryColor = Color.Transparent;
             if (!effectwatch.IsRunning && (device.getBattery() <= LowBattery_threshold) && !device.isCharging())
@@ -318,7 +320,7 @@ namespace Aurora.Devices.Dualshock
             if (effectwatch.ElapsedMilliseconds > 0 && effectwatch.ElapsedMilliseconds <= flashlength)
             {
                 //Global.logger.Info("On");
-                LowBatteryColor = Color.Red;
+                LowBatteryColor = LowBattery_color;
             }
             if (effectwatch.ElapsedMilliseconds > flashlength && effectwatch.ElapsedMilliseconds <= (flashlength + pause))
             {
@@ -328,7 +330,7 @@ namespace Aurora.Devices.Dualshock
             if (effectwatch.ElapsedMilliseconds > (flashlength + pause) && effectwatch.ElapsedMilliseconds <= (flashlength + pause + flashlength))
             {
                 //Global.logger.Info("long On");
-                LowBatteryColor = Color.Red;
+                LowBatteryColor = LowBattery_color;
             }
             if (effectwatch.ElapsedMilliseconds > (flashlength + pause + flashlength) && effectwatch.ElapsedMilliseconds <= (flashlength + pause + flashlength + longpause))
             {
