@@ -23,6 +23,8 @@ namespace Aurora.Profiles.Minecraft {
             DK[] controlKeys = new[] { DK.W, DK.A, DK.S, DK.D, DK.E, DK.SPACE, DK.LEFT_SHIFT, DK.LEFT_CONTROL };
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>() {
+                new Layer("Controls Assistant Layer", new MinecraftKeyConflictLayerHandler()),
+
                 new Layer("Health Bar", new MinecraftHealthBarLayerHandler() {
                     Properties = new MinecraftHealthBarLayerHandlerProperties() {
                         _Sequence = new KeySequence(new[] {

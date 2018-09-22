@@ -432,6 +432,12 @@
       <DependentUpon>Control_Diablo3.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Diablo3\Diablo3Application.cs" />
+    <Compile Include="Profiles\Minecraft\GSI\Nodes\GameNode.cs" />
+    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftKeyConflictLayer.xaml.cs">
+      <DependentUpon>Control_MinecraftKeyConflictLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Minecraft\Layers\MinecraftKeyConflictLayer.cs" />
+    <Compile Include="Profiles\Minecraft\MinecraftKeyBinding.cs" />
     <Compile Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml.cs">
       <DependentUpon>Control_QuakeChampions.xaml</DependentUpon>
     </Compile>
@@ -553,6 +559,9 @@
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
+    <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
+      <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
@@ -1501,6 +1510,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftKeyConflictLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1848,6 +1861,10 @@
     <Page Include="Controls\Control_VariableRegistryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Window_ProcessSelection.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Window_VariableRegistryEditor.xaml">
       <SubType>Designer</SubType>
