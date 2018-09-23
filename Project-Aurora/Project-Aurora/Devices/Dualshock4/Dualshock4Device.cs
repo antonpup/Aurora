@@ -205,7 +205,7 @@ namespace Aurora.Devices.Dualshock
                     if (key.Key == DeviceKeys.Peripheral_Logo)
                     {
                         //Apply and strip Alpha
-                        newColor = CalculateAlpha((Color)key.Value);
+                        newColor = (Color)key.Value;
                     }
                 }
 
@@ -269,7 +269,7 @@ namespace Aurora.Devices.Dualshock
         {
             DS4Color ds4color;
             //calculate new Color out of KeyColor and Effect Color
-            Color newDS4Color = Color.FromArgb(255, Utils.ColorUtils.AddColors(newColor, LowBatteryEffect()));
+            Color newDS4Color = CalculateAlpha(Utils.ColorUtils.AddColors(newColor, LowBatteryEffect()));
             if (setRestoreColor.Equals(Color.Transparent))
             {
                 ds4color.green = newDS4Color.G;
