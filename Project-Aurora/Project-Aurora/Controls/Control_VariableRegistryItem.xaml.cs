@@ -153,6 +153,28 @@ namespace Aurora.Controls
 
                 grd_control.Children.Add(longUpDown_control);
             }
+            else if (var_type == typeof(double))
+            {
+                DoubleUpDown doubleUpDown_control = new DoubleUpDown();
+                doubleUpDown_control.Value = VarRegistry.GetVariable<double>(VariableName);
+                if (VarRegistry.GetVariableMax<double>(VariableName, out double max_val))
+                    doubleUpDown_control.Maximum = max_val;
+                if (VarRegistry.GetVariableMax<double>(VariableName, out double min_val))
+                    doubleUpDown_control.Minimum = min_val;
+                doubleUpDown_control.ValueChanged += DoubleUpDown_control_ValueChanged;
+                grd_control.Children.Add(doubleUpDown_control);
+            }
+            else if (var_type == typeof(float))
+            {
+                DoubleUpDown doubleUpDown_control = new DoubleUpDown();
+                doubleUpDown_control.Value = VarRegistry.GetVariable<float>(VariableName);
+                if (VarRegistry.GetVariableMax<float>(VariableName, out float max_val))
+                    doubleUpDown_control.Maximum = max_val;
+                if (VarRegistry.GetVariableMax<float>(VariableName, out float min_val))
+                    doubleUpDown_control.Minimum = min_val;
+                doubleUpDown_control.ValueChanged += DoubleUpDown_control_ValueChanged;
+                grd_control.Children.Add(doubleUpDown_control);
+            }
             else if (var_type == typeof(Aurora.Settings.KeySequence))
             {
                 Aurora.Controls.KeySequence ctrl = new Aurora.Controls.KeySequence();
@@ -201,6 +223,10 @@ namespace Aurora.Controls
         private void IntUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             VarRegistry.SetVariable(VariableName, (sender as IntegerUpDown).Value);
+        }
+
+        private void DoubleUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+            VarRegistry.SetVariable(VariableName, (sender as DoubleUpDown).Value);
         }
 
         private void Txtbx_control_TextChanged(object sender, TextChangedEventArgs e)
