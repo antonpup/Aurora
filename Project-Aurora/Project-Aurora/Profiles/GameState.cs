@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using NAudio.CoreAudioApi;
 
 namespace Aurora.Profiles
 {
@@ -202,12 +203,30 @@ namespace Aurora.Profiles
         /// </summary>
         public long MemoryTotal { get { return PerformanceInfo.GetTotalMemoryInMiB(); } }
 
+        /// <summary>
+        /// Gets the default NAudio endpoint.
+        /// </summary>
+        private MMDevice DefaultAudioDevice => mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+
+        /// <summary>
+        /// Current system volume (as set from the speaker icon)
+        /// </summary>
+        // Note: Manually checks if muted to return 0 since this is not taken into account with the MasterVolumeLevelScalar.
+        public float SystemVolume => SystemVolumeIsMuted ? 0 : DefaultAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
+
+        /// <summary>
+        /// Gets whether the system volume is muted.
+        /// </summary>
+        public bool SystemVolumeIsMuted => DefaultAudioDevice.AudioEndpointVolume.Mute;
+
         private static PerformanceCounter _CPUCounter;
 
         private static float _CPUUsage = 0.0f;
         private static float _SmoothCPUUsage = 0.0f;
 
         private static System.Timers.Timer cpuCounterTimer;
+
+        private static MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
 
         /// <summary>
         /// Current CPU Usage
