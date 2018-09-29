@@ -166,8 +166,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class representing local computer information
     /// </summary>
-    public class LocalPCInformation : Node<LocalPCInformation>
-    {
+    public class LocalPCInformation : Node<LocalPCInformation> {
         /// <summary>
         /// The current hour
         /// </summary>
@@ -204,20 +203,42 @@ namespace Aurora.Profiles
         public long MemoryTotal { get { return PerformanceInfo.GetTotalMemoryInMiB(); } }
 
         /// <summary>
-        /// Gets the default NAudio endpoint.
+        /// Gets the default endpoint for output (playback) devices e.g. speakers, headphones, etc.
+        /// This will return null if there are no playback devices available.
         /// </summary>
-        private MMDevice DefaultAudioDevice => mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+        private MMDevice DefaultAudioOutDevice {
+            get {
+                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console); }
+                catch { return null; }
+            }
+        }
+
+        /// <summary>
+        /// Gets the default endpoint for input (recording) devices e.g. microphones.
+        /// This will return null if there are no recording devices available.
+        /// </summary>
+        private MMDevice DefaultAudioInDevice {
+            get {
+                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console); }
+                catch { return null; }
+            }
+        }
 
         /// <summary>
         /// Current system volume (as set from the speaker icon)
         /// </summary>
         // Note: Manually checks if muted to return 0 since this is not taken into account with the MasterVolumeLevelScalar.
-        public float SystemVolume => SystemVolumeIsMuted ? 0 : DefaultAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
+        public float SystemVolume => SystemVolumeIsMuted ? 0 : DefaultAudioOutDevice?.AudioEndpointVolume.MasterVolumeLevelScalar * 100 ?? 0;
 
         /// <summary>
         /// Gets whether the system volume is muted.
         /// </summary>
-        public bool SystemVolumeIsMuted => DefaultAudioDevice.AudioEndpointVolume.Mute;
+        public bool SystemVolumeIsMuted => DefaultAudioOutDevice?.AudioEndpointVolume.Mute ?? true;
+
+        /// <summary>
+        /// The volume level that is being recorded by the default microphone.
+        /// </summary>
+        public float MicrophoneLevel => DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         private static PerformanceCounter _CPUCounter;
 
@@ -255,6 +276,11 @@ namespace Aurora.Profiles
             {
                 Global.logger.LogLine("Failed to create PerformanceCounter. Try: https://stackoverflow.com/a/34615451 Exception: " + exc);
             }
+
+            // Without this, the microphone does not activate and therefore the "MicrophoneLevel" property shows 0 unless the user is using
+            // an application that makes use of the microphone.
+            try { new NAudio.Wave.WaveInEvent().StartRecording(); }
+            catch { /* Will error if there is no recording device found. */ }
         }
 
         internal LocalPCInformation() : base()
