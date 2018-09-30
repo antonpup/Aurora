@@ -202,7 +202,7 @@ namespace Aurora.Devices.Dualshock
 
                     if (e.Cancel) return false;
 
-                    if (key.Key == DeviceKeys.Peripheral_Logo)
+                    if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral)
                     {
                         //Apply and strip Alpha
                         newColor = (Color)key.Value;
