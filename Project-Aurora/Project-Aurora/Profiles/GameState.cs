@@ -1,4 +1,4 @@
-﻿using Aurora.Profiles;
+using Aurora.Profiles;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
@@ -236,9 +236,19 @@ namespace Aurora.Profiles
         public bool SystemVolumeIsMuted => DefaultAudioOutDevice?.AudioEndpointVolume.Mute ?? true;
 
         /// <summary>
-        /// The volume level that is being recorded by the default microphone.
+        /// The volume level that is being recorded by the default microphone even when muted.
         /// </summary>
         public float MicrophoneLevel => DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+
+        /// <summary>
+        /// The volume level that is being recorded by the default microphone if not muted.
+        /// </summary>
+        public float MicLevelIfNotMuted => MicrophoneIsMuted ? 0 : DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+
+        /// <summary>
+        /// Gets whether the default microphone is muted.
+        /// </summary>
+        public bool MicrophoneIsMuted => DefaultAudioInDevice?.AudioEndpointVolume.Mute ?? true;
 
         private static PerformanceCounter _CPUCounter;
 
