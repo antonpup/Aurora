@@ -217,7 +217,7 @@ namespace Aurora.Devices
 
             if (anyInitialized)
             {
-                _InitializeOnceAllowed = true;
+                //_InitializeOnceAllowed = true;
                 NewDevicesInitialized?.Invoke(this, new EventArgs());
             }
 
@@ -270,7 +270,7 @@ namespace Aurora.Devices
 
         public void InitializeOnce()
         {
-            if (!anyInitialized && _InitializeOnceAllowed)
+            if (!anyInitialized)// && _InitializeOnceAllowed)
                 Initialize();
         }
 
