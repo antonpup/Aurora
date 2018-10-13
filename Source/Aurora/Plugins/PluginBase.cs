@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Aurora.Applications;
 
 namespace Aurora.Plugins
 {
@@ -12,5 +13,6 @@ namespace Aurora.Plugins
 
         public virtual void Process(IPluginConsumer plugin) { }
         //Create additional ones for each IPluginConsumer
+        public virtual void Process(ApplicationManager plugin) { }
     }
 }

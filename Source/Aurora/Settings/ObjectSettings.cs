@@ -7,12 +7,17 @@ using System.Text;
 
 namespace Aurora.Settings
 {
-    public class ObjectSettings<T> where T : INotifyPropertyChanged
+    public abstract class ObjectSettings<T> where T : SettingsProfile
     {
-        protected string SettingsSavePath { get; set; }
+        private string _settingsSavePath = "";
+        protected string SettingsSavePath
+        {
+            get => _settingsSavePath;
+            set => _settingsSavePath = Path.Combine(GlobalConstants.DataStorageDirectory, value);
+        }
         public T Settings { get; protected set; }
 
-        public void SaveSettings()
+        public virtual void SaveSettings()
         {
             this.SaveSettings(typeof(T));
         }
