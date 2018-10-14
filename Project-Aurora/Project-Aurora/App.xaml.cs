@@ -19,6 +19,7 @@ using SharpDX.RawInput;
 using NLog;
 using System.Reflection;
 using System.Text;
+using Aurora.Service;
 
 namespace Aurora
 {
@@ -354,6 +355,7 @@ namespace Aurora
                     System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
                 }
             }
+            ProfileSwitcher.Init();
         }
 
         private static void InputEventsOnKeyDown(object sender, KeyboardInputEventArgs e)
@@ -419,7 +421,7 @@ namespace Aurora
             Global.net_listener?.Stop();
             Global.dev_manager?.Shutdown();
             Global.dev_manager?.Dispose();
-
+            Service.ProfileSwitcher.Shutdown();
             InputInterceptor?.Dispose();
 
             try

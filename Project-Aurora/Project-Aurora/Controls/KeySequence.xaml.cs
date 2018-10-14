@@ -169,7 +169,7 @@ namespace Aurora.Controls
             
             allowListRefresh = false;
             this.keys_keysequence.Items.Clear();
-            var keys = Enum.GetValues(typeof(Aurora.Devices.DeviceKeys)).Cast<Aurora.Devices.DeviceKeys>();
+            var keys = (Aurora.Devices.DeviceKeys[])Enum.GetValues(typeof(Aurora.Devices.DeviceKeys));
 
             foreach (var item in keys)
             {

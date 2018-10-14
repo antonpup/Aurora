@@ -10,7 +10,7 @@
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
+             xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" xmlns:Service="clr-namespace:Aurora.Service" x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
              d:DesignHeight="261.972" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" x:Name="ctrlSettings">
     <UserControl.Resources>
@@ -42,7 +42,7 @@
 
             <ObjectDataProvider x:Key="KbLayout" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboardLocalization" />
+                    <x:Type TypeName="EnumPercentEffectType:PreferredKeyboardLocalization" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:KbLayoutToStringVC x:Key="KbLayoutToStringVC"/>
@@ -52,7 +52,7 @@
 
             <ObjectDataProvider x:Key="KbBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboard" />
+                    <x:Type TypeName="EnumPercentEffectType:PreferredKeyboard" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:KbBrandToStringVC x:Key="KbBrandToStringVC"/>
@@ -62,7 +62,7 @@
 
             <ObjectDataProvider x:Key="MouseBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredMouse" />
+                    <x:Type TypeName="EnumPercentEffectType:PreferredMouse" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
@@ -72,7 +72,7 @@
 
             <ObjectDataProvider x:Key="MouseOrientation" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:MouseOrientationType" />
+                    <x:Type TypeName="EnumPercentEffectType:MouseOrientationType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:MouseOrientationToStringVC x:Key="MouseOrientationToStringVC"/>
@@ -82,7 +82,7 @@
 
             <ObjectDataProvider x:Key="KeycapType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:KeycapType" />
+                    <x:Type TypeName="EnumPercentEffectType:KeycapType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
@@ -92,7 +92,7 @@
 
             <ObjectDataProvider x:Key="BitmapAccuracy" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:BitmapAccuracy" />
+                    <x:Type TypeName="EnumPercentEffectType:BitmapAccuracy" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
@@ -102,7 +102,7 @@
 
             <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:AppExitMode" />
+                    <x:Type TypeName="EnumPercentEffectType:AppExitMode" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:appexitmodeToStringVC x:Key="appexitmodeToStringVC"/>
@@ -112,7 +112,7 @@
 
             <ObjectDataProvider x:Key="AppDetectionMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:ApplicationDetectionMode" />
+                    <x:Type TypeName="EnumPercentEffectType:ApplicationDetectionMode" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <EnumValueConverters:AppDetectionModeToStringVC x:Key="AppDetectionModeToStringVC"/>
@@ -123,7 +123,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <TabControl Margin="0,7,0,-11" x:Name="tabMain">
+        <TabControl Margin="0" x:Name="tabMain">
             <TabItem Header="General Settings">
                 <Grid>
                     <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness (works only when Aurora is out of focus)" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
@@ -139,10 +139,10 @@
                     <Button x:Name="excluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="744,91,0,0" VerticalAlignment="Top" Click="excluded_remove_Click"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,95,0,0" TextWrapping="Wrap" Text="Keyboard brightness modifier: " VerticalAlignment="Top"/>
                     <TextBlock x:Name="lblKeyboardBrightness" HorizontalAlignment="Left" Margin="333,95,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
-                    <Slider x:Name="sldKeyboardBrightness" HorizontalAlignment="Left" Margin="178,95,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding KeyboardBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblKeyboardBrightness, Path=.}"/>
+                    <Slider x:Name="sldKeyboardBrightness" HorizontalAlignment="Left" Margin="178,95,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding KeyboardBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ., ElementName=lblKeyboardBrightness}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,116,0,0" TextWrapping="Wrap" Text="Peripheral brightness modifier: " VerticalAlignment="Top"/>
                     <TextBlock x:Name="lblPeripheralBrightness" HorizontalAlignment="Left" Margin="333,116,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
-                    <Slider x:Name="sldPeripheralBrightness" HorizontalAlignment="Left" Margin="178,116,0,0" VerticalAlignment="Top" Width="148" ValueChanged="sliderPercentages_ValueChanged" Maximum="1" Value="{Binding PeripheralBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblPeripheralBrightness, Path=.}"/>
+                    <Slider x:Name="sldPeripheralBrightness" HorizontalAlignment="Left" Margin="178,116,0,0" VerticalAlignment="Top" Width="148" ValueChanged="sliderPercentages_ValueChanged" Maximum="1" Value="{Binding PeripheralBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ., ElementName=lblPeripheralBrightness}"/>
                     <xctk:IntegerUpDown x:Name="timed_dimming_start_hour_updown" HorizontalAlignment="Left" Height="24" Margin="118,179,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_hour_updown_ValueChanged"/>
                     <xctk:IntegerUpDown x:Name="timed_dimming_start_minute_updown" HorizontalAlignment="Left" Height="24" Margin="180,179,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_minute_updown_ValueChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="172,179,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
@@ -158,7 +158,7 @@
                     <xctk:IntegerUpDown x:Name="nighttime_end_hour_updown" HorizontalAlignment="Left" Height="24" Margin="419,208,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_hour_updown_ValueChanged"/>
                     <xctk:IntegerUpDown x:Name="nighttime_end_minute_updown" HorizontalAlignment="Left" Height="24" Margin="482,210,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_minute_updown_ValueChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="474,211,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="nighttime_enabled_checkbox" Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" HorizontalAlignment="Left" Margin="332,139,0,0" VerticalAlignment="Top" Unchecked="nighttime_enabled_checkbox_Checked" Checked="nighttime_enabled_checkbox_Checked"/>
+                    <CheckBox x:Name="nighttime_enabled_checkbox" Content="Enable nighttime color zones for&#xA;General Application lighting profiles" HorizontalAlignment="Left" Margin="332,139,0,0" VerticalAlignment="Top" Unchecked="nighttime_enabled_checkbox_Checked" Checked="nighttime_enabled_checkbox_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="What to do when Aurora window is closed:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="app_exit_mode" HorizontalAlignment="Left" Margin="242,27,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource appexitmode}}" ItemTemplate="{Binding Source={StaticResource appexitmodeTemplate}}" SelectionChanged="app_exit_mode_SelectionChanged"/>
                     <CheckBox x:Name="start_silently_enabled" Content="Start Aurora in a minimized state" HorizontalAlignment="Left" Margin="142,10,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
@@ -166,7 +166,7 @@
                     <ComboBox x:Name="app_detection_mode" HorizontalAlignment="Left" Margin="664,10,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource AppDetectionMode}}" ItemTemplate="{Binding Source={StaticResource AppDetectionModeTemplate}}" SelectionChanged="app_detection_mode_SelectionChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,74,0,0" TextWrapping="Wrap" Text="Global brightness modifier: " VerticalAlignment="Top"/>
                     <TextBlock x:Name="lblGlobalBrightness" HorizontalAlignment="Left" Margin="333,74,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
-                    <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="178,74,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblGlobalBrightness, Path=.}"/>
+                    <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="178,74,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ., ElementName=lblGlobalBrightness}"/>
                     <CheckBox x:Name="chkHigherPriority" Content="Run Aurora at High priority" HorizontalAlignment="Left" Margin="12,257,0,0" VerticalAlignment="Top" IsChecked="{Binding HighPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkHigherPriority_IsCheckedChanged" Unchecked="chkHigherPriority_IsCheckedChanged"/>
                 </Grid>
             </TabItem>
@@ -268,6 +268,15 @@
                 <Grid>
                     <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Server">
+                <Grid Margin="0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                        <Service:ServiceSettingsUI x:Name="serviceSettingsUI" VerticalAlignment="Top"/>
+                    </ScrollViewer>
+
+                </Grid>
+
             </TabItem>
             <TabItem Header="Updates">
                 <Grid>

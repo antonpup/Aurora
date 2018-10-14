@@ -360,6 +360,9 @@ namespace Aurora.Settings
 
         private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
         public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
+        //server settings
+        public string ClientID;
+        public bool SocketClosed = true;
 
         public bool updates_check_on_start_up;
         public bool start_silently;
@@ -408,9 +411,13 @@ namespace Aurora.Settings
         public SkypeOverlaySettings skype_overlay_settings;
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
+        
 
         public Configuration()
         {
+            //server settings
+            ClientID = "";
+
             //First Time Installs
             redist_first_time = true;
             logitech_first_time = true;
