@@ -61,10 +61,8 @@ namespace Aurora.Service
         {
             if (Global.Configuration.SocketClosed == false)
             {
-                
                 await connect(clientID,false );
-                DisconnectAsync();
-
+                await DisconnectAsync();
             }
             ThreadPool.QueueUserWorkItem(async (o) =>
             {
