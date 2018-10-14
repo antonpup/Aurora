@@ -1,0 +1,180 @@
+﻿<UserControl x:Class="Aurora.Profiles.Minecraft.Control_Minecraft"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.Minecraft"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="850" Height="Auto" Width="Auto">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Minecraft">
+                <StackPanel Margin="10">
+                    <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with Minecraft. Ensure you have read the below text." Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,10" TextWrapping="Wrap" MaxWidth="824">
+                        <Run Text="Support for Minecraft requires a mod so that Aurora is able to fetch the variables from the game. Currently this mod requires Forge mod loader, though other options may become available in future." />
+                        <LineBreak /><LineBreak />
+                        <Run Text="These mods are not authored by the main Aurora developers and any issues with these mods should not be directed at them, but posted on the relevant GitLab repo for the mod." />
+                    </TextBlock>
+
+                    <Button Content="Minecraft Forge download" HorizontalAlignment="Left" Padding="10,2" Click="GoToForgePage_Click" />
+
+                    <TextBlock Margin="0,10,0,0" Text="Supported versions:" FontSize="13" FontWeight="Bold" />
+
+                    <ItemsControl x:Name="ModListControl" HorizontalAlignment="Left" Margin="0,5">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Width="480" IsItemsHost="True" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="{Binding Path=Name}" FontWeight="SemiBold" HorizontalAlignment="Stretch" Grid.Column="0" />
+                                    <TextBlock Grid.Column="1">
+                                        <Run Text="{Binding Path=Version}" />
+                                        <Run Text=" (" />
+                                        <Run Text="{Binding Path=Date}" FontStyle="Italic" />
+                                        <Run Text=")" />
+                                    </TextBlock>
+                                    <Button Content="Download" Margin="10,0,0,0" Padding="5,0" Grid.Column="2" Click="GoToModDownloadPage_Click" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Content="Refresh" Padding="5,0" FontSize="10" HorizontalAlignment="Left" Click="RefreshModList_Click" />
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Preview">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px"/>
+                        <RowDefinition Height="28px"/>
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition Width="28px"/>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Player-based variables -->
+                    <Label Content="Player" FontWeight="SemiBold" HorizontalAlignment="Center" Grid.ColumnSpan="2" />
+
+                    <Label Content="In Game:" Grid.Row="1" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="1" Grid.Column="1" Margin="0,4" Checked="InGameCh_Checked" Unchecked="InGameCh_Checked" />
+
+                    <Label Content="Health:" Grid.Row="2" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="2" Grid.Column="1" Margin="0,4" ValueChanged="HealthSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
+                    
+                    <Label Content="Absorption:" Grid.Row="3" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="3" Grid.Column="1" Margin="0,4" ValueChanged="Slider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
+
+                    <Label Content="Food:" Grid.Row="4" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="4" Grid.Column="1" Margin="0,4" ValueChanged="HungerSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
+
+                    <Label Content="Armor:" Grid.Row="5" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="5" Grid.Column="1" Margin="0,4" ValueChanged="ArmorSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True"  />
+
+                    <Label Content="Experience:" Grid.Row="6" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="6" Grid.Column="1" Margin="0,4" ValueChanged="ExperienceSlider_ValueChanged" Minimum="0" Maximum="1" />
+
+                    <Label Content="Burning:" Grid.Row="7" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="7" Grid.Column="1" Margin="0,4" Checked="IsBurningCh_Checked" Unchecked="IsBurningCh_Checked" />
+
+                    <Label Content="In Water:" Grid.Row="8" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="8" Grid.Column="1" Margin="0,4" Checked="IsInWaterCh_Checked" Unchecked="IsInWaterCh_Checked" />
+
+                    <Label Content="Sneaking:" Grid.Row="9" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="9" Grid.Column="1" Margin="0,4" Checked="IsSneakingCh_Checked" Unchecked="IsSneakingCh_Checked" />
+
+                    <Label Content="Riding Horse:" Grid.Row="10" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="10" Grid.Column="1" Margin="0,4" Checked="IsRidingCh_Checked" Unchecked="IsRidingCh_Checked" />
+
+                    <Label Content="Player effects:" Grid.Row="11" HorizontalAlignment="Right" Margin="8,0" />
+                    <Grid Grid.Row="11" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28px" />
+                        </Grid.RowDefinitions>
+
+                        <CheckBox Content="Wither" Grid.Row="0" Grid.Column="0" Margin="0,4" Checked="HasWitherCh_Checked" Unchecked="HasWitherCh_Checked" />
+                        <CheckBox Content="Poison" Grid.Row="0" Grid.Column="1" Margin="0,4" Checked="HasPoisonCh_Checked" Unchecked="HasPoisonCh_Checked" />
+                        <CheckBox Content="Regen" Grid.Row="0" Grid.Column="2" Margin="0,4" Checked="HasRegenCh_Checked" Unchecked="HasRegenCh_Checked" />
+                    </Grid>
+
+                    <!--World-based variables-->
+                    <Label Content="World" Grid.Column="3" FontWeight="SemiBold" HorizontalAlignment="Center" Grid.ColumnSpan="2" />
+
+                    <Label Content="Rain Strength:" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="1" Grid.Column="4" Margin="0,4" ValueChanged="RainStrengthSlider_ValueChanged" Minimum="0" Maximum="1" />
+
+                    <Label Content="World time:" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Right" Margin="8,0" VerticalAlignment="Center" />
+                    <Grid Grid.Row="2" Grid.RowSpan="2" Grid.Column="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="8px" />
+                            <!-- Padding due to slider -->
+                            <ColumnDefinition Width="1*" />
+                            <!-- End of sunrise -->
+                            <ColumnDefinition Width="1px" />
+                            <ColumnDefinition Width="10*" />
+                            <!-- Day -->
+                            <ColumnDefinition Width="1px" />
+                            <ColumnDefinition Width="3*" />
+                            <!-- Sunset -->
+                            <ColumnDefinition Width="1px" />
+                            <ColumnDefinition Width="8*" />
+                            <!-- Night -->
+                            <ColumnDefinition Width="1px" />
+                            <ColumnDefinition Width="2*" />
+                            <!-- Start of sunrise -->
+                            <ColumnDefinition Width="8px" />
+                            <!-- Padding due to slider -->
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="8px" />
+                            <RowDefinition Height="36px" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Rectangle Grid.Column="2" Grid.Row="1" Fill="#BABABA" />
+                        <Rectangle Grid.Column="3" Grid.Row="1" Fill="#55FFFF00" />
+                        <Image Grid.Column="3" Grid.Row="1" Source="/Aurora;component/Resources/mc_clock_day.png" Height="16" VerticalAlignment="Bottom" Margin="1" />
+                        <Rectangle Grid.Column="4" Grid.Row="1" Fill="#BABABA" />
+                        <Rectangle Grid.Column="6" Grid.Row="1" Fill="#BABABA" />
+                        <Rectangle Grid.Column="7" Grid.Row="1" Fill="#55000000" />
+                        <Image Grid.Column="7" Grid.Row="1" Source="/Aurora;component/Resources/mc_clock_night.png" Height="16" VerticalAlignment="Bottom" Margin="1" />
+                        <Rectangle Grid.Column="8" Grid.Row="1" Fill="#BABABA" />
+                    </Grid>
+                    <Slider Grid.Row="2" Grid.RowSpan="2" Grid.Column="4" Margin="0,4" ValueChanged="WorldTimeSlider_ValueChanged" Minimum="0" Maximum="1" TickFrequency="0.04166666666" TickPlacement="TopLeft" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

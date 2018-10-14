@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace Aurora.Devices
 {
@@ -80,6 +81,7 @@ namespace Aurora.Devices
         private const int retryAttemps = 3;
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
+        private bool suspended = false;
 
         private bool _InitializeOnceAllowed = false;
 
@@ -104,7 +106,8 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
             devices.Add(new DeviceContainer(new Devices.SteelSeriesHID.SteelSeriesHIDDevice()));   // SteelSeriesHID Device
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
-
+            devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
+            devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
@@ -154,6 +157,35 @@ namespace Aurora.Devices
                     }
                 }
             }
+
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        }
+
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (e.Reason.Equals(SessionSwitchReason.SessionUnlock) && suspended)
+            {
+                Global.logger.Info("Resuming Devices");
+                suspended = false;
+                this.InitializeOnce();
+            }
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Suspend:
+                    Global.logger.Info("Suspending Devices");
+                    suspended = true;
+                    this.Shutdown();
+                    break;
+                case PowerModes.Resume:
+                    //Global.logger.Info("Resuming Devices");
+                    //this.InitializeOnce();
+                    break;
+            }
         }
 
         public void RegisterVariables()
@@ -165,6 +197,9 @@ namespace Aurora.Devices
 
         public void Initialize()
         {
+            if (suspended)
+                return;
+
             int devicesToRetryNo = 0;
             foreach (DeviceContainer device in devices)
             {
@@ -182,7 +217,7 @@ namespace Aurora.Devices
 
             if (anyInitialized)
             {
-                _InitializeOnceAllowed = true;
+                //_InitializeOnceAllowed = true;
                 NewDevicesInitialized?.Invoke(this, new EventArgs());
             }
 
@@ -197,6 +232,8 @@ namespace Aurora.Devices
 
         private void RetryInitialize()
         {
+            if (suspended)
+                return;
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
                 Global.logger.Info("Retrying Device Initialization");
@@ -233,7 +270,7 @@ namespace Aurora.Devices
 
         public void InitializeOnce()
         {
-            if (!anyInitialized && _InitializeOnceAllowed)
+            if (!anyInitialized)// && _InitializeOnceAllowed)
                 Initialize();
         }
 

@@ -21,6 +21,15 @@ Project Aurora is a utility that unifies RGB lighting devices across different b
 Having issues? Want to discuss changes or talk about possible features? Want to be involved in the development and design process of Aurora? Join our [Discord server](https://discord.gg/YAuBmg9) and get involved!
 
 ## How to Install
+
+### AUTOMATIC
+
+1. Download the 'Aurora-setup-vX.X.X.exe' from any of the options found under the Download section, every recent release should have this available
+2. Run the executable and install it, all requirements should be installed for you.
+3. Start using Aurora!
+
+### MANUAL
+
 1. First of all, make sure that your PC meets the requirements listed above. Also, make sure that you have [Visual C++ Redistributable Packages for Visual Studio 2017](https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads) and [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-gb/download/details.aspx?id=49981) installed.
 2. Download the latest release from above
 3. Extract the archive anywhere on your computer. Preferably keep it in a location you can easily access.
@@ -52,6 +61,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Worms W.M.D
 * Blade and Soul
 * Borderlands 2
+* Minecraft
 * Euro Truck Simulator 2
 * American Truck Simulator
 * Rise of the Tomb Raider
@@ -61,8 +71,16 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Battlefield 1
 * Dishonored
 * The Witcher 3
+* Minecraft
+* Killing Floor 2
+* DOOM (2016)
+* Factorio
+* Quake Champions
+* Diablo III
 
 ## Natively Supported Devices
+
+If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface! Devices from supported brands generally should work even if they aren't listed here.
 
 ### Logitech
 #### Keyboards
@@ -88,12 +106,15 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * K70 LUX
 * K95
 * K95 Platinum
-* STRAFE RGB
+* STRAFE Non-RGB/RGB
 #### Mice
 * Scimitar RGB
 * Dark Core RGB
 * M65 RGB
 * Glaive RGB
+#### Other Peripherals
+* ST100 Headset Stand
+* MM800 Mousepad
 
 ### Razer
 #### Keyboards
@@ -111,7 +132,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 #### Mousepads
 * Firefly (single color)
 ### Cooler Master
-* Masterkeys Pro RGB
+* Masterkeys Pro L, M and S RGB/White
 * MK750
 * CK550
 * CK552
@@ -134,13 +155,18 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Rival 600
 * Rival 700
 * Rival 310
+* Rival 300
 
 ### Wooting
 * One
+
+### Alienware
+* Most devices should work
 ### Clevo
 ### AtmoOrb
+### Dualshock 4 (PS4 Controller)
 
-If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface!
+
 ## Video demonstrations
 Dota 2 Demo
 
@@ -255,6 +281,14 @@ Borderlands 2 features
 
 * Health and Shield indicators
 
+Minecraft features
+* Healthbar
+* XP bar
+* Armor and hunger bars (not on the default profile but can easily be added)
+* Flame effect when player burns
+* Raindrops when world is raining
+* Background based on time-of-day
+
 Euro Truck Simulator 2 / American Truck Simulator features
 
 * Throttle/braking indicators
@@ -286,6 +320,38 @@ The Witcher 3 features
 
 * Current active sign as background.
 * Health, Toxicity, and Stamina indicators.
+
+Minecraft features
+
+* Health, hunger, experience, and other indicators
+* Day/Night indicator
+* Rain and Fire indicator
+
+
+Killing Floor 2 features
+
+* Killing Floor 2 effects are controlled by the game itself
+
+
+DOOM features
+
+* DOOM effects are controlled by the game itself
+
+
+Quake Champions features
+
+* Quake Champions effects are controlled by the game itself
+
+
+Factorio features
+
+* Factorio effects are controlled by the game itself
+
+
+Diablo III features
+
+* Diablo III effects are controlled by the game itself
+
 
 ## F.A.Q.
 ### Can this give me a ban in a video game?

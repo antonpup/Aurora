@@ -387,8 +387,7 @@ namespace Aurora
         private static void InterceptVolumeAsBrightness(object sender, InputInterceptor.InputEventData e)
         {
             var keys = (Keys)e.Data.VirtualKeyCode;
-
-            if ((keys.HasFlag(Keys.VolumeDown) || keys.HasFlag(Keys.VolumeUp))
+            if ((keys.Equals(Keys.VolumeDown) || keys.Equals(Keys.VolumeUp))
                 && Global.InputEvents.Alt)
             {
                 e.Intercepted = true;
@@ -442,8 +441,10 @@ namespace Aurora
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception exc = (Exception)e.ExceptionObject;
-            Global.logger.Error("Fatal Exception caught : " + exc);
-            Global.logger.Error(String.Format("Runtime terminating: {0}", e.IsTerminating));
+            Global.logger.Fatal("Fatal Exception caught : " + exc);
+            Global.logger.Fatal(String.Format("Runtime terminating: {0}", e.IsTerminating));
+            LogManager.Flush();
+
             
             System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
             //Perform exit operations
@@ -453,7 +454,8 @@ namespace Aurora
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             Exception exc = (Exception)e.Exception;
-            Global.logger.Error("Fatal Exception caught : " + exc);
+            Global.logger.Fatal("Fatal Exception caught : " + exc);
+            LogManager.Flush();
             if (!Global.isDebug)
                 e.Handled = true;
             else

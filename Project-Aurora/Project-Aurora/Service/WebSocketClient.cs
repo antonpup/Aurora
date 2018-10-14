@@ -26,64 +26,55 @@ namespace Aurora.Service
         private static ClientWebSocket webSocket = null;
         internal static async Task DisconnectAsync()
         {
-            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
-          //  Global.Configuration.SocketClosed = true;
-          //  ConfigManager.Save(Global.Configuration);
+            webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+            Global.Configuration.SocketClosed = true;
+            ConfigManager.Save(Global.Configuration);
         }
-        internal static async void Connect(string clientID)
+        private static async Task connect(string clientID, bool listen)
         {
-            /*if (Global.Configuration.SocketClosed == false)
+            try
             {
-                if (webSocket != null)
+                webSocket = new ClientWebSocket();
+                await webSocket.ConnectAsync(new Uri(uriWS + clientID), CancellationToken.None);
+                Global.Configuration.SocketClosed = false;
+                ConfigManager.Save(Global.Configuration);
+                if (listen)
                 {
-                    await DisconnectAsync();
+                    await Task.WhenAll(Receive(webSocket));
                 }
-                else
-                {
-                    Global.Configuration.SocketClosed = true;
-                    ConfigManager.Save(Global.Configuration);
-                }
-                Connect(clientID);
-                return;
-            }*/
-            ThreadPool.QueueUserWorkItem(async (o) =>
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    webSocket = new ClientWebSocket();
-                    await webSocket.ConnectAsync(new Uri(uriWS+clientID), CancellationToken.None);
-                    Global.Configuration.SocketClosed = false;
-                    ConfigManager.Save(Global.Configuration);
-                    await Task.WhenAll(Receive(webSocket), Send(webSocket));
-
-                }
-                catch (Exception ex)
-                {
-                    Global.logger.Error("WS Exception: {0}", ex);
-                }
-                finally
+                Global.logger.Error("WS Exception: {0}", ex);
+            }
+            finally
+            {
+                if (listen)
                 {
                     if (webSocket != null)
                         webSocket.Dispose();
                     Global.logger.Info("Web socket closed");
                 }
-            });
+            }
         }
-
-        private static async Task Send(ClientWebSocket webSocket)
+        internal static async void Connect(string clientID)
         {
+            if (Global.Configuration.SocketClosed == false)
+            {
+                
+                await connect(clientID,false );
+                DisconnectAsync();
 
-
+            }
+            ThreadPool.QueueUserWorkItem(async (o) =>
+            {
+                connect(clientID, true);
+            });
         }
 
         private static async Task Receive(ClientWebSocket ws)
         {
             byte[] buffer = new byte[receiveChunkSize];
-          /*  if (ws.State == WebSocketState.Closed)
-            {
-                Global.Configuration.SocketClosed = true;
-                ConfigManager.Save(Global.Configuration);
-            }*/
             while (ws.State == WebSocketState.Open)
             {
                 
@@ -99,11 +90,6 @@ namespace Aurora.Service
                     ProfileSwitcher.Switch(p);
                 }
             }
-            if (ws.State == WebSocketState.Closed)
-            {
-            }
         }
-
-
     }
 }

@@ -18,27 +18,23 @@ namespace Aurora.Settings
 {
     public class KeyboardKey
     {
-        public String visualName;
-        public Devices.DeviceKeys tag;
+        public string visualName = null;
+        public Devices.DeviceKeys tag = DeviceKeys.NONE;
         public bool? line_break;
         public double? margin_left;
         public double? margin_top;
         public double? width;
         public double? height;
         public double? font_size;
-        //public int? width_bits;
-        //public int? height_bits;
-        //public int? margin_left_bits;
-        //public int? margin_top_bits;
         public bool? enabled = true;
         public bool? absolute_location = false;
         public String image = "";
 
-        public KeyboardKey() : this("", DeviceKeys.NONE)
+        public KeyboardKey()
         {
         }
 
-        public KeyboardKey(String text, Devices.DeviceKeys tag, bool? enabled = true, bool? linebreak = false, double? fontsize = 12, double? margin_left = 7, double? margin_top = 0, double? width = 30, double? height = 30, int? width_bits = 2, int? height_bits = 2, int? margin_left_bits = 0, int? margin_top_bits = 0)
+        public KeyboardKey(string text, Devices.DeviceKeys tag, bool? enabled = true, bool? linebreak = false, double? fontsize = 12, double? margin_left = 7, double? margin_top = 0, double? width = 30, double? height = 30, int? width_bits = 2, int? height_bits = 2, int? margin_left_bits = 0, int? margin_top_bits = 0)
         {
             this.visualName = text;
             this.tag = tag;
@@ -48,10 +44,6 @@ namespace Aurora.Settings
             this.font_size = fontsize;
             this.margin_left = margin_left;
             this.margin_top = margin_top;
-            /*this.width_bits = width_bits;
-            this.height_bits = height_bits;
-            this.margin_left_bits = margin_left_bits;
-            this.margin_top_bits = margin_top_bits;*/
             this.enabled = enabled;
         }
 
@@ -60,17 +52,15 @@ namespace Aurora.Settings
             if (otherKey != null)
             {
                 if (otherKey.visualName != null) this.visualName = otherKey.visualName;
-                this.tag = otherKey.tag;
+                if (otherKey.tag != DeviceKeys.NONE)
+                    this.tag = otherKey.tag;
                 if (otherKey.line_break != null) this.line_break = otherKey.line_break;
                 if (otherKey.width != null) this.width = otherKey.width;
-                if (otherKey.height != null) this.height = otherKey.height;
+                if (otherKey.height != null)
+                    this.height = otherKey.height;
                 if (otherKey.font_size != null) this.font_size = otherKey.font_size;
                 if (otherKey.margin_left != null) this.margin_left = otherKey.margin_left;
                 if (otherKey.margin_top != null) this.margin_top = otherKey.margin_top;
-                /*if (otherKey.width_bits != null) this.width_bits = otherKey.width_bits;
-                if (otherKey.height_bits != null) this.height_bits = otherKey.height_bits;
-                if (otherKey.margin_left_bits != null) this.margin_left_bits = otherKey.margin_left_bits;
-                if (otherKey.margin_top_bits != null) this.margin_top_bits = otherKey.margin_top_bits;*/
                 if (otherKey.enabled != null) this.enabled = otherKey.enabled;
             }
             return this;
@@ -235,6 +225,8 @@ namespace Aurora.Settings
                 //key.margin_top_bits += location_y_bit;
 
                 grouped_keys.Add(key);
+                if (KeyText.ContainsKey(key.tag))
+                    KeyText.Remove(key.tag);
                 KeyText.Add(key.tag, key.visualName);
 
                 if (key.width + key.margin_left > _region.Width)
@@ -344,9 +336,14 @@ namespace Aurora.Settings
 
             foreach (var key in applicable_keys)
             {
+                KeyboardKey otherKey = keys[key.tag];
+                if (key.tag != otherKey.tag)
+                    KeyText.Remove(key.tag);
+                key.UpdateFromOtherKey(otherKey);
                 if (KeyText.ContainsKey(key.tag))
                     KeyText[key.tag] = key.visualName;
-                key.UpdateFromOtherKey(keys[key.tag]);
+                else
+                    KeyText.Add(key.tag, key.visualName);
             }
         }
 
@@ -385,6 +382,7 @@ namespace Aurora.Settings
                 if (layout_height < current_height)
                     layout_height = current_height;
 
+                KeyText.Remove(key.tag);
 
                 /*int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
                 int key_tlx = KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + width_bit;
@@ -488,8 +486,10 @@ namespace Aurora.Settings
 
         public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
         {
+#if !DEBUG
             try
             {
+#endif
                 //System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
 
                 //Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
@@ -643,6 +643,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
                 else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
                     layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+                else if (keyboard_preference == PreferredKeyboard.Corsair_K68)
+                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
                 else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow)
                     layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow.json");
                 else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_X)
@@ -671,6 +673,10 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
                 else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Flare)
                     layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
+                else if (keyboard_preference == PreferredKeyboard.GenericLaptop)
+                    layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
+                else if (keyboard_preference == PreferredKeyboard.GenericLaptopNumpad)
+                    layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
                 else
                 {
                     LoadNone();
@@ -802,11 +808,13 @@ namespace Aurora.Settings
                     }
 
                 }
+#if !DEBUG
             }
             catch (Exception e)
             {
                 Global.logger.Error(e.ToString());
             }
+#endif
 
             //Perform end of load functions
             _bitmapMapInvalid = true;

@@ -85,11 +85,12 @@ namespace Aurora.Settings
         public void UpdateLayers(object sender, EventArgs e)
         {
             this.lstLayers.ItemsSource = this.FocusedApplication?.Profile?.Layers;
-
-            if (this.FocusedApplication is Profiles.Generic_Application.GenericApplication)
+            
+            //Make sure that it is on the correct list of layers
+            this.radiobtn_daytime.IsChecked = true;
+            if (this.FocusedApplication is Profiles.Generic_Application.GenericApplication && Global.Configuration.nighttime_enabled)
             {
                 this.grid_timeselection.Visibility = Visibility.Visible;
-                this.radiobtn_daytime.IsChecked = true;
                 this.radiobtn_nighttime.IsChecked = false;
             }
             else

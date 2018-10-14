@@ -212,7 +212,14 @@ namespace Aurora.Devices.Roccat
                     {
                         throw new Exception("No devices connected");
                     }
+                    if (Global.Configuration.roccat_first_time)
+                    {
+                        RoccatInstallInstructions instructions = new RoccatInstallInstructions();
+                        instructions.ShowDialog();
 
+                        Global.Configuration.roccat_first_time = false;
+                        Settings.ConfigManager.Save(Global.Configuration);
+                    }
                     isInitialized = true;
                     return true;
                 }
@@ -324,7 +331,7 @@ namespace Aurora.Devices.Roccat
                     if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_enable_generic") == true)
                     {
                         generic_deactivated_first_time = true;
-                        if (key.Key == DeviceKeys.Peripheral)
+                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral)
                         {
                             //Send to generic roccat device if color not equal or 1. time after generic got enabled
                             if (!previous_peripheral_Color.Equals(key.Value) || generic_activated_first_time == true)
