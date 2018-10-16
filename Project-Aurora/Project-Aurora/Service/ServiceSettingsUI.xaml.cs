@@ -28,6 +28,14 @@ namespace Aurora.Service
             uiOutputClientID.IsReadOnly = true;
             uiOutputGenerated.IsReadOnly = true;
             uiOutputGenerated.TextWrapping = TextWrapping.Wrap;
+            this.Loaded += ServiceSettingsUI_Loaded;
+            
+        }
+
+        private void ServiceSettingsUI_Loaded(object sender, RoutedEventArgs e)
+        {
+            uiEndingProfile.Items.Clear();
+            uiStartingProfile.Items.Clear();
             uiEndingProfile.Items.Add("- Return to default -");
             foreach (var item in Global.LightingStateManager.DesktopProfile.Profiles)
             {

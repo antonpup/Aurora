@@ -97,7 +97,7 @@ namespace Aurora.Service
             }
 
             Switch(p.Payload.Profile);
-            if (p.Payload.ProfileEnd != "")
+         //   if (p.Payload.ProfileEnd != "")
             {
                 ThreadPool.QueueUserWorkItem((o) =>
                 {
@@ -105,6 +105,10 @@ namespace Aurora.Service
                         Thread.Sleep(p.Payload.Duration);
                     Switch(p.Payload.ProfileEnd);
                 });
+            }
+          //  else
+            {
+                //there is no ending profile, revert to default if there is 
             }
         }
 
