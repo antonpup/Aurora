@@ -63,6 +63,9 @@ namespace Aurora.Utils
 		[DllImport("user32.dll", SetLastError = true)]
 		static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
 		[DllImport("Oleacc.dll")]
 		static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
 
@@ -195,5 +198,19 @@ namespace Aurora.Utils
 
 			return "";
 		}
-	}
+
+        public string GetActiveWindowsProcessTitle() {
+            try {
+                // Based on https://stackoverflow.com/a/115905
+                IntPtr windowHandle = GetForegroundWindow();
+                StringBuilder text = new StringBuilder(256);
+                if (GetWindowText(windowHandle, text, text.Capacity) > 0)
+                    return text.ToString();
+            } catch (Exception exc) {
+                Global.logger.Error("Exception in GetActiveWindowsProcessTitle" + exc);
+            }
+            return "";
+        }
+
+    }
 }

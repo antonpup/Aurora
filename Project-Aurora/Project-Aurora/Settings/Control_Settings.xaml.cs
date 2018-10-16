@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Win32.TaskScheduler;
+using Aurora.Service;
 
 namespace Aurora.Settings
 {
@@ -405,13 +406,9 @@ namespace Aurora.Settings
 
         private void excluded_add_Click(object sender, RoutedEventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(this.excluded_process_name.Text))
-            {
-                if (!Global.Configuration.excluded_programs.Contains(this.excluded_process_name.Text))
-                {
-                    Global.Configuration.excluded_programs.Add(this.excluded_process_name.Text);
-                }
-            }
+            Window_ProcessSelection dialog = new Window_ProcessSelection();
+            if (dialog.ShowDialog() == true && !String.IsNullOrWhiteSpace(dialog.ChosenExecutable)) // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
+                Global.Configuration.excluded_programs.Add(dialog.ChosenExecutable);
 
             load_excluded_listbox();
         }
@@ -568,6 +565,18 @@ namespace Aurora.Settings
         private void devices_view_first_time_steelseries_Click(object sender, RoutedEventArgs e)
         {
             Devices.SteelSeries.SteelSeriesInstallInstructions instructions = new Devices.SteelSeries.SteelSeriesInstallInstructions();
+            instructions.ShowDialog();
+        }
+
+        private void devices_view_first_time_dualshock_Click(object sender, RoutedEventArgs e)
+        {
+            Devices.Dualshock.DualshockInstallInstructions instructions = new Devices.Dualshock.DualshockInstallInstructions();
+            instructions.ShowDialog();
+        }
+
+        private void devices_view_first_time_roccat_Click(object sender, RoutedEventArgs e)
+        {
+            Devices.Roccat.RoccatInstallInstructions instructions = new Devices.Roccat.RoccatInstallInstructions();
             instructions.ShowDialog();
         }
 
@@ -953,30 +962,6 @@ namespace Aurora.Settings
                 Global.Configuration.volume_overlay_settings.dim_color = Utils.ColorUtils.MediaColorToDrawingColor(this.volume_overlay_dim_color.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
-        }
-
-        private async void excluded_process_name_DropDownOpened(object sender, EventArgs e)
-        {
-            excluded_process_name.ItemsSource = new string[] { "Working..." };
-
-            HashSet<string> processes = new HashSet<string>();
-            await System.Threading.Tasks.Task.Run(() =>
-            {
-
-                foreach (var p in Process.GetProcesses())
-                {
-                    try
-                    {
-                        processes.Add(Path.GetFileName(p.MainModule.FileName));
-                    }
-                    catch (Exception exc)
-                    {
-
-                    }
-                }
-
-            });
-            excluded_process_name.ItemsSource = processes.ToArray();
         }
 
         private void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e)

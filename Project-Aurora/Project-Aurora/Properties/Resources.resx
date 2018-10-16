@@ -277,4 +277,7 @@
   <data name="witcher3_mod" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Profiles\Witcher3\GSI\Resources\witcher3-mod.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="minecraft_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\minecraft_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
