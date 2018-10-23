@@ -23,7 +23,8 @@ namespace Aurora.Devices.SteelSeriesHID
             new Rival100(),
             new Rival110(),
             new Rival300(),
-            new Rival500()
+            new Rival500(),
+            new AsusPugio()
         };
         List<ISSDevice> FoundDevices = new List<ISSDevice>();
 
@@ -234,6 +235,26 @@ namespace Aurora.Devices.SteelSeriesHID
             return false;
         }
 
+        protected bool Connect(int vendorID, int[] productIDs)
+        {
+            IEnumerable<HidDevice> devices = HidDevices.Enumerate(vendorID, productIDs);
+
+            if (devices.Count() > 0)
+            {
+                device = devices.FirstOrDefault();
+                try
+                {
+                    device.OpenDevice();
+                    return (IsConnected = true);
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.LogLine($"Error when attempting to open SteelSeries HID device:\n{exc}", Logging_Level.Error);
+                }
+            }
+            return false;
+        }
+
         public abstract bool Connect();
 
         public virtual bool Disconnect()
@@ -421,6 +442,81 @@ namespace Aurora.Devices.SteelSeriesHID
             return device.WriteReport(report);
         }
 
+    }
+
+
+    class AsusPugio : RivalBase
+    {
+        public AsusPugio()
+        {
+            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            {
+                { DeviceKeys.Peripheral_Logo, SetLogo },
+                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }
+            };
+        }
+
+        public override bool Connect()
+        {
+            return this.Connect(0x0b05, new[] { 0x1846, 0x1847 });
+        }
+
+        public bool SetScrollWheel(byte r, byte g, byte b)
+        {
+            HidReport report = device.CreateReport();
+            report.ReportId = 0x02;
+            for (int i = 0; i < 64; i++)
+            {
+                report.Data[i] = 0x00;
+            }
+            report.Data[0] = 0x51;
+            report.Data[1] = 0x28;
+            report.Data[2] = 0x01;
+            report.Data[4] = 0x00;
+            report.Data[5] = 0x04;
+            report.Data[6] = r;
+            report.Data[7] = g;
+            report.Data[8] = b;
+            return device.WriteReport(report);
+        }
+
+        public bool SetLogo(byte r, byte g, byte b)
+        {
+            HidReport report = device.CreateReport();
+            report.ReportId = 0x02;
+            for (int i = 0; i < 64; i++)
+            {
+                report.Data[i] = 0x00;
+            }
+            report.Data[0] = 0x51;
+            report.Data[1] = 0x28;
+            report.Data[2] = 0x00;
+            report.Data[4] = 0x00;
+            report.Data[5] = 0x04;
+            report.Data[6] = r;
+            report.Data[7] = g;
+            report.Data[8] = b;
+            return device.WriteReport(report);
+        }
+
+        public bool SetBottomLed(byte r, byte g, byte b)
+        {
+            HidReport report = device.CreateReport();
+            report.ReportId = 0x02;
+            for (int i = 0; i < 64; i++)
+            {
+                report.Data[i] = 0x00;
+            }
+            report.Data[0] = 0x51;
+            report.Data[1] = 0x28;
+            report.Data[2] = 0x02;
+            report.Data[4] = 0x00;
+            report.Data[5] = 0x04;
+            report.Data[6] = r;
+            report.Data[7] = g;
+            report.Data[8] = b;
+            return device.WriteReport(report);
+        }
     }
 
 }
