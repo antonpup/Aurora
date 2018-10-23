@@ -452,7 +452,8 @@ namespace Aurora.Devices.SteelSeriesHID
             this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo },
-                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }
+                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel },
+                { DeviceKeys.Peripheral_FrontLight, SetBottomLed }
             };
         }
 
