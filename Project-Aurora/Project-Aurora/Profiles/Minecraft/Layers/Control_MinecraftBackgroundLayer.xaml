@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="Aurora.Profiles.Minecraft.Layers.Control_MinecraftBackgroundLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.Minecraft.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:Controls="clr-namespace:Aurora.Controls"
+             mc:Ignorable="d"
+             Loaded="UserControl_Loaded"
+             d:DesignHeight="250">
+    <Grid>
+        <Label HorizontalAlignment="Left" Padding="0" Content="Day Time Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <xctk:ColorPicker x:Name="ColorPicker_DayTime" Margin="109,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="135" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_DayTime_SelectedColorChanged" />
+
+        <Label HorizontalAlignment="Left" Margin="0,27,0,0" Padding="0" Content="Night Time Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="ColorPicker_NightTime" Margin="109,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="135" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_NightTime_SelectedColorChanged" />
+
+        <Label HorizontalAlignment="Left" Margin="254,4,0,0" Padding="0" Content="Left Blinker Keys:" VerticalAlignment="Top"/>
+        <Controls:KeySequence x:Name="KeySequence_Keys" Margin="254,25,0,0" RecordingTag="Minecraft Background Layer" Title="Affected Keys" HorizontalAlignment="Left" Width="230" SequenceUpdated="KeySequence_Keys_SequenceUpdated"/>
+    </Grid>
+</UserControl>

@@ -7,6 +7,7 @@ using CUE.NET.Devices.Keyboard.Enums;
 using CUE.NET.Devices.Mouse;
 using CUE.NET.Devices.Mouse.Enums;
 using CUE.NET.Devices.Mousemat;
+using CUE.NET.Devices.HeadsetStand;
 using CUE.NET.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace Aurora.Devices.Corsair
         CorsairMouse mouse;
         CorsairHeadset headset;
         CorsairMousemat mousemat;
+        CorsairHeadsetStand headsetstand;
 
         private readonly object action_lock = new object();
 
@@ -78,13 +80,20 @@ namespace Aurora.Devices.Corsair
                         mouse = CueSDK.MouseSDK;
                         headset = CueSDK.HeadsetSDK;
                         mousemat = CueSDK.MousematSDK;
-                        keyboard.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
-                        mouse.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
-                        headset.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
-                        mousemat.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        headsetstand = CueSDK.HeadsetStandSDK;
+                        if (keyboard != null)
+                            keyboard.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        if (mouse != null)
+                            mouse.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        if (headset != null)
+                            headset.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        if (mousemat != null)
+                            mousemat.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
+                        if (headsetstand != null)
+                            headsetstand.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
 
 
-                        if (keyboard == null && mouse == null && headset == null && mousemat == null)
+                        if (keyboard == null && mouse == null && headset == null && mousemat == null && headsetstand == null)
                             throw new WrapperException("No devices found");
                         else
                         {
@@ -314,6 +323,30 @@ namespace Aurora.Devices.Corsair
                             mousemat[CorsairLedId.Zone15].Color = color;
 
                         mousemat.Update(true);
+                    }
+
+                    if (headsetstand != null && !Global.Configuration.devices_disable_headset)
+                    {
+                        if (headsetstand[CorsairLedId.HeadsetStandZone1] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone1].Color = color;
+                        if (headsetstand[CorsairLedId.HeadsetStandZone2] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone2].Color = color;
+                        if (headsetstand[CorsairLedId.HeadsetStandZone3] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone3].Color = color;
+                        if (headsetstand[CorsairLedId.HeadsetStandZone4] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone4].Color = color;
+                        if (headsetstand[CorsairLedId.HeadsetStandZone5] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone5].Color = color;
+                        if (headsetstand[CorsairLedId.HeadsetStandZone6] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone6].Color = color;
+                        if (headsetstand[CorsairLedId.HeadsetStandZone7] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone7].Color = color;
+                        if (headsetstand[CorsairLedId.HeadsetStandZone8] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone8].Color = color;
+                        if (headsetstand[CorsairLedId.HeadsetStandZone9] != null)
+                            headsetstand[CorsairLedId.HeadsetStandZone9].Color = color;
+
+                        headsetstand.Update(true);
                     }
 
                     previous_peripheral_Color = color;

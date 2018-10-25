@@ -1,0 +1,40 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.DeadCells"
+             xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
+             xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.DeadCells.Control_DeadCells"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850" >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
+            <DataTemplate x:Key="DeviceKeys">
+                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Dead Cells">
+                <Grid>
+                    <StackPanel>
+                        <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Dead Cells" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for Dead Cells support to work, you have to apply the Aurora Wrapper Patch for Razer in order for Aurora to receive lighting information. Press the &quot;Patch Dead Cells&quot; button to install automatically to the detected game directory. To choose manually press the &quot;Patch "/><Run Text="Dead Cells "/><Run Text="Manually&quot; button and navigate to the "/><Run Text="Dead Cells "/><Run Text="install directory. This should not trigger any anti-cheat, but it should be used at your own risk. P.S. You can actually apply this patch to any Razer Chroma supported game, and Aurora will work with it."/></TextBlock>
+                        <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+                            <Button x:Name="patch_button" Content="Patch Dead Cells" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="patch_button_Click"/>
+                            <Button x:Name="patch_button_manually" Content="Patch Dead Cells Manually" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="patch_button_manually_Click"/>
+                        </StackPanel>
+                        <Button x:Name="unpatch_button" Content="Unpatch Dead Cells" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
