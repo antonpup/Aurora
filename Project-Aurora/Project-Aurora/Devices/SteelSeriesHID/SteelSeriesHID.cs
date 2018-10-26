@@ -459,7 +459,7 @@ namespace Aurora.Devices.SteelSeriesHID
 
         public override bool Connect()
         {
-            return this.Connect(0x0b05, new[] { 0x1846, 0x1847 });
+            return this.Connect(0x0b05, new[] { 0x1846, 0x1847 }, unchecked((short)0xFFFFFF01));
         }
 
         public bool SetScrollWheel(byte r, byte g, byte b)
