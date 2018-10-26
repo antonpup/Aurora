@@ -465,7 +465,7 @@ namespace Aurora.Devices.SteelSeriesHID
         public bool SetScrollWheel(byte r, byte g, byte b)
         {
             HidReport report = device.CreateReport();
-            report.ReportId = 0x02;
+            report.ReportId = 0x00;
             for (int i = 0; i < 64; i++)
             {
                 report.Data[i] = 0x00;
@@ -484,7 +484,7 @@ namespace Aurora.Devices.SteelSeriesHID
         public bool SetLogo(byte r, byte g, byte b)
         {
             HidReport report = device.CreateReport();
-            report.ReportId = 0x02;
+            report.ReportId = 0x00;
             for (int i = 0; i < 64; i++)
             {
                 report.Data[i] = 0x00;
@@ -503,7 +503,7 @@ namespace Aurora.Devices.SteelSeriesHID
         public bool SetBottomLed(byte r, byte g, byte b)
         {
             HidReport report = device.CreateReport();
-            report.ReportId = 0x02;
+            report.ReportId = 0x00;
             for (int i = 0; i < 64; i++)
             {
                 report.Data[i] = 0x00;
