@@ -371,6 +371,9 @@
     </Compile>
     <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
+    <Compile Include="Devices\Drevo\DrevoDevice.cs" />
+    <Compile Include="Devices\Drevo\DrevoLayoutMap.cs" />
+    <Compile Include="Devices\Drevo\DrevoRadiSDK.cs" />
     <Compile Include="Devices\Dualshock4\Dualshock4Device.cs" />
     <Compile Include="Devices\Dualshock4\DS4InstallInstructions.xaml.cs">
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
@@ -834,6 +837,9 @@
     <None Include="kb_layouts\corsair_strafe.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\drevo_blademaster.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\clevo_touchpad_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -841,6 +847,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\corsair_k68_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\drevo_blademaster_left_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\generic_laptop_numpad_left_bottom_features.json">
@@ -1242,6 +1251,9 @@
     <Compile Include="Utils\UIUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DrevoRadi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="DS4WindowsApi.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

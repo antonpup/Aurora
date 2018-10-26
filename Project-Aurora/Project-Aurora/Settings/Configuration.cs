@@ -223,6 +223,10 @@ namespace Aurora.Settings
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
+
+        //Drevo range is 1000-1099
+        [Description("Drevo BladeMaster")]
+        Drevo_BladeMaster = 1000,
     }
 
     public enum PreferredKeyboardLocalization

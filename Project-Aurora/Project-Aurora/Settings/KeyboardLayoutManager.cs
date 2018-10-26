@@ -677,7 +677,9 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
                 else if (keyboard_preference == PreferredKeyboard.GenericLaptopNumpad)
                     layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
-                else
+                else if (keyboard_preference == PreferredKeyboard.Drevo_BladeMaster)
+                    layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
+            else
                 {
                     LoadNone();
                     return;
