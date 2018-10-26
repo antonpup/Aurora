@@ -21,6 +21,7 @@ namespace Aurora.Devices.SteelSeriesHID
         private long lastUpdateTime = 0;
         List<ISSDevice> AllDevices = new List<ISSDevice> {
             new Rival100(),
+            new Rival110(),
             new Rival300(),
             new Rival500()
         };
@@ -35,12 +36,12 @@ namespace Aurora.Devices.SteelSeriesHID
                     this.FoundDevices.Clear();
                     try
                     {
-                        foreach(ISSDevice dev in AllDevices)
+                        foreach (ISSDevice dev in AllDevices)
                         {
                             if (dev.Connect())
                                 FoundDevices.Add(dev);
                         }
-                        
+
                     }
                     catch (Exception e)
                     {
@@ -213,13 +214,13 @@ namespace Aurora.Devices.SteelSeriesHID
         protected Dictionary<DeviceKeys, Func<byte, byte, byte, bool>> deviceKeyMap;
         public bool IsConnected { get; protected set; } = false;
 
-        protected bool Connect(int vendorID, int[] productIDs)
+        protected bool Connect(int vendorID, int[] productIDs, short usagePage)
         {
             IEnumerable<HidDevice> devices = HidDevices.Enumerate(vendorID, productIDs);
 
             if (devices.Count() > 0)
             {
-                device = devices.FirstOrDefault();
+                device = devices.FirstOrDefault(dev => dev.Capabilities.UsagePage == usagePage);
                 try
                 {
                     device.OpenDevice();
@@ -257,6 +258,7 @@ namespace Aurora.Devices.SteelSeriesHID
         }
     }
 
+
     class Rival100 : RivalBase
     {
         public Rival100()
@@ -269,7 +271,7 @@ namespace Aurora.Devices.SteelSeriesHID
 
         public override bool Connect()
         {
-            return this.Connect(0x1038, new[] { 0x1702, 0x1729 });
+            return this.Connect(0x1038, new[] { 0x1702 }, unchecked((short)0xFFFFFFC0));
         }
 
         public bool SetLogo(byte r, byte g, byte b)
@@ -281,6 +283,40 @@ namespace Aurora.Devices.SteelSeriesHID
             report.Data[2] = r;
             report.Data[3] = g;
             report.Data[4] = b;
+            return device.WriteReport(report);
+        }
+    }
+
+
+    class Rival110 : RivalBase
+    {
+        public Rival110()
+        {
+            deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            {
+                { DeviceKeys.Peripheral_Logo, SetLogo }
+            };
+        }
+
+        public override bool Connect()
+        {
+            return this.Connect(0x1038, new[] { 0x1729 }, unchecked((short)0xFFFFFFC0));
+        }
+
+        public bool SetLogo(byte r, byte g, byte b)
+        {
+            HidReport report = device.CreateReport();
+            report.ReportId = 0x02;
+            report.Data[0] = 0x05;
+            report.Data[1] = 0x00;
+            report.Data[2] = r;
+            report.Data[3] = g;
+            report.Data[4] = b;
+            report.Data[5] = 0x00;
+            report.Data[6] = 0x00;
+            report.Data[7] = 0x00;
+            report.Data[8] = 0x00;
+
             return device.WriteReport(report);
         }
     }
@@ -299,7 +335,7 @@ namespace Aurora.Devices.SteelSeriesHID
 
         public override bool Connect()
         {
-            return this.Connect(0x1038, new[] { 0x1710, 0x171A, 0x1394, 0x1384 });
+            return this.Connect(0x1038, new[] { 0x1710, 0x171A, 0x1394, 0x1384, 0x1718, 0x1712 }, unchecked((short)0xFFFFFFC0));
         }
 
         public bool SetScrollWheel(byte r, byte g, byte b)
@@ -341,7 +377,7 @@ namespace Aurora.Devices.SteelSeriesHID
 
         public override bool Connect()
         {
-            return this.Connect(0x1038, new[] { 0x170e });
+            return this.Connect(0x1038, new[] { 0x170e }, unchecked((short)0xFFFFFFC0));
         }
 
         public bool SetScrollWheel(byte r, byte g, byte b)
@@ -385,10 +421,6 @@ namespace Aurora.Devices.SteelSeriesHID
             return device.WriteReport(report);
         }
 
-    }
-    class Rival700
-    {
-        //Not reverse engineered yet...
     }
 
 }

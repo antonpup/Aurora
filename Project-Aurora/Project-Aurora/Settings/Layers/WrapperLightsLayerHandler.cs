@@ -274,6 +274,17 @@ namespace Aurora.Settings.Layers
                 foreach (var extra_key in extra_keys.Keys.ToArray())
                     extra_keys[extra_key] = last_fill_color;
             }
+            else if (ngw_state.Command.Equals("LFX_GetNumLights"))
+            {
+                //Retain previous lighting
+                int fill_color_int = Utils.ColorUtils.GetIntFromColor(last_fill_color);
+
+                for (int i = 0; i < bitmap.Length; i++)
+                    bitmap[i] = fill_color_int;
+
+                foreach (var extra_key in extra_keys.Keys.ToArray())
+                    extra_keys[extra_key] = last_fill_color;
+            }
             else if (ngw_state.Command.Equals("LFX_Light"))
             {
                 //Retain previous lighting
