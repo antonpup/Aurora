@@ -390,7 +390,7 @@
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
-    <Compile Include="Devices\SteelSeriesHID\SteelSeriesHID.cs" />
+    <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">

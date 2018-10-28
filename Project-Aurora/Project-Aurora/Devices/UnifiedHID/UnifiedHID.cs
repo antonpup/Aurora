@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using HidLibrary;
 using System.ComponentModel;
 
-namespace Aurora.Devices.SteelSeriesHID
+namespace Aurora.Devices.UnifiedHID
 {
 
-    class SteelSeriesHIDDevice : Device
+    class UnifiedHIDDevice : Device
     {
-        private string devicename = "SteelSeriesHID";
+        private string devicename = "UnifiedHID";
         private bool isInitialized = false;
         private bool peripheral_updated = false;
         private readonly object action_lock = new object();
@@ -46,7 +46,7 @@ namespace Aurora.Devices.SteelSeriesHID
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("SteelSeriesHID could not be initialized: " + e);
+                        Global.logger.Error("UnifiedHID could not be initialized: " + e);
                         isInitialized = false;
                     }
                     if (FoundDevices.Count > 0)
@@ -79,7 +79,7 @@ namespace Aurora.Devices.SteelSeriesHID
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.Error("There was an error shutting down SteelSeriesHID: " + ex);
+                    Global.logger.Error("There was an error shutting down UnifiedHID: " + ex);
                     isInitialized = false;
                 }
 
@@ -161,7 +161,7 @@ namespace Aurora.Devices.SteelSeriesHID
             }
             catch (Exception ex)
             {
-                Global.logger.Error("SteelSeriesHID, error when updating device: " + ex);
+                Global.logger.Error("UnifiedHID, error when updating device: " + ex);
                 return false;
             }
         }
