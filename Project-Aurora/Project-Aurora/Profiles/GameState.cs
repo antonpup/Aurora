@@ -241,6 +241,11 @@ namespace Aurora.Profiles
         public float MicrophoneLevel => DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
+        /// The volume level that is being emitted by the default speaker even when muted.
+        /// </summary>
+        public float SpeakerLevel => DefaultAudioOutDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+
+        /// <summary>
         /// The volume level that is being recorded by the default microphone if not muted.
         /// </summary>
         public float MicLevelIfNotMuted => MicrophoneIsMuted ? 0 : DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
