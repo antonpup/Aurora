@@ -42,7 +42,6 @@ namespace Aurora.Devices.UnifiedHID
                             if (dev.Connect())
                                 FoundDevices.Add(dev);
                         }
-
                     }
                     catch (Exception e)
                     {
@@ -143,7 +142,7 @@ namespace Aurora.Devices.UnifiedHID
                     if (e.Cancel) return false;
                     else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
                     {
-                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel)
+                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel || key.Key == DeviceKeys.Peripheral_FrontLight)
                         {
                             foreach (ISSDevice device in FoundDevices)
                                 device.SetLEDColour(key.Key, color.R, color.G, color.B);
@@ -209,7 +208,7 @@ namespace Aurora.Devices.UnifiedHID
         bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue);
     }
 
-    abstract class RivalBase : ISSDevice
+    abstract class UnifiedBase : ISSDevice
     {
         protected HidDevice device;
         protected Dictionary<DeviceKeys, Func<byte, byte, byte, bool>> deviceKeyMap;
@@ -222,26 +221,6 @@ namespace Aurora.Devices.UnifiedHID
             if (devices.Count() > 0)
             {
                 device = devices.FirstOrDefault(dev => dev.Capabilities.UsagePage == usagePage);
-                try
-                {
-                    device.OpenDevice();
-                    return (IsConnected = true);
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.LogLine($"Error when attempting to open UnifiedHID device:\n{exc}", Logging_Level.Error);
-                }
-            }
-            return false;
-        }
-
-        protected bool Connect(int vendorID, int[] productIDs)
-        {
-            IEnumerable<HidDevice> devices = HidDevices.Enumerate(vendorID, productIDs);
-
-            if (devices.Count() > 0)
-            {
-                device = devices.FirstOrDefault();
                 try
                 {
                     device.OpenDevice();
@@ -280,7 +259,7 @@ namespace Aurora.Devices.UnifiedHID
     }
 
 
-    class Rival100 : RivalBase
+    class Rival100 : UnifiedBase
     {
         public Rival100()
         {
@@ -309,7 +288,7 @@ namespace Aurora.Devices.UnifiedHID
     }
 
 
-    class Rival110 : RivalBase
+    class Rival110 : UnifiedBase
     {
         public Rival110()
         {
@@ -343,7 +322,7 @@ namespace Aurora.Devices.UnifiedHID
     }
 
 
-    class Rival300 : RivalBase
+    class Rival300 : UnifiedBase
     {
         public Rival300()
         {
@@ -385,7 +364,7 @@ namespace Aurora.Devices.UnifiedHID
     }
 
 
-    class Rival500 : RivalBase
+    class Rival500 : UnifiedBase
     {
         public Rival500()
         {
@@ -445,15 +424,15 @@ namespace Aurora.Devices.UnifiedHID
     }
 
 
-    class AsusPugio : RivalBase
+    class AsusPugio : UnifiedBase
     {
         public AsusPugio()
         {
             this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo },
-                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }/*,
-                { DeviceKeys.Peripheral_FrontLight, SetBottomLed }*/
+                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel },
+                { DeviceKeys.Peripheral_FrontLight, SetBottomLed }
             };
         }
 
