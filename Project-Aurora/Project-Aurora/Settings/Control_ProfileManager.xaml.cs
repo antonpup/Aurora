@@ -228,18 +228,18 @@ namespace Aurora.Settings
 
                                 foreach (XElement property in profileElement.Element("properties").Elements()) {
                                     if ("Keyboard".Equals(property.Element("key").Value)) {
-                                        foreach (XElement profProperty in property.Element("value").Element("properties").Descendants()) {Global.logger.Debug("ProfileValue: " + profProperty.Name);
+                                        foreach (XElement profProperty in property.Element("value").Element("properties").Descendants()) {
                                             if (profProperty.Name.ToString().Equals("lighting")) {
-                                                var layers = profProperty.Parent.Parent; 
+                                                var layers = profProperty.Parent.Parent.Parent.Parent; Global.logger.Debug("Layers: " + layers.Name);
                                                 FocusedApplication.Profile.Layers.Clear();
 
                                                 uint _basePolyID = 2147483648;
                                                 Dictionary<uint, string> _definedPolyIDS = new Dictionary<uint, string>();
 
                                                 foreach (XElement layer in layers.Elements()) {
-                                                    var keysAndStuff = layer.Element("base"); Global.logger.Debug("Keys: " + keysAndStuff.Name);
+                                                    var keysAndStuff = layer.Element("ptr_wrapper").Element("data").Element("base"); 
 
-                                                    string layerName = keysAndStuff.Element("name").Value;
+                                                    string layerName = keysAndStuff.Element("name").Value; Global.logger.Debug("layerName: " + layerName);
                                                     bool layerEnabled = bool.Parse(keysAndStuff.Element("enabled").Value);
                                                     int repeatTimes = Math.Max(int.Parse(keysAndStuff.Element("executionHints").Element("stopAfterTimes").Value), 0);
                                                     KeySequence affected_keys = new KeySequence();
@@ -297,7 +297,7 @@ namespace Aurora.Settings
                                                         }
                                                     }
 
-                                                    var lightingInfo = layer.Element("lighting");
+                                                    var lightingInfo = layer.Element("ptr_wrapper").Element("data").Element("lighting");
                                                     var transitionInfo = lightingInfo.Element("ptr_wrapper").Element("data").Element("transitions");
                                                     if (transitionInfo == null) {
                                                         transitionInfo = lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("transitions");
@@ -711,7 +711,7 @@ namespace Aurora.Settings
                     //Global.logger.LogLine(rootElement.ToString());
                 }
             } catch (Exception exception) {
-                Global.logger.Error(exception.ToString());
+                Global.logger.Error("Exception Found: "+exception.ToString());
             }
         }
     }
