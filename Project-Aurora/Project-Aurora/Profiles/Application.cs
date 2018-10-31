@@ -201,6 +201,17 @@ namespace Aurora.Profiles
             SwitchToProfile(_newProfile);
         }
 
+        public void AddNewProfile(String profileName)
+        {
+            ApplicationProfile _newProfile = CreateNewProfile(profileName);
+
+            Profiles.Add(_newProfile);
+
+            SaveProfiles();
+
+            SwitchToProfile(_newProfile);
+        }
+
         public void DeleteProfile(ApplicationProfile profile)
         {
             if (Disposed)
