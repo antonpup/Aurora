@@ -565,6 +565,7 @@
     <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
