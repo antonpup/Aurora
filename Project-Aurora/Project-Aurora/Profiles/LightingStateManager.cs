@@ -159,6 +159,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Percent", "Percent Effect Layer", typeof(PercentLayerHandler)),
                 new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
                 new LayerHandlerEntry("Conditional", "Conditional Layer", typeof(ConditionalLayerHandler)),
+                new LayerHandlerEntry("Comparison", "Comparison Layer", typeof(ComparisonLayerHandler)),
                 new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
                 new LayerHandlerEntry("ShortcutAssistant", "Shortcut Assistant Layer", typeof(ShortcutAssistantLayerHandler) ),
                 new LayerHandlerEntry("Equalizer", "Audio Visualizer Layer", typeof(EqualizerLayerHandler) ),
