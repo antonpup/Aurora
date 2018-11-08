@@ -538,7 +538,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_ComparisonLayer.xaml.cs">
+      <DependentUpon>Control_ComparisonLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
       <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
     </Compile>
@@ -1770,6 +1774,10 @@
     <Page Include="Settings\Layers\Control_BlinkingLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_ComparisonLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_ConditionalLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
