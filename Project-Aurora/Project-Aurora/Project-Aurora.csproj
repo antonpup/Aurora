@@ -850,8 +850,6 @@
     <None Include="kb_layouts\drevo_blademaster.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="kb_layouts\Extra Features\clevo_touchpad_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
