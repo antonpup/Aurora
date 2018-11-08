@@ -295,7 +295,11 @@ namespace Aurora.Settings
         [Description("SteelSeries - Rival 300")]
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
-        SteelSeries_Rival_300_HP_OMEN_Edition = 701
+        SteelSeries_Rival_300_HP_OMEN_Edition = 701,
+
+        //Asus range is 900-999
+        [Description("Asus - Pugio")]
+        Asus_Pugio = 900
     }
 
     public enum KeycapType
@@ -356,7 +360,7 @@ namespace Aurora.Settings
 
         private float keyboardBrightness = 1.0f;
         [JsonProperty(PropertyName = "keyboard_brightness_modifier")]
-        public float KeyboardBrightness { get { return keyboardBrightness; } set{ keyboardBrightness = value; InvokePropertyChanged(); } }
+        public float KeyboardBrightness { get { return keyboardBrightness; } set { keyboardBrightness = value; InvokePropertyChanged(); } }
 
         private float peripheralBrightness = 1.0f;
         [JsonProperty(PropertyName = "peripheral_brightness_modifier")]
@@ -487,7 +491,7 @@ namespace Aurora.Settings
 
             VarRegistry = new VariableRegistry();
         }
-  }
+    }
 
     public class ConfigManager
     {
