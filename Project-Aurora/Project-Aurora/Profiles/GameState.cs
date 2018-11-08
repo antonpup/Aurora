@@ -203,6 +203,11 @@ namespace Aurora.Profiles
         public long MemoryTotal { get { return PerformanceInfo.GetTotalMemoryInMiB(); } }
 
         /// <summary>
+        /// Returns whether or not the device dession is in a locked state.
+        /// </summary>
+        public bool IsDesktopLocked => Utils.DesktopUtils.IsDesktopLocked;
+
+        /// <summary>
         /// Gets the default endpoint for output (playback) devices e.g. speakers, headphones, etc.
         /// This will return null if there are no playback devices available.
         /// </summary>
@@ -239,6 +244,11 @@ namespace Aurora.Profiles
         /// The volume level that is being recorded by the default microphone even when muted.
         /// </summary>
         public float MicrophoneLevel => DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+
+        /// <summary>
+        /// The volume level that is being emitted by the default speaker even when muted.
+        /// </summary>
+        public float SpeakerLevel => DefaultAudioOutDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// The volume level that is being recorded by the default microphone if not muted.
