@@ -393,6 +393,10 @@ namespace Aurora.Settings.Layers
             {
 
             }
+            else if (ngw_state.Command.Equals("CreateMousepadEffect"))
+            {
+
+            }
             else if (ngw_state.Command.Equals("CreateKeyboardEffect"))
             {
                 Color primary = Color.Red;
