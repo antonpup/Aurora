@@ -331,14 +331,23 @@ namespace Aurora.Devices.Razer
 
         private void SendColorToMousepad(int index, System.Drawing.Color color)
         {
-            if (mousepad != null && !Global.Configuration.devices_disable_mouse)
+            if (Global.Configuration.allow_peripheral_devices)
             {
-                MousepadGrid[index] = new Color(color.R, color.G, color.B);
-                mousepad.SetCustom(MousepadGrid);
+                if (mousepad != null && !Global.Configuration.devices_disable_mouse)
+                {
+                    MousepadGrid[index] = new Color(color.R, color.G, color.B);
+                    mousepad.SetCustom(MousepadGrid);
+                }
+                previous_peripheral_Color = color;
+                peripheral_updated = true;
             }
-            previous_peripheral_Color = color;
-            peripheral_updated = true;
-
+            else
+            {
+                if (peripheral_updated)
+                {
+                    peripheral_updated = false;
+                }
+            }
         }
 
         private void SendColorToPeripheral(System.Drawing.Color color, bool forced = false)
