@@ -607,10 +607,6 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 			current_mpad[3] = effect.mpad[index + 3];
 			ss << (int)(((int)current_mpad[2] << 16) | ((int)current_mpad[1] << 8) | ((int)current_mpad[0]));
 		}
-		else
-		{
-			ss << (int)(((int)current_mpad[2] << 16) | ((int)current_mpad[1] << 8) | ((int)current_mpad[0]));
-		}
 		index = index + 4;
 
 
