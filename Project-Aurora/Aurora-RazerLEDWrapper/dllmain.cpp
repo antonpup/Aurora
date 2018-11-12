@@ -409,7 +409,7 @@ Logitech_keyboardBitmapKeys ToLogitechBitmap(int rzrow, int rzcolumn)
 typedef struct WRAPPER_EFFECT
 {
 	unsigned char bitmap[LOGI_LED_BITMAP_SIZE] = { NULL };
-	unsigned char mpad[15] = { NULL };
+	unsigned char mpad[56] = { NULL };
 	unsigned char logo[4] = { NULL };
 	unsigned char g1[4] = { NULL };
 	unsigned char g2[4] = { NULL };
@@ -426,7 +426,7 @@ static bool isInitialized = false;
 static bool requiresUpdate = true;
 
 static unsigned char current_bitmap[LOGI_LED_BITMAP_SIZE];
-static unsigned char current_mpad[15];
+static unsigned char current_mpad[4];
 static unsigned char current_logo[4];
 static unsigned char current_g1[4];
 static unsigned char current_g2[4];
@@ -449,11 +449,10 @@ static std::string program_name;
 
 void write_text_to_log_file(const std::string &text)
 {
-	/*
-	std::ofstream out("output.txt", std::ios_base::app);
+	/* std::ofstream out("output.txt", std::ios_base::app);
 	out << text;
-	out.close();
-	*/
+	out.close(); */
+
 }
 
 BOOL WINAPI DllMain(HMODULE hModule,
@@ -594,21 +593,26 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 
 	ss << (int)(((int)current_peripheral[2] << 16) | ((int)current_peripheral[1] << 8) | ((int)current_peripheral[0]));
 	ss << ",";
-	
-	for (int bitm_pos = 0; bitm_pos < 15; bitm_pos ++)
+	int index = 0;
+	for (int bitm_pos = 0; bitm_pos < 15; bitm_pos++)
 	{
 		ss << "\"mousepad";
-		ss << bitm_pos<<"\": ";
-		int index = 0;
-		if (effect.mpad[0] != NULL)
+		ss << bitm_pos << "\": ";
+
+		if (effect.mpad[index + 3] != NULL)
 		{
 			current_mpad[0] = effect.mpad[index];
 			current_mpad[1] = effect.mpad[index + 1];
 			current_mpad[2] = effect.mpad[index + 2];
 			current_mpad[3] = effect.mpad[index + 3];
+			ss << (int)(((int)current_mpad[2] << 16) | ((int)current_mpad[1] << 8) | ((int)current_mpad[0]));
+		}
+		else
+		{
+			ss << (int)(((int)current_mpad[2] << 16) | ((int)current_mpad[1] << 8) | ((int)current_mpad[0]));
 		}
 		index = index + 4;
-		ss << (int)(((int)current_mpad[2] << 16) | ((int)current_mpad[1] << 8) | ((int)current_mpad[0]));
+
 
 		if (bitm_pos < 14)
 			ss << ',';
@@ -1398,15 +1402,15 @@ WRAPPER_EFFECT HandleMousepadEffect(ChromaSDK::Mousepad::EFFECT_TYPE Effect, PRZ
 			for (int colorset = 0; colorset < 56; colorset += 4)
 			{
 				if (current_mpad[colorset] != blue ||
-					current_mpad[colorset+1] != green ||
-					current_mpad[colorset+2] != red
+					current_mpad[colorset + 1] != green ||
+					current_mpad[colorset + 2] != red
 					)
 					requiresUpdate = true;
 
 				return_effect.mpad[colorset] = blue;
-				return_effect.mpad[colorset+1] = green;
-				return_effect.mpad[colorset+2] = red;
-				return_effect.mpad[colorset+3] = (char)255;
+				return_effect.mpad[colorset + 1] = green;
+				return_effect.mpad[colorset + 2] = red;
+				return_effect.mpad[colorset + 3] = (char)255;
 			}
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_STATIC" << "\"";
 		}
@@ -1435,23 +1439,22 @@ WRAPPER_EFFECT HandleMousepadEffect(ChromaSDK::Mousepad::EFFECT_TYPE Effect, PRZ
 		if (custom_effect != NULL)
 		{
 			int colorset = 0;
-			for (int index = 0; index < 15; index ++)
+			for (int index = 0; index < 15; index++)
 			{
 				unsigned char blue = GetBValue(custom_effect->Color[index]);
 				unsigned char green = GetGValue(custom_effect->Color[index]);
 				unsigned char red = GetRValue(custom_effect->Color[index]);
-				
-					if (current_mpad[colorset] != blue ||
-						current_mpad[colorset + 1] != green ||
-						current_mpad[colorset + 2] != red
-						)
-						requiresUpdate = true;
 
-					return_effect.mpad[colorset] = blue;
-					return_effect.mpad[colorset + 1] = green;
-					return_effect.mpad[colorset + 2] = red;
-					return_effect.mpad[colorset + 3] = (char)255;
-					colorset = colorset + 4;
+				if (current_mpad[colorset] != blue ||
+					current_mpad[colorset + 1] != green ||
+					current_mpad[colorset + 2] != red
+					)
+					requiresUpdate = true;
+				return_effect.mpad[colorset] = blue;
+				return_effect.mpad[colorset + 1] = green;
+				return_effect.mpad[colorset + 2] = red;
+				return_effect.mpad[colorset + 3] = (char)255;
+				colorset = colorset + 4;
 			}
 
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM" << "\"";
@@ -1484,7 +1487,7 @@ WRAPPER_EFFECT HandleMousepadEffect(ChromaSDK::Mousepad::EFFECT_TYPE Effect, PRZ
 			}
 		}
 	}
-	
+
 	else if (Effect == ChromaSDK::Mousepad::CHROMA_SPECTRUMCYCLING)
 	{
 		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_SPECTRUMCYCLING" << "\"";
