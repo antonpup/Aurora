@@ -426,7 +426,7 @@ static bool isInitialized = false;
 static bool requiresUpdate = true;
 
 static unsigned char current_bitmap[LOGI_LED_BITMAP_SIZE];
-static unsigned char current_mpad[4];
+static unsigned char current_mpad[56];
 static unsigned char current_logo[4];
 static unsigned char current_g1[4];
 static unsigned char current_g2[4];
@@ -594,27 +594,23 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 	ss << (int)(((int)current_peripheral[2] << 16) | ((int)current_peripheral[1] << 8) | ((int)current_peripheral[0]));
 	ss << ",";
 	int index = 0;
-	for (int bitm_pos = 0; bitm_pos < 15; bitm_pos++)
+	for (int mpadLED = 0; mpadLED < 15; mpadLED++)
 	{
 		ss << "\"mousepad";
-		ss << bitm_pos << "\": ";
+		ss << mpadLED << "\": ";
 
 		if (effect.mpad[index + 3] != NULL)
 		{
-			current_mpad[0] = effect.mpad[index];
-			current_mpad[1] = effect.mpad[index + 1];
-			current_mpad[2] = effect.mpad[index + 2];
-			current_mpad[3] = effect.mpad[index + 3];
-			ss << (int)(((int)current_mpad[2] << 16) | ((int)current_mpad[1] << 8) | ((int)current_mpad[0]));
+			current_mpad[index] = effect.mpad[index];
+			current_mpad[index + 1] = effect.mpad[index + 1];
+			current_mpad[index + 2] = effect.mpad[index + 2];
+			current_mpad[index + 3] = effect.mpad[index + 3];
 		}
-		else
-		{
-			ss << (int)(((int)current_mpad[2] << 16) | ((int)current_mpad[1] << 8) | ((int)current_mpad[0]));
-		}
+
+		ss << (int)(((int)current_mpad[index + 2] << 16) | ((int)current_mpad[index + 1] << 8) | ((int)current_mpad[index]));
 		index = index + 4;
 
-
-		if (bitm_pos < 14)
+		if (mpadLED < 14)
 			ss << ',';
 	}
 	ss << "";
