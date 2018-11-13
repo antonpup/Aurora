@@ -1,38 +1,42 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Aurora.Applications.Application;
+using Aurora.EffectsEngine;
 using Aurora.Plugins;
 
 namespace Aurora.Applications.Layers
 {
-    public struct LayerHandlerEntry
+    
+    public class TitleAttribute : Attribute
     {
-        public Type Type { get; set; }
+        public string Title { get; }
 
-        public string Title { get; set; }
-
-        public string Key { get; set; }
-
-        public LayerHandlerEntry(string key, string title, Type type)
+        public TitleAttribute(string title)
         {
-            this.Type = type;
             this.Title = title;
-            this.Key = key;
-        }
-
-        public override string ToString()
-        {
-            return Title;
         }
     }
 
-    public interface ILayerHandler{}
+    public class ExclusiveLayerHandlerAttribute : Attribute
+    {
+        public Type ExclusiveGameState { get; }
 
+        public ExclusiveLayerHandlerAttribute(Type exclusiveGameState)
+        {
+            this.ExclusiveGameState = exclusiveGameState;
+        }
+    }
+    
+    //TODO: Duplicate this for PostProcess, Ignoring the Exclusivity stuff. Need to think about if PostProcess will use Gamestate as they need to be used on devices as well.
     public sealed class LayerFactory : IPluginConsumer
     {
-        public List<string> DefaultLayerHandlers { get; private set; } = new List<string>();
         
-        public Dictionary<string, LayerHandlerEntry> LayerHandlers { get; private set; } = new Dictionary<string, LayerHandlerEntry>();
-        
+        private readonly List<(string, Type)> _layerHandlers = new List<(string, Type)>();
+
+        private readonly Dictionary<Type, List<(string, Type)>> _gameStateLayerHandlers = new Dictionary<Type, List<(string, Type)>>();
+
         /// <summary>
         /// Singleton Instance
         /// </summary>
@@ -42,39 +46,44 @@ namespace Aurora.Applications.Layers
         
         private bool CheckTypeIsLayer(Type type)
         {
-            return type.IsSubclassOf(typeof(ILayerHandler));
+            return type.IsClass && type.IsSubclassOf(typeof(ILayerHandler));
         }
 
-        public void RegisterLayerHandlers(List<LayerHandlerEntry> layers, bool @default = true)
+        private void addLayerHandler(string title, Type type, Type exclusive = null)
         {
-            foreach(var layer in layers)
+            List<(string, Type)> lst = _layerHandlers;
+            
+            if (exclusive != null)
             {
-                RegisterLayerHandler(layer, @default);
+                if (!_gameStateLayerHandlers.ContainsKey(exclusive))
+                    _gameStateLayerHandlers.Add(exclusive, new List<(string, Type)>());
+                lst = _gameStateLayerHandlers[exclusive];
             }
+            
+            lst.Add((title, type));
         }
 
-        public bool RegisterLayerHandler(LayerHandlerEntry entry, bool @default = true)
+        private bool registerLayerHandler(string title, Type type, Type exclusive = null)
         {
-            if (!CheckTypeIsLayer(entry.Type))
+            if (!CheckTypeIsLayer(type))
                 return false;
 
-            if (LayerHandlers.ContainsKey(entry.Key) || DefaultLayerHandlers.Contains(entry.Key))
-                return false;
-
-            LayerHandlers.Add(entry.Key, entry);
-
-            if (@default)
-                DefaultLayerHandlers.Add(entry.Key);
+            addLayerHandler(title, type, exclusive);
 
             return true;
         }
 
-        public bool RegisterLayerHandler(string key, string title, Type type, bool @default = true)
+        public List<(string, Type)> GetAvailableLayerHandlers(Type gamestateType = null)
         {
-            return RegisterLayerHandler(new LayerHandlerEntry(key, title, type));
+            List<(string, Type)> lst = _layerHandlers.ToList();
+            
+            if (gamestateType != null && _gameStateLayerHandlers.ContainsKey(gamestateType))
+                lst.AddRange(_gameStateLayerHandlers[gamestateType]);
+
+            return lst;
         }
 
-        public Type GetLayerHandlerType(string key)
+        /*public Type GetLayerHandlerType(string key)
         {
             return LayerHandlers.ContainsKey(key) ? LayerHandlers[key].Type : null;
         }
@@ -93,11 +102,20 @@ namespace Aurora.Applications.Layers
 
 
             return null;
-        }
+        }*/
 
-        public void Visit(PluginBase plugin)
+        public void Visit(List<Type> plugin)
         {
-            plugin.Process(this);
+            foreach (Type typ in plugin.Where(CheckTypeIsLayer))
+            {
+                var title = typ.GetCustomAttribute<TitleAttribute>();
+
+                if (title != null)
+                {
+                    var exclusive = typ.GetCustomAttribute<ExclusiveLayerHandlerAttribute>();
+                    this.addLayerHandler(title.Title, typ, exclusive?.ExclusiveGameState);
+                }
+            }
         }
     }
 }

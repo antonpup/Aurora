@@ -27,7 +27,7 @@ namespace Aurora.Settings
             if (Settings == null)
                 Settings = (T)Activator.CreateInstance(settingsType);
 
-            string dir = Path.GetDirectoryName(SettingsSavePath);
+            string dir = Path.GetDirectoryName(SettingsSavePath)    ;
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 

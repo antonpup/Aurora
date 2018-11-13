@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Aurora.Devices.Integration;
 using Aurora.Plugins;
 using Aurora.Settings;
@@ -26,9 +28,9 @@ namespace Aurora.Devices
             throw new System.NotImplementedException();
         }
 
-        public void Visit(PluginBase plugin)
+        public void Visit(List<Type> plugin)
         {
-            plugin.Process(this);
+            
         }
     }
 }

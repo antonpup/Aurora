@@ -5,6 +5,7 @@ using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 using Aurora.Applications.Layers;
 
@@ -73,7 +74,7 @@ namespace Aurora
         }
         #endregion
 
-        public void Visit(PluginBase plugin)
+        public void Visit(List<Type> plugin)
         {
             //Call visit on child IPluginConsumers
             this.ApplicationManager.Visit(plugin);

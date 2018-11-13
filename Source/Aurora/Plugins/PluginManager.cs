@@ -1,13 +1,15 @@
 ﻿using Aurora.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Aurora.Plugins
 {
     public class PluginManager : IInitialize
     {
-        public List<PluginBase> Plugins { get; set; } = new List<PluginBase>();
+        public List<Assembly> Plugins { get; set; } = new List<Assembly>();
 
         public bool Initialized { get; private set; } = false;
 
@@ -32,8 +34,8 @@ namespace Aurora.Plugins
         //TODO: Rename this to something better
         public void CallVisit(IPluginConsumer consumer)
         {
-            foreach (PluginBase plugin in Plugins)
-                consumer.Visit(plugin);
+            foreach (Assembly plugin in Plugins)
+                consumer.Visit(plugin.GetExportedTypes().ToList());
         }
 
         #region IDisposable Support

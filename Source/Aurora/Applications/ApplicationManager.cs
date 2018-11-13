@@ -1,7 +1,9 @@
+using System;
 using Aurora.Plugins;
 using Aurora.Settings;
 using Aurora.Utils;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Aurora.Applications.Application;
 
@@ -86,9 +88,9 @@ namespace Aurora.Applications
         }
 
         
-        public void Visit(PluginBase plugin)
+        public void Visit(List<Type> plugin)
         {
-            plugin.Process(this);
+            //Get all ApplicationBase types out and register
         }
 
         #region IDisposable Support
