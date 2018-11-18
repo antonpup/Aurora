@@ -26,7 +26,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="273" Height="136" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="273" Height="300" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="85px" />
@@ -38,6 +38,7 @@
                     <RowDefinition Height="28px" />
                     <RowDefinition Height="28px" />
                     <RowDefinition Height="28px" />
+                    <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
 
                 <Label Content="Trigger:" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -48,6 +49,8 @@
                 <ComboBox x:Name="stackModeCb" Grid.Row="2" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" />
                 <Label Content="Repeat Times:" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <xctk:IntegerUpDown x:Name="updownAnimationRepeat" Grid.Row="3" Grid.Column="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,4" Value="1" Minimum="1" Maximum="1024" Increment="1" ValueChanged="updownAnimationRepeat_ValueChanged" />
+
+                <TextBlock Text="Setting a trigger will play the animation when a game state value (e.g. health) changes. For 'Always On', the animation does not need a trigger and will run constantly. The stack mode dictates how additional triggers will be handled when an animation is already in progress. 'Ignore' does nothing; 'Restart' restarts the animation and resets repeat count; 'Stack' will play another copy of the animation in addition to the currently running one." TextWrapping="Wrap" Grid.Row="4" Grid.ColumnSpan="2" />
             </Grid>
         </GroupBox>
     </Grid>

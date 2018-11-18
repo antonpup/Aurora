@@ -203,7 +203,7 @@ namespace Aurora.Settings.Layers
     /// An enum of the possible ways for an animation to trigger.
     /// </summary>
     public enum AnimationTriggerMode {
-        [Description("Always on")]
+        [Description("Always on (disable trigger)")]
         AlwaysOn,
         [Description("Trigger on increase")]
         OnHigh,
