@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,31 +26,64 @@ namespace Aurora.Settings.Layers
         private static bool windowAnimationEditorOpen;
 
         private bool settingsset = false;
+        private bool profileset = false;
 
         public Control_AnimationLayer()
         {
             InitializeComponent();
+
+            // Populate trigger mode combobox
+            foreach (var mode in Enum.GetValues(typeof(AnimationTriggerMode)).Cast<AnimationTriggerMode>())
+                triggerModeCb.Items.Add(new KeyValuePair<string, AnimationTriggerMode>(mode.GetDescription(), mode));
+            triggerModeCb.DisplayMemberPath = "Key";
+
+            // Populate stack mode combobox
+            foreach (var mode in Enum.GetValues(typeof(AnimationStackMode)).Cast<AnimationStackMode>())
+                stackModeCb.Items.Add(new KeyValuePair<string, AnimationStackMode>(mode.GetDescription(), mode));
+            stackModeCb.DisplayMemberPath = "Key";
         }
 
-        public Control_AnimationLayer(AnimationLayerHandler datacontext)
+        public Control_AnimationLayer(AnimationLayerHandler datacontext) : this()
         {
-            InitializeComponent();
-
             this.DataContext = datacontext;
         }
 
+        private bool CanSet => IsLoaded && settingsset && DataContext is AnimationLayerHandler;
+        private AnimationLayerHandler Context => DataContext as AnimationLayerHandler;
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetSettings();
+            Loaded -= UserControl_Loaded;
+        }
+        
         public void SetSettings()
         {
-            if(this.DataContext is AnimationLayerHandler && !settingsset)
+            if(DataContext is AnimationLayerHandler && !settingsset)
             {
-                this.chkboxForceKeySequence.IsChecked = (this.DataContext as AnimationLayerHandler).Properties._forceKeySequence;
-                this.chkboxScaleToKeySequence.IsChecked = (this.DataContext as AnimationLayerHandler).Properties._scaleToKeySequenceBounds;
-                this.KeySequence_keys.Sequence = (this.DataContext as AnimationLayerHandler).Properties._Sequence;
-                this.updownAnimationDuration.Value = (double)(this.DataContext as AnimationLayerHandler).Properties._AnimationDuration;
-                this.updownAnimationRepeat.Value = (this.DataContext as AnimationLayerHandler).Properties._AnimationRepeat;
-
+                chkboxForceKeySequence.IsChecked = Context.Properties._forceKeySequence;
+                chkboxScaleToKeySequence.IsChecked = Context.Properties._scaleToKeySequenceBounds;
+                KeySequence_keys.Sequence = Context.Properties._Sequence;
+                updownAnimationDuration.Value = (double)Context.Properties._AnimationDuration;
+                updownAnimationRepeat.Value = Context.Properties._AnimationRepeat;
+                triggerModeCb.SelectedIndex = triggerModeCb.Items.SourceCollection.Cast<KeyValuePair<string, AnimationTriggerMode>>().Select((kvp, index) => new { kvp, index }).First(item => item.kvp.Value == Context.Properties.TriggerMode).index;
+                triggerPath.Text = Context.Properties._TriggerPath;
+                stackModeCb.SelectedIndex = stackModeCb.Items.SourceCollection.Cast<KeyValuePair<string, AnimationStackMode>>().Select((kvp, index) => new { kvp, index }).First(item => item.kvp.Value == Context.Properties.StackMode).index;
                 settingsset = true;
             }
+        }
+
+        internal void SetProfile(Profiles.Application profile)
+        {
+            if (profile != null && !profileset) {
+                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
+                triggerPath.Items.Clear();
+                foreach (var item in var_types_numerical)
+                    triggerPath.Items.Add(item.Key);
+                profileset = true;
+            }
+            settingsset = false;
+            SetSettings();
         }
 
         private void btnEditAnimation_Click(object sender, RoutedEventArgs e)
@@ -67,7 +101,7 @@ namespace Aurora.Settings.Layers
 
                 windowAnimationEditor.Title = "Animation Editor";
 
-                Controls.Control_AnimationEditor animEditor = new Controls.Control_AnimationEditor() { AnimationMix = (this.DataContext as AnimationLayerHandler).Properties._AnimationMix };
+                Controls.Control_AnimationEditor animEditor = new Controls.Control_AnimationEditor() { AnimationMix = Context.Properties._AnimationMix };
                 animEditor.AnimationMixUpdated += AnimEditor_AnimationMixUpdated;
 
                 windowAnimationEditor.Content = animEditor;
@@ -90,45 +124,60 @@ namespace Aurora.Settings.Layers
 
         private void AnimEditor_AnimationMixUpdated(object sender, EffectsEngine.Animations.AnimationMix mix)
         {
-            if (IsLoaded && settingsset && this.DataContext is AnimationLayerHandler && sender is Aurora.Controls.Control_AnimationEditor)
+            if (CanSet && sender is Controls.Control_AnimationEditor)
                 (this.DataContext as AnimationLayerHandler).Properties._AnimationMix = mix;
         }
 
         private void chkboxForceKeySequence_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is AnimationLayerHandler && sender is CheckBox)
-                (this.DataContext as AnimationLayerHandler).Properties._forceKeySequence = ((sender as CheckBox).IsChecked.HasValue ? (sender as CheckBox).IsChecked.Value : false);
+            if (CanSet && sender is CheckBox)
+                Context.Properties._forceKeySequence = ((sender as CheckBox).IsChecked.HasValue ? (sender as CheckBox).IsChecked.Value : false);
         }
 
         private void chkboxScaleToKeySequence_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is AnimationLayerHandler && sender is CheckBox)
-                (this.DataContext as AnimationLayerHandler).Properties._scaleToKeySequenceBounds = ((sender as CheckBox).IsChecked.HasValue ? (sender as CheckBox).IsChecked.Value : false);
+            if (CanSet && sender is CheckBox)
+                Context.Properties._scaleToKeySequenceBounds = ((sender as CheckBox).IsChecked.HasValue ? (sender as CheckBox).IsChecked.Value : false);
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is AnimationLayerHandler && sender is Aurora.Controls.KeySequence)
-                (this.DataContext as AnimationLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
+            if (CanSet && sender is Controls.KeySequence)
+                Context.Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
         private void updownAnimationDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (IsLoaded && settingsset && this.DataContext is AnimationLayerHandler && sender is Xceed.Wpf.Toolkit.DoubleUpDown)
-                (this.DataContext as AnimationLayerHandler).Properties._AnimationDuration = (float)((sender as Xceed.Wpf.Toolkit.DoubleUpDown).Value.HasValue ? (sender as Xceed.Wpf.Toolkit.DoubleUpDown).Value.Value : 0.0f);
+            if (CanSet && sender is Xceed.Wpf.Toolkit.DoubleUpDown)
+                Context.Properties._AnimationDuration = (float)((sender as Xceed.Wpf.Toolkit.DoubleUpDown).Value.HasValue ? (sender as Xceed.Wpf.Toolkit.DoubleUpDown).Value.Value : 0.0f);
         }
 
         private void updownAnimationRepeat_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (IsLoaded && settingsset && this.DataContext is AnimationLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown)
-                (this.DataContext as AnimationLayerHandler).Properties._AnimationRepeat = ((sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.HasValue ? (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.Value : 0);
+            if (CanSet && sender is Xceed.Wpf.Toolkit.IntegerUpDown)
+                Context.Properties._AnimationRepeat = ((sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.HasValue ? (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.Value : 0);
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void triggerMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SetSettings();
+            AnimationTriggerMode selectedItem = ((KeyValuePair<string, AnimationTriggerMode>)(sender as ComboBox).SelectedItem).Value;
+            if (CanSet)
+                Context.Properties._TriggerMode = selectedItem;
 
-            this.Loaded -= UserControl_Loaded;
+            // Only enable the extra settings if the trigger mode is NOT "AlwaysOn"
+            triggerPath.IsEnabled = stackModeCb.IsEnabled = updownAnimationRepeat.IsEnabled = selectedItem != AnimationTriggerMode.AlwaysOn;
+        }
+
+        private void triggerPath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (CanSet)
+                Context.Properties._TriggerPath = (sender as ComboBox).Text;
+        }
+
+        private void stackModeCb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CanSet)
+                Context.Properties._StackMode = ((KeyValuePair<string, AnimationStackMode>)(sender as ComboBox).SelectedItem).Value;
         }
     }
 }

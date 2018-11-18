@@ -47,8 +47,8 @@ namespace Aurora.Settings.Layers {
 
         public override EffectLayer Render(IGameState gamestate) {
             // Parse the operands
-            double op1 = GetValue(gamestate, Properties.Operand1Path);
-            double op2 = GetValue(gamestate, Properties.Operand2Path);
+            double op1 = Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.Operand1Path);
+            double op2 = Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.Operand2Path);
 
             // Evaluate the operands
             bool cond = false;
@@ -76,22 +76,6 @@ namespace Aurora.Settings.Layers {
             }
             (Control as Control_ComparisonLayer).SetProfile(profile);
             base.SetApplication(profile);
-        }
-
-        /// <summary>
-        /// Attempts to get a double value from the game state with the given path.
-        /// </summary>
-        private double GetValue(IGameState state, string path) {
-            if (!double.TryParse(path, out double value) && !string.IsNullOrWhiteSpace(path)) {
-                try {
-                    value = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, path));
-                } catch (Exception exc) {
-                    value = 0;
-                    if (Global.isDebug)
-                        throw exc;
-                }
-            }
-            return value;
         }
     }
 

@@ -177,6 +177,23 @@ namespace Aurora.Utils
             }
         }
 
+        /// <summary>
+        /// Attempts to get a double value from the game state with the given path.
+        /// Returns 0 if an error occures
+        /// </summary>
+        public static double TryGetDoubleFromState(IGameState state, string path) {
+            if (!double.TryParse(path, out double value) && !string.IsNullOrWhiteSpace(path)) {
+                try {
+                    value = Convert.ToDouble(RetrieveGameStateParameter(state, path));
+                } catch (Exception exc) {
+                    value = 0;
+                    if (Global.isDebug)
+                        throw exc;
+                }
+            }
+            return value;
+        }
+
 
         /*public static object RetrieveGameStateParameter(GameState state, string parameter_path, Type type = null)
         {

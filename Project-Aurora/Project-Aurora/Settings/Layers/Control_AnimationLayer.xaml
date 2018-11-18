@@ -8,18 +8,47 @@
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_AnimationLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
-        <Button x:Name="btnEditAnimation" Content="Edit Animation" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditAnimation_Click" Width="85"/>
+        <GroupBox Header="Animation" Height="49" Width="530" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid>
+                <Button x:Name="btnEditAnimation" Grid.Column="1" Content="Edit Animation" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditAnimation_Click" Width="230" Height="23"/>
 
-        <Controls:KeySequence x:Name="KeySequence_keys" Margin="0,69,0,0" HorizontalAlignment="Left" Width="230" RecordingTag="SolidColorLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated"/>
-        <CheckBox x:Name="chkboxForceKeySequence" Content="Display Only on Key Sequence keys" HorizontalAlignment="Left" Margin="0,27,0,0" VerticalAlignment="Top" Checked="chkboxForceKeySequence_Checked" Unchecked="chkboxForceKeySequence_Checked"/>
-        <CheckBox x:Name="chkboxScaleToKeySequence" Content="Scale to Key Sequence bounds" HorizontalAlignment="Left" Margin="0,48,0,0" VerticalAlignment="Top" Checked="chkboxScaleToKeySequence_Checked" Unchecked="chkboxScaleToKeySequence_Checked"/>
-        <TextBlock HorizontalAlignment="Left" Margin="235,2,0,0" TextWrapping="Wrap" Text="Animation Duration:" VerticalAlignment="Top" Width="107"/>
-        <xctk:DoubleUpDown x:Name="updownAnimationDuration" HorizontalAlignment="Left" Height="20" Margin="347,0,0,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="0" Maximum="1024" Increment="0.1" ValueChanged="updownAnimationDuration_ValueChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="412,3,0,0" TextWrapping="Wrap" Text="secs" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="235,27,0,0" TextWrapping="Wrap" Text="Repeat Animation:" VerticalAlignment="Top" Width="98"/>
-        <xctk:IntegerUpDown x:Name="updownAnimationRepeat" HorizontalAlignment="Left" Height="20" Margin="338,25,0,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="0" Maximum="1024" Increment="1" ValueChanged="updownAnimationRepeat_ValueChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="403,28,0,0" TextWrapping="Wrap" Text="times" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="246,50,0,0" TextWrapping="Wrap" Text="Set to 0 to never stop the animation" VerticalAlignment="Top" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                <Label Content="Animation Duration:" Margin="0,-3,142,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="118"/>
+                <xctk:DoubleUpDown x:Name="updownAnimationDuration" HorizontalAlignment="Right" Height="20" Margin="0,0,32,0" VerticalAlignment="Top" Width="112" Value="0" Minimum="0" Maximum="1024" Increment="0.1" ValueChanged="updownAnimationDuration_ValueChanged" />
+                <Label Content="secs" Margin="0,-3,0,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+            </Grid>
+        </GroupBox>
 
+        <GroupBox Header="Keys" Margin="0,53,0,0" Width="242" HorizontalAlignment="Left">
+            <Grid>
+                <CheckBox x:Name="chkboxForceKeySequence" Content="Display Only on Key Sequence keys" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Checked="chkboxForceKeySequence_Checked" Unchecked="chkboxForceKeySequence_Checked"/>
+                <CheckBox x:Name="chkboxScaleToKeySequence" Content="Scale to Key Sequence bounds" HorizontalAlignment="Left" Margin="0,21,0,0" VerticalAlignment="Top" Checked="chkboxScaleToKeySequence_Checked" Unchecked="chkboxScaleToKeySequence_Checked"/>
+                <Controls:KeySequence x:Name="KeySequence_keys" Margin="0,42,0,0" HorizontalAlignment="Left" Width="230" RecordingTag="SolidColorLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="273" Height="136" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="85px" />
+                    <ColumnDefinition Width="175px" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28px" />
+                    <RowDefinition Height="28px" />
+                    <RowDefinition Height="28px" />
+                    <RowDefinition Height="28px" />
+                </Grid.RowDefinitions>
+
+                <Label Content="Trigger:" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox x:Name="triggerModeCb" Grid.Row="0" Grid.Column="1" Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="triggerMode_SelectionChanged" />
+                <Label Content="Trigger path:" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox x:Name="triggerPath" Grid.Row="1" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsEditable="True" TextBoxBase.TextChanged="triggerPath_TextChanged" />
+                <Label Content="Stack mode:" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox x:Name="stackModeCb" Grid.Row="2" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" />
+                <Label Content="Repeat Times:" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:IntegerUpDown x:Name="updownAnimationRepeat" Grid.Row="3" Grid.Column="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,4" Value="1" Minimum="1" Maximum="1024" Increment="1" ValueChanged="updownAnimationRepeat_ValueChanged" />
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>
