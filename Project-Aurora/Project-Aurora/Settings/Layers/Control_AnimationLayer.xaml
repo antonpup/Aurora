@@ -13,7 +13,7 @@
                 <Button x:Name="btnEditAnimation" Grid.Column="1" Content="Edit Animation" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditAnimation_Click" Width="230" Height="23"/>
 
                 <Label Content="Animation Duration:" Margin="0,-3,142,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="118"/>
-                <xctk:DoubleUpDown x:Name="updownAnimationDuration" HorizontalAlignment="Right" Height="20" Margin="0,0,32,0" VerticalAlignment="Top" Width="112" Value="0" Minimum="0" Maximum="1024" Increment="0.1" ValueChanged="updownAnimationDuration_ValueChanged" />
+                <xctk:DoubleUpDown x:Name="updownAnimationDuration" HorizontalAlignment="Right" Height="20" Margin="0,0,32,0" VerticalAlignment="Top" Width="112" Value="0" Minimum="0.1" Maximum="1024" Increment="0.1" ValueChanged="updownAnimationDuration_ValueChanged" />
                 <Label Content="secs" Margin="0,-3,0,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
             </Grid>
         </GroupBox>
@@ -43,7 +43,7 @@
                 <Label Content="Trigger:" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <ComboBox x:Name="triggerModeCb" Grid.Row="0" Grid.Column="1" Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="triggerMode_SelectionChanged" />
                 <Label Content="Trigger path:" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <ComboBox x:Name="triggerPath" Grid.Row="1" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsEditable="True" TextBoxBase.TextChanged="triggerPath_TextChanged" />
+                <ComboBox x:Name="triggerPath" Grid.Row="1" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Stretch" IsEditable="True" TextBoxBase.TextChanged="triggerPath_TextChanged" />
                 <Label Content="Stack mode:" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <ComboBox x:Name="stackModeCb" Grid.Row="2" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" />
                 <Label Content="Repeat Times:" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" />

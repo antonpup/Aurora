@@ -63,8 +63,8 @@ namespace Aurora.Settings.Layers
             this._AnimationMix = new AnimationMix();
             this._forceKeySequence = false;
             this._scaleToKeySequenceBounds = false;
-            this._AnimationDuration = 0.0f;
-            this._AnimationRepeat = 0;
+            this._AnimationDuration = 0.1f;
+            this._AnimationRepeat = 1;
             this._TriggerMode = AnimationTriggerMode.AlwaysOn;
             this._StackMode = AnimationStackMode.Ignore;
             this._TriggerPath = "";
