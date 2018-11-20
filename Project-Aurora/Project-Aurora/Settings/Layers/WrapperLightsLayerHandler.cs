@@ -6,6 +6,7 @@ using System.Drawing;
 using Aurora.Profiles;
 using System.Windows.Controls;
 using Newtonsoft.Json;
+using Aurora.Devices;
 
 namespace Aurora.Settings.Layers
 {
@@ -32,15 +33,14 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public float ColorEnhanceColorHSVGamma { get { return Logic._ColorEnhanceColorHSVGamma ?? _ColorEnhanceColorHSVGamma ?? 0.0f; } }
 
-        public WrapperLightsLayerHandlerProperties() : base()
-        {
+        // Key cloning
+        [JsonIgnore]
+        public Dictionary<DeviceKeys, KeySequence> CloningMap => Logic._CloningMap ?? _CloningMap ?? new Dictionary<DeviceKeys, KeySequence>();
+        public Dictionary<DeviceKeys, KeySequence> _CloningMap { get; set; }
 
-        }
+        public WrapperLightsLayerHandlerProperties() : base() { }
 
-        public WrapperLightsLayerHandlerProperties(bool arg = false) : base(arg)
-        {
-
-        }
+        public WrapperLightsLayerHandlerProperties(bool arg = false) : base(arg) { }
 
         public override void Default()
         {
@@ -52,6 +52,7 @@ namespace Aurora.Settings.Layers
             _ColorEnhanceColorFactor = 90;
             _ColorEnhanceColorHSVSine = 0.1f;
             _ColorEnhanceColorHSVGamma = 2.5f;
+            _CloningMap = new Dictionary<DeviceKeys, KeySequence>();
         }
     }
 
@@ -91,14 +92,25 @@ namespace Aurora.Settings.Layers
             Devices.DeviceKeys[] allkeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
             foreach (var key in allkeys)
             {
-                if(extra_keys.ContainsKey(key))
+                if (extra_keys.ContainsKey(key))
+                {
                     bitmap_layer.Set(key, GetBoostedColor(extra_keys[key]));
+
+                    // Do the key cloning
+                    if (Properties.CloningMap.ContainsKey(key))
+                        bitmap_layer.Set(Properties.CloningMap[key], GetBoostedColor(extra_keys[key]));
+                }
                 else
                 {
                     Devices.Logitech.Logitech_keyboardBitmapKeys logi_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap(key);
 
-                    if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0)
+                    if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0) {
                         bitmap_layer.Set(key, GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4])));
+
+                        // Key cloning
+                        if (Properties.CloningMap.ContainsKey(key))
+                            bitmap_layer.Set(Properties.CloningMap[key], GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4])));
+                    }
                 }
             }
 
