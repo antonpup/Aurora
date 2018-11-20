@@ -92,6 +92,13 @@ namespace Aurora.Settings.Layers
             Devices.DeviceKeys[] allkeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
             foreach (var key in allkeys)
             {
+
+                // This checks if a key is already being cloned over and thus should be prevented from being re-set by the
+                // normal wrapper. Fixes issues with some clones not working. Thanks to @Gurjot95 for finding it :)
+                if (Properties.CloningMap.Values.Any(sequence => sequence.keys.Contains(key)))
+                    continue;
+
+
                 if (extra_keys.ContainsKey(key))
                 {
                     bitmap_layer.Set(key, GetBoostedColor(extra_keys[key]));
@@ -105,11 +112,12 @@ namespace Aurora.Settings.Layers
                     Devices.Logitech.Logitech_keyboardBitmapKeys logi_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap(key);
 
                     if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0) {
-                        bitmap_layer.Set(key, GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4])));
+                        var color = GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4]));
+                        bitmap_layer.Set(key, color);
 
                         // Key cloning
                         if (Properties.CloningMap.ContainsKey(key))
-                            bitmap_layer.Set(Properties.CloningMap[key], GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4])));
+                            bitmap_layer.Set(Properties.CloningMap[key], color);
                     }
                 }
             }
