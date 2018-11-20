@@ -633,16 +633,11 @@ namespace Aurora
 
         private void AddProfile_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog exe_filedlg = new Microsoft.Win32.OpenFileDialog();
 
-            exe_filedlg.DefaultExt = ".exe";
-            exe_filedlg.Filter = "Executable Files (*.exe)|*.exe;";
+            Window_ProcessSelection dialog = new Window_ProcessSelection { CheckCustomPathExists = true };
+            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutablePath)) { // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
 
-            Nullable<bool> result = exe_filedlg.ShowDialog();
-
-            if (result.HasValue && result == true)
-            {
-                string filename = System.IO.Path.GetFileName(exe_filedlg.FileName.ToLowerInvariant());
+                string filename = Path.GetFileName(dialog.ChosenExecutablePath.ToLowerInvariant());
 
                 if (Global.LightingStateManager.Events.ContainsKey(filename))
                 {
@@ -659,10 +654,10 @@ namespace Aurora
                 gen_app_pm.Initialize();
                 ((GenericApplicationSettings)gen_app_pm.Settings).ApplicationName = Path.GetFileNameWithoutExtension(filename);
 
-                System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(exe_filedlg.FileName.ToLowerInvariant());
+                System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(dialog.ChosenExecutablePath.ToLowerInvariant());
 
-                if (!System.IO.Directory.Exists(gen_app_pm.GetProfileFolderPath()))
-                    System.IO.Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
+                if (!Directory.Exists(gen_app_pm.GetProfileFolderPath()))
+                    Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
 
                 using (var icon_asbitmap = ico.ToBitmap())
                 {
