@@ -270,6 +270,8 @@ namespace Aurora.Settings
 
         [Description("Generic Peripheral")]
         Generic_Peripheral = 1,
+        [Description("Razer/Corsair Mousepad + Mouse")]
+        Generic_Mousepad = 2,
 
         //Logitech range is 100-199
         [Description("Logitech - G900")]
