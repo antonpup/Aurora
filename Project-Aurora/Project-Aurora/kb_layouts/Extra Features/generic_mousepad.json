@@ -1,6 +1,6 @@
 {
-  "group_tag": "mouse",
-  "origin_region": 4,
+    "group_tag": "mouse",
+    "origin_region": 4,
     "grouped_keys": [
         {
             "tag": -1,
@@ -30,7 +30,7 @@
             "absolute_location": true
         },
         {
-            "visualName": "Mousepad Light 1",
+            "visualName": "",
             "tag": 201,
             "margin_left": 15.0,
             "margin_top": -200.0,
@@ -38,21 +38,21 @@
             "height": 33.6,
             "width_bits": 2,
             "height_bits": 2,
-            "image": "transparent.png",
+
             "margin_left_bits": 2,
             "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-            "visualName": "Mousepad Light 2",
+            "visualName": "",
             "tag": 202,
             "margin_left": 15.0,
             "margin_top": -168.0,
             "width": 10.0,
             "height": 33.6,
             "width_bits": 6,
-            "image": "transparent.png",
+
             "height_bits": 6,
             "margin_left_bits": 2,
             "margin_top_bits": -6,
@@ -60,14 +60,14 @@
             "absolute_location": true
         },
         {
-            "visualName": "Mousepad Light 3",
+            "visualName": "",
             "tag": 203,
             "margin_left": 15.0,
             "margin_top": -136.0,
             "width": 10.0,
             "height": 33.6,
             "width_bits": 6,
-            "image": "transparent.png",
+
             "height_bits": 6,
             "margin_left_bits": 2,
             "margin_top_bits": -6,
@@ -75,7 +75,7 @@
             "absolute_location": true
         },
         {
-            "visualName": "Mousepad Light 4",
+            "visualName": "",
             "tag": 204,
             "margin_left": 15.0,
             "margin_top": -104.0,
@@ -83,14 +83,14 @@
             "height": 33.6,
             "width_bits": 6,
             "height_bits": 6,
-            "image": "transparent.png",
+
             "margin_left_bits": 2,
             "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-            "visualName": "Mousepad Light 5",
+            "visualName": "",
             "tag": 205,
             "margin_left": 15.0,
             "margin_top": -72.0,
@@ -98,7 +98,7 @@
             "height": 33.6,
             "width_bits": 6,
             "height_bits": 6,
-            "image": "transparent.png",
+
             "margin_left_bits": 2,
             "margin_top_bits": -6,
             "enabled": true,
@@ -106,13 +106,13 @@
         },
         {
             "tag": 206,
-            "visualName": "Mousepad Light 6",
+            "visualName": "",
             "margin_left": 15.0,
             "margin_top": -45.0,
             "width": 40.0,
             "height": 10.0,
             "width_bits": 6,
-            "image": "transparent.png",
+
             "height_bits": 6,
             "margin_left_bits": 2,
             "margin_top_bits": -6,
@@ -122,12 +122,12 @@
         {
 
             "tag": 207,
-            "visualName": "Mousepad Light 7",
+            "visualName": "",
             "margin_left": 55.0,
             "margin_top": -45.0,
             "width": 40.0,
             "height": 10.0,
-            "image": "transparent.png",
+
             "width_bits": 6,
             "height_bits": 6,
             "margin_left_bits": 2,
@@ -138,10 +138,10 @@
         {
 
             "tag": 208,
-            "visualName": "Mousepad Light 8",
+            "visualName": "",
             "margin_left": 95.0,
             "margin_top": -45.0,
-            "image": "transparent.png",
+
             "width": 40.0,
             "height": 10.0,
             "width_bits": 6,
@@ -154,7 +154,7 @@
         {
 
             "tag": 209,
-            "visualName": "Mousepad Light 9",
+            "visualName": "",
             "margin_left": 135.0,
             "margin_top": -45.0,
             "width": 40.0,
@@ -162,7 +162,7 @@
             "width_bits": 6,
             "height_bits": 6,
             "margin_left_bits": 2,
-            "image": "transparent.png",
+
             "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
@@ -170,13 +170,13 @@
         {
 
             "tag": 210,
-            "visualName": "Mousepad Light 10",
+            "visualName": "",
             "margin_left": 175.0,
             "margin_top": -45.0,
             "width": 40.0,
             "height": 10.0,
             "width_bits": 6,
-            "image": "transparent.png",
+
             "height_bits": 6,
             "margin_left_bits": 2,
             "margin_top_bits": -6,
@@ -186,13 +186,13 @@
         {
 
             "tag": 211,
-            "visualName": "Mousepad Light 11",
+            "visualName": "",
             "margin_left": 205.0,
             "margin_top": -75.0,
             "width": 10.0,
             "height": 33.6,
             "width_bits": 6,
-            "image": "transparent.png",
+
             "height_bits": 6,
             "margin_left_bits": 2,
             "margin_top_bits": -6,
@@ -202,11 +202,11 @@
         {
 
             "tag": 212,
-            "visualName": "Mousepad Light 12",
+            "visualName": "",
             "margin_left": 205.0,
             "margin_top": -107.0,
             "width": 10.0,
-            "image": "transparent.png",
+
             "height": 33.6,
             "width_bits": 6,
             "height_bits": 6,
@@ -218,7 +218,7 @@
         {
 
             "tag": 213,
-            "visualName": "Mousepad Light 13",
+            "visualName": "",
             "margin_left": 205.0,
             "margin_top": -139.0,
             "width": 10.0,
@@ -226,7 +226,7 @@
             "width_bits": 6,
             "height_bits": 6,
             "margin_left_bits": 2,
-            "image": "transparent.png",
+
             "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
@@ -234,13 +234,13 @@
         {
 
             "tag": 214,
-            "visualName": "Mousepad Light 14",
+            "visualName": "",
             "margin_left": 205.0,
             "margin_top": -171.0,
             "width": 10.0,
             "height": 33.6,
             "width_bits": 6,
-            "image": "transparent.png",
+
             "height_bits": 6,
             "margin_left_bits": 2,
             "margin_top_bits": -6,
@@ -250,12 +250,12 @@
         {
 
             "tag": 215,
-            "visualName": "Mousepad Light 15",
+            "visualName": "",
             "margin_left": 205.0,
             "margin_top": -200.0,
             "width": 10.0,
             "height": 33.6,
-            "image": "transparent.png",
+
             "width_bits": 6,
             "height_bits": 6,
             "margin_left_bits": 2,

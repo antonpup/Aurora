@@ -1306,7 +1306,6 @@
     <Resource Include="Resources\factorio_64x64.png" />
     <Resource Include="Resources\quakechampions_195x195.png" />
     <Resource Include="Resources\diablo3_120x120.png" />
-    <Content Include="kb_layouts\Extra Features\images\transparent.png" />
     <Content Include="LightFX_SDK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

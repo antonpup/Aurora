@@ -876,6 +876,21 @@ namespace Aurora.Settings
             keytext.Remove(DeviceKeys.RIGHT_WINDOWS);
             keytext.Remove(DeviceKeys.RIGHT_CONTROL);
             keytext.Remove(DeviceKeys.RIGHT_SHIFT);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT1);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT2);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT3);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT4);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT5);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT6);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT7);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT8);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT9);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT10);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT11);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT12);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT13);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT14);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT15);
 
             KeyboardLayoutUpdated?.Invoke(this);
         }
