@@ -196,5 +196,14 @@ namespace Aurora.Settings.Layers
             triggerGridLayout.Visibility = infoText.Visibility;
             infoText.Visibility = infoText.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         }
+
+        private void triggerAnyKey_Checked(object sender, RoutedEventArgs e) {
+            bool val = (sender as CheckBox).IsChecked ?? false;
+            if (CanSet)
+                Context.Properties._TriggerAnyKey = val;
+
+            // Disable keybind box if allow on any keys
+            triggerKeys.IsEnabled = !val;
+        }
     }
 }

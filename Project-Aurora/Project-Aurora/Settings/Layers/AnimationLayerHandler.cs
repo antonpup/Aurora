@@ -55,6 +55,10 @@ namespace Aurora.Settings.Layers
         public string _TriggerPath { get; set; }
 
         [JsonIgnore]
+        public bool TriggerAnyKey => Logic._TriggerAnyKey ?? _TriggerAnyKey ?? false;
+        public bool? _TriggerAnyKey { get; set; }
+
+        [JsonIgnore]
         public Keybind[] TriggerKeybinds => Logic._TriggerKeys ?? _TriggerKeys ?? new Keybind[] { };
         public Keybind[] _TriggerKeys { get; set; }
 
@@ -82,7 +86,8 @@ namespace Aurora.Settings.Layers
         private bool _alwaysOnHasPlayed = false; // A dedicated variable has to be used to make 'Always On' work with the repeat count since the logic has changed
         private double _previousTriggerValue; // Used for tracking when a gamestate value changes
         private bool _awaitingTrigger; // Used to track when keys have been pressed or released (based on the mode) that haven't yet been used as a trigger
-        private HashSet<Keybind> _pressedKeybinds = new HashSet<Keybind>(); // A list of pressed keys used to ensure that the key down event only fires for each key when it first goes down, not as it's held
+        private HashSet<System.Windows.Forms.Keys> _pressedKeys = new HashSet<System.Windows.Forms.Keys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
+        private HashSet<Keybind> _pressedKeybinds = new HashSet<Keybind>(); // A list of pressed keybinds... ^^
 
         public AnimationLayerHandler() {
             _ID = "Animation";
@@ -213,16 +218,32 @@ namespace Aurora.Settings.Layers
         /// Event handler for when keys are pressed.
         /// </summary>
         private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
-            // Find if any keybind has been pressed (and was not previously pressed, i.e. not in _pressedKeybinds)
-            Keybind activedKeybind = Properties.TriggerKeybinds
-                .FirstOrDefault(kb => kb.IsPressed() && !_pressedKeybinds.Contains(kb));
+            // Skip handler if not waiting for a key-related trigger to save memory/CPU time
+            if (Properties.TriggerMode != AnimationTriggerMode.OnKeyRelease && Properties.TriggerMode != AnimationTriggerMode.OnKeyPress) return;
 
-            // If there is a new keybind that is pressed, show a flag that we are awaiting a trigger (if waiting on 'press')
-            // and add the keybind to the pressed list so it doesn't re-trigger until it has been released.
-            if (activedKeybind != null) {
-                if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
-                    _awaitingTrigger = true;
-                _pressedKeybinds.Add(activedKeybind);
+            if (Properties.TriggerAnyKey) { // ANY-KEY-TRIGGERS MODE
+                // If the pressed key has not already been handled (i.e. it's not being held)
+                if (!_pressedKeys.Contains(e.Key)) {
+                    // Do a trigger if waiting for a 'press' event
+                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
+                        _awaitingTrigger = true;
+                    // Mark it as handled
+                    _pressedKeys.Add(e.Key);
+                }
+
+
+            } else { //KEYBIND MODE
+                // Find if any keybind has been pressed (and was not previously pressed, i.e. not in _pressedKeybinds)
+                Keybind activedKeybind = Properties.TriggerKeybinds
+                    .FirstOrDefault(kb => kb.IsPressed() && !_pressedKeybinds.Contains(kb));
+
+                // If there is a new keybind that is pressed, show a flag that we are awaiting a trigger (if waiting on 'press')
+                // and add the keybind to the pressed list so it doesn't re-trigger until it has been released.
+                if (activedKeybind != null) {
+                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
+                        _awaitingTrigger = true;
+                    _pressedKeybinds.Add(activedKeybind);
+                }
             }
         }
 
@@ -230,16 +251,28 @@ namespace Aurora.Settings.Layers
         /// Event handler for when keys are released.
         /// </summary>
         private void InputEvents_KeyUp(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
-            // Find if any currently pressed keybinds are now no longer pressed
-            Keybind deactivatedKeybind = _pressedKeybinds
-                .FirstOrDefault(kb => !kb.IsPressed());
+            // Skip handler if not waiting for a key-related trigger to save memory/CPU time
+            if (Properties.TriggerMode != AnimationTriggerMode.OnKeyRelease && Properties.TriggerMode != AnimationTriggerMode.OnKeyPress) return;
 
-            // If there is a keybind that is no longer pressed, remove it from the pressed list. Also, if we are waiting
-            // on a 'release', set the flag for doing a key trigger.
-            if (deactivatedKeybind != null) {
+            if (Properties.TriggerAnyKey) { // ANY-KEY-TRIGGERS MODE
+                // Do a trigger if waiting for a 'release' event
                 if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease)
                     _awaitingTrigger = true;
-                _pressedKeybinds.Remove(deactivatedKeybind);
+                // Remove it from the pressed keys so it can be re-detected by the KeyDown event handler
+                _pressedKeys.Remove(e.Key);
+
+            } else { //KEYBIND MODE
+                // Find if any currently pressed keybinds are now no longer pressed
+                Keybind deactivatedKeybind = _pressedKeybinds
+                .FirstOrDefault(kb => !kb.IsPressed());
+
+                // If there is a keybind that is no longer pressed, remove it from the pressed list. Also, if we are waiting
+                // on a 'release', set the flag for doing a key trigger.
+                if (deactivatedKeybind != null) {
+                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease)
+                        _awaitingTrigger = true;
+                    _pressedKeybinds.Remove(deactivatedKeybind);
+                }
             }
         }
 
