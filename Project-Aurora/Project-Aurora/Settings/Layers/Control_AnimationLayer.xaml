@@ -10,11 +10,14 @@
     <Grid>
         <GroupBox Header="Animation" Height="49" Width="530" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid>
-                <Button x:Name="btnEditAnimation" Grid.Column="1" Content="Edit Animation" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditAnimation_Click" Width="230" Height="23"/>
+                <Button x:Name="btnEditAnimation" Content="Edit Animation" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditAnimation_Click" Width="116" Height="23"/>
 
-                <Label Content="Animation Duration:" Margin="0,-3,142,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="118"/>
-                <xctk:DoubleUpDown x:Name="updownAnimationDuration" HorizontalAlignment="Right" Height="20" Margin="0,0,32,0" VerticalAlignment="Top" Width="112" Value="0" Minimum="0.1" Maximum="1024" Increment="0.1" ValueChanged="updownAnimationDuration_ValueChanged" />
-                <Label Content="secs" Margin="0,-3,0,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                <Label Content="Animation Duration:" Margin="0,-1,261,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="118"/>
+                <xctk:DoubleUpDown x:Name="updownAnimationDuration" HorizontalAlignment="Right" Height="20" Margin="0,2,201,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="0.1" Maximum="1024" Increment="0.1" ValueChanged="updownAnimationDuration_ValueChanged" />
+                <Label Content="secs" Margin="0,-1,169,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+
+                <Label Content="Repeat Times:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,-1,68,0" />
+                <xctk:IntegerUpDown x:Name="updownAnimationRepeat" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,4,0" Width="60" Minimum="0" Maximum="1024" Increment="1" ValueChanged="updownAnimationRepeat_ValueChanged" />
             </Grid>
         </GroupBox>
 
@@ -39,7 +42,6 @@
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="128px" />
                         <RowDefinition Height="28px" />
-                        <RowDefinition Height="28px" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
 
@@ -51,8 +53,6 @@
                     <Controls:KeyBindList x:Name="triggerKeys" Grid.Row="2" Grid.Column="1" KeybindsChanged="triggerKeys_KeybindsChanged" />
                     <Label Content="Stack mode:" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <ComboBox x:Name="stackModeCb" Grid.Row="3" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" />
-                    <Label Content="Repeat Times:" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                    <xctk:IntegerUpDown x:Name="updownAnimationRepeat" Grid.Row="4" Grid.Column="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2,4" Value="1" Minimum="1" Maximum="1024" Increment="1" ValueChanged="updownAnimationRepeat_ValueChanged" />
                 </Grid>
 
                 <Button Content="  i  " Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Trigger help" Click="btnInfo_Click" />
@@ -62,8 +62,6 @@
                     <Run Text="For 'Always On', the animation does not need a trigger and will run constantly." />
                     <LineBreak />
                     <Run Text="The stack mode dictates how additional triggers will be handled when an animation is already in progress. 'Ignore' does nothing; 'Restart' restarts the animation and resets repeat count; 'Multiple' will play another copy of the animation in addition to the currently running one." />
-                    <LineBreak />
-                    <Run Text="Repeat Times dictates how many times the animation created will loop for one trigger." />
                 </TextBlock>
             </Grid>
         </GroupBox>

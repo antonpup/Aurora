@@ -170,8 +170,8 @@ namespace Aurora.Settings.Layers
             triggerGridLayout.RowDefinitions[1].Height = new GridLength(new[] { AnimationTriggerMode.OnHigh, AnimationTriggerMode.OnLow, AnimationTriggerMode.OnChange }.Contains(selectedItem) ? 28 : 0);
             // Only show tigger keys when one of the key-like modes is set
             triggerGridLayout.RowDefinitions[2].Height = new GridLength(new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease }.Contains(selectedItem) ? 128 : 0);
-            // Only show the extra settings if the trigger mode is NOT "AlwaysOn" (Row[3] = Stack Mode, Row[4] = Repeat times)
-            triggerGridLayout.RowDefinitions[3].Height = triggerGridLayout.RowDefinitions[4].Height = new GridLength(selectedItem == AnimationTriggerMode.AlwaysOn ? 0 : 28);
+            // Only show the stack mode setting if the trigger mode is NOT "AlwaysOn"
+            triggerGridLayout.RowDefinitions[3].Height = new GridLength(selectedItem == AnimationTriggerMode.AlwaysOn ? 0 : 28);
         }
 
         private void triggerPath_TextChanged(object sender, TextChangedEventArgs e)

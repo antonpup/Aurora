@@ -67,7 +67,7 @@ namespace Aurora.Settings.Layers
             this._forceKeySequence = false;
             this._scaleToKeySequenceBounds = false;
             this._AnimationDuration = 1;
-            this._AnimationRepeat = 1;
+            this._AnimationRepeat = 0;
             this._TriggerMode = AnimationTriggerMode.AlwaysOn;
             this._StackMode = AnimationStackMode.Ignore;
             this._TriggerPath = "";
@@ -79,6 +79,7 @@ namespace Aurora.Settings.Layers
 
         private List<RunningAnimation> runningAnimations = new List<RunningAnimation>();
         private Stopwatch _animTimeStopwatch = new Stopwatch();
+        private bool _alwaysOnHasPlayed = false; // A dedicated variable has to be used to make 'Always On' work with the repeat count since the logic has changed
         private double _previousTriggerValue; // Used for tracking when a gamestate value changes
         private bool _awaitingTrigger; // Used to track when keys have been pressed or released (based on the mode) that haven't yet been used as a trigger
         private HashSet<Keybind> _pressedKeybinds = new HashSet<Keybind>(); // A list of pressed keys used to ensure that the key down event only fires for each key when it first goes down, not as it's held
@@ -148,20 +149,25 @@ namespace Aurora.Settings.Layers
         /// more than once per frame.
         /// </summary>
         private bool IsTriggered(IGameState gamestate) {
-            if (Properties.TriggerMode == AnimationTriggerMode.AlwaysOn)
-                // Always should always return true (when there's not an animation already going) and should not try to get a value from the state
-                return true;
+            if (Properties.TriggerMode == AnimationTriggerMode.AlwaysOn) {
+                // Should return true if it has not already been played OR it is allowed to repeat indefinately
+                // Should also not try to get a value from the state
+                if (Properties.AnimationRepeat == 0)
+                    return true; // Always true if infinite repeats
+                else if (!_alwaysOnHasPlayed)
+                    return (_alwaysOnHasPlayed = true); // True if it has not been played
+                return false; // Otherwise false if it has been played
 
             // Handling for key-based triggers
-            if (new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease }.Contains(Properties.TriggerMode)) {
+            } else if (new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease }.Contains(Properties.TriggerMode)) {
                 // If there are keys on the trigger list that have been pressed/released, set the trigger to true
                 if (_awaitingTrigger) {
                     _awaitingTrigger = false;
                     return true;
                 }
                 return false;
-            
-            // Handling for gamestate-change-based triggers
+
+                // Handling for gamestate-change-based triggers
             } else {
                 // Check to see if a gamestate value change should trigger the animation
                 double resolvedTriggerValue = Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.TriggerPath);
