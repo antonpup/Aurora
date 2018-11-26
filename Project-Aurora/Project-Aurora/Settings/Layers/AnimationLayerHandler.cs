@@ -54,11 +54,14 @@ namespace Aurora.Settings.Layers
         public string TriggerPath => Logic._TriggerPath ?? _TriggerPath ?? string.Empty;
         public string _TriggerPath { get; set; }
 
+        [JsonIgnore]
+        public Keybind[] TriggerKeybinds => Logic._TriggerKeys ?? _TriggerKeys ?? new Keybind[] { };
+        public Keybind[] _TriggerKeys { get; set; }
+
         public AnimationLayerHandlerProperties() : base() { }
         public AnimationLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
-        public override void Default()
-        {
+        public override void Default() {
             base.Default();
             this._AnimationMix = new AnimationMix();
             this._forceKeySequence = false;
@@ -68,6 +71,7 @@ namespace Aurora.Settings.Layers
             this._TriggerMode = AnimationTriggerMode.AlwaysOn;
             this._StackMode = AnimationStackMode.Ignore;
             this._TriggerPath = "";
+            this._TriggerKeys = new Keybind[] { };
         }
     }
 
@@ -75,10 +79,16 @@ namespace Aurora.Settings.Layers
 
         private List<RunningAnimation> runningAnimations = new List<RunningAnimation>();
         private Stopwatch _animTimeStopwatch = new Stopwatch();
-        private double _previousTriggerValue;
+        private double _previousTriggerValue; // Used for tracking when a gamestate value changes
+        private bool _awaitingTrigger; // Used to track when keys have been pressed or released (based on the mode) that haven't yet been used as a trigger
+        private HashSet<Keybind> _pressedKeybinds = new HashSet<Keybind>(); // A list of pressed keys used to ensure that the key down event only fires for each key when it first goes down, not as it's held
 
         public AnimationLayerHandler() {
             _ID = "Animation";
+
+            // Listen for key events for the key-based triggers
+            Global.InputEvents.KeyDown += InputEvents_KeyDown;
+            Global.InputEvents.KeyUp += InputEvents_KeyUp;
         }
 
         protected override UserControl CreateControl() {
@@ -113,7 +123,6 @@ namespace Aurora.Settings.Layers
                 EffectLayer temp = new EffectLayer();
                 using (Graphics g = temp.GetGraphics())
                     Properties.AnimationMix.Draw(g, anim.currentTime);
-                Console.WriteLine(anim.currentTime);
 
                 Rectangle rect = new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
                 if (Properties.ScaleToKeySequenceBounds) {
@@ -143,7 +152,17 @@ namespace Aurora.Settings.Layers
                 // Always should always return true (when there's not an animation already going) and should not try to get a value from the state
                 return true;
 
-            else {
+            // Handling for key-based triggers
+            if (new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease }.Contains(Properties.TriggerMode)) {
+                // If there are keys on the trigger list that have been pressed/released, set the trigger to true
+                if (_awaitingTrigger) {
+                    _awaitingTrigger = false;
+                    return true;
+                }
+                return false;
+            
+            // Handling for gamestate-change-based triggers
+            } else {
                 // Check to see if a gamestate value change should trigger the animation
                 double resolvedTriggerValue = Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.TriggerPath);
                 bool shouldTrigger = false;
@@ -185,6 +204,40 @@ namespace Aurora.Settings.Layers
         }
 
         /// <summary>
+        /// Event handler for when keys are pressed.
+        /// </summary>
+        private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+            // Find if any keybind has been pressed (and was not previously pressed, i.e. not in _pressedKeybinds)
+            Keybind activedKeybind = Properties.TriggerKeybinds
+                .FirstOrDefault(kb => kb.IsPressed() && !_pressedKeybinds.Contains(kb));
+
+            // If there is a new keybind that is pressed, show a flag that we are awaiting a trigger (if waiting on 'press')
+            // and add the keybind to the pressed list so it doesn't re-trigger until it has been released.
+            if (activedKeybind != null) {
+                if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
+                    _awaitingTrigger = true;
+                _pressedKeybinds.Add(activedKeybind);
+            }
+        }
+
+        /// <summary>
+        /// Event handler for when keys are released.
+        /// </summary>
+        private void InputEvents_KeyUp(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+            // Find if any currently pressed keybinds are now no longer pressed
+            Keybind deactivatedKeybind = _pressedKeybinds
+                .FirstOrDefault(kb => !kb.IsPressed());
+
+            // If there is a keybind that is no longer pressed, remove it from the pressed list. Also, if we are waiting
+            // on a 'release', set the flag for doing a key trigger.
+            if (deactivatedKeybind != null) {
+                if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease)
+                    _awaitingTrigger = true;
+                _pressedKeybinds.Remove(deactivatedKeybind);
+            }
+        }
+
+        /// <summary>
         /// A tiny data class just to store information about
         /// currently running animations.
         /// </summary>
@@ -205,12 +258,18 @@ namespace Aurora.Settings.Layers
     public enum AnimationTriggerMode {
         [Description("Always on (disable trigger)")]
         AlwaysOn,
-        [Description("Trigger on increase")]
+
+        [Description("On value increase")]
         OnHigh,
-        [Description("Trigger on decrease")]
+        [Description("On value decrease")]
         OnLow,
-        [Description("Trigger on change")]
+        [Description("On value change")]
         OnChange,
+
+        [Description("On key pressed")]
+        OnKeyPress,
+        [Description("On key released")]
+        OnKeyRelease
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using Aurora.Utils;
+﻿using Aurora.Controls;
+using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -68,6 +69,7 @@ namespace Aurora.Settings.Layers
                 updownAnimationRepeat.Value = Context.Properties._AnimationRepeat;
                 triggerModeCb.SelectedIndex = triggerModeCb.Items.SourceCollection.Cast<KeyValuePair<string, AnimationTriggerMode>>().Select((kvp, index) => new { kvp, index }).First(item => item.kvp.Value == Context.Properties.TriggerMode).index;
                 triggerPath.Text = Context.Properties._TriggerPath;
+                triggerKeys.Keybinds = Context.Properties._TriggerKeys;
                 stackModeCb.SelectedIndex = stackModeCb.Items.SourceCollection.Cast<KeyValuePair<string, AnimationStackMode>>().Select((kvp, index) => new { kvp, index }).First(item => item.kvp.Value == Context.Properties.StackMode).index;
                 settingsset = true;
             }
@@ -164,8 +166,12 @@ namespace Aurora.Settings.Layers
             if (CanSet)
                 Context.Properties._TriggerMode = selectedItem;
 
-            // Only enable the extra settings if the trigger mode is NOT "AlwaysOn"
-            triggerPath.IsEnabled = stackModeCb.IsEnabled = updownAnimationRepeat.IsEnabled = selectedItem != AnimationTriggerMode.AlwaysOn;
+            // Only show trigger path when one of the path-like modes is set
+            triggerGridLayout.RowDefinitions[1].Height = new GridLength(new[] { AnimationTriggerMode.OnHigh, AnimationTriggerMode.OnLow, AnimationTriggerMode.OnChange }.Contains(selectedItem) ? 28 : 0);
+            // Only show tigger keys when one of the key-like modes is set
+            triggerGridLayout.RowDefinitions[2].Height = new GridLength(new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease }.Contains(selectedItem) ? 128 : 0);
+            // Only show the extra settings if the trigger mode is NOT "AlwaysOn" (Row[3] = Stack Mode, Row[4] = Repeat times)
+            triggerGridLayout.RowDefinitions[3].Height = triggerGridLayout.RowDefinitions[4].Height = new GridLength(selectedItem == AnimationTriggerMode.AlwaysOn ? 0 : 28);
         }
 
         private void triggerPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -174,10 +180,21 @@ namespace Aurora.Settings.Layers
                 Context.Properties._TriggerPath = (sender as ComboBox).Text;
         }
 
+        private void triggerKeys_KeybindsChanged(object sender) {
+            if (CanSet)
+                Context.Properties._TriggerKeys = (sender as KeyBindList).Keybinds;
+        }
+
         private void stackModeCb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (CanSet)
                 Context.Properties._StackMode = ((KeyValuePair<string, AnimationStackMode>)(sender as ComboBox).SelectedItem).Value;
+        }
+
+        private void btnInfo_Click(object sender, RoutedEventArgs e) {
+            // Toggle the info text textblock and set the triggerGrid visibility to be the opposite
+            triggerGridLayout.Visibility = infoText.Visibility;
+            infoText.Visibility = infoText.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }
