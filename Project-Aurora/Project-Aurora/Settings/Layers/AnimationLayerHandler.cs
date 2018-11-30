@@ -81,6 +81,7 @@ namespace Aurora.Settings.Layers
             this._StackMode = AnimationStackMode.Ignore;
             this._TriggerPath = "";
             this._TriggerKeys = new Keybind[] { };
+            this._TriggerAnyKey = false;
             this._KeyTriggerTranslate = false;
         }
     }
