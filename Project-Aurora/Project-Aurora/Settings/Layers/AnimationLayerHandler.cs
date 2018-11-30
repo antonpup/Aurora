@@ -1,6 +1,7 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
+using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -238,7 +239,7 @@ namespace Aurora.Settings.Layers
                     // Do a trigger if waiting for a 'press' event
                     if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress) {
                         _awaitingTrigger = true;
-                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(Utils.KeyUtils.GetDeviceKey(e.Key)).Center;
+                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(e.GetDeviceKey()).Center;
                     }
                     // Mark it as handled
                     _pressedKeys.Add(e.Key);
@@ -255,7 +256,7 @@ namespace Aurora.Settings.Layers
                 if (activedKeybind != null) {
                     if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress) {
                         _awaitingTrigger = true;
-                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(Utils.KeyUtils.GetDeviceKey(e.Key)).Center;
+                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(e.GetDeviceKey()).Center;
                     }
                     _pressedKeybinds.Add(activedKeybind);
                 }
@@ -273,7 +274,7 @@ namespace Aurora.Settings.Layers
                 // Do a trigger if waiting for a 'release' event
                 if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease) {
                     _awaitingTrigger = true;
-                    _awaitingOffset = Effects.GetBitmappingFromDeviceKey(Utils.KeyUtils.GetDeviceKey(e.Key)).Center;
+                    _awaitingOffset = Effects.GetBitmappingFromDeviceKey(e.GetDeviceKey()).Center;
                 }
                 // Remove it from the pressed keys so it can be re-detected by the KeyDown event handler
                 _pressedKeys.Remove(e.Key);
@@ -288,7 +289,7 @@ namespace Aurora.Settings.Layers
                 if (deactivatedKeybind != null) {
                     if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease) {
                         _awaitingTrigger = true;
-                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(Utils.KeyUtils.GetDeviceKey(e.Key)).Center;
+                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(e.GetDeviceKey()).Center;
                     }
                     _pressedKeybinds.Remove(deactivatedKeybind);
                 }
