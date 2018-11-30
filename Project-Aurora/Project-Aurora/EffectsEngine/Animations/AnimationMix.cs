@@ -116,7 +116,7 @@ namespace Aurora.EffectsEngine.Animations
             return return_val;
         }
 
-        public void Draw(Graphics g, float time, float scale = 1.0f)
+        public void Draw(Graphics g, float time, float scale = 1.0f, PointF offset = default(PointF))
         {
             Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 
@@ -126,7 +126,7 @@ namespace Aurora.EffectsEngine.Animations
                 {
                     try
                     {
-                        track.Value.GetFrame(time).Draw(g, scale);
+                        track.Value.GetFrame(time).Draw(g, scale, offset);
                     }
                     catch (Exception exc)
                     {

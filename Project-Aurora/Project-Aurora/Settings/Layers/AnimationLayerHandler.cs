@@ -62,6 +62,10 @@ namespace Aurora.Settings.Layers
         public Keybind[] TriggerKeybinds => Logic._TriggerKeys ?? _TriggerKeys ?? new Keybind[] { };
         public Keybind[] _TriggerKeys { get; set; }
 
+        [JsonIgnore]
+        public bool KeyTriggerTranslate => Logic._KeyTriggerTranslate ?? _KeyTriggerTranslate ?? false;
+        public bool? _KeyTriggerTranslate { get; set; }
+
         public AnimationLayerHandlerProperties() : base() { }
         public AnimationLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
@@ -76,6 +80,7 @@ namespace Aurora.Settings.Layers
             this._StackMode = AnimationStackMode.Ignore;
             this._TriggerPath = "";
             this._TriggerKeys = new Keybind[] { };
+            this._KeyTriggerTranslate = false;
         }
     }
 
@@ -85,7 +90,8 @@ namespace Aurora.Settings.Layers
         private Stopwatch _animTimeStopwatch = new Stopwatch();
         private bool _alwaysOnHasPlayed = false; // A dedicated variable has to be used to make 'Always On' work with the repeat count since the logic has changed
         private double _previousTriggerValue; // Used for tracking when a gamestate value changes
-        private bool _awaitingTrigger; // Used to track when keys have been pressed or released (based on the mode) that haven't yet been used as a trigger
+        private bool _awaitingTrigger; // Used to track when an animation should be triggered and hasn't been yet
+        private PointF _awaitingOffset; // Used to track the desired offset for the next trigger (used for key related triggers)
         private HashSet<System.Windows.Forms.Keys> _pressedKeys = new HashSet<System.Windows.Forms.Keys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
         private HashSet<Keybind> _pressedKeybinds = new HashSet<Keybind>(); // A list of pressed keybinds... ^^
 
@@ -128,14 +134,14 @@ namespace Aurora.Settings.Layers
             runningAnimations.ForEach(anim => {
                 EffectLayer temp = new EffectLayer();
                 using (Graphics g = temp.GetGraphics())
-                    Properties.AnimationMix.Draw(g, anim.currentTime);
+                    Properties.AnimationMix.Draw(g, anim.currentTime, 1f, anim.offset);
 
                 Rectangle rect = new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
                 if (Properties.ScaleToKeySequenceBounds) {
                     var region = Properties.Sequence.GetAffectedRegion();
                     rect = new Rectangle((int)region.X, (int)region.Y, (int)region.Width, (int)region.Height);
                 }
-
+                
                 using (Graphics g = animationLayer.GetGraphics())
                     g.DrawImage(temp.GetBitmap(), rect, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), GraphicsUnit.Pixel);
 
@@ -191,16 +197,21 @@ namespace Aurora.Settings.Layers
         /// Triggers a new animation to play depending on the StackMode setting.
         /// </summary>
         private void TriggerAnimation() {
+            RunningAnimation anim = null; // Store a reference to the new animation (or the restarted one)
             if (runningAnimations.Count == 0)
                 // If there are no running animations, we will always start a new one
-                runningAnimations.Add(new RunningAnimation());
+                runningAnimations.Add(anim = new RunningAnimation());
 
             else if (Properties.TriggerMode != AnimationTriggerMode.AlwaysOn) // Ignore stack/reset when animation is always on
                 // If there are already running animations, exactly what happens depends on StackMode
                 switch (Properties.StackMode) {
-                    case AnimationStackMode.Reset: runningAnimations[0].Reset(); break;
-                    case AnimationStackMode.Stack: runningAnimations.Add(new RunningAnimation()); break;
+                    case AnimationStackMode.Reset: anim = runningAnimations[0].Reset(); break;
+                    case AnimationStackMode.Stack: runningAnimations.Add(anim = new RunningAnimation()); break;
                 }
+
+            // If a new animation has been started or an existing one restarted, and we are translating based on key press
+            if (Properties.KeyTriggerTranslate && anim != null)
+                anim.offset = _awaitingOffset;
         }
 
         public override void SetApplication(Application profile) {
@@ -225,8 +236,10 @@ namespace Aurora.Settings.Layers
                 // If the pressed key has not already been handled (i.e. it's not being held)
                 if (!_pressedKeys.Contains(e.Key)) {
                     // Do a trigger if waiting for a 'press' event
-                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
+                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress) {
                         _awaitingTrigger = true;
+                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(Utils.KeyUtils.GetDeviceKey(e.Key)).Center;
+                    }
                     // Mark it as handled
                     _pressedKeys.Add(e.Key);
                 }
@@ -240,8 +253,10 @@ namespace Aurora.Settings.Layers
                 // If there is a new keybind that is pressed, show a flag that we are awaiting a trigger (if waiting on 'press')
                 // and add the keybind to the pressed list so it doesn't re-trigger until it has been released.
                 if (activedKeybind != null) {
-                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
+                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress) {
                         _awaitingTrigger = true;
+                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(Utils.KeyUtils.GetDeviceKey(e.Key)).Center;
+                    }
                     _pressedKeybinds.Add(activedKeybind);
                 }
             }
@@ -256,8 +271,10 @@ namespace Aurora.Settings.Layers
 
             if (Properties.TriggerAnyKey) { // ANY-KEY-TRIGGERS MODE
                 // Do a trigger if waiting for a 'release' event
-                if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease)
+                if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease) {
                     _awaitingTrigger = true;
+                    _awaitingOffset = Effects.GetBitmappingFromDeviceKey(Utils.KeyUtils.GetDeviceKey(e.Key)).Center;
+                }
                 // Remove it from the pressed keys so it can be re-detected by the KeyDown event handler
                 _pressedKeys.Remove(e.Key);
 
@@ -269,8 +286,10 @@ namespace Aurora.Settings.Layers
                 // If there is a keybind that is no longer pressed, remove it from the pressed list. Also, if we are waiting
                 // on a 'release', set the flag for doing a key trigger.
                 if (deactivatedKeybind != null) {
-                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease)
+                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease) {
                         _awaitingTrigger = true;
+                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(Utils.KeyUtils.GetDeviceKey(e.Key)).Center;
+                    }
                     _pressedKeybinds.Remove(deactivatedKeybind);
                 }
             }
@@ -283,10 +302,12 @@ namespace Aurora.Settings.Layers
         class RunningAnimation {
             public float currentTime = 0;
             public int playTimes = 0;
+            public PointF offset = PointF.Empty;
 
-            public void Reset() {
+            public RunningAnimation Reset() {
                 currentTime = 0;
                 playTimes = 0;
+                return this;
             }
         }
     }

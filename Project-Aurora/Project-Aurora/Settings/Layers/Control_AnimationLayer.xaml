@@ -29,7 +29,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="273" Height="300" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="273" Height="306" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid>
                 <Grid x:Name="triggerGridLayout">
                     <Grid.ColumnDefinitions>
@@ -42,6 +42,7 @@
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="156px" />
                         <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
 
@@ -52,17 +53,20 @@
                     <Label Content="Trigger keys:" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Right" />
                     <CheckBox x:Name="triggerAnyKey" Grid.Row="2" Grid.Column="1" Content="Trigger for any key" Margin="4,6" Checked="triggerAnyKey_Checked" Unchecked="triggerAnyKey_Checked" />
                     <Controls:KeyBindList x:Name="triggerKeys" Margin="0,28,0,0" Grid.Row="2" Grid.Column="1" KeybindsChanged="triggerKeys_KeybindsChanged" />
-                    <Label Content="Stack mode:" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                    <ComboBox x:Name="stackModeCb" Grid.Row="3" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" />
+                    <Label Content="Stack mode:" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <CheckBox x:Name="translateToKey" Grid.Row="3" Grid.Column="1" Content="Translate to pressed key" Margin="4,6" Checked="translateToKey_Checked" Unchecked="translateToKey_Checked" />
+                    <ComboBox x:Name="stackModeCb" Grid.Row="4" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" />
                 </Grid>
 
                 <Button Content="  i  " Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Trigger help" Click="btnInfo_Click" />
-                <TextBlock x:Name="infoText" Margin="0,24" TextWrapping="Wrap" Visibility="Collapsed">
-                    <Run Text="Setting a trigger will play the animation when a game state value (e.g. health) changes or when a keybind is pressed." />
+                <TextBlock x:Name="infoText" Margin="0,20,0,0" TextWrapping="Wrap" Visibility="Collapsed">
+                    <Run Text="• Setting a trigger will play the animation when a game state value (e.g. health) changes or when a keybind is pressed." />
                     <LineBreak />
-                    <Run Text="For 'Always On', the animation does not need a trigger and will run constantly." />
+                    <Run Text="• For 'Always On', the animation does not need a trigger and will run constantly." />
                     <LineBreak />
-                    <Run Text="The stack mode dictates how additional triggers will be handled when an animation is already in progress. 'Ignore' does nothing; 'Restart' restarts the animation and resets repeat count; 'Multiple' will play another copy of the animation in addition to the currently running one." />
+                    <Run Text="• The stack mode dictates how additional triggers will be handled when an animation is already in progress. 'Ignore' does nothing; 'Restart' restarts the animation and resets repeat count; 'Multiple' will play another copy of the animation in addition to the current ones." />
+                    <LineBreak />
+                    <Run Text="• For key-based triggers, the 'Translate to pressed key' option will shift the animation so that the top-left (coords x:0, y:0) become the center of the pressed key, allowing the animation layer to act as a more advanced interactive layer." />
                 </TextBlock>
             </Grid>
         </GroupBox>
