@@ -223,6 +223,10 @@ namespace Aurora.Settings
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
+
+        //Drevo range is 1000-1099
+        [Description("Drevo BladeMaster")]
+        Drevo_BladeMaster = 1000,
     }
 
     public enum PreferredKeyboardLocalization
@@ -266,6 +270,8 @@ namespace Aurora.Settings
 
         [Description("Generic Peripheral")]
         Generic_Peripheral = 1,
+        [Description("Razer/Corsair Mousepad + Mouse")]
+        Generic_Mousepad = 2,
 
         //Logitech range is 100-199
         [Description("Logitech - G900")]

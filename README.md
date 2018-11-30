@@ -134,15 +134,13 @@ If you don't see some of these devices in the menu, select a similar one and it 
 ### Cooler Master
 * Masterkeys Pro L, M and S RGB/White
 * MK750
-* CK550
+* CK372
 * CK552
-* MS120
-* MS121
+* CK551
 
 ### Roccat
 #### Keyboards
 * Ryos MK FX
-* Vulkan 100 & 120
 #### Mice
 * Kone Pure & SE
 

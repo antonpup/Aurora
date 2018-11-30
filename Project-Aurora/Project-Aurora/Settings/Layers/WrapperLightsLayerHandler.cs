@@ -6,6 +6,7 @@ using System.Drawing;
 using Aurora.Profiles;
 using System.Windows.Controls;
 using Newtonsoft.Json;
+using Aurora.Devices;
 
 namespace Aurora.Settings.Layers
 {
@@ -32,15 +33,14 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public float ColorEnhanceColorHSVGamma { get { return Logic._ColorEnhanceColorHSVGamma ?? _ColorEnhanceColorHSVGamma ?? 0.0f; } }
 
-        public WrapperLightsLayerHandlerProperties() : base()
-        {
+        // Key cloning
+        [JsonIgnore]
+        public Dictionary<DeviceKeys, KeySequence> CloningMap => Logic._CloningMap ?? _CloningMap ?? new Dictionary<DeviceKeys, KeySequence>();
+        public Dictionary<DeviceKeys, KeySequence> _CloningMap { get; set; }
 
-        }
+        public WrapperLightsLayerHandlerProperties() : base() { }
 
-        public WrapperLightsLayerHandlerProperties(bool arg = false) : base(arg)
-        {
-
-        }
+        public WrapperLightsLayerHandlerProperties(bool arg = false) : base(arg) { }
 
         public override void Default()
         {
@@ -52,6 +52,7 @@ namespace Aurora.Settings.Layers
             _ColorEnhanceColorFactor = 90;
             _ColorEnhanceColorHSVSine = 0.1f;
             _ColorEnhanceColorHSVGamma = 2.5f;
+            _CloningMap = new Dictionary<DeviceKeys, KeySequence>();
         }
     }
 
@@ -91,14 +92,33 @@ namespace Aurora.Settings.Layers
             Devices.DeviceKeys[] allkeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
             foreach (var key in allkeys)
             {
-                if(extra_keys.ContainsKey(key))
+
+                // This checks if a key is already being cloned over and thus should be prevented from being re-set by the
+                // normal wrapper. Fixes issues with some clones not working. Thanks to @Gurjot95 for finding it :)
+                if (Properties.CloningMap.Values.Any(sequence => sequence.keys.Contains(key)))
+                    continue;
+
+
+                if (extra_keys.ContainsKey(key))
+                {
                     bitmap_layer.Set(key, GetBoostedColor(extra_keys[key]));
+
+                    // Do the key cloning
+                    if (Properties.CloningMap.ContainsKey(key))
+                        bitmap_layer.Set(Properties.CloningMap[key], GetBoostedColor(extra_keys[key]));
+                }
                 else
                 {
                     Devices.Logitech.Logitech_keyboardBitmapKeys logi_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap(key);
 
-                    if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0)
-                        bitmap_layer.Set(key, GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4])));
+                    if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0) {
+                        var color = GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4]));
+                        bitmap_layer.Set(key, color);
+
+                        // Key cloning
+                        if (Properties.CloningMap.ContainsKey(key))
+                            bitmap_layer.Set(Properties.CloningMap[key], color);
+                    }
                 }
             }
 
@@ -164,6 +184,23 @@ namespace Aurora.Settings.Layers
             SetExtraKey(Devices.DeviceKeys.LOGO, ngw_state.Extra_Keys.logo);
             SetExtraKey(Devices.DeviceKeys.LOGO2, ngw_state.Extra_Keys.badge);
             SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
+            //Reversing the mousepad lights from left to right, razer takes it from right to left
+            SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT15, ngw_state.Extra_Keys.mousepad1);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT14, ngw_state.Extra_Keys.mousepad2);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT13, ngw_state.Extra_Keys.mousepad3);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT12, ngw_state.Extra_Keys.mousepad4);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT11, ngw_state.Extra_Keys.mousepad5);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT10, ngw_state.Extra_Keys.mousepad6);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT9, ngw_state.Extra_Keys.mousepad7);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT8, ngw_state.Extra_Keys.mousepad8);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT7, ngw_state.Extra_Keys.mousepad9);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT6, ngw_state.Extra_Keys.mousepad10);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT5, ngw_state.Extra_Keys.mousepad11);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT4, ngw_state.Extra_Keys.mousepad12);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT3, ngw_state.Extra_Keys.mousepad13);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT2, ngw_state.Extra_Keys.mousepad14);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT1, ngw_state.Extra_Keys.mousepad15);
             SetExtraKey(Devices.DeviceKeys.G1, ngw_state.Extra_Keys.G1);
             SetExtraKey(Devices.DeviceKeys.G2, ngw_state.Extra_Keys.G2);
             SetExtraKey(Devices.DeviceKeys.G3, ngw_state.Extra_Keys.G3);
@@ -274,6 +311,17 @@ namespace Aurora.Settings.Layers
                 foreach (var extra_key in extra_keys.Keys.ToArray())
                     extra_keys[extra_key] = last_fill_color;
             }
+            else if (ngw_state.Command.Equals("LFX_GetNumLights"))
+            {
+                //Retain previous lighting
+                int fill_color_int = Utils.ColorUtils.GetIntFromColor(last_fill_color);
+
+                for (int i = 0; i < bitmap.Length; i++)
+                    bitmap[i] = fill_color_int;
+
+                foreach (var extra_key in extra_keys.Keys.ToArray())
+                    extra_keys[extra_key] = last_fill_color;
+            }
             else if (ngw_state.Command.Equals("LFX_Light"))
             {
                 //Retain previous lighting
@@ -364,6 +412,10 @@ namespace Aurora.Settings.Layers
             }
             //Razer
             else if (ngw_state.Command.Equals("CreateMouseEffect"))
+            {
+
+            }
+            else if (ngw_state.Command.Equals("CreateMousepadEffect"))
             {
 
             }

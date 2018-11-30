@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace Aurora.Settings {
                     if (!processList.Any(x => x.Name == name))
                         processList.Add(new RunningProcess {
                             Name = name,
+                            Path = p.MainModule.FileName,
                             Icon = System.Drawing.Icon.ExtractAssociatedIcon(p.MainModule.FileName)
                         });
                 } catch { }
@@ -46,8 +48,21 @@ namespace Aurora.Settings {
             RunningProcessListFilterText.Focus();
         }
 
-        /// <summary>The exe that the user has selected to exclude.</summary>
-        public string ChosenExecutable { get; private set; } = "";
+        /// <summary>Gets or sets the okay button's label. Default: "Select process".</summary>
+        public string ButtonLabel {
+            get { return okayButton.Content.ToString(); }
+            set { okayButton.Content = value; }
+        }
+
+        /// <summary>Dictates whether to check if a path entered by the user in the "Browse for executable" tab exists.
+        /// The user can type text here and so may point to an exe that does not exist. Default: false.</summary>
+        public bool CheckCustomPathExists { get; set; } = false;
+
+        /// <summary>The name and extension of the application the user has chosen (e.g. 'Aurora.exe').</summary>
+        public string ChosenExecutableName { get; private set; } = "";
+
+        /// <summary>The full path of the process the user has chosen (e.g. 'C:\Program Files\Aurora\Aurora.exe').</summary>
+        public string ChosenExecutablePath { get; private set; } = "";
 
         /// <summary>
         /// Handler for the browse button on the custom exe path tab. Sets
@@ -57,7 +72,7 @@ namespace Aurora.Settings {
         private void BrowseButton_Click(object sender, RoutedEventArgs e) {
             OpenFileDialog dialog = new OpenFileDialog() {
                 AddExtension = true,
-                Filter = "Executable files (*.exe)|*.exe",
+                Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*",
                 Multiselect = false
             };
             if (dialog.ShowDialog() == true) // requires "== true" because ShowDialog is a bool?, so doing "if (dialog.ShowDialog())" is invalid
@@ -100,14 +115,16 @@ namespace Aurora.Settings {
             // If the user is on the running process list tab
             if (MainTabControl.SelectedIndex == 0) {
                 if (RunningProcessList.SelectedItem == null) return; // Cannot OK if there is no item selected
-                ChosenExecutable = ((RunningProcess)RunningProcessList.SelectedItem).Name;
+                ChosenExecutableName = ((RunningProcess)RunningProcessList.SelectedItem).Name;
+                ChosenExecutablePath = ((RunningProcess)RunningProcessList.SelectedItem).Path;
 
                 // Else if user is on browse tab
             } else {
                 string exe = ProcessBrowseResult.Text;
-                if (String.IsNullOrWhiteSpace(exe)) return; // Cannot OK if there is no text entered
-                // Get just the exe name,
-                ChosenExecutable = exe.Substring(exe.LastIndexOfAny(new[] { '/', '\\' }) + 1);
+                if (string.IsNullOrWhiteSpace(exe)) return; // Cannot OK if there is no text entered
+                if (CheckCustomPathExists && !File.Exists(exe)) return; // Cannot OK if we require validation and the file doesn't exist
+                ChosenExecutableName = exe.Substring(exe.LastIndexOfAny(new[] { '/', '\\' }) + 1); // Get just the exe name
+                ChosenExecutablePath = exe;
             }
 
             // Close the window and set result as successful
@@ -143,6 +160,7 @@ namespace Aurora.Settings {
     /// </summary>
     struct RunningProcess {
         public string Name { get; set; }
+        public string Path { get; set; }
         public Icon Icon { get; set; }
     }
 }

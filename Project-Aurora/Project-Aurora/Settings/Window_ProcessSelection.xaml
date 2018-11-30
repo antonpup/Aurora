@@ -87,7 +87,7 @@
         </TabControl>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="0,10">
-            <Button Content="Exclude process" Padding="5,0" Click="OkayButton_Click" IsDefault="True" />
+            <Button x:Name="okayButton" Content="Select process" Padding="5,0" Click="OkayButton_Click" IsDefault="True" />
             <Button Content="Cancel" Margin="10,0" Padding="5,0" Click="CancelButton_Click" IsCancel="True" />
         </StackPanel>
     </Grid>

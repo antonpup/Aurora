@@ -108,6 +108,7 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
             devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
             devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
+            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
@@ -217,7 +218,7 @@ namespace Aurora.Devices
 
             if (anyInitialized)
             {
-                _InitializeOnceAllowed = true;
+                //_InitializeOnceAllowed = true;
                 NewDevicesInitialized?.Invoke(this, new EventArgs());
             }
 
@@ -270,7 +271,7 @@ namespace Aurora.Devices
 
         public void InitializeOnce()
         {
-            if (!anyInitialized && _InitializeOnceAllowed)
+            if (!anyInitialized)// && _InitializeOnceAllowed)
                 Initialize();
         }
 
