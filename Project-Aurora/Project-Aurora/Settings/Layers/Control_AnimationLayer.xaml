@@ -55,6 +55,7 @@
                     <Controls:KeyBindList x:Name="triggerKeys" Margin="0,28,0,0" Grid.Row="2" Grid.Column="1" KeybindsChanged="triggerKeys_KeybindsChanged" />
                     <Label Content="Stack mode:" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <CheckBox x:Name="translateToKey" Grid.Row="3" Grid.Column="1" Content="Translate to pressed key" Margin="4,6" Checked="translateToKey_Checked" Unchecked="translateToKey_Checked" />
+                    <TextBlock Text="?" Grid.Row="3" Grid.Column="4" ToolTip="Moves the top-left (0,0) of the animation to the location of the key. When using this option, ensure your animations are centered around 0,0." Cursor="Help" Opacity=".8" TextDecorations="Underline" Margin="0,6" VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <ComboBox x:Name="stackModeCb" Grid.Row="4" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" />
                 </Grid>
 
