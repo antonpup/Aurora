@@ -29,7 +29,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="333" Height="269" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="333" Height="299" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid>
                 <Grid x:Name="triggerGridLayout">
                     <Grid.ColumnDefinitions>

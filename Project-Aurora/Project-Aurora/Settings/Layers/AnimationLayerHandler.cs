@@ -120,8 +120,8 @@ namespace Aurora.Settings.Layers
             long dt = _animTimeStopwatch.ElapsedMilliseconds;
             _animTimeStopwatch.Restart();
 
-            // Update all running animations
-            runningAnimations.ForEach(anim => {
+            // Update all running animations. We have to call "ToList()" to prevent "Collection was modified; enumeration operation may not execute"
+            runningAnimations.ToList().ForEach(anim => {
                 anim.currentTime += dt / 1000f;
                 if (Properties.AnimationRepeat > 0)
                     anim.playTimes += (int)(anim.currentTime / Properties.AnimationDuration);
@@ -135,8 +135,8 @@ namespace Aurora.Settings.Layers
             // Check to see if the gamestate will cause any animations to trigger
             CheckTriggers(gamestate);
 
-            // Render each playing animation
-            runningAnimations.ForEach(anim => {
+            // Render each playing animation. We have to call "ToList()" to prevent "Collection was modified; enumeration operation may not execute"
+            runningAnimations.ToList().ForEach(anim => {
                 EffectLayer temp = new EffectLayer();
 
                 // Default values for the destination rect (the area that the canvas is drawn to) and animation offset
