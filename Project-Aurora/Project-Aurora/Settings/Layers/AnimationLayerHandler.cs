@@ -135,17 +135,40 @@ namespace Aurora.Settings.Layers
             // Render each playing animation
             runningAnimations.ForEach(anim => {
                 EffectLayer temp = new EffectLayer();
-                using (Graphics g = temp.GetGraphics())
-                    Properties.AnimationMix.Draw(g, anim.currentTime, 1f, anim.offset);
 
-                Rectangle rect = new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
+                // Default values for the destination rect (the area that the canvas is drawn to) and animation offset
+                Rectangle destRect = new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
+                PointF offset = anim.offset;
+
+                // When ScaleToKeySequenceBounds is true, additional calculations are needed on the destRect and offset:
                 if (Properties.ScaleToKeySequenceBounds) {
-                    var region = Properties.Sequence.GetAffectedRegion();
-                    rect = new Rectangle((int)region.X, (int)region.Y, (int)region.Width, (int)region.Height);
+                    // The dest rect should simply be the bounding region of the affected keys
+                    RectangleF affectedRegion = Properties.Sequence.GetAffectedRegion();
+                    destRect = Rectangle.Truncate(affectedRegion);
+
+                    // If we are scaling to key sequence bounds, we need to adapt the offset of the pressed key so that it
+                    // remains where it is after the bound - scaling operation.
+                    // Let's consider only 1 dimension (X) for now since it makes it easier to think about. The scaling process
+                    // is: the whole canvas width is scaled down to the width of the affected region, and then it offset by the
+                    // X of the affected region. To have a point that remains the same, we need to reposition it when it's being
+                    // used on the canvas, therefore this process needs to be inverted: 1.take the original offset of X and
+                    // subtract the affected region's X, thereby giving us the distance from the edge of the affected region to
+                    // the offset; 2. scale this up to counter-act the down-scaling done, so we calculate the change in scale off
+                    // the canvas by dividing canvas width by the affected region's width; 3.multiply these two numbers together
+                    // and that's our new X offset.
+                    // This probably makes no sense and I'll forget how it works immediately, but hopefully it helps a little in
+                    // future if this code ever needs to be revised. It's embarassing how long it took to work this equation out.
+                    offset.X = (offset.X - affectedRegion.X) * (Effects.canvas_width / affectedRegion.Width);
+                    offset.Y = (offset.Y - affectedRegion.Y) * (Effects.canvas_height / affectedRegion.Height);
                 }
+
+                // Draw the animation to a temporary canvas
+                using (Graphics g = temp.GetGraphics())
+                    Properties.AnimationMix.Draw(g, anim.currentTime, 1f, offset);
                 
+                // Draw from this temp canvas to the actual layer, performing the scale down if it's needed.
                 using (Graphics g = animationLayer.GetGraphics())
-                    g.DrawImage(temp.GetBitmap(), rect, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), GraphicsUnit.Pixel);
+                    g.DrawImage(temp.GetBitmap(), destRect, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), GraphicsUnit.Pixel);
 
                 temp.Dispose();
             });
