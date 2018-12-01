@@ -72,7 +72,7 @@ namespace Aurora.Settings.Layers
                 triggerModeCb.SelectedIndex = triggerModeCb.Items.SourceCollection.Cast<KeyValuePair<string, AnimationTriggerMode>>().Select((kvp, index) => new { kvp, index }).First(item => item.kvp.Value == Context.Properties.TriggerMode).index;
                 triggerAnyKey.IsChecked = Context.Properties._TriggerAnyKey;
                 triggerPath.Text = Context.Properties._TriggerPath;
-                triggerKeys.Keybinds = Context.Properties._TriggerKeys;
+                triggerKeys.Sequence = Context.Properties._TriggerKeySequence;
                 translateToKey.IsChecked = Context.Properties._KeyTriggerTranslate;
                 stackModeCb.SelectedIndex = stackModeCb.Items.SourceCollection.Cast<KeyValuePair<string, AnimationStackMode>>().Select((kvp, index) => new { kvp, index }).First(item => item.kvp.Value == Context.Properties.StackMode).index;
                 whileKeyHeldTerminate.IsChecked = Context.Properties._WhileKeyHeldTerminateRunning;
@@ -192,7 +192,7 @@ namespace Aurora.Settings.Layers
             // Only show trigger path when one of the path-like modes is set
             triggerGridLayout.RowDefinitions[1].Height = new GridLength(AnimationLayerHandler.IsTriggerNumericValueBased(selectedItem) || AnimationLayerHandler.IsTriggerBooleanValueBased(selectedItem) ? 28 : 0);
             // Only show tigger keys when one of the key-like modes is set
-            triggerGridLayout.RowDefinitions[2].Height = new GridLength(AnimationLayerHandler.IsTriggerKeyBased(selectedItem) ? 128 : 0);
+            triggerGridLayout.RowDefinitions[2].Height = new GridLength(AnimationLayerHandler.IsTriggerKeyBased(selectedItem) ? 160 : 0);
             triggerGridLayout.RowDefinitions[3].Height = new GridLength(AnimationLayerHandler.IsTriggerKeyBased(selectedItem) ? 28 : 0);
             // Only show the stack mode setting if the trigger mode is NOT "AlwaysOn"
             triggerGridLayout.RowDefinitions[4].Height = new GridLength(selectedItem == AnimationTriggerMode.AlwaysOn ? 0 : 28);
@@ -218,9 +218,9 @@ namespace Aurora.Settings.Layers
             triggerKeys.IsEnabled = !val;
         }
 
-        private void triggerKeys_KeybindsChanged(object sender) {
+        private void triggerKeys_SequenceUpdated(object sender, EventArgs e) {
             if (CanSet)
-                Context.Properties._TriggerKeys = (sender as KeyBindList).Keybinds;
+                Context.Properties._TriggerKeySequence = (sender as Controls.KeySequence).Sequence;
         }
 
         private void translateToKey_Checked(object sender, RoutedEventArgs e) {

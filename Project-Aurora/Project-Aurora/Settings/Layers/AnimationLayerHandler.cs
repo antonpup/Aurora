@@ -61,8 +61,8 @@ namespace Aurora.Settings.Layers
         public bool? _TriggerAnyKey { get; set; }
 
         [JsonIgnore]
-        public Keybind[] TriggerKeybinds => Logic._TriggerKeys ?? _TriggerKeys ?? new Keybind[] { };
-        public Keybind[] _TriggerKeys { get; set; }
+        public KeySequence TriggerKeySequence => Logic._TriggerKeySequence ?? _TriggerKeySequence ?? new KeySequence { };
+        public KeySequence _TriggerKeySequence { get; set; }
 
         [JsonIgnore]
         public bool KeyTriggerTranslate => Logic._KeyTriggerTranslate ?? _KeyTriggerTranslate ?? false;
@@ -85,7 +85,7 @@ namespace Aurora.Settings.Layers
             this._TriggerMode = AnimationTriggerMode.AlwaysOn;
             this._StackMode = AnimationStackMode.Ignore;
             this._TriggerPath = "";
-            this._TriggerKeys = new Keybind[] { };
+            this._TriggerKeySequence = new KeySequence();
             this._TriggerAnyKey = false;
             this._KeyTriggerTranslate = false;
             this._WhileKeyHeldTerminateRunning = false;
@@ -99,10 +99,7 @@ namespace Aurora.Settings.Layers
         private bool _alwaysOnHasPlayed = false; // A dedicated variable has to be used to make 'Always On' work with the repeat count since the logic has changed
         private double _previousTriggerDoubleValue; // Used for tracking when a numeric gamestate value changes
         private bool _previousTriggerBoolValue; // Used for tracking when a boolean gamestate value changes
-        private bool _awaitingTrigger; // Used to track when an animation should be triggered and hasn't been yet
-        private DeviceKeys _awaitingKey; // Used to track the desired key for the next trigger
         private HashSet<DeviceKeys> _pressedKeys = new HashSet<DeviceKeys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
-        private HashSet<Keybind> _pressedKeybinds = new HashSet<Keybind>(); // A list of pressed keybinds... ^^
 
         public AnimationLayerHandler() {
             _ID = "Animation";
@@ -136,8 +133,7 @@ namespace Aurora.Settings.Layers
                 runningAnimations.RemoveAll(ra => ra.playTimes >= Properties.AnimationRepeat);
 
             // Check to see if the gamestate will cause any animations to trigger
-            if (IsTriggered(gamestate))
-                TriggerAnimation();
+            CheckTriggers(gamestate);
 
             // Render each playing animation
             runningAnimations.ForEach(anim => {
@@ -191,67 +187,70 @@ namespace Aurora.Settings.Layers
         /// Note will also have the side-effect of updating _previousTriggerValue so this should not be called
         /// more than once per frame.
         /// </summary>
-        private bool IsTriggered(IGameState gamestate) {
+        private void CheckTriggers(IGameState gamestate) {
             if (Properties.TriggerMode == AnimationTriggerMode.AlwaysOn) {
                 // Should return true if it has not already been played OR it is allowed to repeat indefinately
                 // Should also not try to get a value from the state
                 if (Properties.AnimationRepeat == 0)
-                    return true; // Always true if infinite repeats
-                else if (!_alwaysOnHasPlayed)
-                    return (_alwaysOnHasPlayed = true); // True if it has not been played
-                return false; // Otherwise false if it has been played
+                    StartAnimation(); // Always true if infinite repeats
+                else if (!_alwaysOnHasPlayed) {
+                    _alwaysOnHasPlayed = true; // True if it has not been played
+                    StartAnimation();
+                }
 
             // Handling for key-based triggers
-            } else if (IsTriggerKeyBased(Properties.TriggerMode)) {
-                // If there are keys on the trigger list that have been pressed/released, set the trigger to true
-                if (_awaitingTrigger) {
-                    _awaitingTrigger = false;
-                    return true;
-                }
-
+            } else if (Properties.TriggerMode == AnimationTriggerMode.WhileKeyHeld) {
                 // If we are in "while held down" mode, check to see if any of the keys pressed do not currently
                 // have an animation with them as the assigned key. If not, create trigger it
-                if (Properties.TriggerMode == AnimationTriggerMode.WhileKeyHeld) {
-                    var key = _pressedKeys.FirstOrDefault(k => !runningAnimations.Any(a => a.assignedKey == k));
-                    if (key != default(DeviceKeys)) {
-                        _awaitingKey = key;
-                        return true;
-                    }
-                }
-
-                return false;
+                foreach (var key in _pressedKeys.Where(k => !runningAnimations.Any(a => a.assignedKey == k)))
+                    StartAnimation(key);
 
             // Handling for numeric value change based triggers
             } else if (IsTriggerNumericValueBased(Properties.TriggerMode)) {
                 // Check to see if a gamestate value change should trigger the animation
                 double resolvedTriggerValue = GameStateUtils.TryGetDoubleFromState(gamestate, Properties.TriggerPath);
-                bool shouldTrigger = false;
                 switch (Properties.TriggerMode) {
-                    case AnimationTriggerMode.OnChange: shouldTrigger = resolvedTriggerValue != _previousTriggerDoubleValue; break;
-                    case AnimationTriggerMode.OnHigh: shouldTrigger = resolvedTriggerValue > _previousTriggerDoubleValue; break;
-                    case AnimationTriggerMode.OnLow: shouldTrigger = resolvedTriggerValue < _previousTriggerDoubleValue; break;
+                    case AnimationTriggerMode.OnChange:
+                        if (resolvedTriggerValue != _previousTriggerDoubleValue)
+                            StartAnimation();
+                        break;
+                    case AnimationTriggerMode.OnHigh:
+                        if (resolvedTriggerValue > _previousTriggerDoubleValue)
+                            StartAnimation();
+                        break;
+                    case AnimationTriggerMode.OnLow:
+                        if (resolvedTriggerValue < _previousTriggerDoubleValue)
+                            StartAnimation();
+                        break;
                 }
                 _previousTriggerDoubleValue = resolvedTriggerValue;
-                return shouldTrigger;
             
             // Handling for boolean value based triggers
             } else {
                 bool resolvedTriggerValue = GameStateUtils.TryGetBoolFromState(gamestate, Properties.TriggerPath);
-                bool shouldTrigger = false;
                 switch (Properties.TriggerMode) {
-                    case AnimationTriggerMode.OnTrue: shouldTrigger = resolvedTriggerValue && !_previousTriggerBoolValue; break;
-                    case AnimationTriggerMode.OnFalse: shouldTrigger = !resolvedTriggerValue && _previousTriggerBoolValue; break;
-                    case AnimationTriggerMode.WhileTrue: shouldTrigger = resolvedTriggerValue && runningAnimations.Count == 0; break;
+                    case AnimationTriggerMode.OnTrue:
+                        if (resolvedTriggerValue && !_previousTriggerBoolValue)
+                            StartAnimation();
+                        break;
+                    case AnimationTriggerMode.OnFalse:
+                        if (!resolvedTriggerValue && _previousTriggerBoolValue)
+                            StartAnimation();
+                        break;
+                    case AnimationTriggerMode.WhileTrue:
+                        if (resolvedTriggerValue && runningAnimations.Count == 0)
+                            StartAnimation();
+                        break;
                 }
                 _previousTriggerBoolValue = resolvedTriggerValue;
-                return shouldTrigger;
             }
         }
 
         /// <summary>
         /// Triggers a new animation to play depending on the StackMode setting.
         /// </summary>
-        private void TriggerAnimation() {
+        /// <param name="targetKey">The key to center the animation around.</param>
+        private void StartAnimation(DeviceKeys targetKey = default(DeviceKeys)) {
             RunningAnimation anim = null; // Store a reference to the new animation (or the restarted one)
             if (runningAnimations.Count == 0)
                 // If there are no running animations, we will always start a new one
@@ -265,8 +264,9 @@ namespace Aurora.Settings.Layers
                 }
 
             // If a new animation has been started or an existing one restarted, and we are translating based on key press
+            // assign the target ket to the animation to allow it to calculate the offset.
             if (Properties.KeyTriggerTranslate && anim != null)
-                anim.assignedKey = _awaitingKey;
+                anim.assignedKey = targetKey;
         }
 
         public override void SetApplication(Application profile) {
@@ -287,33 +287,13 @@ namespace Aurora.Settings.Layers
             // Skip handler if not waiting for a key-related trigger to save memory/CPU time
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
-            if (Properties.TriggerAnyKey) { // ANY-KEY-TRIGGERS MODE
-                // If the pressed key has not already been handled (i.e. it's not being held)
-                if (!_pressedKeys.Contains(e.GetDeviceKey())) {
-                    // Do a trigger if waiting for a 'press' event
-                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress) {
-                        _awaitingTrigger = true;
-                        _awaitingKey = e.GetDeviceKey();
-                    }
-                    // Mark it as handled
-                    _pressedKeys.Add(e.GetDeviceKey());
-                }
-
-
-            } else { //KEYBIND MODE
-                // Find if any keybind has been pressed (and was not previously pressed, i.e. not in _pressedKeybinds)
-                Keybind activedKeybind = Properties.TriggerKeybinds
-                    .FirstOrDefault(kb => kb.IsPressed() && !_pressedKeybinds.Contains(kb));
-
-                // If there is a new keybind that is pressed, show a flag that we are awaiting a trigger (if waiting on 'press')
-                // and add the keybind to the pressed list so it doesn't re-trigger until it has been released.
-                if (activedKeybind != null) {
-                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress) {
-                        _awaitingTrigger = true;
-                        _awaitingKey = e.GetDeviceKey();
-                    }
-                    _pressedKeybinds.Add(activedKeybind);
-                }
+            // If triggering on any key or the pressed key is in the trigger list AND the pressed key has not already been handled (i.e. it's not being held)
+            if ((Properties.TriggerAnyKey || Properties.TriggerKeySequence.keys.Contains(e.GetDeviceKey())) && !_pressedKeys.Contains(e.GetDeviceKey())) {
+                // Start an animation if trigger is for 'press' event
+                if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
+                    StartAnimation(e.GetDeviceKey());
+                // Mark it as handled
+                _pressedKeys.Add(e.GetDeviceKey());
             }
         }
 
@@ -324,29 +304,13 @@ namespace Aurora.Settings.Layers
             // Skip handler if not waiting for a key-related trigger to save memory/CPU time
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
-            if (Properties.TriggerAnyKey) { // ANY-KEY-TRIGGERS MODE
-                // Do a trigger if waiting for a 'release' event
-                if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease) {
-                    _awaitingTrigger = true;
-                    _awaitingKey = e.GetDeviceKey();
-                }
+            // If the pressed list contains the now released key (ensures we don't trigger on a key not in the sequence)
+            if (_pressedKeys.Contains(e.GetDeviceKey())) {
+                // Start animation if trigger is for 'release' event
+                if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease)
+                    StartAnimation(e.GetDeviceKey());
                 // Remove it from the pressed keys so it can be re-detected by the KeyDown event handler
                 _pressedKeys.Remove(e.GetDeviceKey());
-
-            } else { //KEYBIND MODE
-                // Find if any currently pressed keybinds are now no longer pressed
-                Keybind deactivatedKeybind = _pressedKeybinds
-                    .FirstOrDefault(kb => !kb.IsPressed());
-
-                // If there is a keybind that is no longer pressed, remove it from the pressed list. Also, if we are waiting
-                // on a 'release', set the flag for doing a key trigger.
-                if (deactivatedKeybind != null) {
-                    if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease) {
-                        _awaitingTrigger = true;
-                        _awaitingKey = e.GetDeviceKey();
-                    }
-                    _pressedKeybinds.Remove(deactivatedKeybind);
-                }
             }
 
             // If we are in "while key held" mode and the user wishes to immediately terminate animations for a key when that key

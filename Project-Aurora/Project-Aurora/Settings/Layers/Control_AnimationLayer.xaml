@@ -8,7 +8,7 @@
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_AnimationLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
-        <GroupBox Header="Animation" Height="49" Width="550" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <GroupBox Header="Animation" Height="49" Width="590" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid>
                 <Button x:Name="btnEditAnimation" Content="Edit Animation" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditAnimation_Click" Width="142" Height="23"/>
 
@@ -29,18 +29,18 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="293" Height="316" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <GroupBox Header="Trigger" Margin="257,53,0,0" Width="333" Height="269" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid>
                 <Grid x:Name="triggerGridLayout">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="85px" />
-                        <ColumnDefinition Width="195px" />
+                        <ColumnDefinition Width="235px" />
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="28px" />
-                        <RowDefinition Height="156px" />
+                        <RowDefinition Height="160px" />
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="28px" />
                         <RowDefinition Height="28px" />
@@ -53,7 +53,7 @@
                     <ComboBox x:Name="triggerPath" Grid.Row="1" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Stretch" IsEditable="True" TextBoxBase.TextChanged="triggerPath_TextChanged" />
                     <Label Content="Trigger keys:" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Right" />
                     <CheckBox x:Name="triggerAnyKey" Grid.Row="2" Grid.Column="1" Content="Trigger for any key" Margin="-6,6" Checked="triggerAnyKey_Checked" Unchecked="triggerAnyKey_Checked" />
-                    <Controls:KeyBindList x:Name="triggerKeys" Margin="0,28,0,0" Grid.Row="2" Grid.Column="1" KeybindsChanged="triggerKeys_KeybindsChanged" />
+                    <Controls:KeySequence x:Name="triggerKeys" Margin="0,28,0,0" Grid.Row="2" Grid.Column="1" RecordingTag="AnimationTriggerKeys" Title="Trigger keys" FreestyleEnabled="False" SequenceUpdated="triggerKeys_SequenceUpdated" />
                     <Label Content="Stack mode:" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <CheckBox x:Name="translateToKey" Grid.Row="3" Grid.Column="1" Content="Translate to pressed key" Margin="-6,6" Checked="translateToKey_Checked" Unchecked="translateToKey_Checked" />
                     <TextBlock Text="?" Grid.Row="3" Grid.Column="4" ToolTip="Moves the top-left (0,0) of the animation to the location of the key. When using this option, ensure your animations are centered around 0,0." Cursor="Help" Opacity=".8" TextDecorations="Underline" Margin="12,6" VerticalAlignment="Center" HorizontalAlignment="Right" />
