@@ -52,13 +52,13 @@
                     <Label Content="Trigger path:" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <ComboBox x:Name="triggerPath" Grid.Row="1" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Stretch" IsEditable="True" TextBoxBase.TextChanged="triggerPath_TextChanged" />
                     <Label Content="Trigger keys:" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Right" />
-                    <CheckBox x:Name="triggerAnyKey" Grid.Row="2" Grid.Column="1" Content="Trigger for any key" Margin="4,6" Checked="triggerAnyKey_Checked" Unchecked="triggerAnyKey_Checked" />
+                    <CheckBox x:Name="triggerAnyKey" Grid.Row="2" Grid.Column="1" Content="Trigger for any key" Margin="-6,6" Checked="triggerAnyKey_Checked" Unchecked="triggerAnyKey_Checked" />
                     <Controls:KeyBindList x:Name="triggerKeys" Margin="0,28,0,0" Grid.Row="2" Grid.Column="1" KeybindsChanged="triggerKeys_KeybindsChanged" />
                     <Label Content="Stack mode:" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                    <CheckBox x:Name="translateToKey" Grid.Row="3" Grid.Column="1" Content="Translate to pressed key" Margin="4,6" Checked="translateToKey_Checked" Unchecked="translateToKey_Checked" />
+                    <CheckBox x:Name="translateToKey" Grid.Row="3" Grid.Column="1" Content="Translate to pressed key" Margin="-6,6" Checked="translateToKey_Checked" Unchecked="translateToKey_Checked" />
                     <TextBlock Text="?" Grid.Row="3" Grid.Column="4" ToolTip="Moves the top-left (0,0) of the animation to the location of the key. When using this option, ensure your animations are centered around 0,0." Cursor="Help" Opacity=".8" TextDecorations="Underline" Margin="12,6" VerticalAlignment="Center" HorizontalAlignment="Right" />
                     <ComboBox x:Name="stackModeCb" Grid.Row="4" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" />
-                    <CheckBox x:Name="whileKeyHeldTerminate" Grid.Row="5" Grid.Column="1" Content="Stop as soon as key released" ToolTip="If true, this setting will stop the animation started by a key press as soon as that key press is released. If false, the animation started by a key will keep going until complete before stopping when the key is released." Margin="4,6" Checked="whileKeyHeldTerminate_Checked" Unchecked="whileKeyHeldTerminate_Checked" />
+                    <CheckBox x:Name="whileKeyHeldTerminate" Grid.Row="5" Grid.Column="1" Content="Stop as soon as key released" ToolTip="If true, this setting will stop the animation started by a key press as soon as that key press is released. If false, the animation started by a key will keep going until complete before stopping when the key is released." Margin="-6,6" Checked="whileKeyHeldTerminate_Checked" Unchecked="whileKeyHeldTerminate_Checked" />
                 </Grid>
 
                 <Button Content="  i  " Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Trigger help" Click="btnInfo_Click" />
