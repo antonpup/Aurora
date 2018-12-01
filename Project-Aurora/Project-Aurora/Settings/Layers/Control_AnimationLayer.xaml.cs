@@ -75,6 +75,7 @@ namespace Aurora.Settings.Layers
                 triggerKeys.Keybinds = Context.Properties._TriggerKeys;
                 translateToKey.IsChecked = Context.Properties._KeyTriggerTranslate;
                 stackModeCb.SelectedIndex = stackModeCb.Items.SourceCollection.Cast<KeyValuePair<string, AnimationStackMode>>().Select((kvp, index) => new { kvp, index }).First(item => item.kvp.Value == Context.Properties.StackMode).index;
+                whileKeyHeldTerminate.IsChecked = Context.Properties._WhileKeyHeldTerminateRunning;
                 settingsset = true;
             }
         }
@@ -195,6 +196,8 @@ namespace Aurora.Settings.Layers
             triggerGridLayout.RowDefinitions[3].Height = new GridLength(AnimationLayerHandler.IsTriggerKeyBased(selectedItem) ? 28 : 0);
             // Only show the stack mode setting if the trigger mode is NOT "AlwaysOn"
             triggerGridLayout.RowDefinitions[4].Height = new GridLength(selectedItem == AnimationTriggerMode.AlwaysOn ? 0 : 28);
+            // Only show the force terminate setting if the trigger mode is key press or when key held (not released)
+            triggerGridLayout.RowDefinitions[5].Height = new GridLength(selectedItem == AnimationTriggerMode.OnKeyPress || selectedItem == AnimationTriggerMode.WhileKeyHeld ? 28 : 0);
 
             // Update the combobox
             UpdatePathCombobox();
@@ -235,6 +238,11 @@ namespace Aurora.Settings.Layers
             // Toggle the info text textblock and set the triggerGrid visibility to be the opposite
             triggerGridLayout.Visibility = infoText.Visibility;
             infoText.Visibility = infoText.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-        }        
+        }
+
+        private void whileKeyHeldTerminate_Checked(object sender, RoutedEventArgs e) {
+            if (CanSet)
+                Context.Properties._WhileKeyHeldTerminateRunning = (sender as CheckBox).IsChecked;
+        }
     }
 }

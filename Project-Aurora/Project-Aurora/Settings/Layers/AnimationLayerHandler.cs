@@ -68,6 +68,10 @@ namespace Aurora.Settings.Layers
         public bool KeyTriggerTranslate => Logic._KeyTriggerTranslate ?? _KeyTriggerTranslate ?? false;
         public bool? _KeyTriggerTranslate { get; set; }
 
+        [JsonIgnore]
+        public bool WhileKeyHeldTerminateRunning => Logic._WhileKeyHeldTerminateRunning ?? _WhileKeyHeldTerminateRunning ?? false;
+        public bool? _WhileKeyHeldTerminateRunning { get; set; }
+
         public AnimationLayerHandlerProperties() : base() { }
         public AnimationLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
@@ -84,6 +88,7 @@ namespace Aurora.Settings.Layers
             this._TriggerKeys = new Keybind[] { };
             this._TriggerAnyKey = false;
             this._KeyTriggerTranslate = false;
+            this._WhileKeyHeldTerminateRunning = false;
         }
     }
 
@@ -343,6 +348,11 @@ namespace Aurora.Settings.Layers
                     _pressedKeybinds.Remove(deactivatedKeybind);
                 }
             }
+
+            // If we are in "while key held" mode and the user wishes to immediately terminate animations for a key when that key
+            // is released (instead of letting the animation finish first), remove any animations assigned to the given key.
+            if ((Properties.TriggerMode == AnimationTriggerMode.OnKeyPress || Properties.TriggerMode == AnimationTriggerMode.WhileKeyHeld) && Properties.WhileKeyHeldTerminateRunning)
+                runningAnimations.RemoveAll(anim => anim.assignedKey == e.GetDeviceKey());
         }
 
         /// <summary>
