@@ -26,6 +26,8 @@ namespace Aurora.Settings.Layers
         private Window windowAnimationEditor = null;
         private static bool windowAnimationEditorOpen;
 
+        private Profiles.Application profile;
+        private bool? triggerPathItemsAreBoolean = null;
         private bool settingsset = false;
         private bool profileset = false;
 
@@ -80,14 +82,32 @@ namespace Aurora.Settings.Layers
         internal void SetProfile(Profiles.Application profile)
         {
             if (profile != null && !profileset) {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-                triggerPath.Items.Clear();
-                foreach (var item in var_types_numerical)
-                    triggerPath.Items.Add(item.Key);
+                this.profile = profile;
+                UpdatePathCombobox();
                 profileset = true;
             }
             settingsset = false;
             SetSettings();
+        }
+
+        private void UpdatePathCombobox() {
+            bool isTriggerBoolean = AnimationLayerHandler.IsTriggerBooleanValueBased(Context.Properties.TriggerMode);
+            // If the trigger items are currently all booleans, and the trigger is now boolean, don't re-populate the list (it will clear the user's selection).
+            // Same goes for if it already contains numeric items and we are now in a numeric mode.
+            if (triggerPathItemsAreBoolean.HasValue && triggerPathItemsAreBoolean == isTriggerBoolean)
+                return;
+            triggerPathItemsAreBoolean = isTriggerBoolean;
+
+            // Get a list of the parameters. If trigger is boolean mode, filters to only boolean values, else does numeric values
+            var parameters = profile.ParameterLookup?.Where(kvp => isTriggerBoolean
+                ? kvp.Value.Item1 == typeof(bool)
+                : TypeUtils.IsNumericType(kvp.Value.Item1)
+            );
+
+            // Add the items to the trigger path combobox
+            triggerPath.Items.Clear();
+            foreach (var item in parameters)
+                triggerPath.Items.Add(item.Key);
         }
 
         private void btnEditAnimation_Click(object sender, RoutedEventArgs e)
@@ -169,12 +189,15 @@ namespace Aurora.Settings.Layers
                 Context.Properties._TriggerMode = selectedItem;
 
             // Only show trigger path when one of the path-like modes is set
-            triggerGridLayout.RowDefinitions[1].Height = new GridLength(new[] { AnimationTriggerMode.OnHigh, AnimationTriggerMode.OnLow, AnimationTriggerMode.OnChange }.Contains(selectedItem) ? 28 : 0);
+            triggerGridLayout.RowDefinitions[1].Height = new GridLength(AnimationLayerHandler.IsTriggerNumericValueBased(selectedItem) || AnimationLayerHandler.IsTriggerBooleanValueBased(selectedItem) ? 28 : 0);
             // Only show tigger keys when one of the key-like modes is set
-            triggerGridLayout.RowDefinitions[2].Height = new GridLength(selectedItem == AnimationTriggerMode.OnKeyPress || selectedItem == AnimationTriggerMode.OnKeyRelease ? 128 : 0);
-            triggerGridLayout.RowDefinitions[3].Height = new GridLength(selectedItem == AnimationTriggerMode.OnKeyPress || selectedItem == AnimationTriggerMode.OnKeyRelease ? 28 : 0);
+            triggerGridLayout.RowDefinitions[2].Height = new GridLength(AnimationLayerHandler.IsTriggerKeyBased(selectedItem) ? 128 : 0);
+            triggerGridLayout.RowDefinitions[3].Height = new GridLength(AnimationLayerHandler.IsTriggerKeyBased(selectedItem) ? 28 : 0);
             // Only show the stack mode setting if the trigger mode is NOT "AlwaysOn"
             triggerGridLayout.RowDefinitions[4].Height = new GridLength(selectedItem == AnimationTriggerMode.AlwaysOn ? 0 : 28);
+
+            // Update the combobox
+            UpdatePathCombobox();
         }
 
         private void triggerPath_TextChanged(object sender, TextChangedEventArgs e)

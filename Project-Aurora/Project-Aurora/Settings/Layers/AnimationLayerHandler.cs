@@ -91,7 +91,8 @@ namespace Aurora.Settings.Layers
         private List<RunningAnimation> runningAnimations = new List<RunningAnimation>();
         private Stopwatch _animTimeStopwatch = new Stopwatch();
         private bool _alwaysOnHasPlayed = false; // A dedicated variable has to be used to make 'Always On' work with the repeat count since the logic has changed
-        private double _previousTriggerValue; // Used for tracking when a gamestate value changes
+        private double _previousTriggerDoubleValue; // Used for tracking when a numeric gamestate value changes
+        private bool _previousTriggerBoolValue; // Used for tracking when a boolean gamestate value changes
         private bool _awaitingTrigger; // Used to track when an animation should be triggered and hasn't been yet
         private PointF _awaitingOffset; // Used to track the desired offset for the next trigger (used for key related triggers)
         private HashSet<System.Windows.Forms.Keys> _pressedKeys = new HashSet<System.Windows.Forms.Keys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
@@ -195,7 +196,7 @@ namespace Aurora.Settings.Layers
                 return false; // Otherwise false if it has been played
 
             // Handling for key-based triggers
-            } else if (new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease }.Contains(Properties.TriggerMode)) {
+            } else if (IsTriggerKeyBased(Properties.TriggerMode)) {
                 // If there are keys on the trigger list that have been pressed/released, set the trigger to true
                 if (_awaitingTrigger) {
                     _awaitingTrigger = false;
@@ -203,17 +204,29 @@ namespace Aurora.Settings.Layers
                 }
                 return false;
 
-                // Handling for gamestate-change-based triggers
-            } else {
+            // Handling for numeric value change based triggers
+            } else if (IsTriggerNumericValueBased(Properties.TriggerMode)) {
                 // Check to see if a gamestate value change should trigger the animation
-                double resolvedTriggerValue = Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.TriggerPath);
+                double resolvedTriggerValue = GameStateUtils.TryGetDoubleFromState(gamestate, Properties.TriggerPath);
                 bool shouldTrigger = false;
                 switch (Properties.TriggerMode) {
-                    case AnimationTriggerMode.OnChange: shouldTrigger = resolvedTriggerValue != _previousTriggerValue; break;
-                    case AnimationTriggerMode.OnHigh: shouldTrigger = resolvedTriggerValue > _previousTriggerValue; break;
-                    case AnimationTriggerMode.OnLow: shouldTrigger = resolvedTriggerValue < _previousTriggerValue; break;
+                    case AnimationTriggerMode.OnChange: shouldTrigger = resolvedTriggerValue != _previousTriggerDoubleValue; break;
+                    case AnimationTriggerMode.OnHigh: shouldTrigger = resolvedTriggerValue > _previousTriggerDoubleValue; break;
+                    case AnimationTriggerMode.OnLow: shouldTrigger = resolvedTriggerValue < _previousTriggerDoubleValue; break;
                 }
-                _previousTriggerValue = resolvedTriggerValue;
+                _previousTriggerDoubleValue = resolvedTriggerValue;
+                return shouldTrigger;
+            
+            // Handling for boolean value based triggers
+            } else {
+                bool resolvedTriggerValue = GameStateUtils.TryGetBoolFromState(gamestate, Properties.TriggerPath);
+                bool shouldTrigger = false;
+                switch (Properties.TriggerMode) {
+                    case AnimationTriggerMode.OnTrue: shouldTrigger = resolvedTriggerValue && !_previousTriggerBoolValue; break;
+                    case AnimationTriggerMode.OnFalse: shouldTrigger = !resolvedTriggerValue && _previousTriggerBoolValue; break;
+                    case AnimationTriggerMode.WhileTrue: shouldTrigger = resolvedTriggerValue && runningAnimations.Count == 0; break;
+                }
+                _previousTriggerBoolValue = resolvedTriggerValue;
                 return shouldTrigger;
             }
         }
@@ -255,7 +268,7 @@ namespace Aurora.Settings.Layers
         /// </summary>
         private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
             // Skip handler if not waiting for a key-related trigger to save memory/CPU time
-            if (Properties.TriggerMode != AnimationTriggerMode.OnKeyRelease && Properties.TriggerMode != AnimationTriggerMode.OnKeyPress) return;
+            if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
             if (Properties.TriggerAnyKey) { // ANY-KEY-TRIGGERS MODE
                 // If the pressed key has not already been handled (i.e. it's not being held)
@@ -292,7 +305,7 @@ namespace Aurora.Settings.Layers
         /// </summary>
         private void InputEvents_KeyUp(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
             // Skip handler if not waiting for a key-related trigger to save memory/CPU time
-            if (Properties.TriggerMode != AnimationTriggerMode.OnKeyRelease && Properties.TriggerMode != AnimationTriggerMode.OnKeyPress) return;
+            if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
             if (Properties.TriggerAnyKey) { // ANY-KEY-TRIGGERS MODE
                 // Do a trigger if waiting for a 'release' event
@@ -318,6 +331,27 @@ namespace Aurora.Settings.Layers
                     _pressedKeybinds.Remove(deactivatedKeybind);
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns true if the given AnimationTrigger mode is a numeric gamestate value-related trigger (OnHigh, OnLow or OnChange)
+        /// </summary>
+        public static bool IsTriggerNumericValueBased(AnimationTriggerMode m) {
+            return new[] { AnimationTriggerMode.OnHigh, AnimationTriggerMode.OnLow, AnimationTriggerMode.OnChange }.Contains(m);
+        }
+
+        /// <summary>
+        /// Returns true if the given AnimationTrigger mode is a boolean gamestate value-related trigger (OnTrue, OnFalse or WhileTrue)
+        /// </summary>
+        public static bool IsTriggerBooleanValueBased(AnimationTriggerMode m) {
+            return new[] { AnimationTriggerMode.OnTrue, AnimationTriggerMode.OnFalse, AnimationTriggerMode.WhileTrue }.Contains(m);
+        }
+
+        /// <summary>
+        /// Returns true if the given AnimationTrigger mode is a key-related trigger (OnKeyPress or OnKeyRelease)
+        /// </summary>
+        public static bool IsTriggerKeyBased(AnimationTriggerMode m) {
+            return new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease }.Contains(m);
         }
 
         /// <summary>
@@ -350,6 +384,13 @@ namespace Aurora.Settings.Layers
         OnLow,
         [Description("On value change")]
         OnChange,
+
+        [Description("On boolean become true")]
+        OnTrue,
+        [Description("While boolean true")]
+        WhileTrue,
+        [Description("On boolean become false")]
+        OnFalse,
 
         [Description("On key pressed")]
         OnKeyPress,
