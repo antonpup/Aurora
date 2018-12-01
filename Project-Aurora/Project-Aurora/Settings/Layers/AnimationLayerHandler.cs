@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
 using Aurora.Utils;
@@ -94,8 +95,8 @@ namespace Aurora.Settings.Layers
         private double _previousTriggerDoubleValue; // Used for tracking when a numeric gamestate value changes
         private bool _previousTriggerBoolValue; // Used for tracking when a boolean gamestate value changes
         private bool _awaitingTrigger; // Used to track when an animation should be triggered and hasn't been yet
-        private PointF _awaitingOffset; // Used to track the desired offset for the next trigger (used for key related triggers)
-        private HashSet<System.Windows.Forms.Keys> _pressedKeys = new HashSet<System.Windows.Forms.Keys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
+        private DeviceKeys _awaitingKey; // Used to track the desired key for the next trigger
+        private HashSet<DeviceKeys> _pressedKeys = new HashSet<DeviceKeys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
         private HashSet<Keybind> _pressedKeybinds = new HashSet<Keybind>(); // A list of pressed keybinds... ^^
 
         public AnimationLayerHandler() {
@@ -202,6 +203,17 @@ namespace Aurora.Settings.Layers
                     _awaitingTrigger = false;
                     return true;
                 }
+
+                // If we are in "while held down" mode, check to see if any of the keys pressed do not currently
+                // have an animation with them as the assigned key. If not, create trigger it
+                if (Properties.TriggerMode == AnimationTriggerMode.WhileKeyHeld) {
+                    var key = _pressedKeys.FirstOrDefault(k => !runningAnimations.Any(a => a.assignedKey == k));
+                    if (key != default(DeviceKeys)) {
+                        _awaitingKey = key;
+                        return true;
+                    }
+                }
+
                 return false;
 
             // Handling for numeric value change based triggers
@@ -249,7 +261,7 @@ namespace Aurora.Settings.Layers
 
             // If a new animation has been started or an existing one restarted, and we are translating based on key press
             if (Properties.KeyTriggerTranslate && anim != null)
-                anim.offset = _awaitingOffset;
+                anim.assignedKey = _awaitingKey;
         }
 
         public override void SetApplication(Application profile) {
@@ -272,14 +284,14 @@ namespace Aurora.Settings.Layers
 
             if (Properties.TriggerAnyKey) { // ANY-KEY-TRIGGERS MODE
                 // If the pressed key has not already been handled (i.e. it's not being held)
-                if (!_pressedKeys.Contains(e.Key)) {
+                if (!_pressedKeys.Contains(e.GetDeviceKey())) {
                     // Do a trigger if waiting for a 'press' event
                     if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress) {
                         _awaitingTrigger = true;
-                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(e.GetDeviceKey()).Center;
+                        _awaitingKey = e.GetDeviceKey();
                     }
                     // Mark it as handled
-                    _pressedKeys.Add(e.Key);
+                    _pressedKeys.Add(e.GetDeviceKey());
                 }
 
 
@@ -293,7 +305,7 @@ namespace Aurora.Settings.Layers
                 if (activedKeybind != null) {
                     if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress) {
                         _awaitingTrigger = true;
-                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(e.GetDeviceKey()).Center;
+                        _awaitingKey = e.GetDeviceKey();
                     }
                     _pressedKeybinds.Add(activedKeybind);
                 }
@@ -311,22 +323,22 @@ namespace Aurora.Settings.Layers
                 // Do a trigger if waiting for a 'release' event
                 if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease) {
                     _awaitingTrigger = true;
-                    _awaitingOffset = Effects.GetBitmappingFromDeviceKey(e.GetDeviceKey()).Center;
+                    _awaitingKey = e.GetDeviceKey();
                 }
                 // Remove it from the pressed keys so it can be re-detected by the KeyDown event handler
-                _pressedKeys.Remove(e.Key);
+                _pressedKeys.Remove(e.GetDeviceKey());
 
             } else { //KEYBIND MODE
                 // Find if any currently pressed keybinds are now no longer pressed
                 Keybind deactivatedKeybind = _pressedKeybinds
-                .FirstOrDefault(kb => !kb.IsPressed());
+                    .FirstOrDefault(kb => !kb.IsPressed());
 
                 // If there is a keybind that is no longer pressed, remove it from the pressed list. Also, if we are waiting
                 // on a 'release', set the flag for doing a key trigger.
                 if (deactivatedKeybind != null) {
                     if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease) {
                         _awaitingTrigger = true;
-                        _awaitingOffset = Effects.GetBitmappingFromDeviceKey(e.GetDeviceKey()).Center;
+                        _awaitingKey = e.GetDeviceKey();
                     }
                     _pressedKeybinds.Remove(deactivatedKeybind);
                 }
@@ -351,7 +363,7 @@ namespace Aurora.Settings.Layers
         /// Returns true if the given AnimationTrigger mode is a key-related trigger (OnKeyPress or OnKeyRelease)
         /// </summary>
         public static bool IsTriggerKeyBased(AnimationTriggerMode m) {
-            return new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease }.Contains(m);
+            return new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease, AnimationTriggerMode.WhileKeyHeld }.Contains(m);
         }
 
         /// <summary>
@@ -361,7 +373,8 @@ namespace Aurora.Settings.Layers
         class RunningAnimation {
             public float currentTime = 0;
             public int playTimes = 0;
-            public PointF offset = PointF.Empty;
+            public DeviceKeys assignedKey = DeviceKeys.NONE;
+            public PointF offset => assignedKey == DeviceKeys.NONE ? PointF.Empty : Effects.GetBitmappingFromDeviceKey(assignedKey).Center;
 
             public RunningAnimation Reset() {
                 currentTime = 0;
@@ -387,15 +400,17 @@ namespace Aurora.Settings.Layers
 
         [Description("On boolean become true")]
         OnTrue,
-        [Description("While boolean true")]
-        WhileTrue,
         [Description("On boolean become false")]
         OnFalse,
+        [Description("While boolean true")]
+        WhileTrue,
 
         [Description("On key pressed")]
         OnKeyPress,
         [Description("On key released")]
-        OnKeyRelease
+        OnKeyRelease,
+        [Description("While key held")]
+        WhileKeyHeld
     }
 
     /// <summary>
