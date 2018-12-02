@@ -342,6 +342,17 @@ namespace Aurora.Devices.Logitech
             return this.isInitialized;
         }
 
+        private void SetZoneColor(byte deviceType, int zone, int redPercentage, int greenPercentage, int bluePercentage)
+        {
+            LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB | LogitechGSDK.LOGI_DEVICETYPE_MONOCHROME);
+
+            LogitechGSDK.LogiLedSetLightingForTargetZone(deviceType, zone, redPercentage, greenPercentage, bluePercentage);
+
+            LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB | LogitechGSDK.LOGI_DEVICETYPE_MONOCHROME);
+
+            LogitechGSDK.LogiLedSaveCurrentLighting();
+        }
+
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
@@ -497,11 +508,11 @@ namespace Aurora.Devices.Logitech
                                          .OrderByDescending(item => item.Count())
                                          .Select(item => new { Color = item.Key, Count = item.Count() })
                                          .First();
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 1, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
+                        SetZoneColor(0x0, 1, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
                     }
                     else
                     {
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 1, 0, 0, 0);
+                        SetZoneColor(0x0, 1, 0, 0, 0);
                     }
 
                     if (centerColor.Any())
@@ -509,11 +520,11 @@ namespace Aurora.Devices.Logitech
                         var mostUsed = centerColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                         .Select(item => new { Color = item.Key, Count = item.Count() })
                                         .First();
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 2, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
+                        SetZoneColor(0x0, 2, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
                     }
                     else
                     {
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 2, 0, 0, 0);
+                        SetZoneColor(0x0, 2, 0, 0, 0);
                     }
 
 
@@ -523,11 +534,11 @@ namespace Aurora.Devices.Logitech
                                            .OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First();
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 3, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
+                        SetZoneColor(0x0, 3, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
                     }
                     else
                     {
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 3, 0, 0, 0);
+                        SetZoneColor(0x0, 3, 0, 0, 0);
                     }
 
                     if (arrowColor.Any())
@@ -536,11 +547,11 @@ namespace Aurora.Devices.Logitech
                                            .OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First();
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 4, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
+                        SetZoneColor(0x0, 4, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
                     }
                     else
                     {
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 4, 0, 0, 0);
+                        SetZoneColor(0x0, 4, 0, 0, 0);
                     }
 
                     if (numpadColor.Any())
@@ -549,11 +560,11 @@ namespace Aurora.Devices.Logitech
                                            .OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First();
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 5, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
+                        SetZoneColor(0x0, 5, (mostUsed.Color.R / 255) * 100, (mostUsed.Color.G / 255) * 100, (mostUsed.Color.B / 255) * 100);
                     }
                     else
                     {
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(0x0, 5, 0, 0, 0);
+                        SetZoneColor(0x0, 5, 0, 0, 0);
                     }
                 }
 
