@@ -202,6 +202,9 @@ namespace LedCSharp
         public static extern bool LogiLedSetLightingForKeyWithKeyName(keyboardNames keyCode, int redPercentage, int greenPercentage, int bluePercentage);
 
         [DllImport("LogitechLed ", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool LogiLedSetLightingForTargetZone(byte deviceType, int zone, int redPercentage, int greenPercentage, int bluePercentage);
+
+        [DllImport("LogitechLed ", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSaveLightingForKey(keyboardNames keyName);
 
         [DllImport("LogitechLed ", CallingConvention = CallingConvention.Cdecl)]
