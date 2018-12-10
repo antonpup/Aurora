@@ -47,7 +47,8 @@ namespace Aurora.Profiles.Minecraft.Layers {
                 layer.Fill(Color.Black); // Hide any other layers behind this one
                 // Set all keys in use by any binding to be the no-conflict colour
                 foreach (var kb in ((GameState_Minecraft)gamestate).Game.KeyBindings)
-                    layer.Set(kb.AffectedKeys, Properties.PrimaryColor);
+                    if(kb!=null)
+                        layer.Set(kb.AffectedKeys, Properties.PrimaryColor);
 
                 // Override the keys for all conflicting keys
                 foreach (var kvp in CalculateConflicts((GameState_Minecraft)gamestate))
@@ -72,9 +73,13 @@ namespace Aurora.Profiles.Minecraft.Layers {
                 bool isOnlyModifierConflict = true;
 
                 foreach (var otherBind in state.Game.KeyBindings) { // Check against every other key binding
-                    if (bind != otherBind && otherBind.ConflictsWith(bind)) {
-                        hasConflict = true;
-                        isOnlyModifierConflict &= otherBind.ModifierConflictsWith(bind);
+                    if (bind != null && otherBind != null)
+                    {
+                        if (bind != otherBind && otherBind.ConflictsWith(bind))
+                        {
+                            hasConflict = true;
+                            isOnlyModifierConflict &= otherBind.ModifierConflictsWith(bind);
+                        }
                     }
                 }
                 // End replicated section
