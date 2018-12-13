@@ -160,6 +160,7 @@ namespace Aurora.Devices.Logitech
 
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
+        private VariableRegistry default_registry = null;
 
         //Keyboard stuff
         private Logitech_keyboardBitmapKeys[] allKeys = Enum.GetValues(typeof(Logitech_keyboardBitmapKeys)).Cast<Logitech_keyboardBitmapKeys>().ToArray();
@@ -194,6 +195,16 @@ namespace Aurora.Devices.Logitech
 
                                 Global.Configuration.logitech_first_time = false;
                                 Settings.ConfigManager.Save(Global.Configuration);
+                            }
+
+                            if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_set_default"))
+                            {
+                                Color default_color = Global.Configuration.VarRegistry.GetVariable<Aurora.Utils.RealColor>($"{devicename}_default_color").GetDrawingColor();
+                                double alpha_amt = (default_color.A / 255.0);
+                                int red_amt = (int)(((default_color.R * alpha_amt) / 255.0) * 100.0);
+                                int green_amt = (int)(((default_color.G * alpha_amt) / 255.0) * 100.0);
+                                int blue_amt = (int)(((default_color.B * alpha_amt) / 255.0) * 100.0);
+                                LogitechGSDK.LogiLedSetLighting(red_amt, green_amt, blue_amt);
                             }
 
                             isInitialized = true;
@@ -1148,7 +1159,13 @@ namespace Aurora.Devices.Logitech
 
         public VariableRegistry GetRegisteredVariables()
         {
-            return new VariableRegistry();
+            if (default_registry == null)
+            {
+                default_registry = new VariableRegistry();
+                default_registry.Register($"{devicename}_set_default", false, "Set Default Color");
+                default_registry.Register($"{devicename}_default_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), "Default Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
+            }
+            return default_registry;
         }
     }
 }
