@@ -48,8 +48,9 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f)
+        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
         {
+            // Offset has no effect on this type of animation frame
             if (_brush == null || _invalidated)
             {
                 _brush = new SolidBrush(_color);
