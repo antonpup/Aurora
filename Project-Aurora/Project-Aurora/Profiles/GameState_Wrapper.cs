@@ -207,6 +207,21 @@ namespace Aurora.Profiles
     {
         public Color peripheral;
         public Color logo;
+        public Color mousepad1;
+        public Color mousepad2;
+        public Color mousepad3;
+        public Color mousepad4;
+        public Color mousepad5;
+        public Color mousepad6;
+        public Color mousepad7;
+        public Color mousepad8;
+        public Color mousepad9;
+        public Color mousepad10;
+        public Color mousepad11;
+        public Color mousepad12;
+        public Color mousepad13;
+        public Color mousepad14;
+        public Color mousepad15;
         public Color badge;
         public Color G1;
         public Color G2;
@@ -234,6 +249,21 @@ namespace Aurora.Profiles
         {
             peripheral = Utils.ColorUtils.GetColorFromInt(GetInt("peripheral"));
             logo = Utils.ColorUtils.GetColorFromInt( GetInt("logo"));
+            mousepad1 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad0"));
+            mousepad2 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad1"));
+            mousepad3 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad2"));
+            mousepad4 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad3"));
+            mousepad5 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad4"));
+            mousepad6 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad5"));
+            mousepad7 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad6"));
+            mousepad8 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad7"));
+            mousepad9 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad8"));
+            mousepad10 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad9"));
+            mousepad11 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad10"));
+            mousepad12 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad11"));
+            mousepad13 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad12"));
+            mousepad14 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad13"));
+            mousepad15 = Utils.ColorUtils.GetColorFromInt(GetInt("mousepad14"));
             badge = Utils.ColorUtils.GetColorFromInt( GetInt("badge"));
             G1 = Utils.ColorUtils.GetColorFromInt( GetInt("G1"));
             G2 = Utils.ColorUtils.GetColorFromInt( GetInt("G2"));

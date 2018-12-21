@@ -405,9 +405,9 @@ namespace Aurora.Settings
 
         private void excluded_add_Click(object sender, RoutedEventArgs e)
         {
-            Window_ProcessSelection dialog = new Window_ProcessSelection();
-            if (dialog.ShowDialog() == true && !String.IsNullOrWhiteSpace(dialog.ChosenExecutable)) // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
-                Global.Configuration.excluded_programs.Add(dialog.ChosenExecutable);
+            Window_ProcessSelection dialog = new Window_ProcessSelection { ButtonLabel = "Exclude Process" };
+            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutableName)) // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
+                Global.Configuration.excluded_programs.Add(dialog.ChosenExecutableName);
 
             load_excluded_listbox();
         }

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
+using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
 using System.ComponentModel;
 
 namespace Aurora.Devices.Razer
@@ -20,6 +21,7 @@ namespace Aurora.Devices.Razer
         private bool keyboard_updated = false;
         private bool peripheral_updated = false;
         private KeyboardCustom grid = KeyboardCustom.Create();
+        private MousepadCustom MousepadGrid = MousepadCustom.Create();
         //private bool bladeLayout = true;
 
         IKeyboard keyboard = null;
@@ -186,6 +188,81 @@ namespace Aurora.Devices.Razer
                     {
                         SendColorToPeripheral(key.Value, forced);
                     }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT1)
+                    {
+                      
+                        SendColorToMousepad(14,key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT2)
+                    {
+
+                        SendColorToMousepad(13, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT3)
+                    {
+
+                        SendColorToMousepad(12, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT4)
+                    {
+
+                        SendColorToMousepad(11, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT5)
+                    {
+
+                        SendColorToMousepad(10, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT6)
+                    {
+
+                        SendColorToMousepad(9, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT7)
+                    {
+
+                        SendColorToMousepad(8, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT8)
+                    {
+
+                        SendColorToMousepad(7, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT9)
+                    {
+
+                        SendColorToMousepad(6, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT10)
+                    {
+
+                        SendColorToMousepad(5, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT11)
+                    {
+
+                        SendColorToMousepad(4, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT12)
+                    {
+
+                        SendColorToMousepad(3, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT13)
+                    {
+
+                        SendColorToMousepad(2, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT14)
+                    {
+
+                        SendColorToMousepad(1, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT15)
+                    {
+
+                        SendColorToMousepad(0, key.Value);
+                    }
                     else if ((coord = GetKeyCoord(key.Key)) != null)
                     {
                         SetOneKey(coord, key.Value);
@@ -252,6 +329,27 @@ namespace Aurora.Devices.Razer
             }
         }
 
+        private void SendColorToMousepad(int index, System.Drawing.Color color)
+        {
+            if (Global.Configuration.allow_peripheral_devices)
+            {
+                if (mousepad != null && !Global.Configuration.devices_disable_mouse)
+                {
+                    MousepadGrid[index] = new Color(color.R, color.G, color.B);
+                    mousepad.SetCustom(MousepadGrid);
+                }
+                previous_peripheral_Color = color;
+                peripheral_updated = true;
+            }
+            else
+            {
+                if (peripheral_updated)
+                {
+                    peripheral_updated = false;
+                }
+            }
+        }
+
         private void SendColorToPeripheral(System.Drawing.Color color, bool forced = false)
         {
             if ((!previous_peripheral_Color.Equals(color) || forced))
@@ -261,8 +359,8 @@ namespace Aurora.Devices.Razer
                     if (mouse != null && !Global.Configuration.devices_disable_mouse)
                         mouse.SetAll(new Color(color.R, color.G, color.B));
 
-                    if (mousepad != null && !Global.Configuration.devices_disable_mouse)
-                        mousepad.SetAll(new Color(color.R, color.G, color.B));
+                    //if (mousepad != null && !Global.Configuration.devices_disable_mouse)
+                     //   mousepad.SetAll(new Color(color.R, color.G, color.B));
 
                     if (headset != null && !Global.Configuration.devices_disable_headset)
                         headset.SetAll(new Color(color.R, color.G, color.B));

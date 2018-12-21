@@ -141,7 +141,6 @@ If you don't see some of these devices in the menu, select a similar one and it 
 ### Roccat
 #### Keyboards
 * Ryos MK FX
-* Vulkan 100 & 120
 #### Mice
 * Kone Pure & SE
 

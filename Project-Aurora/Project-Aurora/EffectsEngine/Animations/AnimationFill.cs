@@ -14,14 +14,15 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f)
+        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
         {
+            // Offset has no effect on this. I think.
             if (_brush == null || _invalidated)
             {
                 _brush = new SolidBrush(_color);
                 _invalidated = false;
             }
-
+            
             g.FillRectangle(_brush, g.VisibleClipBounds);
         }
 

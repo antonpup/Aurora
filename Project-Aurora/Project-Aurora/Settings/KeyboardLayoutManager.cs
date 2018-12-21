@@ -677,6 +677,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
             else if (keyboard_preference == PreferredKeyboard.GenericLaptopNumpad)
                 layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
+            else if (keyboard_preference == PreferredKeyboard.Drevo_BladeMaster)
+                layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else
             {
                 LoadNone();
@@ -745,6 +747,9 @@ namespace Aurora.Settings
                 {
                     case PreferredMouse.Generic_Peripheral:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
+                        break;
+                    case PreferredMouse.Generic_Mousepad:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
                         break;
                     case PreferredMouse.Logitech_G900:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
@@ -874,6 +879,21 @@ namespace Aurora.Settings
             keytext.Remove(DeviceKeys.RIGHT_WINDOWS);
             keytext.Remove(DeviceKeys.RIGHT_CONTROL);
             keytext.Remove(DeviceKeys.RIGHT_SHIFT);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT1);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT2);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT3);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT4);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT5);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT6);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT7);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT8);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT9);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT10);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT11);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT12);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT13);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT14);
+            keytext.Remove(DeviceKeys.MOUSEPADLIGHT15);
 
             KeyboardLayoutUpdated?.Invoke(this);
         }
