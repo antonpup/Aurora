@@ -634,7 +634,7 @@ namespace Aurora
         private void AddProfile_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
-            Window_ProcessSelection dialog = new Window_ProcessSelection { CheckCustomPathExists = true };
+            Window_ProcessSelection dialog = new Window_ProcessSelection { CheckCustomPathExists = true, ButtonLabel = "Add Profile", Title ="Add Profile" };
             if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutablePath)) { // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
 
                 string filename = Path.GetFileName(dialog.ChosenExecutablePath.ToLowerInvariant());

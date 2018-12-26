@@ -43,7 +43,7 @@ namespace Aurora.Settings.Layers {
         public void SetSettings() {
             if (DataContext is ComparisonLayerHandler && !settingsset) {
                 operand1Path.Text = Context.Properties._Operand1Path;
-                @operator.SelectedItem = @operator.Items.SourceCollection.Cast<KeyValuePair<string, ComparisonOperator>>().Where(kvp => kvp.Value == Context.Properties.Operator);
+                @operator.SelectedIndex = @operator.Items.SourceCollection.Cast<KeyValuePair<string, ComparisonOperator>>().Select((kvp, index) => new { kvp, index }).First(item => item.kvp.Value == Context.Properties.Operator).index;
                 operand2Path.Text = Context.Properties._Operand2Path;
                 trueColor.SelectedColor = ColorUtils.DrawingColorToMediaColor(Context.Properties._PrimaryColor ?? System.Drawing.Color.Empty);
                 falseColor.SelectedColor = ColorUtils.DrawingColorToMediaColor(Context.Properties._SecondaryColor ?? System.Drawing.Color.Empty);

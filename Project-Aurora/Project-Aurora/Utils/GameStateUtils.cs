@@ -177,6 +177,37 @@ namespace Aurora.Utils
             }
         }
 
+        /// <summary>
+        /// Attempts to get a double value from the game state with the given path.
+        /// Returns 0 if an error occurs
+        /// </summary>
+        public static double TryGetDoubleFromState(IGameState state, string path) {
+            if (!double.TryParse(path, out double value) && !string.IsNullOrWhiteSpace(path)) {
+                try {
+                    value = Convert.ToDouble(RetrieveGameStateParameter(state, path));
+                } catch (Exception exc) {
+                    value = 0;
+                    if (Global.isDebug)
+                        throw exc;
+                }
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Attempts to get a boolean value from the game state with the given path.
+        /// Returns false if an error occurs.
+        /// </summary>
+        public static bool TryGetBoolFromState(IGameState state, string path) {
+            bool value = false;
+            if (!string.IsNullOrWhiteSpace(path)) {
+                try {
+                    value = Convert.ToBoolean(RetrieveGameStateParameter(state, path));
+                } catch { }
+            }
+            return value;
+        }
+
 
         /*public static object RetrieveGameStateParameter(GameState state, string parameter_path, Type type = null)
         {
