@@ -135,6 +135,8 @@ namespace LedCSharp
         public const int LOGI_DEVICETYPE_MONOCHROME = (1 << LOGI_DEVICETYPE_MONOCHROME_ORD);
         public const int LOGI_DEVICETYPE_RGB = (1 << LOGI_DEVICETYPE_RGB_ORD);
         public const int LOGI_DEVICETYPE_PERKEY_RGB = (1 << LOGI_DEVICETYPE_PERKEY_RGB_ORD);
+        public const int LOGI_DEVICETYPE_ALL = (LOGI_DEVICETYPE_MONOCHROME | LOGI_DEVICETYPE_RGB | LOGI_DEVICETYPE_PERKEY_RGB);
+
         public const int LOGI_LED_BITMAP_WIDTH = 21;
         public const int LOGI_LED_BITMAP_HEIGHT = 6;
         public const int LOGI_LED_BITMAP_BYTES_PER_KEY = 4;
