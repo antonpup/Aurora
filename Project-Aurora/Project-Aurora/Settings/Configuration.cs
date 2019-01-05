@@ -224,8 +224,9 @@ namespace Aurora.Settings
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
 
+        //Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
-        SoundBlasterX_Vanguard_K08 = 1000,
+        SoundBlasterX_Vanguard_K08 = 1100,
     }
 
     public enum PreferredKeyboardLocalization
