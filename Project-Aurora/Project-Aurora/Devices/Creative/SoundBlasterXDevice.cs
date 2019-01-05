@@ -62,7 +62,7 @@ namespace Aurora.Devices.Creative
 
                     if (kbdIdx < devicesArr.Length)
                     {
-                        SBAuroraReactive.LEDManager newKeyboard = null;
+                        LEDManager newKeyboard = null;
                         try
                         {
                             newKeyboard = new LEDManager();
@@ -99,7 +99,7 @@ namespace Aurora.Devices.Creative
 
                     if (moosIdx < devicesArr.Length)
                     {
-                        SBAuroraReactive.LEDManager newMouse = null;
+                        LEDManager newMouse = null;
                         try
                         {
                             newMouse = new LEDManager();
@@ -138,6 +138,18 @@ namespace Aurora.Devices.Creative
             {
                 if (sbMouse != null)
                 {
+                    if (sbMouseSettings != null && sbMouseSettings.payloadData.HasValue && sbMouseSettings.payloadData.Value.opaqueSize > 0)
+                    {
+                        try
+                        {
+                            sbMouseSettings.payloadData = sbMouse.LedPayloadCleanup(sbMouseSettings.payloadData.Value, sbMouseInfo.totalNumLeds);
+                        }
+                        catch (Exception exc)
+                        {
+                            Global.logger.Error("There was an error freeing " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
+                        }
+                    }
+                    sbMouseSettings = null;
                     try
                     {
                         sbMouse.CloseDevice();
@@ -159,6 +171,18 @@ namespace Aurora.Devices.Creative
                 }
                 if (sbKeyboard != null)
                 {
+                    if (sbKeyboardSettings != null && sbKeyboardSettings.payloadData.HasValue && sbKeyboardSettings.payloadData.Value.opaqueSize > 0)
+                    {
+                        try
+                        {
+                            sbKeyboardSettings.payloadData = sbKeyboard.LedPayloadCleanup(sbKeyboardSettings.payloadData.Value, sbKeyboardSettings.payloadData.Value.opaqueSize);
+                        }
+                        catch (Exception exc)
+                        {
+                            Global.logger.Error("There was an error freeing " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
+                        }
+                    }
+                    sbKeyboardSettings = null;
                     try
                     {
                         sbKeyboard.CloseDevice();
@@ -231,6 +255,17 @@ namespace Aurora.Devices.Creative
         {
             if (sbKeyboard != null)
             {
+                if (sbKeyboardSettings != null && sbKeyboardSettings.payloadData.HasValue && sbKeyboardSettings.payloadData.Value.opaqueSize > 0)
+                {
+                    try
+                    {
+                        sbKeyboardSettings.payloadData = sbKeyboard.LedPayloadCleanup(sbKeyboardSettings.payloadData.Value, sbKeyboardSettings.payloadData.Value.opaqueSize);
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.Error("There was an error freeing " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
+                    }
+                }
                 try
                 {
                     sbKeyboard.SetLedSettings(null);
@@ -242,6 +277,17 @@ namespace Aurora.Devices.Creative
             }
             if (sbMouse != null)
             {
+                if (sbMouseSettings != null && sbMouseSettings.payloadData.HasValue && sbMouseSettings.payloadData.Value.opaqueSize > 0)
+                {
+                    try
+                    {
+                        sbMouseSettings.payloadData = sbMouse.LedPayloadCleanup(sbMouseSettings.payloadData.Value, sbMouseInfo.totalNumLeds);
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.Error("There was an error freeing " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
+                    }
+                }
                 try
                 {
                     sbMouse.SetLedSettings(null);
@@ -275,11 +321,7 @@ namespace Aurora.Devices.Creative
             if (sbKeyboard != null)
                 kbIndices = new Dictionary<Color, List<Keyboard_LEDIndex>>();
 
-            uint maxMouseLength = 0;
-            Dictionary<Color, List<Mouse_LEDIndex>> mouseIndices = null;
-            if (mouseIndices != null)
-                mouseIndices = new Dictionary<Color, List<Mouse_LEDIndex>>();
-
+            LedColour[] mouseColors = null;
             foreach (KeyValuePair<DeviceKeys, Color> kv in keyColors)
             {
                 if (e.Cancel) return false;
@@ -298,18 +340,18 @@ namespace Aurora.Devices.Creative
                             maxKbLength = (uint)list.Count;
                     }
                 }
-                if (mouseIndices != null)
+                if (sbMouse != null)
                 {
                     int moosIdx = GetMouseMappingIndex(kv.Key);
                     if (moosIdx >= 0 && moosIdx <= MouseMapping.Length)
                     {
-                        if (!mouseIndices.ContainsKey(kv.Value))
-                            mouseIndices[kv.Value] = new List<Mouse_LEDIndex>(1);
+                        if (mouseColors == null)
+                            mouseColors = new LedColour[MouseMapping.Length];
 
-                        var list = mouseIndices[kv.Value];
-                        list.Add(MouseMapping[moosIdx].Key);
-                        if (list.Count > maxMouseLength)
-                            maxMouseLength = (uint)list.Count;
+                        mouseColors[moosIdx].a = kv.Value.A;
+                        mouseColors[moosIdx].r = kv.Value.R;
+                        mouseColors[moosIdx].g = kv.Value.G;
+                        mouseColors[moosIdx].b = kv.Value.B;
                     }
                 }
             }
@@ -342,35 +384,6 @@ namespace Aurora.Devices.Creative
                     currGroup++;
                 }
                 kbIndices = null;
-            }
-            uint numMouseGroups = 0;
-            uint[] mouseGroupsArr = null;
-            LedPattern[] mousePatterns = null;
-            LedColour[] mouseColors = null;
-            if (mouseIndices != null)
-            {
-                numMouseGroups = (uint)mouseIndices.Count;
-                mouseGroupsArr = new uint[numMouseGroups * (maxMouseLength + 1)];
-                mousePatterns = new LedPattern[numMouseGroups];
-                mouseColors = new LedColour[numMouseGroups];
-                uint currGroup = 0;
-                foreach (var kv in mouseIndices)
-                {
-                    if (e.Cancel) return false;
-
-                    mousePatterns[currGroup] = LedPattern.Static;
-                    mouseColors[currGroup].a = kv.Key.A;
-                    mouseColors[currGroup].r = kv.Key.R;
-                    mouseColors[currGroup].g = kv.Key.G;
-                    mouseColors[currGroup].b = kv.Key.B;
-                    uint i = currGroup * (maxMouseLength + 1);
-                    mouseGroupsArr[i++] = (uint)kv.Value.Count;
-                    foreach (Mouse_LEDIndex idx in kv.Value)
-                        mouseGroupsArr[i++] = (uint)idx;
-
-                    currGroup++;
-                }
-                mouseIndices = null;
             }
 
             lock (action_lock)
@@ -406,32 +419,64 @@ namespace Aurora.Devices.Creative
                 }
 
                 if (e.Cancel) return false;
-                if (sbMouse != null && numMouseGroups > 0)
+                if (sbMouse != null && mouseColors != null)
                 {
-                    try
+                    if (sbMouseSettings == null)
                     {
-                        if (sbMouseSettings == null)
+                        sbMouseSettings = new LedSettings();
+                        sbMouseSettings.persistentInDevice = false;
+                        sbMouseSettings.globalPatternMode = false;
+                        sbMouseSettings.pattern = LedPattern.Static;
+                        sbMouseSettings.payloadData = new LedPayloadData();
+                    }
+
+                    if (sbMouseSettings.payloadData.Value.opaqueSize == 0)
+                    {
+                        var mousePatterns = new LedPattern[mouseColors.Length];
+                        var mouseGroups = new uint[MouseMapping.Length*2];
+                        for (int i = 0; i < MouseMapping.Length; i++)
                         {
-                            sbMouseSettings = new LedSettings();
-                            sbMouseSettings.persistentInDevice = false;
-                            sbMouseSettings.globalPatternMode = false;
-                            sbMouseSettings.pattern = LedPattern.Static;
-                            sbMouseSettings.payloadData = new LedPayloadData();
+                            mouseGroups[(i*2)+0] = 1;                           //1 LED in group
+                            mouseGroups[(i*2)+1] = (uint)MouseMapping[i].Key;   //Which LED it is
+                            mousePatterns[i] = LedPattern.Static;               //LED has a host-controlled static color
                         }
 
-                        sbMouseSettings.payloadData = sbMouse.LedPayloadInitialize(sbMouseSettings.payloadData.Value, numMouseGroups, maxMouseLength, 1);
-                        sbMouseSettings.payloadData = sbMouse.LedPayloadFillupAll(sbMouseSettings.payloadData.Value, numMouseGroups, mousePatterns, maxMouseLength+1, mouseGroupsArr, 1, 1, mouseColors);
+                        try
+                        {
+                            sbMouseSettings.payloadData = sbMouse.LedPayloadInitialize(sbMouseSettings.payloadData.Value, sbMouseInfo.totalNumLeds, 1, 1);
+                            sbMouseSettings.payloadData = sbMouse.LedPayloadFillupAll(sbMouseSettings.payloadData.Value, (uint)mouseColors.Length, mousePatterns, 2, mouseGroups, 1, 1, mouseColors);
+                        }
+                        catch (Exception exc)
+                        {
+                            Global.logger.Error("Failed to setup data for " + sbMouseInfo.friendlyName + ": " + exc.ToString());
+                            if (sbMouseSettings.payloadData.Value.opaqueSize > 0)
+                                sbMouseSettings.payloadData = sbMouse.LedPayloadCleanup(sbMouseSettings.payloadData.Value, sbMouseInfo.totalNumLeds);
+
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            for (int i=0; i<mouseColors.Length; i++)
+                                sbMouseSettings.payloadData = sbMouse.LedPayloadFillupLedColour(sbMouseSettings.payloadData.Value, (uint)i, 1, mouseColors[i], false);
+                        }
+                        catch (Exception exc)
+                        {
+                            Global.logger.Error("Failed to fill color data for " + sbMouseInfo.friendlyName + ": " + exc.ToString());
+                            return false;
+                        }
+                    }
+
+                    try
+                    {
                         sbMouse.SetLedSettings(sbMouseSettings);
                     }
                     catch (Exception exc)
                     {
                         Global.logger.Error("Failed to Update Device " + sbMouseInfo.friendlyName + ": " + exc.ToString());
                         return false;
-                    }
-                    finally
-                    {
-                        if (sbMouseSettings != null && sbMouseSettings.payloadData.HasValue && sbMouseSettings.payloadData.Value.opaqueSize > 0)
-                            sbMouseSettings.payloadData = sbMouse.LedPayloadCleanup(sbMouseSettings.payloadData.Value, numMouseGroups);
                     }
                 }
             }
