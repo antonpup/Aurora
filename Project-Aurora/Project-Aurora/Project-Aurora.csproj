@@ -371,6 +371,7 @@
     </Compile>
     <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
+    <Compile Include="Devices\Creative\SoundBlasterXDevice.cs" />
     <Compile Include="Devices\Dualshock4\Dualshock4Device.cs" />
     <Compile Include="Devices\Dualshock4\DS4InstallInstructions.xaml.cs">
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
@@ -2067,6 +2068,11 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
+      <Project>{053a704b-5c79-4cde-b1fc-b952051acaa0}</Project>
+      <Name>SBAuroraReactive</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj">
       <Project>{fea699ae-db83-43dc-ab85-99f2e90c328f}</Project>
       <Name>Wooting.NET</Name>

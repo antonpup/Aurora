@@ -223,6 +223,9 @@ namespace Aurora.Settings
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
+
+        [Description("SoundBlasterX VanguardK08")]
+        SoundBlasterX_Vanguard_K08 = 1000,
     }
 
     public enum PreferredKeyboardLocalization
