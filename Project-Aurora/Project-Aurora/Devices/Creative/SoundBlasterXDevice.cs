@@ -653,19 +653,19 @@ namespace Aurora.Devices.Creative
         }
 
         public static readonly KeyValuePair<Mouse_LEDIndex, DeviceKeys>[] MouseMapping = {
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED0, DeviceKeys.ADDITIONALLIGHT1),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED1, DeviceKeys.ADDITIONALLIGHT2),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED2, DeviceKeys.ADDITIONALLIGHT3),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED3, DeviceKeys.ADDITIONALLIGHT4),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED4, DeviceKeys.ADDITIONALLIGHT5),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED5, DeviceKeys.ADDITIONALLIGHT6),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED6, DeviceKeys.ADDITIONALLIGHT7),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED7, DeviceKeys.ADDITIONALLIGHT8),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED8, DeviceKeys.ADDITIONALLIGHT9),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED9, DeviceKeys.ADDITIONALLIGHT10),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED10, DeviceKeys.Peripheral_FrontLight),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED0, DeviceKeys.MOUSEPADLIGHT1),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED1, DeviceKeys.MOUSEPADLIGHT2),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED2, DeviceKeys.MOUSEPADLIGHT3),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED3, DeviceKeys.MOUSEPADLIGHT4),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED4, DeviceKeys.MOUSEPADLIGHT5),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED5, DeviceKeys.MOUSEPADLIGHT6),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED6, DeviceKeys.MOUSEPADLIGHT7),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED7, DeviceKeys.MOUSEPADLIGHT8),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED8, DeviceKeys.MOUSEPADLIGHT9),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED9, DeviceKeys.MOUSEPADLIGHT10),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED10, DeviceKeys.MOUSEPADLIGHT11),
             new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.Logo, DeviceKeys.Peripheral_Logo),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.Wheel, DeviceKeys.Peripheral_ScrollWheel),
+            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.Wheel, DeviceKeys.Peripheral_ScrollWheel)
         };
 
         public static int GetMouseMappingIndex(DeviceKeys devKey)
