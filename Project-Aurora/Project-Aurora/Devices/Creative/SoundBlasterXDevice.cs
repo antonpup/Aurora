@@ -328,14 +328,14 @@ namespace Aurora.Devices.Creative
 
                 if (kbIndices != null)
                 {
-                    int kbIdx = GetKeyboardMappingIndex(kv.Key);
-                    if (kbIdx >= 0 && kbIdx < KeyboardMapping.Length)
+                    var kbLedIdx = GetKeyboardMappingLedIndex(kv.Key);
+                    if (kbLedIdx != Keyboard_LEDIndex.NotApplicable)
                     {
                         if (!kbIndices.ContainsKey(kv.Value))
                             kbIndices[kv.Value] = new List<Keyboard_LEDIndex>(1);
 
                         var list = kbIndices[kv.Value];
-                        list.Add(KeyboardMapping[kbIdx].Key);
+                        list.Add(kbLedIdx);
                         if (list.Count > maxKbLength)
                             maxKbLength = (uint)list.Count;
                     }
@@ -516,8 +516,7 @@ namespace Aurora.Devices.Creative
             return new VariableRegistry();
         }
 
-        //TODO: make these for the nordic and german keyboard versions too
-        public static KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping = {
+        static KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping_All = {
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Esc, DeviceKeys.ESC),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F1, DeviceKeys.F1),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F2, DeviceKeys.F2),
@@ -560,7 +559,7 @@ namespace Aurora.Devices.Creative
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.P, DeviceKeys.P),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.OpenBracket, DeviceKeys.OPEN_BRACKET),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.ClosedBracket, DeviceKeys.CLOSE_BRACKET),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.BackSlash, DeviceKeys.BACKSLASH),
+            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.BackSlash, DeviceKeys.BACKSLASH),         //Only on US
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.M3, DeviceKeys.G3),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.CapsLock, DeviceKeys.CAPS_LOCK),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.A, DeviceKeys.A),
@@ -574,9 +573,11 @@ namespace Aurora.Devices.Creative
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.L, DeviceKeys.L),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Semicolon, DeviceKeys.SEMICOLON),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Apostrophe, DeviceKeys.APOSTROPHE),
+            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.NonUS57, DeviceKeys.HASHTAG),             //Only on European
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Enter, DeviceKeys.ENTER),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.M4, DeviceKeys.G4),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.LeftShift, DeviceKeys.LEFT_SHIFT),
+            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.NonUS61, DeviceKeys.BACKSLASH_UK),        //Only on European
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Z, DeviceKeys.Z),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.X, DeviceKeys.X),
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.C, DeviceKeys.C),
@@ -630,17 +631,28 @@ namespace Aurora.Devices.Creative
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Logo, DeviceKeys.LOGO)
         };
 
-        public static int GetKeyboardMappingIndex(DeviceKeys devKey)
-        {
-            int i;
-            for (i=0; i<KeyboardMapping.Length; i++)
-                if (KeyboardMapping[i].Value.Equals(devKey))
-                    break;
+        public static readonly KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping_US;
+        public static readonly KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping_European;
 
-            return i;
+        static SoundBlasterXDevice()
+        {
+            KeyboardMapping_US = KeyboardMapping_All.Where(x => (x.Key != Keyboard_LEDIndex.NonUS57 && x.Key != Keyboard_LEDIndex.NonUS61)).ToArray();
+            KeyboardMapping_European = KeyboardMapping_All.Where(x => (x.Key != Keyboard_LEDIndex.BackSlash)).ToArray();
         }
 
-        public static KeyValuePair<Mouse_LEDIndex, DeviceKeys>[] MouseMapping = {
+        public Keyboard_LEDIndex GetKeyboardMappingLedIndex(DeviceKeys devKey)
+        {
+            var mapping = sbKeyboardInfo.deviceId.Equals(EnumeratedDevice.SoundBlasterXVanguardK08_USEnglish) ? KeyboardMapping_US : KeyboardMapping_European;
+            for (int i=0; i<mapping.Length; i++)
+            {
+                if (mapping[i].Value.Equals(devKey))
+                    return mapping[i].Key;
+            }
+
+            return Keyboard_LEDIndex.NotApplicable;
+        }
+
+        public static readonly KeyValuePair<Mouse_LEDIndex, DeviceKeys>[] MouseMapping = {
             new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED0, DeviceKeys.ADDITIONALLIGHT1),
             new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED1, DeviceKeys.ADDITIONALLIGHT2),
             new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED2, DeviceKeys.ADDITIONALLIGHT3),
