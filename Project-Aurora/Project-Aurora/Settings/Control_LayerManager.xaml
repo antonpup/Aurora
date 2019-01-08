@@ -17,18 +17,29 @@
         <Border Background="#54A8A8A8" CornerRadius="8" VerticalAlignment="Top" Height="25">
             <TextBlock TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="10,3,10,0"/>
         </Border>
-        <Button x:Name="btnAddLayer" Margin="0,30,78,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="add_layer_button_Click" ToolTip="Add a new layer" Height="24">
-            <DockPanel Margin="2,0">
-                <Image Source="/Aurora;component/Resources/Layers_Add.png" Width="18" Height="18"/>
-                <TextBlock>Add</TextBlock>
-            </DockPanel>
-        </Button>
-        <Button x:Name="btnRemoveLayer" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,30,5,0" Click="btnRemoveLayer_Click" IsEnabled="False" ToolTip="Remove selected layer" Height="24">
-            <DockPanel Margin="2,0">
-                <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" />
-                <TextBlock>Remove</TextBlock>
-            </DockPanel>
-        </Button>
+        <StackPanel Orientation="Horizontal" Margin="0,30" VerticalAlignment="Top" HorizontalAlignment="Right" Height="24">
+            <Button x:Name="btnAddLayer" Click="add_layer_button_Click" ToolTip="Add a new layer" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Layers_Add.png" Width="18" Height="18"/>
+                    <TextBlock>Add</TextBlock>
+                </DockPanel>
+            </Button>
+            <Button x:Name="btnCopyLayer" ToolTip="Copy the selected layer (Ctrl + C)" Click="btnCopyLayer_Click" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Layers_Copy.png" Width="18" Height="18"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="btnPasteLayer" ToolTip="Paste layer from clipboard (Ctrl + V)" Click="btnPasteLayer_Click" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Layers_Paste.png" Width="18" Height="18"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="btnRemoveLayer" Click="btnRemoveLayer_Click" IsEnabled="False" ToolTip="Remove selected layer (Del)" Margin="4,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" />
+                </DockPanel>
+            </Button>
+        </StackPanel>
         <DockPanel Margin="0,59,0,0">
             <Grid x:Name="grid_timeselection" Height="23" VerticalAlignment="Top" DockPanel.Dock="Top" Visibility="Collapsed">
                 <RadioButton x:Name="radiobtn_daytime" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Daytime" Checked="radiobtn_daytime_Checked">
