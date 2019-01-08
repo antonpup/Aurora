@@ -30,7 +30,7 @@
                     <Image Source="/Aurora;component/Resources/Import_Icon.png" Width="18" Height="18"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="btnExportProfile" ToolTip="Import an existing profile from file" Click="btnExportProfile_Click" Margin="2,0">
+            <Button x:Name="btnExportProfile" ToolTip="Export an existing profile as JSON file" Click="btnExportProfile_Click" Margin="2,0">
                 <DockPanel Margin="2,0">
                     <Image Source="/Aurora;component/Resources/Export_Icon.png" Width="18" Height="18" />
                 </DockPanel>
