@@ -30,6 +30,11 @@
                     <Image Source="/Aurora;component/Resources/Import_Icon.png" Width="18" Height="18"/>
                 </DockPanel>
             </Button>
+            <Button x:Name="btnExportProfile" ToolTip="Import an existing profile from file" Click="btnExportProfile_Click" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Export_Icon.png" Width="18" Height="18" />
+                </DockPanel>
+            </Button>
             <Button x:Name="btnCopyProfile" ToolTip="Copy the selected profile (Ctrl + C)" Click="btnCopyProfile_Click" Margin="2,0">
                 <DockPanel Margin="2,0">
                     <Image Source="/Aurora;component/Resources/Layers_Copy.png" Width="18" Height="18"/>
@@ -59,12 +64,5 @@
             </ListBox>
         </DockPanel>
         <TextBlock x:Name="textblockDownload" Margin="10,0,10,3" TextWrapping="Wrap" RenderTransformOrigin="0.49,0.531" TextAlignment="Center" Height="16" VerticalAlignment="Bottom"><Hyperlink NavigateUri="http://modworkshop.net/mydownloads.php?action=browse_cat&amp;cid=299" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Download More Profiles"/></Hyperlink></TextBlock>
-
-        <Button x:Name="btnExportProfile" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,55,67,0" IsEnabled="False" ToolTip="Export selected profile" Height="24" Visibility="Hidden">
-            <DockPanel Margin="2,0">
-                <Image Source="/Aurora;component/Resources/Export_Icon.png" Width="18" Height="18" />
-                <TextBlock><Run Text="Export"/></TextBlock>
-            </DockPanel>
-        </Button>
     </Grid>
 </UserControl>

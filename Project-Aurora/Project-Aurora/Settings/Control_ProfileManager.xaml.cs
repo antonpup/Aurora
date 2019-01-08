@@ -205,19 +205,31 @@ namespace Aurora.Settings
                 // Create OpenFileDialog 
                 OpenFileDialog dlg = new OpenFileDialog
                 {
-
+                    Title = "Import profile",
                     // Set filter for file extension and default file extension 
                     Filter = "Importable files (*.json;*.cueprofile;*.cuefolder)|*.json;*.cueprofile;*.cuefolder|JSON files (*.json)|*.json|CUE Profile Files (*.cueprofile;*.cuefolder)|*.cueprofile;*.cuefolder"
                 };
 
                 // Display OpenFileDialog by calling ShowDialog method
                 if (dlg.ShowDialog() == true)
-                    ProfileImporter.ImportFile(dlg.FileName, FocusedApplication);
+                    FocusedApplication.ImportProfile(dlg.FileName);
             }
             catch (Exception exception)
             {
                 Global.logger.Error("Exception Found: " + exception.ToString());
             }
+        }
+
+        private void btnExportProfile_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog
+            {
+                Title = "Export profile",
+                Filter = "JSON file (*.json)|*.json"
+            };
+
+            if (dialog.ShowDialog() == true)
+                FocusedApplication.SaveProfile(FocusedApplication.Profile, dialog.FileName);
         }
 
         private void btnCopyProfile_Click(object sender, RoutedEventArgs e)

@@ -17,20 +17,19 @@ namespace Aurora.Settings {
         /// Imports a file from disk as a profile into the given application.
         /// </summary>
         /// <param name="filepath">The full filepath of the file to import.</param>
-        /// <param name="app">The application to import the profile to.</param>
-        public static void ImportFile(string filepath, Application app) {
+        public static void ImportProfile(this Application app, string filepath) {
             string fn = filepath.ToLower();
-
+            
             if (fn.EndsWith(".cueprofile") || fn.EndsWith(".cuefolder"))
-                ImportCueprofile(filepath, app);
+                app.ImportCueprofile(filepath);
             else if (fn.EndsWith(".json"))
-                ImportJson(filepath, app);
+                app.ImportJson(filepath);
         }
 
         /// <summary>
         /// Imports a cue profile file to the given application.
         /// </summary>
-        private static void ImportCueprofile(string filepath, Application app)
+        private static void ImportCueprofile(this Application app, string filepath)
         {
             XElement rootElement = XElement.Load(filepath);
             XElement valueElement = filepath.EndsWith(".cueprofile") ? rootElement : rootElement.Element("profile_folder").Element("profiles");
@@ -675,7 +674,7 @@ namespace Aurora.Settings {
         /// <summary>
         /// Imports a json profile into the given application.
         /// </summary>
-        private static void ImportJson(string filepath, Application app) {
+        private static void ImportJson(this Application app, string filepath) {
             try {
                 // Attempt to read and deserialise the profile
                 string json = File.ReadAllText(filepath, Encoding.UTF8);
