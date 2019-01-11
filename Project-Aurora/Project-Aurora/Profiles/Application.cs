@@ -201,7 +201,7 @@ namespace Aurora.Profiles
             SwitchToProfile(_newProfile);
         }
 
-        public void AddNewProfile(String profileName)
+        public ApplicationProfile AddNewProfile(String profileName)
         {
             ApplicationProfile _newProfile = CreateNewProfile(profileName);
 
@@ -210,6 +210,8 @@ namespace Aurora.Profiles
             SaveProfiles();
 
             SwitchToProfile(_newProfile);
+
+            return _newProfile;
         }
 
         public void DeleteProfile(ApplicationProfile profile)
