@@ -77,5 +77,10 @@ namespace Aurora.Settings
 
             return _sb.ToString();
         }
+
+        public Keybind Clone()
+        {
+            return new Keybind(_AssignedKeys.ToArray());
+        }
     }
 }

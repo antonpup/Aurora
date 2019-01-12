@@ -16,21 +16,42 @@
         <Border Background="#A5000000" CornerRadius="8" />
         <Border Background="#54A8A8A8" CornerRadius="8" VerticalAlignment="Top" Height="25" />
         <Border x:Name="borderBottom" Background="#66000000" CornerRadius="8" VerticalAlignment="Bottom" Height="25" />
-        <Button x:Name="btnProfilePath" Content="View Profile Folder" Margin="0,30,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfilePath_Click" ToolTip="Open the profiles folder"/>
-        <Button x:Name="btnProfileReset" Content="Reset Profile" Margin="0,30,124,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfileReset_Click" ToolTip="Reset the current profile"/>        <TextBlock TextWrapping="Wrap" Text="Profiles" VerticalAlignment="Top" Margin="10,3,10,0"/>
-        <Button x:Name="btnNewProfile" Margin="0,84,70,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnNewProfile_Click" ToolTip="Save current settings as a new profile" Height="24">
-            <DockPanel Margin="2,0">
-                <Image Source="/Aurora;component/Resources/AddProfile_Icon.png" Width="18" Height="18"/>
-                <TextBlock>New</TextBlock>
-            </DockPanel>
-        </Button>
-        <Button x:Name="btnDeleteProfile" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,84,5,0" Click="buttonDeleteProfile_Click" IsEnabled="False" ToolTip="Remove delete profile" Height="24">
-            <DockPanel Margin="2,0">
-                <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" />
-                <TextBlock>Delete</TextBlock>
-            </DockPanel>
-        </Button>
-        <DockPanel Margin="0,113,0,19">
+        <Button x:Name="btnProfilePath" Content="View Profile Folder" Margin="0,30,4,0" Padding="4" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnProfilePath_Click" ToolTip="Open the profiles folder" Height="24" />        <Button x:Name="btnProfileReset" Content="Reset Profile" Margin="4,30,0,0" Padding="4" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btnProfileReset_Click" ToolTip="Reset the selected profile to default layers." Height="24" />        <TextBlock TextWrapping="Wrap" Text="Profiles" VerticalAlignment="Top" Margin="10,3,10,0"/>
+
+        <StackPanel Orientation="Horizontal" Margin="0,60" VerticalAlignment="Top" HorizontalAlignment="Right" Height="24">
+            <Button x:Name="btnNewProfile" Click="btnNewProfile_Click" ToolTip="Create a new profile" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/AddProfile_Icon.png" Width="18" Height="18"/>
+                    <TextBlock>New</TextBlock>
+                </DockPanel>
+            </Button>
+            <Button x:Name="btnImportProfile" ToolTip="Import an existing profile from file" Click="btnImportProfile_Click" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Import_Icon.png" Width="18" Height="18"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="btnExportProfile" ToolTip="Export an existing profile as JSON file" Click="btnExportProfile_Click" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Export_Icon.png" Width="18" Height="18" />
+                </DockPanel>
+            </Button>
+            <Button x:Name="btnCopyProfile" ToolTip="Copy the selected profile (Ctrl + C)" Click="btnCopyProfile_Click" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Layers_Copy.png" Width="18" Height="18"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="btnPasteProfile" ToolTip="Paste profile from clipboard (Ctrl + V)" Click="btnPasteProfile_Click" Margin="2,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Layers_Paste.png" Width="18" Height="18"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="btnDeleteProfile" Click="buttonDeleteProfile_Click" IsEnabled="False" ToolTip="Delete the selected profile (Del)" Margin="4,0">
+                <DockPanel Margin="2,0">
+                    <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" />
+                </DockPanel>
+            </Button>
+        </StackPanel>
+        <DockPanel Margin="0,89,0,19">
             <ListBox x:Name="lstProfiles" Margin="0,0,0,0" SelectionMode="Single"  DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="lstProfiles_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <HierarchicalDataTemplate>
@@ -43,17 +64,5 @@
             </ListBox>
         </DockPanel>
         <TextBlock x:Name="textblockDownload" Margin="10,0,10,3" TextWrapping="Wrap" RenderTransformOrigin="0.49,0.531" TextAlignment="Center" Height="16" VerticalAlignment="Bottom"><Hyperlink NavigateUri="http://modworkshop.net/mydownloads.php?action=browse_cat&amp;cid=299" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Download More Profiles"/></Hyperlink></TextBlock>
-        <Button x:Name="btnImportProfile" Margin="0,55,132,0" VerticalAlignment="Top" HorizontalAlignment="Right" ToolTip="Import a new profile" Height="24" Click="btnImportProfile_Click">
-            <DockPanel Margin="2,0">
-                <Image Source="/Aurora;component/Resources/Import_Icon.png" Width="18" Height="18"/>
-                <TextBlock><Run Text="Import"/></TextBlock>
-            </DockPanel>
-        </Button>
-        <Button x:Name="btnExportProfile" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,55,67,0" IsEnabled="False" ToolTip="Export selected profile" Height="24" Visibility="Hidden">
-            <DockPanel Margin="2,0">
-                <Image Source="/Aurora;component/Resources/Export_Icon.png" Width="18" Height="18" />
-                <TextBlock><Run Text="Export"/></TextBlock>
-            </DockPanel>
-        </Button>
     </Grid>
 </UserControl>
