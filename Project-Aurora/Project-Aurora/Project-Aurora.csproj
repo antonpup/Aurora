@@ -549,6 +549,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\ProfileImporter.cs" />
     <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_ComparisonLayer.xaml.cs">
@@ -1326,6 +1327,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\deadcells_128x128.png" />
+    <Resource Include="Resources\Layers_Copy.png" />
+    <Resource Include="Resources\Layers_Paste.png" />
     <Resource Include="Resources\Subnautica.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
