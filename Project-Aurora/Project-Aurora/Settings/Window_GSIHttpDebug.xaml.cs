@@ -11,7 +11,6 @@ namespace Aurora.Settings {
     public partial class Window_GSIHttpDebug : Window {
 
         private Timer timeDisplayTimer;
-        private DateTime? previousRequestTime = null;
         private DateTime? lastRequestTime = null;
 
         public Window_GSIHttpDebug() {
