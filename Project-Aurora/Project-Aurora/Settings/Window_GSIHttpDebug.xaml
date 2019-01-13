@@ -7,21 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Title="Aurora Game State Integration HTTP Request Viewer"
-             Loaded="Window_Loaded" Closing="Window_Closing">
+             Loaded="Window_Loaded" Closing="Window_Closing" Background="#181818">
     <Grid>
-        <RichTextBox x:Name="BodyPreviewTxt" IsReadOnly="True" Background="#1E1E1E" BorderThickness="0" Padding="4px">
-            <RichTextBox.Resources>
-                <Style TargetType="{x:Type FlowDocument}">
-                    <Setter Property="FontFamily" Value="Fira Code,Consolas,Courier New,monospace" />
-                    <Setter Property="FontSize" Value="12" />
-                    <Setter Property="Foreground" Value="#C9D1CE" />
-                </Style>
-            </RichTextBox.Resources>
-            <FlowDocument>
-                <Paragraph>
-                    <Run>LOL</Run>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="18px" />
+        </Grid.RowDefinitions>
+        
+        <TextBox x:Name="BodyPreviewTxt" IsReadOnly="True" Background="#1E1E1E" BorderThickness="0" Padding="4px" FontFamily="Fira Code,Consolas,Courier New,monospace" FontSize="12" Foreground="#C9D1CE" />
+
+        <TextBlock Grid.Row="1">
+            <Run FontWeight="Bold">Request time:</Run>
+            <Run x:Name="CurRequestTime" FontFamily="Fira Code,Consolas,Courier New,monospace">-</Run>
+        </TextBlock>
     </Grid>
 </Window>
