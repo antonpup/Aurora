@@ -569,6 +569,9 @@
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
+    <Compile Include="Settings\Window_GSIHttpDebug.xaml.cs">
+      <DependentUpon>Window_GSIHttpDebug.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
@@ -1875,6 +1878,10 @@
     <Page Include="Settings\Layers\Control_SolidColorLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Window_GSIHttpDebug.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Window_LayerLogicEditor.xaml">
       <SubType>Designer</SubType>
