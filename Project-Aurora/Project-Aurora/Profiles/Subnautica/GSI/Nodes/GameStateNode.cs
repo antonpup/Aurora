@@ -20,25 +20,9 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
         internal GameStateNode(string json) : base(json) {
 
             GameState = GetInt("game_state");
-
-            if (GameState == 2)
-            {
-                InGame = true;
-                InMenu = false;
-                loading = false;
-            }
-            else if (GameState == 1)
-            {
-                InGame = false;
-                InMenu = false;
-                loading = true;
-            }
-            else
-            {
-                InGame = false;
-                InMenu = true;
-                loading = false;
-            }
+            InGame = GameState == 2;
+            InMenu = GameState == 0;
+            loading = GameState == 1;
         }
     }
 }
