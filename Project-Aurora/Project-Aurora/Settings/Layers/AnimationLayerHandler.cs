@@ -265,7 +265,8 @@ namespace Aurora.Settings.Layers
 
             // If a new animation has been started or an existing one restarted, and we are translating based on key press
             // assign the target ket to the animation to allow it to calculate the offset.
-            anim.assignedKey = targetKey;
+            if (anim != null)
+                anim.assignedKey = targetKey;
         }
 
         public override void SetApplication(Application profile) {
