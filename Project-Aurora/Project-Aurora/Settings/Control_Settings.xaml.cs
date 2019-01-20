@@ -1057,5 +1057,7 @@ namespace Aurora.Settings
         {
             Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
         }
+
+        private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => new Window_GSIHttpDebug().Show();
     }
 }
