@@ -67,10 +67,12 @@ namespace Aurora.Settings {
                                             bool layerEnabled = bool.Parse(keysAndStuff.Element("enabled").Value);
                                             int repeatTimes = Math.Max(int.Parse(keysAndStuff.Element("executionHints").Element("stopAfterTimes").Value), 0);
                                             bool stopOnRelease = bool.Parse(keysAndStuff.Element("executionHints").Element("stopOnKeyRelease").Value);
+                                            bool stopOnPress = bool.Parse(keysAndStuff.Element("executionHints").Element("stopOnKeyPress").Value);
                                             var startOnKeyPress = keysAndStuff.Element("executionHints").Element("startOnKeyPress").Value;
                                             var playOption = keysAndStuff.Element("executionHints").Element("playOption").Value;
                                             bool RippleEffectCheck = false;
                                             bool playFromKey = false;
+                                            bool stopImmediately = false;
                                             AnimationTriggerMode triggerMode = AnimationTriggerMode.OnKeyPress;
                                             if (playOption.Equals("PlayFromKeyCenter"))
                                             {
@@ -79,9 +81,10 @@ namespace Aurora.Settings {
                                             if (startOnKeyPress.Equals("true"))
                                             {
                                                 RippleEffectCheck = true;
-                                                if (stopOnRelease)
+                                                if (stopOnRelease||stopOnPress)
                                                 {
-                                                    repeatTimes = 1;
+                                                    stopImmediately = true;
+                                                       repeatTimes = 1;
                                                     triggerMode = AnimationTriggerMode.WhileKeyHeld;
                                                 }
                                             }
@@ -262,7 +265,7 @@ namespace Aurora.Settings {
                                                             //  _TriggerAnyKey = RippleEffectCheck,
                                                             _TriggerKeySequence = affected_keys,
                                                             _StackMode = RippleEffectCheck ? AnimationStackMode.Reset : AnimationStackMode.Ignore,
-                                                            _WhileKeyHeldTerminateRunning = true,
+                                                            _WhileKeyHeldTerminateRunning = stopImmediately,
                                                             _KeyTriggerTranslate = playFromKey
                                                         }
                                                     }
@@ -584,7 +587,7 @@ namespace Aurora.Settings {
                                                             //  _TriggerAnyKey = RippleEffectCheck,
                                                             _TriggerKeySequence = affected_keys,
                                                             _StackMode = RippleEffectCheck ? AnimationStackMode.Reset : AnimationStackMode.Ignore,
-                                                            _WhileKeyHeldTerminateRunning = true,
+                                                            _WhileKeyHeldTerminateRunning = stopImmediately,
                                                             _KeyTriggerTranslate = playFromKey
                                                         }
                                                     }
@@ -669,7 +672,7 @@ namespace Aurora.Settings {
                                                             //  _TriggerAnyKey = RippleEffectCheck,
                                                             _TriggerKeySequence = affected_keys,
                                                             _StackMode = RippleEffectCheck ? AnimationStackMode.Reset : AnimationStackMode.Ignore,
-                                                            _WhileKeyHeldTerminateRunning = true,
+                                                            _WhileKeyHeldTerminateRunning = stopImmediately,
                                                             _KeyTriggerTranslate = playFromKey
                                                         }
                                                     }
