@@ -26,9 +26,11 @@ namespace Aurora.Devices.Dualshock
 
         Color newColor;
         Color setRestoreColor;
+        DeviceKeys newkey;
 
         public bool Initialize()
         {
+            newkey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey");
             setRestoreColor = Color.Transparent;
             DS4Devices.findControllers();
             IEnumerable<DS4Device> devices = DS4Devices.getDS4Controllers();
@@ -195,7 +197,6 @@ namespace Aurora.Devices.Dualshock
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
-            DeviceKeys newkey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey");
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
