@@ -37,4 +37,49 @@ namespace Aurora.Settings.Conditions {
             control?.SetApplication(application);
         }
     }
+
+
+
+    /// <summary>
+    /// Condition that accesses some specified game state variables (of numeric type) and returns a comparison between them.
+    /// </summary>
+    [Condition("Numeric Game State Variable")]
+    public class ConditionGSINumeric : ICondition {
+
+        // Path to the two GSI variables (or numbers themselves) and the operator to compare them with
+        public string Operand1Path { get; set; }
+        public string Operand2Path { get; set; }
+        public ComparisonOperator Operator { get; set; } = ComparisonOperator.EQ;
+
+        // Control assigned to this condition
+        private Control_ConditionGSINumeric control;
+        public UserControl GetControl(Application application) {
+            if (control == null)
+                control = new Control_ConditionGSINumeric(this, application);
+            return control;
+        }
+
+        /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
+        public bool Evaluate(IGameState gameState) {
+            // Parse the operands (either as numbers or paths)
+            double op1 = Utils.GameStateUtils.TryGetDoubleFromState(gameState, Operand1Path);
+            double op2 = Utils.GameStateUtils.TryGetDoubleFromState(gameState, Operand2Path);
+
+            // Evaluate the operands based on the selected operator and return the result.
+            switch (Operator) {
+                case ComparisonOperator.EQ: return op1 == op2;
+                case ComparisonOperator.NEQ: return op1 != op2;
+                case ComparisonOperator.LT: return op1 < op2;
+                case ComparisonOperator.LTE: return op1 <= op2;
+                case ComparisonOperator.GT: return op1 > op2;
+                case ComparisonOperator.GTE: return op1 >= op2;
+                default: return false;
+            }
+        }
+
+        /// <summary>Update the assigned control with the new application.</summary>
+        public void SetApplication(Application application) {
+            control?.SetApplication(application);
+        }
+    }
 }

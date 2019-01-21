@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Conditions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -77,23 +78,5 @@ namespace Aurora.Settings.Layers {
             (Control as Control_ComparisonLayer).SetProfile(profile);
             base.SetApplication(profile);
         }
-    }
-
-    /// <summary>
-    /// Enum listing various logic operators.
-    /// </summary>
-    public enum ComparisonOperator {
-        [Description("=")]
-        EQ,
-        [Description("≠")]
-        NEQ,
-        [Description("<")]
-        LT,
-        [Description("≤")]
-        LTE,
-        [Description(">")]
-        GT,
-        [Description("≥")]
-        GTE
     }
 }

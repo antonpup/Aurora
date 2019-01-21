@@ -590,6 +590,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Conditions\ComparisonOperator.cs" />
     <Compile Include="Settings\Conditions\ConditionAttribute.cs" />
     <Compile Include="Settings\Conditions\Condition_GameState.cs" />
     <Compile Include="Settings\Conditions\Control_ConditionDebug.xaml.cs">
@@ -597,6 +598,9 @@
     </Compile>
     <Compile Include="Settings\Conditions\Control_ConditionGSIBoolean.xaml.cs">
       <DependentUpon>Control_ConditionGSIBoolean.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Conditions\Control_ConditionGSINumeric.xaml.cs">
+      <DependentUpon>Control_ConditionGSINumeric.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Conditions\Control_ConditionNot.xaml.cs">
       <DependentUpon>Control_ConditionNot.xaml</DependentUpon>
@@ -1880,6 +1884,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Conditions\Control_ConditionGSIBoolean.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Conditions\Control_ConditionGSINumeric.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
