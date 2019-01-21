@@ -9,20 +9,28 @@
     <Grid>
         <Label Content="{Binding Title}" />
 
-        <ItemsControl Margin="24,28,2,28" ItemsSource="{Binding SubConditions}">
+        <ItemsControl Margin="12,28,0,26" ItemsSource="{Binding SubConditions}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <local:Control_ConditionPresenter Condition="{Binding .}" Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Application}" ConditionChanged="ConditionPresenter_ConditionChanged" Margin="0,2,28,0" />
-                        <Button Margin="2" HorizontalAlignment="Right" VerticalAlignment="Center" Click="DeleteButton_Click">
-                            <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" Margin="2" />
-                        </Button>
+                    <Grid Margin="6,0,0,6">
+                        <Rectangle Fill="#6000" Height="4" Width="10" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <Border Margin="10,0,0,0" BorderThickness="1" BorderBrush="#6000" Background="#3000">
+                            <Grid>
+                                <local:Control_ConditionPresenter Condition="{Binding .}" Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Application}" ConditionChanged="ConditionPresenter_ConditionChanged" Margin="6,2,36,0" />
+                                <Button Margin="6" HorizontalAlignment="Right" VerticalAlignment="Center" Click="DeleteButton_Click" ToolTip="Remove this subcondition">
+                                    <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" Margin="2" />
+                                </Button>
+                            </Grid>
+                        </Border>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Margin="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="AddSubconditionButton_Click">
+        <Rectangle Fill="#6000" Width="4" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="14,18,0,12" />
+        <Rectangle Fill="#6000" Height="4" Width="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="18,0,0,12" />
+
+        <Button Margin="28,0,2,2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="AddSubconditionButton_Click">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Aurora;component/Resources/Layers_Add.png" Width="18" Height="18" Margin="2" />
                 <TextBlock Text="Add subcondition" VerticalAlignment="Center" Margin="0,0,4,0" />

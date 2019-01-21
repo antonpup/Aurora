@@ -8,10 +8,10 @@
              d:DesignWidth="100" d:DesignHeight="40">
     <Grid>
         <!-- Condition type selection -->
-        <Label Content="Condition Type:" FontWeight="Bold" />
-        <ComboBox x:Name="ConditionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="100,0,0,0" Height="26" VerticalAlignment="Top" SelectionChanged="ConditionSelection_SelectionChanged" />
+        <Label Content="Condition Type:" FontWeight="Bold" Margin="0,6,0,0" />
+        <ComboBox x:Name="ConditionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="100,6,0,0" Height="26" VerticalAlignment="Top" SelectionChanged="ConditionSelection_SelectionChanged" />
 
         <!-- Condition control -->
-        <ContentPresenter x:Name="ContentContainer" Margin="0,26,0,0" />
+        <ContentPresenter x:Name="ContentContainer" Margin="0,36,0,0" />
     </Grid>
 </UserControl>

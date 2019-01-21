@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Conditions"
              mc:Ignorable="d">
-    <StackPanel Orientation="Horizontal">
-        <TextBlock Text="!" VerticalAlignment="Center" ToolTip="Not" />
-        <local:Control_ConditionPresenter Condition="{Binding ParentCondition.SubCondition}" Application="{Binding Application}" ConditionChanged="ConditionPresenter_ConditionChanged" />
-    </StackPanel>
+    <Grid>
+        <TextBlock Text="!" FontSize="18" VerticalAlignment="Center" />
+        <local:Control_ConditionPresenter Condition="{Binding ParentCondition.SubCondition}" Application="{Binding Application}" ConditionChanged="ConditionPresenter_ConditionChanged" Margin="15,0,0,0" />
+    </Grid>
 </UserControl>

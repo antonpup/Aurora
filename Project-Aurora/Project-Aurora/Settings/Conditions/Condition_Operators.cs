@@ -9,7 +9,7 @@ namespace Aurora.Settings.Conditions {
     /// <summary>
     /// Condition that checks a set of subconditions for atleast one of them being true.
     /// </summary>
-    [Condition("Or")]
+    [Condition("Logical Or")]
     public class ConditionOr : ICondition {
 
         [JsonProperty]
@@ -28,7 +28,7 @@ namespace Aurora.Settings.Conditions {
     /// <summary>
     /// Condition that checks a set of subconditions and requires them all to be true.
     /// </summary>
-    [Condition("And")]
+    [Condition("Logical And")]
     public class ConditionAnd : ICondition {
 
         [JsonProperty]
@@ -47,7 +47,7 @@ namespace Aurora.Settings.Conditions {
     /// <summary>
     /// Condition that inverts another condition.AUR
     /// </summary>
-    [Condition("Not")]
+    [Condition("Logical Not")]
     public class ConditionNot : ICondition {
 
         [JsonProperty]
@@ -66,7 +66,7 @@ namespace Aurora.Settings.Conditions {
     /// Condition that always returns true. Useful as a default condition as it means that
     /// the layer will always be visible.
     /// </summary>
-    [Condition("True")]
+    [Condition("True Constant")]
     public class ConditionTrue : ICondition {
         
         public UserControl GetControl(Application application) => null;

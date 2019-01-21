@@ -5,5 +5,5 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Conditions"
              mc:Ignorable="d">
-    <ComboBox x:Name="ValidPathsCombo" SelectedItem="{Binding VariablePath}" />
+    <ComboBox x:Name="ValidPathsCombo" SelectedItem="{Binding VariablePath}" Margin="0,0,0,6" />
 </UserControl>

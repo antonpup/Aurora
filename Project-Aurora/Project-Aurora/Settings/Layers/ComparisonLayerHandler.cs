@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers {
-
+    
     public class ComparisonLayerProperties : LayerHandlerProperties2Color<ComparisonLayerProperties> {
 
         public string _Operand1Path { get; set; }
@@ -36,6 +36,7 @@ namespace Aurora.Settings.Layers {
         }
     }
 
+    [Obsolete("This layer is obselete and has been replaced by the Layer Visibility Conditions.")]
     public class ComparisonLayerHandler : LayerHandler<ComparisonLayerProperties> {
         
         public ComparisonLayerHandler() {

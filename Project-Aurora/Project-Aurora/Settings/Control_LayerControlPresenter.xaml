@@ -44,7 +44,7 @@
             <TextBlock x:Name="lbl_Opacity_Text" HorizontalAlignment="Left" Margin="166,30,0,0" TextWrapping="Wrap" Text="100 %" VerticalAlignment="Top"/>
         </Grid>
 
-        <Grid x:Name="grdLayerConditions" Margin="4" HorizontalAlignment="Right" Width="484" Height="260" VerticalAlignment="Top" Background="#FF323232" Visibility="Visible">
+        <Grid x:Name="grdLayerConditions" Margin="4" HorizontalAlignment="Right" Width="560" VerticalAlignment="Stretch" Background="#FF323232" Visibility="Visible">
             <Label Content="Condition editor" FontSize="16" Margin="8,3" />
             <Border Margin="4,38,4,4" BorderBrush="#292929" BorderThickness="1">
                 <ScrollViewer VerticalScrollBarVisibility="Visible">
