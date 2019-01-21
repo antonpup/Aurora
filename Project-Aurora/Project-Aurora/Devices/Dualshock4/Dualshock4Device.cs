@@ -195,6 +195,7 @@ namespace Aurora.Devices.Dualshock
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
+            DeviceKeys newkey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey");
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
@@ -202,7 +203,7 @@ namespace Aurora.Devices.Dualshock
 
                     if (e.Cancel) return false;
 
-                    if (key.Key == Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey"))
+                    if (key.Key == newkey)
                     {
                         //Apply and strip Alpha
                         newColor = (Color)key.Value;

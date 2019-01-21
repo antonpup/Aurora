@@ -57,7 +57,10 @@ namespace Aurora.Settings
             this.Max = variableRegistryItem.Max;
             Type typ = this.Value.GetType();
             Type defaultType = variableRegistryItem.Default.GetType();
-            if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
+
+            if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
+                this.Value = Enum.ToObject(defaultType, Value);
+            else if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
                 this.Value = Convert.ChangeType(this.Value, defaultType);
             else if (this.Value == null && !defaultType.Equals(typ))
                 this.Value = variableRegistryItem.Default;
