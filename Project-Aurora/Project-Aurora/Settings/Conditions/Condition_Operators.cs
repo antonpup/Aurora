@@ -78,12 +78,11 @@ namespace Aurora.Settings.Conditions {
 
     [Condition("Debug")]
     public class ConditionDebug : ICondition {
-
-        [JsonProperty]
-        internal bool state = false;
+        
+        public bool State { get; set; }
         
         public UserControl GetControl(Application application) => new Control_ConditionDebug(this);
-        public bool Evaluate(IGameState _) => state;
+        public bool Evaluate(IGameState _) => State;
 
         public void SetApplication(Application application) { }
     }
