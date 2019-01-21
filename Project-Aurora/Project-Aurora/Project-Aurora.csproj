@@ -590,6 +590,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Conditions\ConditionAttribute.cs" />
+    <Compile Include="Settings\Conditions\Control_ConditionDebug.xaml.cs">
+      <DependentUpon>Control_ConditionDebug.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Conditions\Control_ConditionNot.xaml.cs">
+      <DependentUpon>Control_ConditionNot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Conditions\Control_ConditionPresenter.xaml.cs">
+      <DependentUpon>Control_ConditionPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Conditions\Condition_Operators.cs" />
+    <Compile Include="Settings\Conditions\Control_SubconditionHolder.xaml.cs">
+      <DependentUpon>Control_SubconditionHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Conditions\ICondition.cs" />
     <Compile Include="Settings\ProfileImporter.cs" />
     <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
@@ -1398,6 +1413,7 @@
     </Content>
     <Resource Include="Resources\ch_128x128.png" />
     <Resource Include="Resources\re2_256x256.png" />
+    <Resource Include="Resources\LayerConditions_icon.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1852,6 +1868,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\XCOM\Control_XCOM.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Conditions\Control_ConditionDebug.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Conditions\Control_ConditionNot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Conditions\Control_ConditionPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Conditions\Control_SubconditionHolder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

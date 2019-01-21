@@ -67,8 +67,13 @@ namespace Aurora.Settings
             lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
 
             grdLayerConfigs.Visibility = Visibility.Hidden;
+            grdLayerConditions.Visibility = Visibility.Hidden;
+            btnConfig.Visibility = Visibility.Visible;
+            btnCondition.Visibility = Visibility.Visible;
             grd_LayerControl.IsHitTestVisible = true;
             grd_LayerControl.Effect = null;
+            layerConditionEditor.Condition = layer.Handler.VisibleCondition;
+            layerConditionEditor.Application = layer.AssociatedApplication;
             isSettingNewLayer = false;
         }
 
@@ -226,18 +231,11 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
-                if(this.grdLayerConfigs.IsVisible)
-                {
-                    this.grdLayerConfigs.Visibility = Visibility.Hidden;
-                    grd_LayerControl.IsHitTestVisible = true;
-                    grd_LayerControl.Effect = null;
-                }
-                else
-                {
-                    this.grdLayerConfigs.Visibility = Visibility.Visible;
-                    grd_LayerControl.IsHitTestVisible = false;
-                    grd_LayerControl.Effect = new System.Windows.Media.Effects.BlurEffect();
-                }
+                bool v = grdLayerConfigs.IsVisible;
+                grdLayerConfigs.Visibility = v ? Visibility.Hidden : Visibility.Visible;
+                grd_LayerControl.IsHitTestVisible = v;
+                grd_LayerControl.Effect = v ? null : new System.Windows.Media.Effects.BlurEffect();
+                btnCondition.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -268,6 +266,20 @@ namespace Aurora.Settings
                 Layer.Handler.Opacity = (float)((sender as Slider).Value) / 100.0f;
                 this.lbl_Opacity_Text.Text = $"{(int)((sender as Slider).Value)} %";
             }
+        }
+
+        private void btnCondition_Click(object sender, RoutedEventArgs e) {
+            if (IsLoaded && !isSettingNewLayer) {
+                bool v = grdLayerConditions.IsVisible;
+                grdLayerConditions.Visibility = v ? Visibility.Hidden : Visibility.Visible;
+                grd_LayerControl.IsHitTestVisible = v;
+                grd_LayerControl.Effect = v ? null : new System.Windows.Media.Effects.BlurEffect();
+                btnConfig.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private void ConditionPresenter_ConditionChanged(object sender, Conditions.ConditionChangeEventArgs e) {
+            Layer.Handler.VisibleCondition = e.NewCondition;
         }
     }
 }

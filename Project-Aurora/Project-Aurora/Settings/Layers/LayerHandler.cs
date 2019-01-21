@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Conditions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -100,6 +101,8 @@ namespace Aurora.Settings.Layers
 
         KeySequence ExclusionMask { get; set; }
 
+        ICondition VisibleCondition { get; set; }
+
         float Opacity { get; set; }
 
         EffectLayer Render(IGameState gamestate);
@@ -156,6 +159,8 @@ namespace Aurora.Settings.Layers
         public KeySequence ExclusionMask { get; set; }
 
         public float Opacity { get; set; }
+
+        public ICondition VisibleCondition { get; set; } = new ConditionTrue();
 
         //public Color PrimaryColor { get; set; }
 

@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Aurora.Settings.Conditions.Control_ConditionPresenter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings.Conditions"
+             mc:Ignorable="d"
+             d:DesignWidth="100" d:DesignHeight="40">
+    <Grid>
+        <!-- Condition type selection -->
+        <Label Content="Condition Type:" FontWeight="Bold" />
+        <ComboBox x:Name="ConditionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="100,0,0,0" Height="26" VerticalAlignment="Top" SelectionChanged="ConditionSelection_SelectionChanged" />
+
+        <!-- Condition control -->
+        <ContentPresenter x:Name="ContentContainer" Margin="0,26,0,0" />
+    </Grid>
+</UserControl>

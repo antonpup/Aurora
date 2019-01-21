@@ -278,7 +278,7 @@ namespace Aurora.Settings.Layers
             {
                 logic.Check(gs, this._Handler);   
             }
-            return this._Handler.PostRenderFX(this._Handler.Render(gs));
+            return Handler.VisibleCondition.Evaluate(gs) ? _Handler.PostRenderFX(_Handler.Render(gs)) : new EffectLayer();
         }
 
         public void SetProfile(Application profile)
