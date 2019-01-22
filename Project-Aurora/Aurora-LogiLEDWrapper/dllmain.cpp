@@ -22,7 +22,7 @@ static std::string program_name;
 BOOL WINAPI DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
 	LPVOID lpReserved
-)
+	)
 {
 	switch (ul_reason_for_call)
 	{
@@ -39,217 +39,217 @@ LogiLed::Logitech_keyboardBitmapKeys ToLogitechBitmap(LogiLed::KeyName keyName)
 {
 	switch (keyName)
 	{
-	case(LogiLed::KeyName::ESC):
+	case(LogiLed::KeyName::ESC) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_ESC;
-	case(LogiLed::KeyName::F1):
+	case(LogiLed::KeyName::F1) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F1;
-	case(LogiLed::KeyName::F2):
+	case(LogiLed::KeyName::F2) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F2;
-	case(LogiLed::KeyName::F3):
+	case(LogiLed::KeyName::F3) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F3;
-	case(LogiLed::KeyName::F4):
+	case(LogiLed::KeyName::F4) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F4;
-	case(LogiLed::KeyName::F5):
+	case(LogiLed::KeyName::F5) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F5;
-	case(LogiLed::KeyName::F6):
+	case(LogiLed::KeyName::F6) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F6;
-	case(LogiLed::KeyName::F7):
+	case(LogiLed::KeyName::F7) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F7;
-	case(LogiLed::KeyName::F8):
+	case(LogiLed::KeyName::F8) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F8;
-	case(LogiLed::KeyName::F9):
+	case(LogiLed::KeyName::F9) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F9;
-	case(LogiLed::KeyName::F10):
+	case(LogiLed::KeyName::F10) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F10;
-	case(LogiLed::KeyName::F11):
+	case(LogiLed::KeyName::F11) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F11;
-	case(LogiLed::KeyName::F12):
+	case(LogiLed::KeyName::F12) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F12;
-	case(LogiLed::KeyName::PRINT_SCREEN):
+	case(LogiLed::KeyName::PRINT_SCREEN) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_PRINT_SCREEN;
-	case(LogiLed::KeyName::SCROLL_LOCK):
+	case(LogiLed::KeyName::SCROLL_LOCK) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_SCROLL_LOCK;
-	case(LogiLed::KeyName::PAUSE_BREAK):
+	case(LogiLed::KeyName::PAUSE_BREAK) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_PAUSE_BREAK;
-	case(LogiLed::KeyName::TILDE):
+	case(LogiLed::KeyName::TILDE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_TILDE;
-	case(LogiLed::KeyName::ONE):
+	case(LogiLed::KeyName::ONE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_ONE;
-	case(LogiLed::KeyName::TWO):
+	case(LogiLed::KeyName::TWO) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_TWO;
-	case(LogiLed::KeyName::THREE):
+	case(LogiLed::KeyName::THREE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_THREE;
-	case(LogiLed::KeyName::FOUR):
+	case(LogiLed::KeyName::FOUR) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_FOUR;
-	case(LogiLed::KeyName::FIVE):
+	case(LogiLed::KeyName::FIVE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_FIVE;
-	case(LogiLed::KeyName::SIX):
+	case(LogiLed::KeyName::SIX) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_SIX;
-	case(LogiLed::KeyName::SEVEN):
+	case(LogiLed::KeyName::SEVEN) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_SEVEN;
-	case(LogiLed::KeyName::EIGHT):
+	case(LogiLed::KeyName::EIGHT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_EIGHT;
-	case(LogiLed::KeyName::NINE):
+	case(LogiLed::KeyName::NINE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NINE;
-	case(LogiLed::KeyName::ZERO):
+	case(LogiLed::KeyName::ZERO) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_ZERO;
-	case(LogiLed::KeyName::MINUS):
+	case(LogiLed::KeyName::MINUS) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_MINUS;
-	case(LogiLed::KeyName::EQUALS):
+	case(LogiLed::KeyName::EQUALS) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_EQUALS;
-	case(LogiLed::KeyName::BACKSPACE):
+	case(LogiLed::KeyName::BACKSPACE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_BACKSPACE;
-	case(LogiLed::KeyName::INSERT):
+	case(LogiLed::KeyName::INSERT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_INSERT;
-	case(LogiLed::KeyName::HOME):
+	case(LogiLed::KeyName::HOME) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_HOME;
-	case(LogiLed::KeyName::PAGE_UP):
+	case(LogiLed::KeyName::PAGE_UP) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_PAGE_UP;
-	case(LogiLed::KeyName::NUM_LOCK):
+	case(LogiLed::KeyName::NUM_LOCK) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_LOCK;
-	case(LogiLed::KeyName::NUM_SLASH):
+	case(LogiLed::KeyName::NUM_SLASH) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_SLASH;
-	case(LogiLed::KeyName::NUM_ASTERISK):
+	case(LogiLed::KeyName::NUM_ASTERISK) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_ASTERISK;
-	case(LogiLed::KeyName::NUM_MINUS):
+	case(LogiLed::KeyName::NUM_MINUS) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_MINUS;
-	case(LogiLed::KeyName::TAB):
+	case(LogiLed::KeyName::TAB) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_TAB;
-	case(LogiLed::KeyName::Q):
+	case(LogiLed::KeyName::Q) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_Q;
-	case(LogiLed::KeyName::W):
+	case(LogiLed::KeyName::W) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_W;
-	case(LogiLed::KeyName::E):
+	case(LogiLed::KeyName::E) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_E;
-	case(LogiLed::KeyName::R):
+	case(LogiLed::KeyName::R) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_R;
-	case(LogiLed::KeyName::T):
+	case(LogiLed::KeyName::T) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_T;
-	case(LogiLed::KeyName::Y):
+	case(LogiLed::KeyName::Y) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_Y;
-	case(LogiLed::KeyName::U):
+	case(LogiLed::KeyName::U) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_U;
-	case(LogiLed::KeyName::I):
+	case(LogiLed::KeyName::I) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_I;
-	case(LogiLed::KeyName::O):
+	case(LogiLed::KeyName::O) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_O;
-	case(LogiLed::KeyName::P):
+	case(LogiLed::KeyName::P) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_P;
-	case(LogiLed::KeyName::OPEN_BRACKET):
+	case(LogiLed::KeyName::OPEN_BRACKET) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_OPEN_BRACKET;
-	case(LogiLed::KeyName::CLOSE_BRACKET):
+	case(LogiLed::KeyName::CLOSE_BRACKET) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_CLOSE_BRACKET;
-	case(LogiLed::KeyName::BACKSLASH):
+	case(LogiLed::KeyName::BACKSLASH) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_BACKSLASH;
-	case(LogiLed::KeyName::KEYBOARD_DELETE):
+	case(LogiLed::KeyName::KEYBOARD_DELETE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_KEYBOARD_DELETE;
-	case(LogiLed::KeyName::END):
+	case(LogiLed::KeyName::END) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_END;
-	case(LogiLed::KeyName::PAGE_DOWN):
+	case(LogiLed::KeyName::PAGE_DOWN) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_PAGE_DOWN;
-	case(LogiLed::KeyName::NUM_SEVEN):
+	case(LogiLed::KeyName::NUM_SEVEN) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_SEVEN;
-	case(LogiLed::KeyName::NUM_EIGHT):
+	case(LogiLed::KeyName::NUM_EIGHT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_EIGHT;
-	case(LogiLed::KeyName::NUM_NINE):
+	case(LogiLed::KeyName::NUM_NINE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_NINE;
-	case(LogiLed::KeyName::NUM_PLUS):
+	case(LogiLed::KeyName::NUM_PLUS) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_PLUS;
-	case(LogiLed::KeyName::CAPS_LOCK):
+	case(LogiLed::KeyName::CAPS_LOCK) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_CAPS_LOCK;
-	case(LogiLed::KeyName::A):
+	case(LogiLed::KeyName::A) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_A;
-	case(LogiLed::KeyName::S):
+	case(LogiLed::KeyName::S) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_S;
-	case(LogiLed::KeyName::D):
+	case(LogiLed::KeyName::D) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_D;
-	case(LogiLed::KeyName::F):
+	case(LogiLed::KeyName::F) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_F;
-	case(LogiLed::KeyName::G):
+	case(LogiLed::KeyName::G) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_G;
-	case(LogiLed::KeyName::H):
+	case(LogiLed::KeyName::H) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_H;
-	case(LogiLed::KeyName::J):
+	case(LogiLed::KeyName::J) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_J;
-	case(LogiLed::KeyName::K):
+	case(LogiLed::KeyName::K) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_K;
-	case(LogiLed::KeyName::L):
+	case(LogiLed::KeyName::L) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_L;
-	case(LogiLed::KeyName::SEMICOLON):
+	case(LogiLed::KeyName::SEMICOLON) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_SEMICOLON;
-	case(LogiLed::KeyName::APOSTROPHE):
+	case(LogiLed::KeyName::APOSTROPHE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_APOSTROPHE;
 		//case(LogiLed::KeyName::HASHTAG) :
 		//	return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_HASHTAG;
-	case(LogiLed::KeyName::ENTER):
+	case(LogiLed::KeyName::ENTER) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_ENTER;
-	case(LogiLed::KeyName::NUM_FOUR):
+	case(LogiLed::KeyName::NUM_FOUR) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_FOUR;
-	case(LogiLed::KeyName::NUM_FIVE):
+	case(LogiLed::KeyName::NUM_FIVE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_FIVE;
-	case(LogiLed::KeyName::NUM_SIX):
+	case(LogiLed::KeyName::NUM_SIX) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_SIX;
-	case(LogiLed::KeyName::LEFT_SHIFT):
+	case(LogiLed::KeyName::LEFT_SHIFT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_LEFT_SHIFT;
 		//case(LogiLed::KeyName::BACKSLASH_UK) :
 		//	return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_BACKSLASH_UK;
-	case(LogiLed::KeyName::Z):
+	case(LogiLed::KeyName::Z) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_Z;
-	case(LogiLed::KeyName::X):
+	case(LogiLed::KeyName::X) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_X;
-	case(LogiLed::KeyName::C):
+	case(LogiLed::KeyName::C) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_C;
-	case(LogiLed::KeyName::V):
+	case(LogiLed::KeyName::V) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_V;
-	case(LogiLed::KeyName::B):
+	case(LogiLed::KeyName::B) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_B;
-	case(LogiLed::KeyName::N):
+	case(LogiLed::KeyName::N) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_N;
-	case(LogiLed::KeyName::M):
+	case(LogiLed::KeyName::M) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_M;
-	case(LogiLed::KeyName::COMMA):
+	case(LogiLed::KeyName::COMMA) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_COMMA;
-	case(LogiLed::KeyName::PERIOD):
+	case(LogiLed::KeyName::PERIOD) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_PERIOD;
-	case(LogiLed::KeyName::FORWARD_SLASH):
+	case(LogiLed::KeyName::FORWARD_SLASH) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_FORWARD_SLASH;
-	case(LogiLed::KeyName::RIGHT_SHIFT):
+	case(LogiLed::KeyName::RIGHT_SHIFT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_RIGHT_SHIFT;
-	case(LogiLed::KeyName::ARROW_UP):
+	case(LogiLed::KeyName::ARROW_UP) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_ARROW_UP;
-	case(LogiLed::KeyName::NUM_ONE):
+	case(LogiLed::KeyName::NUM_ONE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_ONE;
-	case(LogiLed::KeyName::NUM_TWO):
+	case(LogiLed::KeyName::NUM_TWO) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_TWO;
-	case(LogiLed::KeyName::NUM_THREE):
+	case(LogiLed::KeyName::NUM_THREE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_THREE;
-	case(LogiLed::KeyName::NUM_ENTER):
+	case(LogiLed::KeyName::NUM_ENTER) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_ENTER;
-	case(LogiLed::KeyName::LEFT_CONTROL):
+	case(LogiLed::KeyName::LEFT_CONTROL) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_LEFT_CONTROL;
-	case(LogiLed::KeyName::LEFT_WINDOWS):
+	case(LogiLed::KeyName::LEFT_WINDOWS) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_LEFT_WINDOWS;
-	case(LogiLed::KeyName::LEFT_ALT):
+	case(LogiLed::KeyName::LEFT_ALT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_LEFT_ALT;
-	case(LogiLed::KeyName::SPACE):
+	case(LogiLed::KeyName::SPACE) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_SPACE;
-	case(LogiLed::KeyName::RIGHT_ALT):
+	case(LogiLed::KeyName::RIGHT_ALT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_RIGHT_ALT;
-	case(LogiLed::KeyName::RIGHT_WINDOWS):
+	case(LogiLed::KeyName::RIGHT_WINDOWS) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_RIGHT_WINDOWS;
-	case(LogiLed::KeyName::APPLICATION_SELECT):
+	case(LogiLed::KeyName::APPLICATION_SELECT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_APPLICATION_SELECT;
-	case(LogiLed::KeyName::RIGHT_CONTROL):
+	case(LogiLed::KeyName::RIGHT_CONTROL) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_RIGHT_CONTROL;
-	case(LogiLed::KeyName::ARROW_LEFT):
+	case(LogiLed::KeyName::ARROW_LEFT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_ARROW_LEFT;
-	case(LogiLed::KeyName::ARROW_DOWN):
+	case(LogiLed::KeyName::ARROW_DOWN) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_ARROW_DOWN;
-	case(LogiLed::KeyName::ARROW_RIGHT):
+	case(LogiLed::KeyName::ARROW_RIGHT) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_ARROW_RIGHT;
-	case(LogiLed::KeyName::NUM_ZERO):
+	case(LogiLed::KeyName::NUM_ZERO) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_ZERO;
-	case(LogiLed::KeyName::NUM_PERIOD):
+	case(LogiLed::KeyName::NUM_PERIOD) :
 		return LogiLed::Logitech_keyboardBitmapKeys::BITLOC_NUM_PERIOD;
 	default:
 		return LogiLed::Logitech_keyboardBitmapKeys::UNKNOWN;
@@ -480,7 +480,7 @@ LogiLed::KeyName ScanCodeToLogitechKeyName(int scanCode)
 
 LogiLed::Logitech_keyboardBitmapKeys ScanCodeToLogitechBitmap(int scanCode)
 {
-	return ToLogitechBitmap(ScanCodeToLogitechKeyName(scanCode));
+	return ToLogitechBitmap( ScanCodeToLogitechKeyName(scanCode) );
 }
 
 bool WriteToPipe(const std::string command_cargo)
@@ -560,7 +560,7 @@ void _LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercent
 				current_bitmap[colorset + 2] = redValue;
 				current_bitmap[colorset + 3] = (char)255;
 			}
-
+			
 			switch (custom_mode)
 			{
 			case 0xFFFB00:
@@ -1125,50 +1125,10 @@ bool LogiLedInit()
 	return true;
 }
 
-bool LogiLedGetSdkVersion(int *majorNum, int *minorNum, int *buildNum)
-{
-	return true;
-}
-bool LogiLedGetConfigOptionNumber(const wchar_t *configPath, double *defaultValue)
-{
-	return true;
-}
-bool LogiLedGetConfigOptionBool(const wchar_t *configPath, bool *defaultValue)
-{
-	return true;
-}
-bool LogiLedGetConfigOptionColor(const wchar_t *configPath, int *defaultRed, int *defaultGreen, int *defaultBlue)
-{
-	return true;
-}
-bool LogiLedGetConfigOptionRect(const wchar_t *configPath, int *defaultX, int *defaultY, int *defaultWidth, int *defaultHeight)
-{
-	return true;
-}
-bool LogiLedGetConfigOptionString(const wchar_t *configPath, wchar_t *defaultValue, int bufferSize)
-{
-	return true;
-}
-bool LogiLedGetConfigOptionKeyInput(const wchar_t *configPath, wchar_t *defaultValue, int bufferSize)
-{
-	return true;
-}
-bool LogiLedGetConfigOptionSelect(const wchar_t *configPath, wchar_t *defaultValue, int *valueSize, const wchar_t *values, int bufferSize)
-{
-	return true;
-}
-bool LogiLedGetConfigOptionRange(const wchar_t *configPath, int *defaultValue, int min, int max)
-{
-	return true;
-}
-bool LogiLedSetConfigOptionLabel(const wchar_t *configPath, wchar_t *label)
-{
-	return true;
-}
 bool LogiLedSetTargetDevice(int targetDevice)
 {
 	current_device = targetDevice;
-
+	
 	return isInitialized;
 }
 
