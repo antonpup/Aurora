@@ -74,7 +74,7 @@ namespace Aurora.Settings
         UseHEX = 1
     }
 
-    public class VariableRegistry //Might want to implement something like IEnumerable here
+    public class VariableRegistry : ICloneable //Might want to implement something like IEnumerable here
     {
         [JsonProperty("Variables")]
         private Dictionary<string, VariableRegistryItem> _variables;
@@ -227,6 +227,17 @@ namespace Aurora.Settings
         {
             if (_variables.ContainsKey(name))
                 _variables.Remove(name);
+        }
+
+        public object Clone()
+        {
+            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+
+            return JsonConvert.DeserializeObject(
+                    str,
+                    this.GetType(),
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
+                    );
         }
     }
 }
