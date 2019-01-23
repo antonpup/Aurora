@@ -141,7 +141,7 @@ namespace Aurora.Settings.Layers
 
                 // Default values for the destination rect (the area that the canvas is drawn to) and animation offset
                 Rectangle destRect = new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
-                PointF offset = anim.offset;
+                PointF offset = Properties.KeyTriggerTranslate ? anim.offset : PointF.Empty;
 
                 // When ScaleToKeySequenceBounds is true, additional calculations are needed on the destRect and offset:
                 if (Properties.ScaleToKeySequenceBounds) {
@@ -265,7 +265,7 @@ namespace Aurora.Settings.Layers
 
             // If a new animation has been started or an existing one restarted, and we are translating based on key press
             // assign the target ket to the animation to allow it to calculate the offset.
-            if (Properties.KeyTriggerTranslate && anim != null)
+            if (anim != null)
                 anim.assignedKey = targetKey;
         }
 
