@@ -93,7 +93,6 @@ namespace SteelSeries.GameSenseSDK
         public void setHeadsetColor(byte red, byte green, byte blue)
         {
             sendColor("headset", red, green, blue);
-            sendColor("earcups", red, green, blue);
         }
 
         public void sendColor(String deviceType, byte red, byte green, byte blue)
@@ -198,6 +197,7 @@ namespace SteelSeries.GameSenseSDK
             (let* ((headset (headset: data))
                    (color (color: headset)))
                 (on-device ""headset"" show: color)))
+                (on-device ""earcups"" show: color)))
     )
 )
 
