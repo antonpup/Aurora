@@ -77,7 +77,7 @@ namespace Aurora.Devices
 
         private bool anyInitialized = false;
         private bool retryActivated = false;
-        private const int retryInterval = 5000;
+        private const int retryInterval = 10000;
         private const int retryAttemps = 5;
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
