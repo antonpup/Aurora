@@ -261,35 +261,35 @@ LogiLed::KeyName HIDCodeToLogitechKeyName(int hidCode)
 	//To-Do Convert HID codes to correct keys, its currently copy pasted method from scan code
 	switch (hidCode)
 	{
-	case(1):
+	case(0x29):
 		return LogiLed::KeyName::ESC;
-	case(59):
+	case(0x3A):
 		return LogiLed::KeyName::F1;
-	case(60):
+	case(0x3B):
 		return LogiLed::KeyName::F2;
-	case(61):
+	case(0x3C):
 		return LogiLed::KeyName::F3;
-	case(62):
+	case(0x3D):
 		return LogiLed::KeyName::F4;
-	case(63):
+	case(0x3E):
 		return LogiLed::KeyName::F5;
-	case(64):
+	case(0x3F):
 		return LogiLed::KeyName::F6;
-	case(65):
+	case(0x40):
 		return LogiLed::KeyName::F7;
-	case(66):
+	case(0x41):
 		return LogiLed::KeyName::F8;
-	case(67):
+	case(0x42):
 		return LogiLed::KeyName::F9;
-	case(68):
+	case(0x43):
 		return LogiLed::KeyName::F10;
-	case(87):
+	case(0x44):
 		return LogiLed::KeyName::F11;
-	case(88):
+	case(0x45):
 		return LogiLed::KeyName::F12;
-	case(55):
+	case(0x46):
 		return LogiLed::KeyName::PRINT_SCREEN;
-	case(70):
+	case(0x47):
 		return LogiLed::KeyName::SCROLL_LOCK;
 		//case(LogiLed::KeyName::PAUSE_BREAK):
 		//	return LogiLed::KeyName::PAUSE_BREAK;
@@ -1118,7 +1118,7 @@ void _LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int gr
 		current_bitmap[(int)bit_location + 2] = redValue;
 
 		std::string contents = "";
-		contents += "\"command\": \"SetLightingForKeyWithScanCode\",";
+		contents += "\"command\": \"SetLightingForKeyWithHIDCode\",";
 		contents += "\"command_data\": {";
 
 		contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
