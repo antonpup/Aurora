@@ -291,188 +291,188 @@ LogiLed::KeyName HIDCodeToLogitechKeyName(int hidCode)
 		return LogiLed::KeyName::PRINT_SCREEN;
 	case(0x47):
 		return LogiLed::KeyName::SCROLL_LOCK;
-		//case(LogiLed::KeyName::PAUSE_BREAK):
-		//	return LogiLed::KeyName::PAUSE_BREAK;
-	case(41):
+	case(0x48):
+		return LogiLed::KeyName::PAUSE_BREAK;
+	case(0x35):
 		return LogiLed::KeyName::TILDE;
-	case(2):
+	case(0x1e):
 		return LogiLed::KeyName::ONE;
-	case(3):
+	case(0x1f):
 		return LogiLed::KeyName::TWO;
-	case(4):
+	case(0x20):
 		return LogiLed::KeyName::THREE;
-	case(5):
+	case(0x21):
 		return LogiLed::KeyName::FOUR;
-	case(6):
+	case(0x22):
 		return LogiLed::KeyName::FIVE;
-	case(7):
+	case(0x23):
 		return LogiLed::KeyName::SIX;
-	case(8):
+	case(0x24):
 		return LogiLed::KeyName::SEVEN;
-	case(9):
+	case(0x25):
 		return LogiLed::KeyName::EIGHT;
-	case(10):
+	case(0x26):
 		return LogiLed::KeyName::NINE;
-	case(11):
+	case(0x27):
 		return LogiLed::KeyName::ZERO;
-	case(12):
+	case(0x2d):
 		return LogiLed::KeyName::MINUS;
-	case(13):
+	case(0x2e):
 		return LogiLed::KeyName::EQUALS;
-	case(14):
+	case(0x2a):
 		return LogiLed::KeyName::BACKSPACE;
-	case(82):
+	case(0x49):
 		return LogiLed::KeyName::INSERT;
-	case(71):
+	case(0x4a):
 		return LogiLed::KeyName::HOME;
-	case(73):
+	case(0x4b):
 		return LogiLed::KeyName::PAGE_UP;
-	case(69):
+	case(0x53):
 		return LogiLed::KeyName::NUM_LOCK;
-		//case(LogiLed::KeyName::NUM_SLASH):
-		//	return LogiLed::KeyName::NUM_SLASH;
-		//case(LogiLed::KeyName::NUM_ASTERISK):
-		//	return LogiLed::KeyName::NUM_ASTERISK;
-		//case(LogiLed::KeyName::NUM_MINUS):
-		//	return LogiLed::KeyName::NUM_MINUS;
-	case(15):
+	case(0x54):
+		return LogiLed::KeyName::NUM_SLASH;
+	case(0x55):
+		return LogiLed::KeyName::NUM_ASTERISK;
+	case(0x56):
+		return LogiLed::KeyName::NUM_MINUS;
+	case(0x2b):
 		return LogiLed::KeyName::TAB;
-	case(16):
+	case(0x14):
 		return LogiLed::KeyName::Q;
-	case(17):
+	case(0x1a):
 		return LogiLed::KeyName::W;
-	case(18):
+	case(0x08):
 		return LogiLed::KeyName::E;
-	case(19):
+	case(0x15):
 		return LogiLed::KeyName::R;
-	case(20):
+	case(0x17):
 		return LogiLed::KeyName::T;
-	case(21):
+	case(0x1c):
 		return LogiLed::KeyName::Y;
-	case(22):
+	case(0x18):
 		return LogiLed::KeyName::U;
-	case(23):
+	case(0x0c):
 		return LogiLed::KeyName::I;
-	case(24):
+	case(0x12):
 		return LogiLed::KeyName::O;
-	case(25):
+	case(0x13):
 		return LogiLed::KeyName::P;
-	case(26):
+	case(0x2f):
 		return LogiLed::KeyName::OPEN_BRACKET;
-	case(27):
+	case(0x30):
 		return LogiLed::KeyName::CLOSE_BRACKET;
-	case(43):
+	case(0x31):
 		return LogiLed::KeyName::BACKSLASH;
-	case(83):
+	case(0x4c):
 		return LogiLed::KeyName::KEYBOARD_DELETE;
-	case(79):
+	case(0x4d):
 		return LogiLed::KeyName::END;
-	case(81):
+	case(0x4e):
 		return LogiLed::KeyName::PAGE_DOWN;
-		//case(LogiLed::KeyName::NUM_SEVEN):
-		//	return LogiLed::KeyName::NUM_SEVEN;
-		//case(LogiLed::KeyName::NUM_EIGHT):
-		//	return LogiLed::KeyName::NUM_EIGHT;
-		//case(LogiLed::KeyName::NUM_NINE):
-		//	return LogiLed::KeyName::NUM_NINE;
-		//case(LogiLed::KeyName::NUM_PLUS):
-		//	return LogiLed::KeyName::NUM_PLUS;
-	case(58):
+	case(0x5f):
+		return LogiLed::KeyName::NUM_SEVEN;
+	case(0x60):
+		return LogiLed::KeyName::NUM_EIGHT;
+	case(0x61):
+		return LogiLed::KeyName::NUM_NINE;
+	case(0x57):
+		return LogiLed::KeyName::NUM_PLUS;
+	case(0x39):
 		return LogiLed::KeyName::CAPS_LOCK;
-	case(30):
+	case(0x04):
 		return LogiLed::KeyName::A;
-	case(31):
+	case(0x16):
 		return LogiLed::KeyName::S;
-	case(32):
+	case(0x07):
 		return LogiLed::KeyName::D;
-	case(33):
+	case(0x09):
 		return LogiLed::KeyName::F;
-	case(34):
+	case(0x0a):
 		return LogiLed::KeyName::G;
-	case(35):
+	case(0x0b):
 		return LogiLed::KeyName::H;
-	case(36):
+	case(0x0d):
 		return LogiLed::KeyName::J;
-	case(37):
+	case(0x0e):
 		return LogiLed::KeyName::K;
-	case(38):
+	case(0x0f):
 		return LogiLed::KeyName::L;
-	case(39):
+	case(0x33):
 		return LogiLed::KeyName::SEMICOLON;
-	case(40):
+	case(0x34):
 		return LogiLed::KeyName::APOSTROPHE;
-		//case(LogiLed::KeyName::HASHTAG) :
-		//	return LogiLed::KeyName::HASHTAG;
-	case(28):
+	//case(LogiLed::KeyName::HASHTAG):
+	//	return LogiLed::KeyName::HASHTAG;
+	case(0x28):
 		return LogiLed::KeyName::ENTER;
-		//case(LogiLed::KeyName::NUM_FOUR):
-		//	return LogiLed::KeyName::NUM_FOUR;
-		//case(LogiLed::KeyName::NUM_FIVE):
-		//	return LogiLed::KeyName::NUM_FIVE;
-		//case(LogiLed::KeyName::NUM_SIX):
-		//	return LogiLed::KeyName::NUM_SIX;
-	case(42):
+	case(0x5c):
+		return LogiLed::KeyName::NUM_FOUR;
+	case(0x5d):
+		return LogiLed::KeyName::NUM_FIVE;
+	case(0x5e):
+		return LogiLed::KeyName::NUM_SIX;
+	case(0xe1):
 		return LogiLed::KeyName::LEFT_SHIFT;
-		//case(LogiLed::KeyName::BACKSLASH_UK) :
-		//	return LogiLed::KeyName::BACKSLASH_UK;
-	case(44):
+	//case(LogiLed::KeyName::BACKSLASH_UK) :
+	//	return LogiLed::KeyName::BACKSLASH_UK;
+	case(0x1d):
 		return LogiLed::KeyName::Z;
-	case(45):
+	case(0x1b):
 		return LogiLed::KeyName::X;
-	case(46):
+	case(0x06):
 		return LogiLed::KeyName::C;
-	case(47):
+	case(0x19):
 		return LogiLed::KeyName::V;
-	case(48):
+	case(0x05):
 		return LogiLed::KeyName::B;
-	case(49):
+	case(0x11):
 		return LogiLed::KeyName::N;
-	case(50):
+	case(0x10):
 		return LogiLed::KeyName::M;
-	case(51):
+	case(0x36):
 		return LogiLed::KeyName::COMMA;
-	case(52):
+	case(0x37):
 		return LogiLed::KeyName::PERIOD;
-	case(53):
+	case(0x38):
 		return LogiLed::KeyName::FORWARD_SLASH;
-	case(54):
+	case(0xe5):
 		return LogiLed::KeyName::RIGHT_SHIFT;
-	case(72):
+	case(0x52):
 		return LogiLed::KeyName::ARROW_UP;
-		//case(LogiLed::KeyName::NUM_ONE):
-		//	return LogiLed::KeyName::NUM_ONE;
-		//case(LogiLed::KeyName::NUM_TWO):
-		//	return LogiLed::KeyName::NUM_TWO;
-		//case(LogiLed::KeyName::NUM_THREE):
-		//	return LogiLed::KeyName::NUM_THREE;
-		//case(LogiLed::KeyName::NUM_ENTER):
-		//	return LogiLed::KeyName::NUM_ENTER;
-	case(29):
+	case(0x59):
+		return LogiLed::KeyName::NUM_ONE;
+	case(0x5a):
+		return LogiLed::KeyName::NUM_TWO;
+	case(0x5b):
+		return LogiLed::KeyName::NUM_THREE;
+	case(0x58):
+		return LogiLed::KeyName::NUM_ENTER;
+	case(0xe0):
 		return LogiLed::KeyName::LEFT_CONTROL;
-		//case(LogiLed::KeyName::LEFT_WINDOWS):
-		//	return LogiLed::KeyName::LEFT_WINDOWS;
-	case(56):
+	case(0xe3)://left gui?
+		return LogiLed::KeyName::LEFT_WINDOWS;
+	case(0xe2):
 		return LogiLed::KeyName::LEFT_ALT;
-	case(57):
+	case(0x2c):
 		return LogiLed::KeyName::SPACE;
-		//case(LogiLed::KeyName::RIGHT_ALT):
-		//	return LogiLed::KeyName::RIGHT_ALT;
-		//case(LogiLed::KeyName::RIGHT_WINDOWS):
-		//	return LogiLed::KeyName::RIGHT_WINDOWS;
-		//case(LogiLed::KeyName::APPLICATION_SELECT):
-		//	return LogiLed::KeyName::APPLICATION_SELECT;
-		//case(LogiLed::KeyName::RIGHT_CONTROL):
-		//	return LogiLed::KeyName::RIGHT_CONTROL;
-	case(75):
+	case(0xe6):
+		return LogiLed::KeyName::RIGHT_ALT;
+	case(0xe7)://right gui?
+		return LogiLed::KeyName::RIGHT_WINDOWS;
+	//case(LogiLed::KeyName::APPLICATION_SELECT):
+	//	return LogiLed::KeyName::APPLICATION_SELECT;
+	case(0xe4):
+		return LogiLed::KeyName::RIGHT_CONTROL;
+	case(0x50):
 		return LogiLed::KeyName::ARROW_LEFT;
-	case(80):
+	case(0x51):
 		return LogiLed::KeyName::ARROW_DOWN;
-	case(77):
+	case(0x4f):
 		return LogiLed::KeyName::ARROW_RIGHT;
-		//case(LogiLed::KeyName::NUM_ZERO):
-		//	return LogiLed::KeyName::NUM_ZERO;
-		//case(LogiLed::KeyName::NUM_PERIOD):
-		//	return LogiLed::KeyName::NUM_PERIOD;
+	case(0x62):
+		return LogiLed::KeyName::NUM_ZERO;
+	case(0x63):
+		return LogiLed::KeyName::NUM_PERIOD;
 	default:
 		return LogiLed::KeyName::APPLICATION_SELECT; //Used as an error placeholder
 	}
@@ -1118,7 +1118,7 @@ void _LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int gr
 		current_bitmap[(int)bit_location + 2] = redValue;
 
 		std::string contents = "";
-		contents += "\"command\": \"SetLightingForKeyWithHIDCode\",";
+		contents += "\"command\": \"SetLightingForKeyWithHidCode\",";
 		contents += "\"command_data\": {";
 
 		contents += "\"red_start\": " + std::to_string((int)redValue) + ',';
