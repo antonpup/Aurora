@@ -3,6 +3,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.IO;
+using System.Reflection;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace LedCSharp
