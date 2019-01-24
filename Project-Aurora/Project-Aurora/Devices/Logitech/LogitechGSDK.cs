@@ -135,7 +135,7 @@ namespace LedCSharp
         static LogitechGSDK()
         {
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            path = Path.Combine(path, "Logi", Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "LGGHUB")) ? "GHUB" : "LGS");
+            path = Path.Combine(path, "Logi", Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "LGHUB")) ? "GHUB" : "LGS");
             bool ok = SetDllDirectory(path);
             if (!ok) throw new System.ComponentModel.Win32Exception();
         }
