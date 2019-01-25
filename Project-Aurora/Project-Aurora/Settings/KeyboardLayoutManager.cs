@@ -639,6 +639,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95_platinum.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K70)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
+            else if (keyboard_preference == PreferredKeyboard.Corsair_K70MK2)
+                layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70_mk2.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K65)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
