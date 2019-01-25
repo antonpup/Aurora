@@ -26,9 +26,11 @@ namespace Aurora.Devices.Dualshock
 
         Color newColor;
         Color setRestoreColor;
+        DeviceKeys newkey;
 
         public bool Initialize()
         {
+            newkey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey");
             setRestoreColor = Color.Transparent;
             DS4Devices.findControllers();
             IEnumerable<DS4Device> devices = DS4Devices.getDS4Controllers();
@@ -202,7 +204,7 @@ namespace Aurora.Devices.Dualshock
 
                     if (e.Cancel) return false;
 
-                    if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral)
+                    if (key.Key == newkey)
                     {
                         //Apply and strip Alpha
                         newColor = (Color)key.Value;
@@ -255,6 +257,7 @@ namespace Aurora.Devices.Dualshock
                 default_registry.Register($"{devicename}_auto_connect", true, "Auto connect");
                 default_registry.Register($"{devicename}_LowBattery_threshold", 20, "Low battery threshold", 100, 0, "In percent. To deactivate set to 0");
                 default_registry.Register($"{devicename}_LowBattery_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 0, 0)), "Low battery color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
+                default_registry.Register($"{devicename}_devicekey", DeviceKeys.Peripheral, "Key to Use", DeviceKeys.MOUSEPADLIGHT15, DeviceKeys.Peripheral);
             }
             return default_registry;
         }
