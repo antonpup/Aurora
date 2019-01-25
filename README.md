@@ -159,7 +159,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * One
 
 ### Alienware
-* Most devices should work
+* All laptop models before AW15 R3/AW17 R4
 ### Clevo
 ### AtmoOrb
 ### Dualshock 4 (PS4 Controller)
