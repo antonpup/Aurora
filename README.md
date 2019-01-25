@@ -130,7 +130,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * DeathAdder Elite
 * Basilisk
 #### Mousepads
-* Firefly (single color)
+* Firefly
 ### Cooler Master
 * Masterkeys Pro L, M and S RGB/White
 * MK750
@@ -159,7 +159,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * One
 
 ### Alienware
-* All laptop models before AW15 R3/AW17 R4
+* All laptop models until AW15 R3/AW17 R4 (AW broke support for per-key RGB)
 ### Clevo
 ### AtmoOrb
 ### Dualshock 4 (PS4 Controller)
