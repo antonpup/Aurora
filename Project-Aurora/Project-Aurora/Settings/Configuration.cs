@@ -229,6 +229,10 @@ namespace Aurora.Settings
         //Drevo range is 1000-1099
         [Description("Drevo BladeMaster")]
         Drevo_BladeMaster = 1000,
+
+	//Creative range is 1100-1199
+        [Description("SoundBlasterX VanguardK08")]
+        SoundBlasterX_Vanguard_K08 = 1100,
     }
 
     public enum PreferredKeyboardLocalization

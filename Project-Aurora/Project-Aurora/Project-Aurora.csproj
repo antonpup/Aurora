@@ -372,6 +372,7 @@
     </Compile>
     <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
+    <Compile Include="Devices\Creative\SoundBlasterXDevice.cs" />
     <Compile Include="Devices\Drevo\DrevoDevice.cs" />
     <Compile Include="Devices\Drevo\DrevoLayoutMap.cs" />
     <Compile Include="Devices\Drevo\DrevoRadiSDK.cs" />
@@ -977,6 +978,12 @@
     <None Include="kb_layouts\Extra Features\masterkeys_pro_m_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\soundblasterx_vanguardk08_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\soundblasterx_vanguardk08_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\steelseries_apex_m800_left_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1301,6 +1308,9 @@
     <Content Include="kb_layouts\Extra Features\images\Omen_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="kb_layouts\Extra Features\images\SoundBlasterX_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1341,6 +1351,9 @@
     <Resource Include="Profiles\Payday 2\GSI\PD2_GSI.zip" />
     <Resource Include="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
     <Resource Include="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
+    <None Include="kb_layouts\soundblasterx_vanguardk08.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\wooting_one.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2131,6 +2144,11 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
+      <Project>{053a704b-5c79-4cde-b1fc-b952051acaa0}</Project>
+      <Name>SBAuroraReactive</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj">
       <Project>{fea699ae-db83-43dc-ab85-99f2e90c328f}</Project>
       <Name>Wooting.NET</Name>
