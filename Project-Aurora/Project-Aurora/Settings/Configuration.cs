@@ -307,7 +307,11 @@ namespace Aurora.Settings
         [Description("SteelSeries - Rival 300")]
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
-        SteelSeries_Rival_300_HP_OMEN_Edition = 701
+        SteelSeries_Rival_300_HP_OMEN_Edition = 701,
+
+        //Asus range is 900-999
+        [Description("Asus - Pugio")]
+        Asus_Pugio = 900
     }
 
     public enum KeycapType
@@ -368,7 +372,7 @@ namespace Aurora.Settings
 
         private float keyboardBrightness = 1.0f;
         [JsonProperty(PropertyName = "keyboard_brightness_modifier")]
-        public float KeyboardBrightness { get { return keyboardBrightness; } set{ keyboardBrightness = value; InvokePropertyChanged(); } }
+        public float KeyboardBrightness { get { return keyboardBrightness; } set { keyboardBrightness = value; InvokePropertyChanged(); } }
 
         private float peripheralBrightness = 1.0f;
         [JsonProperty(PropertyName = "peripheral_brightness_modifier")]
@@ -396,7 +400,7 @@ namespace Aurora.Settings
         public bool devices_disable_keyboard;
         public bool devices_disable_mouse;
         public bool devices_disable_headset;
-        public bool ss_hid_disabled = false;
+        public bool unified_hid_disabled = false;
         public HashSet<Type> devices_disabled;
         public bool OverlaysInPreview;
 
@@ -499,7 +503,7 @@ namespace Aurora.Settings
 
             VarRegistry = new VariableRegistry();
         }
-  }
+    }
 
     public class ConfigManager
     {
@@ -523,10 +527,10 @@ namespace Aurora.Settings
 
             Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
 
-            if (!config.ss_hid_disabled)
+            if (!config.unified_hid_disabled)
             {
-                config.devices_disabled.Add(typeof(Devices.SteelSeriesHID.SteelSeriesHIDDevice));
-                config.ss_hid_disabled = true;
+                config.devices_disabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
+                config.unified_hid_disabled = true;
             }
 
             return config;

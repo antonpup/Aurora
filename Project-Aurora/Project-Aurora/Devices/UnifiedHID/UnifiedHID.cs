@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using HidLibrary;
 using System.ComponentModel;
 
-namespace Aurora.Devices.SteelSeriesHID
+namespace Aurora.Devices.UnifiedHID
 {
 
-    class SteelSeriesHIDDevice : Device
+    class UnifiedHIDDevice : Device
     {
-        private string devicename = "SteelSeriesHID";
+        private string devicename = "UnifiedHID";
         private bool isInitialized = false;
         private bool peripheral_updated = false;
         private readonly object action_lock = new object();
@@ -23,7 +23,8 @@ namespace Aurora.Devices.SteelSeriesHID
             new Rival100(),
             new Rival110(),
             new Rival300(),
-            new Rival500()
+            new Rival500(),
+            new AsusPugio()
         };
         List<ISSDevice> FoundDevices = new List<ISSDevice>();
 
@@ -41,11 +42,10 @@ namespace Aurora.Devices.SteelSeriesHID
                             if (dev.Connect())
                                 FoundDevices.Add(dev);
                         }
-
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("SteelSeriesHID could not be initialized: " + e);
+                        Global.logger.Error("UnifiedHID could not be initialized: " + e);
                         isInitialized = false;
                     }
                     if (FoundDevices.Count > 0)
@@ -78,7 +78,7 @@ namespace Aurora.Devices.SteelSeriesHID
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.Error("There was an error shutting down SteelSeriesHID: " + ex);
+                    Global.logger.Error("There was an error shutting down UnifiedHID: " + ex);
                     isInitialized = false;
                 }
 
@@ -142,7 +142,7 @@ namespace Aurora.Devices.SteelSeriesHID
                     if (e.Cancel) return false;
                     else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
                     {
-                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel)
+                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel || key.Key == DeviceKeys.Peripheral_FrontLight)
                         {
                             foreach (ISSDevice device in FoundDevices)
                                 device.SetLEDColour(key.Key, color.R, color.G, color.B);
@@ -160,7 +160,7 @@ namespace Aurora.Devices.SteelSeriesHID
             }
             catch (Exception ex)
             {
-                Global.logger.Error("SteelSeriesHID, error when updating device: " + ex);
+                Global.logger.Error("UnifiedHID, error when updating device: " + ex);
                 return false;
             }
         }
@@ -208,7 +208,7 @@ namespace Aurora.Devices.SteelSeriesHID
         bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue);
     }
 
-    abstract class RivalBase : ISSDevice
+    abstract class UnifiedBase : ISSDevice
     {
         protected HidDevice device;
         protected Dictionary<DeviceKeys, Func<byte, byte, byte, bool>> deviceKeyMap;
@@ -228,7 +228,7 @@ namespace Aurora.Devices.SteelSeriesHID
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine($"Error when attempting to open SteelSeries HID device:\n{exc}", Logging_Level.Error);
+                    Global.logger.LogLine($"Error when attempting to open UnifiedHID device:\n{exc}", Logging_Level.Error);
                 }
             }
             return false;
@@ -259,7 +259,7 @@ namespace Aurora.Devices.SteelSeriesHID
     }
 
 
-    class Rival100 : RivalBase
+    class Rival100 : UnifiedBase
     {
         public Rival100()
         {
@@ -288,7 +288,7 @@ namespace Aurora.Devices.SteelSeriesHID
     }
 
 
-    class Rival110 : RivalBase
+    class Rival110 : UnifiedBase
     {
         public Rival110()
         {
@@ -322,7 +322,7 @@ namespace Aurora.Devices.SteelSeriesHID
     }
 
 
-    class Rival300 : RivalBase
+    class Rival300 : UnifiedBase
     {
         public Rival300()
         {
@@ -364,7 +364,7 @@ namespace Aurora.Devices.SteelSeriesHID
     }
 
 
-    class Rival500 : RivalBase
+    class Rival500 : UnifiedBase
     {
         public Rival500()
         {
@@ -421,6 +421,83 @@ namespace Aurora.Devices.SteelSeriesHID
             return device.WriteReport(report);
         }
 
+    }
+
+
+    class AsusPugio : UnifiedBase
+    {
+        public AsusPugio()
+        {
+            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            {
+                { DeviceKeys.Peripheral_Logo, SetLogo },
+                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel },
+                { DeviceKeys.Peripheral_FrontLight, SetBottomLed }
+            };
+        }
+
+        public override bool Connect()
+        {
+            return this.Connect(0x0b05, new[] { 0x1846, 0x1847 }, unchecked((short)0xFFFFFF01));
+        }
+
+        public bool SetScrollWheel(byte r, byte g, byte b)
+        {
+            HidReport report = device.CreateReport();
+            report.ReportId = 0x00;
+            for (int i = 0; i < 64; i++)
+            {
+                report.Data[i] = 0x00;
+            }
+            report.Data[0] = 0x51;
+            report.Data[1] = 0x28;
+            report.Data[2] = 0x01;
+            report.Data[4] = 0x00;
+            report.Data[5] = 0x04;
+            report.Data[6] = r;
+            report.Data[7] = g;
+            report.Data[8] = b;
+            return device.WriteReport(report);
+        }
+
+        public bool SetLogo(byte r, byte g, byte b)
+        {
+            SetBottomLed(r,g,b);
+            HidReport report = device.CreateReport();
+            report.ReportId = 0x00;
+            for (int i = 0; i < 64; i++)
+            {
+                report.Data[i] = 0x00;
+            }
+            report.Data[0] = 0x51;
+            report.Data[1] = 0x28;
+            report.Data[2] = 0x00;
+            report.Data[4] = 0x00;
+            report.Data[5] = 0x04;
+            report.Data[6] = r;
+            report.Data[7] = g;
+            report.Data[8] = b;
+            return device.WriteReport(report);
+        }
+
+        public bool SetBottomLed(byte r, byte g, byte b)
+        {
+            HidReport report = device.CreateReport();
+            report.ReportId = 0x00;
+            for (int i = 0; i < 64; i++)
+            {
+                report.Data[i] = 0x00;
+            }
+            report.Data[0] = 0x51;
+            report.Data[1] = 0x28;
+            report.Data[2] = 0x02;
+            report.Data[4] = 0x00;
+            report.Data[5] = 0x04;
+            report.Data[6] = r;
+            report.Data[7] = g;
+            report.Data[8] = b;
+            return device.WriteReport(report);
+        }
     }
 
 }
