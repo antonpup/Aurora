@@ -38,45 +38,44 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 
 ## Natively Supported Games
 
-* Dota 2
-* CS:GO
-* Grand Theft Auto V
-* Rocket League
-* Overwatch
-* Payday 2
-* The Division
-* League of Legends
-* Hotline Miami
-* The Talos Principle
+* American Truck Simulator
+* Battlefield 1
 * Battlefield 3
 * Blacklight: Retribution
-* Magic: The Gathering - Duels of the Planeswalkers 2012
-* Middle-earth: Shadow of Mordor
-* Serious Sam 3
-* Robot Roller-Derby Disco Dodgeball
-* XCOM: Enemy Unknown
-* Evolve Stage 2
-* Metro: Last Light
-* Guild Wars 2
-* Worms W.M.D
 * Blade and Soul
 * Borderlands 2
-* Minecraft
-* Euro Truck Simulator 2
-* American Truck Simulator
-* Rise of the Tomb Raider
-* Dying Light
-* Quantum Conumdrum
-* Move or Die
-* Battlefield 1
-* Dishonored
-* The Witcher 3
-* Minecraft
-* Killing Floor 2
+* CS:GO
 * DOOM (2016)
-* Factorio
-* Quake Champions
 * Diablo III
+* Dishonored
+* Dota 2
+* Dying Light
+* Euro Truck Simulator 2
+* Evolve Stage 2
+* Factorio
+* Grand Theft Auto V
+* Guild Wars 2
+* Hotline Miami
+* Killing Floor 2
+* League of Legends
+* Magic: The Gathering - Duels of the Planeswalkers 2012
+* Metro: Last Light
+* Middle-earth: Shadow of Mordor
+* Minecraft
+* Move or Die
+* Overwatch
+* Payday 2
+* Quake Champions
+* Quantum Conumdrum
+* Rise of the Tomb Raider
+* Robot Roller-Derby Disco Dodgeball
+* Rocket League
+* Serious Sam 3
+* The Division
+* The Talos Principle
+* The Witcher 3
+* Worms W.M.D
+* XCOM: Enemy Unknown
 
 ## Natively Supported Devices
 
@@ -94,9 +93,9 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * G203
 * G403
 * G502
+* G703
 * G900
 * G903
-* G703
 * G PRO
 
 ### Corsair
@@ -108,34 +107,36 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * K95 Platinum
 * STRAFE Non-RGB/RGB
 #### Mice
-* Scimitar RGB
 * Dark Core RGB
-* M65 RGB
 * Glaive RGB
+* M65 RGB
+* Scimitar RGB
 #### Other Peripherals
-* ST100 Headset Stand
 * MM800 Mousepad
+* ST100 Headset Stand
 
 ### Razer
 #### Keyboards
+* BlackWidow Chroma
 * Huntsman
 * Huntsman Elite
-* BlackWidow Chroma
 * Any other Chroma enabled Keyboard
 #### Mice
 * Abyssus Essential
-* Naga Hex/Trinity
-* Lancehead
-* Mamba & Elite
-* DeathAdder Elite
 * Basilisk
+* Deathadder Elite
+* Lancehead
+* Mamba
+* Mamba Elite
+* Naga Hex
+* Naga Trinity
 #### Mousepads
 * Firefly (single color)
 ### Cooler Master
-* Masterkeys Pro L, M and S RGB/White
-* MK750
 * CK550
 * CK552
+* Masterkeys Pro L, M and S RGB/White
+* MK750
 * MS120
 * MS121
 
@@ -148,14 +149,14 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ### SteelSeries
 #### Keyboards
-* Apex M800
 * Apex M750
 * Apex M750 TKL
+* Apex M800
 #### Mice
+* Rival 300
+* Rival 310
 * Rival 600
 * Rival 700
-* Rival 310
-* Rival 300
 
 ### Wooting
 * One
@@ -172,10 +173,6 @@ Dota 2 Demo
 
 [![Dota 2 Demo](http://img.youtube.com/vi/iqwYU-blkhk/0.jpg)](https://www.youtube.com/watch?v=iqwYU-blkhk)
 
-Rocket League Demo
-
-[![Rocket League Demo](http://img.youtube.com/vi/XhXQt0LU520/0.jpg)](https://www.youtube.com/watch?v=XhXQt0LU520)
-
 Grand Theft Auto V Demo
 
 [![Grand Theft Auto V Demo](http://img.youtube.com/vi/irBmmA_ndPY/0.jpg)](https://www.youtube.com/watch?v=irBmmA_ndPY)
@@ -184,15 +181,19 @@ Robot Roller-Derby Disco Dodgeball Demo
 
 [![Robot Roller-Derby Disco Dodgeball Demo](http://img.youtube.com/vi/pxx3hqoPFD8/0.jpg)](https://www.youtube.com/watch?v=pxx3hqoPFD8)
 
+Rocket League Demo
+
+[![Rocket League Demo](http://img.youtube.com/vi/XhXQt0LU520/0.jpg)](https://www.youtube.com/watch?v=XhXQt0LU520)
+
 
 ## Screenshots
+![CSGO Settings](https://puu.sh/tfKRK/61f3bb3757.png)
 ![Desktop Settings](https://puu.sh/tfKzm/1ce3b0cd5c.png)
 ![Dota 2 Settings](https://puu.sh/tfKNj/98229d2f69.png)
-![CSGO Settings](https://puu.sh/tfKRK/61f3bb3757.png)
-![GTA 5 Settings](https://puu.sh/tfKWL/d72e10b288.png)
-![Rocket League Settings](https://puu.sh/tfL4N/30f5b9cfea.png)
-![Payday 2 Settings](https://puu.sh/tfLcn/4978a48199.png)
 ![Euro Truck Simulator 2 / American Truck Simulator Settings](https://i.imgur.com/oaCpWd0.png)
+![GTA 5 Settings](https://puu.sh/tfKWL/d72e10b288.png)
+![Payday 2 Settings](https://puu.sh/tfLcn/4978a48199.png)
+![Rocket League Settings](https://puu.sh/tfL4N/30f5b9cfea.png)
 ![Skype Integration Settings](https://puu.sh/tfLfu/57b1df348a.png)
 
 
