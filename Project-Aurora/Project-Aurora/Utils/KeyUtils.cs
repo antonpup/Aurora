@@ -100,7 +100,301 @@ namespace Aurora.Utils
                     break;
             }
         }
+        /// <summary>
+        /// Converts Devices.DeviceKeys to Forms.Keys
+        /// </summary>
+        /// <param name="deviceKeys">The Forms.Key to be converted</param>
+        /// <returns>The resulting Devices.DeviceKeys</returns>
+        public static Keys GetFormsKey(Devices.DeviceKeys deviceKeys)
+        {
+            switch (deviceKeys)
+            {
+                case (DeviceKeys.ESC):
+                    return Keys.Escape;
+                case (DeviceKeys.BACKSPACE):
+                    return Keys.Back;
+                case (DeviceKeys.TAB):
+                    return Keys.Tab;
+                case (DeviceKeys.NUM_ENTER):
+                    return Keys.Enter;
+                case (DeviceKeys.ENTER):
+                    return Keys.Enter;
+                case (DeviceKeys.LEFT_SHIFT):
+                    return Keys.LShiftKey;
+                case (DeviceKeys.LEFT_CONTROL):
+                    return Keys.LControlKey;
+                case (DeviceKeys.LEFT_ALT):
+                    return Keys.LMenu;
+                case (DeviceKeys.JPN_MUHENKAN):
+                    return Keys.IMENonconvert;
+                case (DeviceKeys.JPN_HENKAN):
+                    return Keys.IMEConvert;
+                case (DeviceKeys.JPN_HIRAGANA_KATAKANA):
+                    return Keys.IMEModeChange;
+                case (DeviceKeys.RIGHT_SHIFT):
+                    return Keys.RShiftKey;
+                case (DeviceKeys.RIGHT_CONTROL):
+                    return Keys.RControlKey;
+                case (DeviceKeys.RIGHT_ALT):
+                    return Keys.RMenu;
+                case (DeviceKeys.PAUSE_BREAK):
+                    return Keys.Pause;
+                case (DeviceKeys.CAPS_LOCK):
+                    return Keys.CapsLock;
+                case (DeviceKeys.SPACE):
+                    return Keys.Space;
+                case (DeviceKeys.PAGE_UP):
+                    return Keys.PageUp;
 
+                case (DeviceKeys.PAGE_DOWN):
+                    return Keys.PageDown;
+
+                case (DeviceKeys.END):
+                    return Keys.End;
+                case (DeviceKeys.HOME):
+                    return Keys.Home;
+                case (DeviceKeys.ARROW_LEFT):
+                    return Keys.Left;
+                case (DeviceKeys.ARROW_UP):
+                    return Keys.Up;
+                case (DeviceKeys.ARROW_RIGHT):
+                    return Keys.Right;
+                case (DeviceKeys.ARROW_DOWN):
+                    return Keys.Down;
+                case (DeviceKeys.PRINT_SCREEN):
+                    return Keys.PrintScreen;
+                case (DeviceKeys.INSERT):
+                    return Keys.Insert;
+                case (DeviceKeys.DELETE):
+                    return Keys.Delete;
+                case (DeviceKeys.ZERO):
+                    return Keys.D0;
+                case (DeviceKeys.ONE):
+                    return Keys.D1;
+                case (DeviceKeys.TWO):
+                    return Keys.D2;
+                case (DeviceKeys.THREE):
+                    return Keys.D3;
+                case (DeviceKeys.FOUR):
+                    return Keys.D4;
+                case (DeviceKeys.FIVE):
+                    return Keys.D5;
+                case (DeviceKeys.SIX):
+                    return Keys.D6;
+                case (DeviceKeys.SEVEN):
+                    return Keys.D7;
+                case (DeviceKeys.EIGHT):
+                    return Keys.D8;
+                case (DeviceKeys.NINE):
+                    return Keys.D9;
+                case (DeviceKeys.A):
+                    return Keys.A;
+                case (DeviceKeys.B):
+                    return Keys.B;
+                case (DeviceKeys.C):
+                    return Keys.C;
+                case (DeviceKeys.D):
+                    return Keys.D;
+                case (DeviceKeys.E):
+                    return Keys.E;
+                case (DeviceKeys.F):
+                    return Keys.F;
+                case (DeviceKeys.G):
+                    return Keys.G;
+                case (DeviceKeys.H):
+                    return Keys.H;
+                case (DeviceKeys.I):
+                    return Keys.I;
+                case (DeviceKeys.J):
+                    return Keys.J;
+                case (DeviceKeys.K):
+                    return Keys.K;
+                case (DeviceKeys.L):
+                    return Keys.L;
+                case (DeviceKeys.M):
+                    return Keys.M;
+                case (DeviceKeys.N):
+                    return Keys.N;
+                case (DeviceKeys.O):
+                    return Keys.O;
+                case (DeviceKeys.P):
+                    return Keys.P;
+                case (DeviceKeys.Q):
+                    return Keys.Q;
+                case (DeviceKeys.R):
+                    return Keys.R;
+                case (DeviceKeys.S):
+                    return Keys.S;
+                case (DeviceKeys.T):
+                    return Keys.T;
+                case (DeviceKeys.U):
+                    return Keys.U;
+                case (DeviceKeys.V):
+                    return Keys.V;
+                case (DeviceKeys.W):
+                    return Keys.W;
+                case (DeviceKeys.X):
+                    return Keys.X;
+                case (DeviceKeys.Y):
+                    return Keys.Y;
+                case (DeviceKeys.Z):
+                    return Keys.Z;
+                case (DeviceKeys.LEFT_WINDOWS):
+                    return Keys.LWin;
+                case (DeviceKeys.RIGHT_WINDOWS):
+                    return Keys.RWin;
+                case (DeviceKeys.APPLICATION_SELECT):
+                    return Keys.Apps;
+                case (DeviceKeys.NUM_ZERO):
+                    return Keys.NumPad0;
+                case (DeviceKeys.NUM_ONE):
+                    return Keys.NumPad1;
+                case (DeviceKeys.NUM_TWO):
+                    return Keys.NumPad2;
+                case (DeviceKeys.NUM_THREE):
+                    return Keys.NumPad3;
+                case (DeviceKeys.NUM_FOUR):
+                    return Keys.NumPad4;
+                case (DeviceKeys.NUM_FIVE):
+                    return Keys.NumPad5;
+                case (DeviceKeys.NUM_SIX):
+                    return Keys.NumPad6;
+                case (DeviceKeys.NUM_SEVEN):
+                    return Keys.NumPad7;
+                case (DeviceKeys.NUM_EIGHT):
+                    return Keys.NumPad8;
+                case (DeviceKeys.NUM_NINE):
+                    return Keys.NumPad9;
+                case (DeviceKeys.NUM_ASTERISK):
+                    return Keys.Multiply;
+                case (DeviceKeys.NUM_PLUS):
+                    return Keys.Add;
+                case (DeviceKeys.NUM_MINUS):
+                    return Keys.Subtract;
+                case (DeviceKeys.NUM_PERIOD):
+                    return Keys.Decimal;
+                case (DeviceKeys.NUM_SLASH):
+                    return Keys.Divide;
+                case (DeviceKeys.F1):
+                    return Keys.F1;
+                case (DeviceKeys.F2):
+                    return Keys.F2;
+                case (DeviceKeys.F3):
+                    return Keys.F3;
+                case (DeviceKeys.F4):
+                    return Keys.F4;
+                case (DeviceKeys.F5):
+                    return Keys.F5;
+                case (DeviceKeys.F6):
+                    return Keys.F6;
+                case (DeviceKeys.F7):
+                    return Keys.F7;
+                case (DeviceKeys.F8):
+                    return Keys.F8;
+                case (DeviceKeys.F9):
+                    return Keys.F9;
+                case (DeviceKeys.F10):
+                    return Keys.F10;
+                case (DeviceKeys.F11):
+                    return Keys.F11;
+                case (DeviceKeys.F12):
+                    return Keys.F12;
+                case (DeviceKeys.NUM_LOCK):
+                    return Keys.NumLock;
+                case (DeviceKeys.SCROLL_LOCK):
+                    return Keys.Scroll;
+                case (DeviceKeys.VOLUME_MUTE):
+                    return Keys.VolumeMute;
+                case (DeviceKeys.VOLUME_DOWN):
+                    return Keys.VolumeDown;
+                case (DeviceKeys.VOLUME_UP):
+                    return Keys.VolumeUp;
+                case (DeviceKeys.MEDIA_NEXT):
+                    return Keys.MediaNextTrack;
+                case (DeviceKeys.MEDIA_PREVIOUS):
+                    return Keys.MediaPreviousTrack;
+                case (DeviceKeys.MEDIA_STOP):
+                    return Keys.MediaStop;
+                case (DeviceKeys.MEDIA_PLAY_PAUSE):
+                    return Keys.MediaPlayPause;
+                case (DeviceKeys.SEMICOLON):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.CLOSE_BRACKET;
+                    else*/
+                    return Keys.OemSemicolon;
+                case (DeviceKeys.EQUALS):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.CLOSE_BRACKET;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.MINUS;
+                    else*/
+                    return Keys.Oemplus;
+                case (DeviceKeys.COMMA):
+                    return Keys.Oemcomma;
+                case (DeviceKeys.MINUS):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.FORWARD_SLASH;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.FORWARD_SLASH;
+                    else*/
+                    return Keys.OemMinus;
+                case (DeviceKeys.PERIOD):
+                    return Keys.OemPeriod;
+                case (DeviceKeys.FORWARD_SLASH):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.HASHTAG;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.HASHTAG;
+                    else*/
+                    return Keys.OemQuestion;
+                case (DeviceKeys.JPN_HALFFULLWIDTH):
+                    return Keys.ProcessKey;
+                case (DeviceKeys.TILDE):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                        return DeviceKeys.APOSTROPHE;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.SEMICOLON;
+                    else*/
+                    return Keys.Oemtilde;
+                case (DeviceKeys.OPEN_BRACKET):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.MINUS;
+                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.EQUALS;
+                    else*/
+                    return Keys.OemOpenBrackets;
+                case (DeviceKeys.BACKSLASH):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                        return DeviceKeys.BACKSLASH_UK;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.TILDE;
+                    else*/
+                    return Keys.OemPipe;
+                case (DeviceKeys.CLOSE_BRACKET):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
+                        return DeviceKeys.EQUALS;
+                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
+                        return DeviceKeys.OPEN_BRACKET;
+                    else*/
+                    return Keys.OemCloseBrackets;
+                case (DeviceKeys.APOSTROPHE):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                        return DeviceKeys.HASHTAG;
+                    else*/
+                    return Keys.OemQuotes;
+                case (DeviceKeys.BACKSLASH_UK):
+                    return Keys.OemBackslash;
+                case (DeviceKeys.OEM8):
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
+                        return DeviceKeys.TILDE;
+                    else*/
+                    return Keys.Oem8;
+                case (DeviceKeys.MEDIA_PLAY):
+                    return Keys.Play;
+                default:
+                    return Keys.None;
+            }
+        }
         /// <summary>
         /// Converts Devices.DeviceKeys from RawInput event
         /// </summary>

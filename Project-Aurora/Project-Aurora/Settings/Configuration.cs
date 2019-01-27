@@ -183,7 +183,9 @@ namespace Aurora.Settings
         Corsair_K95_PL = 204,
         [Description("Corsair - K68")]
         Corsair_K68 = 205,
-
+        [Description("Corsair - K70 MK2")]
+        Corsair_K70MK2 = 206
+            ,
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
         Razer_Blackwidow = 300,
@@ -227,6 +229,10 @@ namespace Aurora.Settings
         //Drevo range is 1000-1099
         [Description("Drevo BladeMaster")]
         Drevo_BladeMaster = 1000,
+
+	//Creative range is 1100-1199
+        [Description("SoundBlasterX VanguardK08")]
+        SoundBlasterX_Vanguard_K08 = 1100,
     }
 
     public enum PreferredKeyboardLocalization
