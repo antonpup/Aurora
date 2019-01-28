@@ -524,6 +524,15 @@
       <DependentUpon>Control_DeadCells.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\DeadCells\DeadCellsApplication.cs" />
+    <Compile Include="Profiles\Subnautica\Control_Subnautica.xaml.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\GameState_Subnautica.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\GameStateNode.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\NotificationNode.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Subnautica\SubnauticaApplication.cs" />
+    <Compile Include="Profiles\Subnautica\SubnauticaProfile.cs" />
     <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
       <DependentUpon>Control_Witcher3.xaml</DependentUpon>
     </Compile>
@@ -1354,6 +1363,7 @@
     <Resource Include="Resources\deadcells_128x128.png" />
     <Resource Include="Resources\Layers_Copy.png" />
     <Resource Include="Resources\Layers_Paste.png" />
+    <Resource Include="Resources\Subnautica.png" />
     <Content Include="Logi\GHUB\LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1747,6 +1757,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\Subnautica\Control_Subnautica.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Witcher3\Control_Witcher3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -2026,6 +2040,7 @@
     <Resource Include="Resources\AddProfile_Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Profiles\Subnautica\Layers\" />
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <ItemGroup>
