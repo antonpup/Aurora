@@ -9,6 +9,7 @@ using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.Overlays;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Profiles;
+using Newtonsoft.Json.Serialization;
 
 namespace Aurora.Settings
 {
@@ -525,7 +526,7 @@ namespace Aurora.Settings
             if (String.IsNullOrWhiteSpace(content))
                 return CreateDefaultConfigurationFile();
 
-            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder, Error = DeserializeErrorHandler });
 
             if (!config.unified_hid_disabled)
             {
@@ -534,6 +535,15 @@ namespace Aurora.Settings
             }
 
             return config;
+        }
+
+        private static void DeserializeErrorHandler(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+        {
+            if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice") && e.CurrentObject is HashSet<Type> dd)
+            {
+                dd.Add(typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice));
+                e.ErrorContext.Handled = true;
+            }
         }
 
         public static void Save(Configuration configuration)

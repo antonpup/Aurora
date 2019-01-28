@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,8 @@ namespace Aurora.Utils
                 case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
                 case "Aurora.Profiles.ColorEnhanceProfile":
                     return typeof(Profiles.WrapperProfile);
+                case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
+                    return typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice);
                 default:
                     if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
                         return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));
