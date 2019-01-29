@@ -142,8 +142,17 @@ namespace LedCSharp
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool SetDllDirectory(string path);
 
+        static LogitechGSDK()
+        {
+            //InitDLL(LGDLL.GHUB);
+        }
+
+        private static bool initd = false;
         public static void InitDLL(LGDLL? dll = null)
         {
+            if (initd)
+                return;
+
             bool ghub = false;
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
@@ -159,6 +168,7 @@ namespace LedCSharp
             path = Path.Combine(path, "Logi", ghub ? "GHUB" : "LGS");
             bool ok = SetDllDirectory(path);
             if (!ok) throw new System.ComponentModel.Win32Exception();
+            initd = true;
         }
 
         //LED SDK
