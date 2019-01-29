@@ -27,7 +27,10 @@
                     <StackPanel Orientation="Vertical" MinHeight="140">
                         <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with League of Legends" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
                         <TextBlock Margin="10,10,10,0" Text="In order for League of Legends support to work, you have to apply the Aurora Wrapper Patch for LightFX in order for Aurora to receive lighting information. Press the &quot;Patch League of Legends&quot; button and navigate to the location of the &quot;League of Legends.exe&quot; file. The default location of this file is usually located at : &quot;*path to riot games directory*\Riot Games\League of Legends\RADS\solutions\lol_game_client_sln\releases\*release number*\deploy\&quot;. After this, ensure 'EnableLightFx' is set to '1' in League of Legends' game.cfg file (located at &quot;*path to riot games directory*\Riot Games\League of Legends\Config\game.cfg). This should not trigger any anti-cheat, as this uses natively supported LightFX support, but it is still used at your own risk." VerticalAlignment="Top" TextWrapping="Wrap"/>
-                        <Button x:Name="patch_button" Content="Patch League of Legends" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
+                        <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+                            <Button x:Name="patch_button" Content="Patch League of Legends" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="patch_button_Click"/>
+                            <Button x:Name="patch_button_manual" Content="Patch League of Legends Manually" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="patch_button_manual_Click"/>
+                        </StackPanel>
                         <TextBlock Margin="10,10,325,0" TextWrapping="Wrap" VerticalAlignment="Bottom"><Run Text="League of Legends natively offers LightFX effects for hero's current HP, when they are hit, and when they are dead"/><Run Text="."/></TextBlock>
                     </StackPanel>
                 </Grid>
