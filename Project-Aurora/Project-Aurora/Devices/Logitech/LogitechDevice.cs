@@ -190,9 +190,11 @@ namespace Aurora.Devices.Logitech
                         {
                             if (Global.Configuration.logitech_first_time)
                             {
-                                LogitechInstallInstructions instructions = new LogitechInstallInstructions();
-                                instructions.ShowDialog();
-
+                                App.Current.Dispatcher.Invoke(() =>
+                                {
+                                    LogitechInstallInstructions instructions = new LogitechInstallInstructions();
+                                    instructions.ShowDialog();
+                                });
                                 Global.Configuration.logitech_first_time = false;
                                 Settings.ConfigManager.Save(Global.Configuration);
                             }

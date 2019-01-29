@@ -54,9 +54,11 @@ namespace Aurora.Devices.SteelSeries
 
                         if (Global.Configuration.steelseries_first_time)
                         {
-                            SteelSeriesInstallInstructions instructions = new SteelSeriesInstallInstructions();
-                            instructions.ShowDialog();
-
+                            App.Current.Dispatcher.Invoke(() =>
+                            {
+                                SteelSeriesInstallInstructions instructions = new SteelSeriesInstallInstructions();
+                                instructions.ShowDialog();
+                            });
                             Global.Configuration.steelseries_first_time = false;
                             Settings.ConfigManager.Save(Global.Configuration);
                         }
