@@ -178,6 +178,12 @@ namespace Aurora.Devices.Logitech
                 {
                     try
                     {
+                        LogitechGSDK.LGDLL? dll = null;
+                        if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_override_dll"))
+                            dll = Global.Configuration.VarRegistry.GetVariable<LogitechGSDK.LGDLL>($"{devicename}_override_dll_option");
+
+                        LogitechGSDK.InitDLL(dll);
+
                         if (!LogitechGSDK.LogiLedInit())
                         {
                             Global.logger.Error("Logitech LED SDK could not be initialized.");
@@ -1166,6 +1172,8 @@ namespace Aurora.Devices.Logitech
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_set_default", false, "Set Default Color");
                 default_registry.Register($"{devicename}_default_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), "Default Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
+                default_registry.Register($"{devicename}_override_dll", false, "Override DLL");
+                default_registry.Register($"{devicename}_override_dll_option", LogitechGSDK.LGDLL.LGS, "Override DLL");
             }
             return default_registry;
         }

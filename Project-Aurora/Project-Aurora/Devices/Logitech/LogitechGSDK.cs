@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using Aurora;
+using System.ComponentModel;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace LedCSharp
@@ -130,13 +131,27 @@ namespace LedCSharp
 
     public class LogitechGSDK
     {
+        public enum LGDLL
+        {
+            [Description("LGS")]
+            LGS,
+            [Description("GHUB")]
+            GHUB
+        }
+
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool SetDllDirectory(string path);
 
-        static LogitechGSDK()
+        public static void InitDLL(LGDLL? dll = null)
         {
+            bool ghub = false;
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            bool ghub = Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "LGHUB"));
+
+            if (dll == null)
+                ghub = Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "LGHUB"));
+            else
+                ghub = dll.Equals(LGDLL.GHUB);
+
             if (ghub)
                 Global.logger.LogLine("Loading GHUB DLL", Logging_Level.Info);
             else
