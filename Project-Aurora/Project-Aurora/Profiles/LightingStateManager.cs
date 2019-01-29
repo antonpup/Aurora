@@ -45,7 +45,7 @@ namespace Aurora.Profiles
         }
     }    
 
-    public class ProfilesManagerSettings
+    public class ProfilesManagerSettings : SettingsBase
     {
         public ProfilesManagerSettings()
         {
@@ -92,7 +92,7 @@ namespace Aurora.Profiles
 
         public LightingStateManager()
         {
-            SettingsSavePath = Path.Combine(Global.AppDataDirectory, "ProfilesSettings.json");
+            SettingsSavePath = Path.Combine(Global.SavePath, "ProfilesSettings.json");
         }
 
         public bool Initialized { get; private set; }
@@ -176,7 +176,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Ambilight", "Ambilight Layer", typeof(AmbilightLayerHandler) ),
                 new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
                 new LayerHandlerEntry("Glitch", "Glitch Effect Layer", typeof(GlitchLayerHandler) ),
-                new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
+                //new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
                 new LayerHandlerEntry("ToggleKey", "Toggle Key Layer", typeof(ToggleKeyLayerHandler)),
                 new LayerHandlerEntry("Timer", "Timer Layer", typeof(TimerLayerHandler)),
                 new LayerHandlerEntry("Toolbar", "Toolbar Layer", typeof(ToolbarLayerHandler)),

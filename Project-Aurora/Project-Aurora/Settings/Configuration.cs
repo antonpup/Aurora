@@ -370,7 +370,7 @@ namespace Aurora.Settings
         Fine = 12
     }
 
-    public class Configuration : Settings
+    public class Configuration : SettingsBase
     {
         //First Time Installs
         public bool redist_first_time;
@@ -388,31 +388,31 @@ namespace Aurora.Settings
 
         private bool useVolumeAsBrightness = false;
         [JsonProperty(PropertyName = "use_volume_as_brightness")]
-        public bool UseVolumeAsBrightness { get { return useVolumeAsBrightness; } set { useVolumeAsBrightness = value; InvokePropertyChanged(); } }
+        public bool UseVolumeAsBrightness { get { return useVolumeAsBrightness; } set { UpdateVar(ref useVolumeAsBrightness, value); } }
 
         private float globalBrightness = 1.0f;
         [JsonProperty(PropertyName = "global_brightness")]
-        public float GlobalBrightness { get { return globalBrightness; } set { globalBrightness = value; InvokePropertyChanged(); } }
+        public float GlobalBrightness { get { return globalBrightness; } set { UpdateVar(ref globalBrightness, value); } }
 
         private float keyboardBrightness = 1.0f;
         [JsonProperty(PropertyName = "keyboard_brightness_modifier")]
-        public float KeyboardBrightness { get { return keyboardBrightness; } set { keyboardBrightness = value; InvokePropertyChanged(); } }
+        public float KeyboardBrightness { get { return keyboardBrightness; } set{ UpdateVar(ref keyboardBrightness, value); } }
 
         private float peripheralBrightness = 1.0f;
         [JsonProperty(PropertyName = "peripheral_brightness_modifier")]
-        public float PeripheralBrightness { get { return peripheralBrightness; } set { peripheralBrightness = value; InvokePropertyChanged(); } }
+        public float PeripheralBrightness { get { return peripheralBrightness; } set { UpdateVar(ref peripheralBrightness, value); } }
 
         private bool getDevReleases = false;
-        public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
+        public bool GetDevReleases { get { return getDevReleases; } set { UpdateVar(ref getDevReleases, value); } }
 
         private bool getPointerUpdates = true;
         public bool GetPointerUpdates { get { return getPointerUpdates; } set { getPointerUpdates = value; InvokePropertyChanged(); } }
 
         private bool highPriority = false;
-        public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
+        public bool HighPriority { get { return highPriority; } set { UpdateVar(ref highPriority, value); } }
 
         private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
-        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
+        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { UpdateVar(ref bitmapAccuracy, value); } }
 
         private bool enableAudioCapture;
         public bool EnableAudioCapture { get => enableAudioCapture; set { enableAudioCapture = value; InvokePropertyChanged(); } }

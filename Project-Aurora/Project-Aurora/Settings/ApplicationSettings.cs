@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Settings
 {
-    public class ApplicationSettings : Settings
+    public class ApplicationSettings : SettingsBase
     {
         #region Private Properties
         private bool isEnabled = true;
@@ -17,11 +17,11 @@ namespace Aurora.Settings
         #endregion
 
         #region Public Properties
-        public bool IsEnabled { get { return isEnabled; } set { isEnabled = value; InvokePropertyChanged(); } }
+        public bool IsEnabled { get { return isEnabled; } set { UpdateVar(ref isEnabled, value); } }
 
-        public bool Hidden { get { return hidden; } set { hidden = value; InvokePropertyChanged(); } }
+        public bool Hidden { get { return hidden; } set { UpdateVar(ref hidden, value); } }
 
-        public string SelectedProfile { get { return selectedProfile; } set { selectedProfile = value; InvokePropertyChanged(); } }
+        public string SelectedProfile { get { return selectedProfile; } set { UpdateVar(ref selectedProfile, value); } }
         #endregion
 
         public ApplicationSettings()
@@ -37,7 +37,7 @@ namespace Aurora.Settings
         #endregion
 
         #region Public Properties
-        public bool IsFirstTimeInstalled { get { return isFirstTimeInstalled; } set { isFirstTimeInstalled = value; InvokePropertyChanged(); } }
+        public bool IsFirstTimeInstalled { get { return isFirstTimeInstalled; } set { UpdateVar(ref isFirstTimeInstalled, value); } }
         #endregion
 
         public FirstTimeApplicationSettings()

@@ -14,7 +14,7 @@ namespace Aurora.Profiles.Generic_Application
         #endregion
 
         #region Public Properties
-        public string ApplicationName { get { return applicationName; } set { applicationName = value; InvokePropertyChanged(); } }
+        public string ApplicationName { get { return applicationName; } set { UpdateVar(ref applicationName, value); } }
         #endregion
 
         public GenericApplicationSettings()
