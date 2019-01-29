@@ -8,6 +8,10 @@ using CUE.NET.Devices.Mouse;
 using CUE.NET.Devices.Mouse.Enums;
 using CUE.NET.Devices.Mousemat;
 using CUE.NET.Devices.HeadsetStand;
+using CUE.NET.Devices.CommanderPro;
+using CUE.NET.Devices.Cooler;
+using CUE.NET.Devices.LightingNodePro;
+using CUE.NET.Devices.MemoryModule;
 using CUE.NET.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -35,6 +39,10 @@ namespace Aurora.Devices.Corsair
         CorsairHeadset headset;
         CorsairMousemat mousemat;
         CorsairHeadsetStand headsetstand;
+        CorsairCommanderPro commanderPro;
+        CorsairCooler cooler;
+        CorsairLightingNodePro lightingNode;
+        CorsairMemoryModule memory;
 
         private readonly object action_lock = new object();
 
@@ -80,7 +88,12 @@ namespace Aurora.Devices.Corsair
                         mouse = CueSDK.MouseSDK;
                         headset = CueSDK.HeadsetSDK;
                         mousemat = CueSDK.MousematSDK;
-                        headsetstand = CueSDK.HeadsetStandSDK;
+                        //headsetstand = CueSDK.HeadsetStandSDK;
+                        memory = CueSDK.MemoryModuleSDK;
+                        cooler = CueSDK.CoolerSDK;
+                        lightingNode = CueSDK.LightingNodeProSDK;
+                        commanderPro = CueSDK.CommanderProSDK;
+                        Global.logger.Info("Corsair Cooler " + commanderPro);
                         if (keyboard != null)
                             keyboard.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
                         if (mouse != null)
@@ -93,7 +106,7 @@ namespace Aurora.Devices.Corsair
                             headsetstand.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
 
 
-                        if (keyboard == null && mouse == null && headset == null && mousemat == null && headsetstand == null)
+                        if (keyboard == null && mouse == null && headset == null && mousemat == null && headsetstand == null && memory == null && lightingNode == null && cooler == null && commanderPro == null)
                             throw new WrapperException("No devices found");
                         else
                         {
@@ -368,6 +381,10 @@ namespace Aurora.Devices.Corsair
                             mouse[CorsairLedId.B5].Color = color;
                         if (mouse[CorsairLedId.B6] != null)
                             mouse[CorsairLedId.B6].Color = color;
+                        //if (memory[CorsairLedId.RAM_1] != null)
+                        //    memory[CorsairLedId.RAM_1].Color = color;
+                        //if (cooler[CorsairLedId.Cooler_1] != null)
+                         //   cooler[CorsairLedId.Cooler_1].Color = color;
                         mouse.Update(true);
                     }
 
