@@ -617,7 +617,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = leftColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                          .Select(item => new { Color = item.Key, Count = item.Count() })
                                          .First().Color;
-                        SetZoneColor(0x0, 1, (mostUsed.R / 255) * 100, (mostUsed.G / 255) * 100, (mostUsed.B / 255) * 100);
+                        SetZoneColor(0x0, 1, (int)((float)(mostUsed.R / 255) * 100), (int)((float)(mostUsed.G / 255) * 100), (int)((float)(mostUsed.B / 255) * 100));
                     }
                     else
                     {
@@ -629,7 +629,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = centerColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                         .Select(item => new { Color = item.Key, Count = item.Count() })
                                         .First().Color;
-                        SetZoneColor(0x0, 2, (mostUsed.R / 255) * 100, (mostUsed.G / 255) * 100, (mostUsed.B / 255) * 100);
+                        SetZoneColor(0x0, 2, (int)((float)(mostUsed.R / 255) * 100), (int)((float)(mostUsed.G / 255) * 100), (int)((float)(mostUsed.B / 255) * 100));
                     }
                     else
                     {
@@ -641,7 +641,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = rightColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First().Color;
-                        SetZoneColor(0x0, 3, (mostUsed.R / 255) * 100, (mostUsed.G / 255) * 100, (mostUsed.B / 255) * 100);
+                        SetZoneColor(0x0, 3, (int)((float)(mostUsed.R / 255) * 100), (int)((float)(mostUsed.G / 255) * 100), (int)((float)(mostUsed.B / 255) * 100));
                     }
                     else
                     {
@@ -653,7 +653,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = arrowColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First().Color;
-                        SetZoneColor(0x0, 4, (mostUsed.R / 255) * 100, (mostUsed.G / 255) * 100, (mostUsed.B / 255) * 100);
+                        SetZoneColor(0x0, 4, (int)((float)(mostUsed.R / 255) * 100), (int)((float)(mostUsed.G / 255) * 100), (int)((float)(mostUsed.B / 255) * 100));
                     }
                     else
                     {
@@ -665,7 +665,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = numpadColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First().Color;
-                        SetZoneColor(0x0, 5, (mostUsed.R / 255) * 100, (mostUsed.G / 255) * 100, (mostUsed.B / 255) * 100);
+                        SetZoneColor(0x0, 5, (int)((float)(mostUsed.R / 255) * 100), (int)((float)(mostUsed.G / 255) * 100), (int)((float)(mostUsed.B / 255) * 100));
                     }
                     else
                     {
