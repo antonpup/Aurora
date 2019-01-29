@@ -1,0 +1,24 @@
+﻿<Window x:Class="Aurora.Settings.Window_GSIHttpDebug"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Title="Aurora Game State Integration HTTP Request Viewer"
+             Loaded="Window_Loaded" Closing="Window_Closing" Background="#181818">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="18px" />
+        </Grid.RowDefinitions>
+        
+        <TextBox x:Name="BodyPreviewTxt" IsReadOnly="True" Background="#1E1E1E" BorderThickness="0" Padding="4px" FontFamily="Fira Code,Consolas,Courier New,monospace" FontSize="12" Foreground="#C9D1CE" />
+
+        <TextBlock Grid.Row="1">
+            <Run FontWeight="Bold">Request time:</Run>
+            <Run x:Name="CurRequestTime" FontFamily="Fira Code,Consolas,Courier New,monospace">-</Run>
+        </TextBlock>
+    </Grid>
+</Window>

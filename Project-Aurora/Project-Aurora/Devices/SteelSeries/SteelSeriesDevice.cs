@@ -54,9 +54,11 @@ namespace Aurora.Devices.SteelSeries
 
                         if (Global.Configuration.steelseries_first_time)
                         {
-                            SteelSeriesInstallInstructions instructions = new SteelSeriesInstallInstructions();
-                            instructions.ShowDialog();
-
+                            App.Current.Dispatcher.Invoke(() =>
+                            {
+                                SteelSeriesInstallInstructions instructions = new SteelSeriesInstallInstructions();
+                                instructions.ShowDialog();
+                            });
                             Global.Configuration.steelseries_first_time = false;
                             Settings.ConfigManager.Save(Global.Configuration);
                         }
@@ -175,6 +177,7 @@ namespace Aurora.Devices.SteelSeries
                              key.Key == DeviceKeys.Peripheral_ScrollWheel)
                     {
                         SendColorToPeripheralZone(key.Key, color);
+                        SendColorToPeripheral(color, forced);
                     }
                     else
                     {
@@ -279,8 +282,8 @@ namespace Aurora.Devices.SteelSeries
                 }
                 //else if (zone == DeviceKeys.Peripheral_FrontLight)
                 //{
-                    //NYI
-                    //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
+                //NYI
+                //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
                 //}
                 /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
                 {

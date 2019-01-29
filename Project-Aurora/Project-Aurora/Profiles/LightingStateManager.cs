@@ -143,7 +143,8 @@ namespace Aurora.Profiles
                 new Factorio.Factorio(),
                 new QuakeChampions.QuakeChampions(),
                 new Diablo3.Diablo3(),
-                new DeadCells.DeadCells()
+                new DeadCells.DeadCells(),
+                new Subnautica.Subnautica()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -185,7 +186,7 @@ namespace Aurora.Profiles
                 List<string> additionals = new List<string>(Directory.EnumerateDirectories(AdditionalProfilesPath));
                 foreach (var dir in additionals)
                 {
-                    if (File.Exists(Path.Combine(dir, "default.json")))
+                    if (File.Exists(Path.Combine(dir, "settings.json")))
                     {
                         string proccess_name = Path.GetFileName(dir);
                         RegisterEvent(new GenericApplication(proccess_name));

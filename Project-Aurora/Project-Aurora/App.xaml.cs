@@ -131,8 +131,11 @@ namespace Aurora
                 Global.isDebug = true;
 #endif
                 Global.Initialize();
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-
+                string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                Directory.SetCurrentDirectory(path);
+                string logiDll = Path.Combine(path, "LogitechLed.dll");
+                if (File.Exists(logiDll))
+                    File.Delete(logiDll);
                 StringBuilder systeminfo_sb = new StringBuilder(string.Empty);
                 systeminfo_sb.Append("\r\n========================================\r\n");
 
@@ -229,6 +232,11 @@ namespace Aurora
 
                 this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+
+                if (Environment.Is64BitProcess)
+                    currentDomain.AppendPrivatePath("x64");
+                else
+                    currentDomain.AppendPrivatePath("x86");
 
                 Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
 

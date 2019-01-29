@@ -57,7 +57,10 @@ namespace Aurora.Settings
             this.Max = variableRegistryItem.Max;
             Type typ = this.Value.GetType();
             Type defaultType = variableRegistryItem.Default.GetType();
-            if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
+
+            if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
+                this.Value = Enum.ToObject(defaultType, Value);
+            else if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
                 this.Value = Convert.ChangeType(this.Value, defaultType);
             else if (this.Value == null && !defaultType.Equals(typ))
                 this.Value = variableRegistryItem.Default;
@@ -71,7 +74,7 @@ namespace Aurora.Settings
         UseHEX = 1
     }
 
-    public class VariableRegistry //Might want to implement something like IEnumerable here
+    public class VariableRegistry : ICloneable //Might want to implement something like IEnumerable here
     {
         [JsonProperty("Variables")]
         private Dictionary<string, VariableRegistryItem> _variables;
@@ -150,7 +153,7 @@ namespace Aurora.Settings
 
         public T GetVariable<T>(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && _variables[name].Value.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
                 return (T)_variables[name].Value;
 
             return default(T);
@@ -158,7 +161,7 @@ namespace Aurora.Settings
 
         public T GetVariableDefault<T>(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && _variables[name].Default.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
                 return (T)_variables[name].Default;
 
             return Activator.CreateInstance<T>();
@@ -166,7 +169,7 @@ namespace Aurora.Settings
 
         public bool GetVariableMax<T>(string name, out T value)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && _variables[name].Max.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
                 value = (T)_variables[name].Max;
                 return true;
@@ -178,7 +181,7 @@ namespace Aurora.Settings
 
         public bool GetVariableMin<T>(string name, out T value)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && _variables[name].Min.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
                 value = (T)_variables[name].Min;
                 return true;
@@ -224,6 +227,17 @@ namespace Aurora.Settings
         {
             if (_variables.ContainsKey(name))
                 _variables.Remove(name);
+        }
+
+        public object Clone()
+        {
+            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+
+            return JsonConvert.DeserializeObject(
+                    str,
+                    this.GetType(),
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
+                    );
         }
     }
 }

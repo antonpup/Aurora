@@ -83,6 +83,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface! Devices from supported brands generally should work even if they aren't listed here.
 
 ### Logitech
+* Most Logitech Lightsync devices should work
 #### Keyboards
 * G410
 * G512
@@ -100,6 +101,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * G PRO
 
 ### Corsair
+* Most Keyboards, Mice, Headsets and mousepads should work.
 #### Keyboards
 * K68
 * K65
@@ -117,11 +119,11 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * MM800 Mousepad
 
 ### Razer
+* Most Chroma enabled devices should work
 #### Keyboards
 * Huntsman
 * Huntsman Elite
 * BlackWidow Chroma
-* Any other Chroma enabled Keyboard
 #### Mice
 * Abyssus Essential
 * Naga Hex/Trinity
@@ -130,7 +132,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * DeathAdder Elite
 * Basilisk
 #### Mousepads
-* Firefly (single color)
+* Firefly
 ### Cooler Master
 * Masterkeys Pro L, M and S RGB/White
 * MK750
@@ -159,10 +161,14 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * One
 
 ### Alienware
-* Most devices should work
+* All laptop models until AW15 R3/AW17 R4 (AW broke support for per-key RGB)
 ### Clevo
 ### AtmoOrb
 ### Dualshock 4 (PS4 Controller)
+### Drevo
+* Blademaster
+### SoundBlasterX
+* Vanguard K08
 
 
 ## Video demonstrations

@@ -71,6 +71,8 @@ namespace Aurora.Profiles.Dota_2.Layers
                     for (int index = 0; index < dota2state.Abilities.Count; index++)
                     {
                         Ability ability = dota2state.Abilities[index];
+                        if (ability.Name.Contains("seasonal"))
+                            continue;
                         Devices.DeviceKeys key = Properties.AbilityKeys[index];
 
                         if (ability.IsUltimate)

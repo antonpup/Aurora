@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.IO;
+using System.Reflection;
+using Aurora;
+using System.ComponentModel;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace LedCSharp
@@ -127,6 +131,46 @@ namespace LedCSharp
 
     public class LogitechGSDK
     {
+        public enum LGDLL
+        {
+            [Description("LGS")]
+            LGS,
+            [Description("GHUB")]
+            GHUB
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool SetDllDirectory(string path);
+
+        static LogitechGSDK()
+        {
+            //InitDLL(LGDLL.GHUB);
+        }
+
+        private static bool initd = false;
+        public static void InitDLL(LGDLL? dll = null)
+        {
+            if (initd)
+                return;
+
+            bool ghub = false;
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+            if (dll == null)
+                ghub = Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "LGHUB"));
+            else
+                ghub = dll.Equals(LGDLL.GHUB);
+
+            if (ghub)
+                Global.logger.LogLine("Loading GHUB DLL", Logging_Level.Info);
+            else
+                Global.logger.LogLine("Loading LGS DLL", Logging_Level.Info);
+            path = Path.Combine(path, "Logi", ghub ? "GHUB" : "LGS");
+            bool ok = SetDllDirectory(path);
+            if (!ok) throw new System.ComponentModel.Win32Exception();
+            initd = true;
+        }
+
         //LED SDK
         private const int LOGI_DEVICETYPE_MONOCHROME_ORD = 0;
         private const int LOGI_DEVICETYPE_RGB_ORD = 1;
