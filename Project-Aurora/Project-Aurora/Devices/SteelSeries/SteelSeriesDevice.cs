@@ -175,6 +175,7 @@ namespace Aurora.Devices.SteelSeries
                              key.Key == DeviceKeys.Peripheral_ScrollWheel)
                     {
                         SendColorToPeripheralZone(key.Key, color);
+                        SendColorToPeripheral(color, forced);
                     }
                     else
                     {
@@ -279,8 +280,8 @@ namespace Aurora.Devices.SteelSeries
                 }
                 //else if (zone == DeviceKeys.Peripheral_FrontLight)
                 //{
-                    //NYI
-                    //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
+                //NYI
+                //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
                 //}
                 /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
                 {

@@ -197,6 +197,7 @@ namespace SteelSeries.GameSenseSDK
             (let* ((headset (headset: data))
                    (color (color: headset)))
                 (on-device ""headset"" show: color)))
+                (on-device ""earcups"" show: color)))
     )
 )
 

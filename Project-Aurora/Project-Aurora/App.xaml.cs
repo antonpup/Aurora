@@ -230,6 +230,11 @@ namespace Aurora
                 this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
+                if (Environment.Is64BitProcess)
+                    currentDomain.AppendPrivatePath("x64");
+                else
+                    currentDomain.AppendPrivatePath("x86");
+
                 Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
 
                 Global.dev_manager = new DeviceManager();
@@ -284,6 +289,7 @@ namespace Aurora
                 Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
                 SetupVolumeAsBrightness(Global.Configuration,
                     new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
+                Utils.DesktopUtils.StartSessionWatch();
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
 
