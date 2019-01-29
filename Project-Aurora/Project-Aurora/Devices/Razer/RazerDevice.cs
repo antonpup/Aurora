@@ -95,9 +95,11 @@ namespace Aurora.Devices.Razer
 
                             if (Global.Configuration.razer_first_time)
                             {
-                                RazerInstallInstructions instructions = new RazerInstallInstructions();
-                                instructions.ShowDialog();
-
+                                App.Current.Dispatcher.Invoke(() =>
+                                {
+                                    RazerInstallInstructions instructions = new RazerInstallInstructions();
+                                    instructions.ShowDialog();
+                                });
                                 Global.Configuration.razer_first_time = false;
                                 Settings.ConfigManager.Save(Global.Configuration);
                             }

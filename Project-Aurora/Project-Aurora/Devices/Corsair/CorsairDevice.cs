@@ -99,9 +99,11 @@ namespace Aurora.Devices.Corsair
                         {
                             if (Global.Configuration.corsair_first_time)
                             {
-                                CorsairInstallInstructions instructions = new CorsairInstallInstructions();
-                                instructions.ShowDialog();
-
+                                App.Current.Dispatcher.Invoke(() =>
+                                {
+                                    CorsairInstallInstructions instructions = new CorsairInstallInstructions();
+                                    instructions.ShowDialog();
+                                });
                                 Global.Configuration.corsair_first_time = false;
                                 Settings.ConfigManager.Save(Global.Configuration);
                             }
