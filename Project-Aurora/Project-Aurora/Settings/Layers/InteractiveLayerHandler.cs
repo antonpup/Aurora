@@ -135,7 +135,7 @@ namespace Aurora.Settings.Layers
             if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
-            Devices.DeviceKeys deviceKey = e.GetDeviceKey();
+            Devices.DeviceKeys deviceKey = e.GetKeyboardKey();
             if (deviceKey != Devices.DeviceKeys.NONE)
             {
                 foreach (var input in _input_list.ToArray())
@@ -162,7 +162,7 @@ namespace Aurora.Settings.Layers
                 return;
 
             long? currentTime = null;
-            Devices.DeviceKeys device_key = e.GetDeviceKey();
+            Devices.DeviceKeys device_key = e.GetKeyboardKey();
 
             lock (TimeOfLastPress)
             {

@@ -87,6 +87,14 @@ namespace Aurora.Settings
             _variables = new Dictionary<string, VariableRegistryItem>();
         }
 
+        public VariableRegistry(params ValueTuple<string, VariableRegistryItem>[] items) : this()
+        {
+            foreach (var item in items)
+            {
+                this.Register(item.Item1, item.Item2);
+            }
+        }
+
         public void Combine(VariableRegistry otherRegistry, bool removeMissing = false)
         {
             //Below doesn't work for added variables

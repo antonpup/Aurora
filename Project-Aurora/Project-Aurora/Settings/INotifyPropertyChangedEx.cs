@@ -35,6 +35,16 @@ namespace Aurora.Settings
     {
         public event PropertyChangedExEventHandler PropertyChanged;
 
+        protected void UpdateVar<T>(ref T var, T newValue, [CallerMemberName] string propertyName = null)
+        {
+            if (!var.Equals(newValue))
+            {
+                T oldValue = var;
+                var = newValue;
+                InvokePropertyChanged(oldValue, newValue, propertyName);
+            }
+        }
+
         protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedExEventArgs(propertyName, oldValue, newValue));

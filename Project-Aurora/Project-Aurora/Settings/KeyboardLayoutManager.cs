@@ -925,7 +925,7 @@ namespace Aurora.Settings
             return (int)Math.Round(pixel / (double)(Global.Configuration.BitmapAccuracy));
         }
 
-        private void Configuration_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Configuration_PropertyChanged(object sender, PropertyChangedExEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(Configuration.BitmapAccuracy)))
             {

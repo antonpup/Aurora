@@ -206,8 +206,9 @@ namespace Aurora.Settings.Layers
 
 
             //Last PostFX is exclusion
-            if (EnableExclusionMask)
-                returnLayer.Exclude(ExclusionMask);
+            //TODO: Deal with Exclusion Mask
+            //if (EnableExclusionMask)
+                //returnLayer.Exclude(ExclusionMask);
 
             returnLayer *= Opacity;
 

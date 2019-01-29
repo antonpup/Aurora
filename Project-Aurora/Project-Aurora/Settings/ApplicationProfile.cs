@@ -9,28 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace Aurora.Settings
 {
-    public abstract class Settings : INotifyPropertyChanged, ICloneable
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void InvokePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public object Clone()
-        {
-            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
-
-            return JsonConvert.DeserializeObject(
-                    str,
-                    this.GetType(),
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
-                    );
-        }
-    }
-
-    public class ScriptSettings : Settings
+    public class ScriptSettings : SettingsBase
     {
         #region Private Properties
         private KeySequence _Keys;
@@ -43,25 +22,24 @@ namespace Aurora.Settings
         #endregion
 
         #region Public Properties
-        public KeySequence Keys { get { return _Keys; } set { _Keys = value; InvokePropertyChanged(); } }
+        public KeySequence Keys { get { return _Keys; } set { UpdateVar(ref _Keys, value); } }
 
         public bool Enabled { get { return _Enabled; }
             set {
-                _Enabled = value;
                 if (value)
                 {
                     ExceptionHit = false;
                     Exception = null;
                 }
-                InvokePropertyChanged();
+                UpdateVar(ref _Enabled, value);
             }
         }
 
         [JsonIgnore]
-        public bool ExceptionHit { get { return _ExceptionHit; } set { _ExceptionHit = value; InvokePropertyChanged(); } }
+        public bool ExceptionHit { get { return _ExceptionHit; } set { UpdateVar(ref _ExceptionHit, value); } }
 
         [JsonIgnore]
-        public Exception Exception { get { return _Exception; } set { _Exception = value; InvokePropertyChanged(); } }
+        public Exception Exception { get { return _Exception; } set { UpdateVar(ref _Exception, value); } }
         #endregion
 
         public ScriptSettings(dynamic script)
@@ -71,7 +49,7 @@ namespace Aurora.Settings
         }
     }
 
-    public class ApplicationProfile : Settings, IDisposable
+    public class ApplicationProfile : SettingsBase, IDisposable
     {
         #region Private Properties
         private string _ProfileName = "";
@@ -84,16 +62,16 @@ namespace Aurora.Settings
         #endregion
 
         #region Public Properties
-        public string ProfileName { get { return _ProfileName; } set { _ProfileName = value; InvokePropertyChanged(); } }
+        public string ProfileName { get { return _ProfileName; } set { UpdateVar(ref _ProfileName, value); } }
 
-        public Keybind TriggerKeybind { get { return _triggerKeybind; } set { _triggerKeybind = value; InvokePropertyChanged(); } }
+        public Keybind TriggerKeybind { get { return _triggerKeybind; } set { UpdateVar(ref _triggerKeybind, value); } }
 
         [JsonIgnore]
         public string ProfileFilepath { get; set; }
 
-        public Dictionary<string, ScriptSettings> ScriptSettings { get { return _ScriptSettings; } set { _ScriptSettings = value; InvokePropertyChanged(); } }
+        public Dictionary<string, ScriptSettings> ScriptSettings { get { return _ScriptSettings; } set { UpdateVar(ref _ScriptSettings, value); } }
 
-        public ObservableCollection<Layer> Layers { get { return _Layers; } set { _Layers = value; InvokePropertyChanged(); } }
+        public ObservableCollection<Layer> Layers { get { return _Layers; } set { UpdateVar(ref _Layers, value); } }
         #endregion
 
         public ApplicationProfile()

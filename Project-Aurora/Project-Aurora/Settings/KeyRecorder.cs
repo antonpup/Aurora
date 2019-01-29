@@ -31,7 +31,7 @@ namespace Aurora.Settings
         {
             if (IsRecording())
             {
-                DeviceKeys key = e.GetDeviceKey();
+                DeviceKeys key = e.GetKeyboardKey();
 
                 if(key != DeviceKeys.NONE)
                 {

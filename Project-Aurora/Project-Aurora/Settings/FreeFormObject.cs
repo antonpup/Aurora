@@ -1,4 +1,6 @@
-﻿namespace Aurora.Settings
+﻿using System.Drawing;
+
+namespace Aurora.Settings
 {
     /// <summary>
     /// The type of the FreeForm region.
@@ -106,6 +108,9 @@
                 ValuesChanged?.Invoke(this);
             }
         }
+
+        public Rectangle Rectangle => new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+        public RectangleF RectangleF => new RectangleF(X, Y, Width, Height);
 
         /// <summary>
         /// Event for when any value of this FreeFormObject changes.

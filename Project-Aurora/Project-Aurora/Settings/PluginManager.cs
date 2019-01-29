@@ -97,8 +97,9 @@ namespace Aurora.Settings
         }
     }
 
-    public class PluginManagerSettings : Settings
+    public class PluginManagerSettings : SettingsBase
     {
+        //TODO: Convert this to correct format for Settings
         public Dictionary<string, bool> PluginManagement { get; private set; } = new Dictionary<string, bool>();
 
         public PluginManagerSettings()

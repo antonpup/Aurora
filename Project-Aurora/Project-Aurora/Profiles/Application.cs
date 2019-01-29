@@ -370,7 +370,7 @@ namespace Aurora.Profiles
             }
         }
 
-        private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Profile_PropertyChanged(object sender, PropertyChangedExEventArgs e)
         {
             if (sender is ApplicationProfile)
                 SaveProfile(sender as ApplicationProfile);

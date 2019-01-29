@@ -309,19 +309,20 @@
     <Compile Include="ConfigUI.xaml.cs">
       <DependentUpon>ConfigUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Const.cs" />
     <Compile Include="Controls\ArrangeListBox.cs" />
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Control_AnimationEditor.xaml.cs">
+    <None Include="Controls\Control_AnimationEditor.xaml.cs">
       <DependentUpon>Control_AnimationEditor.xaml</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="Controls\Control_AnimationFrameItem.xaml.cs">
       <DependentUpon>Control_AnimationFrameItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Control_AnimationMixPresenter.xaml.cs">
+    <None Include="Controls\Control_AnimationMixPresenter.xaml.cs">
       <DependentUpon>Control_AnimationMixPresenter.xaml</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="Controls\Control_AnimationTrackPresenter.xaml.cs">
       <DependentUpon>Control_AnimationTrackPresenter.xaml</DependentUpon>
     </Compile>
@@ -364,58 +365,67 @@
     <Compile Include="Controls\LogicCheckEdit.xaml.cs">
       <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
-    <Compile Include="Devices\Clevo\ClevoSetKBLED.cs" />
-    <Compile Include="Devices\Clevo\ClevoDevice.cs" />
-    <Compile Include="Devices\Corsair\CorsairInstallInstructions.xaml.cs">
+    <Compile Include="Devices\Integrations\AtmoOrb\AtmoOrbDevice.cs" />
+    <Compile Include="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
+    <Compile Include="Devices\Integrations\Clevo\ClevoDevice.cs" />
+    <Compile Include="Devices\Integrations\Corsair\CorsairInstallInstructions.xaml.cs">
       <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
-    <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
-    <Compile Include="Devices\Creative\SoundBlasterXDevice.cs" />
-    <Compile Include="Devices\Drevo\DrevoDevice.cs" />
-    <Compile Include="Devices\Drevo\DrevoLayoutMap.cs" />
-    <Compile Include="Devices\Drevo\DrevoRadiSDK.cs" />
-    <Compile Include="Devices\Dualshock4\Dualshock4Device.cs" />
-    <Compile Include="Devices\Dualshock4\DS4InstallInstructions.xaml.cs">
+    <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
+    <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
+    <Compile Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
+    <Compile Include="Devices\Integrations\Drevo\DrevoDevice.cs" />
+    <Compile Include="Devices\Integrations\Drevo\DrevoLayoutMap.cs" />
+    <Compile Include="Devices\Integrations\Drevo\DrevoRadiSDK.cs" />
+    <Compile Include="Devices\Integrations\Dualshock4\Dualshock4Device.cs" />
+    <Compile Include="Devices\Integrations\Dualshock4\DS4InstallInstructions.xaml.cs">
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\LightFX\LightFX.cs" />
-    <Compile Include="Devices\LightFX\LightFXSDK.cs" />
-    <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
+    <Compile Include="Devices\Integrations\LightFX\LightFX.cs" />
+    <Compile Include="Devices\Integrations\LightFX\LightFXSDK.cs" />
+    <Compile Include="Devices\Integrations\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Razer\RazerInstallInstructions.xaml.cs">
+    <Compile Include="Devices\Integrations\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Razer\RazerDevice.cs" />
-    <Compile Include="Devices\Razer\RazerLayoutMap.cs" />
-    <Compile Include="Devices\Roccat\RoccatDevice.cs" />
-    <Compile Include="Devices\Roccat\RoccatInstallInstructions.xaml.cs">
+    <Compile Include="Devices\Integrations\Razer\RazerDevice.cs" />
+    <Compile Include="Devices\Integrations\Razer\RazerLayoutMap.cs" />
+    <Compile Include="Devices\Integrations\Roccat\RoccatDevice.cs" />
+    <Compile Include="Devices\Integrations\Roccat\RoccatInstallInstructions.xaml.cs">
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
-    <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
-    <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
-    <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
-    <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
+    <Compile Include="Devices\Integrations\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Include="Devices\Integrations\SteelSeries\GameSenseSDK.cs" />
+    <Compile Include="Devices\Integrations\SteelSeries\SteelSeriesDevice.cs" />
+    <Compile Include="Devices\Integrations\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Wooting\WootingDevice.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationFilledGradientRectangle.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationFilledRectangle.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationFrame.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationCircle.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationGradientCircle.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationLine.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationLines.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationManualColorFrame.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationMix.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
-    <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
+    <Compile Include="Devices\Integrations\Wooting\WootingDevice.cs" />
+    <Compile Include="Devices\Layout\Canvas.cs" />
+    <Compile Include="Devices\Layout\DeviceLayout.cs" />
+    <Compile Include="Devices\Layout\DeviceLayoutSettings.cs" />
+    <Compile Include="Devices\Layout\DeviceLED.cs" />
+    <Compile Include="Devices\Layout\GlobalDeviceLayout.cs" />
+    <Compile Include="Devices\Layout\Layouts\KeyboardDeviceLayout.cs" />
+    <Compile Include="Devices\Layout\Layouts\MouseDeviceLayout.cs" />
+    <Compile Include="Devices\Layout\LayoutUtils.cs" />
+    <Compile Include="Devices\Layout\VirtualGroup.cs" />
+    <Compile Include="Devices\Integrations\UnifiedHID\UnifiedHID.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationEllipse.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationFill.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationFilledGradientRectangle.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationFilledRectangle.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationFrame.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationCircle.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationGradientCircle.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationLine.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationLines.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationManualColorFrame.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationMix.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationRectangle.cs" />
+    <Content Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
     <Compile Include="Profiles\ATS\ATSApplication.cs" />
     <Compile Include="Profiles\ATS\Control_ATS.xaml.cs">
@@ -579,6 +589,7 @@
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
+    <Compile Include="Settings\SettingsBase.cs" />
     <Compile Include="Settings\Window_GSIHttpDebug.xaml.cs">
       <DependentUpon>Window_GSIHttpDebug.xaml</DependentUpon>
     </Compile>
@@ -822,15 +833,16 @@
     <Compile Include="Settings\Keycaps\Control_GhostKeycap.xaml.cs">
       <DependentUpon>Control_GhostKeycap.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Layers\AnimationLayerHandler.cs" />
-    <Compile Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
+    <Content Include="Settings\Layers\AnimationLayerHandler.cs" />
+    <Content Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
       <DependentUpon>Control_AnimationLayer.xaml</DependentUpon>
-    </Compile>
+    </Content>
     <Compile Include="Settings\ObjectSettings.cs" />
     <Compile Include="Settings\PluginManager.cs" />
-    <Compile Include="Devices\SteelSeries\USBHIDCodes.cs" />
+    <Compile Include="Devices\Integrations\SteelSeries\USBHIDCodes.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\MouseUtils.cs" />
+    <Compile Include="Utils\PointUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
     <None Include="App.config">
@@ -865,9 +877,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\corsair_strafe.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="kb_layouts\Extra Features\asus_pugio_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\drevo_blademaster.json">
@@ -1101,12 +1110,12 @@
     <None Include="kb_layouts\masterkeys_pro_m.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="Settings\ColorZone.cs" />
+    <Content Include="Settings\ColorZone.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Devices\DeviceManager.cs" />
-    <Compile Include="Devices\Corsair\CorsairDevice.cs" />
+    <Compile Include="Devices\Integrations\Corsair\CorsairDevice.cs" />
     <Compile Include="Devices\Device.cs" />
-    <Compile Include="Devices\Logitech\LogitechDevice.cs" />
+    <Compile Include="Devices\Integrations\Logitech\LogitechDevice.cs" />
     <Compile Include="EffectsEngine\EffectColor.cs" />
     <Compile Include="EffectsEngine\ColorSpectrum.cs" />
     <Compile Include="EffectsEngine\EffectFrame.cs" />
@@ -1258,7 +1267,7 @@
     <Compile Include="Settings\Layers\Layer.cs" />
     <Compile Include="Settings\Layers\LogicItem.cs" />
     <Compile Include="Profiles\Application.cs" />
-    <Compile Include="Settings\KeyboardLayoutManager.cs" />
+    <Content Include="Settings\KeyboardLayoutManager.cs" />
     <Compile Include="Settings\KeyRecorder.cs" />
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
@@ -1274,7 +1283,7 @@
     <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\GenericUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
-    <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
+    <Compile Include="Devices\Integrations\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -1309,18 +1318,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DS4WindowsApi.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_backlights.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_body.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_wheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\Logi_G502_logo.png">
@@ -1429,18 +1426,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Control_AnimationEditor.xaml">
+    <None Include="Controls\Control_AnimationEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
+    </None>
     <Page Include="Controls\Control_AnimationFrameItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Control_AnimationMixPresenter.xaml">
+    <None Include="Controls\Control_AnimationMixPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
+    </None>
     <Page Include="Controls\Control_AnimationTrackPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1509,27 +1506,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Devices\Corsair\CorsairInstallInstructions.xaml">
+    <Page Include="Devices\Integrations\Corsair\CorsairInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Devices\Dualshock4\DS4InstallInstructions.xaml">
+    <Page Include="Devices\Integrations\Dualshock4\DS4InstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Devices\Logitech\LogitechInstallInstructions.xaml">
+    <Page Include="Devices\Integrations\Logitech\LogitechInstallInstructions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Devices\Razer\RazerInstallInstructions.xaml">
+    <Page Include="Devices\Integrations\Razer\RazerInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Devices\Roccat\RoccatInstallInstructions.xaml">
+    <Page Include="Devices\Integrations\Roccat\RoccatInstallInstructions.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
-    <Page Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml">
+    <Page Include="Devices\Integrations\SteelSeries\SteelSeriesInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1841,10 +1838,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Settings\Layers\Control_AnimationLayer.xaml">
+    <Content Include="Settings\Layers\Control_AnimationLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </Content>
     <Page Include="Settings\Layers\Control_BlinkingLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

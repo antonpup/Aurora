@@ -9,7 +9,7 @@ namespace Aurora.Devices
     /// <summary>
     /// Enum definition, representing everysingle supported device key
     /// </summary>
-    public enum DeviceKeys
+    /*public enum DeviceKeys
     {
         /// <summary>
         /// Peripheral Device
@@ -1301,6 +1301,7 @@ namespace Aurora.Devices
         [Description("None")]
         NONE = -1,
     };
+    */
 
     /// <summary>
     /// Struct representing color settings being sent to devices

@@ -23,93 +23,6 @@ using System.Text;
 namespace Aurora
 {
     /// <summary>
-    /// Globally accessible classes and variables
-    /// </summary>
-    public static class Global
-    {
-        public static string ScriptDirectory = "Scripts";
-        public static ScriptEngine PythonEngine = Python.CreateEngine();
-
-        /// <summary>
-        /// A boolean indicating if Aurora was started with Debug parameter
-        /// </summary>
-        public static bool isDebug = false;
-
-        private static string _ExecutingDirectory = "";
-
-        /// <summary>
-        /// The path to the application executing directory
-        /// </summary>
-        public static string ExecutingDirectory
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(_ExecutingDirectory))
-                    _ExecutingDirectory = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-
-                return _ExecutingDirectory;
-            }
-        }
-
-
-        /// <summary>
-        /// Output logger for errors, warnings, and information
-        /// </summary>
-        public static NLog.Logger logger;
-        //public static Logger logger;
-
-        public static void LogLine(this NLog.Logger logger, string text, Logging_Level level = Logging_Level.None)
-        {
-            switch (level)
-            {
-                case Logging_Level.Debug:
-                    logger.Debug(text);
-                    break;
-                case Logging_Level.External:
-                case Logging_Level.Error:
-                    logger.Error(text);
-                    break;
-                case Logging_Level.None:
-                case Logging_Level.Info:
-                    logger.Info(text);
-                    break;
-                case Logging_Level.Warning:
-                    logger.Warn(text);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Input event subscriptions
-        /// </summary>
-        public static InputEvents InputEvents;
-
-        //public static GameEventHandler geh;
-        public static PluginManager PluginManager;
-        public static LightingStateManager LightingStateManager;
-        public static NetworkListener net_listener;
-        public static Configuration Configuration;
-        public static DeviceManager dev_manager;
-        public static KeyboardLayoutManager kbLayout;
-        public static Effects effengine;
-        public static KeyRecorder key_recorder;
-
-        /// <summary>
-        /// Currently held down modifer key
-        /// </summary>
-        public static Keys held_modified = Keys.None;
-
-        public static object Clipboard { get; set; }
-
-        public static long StartTime;
-
-        public static void Initialize()
-        {
-            logger = LogManager.GetLogger("global");
-        }
-    }
-
-    /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : System.Windows.Application
@@ -291,7 +204,7 @@ namespace Aurora
                 Global.InputEvents.KeyDown += InputEventsOnKeyDown;
                 Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
                 SetupVolumeAsBrightness(Global.Configuration,
-                    new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
+                    new PropertyChangedExEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness), null, null));
                 Utils.DesktopUtils.StartSessionWatch();
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
@@ -374,7 +287,7 @@ namespace Aurora
             }
         }
 
-        private static void SetupVolumeAsBrightness(object sender, PropertyChangedEventArgs eventArgs)
+        private static void SetupVolumeAsBrightness(object sender, PropertyChangedExEventArgs eventArgs)
         {
             if (eventArgs.PropertyName == nameof(Global.Configuration.UseVolumeAsBrightness))
             {
