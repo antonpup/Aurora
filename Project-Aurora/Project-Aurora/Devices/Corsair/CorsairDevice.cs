@@ -99,7 +99,7 @@ namespace Aurora.Devices.Corsair
                         commanderPro = CueSDK.CommanderProSDK;
                         memory = CueSDK.MemoryModuleSDK;
                         cooler = CueSDK.CoolerSDK;
-                        Global.logger.Info("Corsair Cooler " + commanderPro);
+                      
                         if (keyboard != null)
                             keyboard.Brush = (CUE.NET.Brushes.SolidColorBrush)Color.Transparent;
                         if (mouse != null)
@@ -359,10 +359,6 @@ namespace Aurora.Devices.Corsair
                             mouse[CorsairLedId.B5].Color = color;
                         if (mouse[CorsairLedId.B6] != null)
                             mouse[CorsairLedId.B6].Color = color;
-                        //if (memory[CorsairLedId.RAM_1] != null)
-                        //    memory[CorsairLedId.RAM_1].Color = color;
-                        //if (cooler[CorsairLedId.Cooler_1] != null)
-                        //   cooler[CorsairLedId.Cooler_1].Color = color;
                         mouse.Update(true);
                     }
 
@@ -506,7 +502,7 @@ namespace Aurora.Devices.Corsair
                 case (DeviceKeys.LOGO):
                     return CorsairLedId.Logo;
                 case (DeviceKeys.BRIGHTNESS_SWITCH):
-                    return CorsairLedId.Logo;
+                    return CorsairLedId.Brightness;
                 case (DeviceKeys.LOCK_SWITCH):
                     return CorsairLedId.WinLock;
 
