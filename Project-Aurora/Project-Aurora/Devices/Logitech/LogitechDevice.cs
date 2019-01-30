@@ -350,11 +350,12 @@ namespace Aurora.Devices.Logitech
             return this.isInitialized;
         }
 
-        private void SetZoneColor(byte deviceType, int zone, int redPercentage, int greenPercentage, int bluePercentage)
+        private void SetZoneColor(byte deviceType, int zone, byte red, byte green, byte blue)
         {
-            LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB | LogitechGSDK.LOGI_DEVICETYPE_MONOCHROME);
-
-            LogitechGSDK.LogiLedSetLightingForTargetZone(deviceType, zone, redPercentage, greenPercentage, bluePercentage);
+            LogitechGSDK.LogiLedSetLightingForTargetZone(deviceType, zone
+                , (int)Math.Round((double)(100 * red) / 255.0f)
+                , (int)Math.Round((double)(100 * green) / 255.0f)
+                , (int)Math.Round((double)(100 * blue) / 255.0f));
         }
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
@@ -538,7 +539,6 @@ namespace Aurora.Devices.Logitech
                         }
                         else if (localKey != Logitech_keyboardBitmapKeys.UNKNOWN)
                         {
-
                             //left
                             if ((localKey == Logitech_keyboardBitmapKeys.ESC /*|| localKey == Logitech_keyboardBitmapKeys.LEFT_FN*/ || localKey == Logitech_keyboardBitmapKeys.TILDE
                                 || localKey == Logitech_keyboardBitmapKeys.TAB
@@ -555,18 +555,14 @@ namespace Aurora.Devices.Logitech
                                 leftColor.Add(key.Value);
                             }
                             //right
-                            else if ((localKey == Logitech_keyboardBitmapKeys.F11 || localKey == Logitech_keyboardBitmapKeys.HOME || localKey == Logitech_keyboardBitmapKeys.END
-                                || localKey == Logitech_keyboardBitmapKeys.KEYBOARD_DELETE || localKey == Logitech_keyboardBitmapKeys.BACKSPACE
+                            else if ((localKey == Logitech_keyboardBitmapKeys.F11
+                                || localKey == Logitech_keyboardBitmapKeys.BACKSPACE
                                 || localKey == Logitech_keyboardBitmapKeys.APOSTROPHE || localKey == Logitech_keyboardBitmapKeys.RIGHT_SHIFT
-                                || localKey == Logitech_keyboardBitmapKeys.ARROW_UP || localKey == Logitech_keyboardBitmapKeys.ARROW_DOWN
                                 || localKey == Logitech_keyboardBitmapKeys.F6 || localKey == Logitech_keyboardBitmapKeys.SIX || localKey == Logitech_keyboardBitmapKeys.T
                                 || localKey == Logitech_keyboardBitmapKeys.G || localKey == Logitech_keyboardBitmapKeys.B
-                                || localKey == Logitech_keyboardBitmapKeys.ARROW_RIGHT || localKey == Logitech_keyboardBitmapKeys.ARROW_LEFT
                                 || localKey == Logitech_keyboardBitmapKeys.MINUS
                                 || localKey == Logitech_keyboardBitmapKeys.FORWARD_SLASH || localKey == Logitech_keyboardBitmapKeys.ENTER
-                                || localKey == Logitech_keyboardBitmapKeys.PAGE_DOWN
-                                || localKey == Logitech_keyboardBitmapKeys.PAGE_UP || localKey == Logitech_keyboardBitmapKeys.RIGHT_CONTROL
-                                || localKey == Logitech_keyboardBitmapKeys.PAGE_DOWN || localKey == Logitech_keyboardBitmapKeys.CLOSE_BRACKET)
+                                || localKey == Logitech_keyboardBitmapKeys.RIGHT_CONTROL || localKey == Logitech_keyboardBitmapKeys.CLOSE_BRACKET)
                                 && (key.Value.R >= 0 || key.Value.G >= 0 || key.Value.B >= 0))
                             {
                                 rightColor.Add(key.Value);
@@ -596,8 +592,13 @@ namespace Aurora.Devices.Logitech
                             }
 
                             //arrow
-                            else if ((localKey == Logitech_keyboardBitmapKeys.ARROW_UP || localKey == Logitech_keyboardBitmapKeys.ARROW_DOWN
-                                || localKey == Logitech_keyboardBitmapKeys.ARROW_LEFT || localKey == Logitech_keyboardBitmapKeys.ARROW_RIGHT)
+                            else if ((localKey == Logitech_keyboardBitmapKeys.PRINT_SCREEN || localKey == Logitech_keyboardBitmapKeys.SCROLL_LOCK
+                                || localKey == Logitech_keyboardBitmapKeys.PAUSE_BREAK || localKey == Logitech_keyboardBitmapKeys.INSERT
+                                || localKey == Logitech_keyboardBitmapKeys.HOME || localKey == Logitech_keyboardBitmapKeys.PAGE_UP
+                                || localKey == Logitech_keyboardBitmapKeys.KEYBOARD_DELETE || localKey == Logitech_keyboardBitmapKeys.END
+                                || localKey == Logitech_keyboardBitmapKeys.PAGE_DOWN || localKey == Logitech_keyboardBitmapKeys.ARROW_UP
+                                || localKey == Logitech_keyboardBitmapKeys.ARROW_DOWN || localKey == Logitech_keyboardBitmapKeys.ARROW_LEFT
+                                || localKey == Logitech_keyboardBitmapKeys.ARROW_RIGHT)
                                 && (key.Value.R >= 0 || key.Value.G >= 0 || key.Value.B >= 0))
                             {
                                 arrowColor.Add(key.Value);
@@ -625,8 +626,8 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = leftColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                          .Select(item => new { Color = item.Key, Count = item.Count() })
                                          .First().Color;
-                        int a  = (int)Math.Round((double)(100 * mostUsed.R) / 255.0f);
-                        SetZoneColor(0x0, 1, (int)Math.Round((double)(100 * mostUsed.R) / 255.0f), (int)Math.Round((double)(100 * mostUsed.G) / 255.0f), (int)Math.Round((double)(100 * mostUsed.B) / 255.0f));
+                        int a = (int)Math.Round((double)(100 * mostUsed.R) / 255.0f);
+                        SetZoneColor(0x0, 1, mostUsed.R, mostUsed.G, mostUsed.B);
                     }
                     else
                     {
@@ -638,7 +639,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = centerColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                         .Select(item => new { Color = item.Key, Count = item.Count() })
                                         .First().Color;
-                        SetZoneColor(0x0, 2, (int)Math.Round((double)(100 * mostUsed.R) / 255.0f), (int)Math.Round((double)(100 * mostUsed.G) / 255.0f), (int)Math.Round((double)(100 * mostUsed.B) / 255.0f));
+                        SetZoneColor(0x0, 2, mostUsed.R, mostUsed.G, mostUsed.B);
                     }
                     else
                     {
@@ -650,7 +651,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = rightColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First().Color;
-                        SetZoneColor(0x0, 3, (int)Math.Round((double)(100 * mostUsed.R) / 255.0f), (int)Math.Round((double)(100 * mostUsed.G) / 255.0f), (int)Math.Round((double)(100 * mostUsed.B) / 255.0f));
+                        SetZoneColor(0x0, 3, mostUsed.R, mostUsed.G, mostUsed.B);
                     }
                     else
                     {
@@ -662,7 +663,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = arrowColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First().Color;
-                        SetZoneColor(0x0, 4, (int)Math.Round((double)(100 * mostUsed.R) / 255.0f), (int)Math.Round((double)(100 * mostUsed.G) / 255.0f), (int)Math.Round((double)(100 * mostUsed.B) / 255.0f));
+                        SetZoneColor(0x0, 4, mostUsed.R, mostUsed.G, mostUsed.B);
                     }
                     else
                     {
@@ -674,7 +675,7 @@ namespace Aurora.Devices.Logitech
                         Color mostUsed = numpadColor.GroupBy(item => item).OrderByDescending(item => item.Count())
                                            .Select(item => new { Color = item.Key, Count = item.Count() })
                                            .First().Color;
-                        SetZoneColor(0x0, 5, (int)Math.Round((double)(100 * mostUsed.R) / 255.0f), (int)Math.Round((double)(100 * mostUsed.G) / 255.0f), (int)Math.Round((double)(100 * mostUsed.B) / 255.0f));
+                        SetZoneColor(0x0, 5, mostUsed.R, mostUsed.G, mostUsed.B);
                     }
                     else
                     {
