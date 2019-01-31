@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Aurora.Settings.Keycaps
     public partial class Control_ColorizedKeycap : UserControl, IKeycap
     {
         private Color? current_color = null;
-        private Devices.DeviceKeys associatedKey = DeviceKeys.NONE;
+        private DynamicDeviceLED associatedKey;
         private bool isImage = false;
 
         public Control_ColorizedKeycap()
@@ -30,11 +31,11 @@ namespace Aurora.Settings.Keycaps
             InitializeComponent();
         }
 
-        public Control_ColorizedKeycap(KeyboardKey key, string image_path)
+        public Control_ColorizedKeycap(DynamicDeviceLED led, VirtualLight key, string image_path)
         {
             InitializeComponent();
 
-            associatedKey = key.tag;
+            associatedKey = led;
 
             this.Width = key.width.Value;
             this.Height = key.height.Value;
@@ -72,7 +73,7 @@ namespace Aurora.Settings.Keycaps
                     image.StreamSource = memStream;
                     image.EndInit();
 
-                    if (key.tag == DeviceKeys.NONE)
+                    if (associatedKey.IsNone)
                         keyBorder.Background = new ImageBrush(image);
                     else
                     {
@@ -85,9 +86,9 @@ namespace Aurora.Settings.Keycaps
             }
         }
 
-        public DeviceKeys GetKey()
+        public DeviceLED GetKey()
         {
-            return associatedKey;
+            return associatedKey.GetDeviceLED();
         }
 
         public void SetColor(Color key_color)
@@ -101,13 +102,13 @@ namespace Aurora.Settings.Keycaps
                 }
                 else
                 {
-                    if (associatedKey != DeviceKeys.NONE)
+                    if (!associatedKey.IsNone)
                         keyBorder.Background = new SolidColorBrush(key_color);
                 }
                 current_color = key_color;
             }
 
-            if (Global.key_recorder.HasRecorded(associatedKey))
+            if (Global.key_recorder.HasRecorded(GetKey()))
                 keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
             else
             {
@@ -136,9 +137,11 @@ namespace Aurora.Settings.Keycaps
         {
         }
 
-        private void virtualkeyboard_key_selected(Devices.DeviceKeys key)
+        private void virtualkeyboard_key_selected(DynamicDeviceLED led) => virtualkeyboard_key_selected(led.GetDeviceLED());
+
+        private void virtualkeyboard_key_selected(DeviceLED key)
         {
-            if (key != DeviceKeys.NONE)
+            if (!key.IsNone)
             {
                 if (Global.key_recorder.HasRecorded(key))
                     Global.key_recorder.RemoveKey(key);

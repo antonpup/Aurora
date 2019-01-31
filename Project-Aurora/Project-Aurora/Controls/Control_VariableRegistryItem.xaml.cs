@@ -195,7 +195,8 @@ namespace Aurora.Controls
                 ctrl.SelectedColorChanged += colorPickerControlValueChanged;
                 grd_control.Children.Add(ctrl);
             }
-            else if (var_type == typeof(Aurora.Devices.DeviceKeys))
+            //TODO: Sort this out
+            /*else if (var_type == typeof(Aurora.Devices.DeviceKeys))
             {
                 ComboBox ctrl = new ComboBox();
                 ctrl.ItemsSource = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToList();
@@ -203,7 +204,7 @@ namespace Aurora.Controls
                 ctrl.SelectionChanged += CmbbxEnum_control_SelectionChanged;
 
                 grd_control.Children.Add(ctrl);
-            }
+            }*/
             else if (var_type.IsEnum)
             {
                 ComboBox cmbbxEnum_control = new ComboBox();

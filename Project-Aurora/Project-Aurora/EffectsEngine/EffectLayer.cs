@@ -66,7 +66,7 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             //TODO: Get Canvas
-            //colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            //colormap = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
             if (color != null && color.IsEmpty)
                 Fill(color);
@@ -268,6 +268,11 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        public Canvas GetCanvas()
+        {
+            return this.canvas;
+        }
+
         public void Dispose()
         {
             canvas.Dispose();
@@ -370,7 +375,7 @@ namespace Aurora.EffectsEngine
         /// <param name="keys">Array of DeviceKeys to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(DeviceLED[] keys, Color color)
+        public EffectLayer Set(IEnumerable<DeviceLED> keys, Color color)
         {
             foreach(var key in keys)
                 SetOneKey(key, color);

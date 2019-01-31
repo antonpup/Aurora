@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.RocketLeague.GSI;
 using Aurora.Profiles.RocketLeague.GSI.Nodes;
@@ -138,7 +139,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
                         LinearGradientBrush the__split_brush = new LinearGradientBrush(
                                 new Point(0, 0),
-                                new Point(Effects.canvas_biggest, 0),
+                                new Point(GlobalDeviceLayout.Instance.CanvasBiggest, 0),
                                 Color.Red, Color.Red);
                         Color[] colors = new Color[]
                         {
@@ -187,38 +188,38 @@ namespace Aurora.Profiles.RocketLeague.Layers
                                                                                      : rlstate.Match.OrangeTeam_Score))
                     {
                         goal_explosion_track.SetFrame(0.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, playerColor, 4)
                         );
                         goal_explosion_track.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, playerColor, 4)
                         );
 
                         goal_explosion_track_1.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
+                           new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, playerColor, 4)
                        );
                         goal_explosion_track_1.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, playerColor, 4)
                         );
 
                         goal_explosion_track_2.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
+                           new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, playerColor, 4)
                        );
                         goal_explosion_track_2.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, playerColor, 4)
                         );
 
                         goal_explosion_track_3.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
+                           new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, playerColor, 4)
                        );
                         goal_explosion_track_3.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, playerColor, 4)
                         );
 
                         goal_explosion_track_4.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
+                           new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, playerColor, 4)
                        );
                         goal_explosion_track_4.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, playerColor, 4)
                         );
 
                         goal_explosion_mix.Clear();
@@ -232,38 +233,38 @@ namespace Aurora.Profiles.RocketLeague.Layers
                                                                                  : rlstate.Match.OrangeTeam_Score))
                     {
                         goal_explosion_track.SetFrame(0.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, enemyColor, 4)
                         );
                         goal_explosion_track.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, enemyColor, 4)
                         );
 
                         goal_explosion_track_1.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                           new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, enemyColor, 4)
                        );
                         goal_explosion_track_1.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, enemyColor, 4)
                         );
 
                         goal_explosion_track_2.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                           new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, enemyColor, 4)
                        );
                         goal_explosion_track_2.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, enemyColor, 4)
                         );
 
                         goal_explosion_track_3.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                           new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, enemyColor, 4)
                        );
                         goal_explosion_track_3.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, enemyColor, 4)
                         );
 
                         goal_explosion_track_4.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
+                           new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, 0, enemyColor, 4)
                        );
                         goal_explosion_track_4.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
+                            new AnimationCircle((int)(GlobalDeviceLayout.Instance.CanvasWidthCenter * 0.9), GlobalDeviceLayout.Instance.CanvasHeightCenter, GlobalDeviceLayout.Instance.CanvasBiggest / 2.0f, enemyColor, 4)
                         );
 
                         goal_explosion_mix.Clear();

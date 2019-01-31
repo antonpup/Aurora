@@ -77,6 +77,8 @@ namespace Aurora.Devices.Layout
 
     public class VirtualGroup
     {
+        public DeviceLayout parent;
+
         public string group_tag;
 
         public VirtualRegion origin_region;
@@ -108,12 +110,12 @@ namespace Aurora.Devices.Layout
             }
         }
 
-        public VirtualGroup()
+        public VirtualGroup(DeviceLayout layout)
         {
-
+            this.parent = layout;
         }
 
-        public VirtualGroup(VirtualLight[] keys)
+        public VirtualGroup(DeviceLayout layout, VirtualLight[] keys) : this(layout)
         {
             double layout_height = 0;
             double layout_width = 0;
@@ -487,28 +489,29 @@ namespace Aurora.Devices.Layout
                     image_path = Path.Combine(images_path, key.image);
 
                 UserControl keycap;
+                DynamicDeviceLED dynamicDeviceLED = new DynamicDeviceLED(key.tag, this.parent);
 
                 //Ghost keycap is used for abstract representation of keys
                 if (abstractKeycaps)
-                    keycap = new Control_GhostKeycap(this, key, image_path);
+                    keycap = new Control_GhostKeycap(dynamicDeviceLED, key, image_path);
                 else
                 {
                     switch (Global.Configuration.virtualkeyboard_keycap_type)
                     {
                         case KeycapType.Default_backglow:
-                            keycap = new Control_DefaultKeycapBackglow(this, key, image_path);
+                            keycap = new Control_DefaultKeycapBackglow(dynamicDeviceLED, key, image_path);
                             break;
                         case KeycapType.Default_backglow_only:
-                            keycap = new Control_DefaultKeycapBackglowOnly(this, key, image_path);
+                            keycap = new Control_DefaultKeycapBackglowOnly(dynamicDeviceLED, key, image_path);
                             break;
                         case KeycapType.Colorized:
-                            keycap = new Control_ColorizedKeycap(this, key, image_path);
+                            keycap = new Control_ColorizedKeycap(dynamicDeviceLED, key, image_path);
                             break;
                         case KeycapType.Colorized_blank:
-                            keycap = new Control_ColorizedKeycapBlank(this, key, image_path);
+                            keycap = new Control_ColorizedKeycapBlank(dynamicDeviceLED, key, image_path);
                             break;
                         default:
-                            keycap = new Control_DefaultKeycap(this, key, image_path);
+                            keycap = new Control_DefaultKeycap(dynamicDeviceLED, key, image_path);
                             break;
                     }
                 }

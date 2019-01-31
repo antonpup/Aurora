@@ -247,28 +247,28 @@ namespace Aurora.Settings.Layers
 
                 using (Graphics g = equalizer_layer.GetGraphics())
                 {
-                    int wave_step_amount = _local_fft.Length / Effects.canvas_width;
+                    int wave_step_amount = _local_fft.Length / GlobalDeviceLayout.Instance.CanvasWidth;
 
                     switch (Properties.EQType)
                     {
                         case EqualizerType.Waveform:
-                            for (int x = 0; x < Effects.canvas_width; x++)
+                            for (int x = 0; x < GlobalDeviceLayout.Instance.CanvasWidth; x++)
                             {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
 
-                                Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
+                                Brush brush = GetBrush(fft_val, x, GlobalDeviceLayout.Instance.CanvasWidth);
 
-                                g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val / scaled_max_amplitude * 500.0f);
+                                g.DrawLine(new Pen(brush), x, GlobalDeviceLayout.Instance.CanvasHeightCenter, x, GlobalDeviceLayout.Instance.CanvasHeightCenter - fft_val / scaled_max_amplitude * 500.0f);
                             }
                             break;
                         case EqualizerType.Waveform_Bottom:
-                            for (int x = 0; x < Effects.canvas_width; x++)
+                            for (int x = 0; x < GlobalDeviceLayout.Instance.CanvasWidth; x++)
                             {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
 
-                                Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
+                                Brush brush = GetBrush(fft_val, x, GlobalDeviceLayout.Instance.CanvasWidth);
 
-                                g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f);
+                                g.DrawLine(new Pen(brush), x, GlobalDeviceLayout.Instance.CanvasHeight, x, GlobalDeviceLayout.Instance.CanvasHeight - Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f);
                             }
                             break;
                         case EqualizerType.PowerBars:
@@ -311,7 +311,7 @@ namespace Aurora.Settings.Layers
 
                             //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
 
-                            float bar_width = Effects.canvas_width / (float)(freqs.Length - 1);
+                            float bar_width = GlobalDeviceLayout.Instance.CanvasWidth / (float)(freqs.Length - 1);
 
                             for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
                             {
@@ -323,9 +323,9 @@ namespace Aurora.Settings.Layers
                                     fft_val = previous_freq_results[f_x] - 0.15f;
 
                                 float x = f_x * bar_width;
-                                float y = Effects.canvas_height;
+                                float y = GlobalDeviceLayout.Instance.CanvasHeight;
                                 float width = bar_width;
-                                float height = fft_val * Effects.canvas_height;
+                                float height = fft_val * GlobalDeviceLayout.Instance.CanvasHeight;
 
                                 previous_freq_results[f_x] = fft_val;
 
@@ -405,7 +405,7 @@ namespace Aurora.Settings.Layers
             {
                 EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
                 e_brush.start = new PointF(0, 0);
-                e_brush.end = new PointF(Effects.canvas_width, 0);
+                e_brush.end = new PointF(GlobalDeviceLayout.Instance.CanvasWidth, 0);
 
                 return e_brush.GetDrawingBrush();
             }
@@ -414,7 +414,7 @@ namespace Aurora.Settings.Layers
             else if (Properties.ViewType == EqualizerPresentationType.GradientVertical)
             {
                 EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
-                e_brush.start = new PointF(0, Effects.canvas_height);
+                e_brush.start = new PointF(0, GlobalDeviceLayout.Instance.CanvasHeight);
                 e_brush.end = new PointF(0, 0);
 
                 return e_brush.GetDrawingBrush();

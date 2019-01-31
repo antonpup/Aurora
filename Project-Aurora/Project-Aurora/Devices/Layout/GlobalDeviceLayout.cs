@@ -26,7 +26,21 @@ namespace Aurora.Devices.Layout
 
         public event EventHandler LayoutChanged;
 
-        public GlobalDeviceLayout()
+        public static GlobalDeviceLayout Instance { get; } = new GlobalDeviceLayout();
+
+        //TODO: Create and update these values
+        public int CanvasWidth { get; }
+        public int CanvasHeight { get; }
+        public int Width { get; }
+        public int Height { get; }
+
+        public int CanvasBiggest => CanvasWidth > CanvasHeight ? CanvasWidth : CanvasHeight;
+
+        public List<DeviceLED> AllLeds { get; }
+        public int CanvasWidthCenter => CanvasWidth / 2;
+        public int CanvasHeightCenter => CanvasHeight / 2;
+
+        private GlobalDeviceLayout()
         {
             SettingsSavePath = Path.Combine(Global.SavePath, "GlobalDeviceLayout.json");
         }
@@ -87,10 +101,22 @@ namespace Aurora.Devices.Layout
             throw new KeyNotFoundException();*/
         }
 
-        public BitmapRectangle GetDeviceLEDBitmapRegion(DeviceLED led)
+        public string GetDeviceLEDName(DeviceLED deviceLED)
         {
-            if (GetDeviceFromDeviceLED(led).layout.VirtualGroup.BitmapMap.TryGetValue(led.LedID, out BitmapRectangle rect))
+            (DeviceLayout layout, LEDINT led) = GetDeviceFromDeviceLED(deviceLED);
+            return layout.GetLEDName(led);
+        }
+
+        public BitmapRectangle GetDeviceLEDBitmapRegion(DeviceLED led, bool local = false)
+        {
+            DeviceLayout layout;
+            if ((layout = GetDeviceFromDeviceLED(led).layout).VirtualGroup.BitmapMap.TryGetValue(led.LedID, out BitmapRectangle rect))
+            {
+                if (!local)
+                    rect.AddOffset(layout.Location);
+
                 return rect;
+            }
 
             return null;
         }

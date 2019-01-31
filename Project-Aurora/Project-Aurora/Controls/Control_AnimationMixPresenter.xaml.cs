@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine.Animations;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine.Animations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Canvas = Aurora.Devices.Layout.Canvas;
 
 namespace Aurora.Controls
 {
@@ -90,7 +92,7 @@ namespace Aurora.Controls
 
         public event AnimationMixArgs AnimationMixUpdated;
 
-        public Bitmap RenderedBitmap;
+        public Canvas RenderedBitmap;
 
         public float AnimationScale = 1.0f;
 
@@ -102,7 +104,7 @@ namespace Aurora.Controls
         {
             InitializeComponent();
 
-            RenderedBitmap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            RenderedBitmap = GlobalDeviceLayout.Instance.GetCanvas();
 
             _playbackTimer.Elapsed += _playbackTimer_Elapsed;
         }
@@ -159,16 +161,13 @@ namespace Aurora.Controls
 
             this.txtblkCurrentTime.Text = $"{seconds};{milliseconds}";
 
-            Bitmap newBitmap = new Bitmap((int)(Effects.canvas_width * AnimationScale), (int)(Effects.canvas_height * AnimationScale));
+            Canvas g = GlobalDeviceLayout.Instance.GetCanvas();
 
-            using (Graphics g = Graphics.FromImage(newBitmap))
-            {
-                g.Clear(System.Drawing.Color.Black);
+                g.Fill(System.Drawing.Color.Black);
 
                 ContextMix.Draw(g, _currentPlaybackTime, AnimationScale);
-            }
 
-            RenderedBitmap = newBitmap;
+            RenderedBitmap = g;
 
             if (chkbxDrawToDevices.IsChecked.Value)
                 Global.effengine.ForceImageRender(RenderedBitmap);

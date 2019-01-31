@@ -12,6 +12,8 @@ namespace Aurora.Devices.Layout
     [JsonConverter(typeof(DeviceLEDConverter))]
     public struct DeviceLED
     {
+        public static readonly DeviceLED None = new DeviceLED(0, 0, LEDINT.MinValue);
+
         public byte DeviceTypeID { get; private set; }
         public byte DeviceID { get; private set; }
         public LEDINT LedID { get; private set; }
@@ -55,6 +57,40 @@ namespace Aurora.Devices.Layout
         public (byte type, byte id) GetLookupKey()
         {
             return (type: this.DeviceTypeID, id: this.DeviceID);
+        }
+
+        public string GetName()
+        {
+            return GlobalDeviceLayout.Instance.GetDeviceLEDName(this);
+        }
+
+        public bool IsNone => this.Equals(None);
+
+        public static bool operator ==(DeviceLED lhs, DeviceLED rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(DeviceLED lhs, DeviceLED rhs)
+        {
+            return !lhs.Equals(rhs);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is DeviceLED led)
+            {
+                return this.DeviceTypeID.Equals(led.DeviceTypeID)
+                    && this.DeviceID.Equals(led.DeviceID)
+                    && this.LedID.Equals(led.LedID);
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)Encode();
         }
     }
 

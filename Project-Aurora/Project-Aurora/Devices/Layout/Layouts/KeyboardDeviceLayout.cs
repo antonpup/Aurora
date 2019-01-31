@@ -1558,7 +1558,6 @@ namespace Aurora.Devices.Layout.Layouts
             //CalculateBitmap();
 
 
-            CreateUserControl();
 
             //Better description for these keys by using the DeviceKeys description instead
             Dictionary<LEDINT, string> keytext = KeyText;

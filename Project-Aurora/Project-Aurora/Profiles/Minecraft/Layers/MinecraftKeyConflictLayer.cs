@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Controls;
+using System.Linq;
+using Aurora.Devices.Layout;
 
 namespace Aurora.Profiles.Minecraft.Layers {
 
@@ -48,7 +50,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
                 // Set all keys in use by any binding to be the no-conflict colour
                 foreach (var kb in ((GameState_Minecraft)gamestate).Game.KeyBindings)
                     if(kb!=null)
-                        layer.Set(kb.AffectedKeys, Properties.PrimaryColor);
+                        layer.Set(kb.AffectedKeys.ToList().ConvertAll(s => s.GetDeviceLED()), Properties.PrimaryColor);
 
                 // Override the keys for all conflicting keys
                 foreach (var kvp in CalculateConflicts((GameState_Minecraft)gamestate))
@@ -62,8 +64,8 @@ namespace Aurora.Profiles.Minecraft.Layers {
         /// Returns an enumerable of all DeviceKeys with a conflict, and whether they are only modifier conflicts (warning).
         /// Forge shows modifier conflicts in red and soft in orange on the in-game keys menu.
         /// </summary>
-        private Dictionary<DeviceKeys, bool> CalculateConflicts(GameState_Minecraft state) {
-            Dictionary<DeviceKeys, bool> keys = new Dictionary<DeviceKeys, bool>();
+        private Dictionary<DeviceLED, bool> CalculateConflicts(GameState_Minecraft state) {
+            Dictionary<DeviceLED, bool> keys = new Dictionary<DeviceLED, bool>();
             foreach (var bind in state.Game.KeyBindings) { // For every key binding
 
                 // This code is based on the code from Minecraft in "GuiKeyBindingList.java" in the "drawEntry" method.
@@ -85,10 +87,12 @@ namespace Aurora.Profiles.Minecraft.Layers {
                 // End replicated section
 
                 if (hasConflict)
-                    foreach (var affectedKey in bind.AffectedKeys) // For each key that is affected by this keybind
+                    foreach (var key in bind.AffectedKeys){ // For each key that is affected by this keybind
+                        DeviceLED affectedKey = key.GetDeviceLED();
                         keys[affectedKey] = keys.ContainsKey(affectedKey) // Check if this key is already flagged as a conflict
                             ? keys[affectedKey] && isOnlyModifierConflict // If so, ensure it shows full conflicts over modifier conflicts 
                             : isOnlyModifierConflict; // Else if not already flagged, simply set it.
+                    }
             }
             return keys;
         }

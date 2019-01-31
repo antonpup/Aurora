@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Devices.Layout;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -27,7 +28,7 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Canvas g, float scale = 1.0f, PointF offset = default(PointF))
         {
             if (_brush == null || _invalidated)
             {
@@ -41,10 +42,7 @@ namespace Aurora.EffectsEngine.Animations
             Matrix rotationMatrix = new Matrix();
             rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);
 
-            Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
-            g.FillEllipse(_brush, _scaledDimension);
-            g.Transform = originalMatrix;
+            g.FillEllipse(_brush, _scaledDimension, rotationMatrix);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

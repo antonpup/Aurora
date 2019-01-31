@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -41,7 +43,7 @@ namespace Aurora.Controls
             }
         }
 
-        public List<Devices.DeviceKeys> List
+        public List<DeviceLED> List
         {
             get
             {
@@ -99,7 +101,7 @@ namespace Aurora.Controls
             }
         }
 
-        public IEnumerable<Devices.DeviceKeys> SelectedItems => keys_keysequence.SelectedItems.Cast<Devices.DeviceKeys>();
+        public IEnumerable<DeviceLED> SelectedItems => keys_keysequence.SelectedItems.Cast<DeviceLED>();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty FreestyleEnabledProperty = DependencyProperty.Register("FreestyleEnabled", typeof(bool), typeof(UserControl));
@@ -191,7 +193,7 @@ namespace Aurora.Controls
 
                     button.Content = "Assign Keys";
 
-                    Devices.DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceLED[] recorded_keys = Global.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {

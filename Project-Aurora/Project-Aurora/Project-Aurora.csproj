@@ -311,18 +311,18 @@
     </Compile>
     <Compile Include="Const.cs" />
     <Compile Include="Controls\ArrangeListBox.cs" />
-    <Compile Include="Controls\ColorZones.xaml.cs">
+    <None Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
-    </Compile>
-    <None Include="Controls\Control_AnimationEditor.xaml.cs">
-      <DependentUpon>Control_AnimationEditor.xaml</DependentUpon>
     </None>
+    <Compile Include="Controls\Control_AnimationEditor.xaml.cs">
+      <DependentUpon>Control_AnimationEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_AnimationFrameItem.xaml.cs">
       <DependentUpon>Control_AnimationFrameItem.xaml</DependentUpon>
     </Compile>
-    <None Include="Controls\Control_AnimationMixPresenter.xaml.cs">
+    <Compile Include="Controls\Control_AnimationMixPresenter.xaml.cs">
       <DependentUpon>Control_AnimationMixPresenter.xaml</DependentUpon>
-    </None>
+    </Compile>
     <Compile Include="Controls\Control_AnimationTrackPresenter.xaml.cs">
       <DependentUpon>Control_AnimationTrackPresenter.xaml</DependentUpon>
     </Compile>
@@ -412,20 +412,20 @@
     <Compile Include="Devices\Layout\LayoutUtils.cs" />
     <Compile Include="Devices\Layout\VirtualGroup.cs" />
     <Compile Include="Devices\Integrations\UnifiedHID\UnifiedHID.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationEllipse.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationFill.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationFilledGradientRectangle.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationFilledRectangle.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationFrame.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationCircle.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationGradientCircle.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationLine.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationLines.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationManualColorFrame.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationMix.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationRectangle.cs" />
-    <Content Include="EffectsEngine\Animations\AnimationTrack.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFilledGradientRectangle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFilledRectangle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationFrame.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationCircle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationGradientCircle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationLine.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationLines.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationManualColorFrame.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationMix.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
+    <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
     <Compile Include="Profiles\ATS\ATSApplication.cs" />
     <Compile Include="Profiles\ATS\Control_ATS.xaml.cs">
@@ -833,10 +833,10 @@
     <Compile Include="Settings\Keycaps\Control_GhostKeycap.xaml.cs">
       <DependentUpon>Control_GhostKeycap.xaml</DependentUpon>
     </Compile>
-    <Content Include="Settings\Layers\AnimationLayerHandler.cs" />
-    <Content Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
+    <Compile Include="Settings\Layers\AnimationLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
       <DependentUpon>Control_AnimationLayer.xaml</DependentUpon>
-    </Content>
+    </Compile>
     <Compile Include="Settings\ObjectSettings.cs" />
     <Compile Include="Settings\PluginManager.cs" />
     <Compile Include="Devices\Integrations\SteelSeries\USBHIDCodes.cs" />
@@ -1422,22 +1422,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ColorZones.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Include="Controls\Control_AnimationEditor.xaml">
+    <None Include="Controls\ColorZones.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Include="Controls\Control_AnimationEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Control_AnimationFrameItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Include="Controls\Control_AnimationMixPresenter.xaml">
+    <Page Include="Controls\Control_AnimationMixPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </None>
+    </Page>
     <Page Include="Controls\Control_AnimationTrackPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1838,10 +1838,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Content Include="Settings\Layers\Control_AnimationLayer.xaml">
+    <Page Include="Settings\Layers\Control_AnimationLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Content>
+    </Page>
     <Page Include="Settings\Layers\Control_BlinkingLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

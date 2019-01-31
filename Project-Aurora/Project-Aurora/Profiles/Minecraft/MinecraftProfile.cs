@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine.Animations;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.Minecraft.Layers;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
@@ -8,7 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DK = Aurora.Devices.DeviceKeys;
+using DK = Aurora.Devices.Layout.Layouts.KeyboardKeys;
 
 namespace Aurora.Profiles.Minecraft {
 
@@ -20,16 +21,16 @@ namespace Aurora.Profiles.Minecraft {
             base.Reset();
 
             // Keys that do something and should be highlighted in a static color
-            DK[] controlKeys = new[] { DK.W, DK.A, DK.S, DK.D, DK.E, DK.SPACE, DK.LEFT_SHIFT, DK.LEFT_CONTROL };
+            List<DeviceLED> controlKeys = (new List<DK> { DK.W, DK.A, DK.S, DK.D, DK.E, DK.SPACE, DK.LEFT_SHIFT, DK.LEFT_CONTROL }).ConvertAll(s => s.GetDeviceLED());
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>() {
                 new Layer("Controls Assistant Layer", new MinecraftKeyConflictLayerHandler()),
 
                 new Layer("Health Bar", new MinecraftHealthBarLayerHandler() {
                     Properties = new MinecraftHealthBarLayerHandlerProperties() {
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence((new List<DK>() {
                             DK.Z, DK.X, DK.C, DK.V, DK.B, DK.N, DK.M, DK.COMMA, DK.PERIOD, DK.FORWARD_SLASH
-                        })
+                        }).ConvertAll(s=>s.GetDeviceLED()))
                     }
                 }),
 
@@ -39,9 +40,9 @@ namespace Aurora.Profiles.Minecraft {
                         _MaxVariablePath = "Player/ExperienceMax",
                         _PrimaryColor = Color.FromArgb(255, 255, 0),
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence((new List<DK>() {
                             DK.F1, DK.F2, DK.F3, DK.F4, DK.F5, DK.F6, DK.F7, DK.F8, DK.F9, DK.F10, DK.F11, DK.F12
-                        })
+                        }).ConvertAll(s=>s.GetDeviceLED()))
                     }
                 }),
 
@@ -51,9 +52,9 @@ namespace Aurora.Profiles.Minecraft {
                         _SecondaryColor = Color.White,
                         _EnableScroll = true,
                         _ScrollLoop = true,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence((new List<DK> {
                             DK.ONE, DK.TWO, DK.THREE, DK.FOUR, DK.FIVE, DK.SIX, DK.SEVEN, DK.EIGHT, DK.NINE
-                        })
+                        }).ConvertAll(s=>s.GetDeviceLED()))
                     }
                 }),
                 

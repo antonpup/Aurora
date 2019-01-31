@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SteelSeries.GameSenseSDK;
 using System.ComponentModel;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Devices.SteelSeries
 {
@@ -327,260 +328,260 @@ namespace Aurora.Devices.SteelSeries
             }
         }
 
-        public static byte GetHIDCode(DeviceKeys key)
+        public static byte GetHIDCode(KeyboardKeys key)
         {
 
             switch (key)
             {
-                case (DeviceKeys.LOGO):
+                case (KeyboardKeys.LOGO):
                     return (byte)SteelSeriesKeyCodes.LOGO;
-                case (DeviceKeys.FN_Key):
+                case (KeyboardKeys.FN_Key):
                     return (byte)SteelSeriesKeyCodes.SS_KEY;
-                case (DeviceKeys.G0):
+                case (KeyboardKeys.G0):
                     return (byte)SteelSeriesKeyCodes.G0;
-                case (DeviceKeys.G1):
+                case (KeyboardKeys.G1):
                     return (byte)SteelSeriesKeyCodes.G1;
-                case (DeviceKeys.G2):
+                case (KeyboardKeys.G2):
                     return (byte)SteelSeriesKeyCodes.G2;
-                case (DeviceKeys.G3):
+                case (KeyboardKeys.G3):
                     return (byte)SteelSeriesKeyCodes.G3;
-                case (DeviceKeys.G4):
+                case (KeyboardKeys.G4):
                     return (byte)SteelSeriesKeyCodes.G4;
-                case (DeviceKeys.G5):
+                case (KeyboardKeys.G5):
                     return (byte)SteelSeriesKeyCodes.G5;
-                case (DeviceKeys.ESC):
+                case (KeyboardKeys.ESC):
                     return (byte)USBHIDCodes.ESC;
-                case (DeviceKeys.F1):
+                case (KeyboardKeys.F1):
                     return (byte)USBHIDCodes.F1;
-                case (DeviceKeys.F2):
+                case (KeyboardKeys.F2):
                     return (byte)USBHIDCodes.F2;
-                case (DeviceKeys.F3):
+                case (KeyboardKeys.F3):
                     return (byte)USBHIDCodes.F3;
-                case (DeviceKeys.F4):
+                case (KeyboardKeys.F4):
                     return (byte)USBHIDCodes.F4;
-                case (DeviceKeys.F5):
+                case (KeyboardKeys.F5):
                     return (byte)USBHIDCodes.F5;
-                case (DeviceKeys.F6):
+                case (KeyboardKeys.F6):
                     return (byte)USBHIDCodes.F6;
-                case (DeviceKeys.F7):
+                case (KeyboardKeys.F7):
                     return (byte)USBHIDCodes.F7;
-                case (DeviceKeys.F8):
+                case (KeyboardKeys.F8):
                     return (byte)USBHIDCodes.F8;
-                case (DeviceKeys.F9):
+                case (KeyboardKeys.F9):
                     return (byte)USBHIDCodes.F9;
-                case (DeviceKeys.F10):
+                case (KeyboardKeys.F10):
                     return (byte)USBHIDCodes.F10;
-                case (DeviceKeys.F11):
+                case (KeyboardKeys.F11):
                     return (byte)USBHIDCodes.F11;
-                case (DeviceKeys.F12):
+                case (KeyboardKeys.F12):
                     return (byte)USBHIDCodes.F12;
-                case (DeviceKeys.PRINT_SCREEN):
+                case (KeyboardKeys.PRINT_SCREEN):
                     return (byte)USBHIDCodes.PRINT_SCREEN;
-                case (DeviceKeys.SCROLL_LOCK):
+                case (KeyboardKeys.SCROLL_LOCK):
                     return (byte)USBHIDCodes.SCROLL_LOCK;
-                case (DeviceKeys.PAUSE_BREAK):
+                case (KeyboardKeys.PAUSE_BREAK):
                     return (byte)USBHIDCodes.PAUSE_BREAK;
-                case (DeviceKeys.JPN_HALFFULLWIDTH):
+                case (KeyboardKeys.JPN_HALFFULLWIDTH):
                     return (byte)USBHIDCodes.TILDE;
-                case (DeviceKeys.OEM5):
+                case (KeyboardKeys.OEM5):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return (byte)USBHIDCodes.ERROR;
                     else
                         return (byte)USBHIDCodes.TILDE;
-                case (DeviceKeys.TILDE):
+                case (KeyboardKeys.TILDE):
                     return (byte)USBHIDCodes.TILDE;
-                case (DeviceKeys.ONE):
+                case (KeyboardKeys.ONE):
                     return (byte)USBHIDCodes.ONE;
-                case (DeviceKeys.TWO):
+                case (KeyboardKeys.TWO):
                     return (byte)USBHIDCodes.TWO;
-                case (DeviceKeys.THREE):
+                case (KeyboardKeys.THREE):
                     return (byte)USBHIDCodes.THREE;
-                case (DeviceKeys.FOUR):
+                case (KeyboardKeys.FOUR):
                     return (byte)USBHIDCodes.FOUR;
-                case (DeviceKeys.FIVE):
+                case (KeyboardKeys.FIVE):
                     return (byte)USBHIDCodes.FIVE;
-                case (DeviceKeys.SIX):
+                case (KeyboardKeys.SIX):
                     return (byte)USBHIDCodes.SIX;
-                case (DeviceKeys.SEVEN):
+                case (KeyboardKeys.SEVEN):
                     return (byte)USBHIDCodes.SEVEN;
-                case (DeviceKeys.EIGHT):
+                case (KeyboardKeys.EIGHT):
                     return (byte)USBHIDCodes.EIGHT;
-                case (DeviceKeys.NINE):
+                case (KeyboardKeys.NINE):
                     return (byte)USBHIDCodes.NINE;
-                case (DeviceKeys.ZERO):
+                case (KeyboardKeys.ZERO):
                     return (byte)USBHIDCodes.ZERO;
-                case (DeviceKeys.MINUS):
+                case (KeyboardKeys.MINUS):
                     return (byte)USBHIDCodes.MINUS;
-                case (DeviceKeys.EQUALS):
+                case (KeyboardKeys.EQUALS):
                     return (byte)USBHIDCodes.EQUALS;
-                case (DeviceKeys.BACKSPACE):
+                case (KeyboardKeys.BACKSPACE):
                     return (byte)USBHIDCodes.BACKSPACE;
-                case (DeviceKeys.INSERT):
+                case (KeyboardKeys.INSERT):
                     return (byte)USBHIDCodes.INSERT;
-                case (DeviceKeys.HOME):
+                case (KeyboardKeys.HOME):
                     return (byte)USBHIDCodes.HOME;
-                case (DeviceKeys.PAGE_UP):
+                case (KeyboardKeys.PAGE_UP):
                     return (byte)USBHIDCodes.PAGE_UP;
-                case (DeviceKeys.NUM_LOCK):
+                case (KeyboardKeys.NUM_LOCK):
                     return (byte)USBHIDCodes.NUM_LOCK;
-                case (DeviceKeys.NUM_SLASH):
+                case (KeyboardKeys.NUM_SLASH):
                     return (byte)USBHIDCodes.NUM_SLASH;
-                case (DeviceKeys.NUM_ASTERISK):
+                case (KeyboardKeys.NUM_ASTERISK):
                     return (byte)USBHIDCodes.NUM_ASTERISK;
-                case (DeviceKeys.NUM_MINUS):
+                case (KeyboardKeys.NUM_MINUS):
                     return (byte)USBHIDCodes.NUM_MINUS;
-                case (DeviceKeys.TAB):
+                case (KeyboardKeys.TAB):
                     return (byte)USBHIDCodes.TAB;
-                case (DeviceKeys.Q):
+                case (KeyboardKeys.Q):
                     return (byte)USBHIDCodes.Q;
-                case (DeviceKeys.W):
+                case (KeyboardKeys.W):
                     return (byte)USBHIDCodes.W;
-                case (DeviceKeys.E):
+                case (KeyboardKeys.E):
                     return (byte)USBHIDCodes.E;
-                case (DeviceKeys.R):
+                case (KeyboardKeys.R):
                     return (byte)USBHIDCodes.R;
-                case (DeviceKeys.T):
+                case (KeyboardKeys.T):
                     return (byte)USBHIDCodes.T;
-                case (DeviceKeys.Y):
+                case (KeyboardKeys.Y):
                     return (byte)USBHIDCodes.Y;
-                case (DeviceKeys.U):
+                case (KeyboardKeys.U):
                     return (byte)USBHIDCodes.U;
-                case (DeviceKeys.I):
+                case (KeyboardKeys.I):
                     return (byte)USBHIDCodes.I;
-                case (DeviceKeys.O):
+                case (KeyboardKeys.O):
                     return (byte)USBHIDCodes.O;
-                case (DeviceKeys.P):
+                case (KeyboardKeys.P):
                     return (byte)USBHIDCodes.P;
-                case (DeviceKeys.OPEN_BRACKET):
+                case (KeyboardKeys.OPEN_BRACKET):
                     return (byte)USBHIDCodes.OPEN_BRACKET;
-                case (DeviceKeys.CLOSE_BRACKET):
+                case (KeyboardKeys.CLOSE_BRACKET):
                     return (byte)USBHIDCodes.CLOSE_BRACKET;
-                case (DeviceKeys.BACKSLASH):
+                case (KeyboardKeys.BACKSLASH):
                     return (byte)USBHIDCodes.BACKSLASH;
-                case (DeviceKeys.DELETE):
+                case (KeyboardKeys.DELETE):
                     return (byte)USBHIDCodes.KEYBOARD_DELETE;
-                case (DeviceKeys.END):
+                case (KeyboardKeys.END):
                     return (byte)USBHIDCodes.END;
-                case (DeviceKeys.PAGE_DOWN):
+                case (KeyboardKeys.PAGE_DOWN):
                     return (byte)USBHIDCodes.PAGE_DOWN;
-                case (DeviceKeys.NUM_SEVEN):
+                case (KeyboardKeys.NUM_SEVEN):
                     return (byte)USBHIDCodes.NUM_SEVEN;
-                case (DeviceKeys.NUM_EIGHT):
+                case (KeyboardKeys.NUM_EIGHT):
                     return (byte)USBHIDCodes.NUM_EIGHT;
-                case (DeviceKeys.NUM_NINE):
+                case (KeyboardKeys.NUM_NINE):
                     return (byte)USBHIDCodes.NUM_NINE;
-                case (DeviceKeys.NUM_PLUS):
+                case (KeyboardKeys.NUM_PLUS):
                     return (byte)USBHIDCodes.NUM_PLUS;
-                case (DeviceKeys.CAPS_LOCK):
+                case (KeyboardKeys.CAPS_LOCK):
                     return (byte)USBHIDCodes.CAPS_LOCK;
-                case (DeviceKeys.A):
+                case (KeyboardKeys.A):
                     return (byte)USBHIDCodes.A;
-                case (DeviceKeys.S):
+                case (KeyboardKeys.S):
                     return (byte)USBHIDCodes.S;
-                case (DeviceKeys.D):
+                case (KeyboardKeys.D):
                     return (byte)USBHIDCodes.D;
-                case (DeviceKeys.F):
+                case (KeyboardKeys.F):
                     return (byte)USBHIDCodes.F;
-                case (DeviceKeys.G):
+                case (KeyboardKeys.G):
                     return (byte)USBHIDCodes.G;
-                case (DeviceKeys.H):
+                case (KeyboardKeys.H):
                     return (byte)USBHIDCodes.H;
-                case (DeviceKeys.J):
+                case (KeyboardKeys.J):
                     return (byte)USBHIDCodes.J;
-                case (DeviceKeys.K):
+                case (KeyboardKeys.K):
                     return (byte)USBHIDCodes.K;
-                case (DeviceKeys.L):
+                case (KeyboardKeys.L):
                     return (byte)USBHIDCodes.L;
-                case (DeviceKeys.SEMICOLON):
+                case (KeyboardKeys.SEMICOLON):
                     return (byte)USBHIDCodes.SEMICOLON;
-                case (DeviceKeys.APOSTROPHE):
+                case (KeyboardKeys.APOSTROPHE):
                     return (byte)USBHIDCodes.APOSTROPHE;
-                case (DeviceKeys.HASHTAG):
+                case (KeyboardKeys.HASHTAG):
                     return (byte)USBHIDCodes.HASHTAG;
-                case (DeviceKeys.ENTER):
+                case (KeyboardKeys.ENTER):
                     return (byte)USBHIDCodes.ENTER;
-                case (DeviceKeys.NUM_FOUR):
+                case (KeyboardKeys.NUM_FOUR):
                     return (byte)USBHIDCodes.NUM_FOUR;
-                case (DeviceKeys.NUM_FIVE):
+                case (KeyboardKeys.NUM_FIVE):
                     return (byte)USBHIDCodes.NUM_FIVE;
-                case (DeviceKeys.NUM_SIX):
+                case (KeyboardKeys.NUM_SIX):
                     return (byte)USBHIDCodes.NUM_SIX;
-                case (DeviceKeys.LEFT_SHIFT):
+                case (KeyboardKeys.LEFT_SHIFT):
                     return (byte)USBHIDCodes.LEFT_SHIFT;
-                case (DeviceKeys.BACKSLASH_UK):
+                case (KeyboardKeys.BACKSLASH_UK):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return (byte)USBHIDCodes.ERROR;
                     else
                         return (byte)USBHIDCodes.BACKSLASH_UK;
-                case (DeviceKeys.Z):
+                case (KeyboardKeys.Z):
                     return (byte)USBHIDCodes.Z;
-                case (DeviceKeys.X):
+                case (KeyboardKeys.X):
                     return (byte)USBHIDCodes.X;
-                case (DeviceKeys.C):
+                case (KeyboardKeys.C):
                     return (byte)USBHIDCodes.C;
-                case (DeviceKeys.V):
+                case (KeyboardKeys.V):
                     return (byte)USBHIDCodes.V;
-                case (DeviceKeys.B):
+                case (KeyboardKeys.B):
                     return (byte)USBHIDCodes.B;
-                case (DeviceKeys.N):
+                case (KeyboardKeys.N):
                     return (byte)USBHIDCodes.N;
-                case (DeviceKeys.M):
+                case (KeyboardKeys.M):
                     return (byte)USBHIDCodes.M;
-                case (DeviceKeys.COMMA):
+                case (KeyboardKeys.COMMA):
                     return (byte)USBHIDCodes.COMMA;
-                case (DeviceKeys.PERIOD):
+                case (KeyboardKeys.PERIOD):
                     return (byte)USBHIDCodes.PERIOD;
-                case (DeviceKeys.FORWARD_SLASH):
+                case (KeyboardKeys.FORWARD_SLASH):
                     return (byte)USBHIDCodes.FORWARD_SLASH;
-                case (DeviceKeys.OEM8):
+                case (KeyboardKeys.OEM8):
                     return (byte)USBHIDCodes.FORWARD_SLASH;
-                case (DeviceKeys.OEM102):
+                case (KeyboardKeys.OEM102):
                     return (byte)USBHIDCodes.ERROR;
-                case (DeviceKeys.RIGHT_SHIFT):
+                case (KeyboardKeys.RIGHT_SHIFT):
                     return (byte)USBHIDCodes.RIGHT_SHIFT;
-                case (DeviceKeys.ARROW_UP):
+                case (KeyboardKeys.ARROW_UP):
                     return (byte)USBHIDCodes.ARROW_UP;
-                case (DeviceKeys.NUM_ONE):
+                case (KeyboardKeys.NUM_ONE):
                     return (byte)USBHIDCodes.NUM_ONE;
-                case (DeviceKeys.NUM_TWO):
+                case (KeyboardKeys.NUM_TWO):
                     return (byte)USBHIDCodes.NUM_TWO;
-                case (DeviceKeys.NUM_THREE):
+                case (KeyboardKeys.NUM_THREE):
                     return (byte)USBHIDCodes.NUM_THREE;
-                case (DeviceKeys.NUM_ENTER):
+                case (KeyboardKeys.NUM_ENTER):
                     return (byte)USBHIDCodes.NUM_ENTER;
-                case (DeviceKeys.LEFT_CONTROL):
+                case (KeyboardKeys.LEFT_CONTROL):
                     return (byte)USBHIDCodes.LEFT_CONTROL;
-                case (DeviceKeys.LEFT_WINDOWS):
+                case (KeyboardKeys.LEFT_WINDOWS):
                     return (byte)USBHIDCodes.LEFT_WINDOWS;
-                case (DeviceKeys.LEFT_ALT):
+                case (KeyboardKeys.LEFT_ALT):
                     return (byte)USBHIDCodes.LEFT_ALT;
-                case (DeviceKeys.JPN_MUHENKAN):
+                case (KeyboardKeys.JPN_MUHENKAN):
                     return (byte)USBHIDCodes.JPN_MUHENKAN;
-                case (DeviceKeys.SPACE):
+                case (KeyboardKeys.SPACE):
                     return (byte)USBHIDCodes.SPACE;
-                case (DeviceKeys.JPN_HENKAN):
+                case (KeyboardKeys.JPN_HENKAN):
                     return (byte)USBHIDCodes.JPN_HENKAN;
-                case (DeviceKeys.JPN_HIRAGANA_KATAKANA):
+                case (KeyboardKeys.JPN_HIRAGANA_KATAKANA):
                     return (byte)USBHIDCodes.JPN_HIRAGANA_KATAKANA;
-                case (DeviceKeys.RIGHT_ALT):
+                case (KeyboardKeys.RIGHT_ALT):
                     return (byte)USBHIDCodes.RIGHT_ALT;
-                case (DeviceKeys.RIGHT_WINDOWS):
+                case (KeyboardKeys.RIGHT_WINDOWS):
                     return (byte)USBHIDCodes.RIGHT_WINDOWS;
-                //case (DeviceKeys.FN_Key):
+                //case (KeyboardKeys.FN_Key):
                 //return (byte) USBHIDCodes.RIGHT_WINDOWS;
-                case (DeviceKeys.APPLICATION_SELECT):
+                case (KeyboardKeys.APPLICATION_SELECT):
                     return (byte)USBHIDCodes.APPLICATION_SELECT;
-                case (DeviceKeys.RIGHT_CONTROL):
+                case (KeyboardKeys.RIGHT_CONTROL):
                     return (byte)USBHIDCodes.RIGHT_CONTROL;
-                case (DeviceKeys.ARROW_LEFT):
+                case (KeyboardKeys.ARROW_LEFT):
                     return (byte)USBHIDCodes.ARROW_LEFT;
-                case (DeviceKeys.ARROW_DOWN):
+                case (KeyboardKeys.ARROW_DOWN):
                     return (byte)USBHIDCodes.ARROW_DOWN;
-                case (DeviceKeys.ARROW_RIGHT):
+                case (KeyboardKeys.ARROW_RIGHT):
                     return (byte)USBHIDCodes.ARROW_RIGHT;
-                case (DeviceKeys.NUM_ZERO):
+                case (KeyboardKeys.NUM_ZERO):
                     return (byte)USBHIDCodes.NUM_ZERO;
-                case (DeviceKeys.NUM_PERIOD):
+                case (KeyboardKeys.NUM_PERIOD):
                     return (byte)USBHIDCodes.NUM_PERIOD;
 
                 default:

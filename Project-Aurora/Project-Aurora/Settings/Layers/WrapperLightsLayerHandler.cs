@@ -7,6 +7,8 @@ using Aurora.Profiles;
 using System.Windows.Controls;
 using Newtonsoft.Json;
 using Aurora.Devices;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Settings.Layers
 {
@@ -35,8 +37,8 @@ namespace Aurora.Settings.Layers
 
         // Key cloning
         [JsonIgnore]
-        public Dictionary<DeviceKeys, KeySequence> CloningMap => Logic._CloningMap ?? _CloningMap ?? new Dictionary<DeviceKeys, KeySequence>();
-        public Dictionary<DeviceKeys, KeySequence> _CloningMap { get; set; }
+        public Dictionary<DeviceLED, KeySequence> CloningMap => Logic._CloningMap ?? _CloningMap ?? new Dictionary<DeviceLED, KeySequence>();
+        public Dictionary<DeviceLED, KeySequence> _CloningMap { get; set; }
 
         public WrapperLightsLayerHandlerProperties() : base() { }
 
@@ -52,19 +54,19 @@ namespace Aurora.Settings.Layers
             _ColorEnhanceColorFactor = 90;
             _ColorEnhanceColorHSVSine = 0.1f;
             _ColorEnhanceColorHSVGamma = 2.5f;
-            _CloningMap = new Dictionary<DeviceKeys, KeySequence>();
+            _CloningMap = new Dictionary<DeviceLED, KeySequence>();
         }
     }
 
     public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerProperties>
     {
         internal int[] bitmap = new int[126];
-        internal Dictionary<Devices.DeviceKeys, Color> extra_keys = new Dictionary<Devices.DeviceKeys, Color>();
+        internal Dictionary<DeviceLED, Color> extra_keys = new Dictionary<DeviceLED, Color>();
         internal Color last_fill_color = Color.Black;
-        internal Dictionary<Devices.DeviceKeys, KeyEffect> key_effects = new Dictionary<Devices.DeviceKeys, KeyEffect>();
+        internal Dictionary<DeviceLED, KeyEffect> key_effects = new Dictionary<DeviceLED, KeyEffect>();
         internal EntireEffect current_effect = null;
 
-        internal Dictionary<Devices.DeviceKeys, Color> colors = new Dictionary<Devices.DeviceKeys, Color>();
+        internal Dictionary<DeviceLED, Color> colors = new Dictionary<DeviceLED, Color>();
 
         public WrapperLightsLayerHandler()
         {
@@ -89,8 +91,7 @@ namespace Aurora.Settings.Layers
 
             EffectLayer bitmap_layer = new EffectLayer("Aurora Wrapper - Bitmap");
 
-            Devices.DeviceKeys[] allkeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
-            foreach (var key in allkeys)
+            foreach (var key in GlobalDeviceLayout.Instance.AllLeds)
             {
 
                 // This checks if a key is already being cloned over and thus should be prevented from being re-set by the
@@ -126,7 +127,7 @@ namespace Aurora.Settings.Layers
 
             EffectLayer effects_layer = new EffectLayer("Aurora Wrapper - Effects");
 
-            Devices.DeviceKeys[] effect_keys = key_effects.Keys.ToArray();
+            DeviceLED[] effect_keys = key_effects.Keys.ToArray();
             long currentTime = Utils.Time.GetMillisecondsSinceEpoch();
 
             foreach (var key in effect_keys)
@@ -181,11 +182,13 @@ namespace Aurora.Settings.Layers
             if (ngw_state.Sent_Bitmap.Length != 0)
                 bitmap = ngw_state.Sent_Bitmap;
 
-            SetExtraKey(Devices.DeviceKeys.LOGO, ngw_state.Extra_Keys.logo);
-            SetExtraKey(Devices.DeviceKeys.LOGO2, ngw_state.Extra_Keys.badge);
-            SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
+            SetExtraKey(KeyboardKeys.LOGO, ngw_state.Extra_Keys.logo);
+            SetExtraKey(KeyboardKeys.LOGO2, ngw_state.Extra_Keys.badge);
+            //TODO: Deal with MouseLights.ALL
+            SetExtraKey(MouseLights.All, ngw_state.Extra_Keys.peripheral);
             //Reversing the mousepad lights from left to right, razer takes it from right to left
-            SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
+            //TODO: Deal with these
+            /*SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
             SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT15, ngw_state.Extra_Keys.mousepad1);
             SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT14, ngw_state.Extra_Keys.mousepad2);
             SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT13, ngw_state.Extra_Keys.mousepad3);
@@ -200,27 +203,27 @@ namespace Aurora.Settings.Layers
             SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT4, ngw_state.Extra_Keys.mousepad12);
             SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT3, ngw_state.Extra_Keys.mousepad13);
             SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT2, ngw_state.Extra_Keys.mousepad14);
-            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT1, ngw_state.Extra_Keys.mousepad15);
-            SetExtraKey(Devices.DeviceKeys.G1, ngw_state.Extra_Keys.G1);
-            SetExtraKey(Devices.DeviceKeys.G2, ngw_state.Extra_Keys.G2);
-            SetExtraKey(Devices.DeviceKeys.G3, ngw_state.Extra_Keys.G3);
-            SetExtraKey(Devices.DeviceKeys.G4, ngw_state.Extra_Keys.G4);
-            SetExtraKey(Devices.DeviceKeys.G5, ngw_state.Extra_Keys.G5);
-            SetExtraKey(Devices.DeviceKeys.G6, ngw_state.Extra_Keys.G6);
-            SetExtraKey(Devices.DeviceKeys.G7, ngw_state.Extra_Keys.G7);
-            SetExtraKey(Devices.DeviceKeys.G8, ngw_state.Extra_Keys.G8);
-            SetExtraKey(Devices.DeviceKeys.G9, ngw_state.Extra_Keys.G9);
-            SetExtraKey(Devices.DeviceKeys.G10, ngw_state.Extra_Keys.G10);
-            SetExtraKey(Devices.DeviceKeys.G11, ngw_state.Extra_Keys.G11);
-            SetExtraKey(Devices.DeviceKeys.G12, ngw_state.Extra_Keys.G12);
-            SetExtraKey(Devices.DeviceKeys.G13, ngw_state.Extra_Keys.G13);
-            SetExtraKey(Devices.DeviceKeys.G14, ngw_state.Extra_Keys.G14);
-            SetExtraKey(Devices.DeviceKeys.G15, ngw_state.Extra_Keys.G15);
-            SetExtraKey(Devices.DeviceKeys.G16, ngw_state.Extra_Keys.G16);
-            SetExtraKey(Devices.DeviceKeys.G17, ngw_state.Extra_Keys.G17);
-            SetExtraKey(Devices.DeviceKeys.G18, ngw_state.Extra_Keys.G18);
-            SetExtraKey(Devices.DeviceKeys.G19, ngw_state.Extra_Keys.G19);
-            SetExtraKey(Devices.DeviceKeys.G20, ngw_state.Extra_Keys.G20);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT1, ngw_state.Extra_Keys.mousepad15);*/
+            SetExtraKey(KeyboardKeys.G1, ngw_state.Extra_Keys.G1);
+            SetExtraKey(KeyboardKeys.G2, ngw_state.Extra_Keys.G2);
+            SetExtraKey(KeyboardKeys.G3, ngw_state.Extra_Keys.G3);
+            SetExtraKey(KeyboardKeys.G4, ngw_state.Extra_Keys.G4);
+            SetExtraKey(KeyboardKeys.G5, ngw_state.Extra_Keys.G5);
+            SetExtraKey(KeyboardKeys.G6, ngw_state.Extra_Keys.G6);
+            SetExtraKey(KeyboardKeys.G7, ngw_state.Extra_Keys.G7);
+            SetExtraKey(KeyboardKeys.G8, ngw_state.Extra_Keys.G8);
+            SetExtraKey(KeyboardKeys.G9, ngw_state.Extra_Keys.G9);
+            SetExtraKey(KeyboardKeys.G10, ngw_state.Extra_Keys.G10);
+            SetExtraKey(KeyboardKeys.G11, ngw_state.Extra_Keys.G11);
+            SetExtraKey(KeyboardKeys.G12, ngw_state.Extra_Keys.G12);
+            SetExtraKey(KeyboardKeys.G13, ngw_state.Extra_Keys.G13);
+            SetExtraKey(KeyboardKeys.G14, ngw_state.Extra_Keys.G14);
+            SetExtraKey(KeyboardKeys.G15, ngw_state.Extra_Keys.G15);
+            SetExtraKey(KeyboardKeys.G16, ngw_state.Extra_Keys.G16);
+            SetExtraKey(KeyboardKeys.G17, ngw_state.Extra_Keys.G17);
+            SetExtraKey(KeyboardKeys.G18, ngw_state.Extra_Keys.G18);
+            SetExtraKey(KeyboardKeys.G19, ngw_state.Extra_Keys.G19);
+            SetExtraKey(KeyboardKeys.G20, ngw_state.Extra_Keys.G20);
 
             if (ngw_state.Command.Equals("SetLighting"))
             {
@@ -247,7 +250,7 @@ namespace Aurora.Settings.Layers
             }
             else if (ngw_state.Command.Equals("FlashSingleKey"))
             {
-                Devices.DeviceKeys dev_key = Devices.Logitech.LogitechDevice.ToDeviceKey((LedCSharp.keyboardNames)(ngw_state.Command_Data.key));
+                DeviceLED dev_key = Devices.Logitech.LogitechDevice.ToDeviceKey((LedCSharp.keyboardNames)(ngw_state.Command_Data.key)).GetDeviceLED();
                 LogiFlashSingleKey neweffect = new LogiFlashSingleKey(dev_key, Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start),
                         ngw_state.Command_Data.duration,
                         ngw_state.Command_Data.interval
@@ -261,7 +264,7 @@ namespace Aurora.Settings.Layers
             }
             else if (ngw_state.Command.Equals("PulseSingleKey"))
             {
-                Devices.DeviceKeys dev_key = Devices.Logitech.LogitechDevice.ToDeviceKey((LedCSharp.keyboardNames)(ngw_state.Command_Data.key));
+                DeviceLED dev_key = Devices.Logitech.LogitechDevice.ToDeviceKey((LedCSharp.keyboardNames)(ngw_state.Command_Data.key)).GetDeviceLED();
                 long duration = ngw_state.Command_Data.interval == 0 ? 0 : ngw_state.Command_Data.duration;
 
                 LogiPulseSingleKey neweffect = new LogiPulseSingleKey(dev_key, Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start),
@@ -560,8 +563,22 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        private void SetExtraKey(Devices.DeviceKeys key, Color color)
+
+        private void SetExtraKey(MouseLights key, Color color)
         {
+            DeviceLED led = key.GetDeviceLED();
+            SetExtraKey(led, color);
+        }
+
+        private void SetExtraKey(KeyboardKeys key, Color color)
+        {
+            DeviceLED led = key.GetDeviceLED();
+            SetExtraKey(led, color);
+        }
+
+        private void SetExtraKey(DeviceLED key, Color color)
+        {
+
             if (!extra_keys.ContainsKey(key))
                 extra_keys.Add(key, color);
             else
@@ -571,13 +588,13 @@ namespace Aurora.Settings.Layers
 
     class KeyEffect
     {
-        public Devices.DeviceKeys key;
+        public DeviceLED key;
         public Color color;
         public long duration;
         public long interval;
         public long timeStarted;
 
-        public KeyEffect(Devices.DeviceKeys key, Color color, long duration, long interval)
+        public KeyEffect(DeviceLED key, Color color, long duration, long interval)
         {
             this.key = key;
             this.color = color;
@@ -594,7 +611,7 @@ namespace Aurora.Settings.Layers
 
     class LogiFlashSingleKey : KeyEffect
     {
-        public LogiFlashSingleKey(Devices.DeviceKeys key, Color color, long duration, long interval) : base(key, color, duration, interval)
+        public LogiFlashSingleKey(DeviceLED key, Color color, long duration, long interval) : base(key, color, duration, interval)
         {
         }
 
@@ -608,7 +625,7 @@ namespace Aurora.Settings.Layers
     {
         public Color color_end;
 
-        public LogiPulseSingleKey(Devices.DeviceKeys key, Color color, Color color_end, long duration) : base(key, color, duration, 1)
+        public LogiPulseSingleKey(DeviceLED key, Color color, Color color_end, long duration) : base(key, color, duration, 1)
         {
             this.color_end = color_end;
         }

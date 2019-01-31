@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Aurora.Utils;
 using SharpDX.RawInput;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Settings
 {
@@ -15,8 +17,8 @@ namespace Aurora.Settings
 	    private readonly InputEvents inputEvents;
 	    private String recordingType = "";
         private bool isSingleKey = false;
-        private List<DeviceKeys> recordedKeys = new List<DeviceKeys>();
-        public delegate void RecordingFinishedHandler(DeviceKeys[] resulting_keys);
+        private List<DeviceLED> recordedKeys = new List<DeviceLED>();
+        public delegate void RecordingFinishedHandler(DeviceLED[] resulting_keys);
         public event RecordingFinishedHandler FinishedRecording;
 
         public KeyRecorder(InputEvents inputEvents)
@@ -31,19 +33,20 @@ namespace Aurora.Settings
         {
             if (IsRecording())
             {
-                DeviceKeys key = e.GetKeyboardKey();
+                KeyboardKeys key = e.GetKeyboardKey();
 
-                if(key != DeviceKeys.NONE)
+                if(key != KeyboardKeys.NONE)
                 {
-                    if (HasRecorded(key))
-                        RemoveKey(key);
+                    DeviceLED deviceLED = key.GetDeviceLED();
+                    if (HasRecorded(deviceLED))
+                        RemoveKey(deviceLED);
                     else
-                        AddKey(key);
+                        AddKey(deviceLED);
                 }
             }
         }
 
-        public void AddKey(DeviceKeys key)
+        public void AddKey(DeviceLED key)
         {
             if (!IsRecording())
                 return;
@@ -59,7 +62,7 @@ namespace Aurora.Settings
             }
         }
 
-        public void RemoveKey(DeviceKeys key)
+        public void RemoveKey(DeviceLED key)
         {
             if (!IsRecording())
                 return;
@@ -70,12 +73,12 @@ namespace Aurora.Settings
             }
         }
 
-        public bool HasRecorded(DeviceKeys key)
+        public bool HasRecorded(DeviceLED key)
         {
             return recordedKeys.Contains(key);
         }
 
-        public DeviceKeys[] GetKeys()
+        public DeviceLED[] GetKeys()
         {
             return recordedKeys.ToArray();
         }
@@ -120,7 +123,7 @@ namespace Aurora.Settings
         {
             recordingType = "";
             isSingleKey = false;
-            recordedKeys = new List<DeviceKeys>();
+            recordedKeys = new List<DeviceLED>();
         }
 
         public bool IsSingleKey()

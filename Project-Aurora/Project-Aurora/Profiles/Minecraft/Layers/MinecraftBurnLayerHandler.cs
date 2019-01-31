@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.Minecraft.GSI;
 using Aurora.Settings.Layers;
@@ -27,12 +28,12 @@ namespace Aurora.Profiles.Minecraft.Layers {
         }
 
         private void CreateFireParticle() {
-            float randomX = (float)rnd.NextDouble() * Effects.canvas_width;
+            float randomX = (float)rnd.NextDouble() * GlobalDeviceLayout.Instance.CanvasWidth;
             float randomOffset = ((float)rnd.NextDouble() * 15) - 7.5f;
             particles.Add(new FireParticle() {
                 mix = new AnimationMix(new[] {
                     new AnimationTrack("particle", 0)
-                        .SetFrame(0, new AnimationFilledCircle(randomX, Effects.canvas_height + 5, 5, Color.FromArgb(255, 230, 0)))
+                        .SetFrame(0, new AnimationFilledCircle(randomX, GlobalDeviceLayout.Instance.CanvasHeight + 5, 5, Color.FromArgb(255, 230, 0)))
                         .SetFrame(1, new AnimationFilledCircle(randomX + randomOffset, -6, 6, Color.FromArgb(0, 255, 230, 0)))
                 }),
                 time = 0

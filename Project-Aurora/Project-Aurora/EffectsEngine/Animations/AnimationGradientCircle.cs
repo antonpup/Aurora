@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Devices.Layout;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -36,7 +37,7 @@ namespace Aurora.EffectsEngine.Animations
             _gradientBrush = brush;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Canvas g, float scale = 1.0f, PointF offset = default(PointF))
         {
             RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
             _scaledDimension.Offset(offset);
@@ -88,10 +89,7 @@ namespace Aurora.EffectsEngine.Animations
                 Matrix rotationMatrix = new Matrix();
                 rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);
 
-                Matrix originalMatrix = g.Transform;
-                g.Transform = rotationMatrix;
-                g.FillEllipse(brush, _scaledDimension);
-                g.Transform = originalMatrix;
+                g.FillEllipse(brush, _scaledDimension, rotationMatrix);
             }
         }
 

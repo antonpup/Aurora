@@ -71,6 +71,13 @@ namespace Aurora.Settings
             freeform = new FreeFormObject();
         }
 
+        public KeySequence(List<DeviceLED> keys)
+        {
+            this.keys = new List<DeviceLED>(keys);
+            type = KeySequenceType.Sequence;
+            freeform = new FreeFormObject();
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

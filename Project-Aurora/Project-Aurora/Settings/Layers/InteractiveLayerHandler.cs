@@ -15,6 +15,8 @@ using System.Windows.Controls;
 using Aurora.Utils;
 using Gma.System.MouseKeyHook;
 using SharpDX.RawInput;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Devices.Layout;
 
 namespace Aurora.Settings.Layers
 {
@@ -26,14 +28,14 @@ namespace Aurora.Settings.Layers
             Spectrum
         };
 
-        public Devices.DeviceKeys key;
+        public KeyboardKeys key;
         public float progress;
         public bool waitOnKeyUp;
         public AnimationMix animation;
         public ColorSpectrum spectrum;
         public readonly input_type type;
 
-        public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, AnimationMix animation)
+        public input_item(KeyboardKeys key, float progress, bool waitOnKeyUp, AnimationMix animation)
         {
             this.key = key;
             this.progress = progress;
@@ -43,7 +45,7 @@ namespace Aurora.Settings.Layers
             type = input_type.AnimationMix;
         }
 
-        public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, ColorSpectrum spectrum)
+        public input_item(KeyboardKeys key, float progress, bool waitOnKeyUp, ColorSpectrum spectrum)
         {
             this.key = key;
             this.progress = progress;
@@ -135,8 +137,8 @@ namespace Aurora.Settings.Layers
             if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
-            Devices.DeviceKeys deviceKey = e.GetKeyboardKey();
-            if (deviceKey != Devices.DeviceKeys.NONE)
+            KeyboardKeys deviceKey = e.GetKeyboardKey();
+            if (deviceKey != KeyboardKeys.NONE)
             {
                 foreach (var input in _input_list.ToArray())
                 {
@@ -149,7 +151,7 @@ namespace Aurora.Settings.Layers
                 previous_key = Keys.None;
         }
 
-        private Dictionary<Devices.DeviceKeys, long> TimeOfLastPress = new Dictionary<Devices.DeviceKeys, long>();
+        private Dictionary<KeyboardKeys, long> TimeOfLastPress = new Dictionary<KeyboardKeys, long>();
         private const long pressBuffer = 300L;
 
         private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
@@ -162,7 +164,7 @@ namespace Aurora.Settings.Layers
                 return;
 
             long? currentTime = null;
-            Devices.DeviceKeys device_key = e.GetKeyboardKey();
+            KeyboardKeys device_key = e.GetKeyboardKey();
 
             lock (TimeOfLastPress)
             {
@@ -174,10 +176,10 @@ namespace Aurora.Settings.Layers
                         TimeOfLastPress.Remove(device_key);
                 }
             }
-
-            if (device_key != Devices.DeviceKeys.NONE && !Properties.Sequence.keys.Contains(device_key))
+            DeviceLED deviceLED = device_key.GetDeviceLED();
+            if (device_key != KeyboardKeys.NONE && !Properties.Sequence.keys.Contains(deviceLED))
             {
-                PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
+                PointF pt = GlobalDeviceLayout.Instance.GetDeviceLEDBitmapRegion(deviceLED).Center;
                 if (pt != new PointF(0, 0))
                 {
                     lock (TimeOfLastPress)
@@ -189,7 +191,7 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        private input_item CreateInputItem(Devices.DeviceKeys key, PointF origin)
+        private input_item CreateInputItem(KeyboardKeys key, PointF origin)
         {
             Color primary_c = Properties.RandomPrimaryColor ? Utils.ColorUtils.GenerateRandomColor() : Properties.PrimaryColor;
             Color secondary_c = Properties.RandomSecondaryColor ? Utils.ColorUtils.GenerateRandomColor() : Properties.SecondaryColor;
@@ -203,10 +205,10 @@ namespace Aurora.Settings.Layers
                     new AnimationCircle(origin, 0, primary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(0.80f,
-                    new AnimationCircle(origin, Effects.canvas_width * 0.80f, secondary_c, Properties.EffectWidth)
+                    new AnimationCircle(origin, GlobalDeviceLayout.Instance.CanvasWidth * 0.80f, secondary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(1.00f,
-                    new AnimationCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
+                    new AnimationCircle(origin, GlobalDeviceLayout.Instance.CanvasWidth + (Properties.EffectWidth / 2), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
                     );
                 anim_mix.AddTrack(wave);
             }
@@ -215,7 +217,7 @@ namespace Aurora.Settings.Layers
                 AnimationTrack rainbowWave = new AnimationTrack("Rainbow Wave", 1.0f);
 
                 rainbowWave.SetFrame(0.0f, new AnimationGradientCircle(origin, 0, new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
-                rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
+                rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, GlobalDeviceLayout.Instance.CanvasWidth + (Properties.EffectWidth / 2), new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
 
                 anim_mix.AddTrack(rainbowWave);
             }
@@ -226,10 +228,10 @@ namespace Aurora.Settings.Layers
                     new AnimationFilledCircle(origin, 0, primary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(0.80f,
-                    new AnimationFilledCircle(origin, Effects.canvas_width * 0.80f, secondary_c, Properties.EffectWidth)
+                    new AnimationFilledCircle(origin, GlobalDeviceLayout.Instance.CanvasWidth * 0.80f, secondary_c, Properties.EffectWidth)
                     );
                 wave.SetFrame(1.00f,
-                    new AnimationFilledCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
+                    new AnimationFilledCircle(origin, GlobalDeviceLayout.Instance.CanvasWidth + (Properties.EffectWidth / 2), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
                     );
                 anim_mix.AddTrack(wave);
             }
@@ -255,24 +257,24 @@ namespace Aurora.Settings.Layers
                 arrow.SetFrame(0.33f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(origin, new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), Properties.EffectWidth),
-                            new AnimationLine(origin, new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), Properties.EffectWidth)
+                            new AnimationLine(origin, new PointF(origin.X + GlobalDeviceLayout.Instance.CanvasWidth * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), Properties.EffectWidth),
+                            new AnimationLine(origin, new PointF(origin.X - GlobalDeviceLayout.Instance.CanvasWidth * 0.33f, origin.Y), Utils.ColorUtils.BlendColors(primary_c, secondary_c, 0.33D), Properties.EffectWidth)
                         }
                         )
                     );
                 arrow.SetFrame(0.66f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), secondary_c, Properties.EffectWidth),
-                            new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), secondary_c, Properties.EffectWidth)
+                            new AnimationLine(new PointF(origin.X + GlobalDeviceLayout.Instance.CanvasWidth * 0.33f, origin.Y), new PointF(origin.X + GlobalDeviceLayout.Instance.CanvasWidth * 0.66f, origin.Y), secondary_c, Properties.EffectWidth),
+                            new AnimationLine(new PointF(origin.X - GlobalDeviceLayout.Instance.CanvasWidth * 0.33f, origin.Y), new PointF(origin.X - GlobalDeviceLayout.Instance.CanvasWidth * 0.66f, origin.Y), secondary_c, Properties.EffectWidth)
                         }
                         )
                     );
                 arrow.SetFrame(1.0f,
                     new AnimationLines(
                         new AnimationLine[] {
-                            new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X + Effects.canvas_width, origin.Y), Color.FromArgb(0, secondary_c), Properties.EffectWidth),
-                            new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X - Effects.canvas_width, origin.Y), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
+                            new AnimationLine(new PointF(origin.X + GlobalDeviceLayout.Instance.CanvasWidth * 0.66f, origin.Y), new PointF(origin.X + GlobalDeviceLayout.Instance.CanvasWidth, origin.Y), Color.FromArgb(0, secondary_c), Properties.EffectWidth),
+                            new AnimationLine(new PointF(origin.X - GlobalDeviceLayout.Instance.CanvasWidth * 0.66f, origin.Y), new PointF(origin.X - GlobalDeviceLayout.Instance.CanvasWidth, origin.Y), Color.FromArgb(0, secondary_c), Properties.EffectWidth)
                         }
                         )
                     );
@@ -307,18 +309,18 @@ namespace Aurora.Settings.Layers
                 {
                     if (input.type == input_item.input_type.Spectrum)
                     {
-                        float transition_value = input.progress / Effects.canvas_width;
+                        float transition_value = input.progress / GlobalDeviceLayout.Instance.CanvasWidth;
 
                         if (transition_value > 1.0f)
                             continue;
 
                         Color color = input.spectrum.GetColorAt(transition_value);
 
-                        interactive_layer.Set(input.key, color);
+                        interactive_layer.Set(input.key.GetDeviceLED(), color);
                     }
                     else if (input.type == input_item.input_type.AnimationMix)
                     {
-                        float time_value = input.progress / Effects.canvas_width;
+                        float time_value = input.progress / GlobalDeviceLayout.Instance.CanvasWidth;
 
                         if (time_value > 1.0f)
                             continue;
@@ -336,7 +338,7 @@ namespace Aurora.Settings.Layers
             {
                 try
                 {
-                    if (_input_list[x].progress > Effects.canvas_width)
+                    if (_input_list[x].progress > GlobalDeviceLayout.Instance.CanvasWidth)
                         _input_list.RemoveAt(x);
                     else
                     {

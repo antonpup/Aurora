@@ -98,13 +98,13 @@ namespace Aurora.Settings.Layers
         {
             Image newscreen = Pranas.ScreenshotCapture.TakeScreenshot();
 
-            image_scale_x = Effects.canvas_width / (float)newscreen.Width;
-            image_scale_y = Effects.canvas_height / (float)newscreen.Height;
+            image_scale_x = GlobalDeviceLayout.Instance.CanvasWidth / (float)newscreen.Width;
+            image_scale_y = GlobalDeviceLayout.Instance.CanvasHeight / (float)newscreen.Height;
 
-            var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            var newImage = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
             using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(newscreen, 0, 0, Effects.canvas_width, Effects.canvas_height);
+                graphics.DrawImage(newscreen, 0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
             avg_color = GetAverageColor(newscreen);
 
@@ -135,7 +135,7 @@ namespace Aurora.Settings.Layers
                 case AmbilightCaptureType.MainMonitor:
                     if(screen_image != null)
                     {
-                        var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                        var newImage = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
                         RectangleF prim_scr_region = new RectangleF(
                                 (Screen.PrimaryScreen.Bounds.X - SystemInformation.VirtualScreen.X) * image_scale_x,
                                 (Screen.PrimaryScreen.Bounds.Y - SystemInformation.VirtualScreen.Y) * image_scale_y,
@@ -143,7 +143,7 @@ namespace Aurora.Settings.Layers
                                 Screen.PrimaryScreen.Bounds.Height * image_scale_y);
 
                         using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), prim_scr_region, GraphicsUnit.Pixel);
+                            graphics.DrawImage(screen_image, new RectangleF(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), prim_scr_region, GraphicsUnit.Pixel);
 
                         screen_image = newImage;
                         average_color = GetAverageColor(newImage);
@@ -161,7 +161,7 @@ namespace Aurora.Settings.Layers
 
                     if (screen_image != null)
                     {
-                        var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                        var newImage = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
                         RectangleF scr_region = new RectangleF(
                                 (app_rect.left - SystemInformation.VirtualScreen.X) * image_scale_x,
@@ -170,7 +170,7 @@ namespace Aurora.Settings.Layers
                                 (app_rect.bottom - app_rect.top) * image_scale_y);
 
                         using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
+                            graphics.DrawImage(screen_image, new RectangleF(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), scr_region, GraphicsUnit.Pixel);
 
                         screen_image = newImage;
                         average_color = GetAverageColor(newImage);
@@ -194,7 +194,7 @@ namespace Aurora.Settings.Layers
 
                                 if (screen_image != null)
                                 {
-                                    var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                                    var newImage = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
                                     RectangleF scr_region = new RectangleF(
                                             (app_rect.left - SystemInformation.VirtualScreen.X) * image_scale_x,
@@ -203,7 +203,7 @@ namespace Aurora.Settings.Layers
                                             (app_rect.bottom - app_rect.top) * image_scale_y);
 
                                     using (var graphics = Graphics.FromImage(newImage))
-                                        graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
+                                        graphics.DrawImage(screen_image, new RectangleF(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), scr_region, GraphicsUnit.Pixel);
 
                                     screen_image = newImage;
                                     average_color = GetAverageColor(newImage);

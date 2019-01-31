@@ -1,4 +1,6 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using LedCSharp;
 using System;
 using System.Collections.Generic;
@@ -465,464 +467,472 @@ namespace Aurora.Devices.Logitech
             return update_result;
         }
 
-        public static DeviceKeys ToDeviceKey(keyboardNames key)
+        public static KeyboardKeys ToDeviceKey(keyboardNames key)
         {
             switch (key)
             {
                 case (keyboardNames.ESC):
-                    return DeviceKeys.ESC;
+                    return KeyboardKeys.ESC;
                 case (keyboardNames.F1):
-                    return DeviceKeys.F1;
+                    return KeyboardKeys.F1;
                 case (keyboardNames.F2):
-                    return DeviceKeys.F2;
+                    return KeyboardKeys.F2;
                 case (keyboardNames.F3):
-                    return DeviceKeys.F3;
+                    return KeyboardKeys.F3;
                 case (keyboardNames.F4):
-                    return DeviceKeys.F4;
+                    return KeyboardKeys.F4;
                 case (keyboardNames.F5):
-                    return DeviceKeys.F5;
+                    return KeyboardKeys.F5;
                 case (keyboardNames.F6):
-                    return DeviceKeys.F6;
+                    return KeyboardKeys.F6;
                 case (keyboardNames.F7):
-                    return DeviceKeys.F7;
+                    return KeyboardKeys.F7;
                 case (keyboardNames.F8):
-                    return DeviceKeys.F8;
+                    return KeyboardKeys.F8;
                 case (keyboardNames.F9):
-                    return DeviceKeys.F9;
+                    return KeyboardKeys.F9;
                 case (keyboardNames.F10):
-                    return DeviceKeys.F10;
+                    return KeyboardKeys.F10;
                 case (keyboardNames.F11):
-                    return DeviceKeys.F11;
+                    return KeyboardKeys.F11;
                 case (keyboardNames.F12):
-                    return DeviceKeys.F12;
+                    return KeyboardKeys.F12;
                 case (keyboardNames.PRINT_SCREEN):
-                    return DeviceKeys.PRINT_SCREEN;
+                    return KeyboardKeys.PRINT_SCREEN;
                 case (keyboardNames.SCROLL_LOCK):
-                    return DeviceKeys.SCROLL_LOCK;
+                    return KeyboardKeys.SCROLL_LOCK;
                 case (keyboardNames.PAUSE_BREAK):
-                    return DeviceKeys.PAUSE_BREAK;
+                    return KeyboardKeys.PAUSE_BREAK;
                 case (keyboardNames.TILDE):
-                    return DeviceKeys.TILDE;
+                    return KeyboardKeys.TILDE;
                 case (keyboardNames.ONE):
-                    return DeviceKeys.ONE;
+                    return KeyboardKeys.ONE;
                 case (keyboardNames.TWO):
-                    return DeviceKeys.TWO;
+                    return KeyboardKeys.TWO;
                 case (keyboardNames.THREE):
-                    return DeviceKeys.THREE;
+                    return KeyboardKeys.THREE;
                 case (keyboardNames.FOUR):
-                    return DeviceKeys.FOUR;
+                    return KeyboardKeys.FOUR;
                 case (keyboardNames.FIVE):
-                    return DeviceKeys.FIVE;
+                    return KeyboardKeys.FIVE;
                 case (keyboardNames.SIX):
-                    return DeviceKeys.SIX;
+                    return KeyboardKeys.SIX;
                 case (keyboardNames.SEVEN):
-                    return DeviceKeys.SEVEN;
+                    return KeyboardKeys.SEVEN;
                 case (keyboardNames.EIGHT):
-                    return DeviceKeys.EIGHT;
+                    return KeyboardKeys.EIGHT;
                 case (keyboardNames.NINE):
-                    return DeviceKeys.NINE;
+                    return KeyboardKeys.NINE;
                 case (keyboardNames.ZERO):
-                    return DeviceKeys.ZERO;
+                    return KeyboardKeys.ZERO;
                 case (keyboardNames.MINUS):
-                    return DeviceKeys.MINUS;
+                    return KeyboardKeys.MINUS;
                 case (keyboardNames.EQUALS):
-                    return DeviceKeys.EQUALS;
+                    return KeyboardKeys.EQUALS;
                 case (keyboardNames.BACKSPACE):
-                    return DeviceKeys.BACKSPACE;
+                    return KeyboardKeys.BACKSPACE;
                 case (keyboardNames.INSERT):
-                    return DeviceKeys.INSERT;
+                    return KeyboardKeys.INSERT;
                 case (keyboardNames.HOME):
-                    return DeviceKeys.HOME;
+                    return KeyboardKeys.HOME;
                 case (keyboardNames.PAGE_UP):
-                    return DeviceKeys.PAGE_UP;
+                    return KeyboardKeys.PAGE_UP;
                 case (keyboardNames.NUM_LOCK):
-                    return DeviceKeys.NUM_LOCK;
+                    return KeyboardKeys.NUM_LOCK;
                 case (keyboardNames.NUM_SLASH):
-                    return DeviceKeys.NUM_SLASH;
+                    return KeyboardKeys.NUM_SLASH;
                 case (keyboardNames.NUM_ASTERISK):
-                    return DeviceKeys.NUM_ASTERISK;
+                    return KeyboardKeys.NUM_ASTERISK;
                 case (keyboardNames.NUM_MINUS):
-                    return DeviceKeys.NUM_MINUS;
+                    return KeyboardKeys.NUM_MINUS;
                 case (keyboardNames.TAB):
-                    return DeviceKeys.TAB;
+                    return KeyboardKeys.TAB;
                 case (keyboardNames.Q):
-                    return DeviceKeys.Q;
+                    return KeyboardKeys.Q;
                 case (keyboardNames.W):
-                    return DeviceKeys.W;
+                    return KeyboardKeys.W;
                 case (keyboardNames.E):
-                    return DeviceKeys.E;
+                    return KeyboardKeys.E;
                 case (keyboardNames.R):
-                    return DeviceKeys.R;
+                    return KeyboardKeys.R;
                 case (keyboardNames.T):
-                    return DeviceKeys.T;
+                    return KeyboardKeys.T;
                 case (keyboardNames.Y):
-                    return DeviceKeys.Y;
+                    return KeyboardKeys.Y;
                 case (keyboardNames.U):
-                    return DeviceKeys.U;
+                    return KeyboardKeys.U;
                 case (keyboardNames.I):
-                    return DeviceKeys.I;
+                    return KeyboardKeys.I;
                 case (keyboardNames.O):
-                    return DeviceKeys.O;
+                    return KeyboardKeys.O;
                 case (keyboardNames.P):
-                    return DeviceKeys.P;
+                    return KeyboardKeys.P;
                 case (keyboardNames.OPEN_BRACKET):
-                    return DeviceKeys.OPEN_BRACKET;
+                    return KeyboardKeys.OPEN_BRACKET;
                 case (keyboardNames.CLOSE_BRACKET):
-                    return DeviceKeys.CLOSE_BRACKET;
+                    return KeyboardKeys.CLOSE_BRACKET;
                 case (keyboardNames.BACKSLASH):
-                    return DeviceKeys.BACKSLASH;
+                    return KeyboardKeys.BACKSLASH;
                 case (keyboardNames.KEYBOARD_DELETE):
-                    return DeviceKeys.DELETE;
+                    return KeyboardKeys.DELETE;
                 case (keyboardNames.END):
-                    return DeviceKeys.END;
+                    return KeyboardKeys.END;
                 case (keyboardNames.PAGE_DOWN):
-                    return DeviceKeys.PAGE_DOWN;
+                    return KeyboardKeys.PAGE_DOWN;
                 case (keyboardNames.NUM_SEVEN):
-                    return DeviceKeys.NUM_SEVEN;
+                    return KeyboardKeys.NUM_SEVEN;
                 case (keyboardNames.NUM_EIGHT):
-                    return DeviceKeys.NUM_EIGHT;
+                    return KeyboardKeys.NUM_EIGHT;
                 case (keyboardNames.NUM_NINE):
-                    return DeviceKeys.NUM_NINE;
+                    return KeyboardKeys.NUM_NINE;
                 case (keyboardNames.NUM_PLUS):
-                    return DeviceKeys.NUM_PLUS;
+                    return KeyboardKeys.NUM_PLUS;
                 case (keyboardNames.CAPS_LOCK):
-                    return DeviceKeys.CAPS_LOCK;
+                    return KeyboardKeys.CAPS_LOCK;
                 case (keyboardNames.A):
-                    return DeviceKeys.A;
+                    return KeyboardKeys.A;
                 case (keyboardNames.S):
-                    return DeviceKeys.S;
+                    return KeyboardKeys.S;
                 case (keyboardNames.D):
-                    return DeviceKeys.D;
+                    return KeyboardKeys.D;
                 case (keyboardNames.F):
-                    return DeviceKeys.F;
+                    return KeyboardKeys.F;
                 case (keyboardNames.G):
-                    return DeviceKeys.G;
+                    return KeyboardKeys.G;
                 case (keyboardNames.H):
-                    return DeviceKeys.H;
+                    return KeyboardKeys.H;
                 case (keyboardNames.J):
-                    return DeviceKeys.J;
+                    return KeyboardKeys.J;
                 case (keyboardNames.K):
-                    return DeviceKeys.K;
+                    return KeyboardKeys.K;
                 case (keyboardNames.L):
-                    return DeviceKeys.L;
+                    return KeyboardKeys.L;
                 case (keyboardNames.SEMICOLON):
-                    return DeviceKeys.SEMICOLON;
+                    return KeyboardKeys.SEMICOLON;
                 case (keyboardNames.APOSTROPHE):
-                    return DeviceKeys.APOSTROPHE;
+                    return KeyboardKeys.APOSTROPHE;
                 //case (keyboardNames.HASHTAG):
-                //    return DeviceKeys.HASHTAG;
+                //    return KeyboardKeys.HASHTAG;
                 case (keyboardNames.ENTER):
-                    return DeviceKeys.ENTER;
+                    return KeyboardKeys.ENTER;
                 case (keyboardNames.NUM_FOUR):
-                    return DeviceKeys.NUM_FOUR;
+                    return KeyboardKeys.NUM_FOUR;
                 case (keyboardNames.NUM_FIVE):
-                    return DeviceKeys.NUM_FIVE;
+                    return KeyboardKeys.NUM_FIVE;
                 case (keyboardNames.NUM_SIX):
-                    return DeviceKeys.NUM_SIX;
+                    return KeyboardKeys.NUM_SIX;
                 case (keyboardNames.LEFT_SHIFT):
-                    return DeviceKeys.LEFT_SHIFT;
+                    return KeyboardKeys.LEFT_SHIFT;
                 //case (keyboardNames.BACKSLASH_UK):
-                //    return DeviceKeys.BACKSLASH_UK;
+                //    return KeyboardKeys.BACKSLASH_UK;
                 case (keyboardNames.Z):
-                    return DeviceKeys.Z;
+                    return KeyboardKeys.Z;
                 case (keyboardNames.X):
-                    return DeviceKeys.X;
+                    return KeyboardKeys.X;
                 case (keyboardNames.C):
-                    return DeviceKeys.C;
+                    return KeyboardKeys.C;
                 case (keyboardNames.V):
-                    return DeviceKeys.V;
+                    return KeyboardKeys.V;
                 case (keyboardNames.B):
-                    return DeviceKeys.B;
+                    return KeyboardKeys.B;
                 case (keyboardNames.N):
-                    return DeviceKeys.N;
+                    return KeyboardKeys.N;
                 case (keyboardNames.M):
-                    return DeviceKeys.M;
+                    return KeyboardKeys.M;
                 case (keyboardNames.COMMA):
-                    return DeviceKeys.COMMA;
+                    return KeyboardKeys.COMMA;
                 case (keyboardNames.PERIOD):
-                    return DeviceKeys.PERIOD;
+                    return KeyboardKeys.PERIOD;
                 case (keyboardNames.FORWARD_SLASH):
-                    return DeviceKeys.FORWARD_SLASH;
+                    return KeyboardKeys.FORWARD_SLASH;
                 case (keyboardNames.RIGHT_SHIFT):
-                    return DeviceKeys.RIGHT_SHIFT;
+                    return KeyboardKeys.RIGHT_SHIFT;
                 case (keyboardNames.ARROW_UP):
-                    return DeviceKeys.ARROW_UP;
+                    return KeyboardKeys.ARROW_UP;
                 case (keyboardNames.NUM_ONE):
-                    return DeviceKeys.NUM_ONE;
+                    return KeyboardKeys.NUM_ONE;
                 case (keyboardNames.NUM_TWO):
-                    return DeviceKeys.NUM_TWO;
+                    return KeyboardKeys.NUM_TWO;
                 case (keyboardNames.NUM_THREE):
-                    return DeviceKeys.NUM_THREE;
+                    return KeyboardKeys.NUM_THREE;
                 case (keyboardNames.NUM_ENTER):
-                    return DeviceKeys.NUM_ENTER;
+                    return KeyboardKeys.NUM_ENTER;
                 case (keyboardNames.LEFT_CONTROL):
-                    return DeviceKeys.LEFT_CONTROL;
+                    return KeyboardKeys.LEFT_CONTROL;
                 case (keyboardNames.LEFT_WINDOWS):
-                    return DeviceKeys.LEFT_WINDOWS;
+                    return KeyboardKeys.LEFT_WINDOWS;
                 case (keyboardNames.LEFT_ALT):
-                    return DeviceKeys.LEFT_ALT;
+                    return KeyboardKeys.LEFT_ALT;
                 case (keyboardNames.SPACE):
-                    return DeviceKeys.SPACE;
+                    return KeyboardKeys.SPACE;
                 case (keyboardNames.RIGHT_ALT):
-                    return DeviceKeys.RIGHT_ALT;
+                    return KeyboardKeys.RIGHT_ALT;
                 case (keyboardNames.RIGHT_WINDOWS):
-                    return DeviceKeys.RIGHT_WINDOWS;
+                    return KeyboardKeys.RIGHT_WINDOWS;
                 case (keyboardNames.APPLICATION_SELECT):
-                    return DeviceKeys.APPLICATION_SELECT;
+                    return KeyboardKeys.APPLICATION_SELECT;
                 case (keyboardNames.RIGHT_CONTROL):
-                    return DeviceKeys.RIGHT_CONTROL;
+                    return KeyboardKeys.RIGHT_CONTROL;
                 case (keyboardNames.ARROW_LEFT):
-                    return DeviceKeys.ARROW_LEFT;
+                    return KeyboardKeys.ARROW_LEFT;
                 case (keyboardNames.ARROW_DOWN):
-                    return DeviceKeys.ARROW_DOWN;
+                    return KeyboardKeys.ARROW_DOWN;
                 case (keyboardNames.ARROW_RIGHT):
-                    return DeviceKeys.ARROW_RIGHT;
+                    return KeyboardKeys.ARROW_RIGHT;
                 case (keyboardNames.NUM_ZERO):
-                    return DeviceKeys.NUM_ZERO;
+                    return KeyboardKeys.NUM_ZERO;
                 case (keyboardNames.NUM_PERIOD):
-                    return DeviceKeys.NUM_PERIOD;
+                    return KeyboardKeys.NUM_PERIOD;
                 default:
-                    return DeviceKeys.NONE;
+                    return KeyboardKeys.NONE;
             }
         }
 
-        public static Logitech_keyboardBitmapKeys ToLogitechBitmap(DeviceKeys key)
+        public static Logitech_keyboardBitmapKeys ToLogitechBitmap(DeviceLED led)
+        {
+            if (led.DeviceTypeID.Equals(KeyboardDeviceLayout.DeviceTypeID))
+                return ToLogitechBitmap((KeyboardKeys)led.LedID);
+
+            return Logitech_keyboardBitmapKeys.UNKNOWN;
+        }
+
+        public static Logitech_keyboardBitmapKeys ToLogitechBitmap(KeyboardKeys key)
         {
             switch (key)
             {
-                case (DeviceKeys.ESC):
+                case (KeyboardKeys.ESC):
                     return Logitech_keyboardBitmapKeys.ESC;
-                case (DeviceKeys.F1):
+                case (KeyboardKeys.F1):
                     return Logitech_keyboardBitmapKeys.F1;
-                case (DeviceKeys.F2):
+                case (KeyboardKeys.F2):
                     return Logitech_keyboardBitmapKeys.F2;
-                case (DeviceKeys.F3):
+                case (KeyboardKeys.F3):
                     return Logitech_keyboardBitmapKeys.F3;
-                case (DeviceKeys.F4):
+                case (KeyboardKeys.F4):
                     return Logitech_keyboardBitmapKeys.F4;
-                case (DeviceKeys.F5):
+                case (KeyboardKeys.F5):
                     return Logitech_keyboardBitmapKeys.F5;
-                case (DeviceKeys.F6):
+                case (KeyboardKeys.F6):
                     return Logitech_keyboardBitmapKeys.F6;
-                case (DeviceKeys.F7):
+                case (KeyboardKeys.F7):
                     return Logitech_keyboardBitmapKeys.F7;
-                case (DeviceKeys.F8):
+                case (KeyboardKeys.F8):
                     return Logitech_keyboardBitmapKeys.F8;
-                case (DeviceKeys.F9):
+                case (KeyboardKeys.F9):
                     return Logitech_keyboardBitmapKeys.F9;
-                case (DeviceKeys.F10):
+                case (KeyboardKeys.F10):
                     return Logitech_keyboardBitmapKeys.F10;
-                case (DeviceKeys.F11):
+                case (KeyboardKeys.F11):
                     return Logitech_keyboardBitmapKeys.F11;
-                case (DeviceKeys.F12):
+                case (KeyboardKeys.F12):
                     return Logitech_keyboardBitmapKeys.F12;
-                case (DeviceKeys.PRINT_SCREEN):
+                case (KeyboardKeys.PRINT_SCREEN):
                     return Logitech_keyboardBitmapKeys.PRINT_SCREEN;
-                case (DeviceKeys.SCROLL_LOCK):
+                case (KeyboardKeys.SCROLL_LOCK):
                     return Logitech_keyboardBitmapKeys.SCROLL_LOCK;
-                case (DeviceKeys.PAUSE_BREAK):
+                case (KeyboardKeys.PAUSE_BREAK):
                     return Logitech_keyboardBitmapKeys.PAUSE_BREAK;
-                case (DeviceKeys.JPN_HALFFULLWIDTH):
+                case (KeyboardKeys.JPN_HALFFULLWIDTH):
                     return Logitech_keyboardBitmapKeys.TILDE;
-                case (DeviceKeys.OEM5):
+                case (KeyboardKeys.OEM5):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.UNKNOWN;
                     else
                         return Logitech_keyboardBitmapKeys.TILDE;
-                case (DeviceKeys.TILDE):
+                case (KeyboardKeys.TILDE):
                     return Logitech_keyboardBitmapKeys.TILDE;
-                case (DeviceKeys.ONE):
+                case (KeyboardKeys.ONE):
                     return Logitech_keyboardBitmapKeys.ONE;
-                case (DeviceKeys.TWO):
+                case (KeyboardKeys.TWO):
                     return Logitech_keyboardBitmapKeys.TWO;
-                case (DeviceKeys.THREE):
+                case (KeyboardKeys.THREE):
                     return Logitech_keyboardBitmapKeys.THREE;
-                case (DeviceKeys.FOUR):
+                case (KeyboardKeys.FOUR):
                     return Logitech_keyboardBitmapKeys.FOUR;
-                case (DeviceKeys.FIVE):
+                case (KeyboardKeys.FIVE):
                     return Logitech_keyboardBitmapKeys.FIVE;
-                case (DeviceKeys.SIX):
+                case (KeyboardKeys.SIX):
                     return Logitech_keyboardBitmapKeys.SIX;
-                case (DeviceKeys.SEVEN):
+                case (KeyboardKeys.SEVEN):
                     return Logitech_keyboardBitmapKeys.SEVEN;
-                case (DeviceKeys.EIGHT):
+                case (KeyboardKeys.EIGHT):
                     return Logitech_keyboardBitmapKeys.EIGHT;
-                case (DeviceKeys.NINE):
+                case (KeyboardKeys.NINE):
                     return Logitech_keyboardBitmapKeys.NINE;
-                case (DeviceKeys.ZERO):
+                case (KeyboardKeys.ZERO):
                     return Logitech_keyboardBitmapKeys.ZERO;
-                case (DeviceKeys.MINUS):
+                case (KeyboardKeys.MINUS):
                     return Logitech_keyboardBitmapKeys.MINUS;
-                case (DeviceKeys.EQUALS):
+                case (KeyboardKeys.EQUALS):
                     return Logitech_keyboardBitmapKeys.EQUALS;
-                case (DeviceKeys.BACKSPACE):
+                case (KeyboardKeys.BACKSPACE):
                     return Logitech_keyboardBitmapKeys.BACKSPACE;
-                case (DeviceKeys.INSERT):
+                case (KeyboardKeys.INSERT):
                     return Logitech_keyboardBitmapKeys.INSERT;
-                case (DeviceKeys.HOME):
+                case (KeyboardKeys.HOME):
                     return Logitech_keyboardBitmapKeys.HOME;
-                case (DeviceKeys.PAGE_UP):
+                case (KeyboardKeys.PAGE_UP):
                     return Logitech_keyboardBitmapKeys.PAGE_UP;
-                case (DeviceKeys.NUM_LOCK):
+                case (KeyboardKeys.NUM_LOCK):
                     return Logitech_keyboardBitmapKeys.NUM_LOCK;
-                case (DeviceKeys.NUM_SLASH):
+                case (KeyboardKeys.NUM_SLASH):
                     return Logitech_keyboardBitmapKeys.NUM_SLASH;
-                case (DeviceKeys.NUM_ASTERISK):
+                case (KeyboardKeys.NUM_ASTERISK):
                     return Logitech_keyboardBitmapKeys.NUM_ASTERISK;
-                case (DeviceKeys.NUM_MINUS):
+                case (KeyboardKeys.NUM_MINUS):
                     return Logitech_keyboardBitmapKeys.NUM_MINUS;
-                case (DeviceKeys.TAB):
+                case (KeyboardKeys.TAB):
                     return Logitech_keyboardBitmapKeys.TAB;
-                case (DeviceKeys.Q):
+                case (KeyboardKeys.Q):
                     return Logitech_keyboardBitmapKeys.Q;
-                case (DeviceKeys.W):
+                case (KeyboardKeys.W):
                     return Logitech_keyboardBitmapKeys.W;
-                case (DeviceKeys.E):
+                case (KeyboardKeys.E):
                     return Logitech_keyboardBitmapKeys.E;
-                case (DeviceKeys.R):
+                case (KeyboardKeys.R):
                     return Logitech_keyboardBitmapKeys.R;
-                case (DeviceKeys.T):
+                case (KeyboardKeys.T):
                     return Logitech_keyboardBitmapKeys.T;
-                case (DeviceKeys.Y):
+                case (KeyboardKeys.Y):
                     return Logitech_keyboardBitmapKeys.Y;
-                case (DeviceKeys.U):
+                case (KeyboardKeys.U):
                     return Logitech_keyboardBitmapKeys.U;
-                case (DeviceKeys.I):
+                case (KeyboardKeys.I):
                     return Logitech_keyboardBitmapKeys.I;
-                case (DeviceKeys.O):
+                case (KeyboardKeys.O):
                     return Logitech_keyboardBitmapKeys.O;
-                case (DeviceKeys.P):
+                case (KeyboardKeys.P):
                     return Logitech_keyboardBitmapKeys.P;
-                case (DeviceKeys.OPEN_BRACKET):
+                case (KeyboardKeys.OPEN_BRACKET):
                     return Logitech_keyboardBitmapKeys.OPEN_BRACKET;
-                case (DeviceKeys.CLOSE_BRACKET):
+                case (KeyboardKeys.CLOSE_BRACKET):
                     return Logitech_keyboardBitmapKeys.CLOSE_BRACKET;
-                case (DeviceKeys.BACKSLASH):
+                case (KeyboardKeys.BACKSLASH):
                     return Logitech_keyboardBitmapKeys.BACKSLASH;
-                case (DeviceKeys.DELETE):
+                case (KeyboardKeys.DELETE):
                     return Logitech_keyboardBitmapKeys.KEYBOARD_DELETE;
-                case (DeviceKeys.END):
+                case (KeyboardKeys.END):
                     return Logitech_keyboardBitmapKeys.END;
-                case (DeviceKeys.PAGE_DOWN):
+                case (KeyboardKeys.PAGE_DOWN):
                     return Logitech_keyboardBitmapKeys.PAGE_DOWN;
-                case (DeviceKeys.NUM_SEVEN):
+                case (KeyboardKeys.NUM_SEVEN):
                     return Logitech_keyboardBitmapKeys.NUM_SEVEN;
-                case (DeviceKeys.NUM_EIGHT):
+                case (KeyboardKeys.NUM_EIGHT):
                     return Logitech_keyboardBitmapKeys.NUM_EIGHT;
-                case (DeviceKeys.NUM_NINE):
+                case (KeyboardKeys.NUM_NINE):
                     return Logitech_keyboardBitmapKeys.NUM_NINE;
-                case (DeviceKeys.NUM_PLUS):
+                case (KeyboardKeys.NUM_PLUS):
                     return Logitech_keyboardBitmapKeys.NUM_PLUS;
-                case (DeviceKeys.CAPS_LOCK):
+                case (KeyboardKeys.CAPS_LOCK):
                     return Logitech_keyboardBitmapKeys.CAPS_LOCK;
-                case (DeviceKeys.A):
+                case (KeyboardKeys.A):
                     return Logitech_keyboardBitmapKeys.A;
-                case (DeviceKeys.S):
+                case (KeyboardKeys.S):
                     return Logitech_keyboardBitmapKeys.S;
-                case (DeviceKeys.D):
+                case (KeyboardKeys.D):
                     return Logitech_keyboardBitmapKeys.D;
-                case (DeviceKeys.F):
+                case (KeyboardKeys.F):
                     return Logitech_keyboardBitmapKeys.F;
-                case (DeviceKeys.G):
+                case (KeyboardKeys.G):
                     return Logitech_keyboardBitmapKeys.G;
-                case (DeviceKeys.H):
+                case (KeyboardKeys.H):
                     return Logitech_keyboardBitmapKeys.H;
-                case (DeviceKeys.J):
+                case (KeyboardKeys.J):
                     return Logitech_keyboardBitmapKeys.J;
-                case (DeviceKeys.K):
+                case (KeyboardKeys.K):
                     return Logitech_keyboardBitmapKeys.K;
-                case (DeviceKeys.L):
+                case (KeyboardKeys.L):
                     return Logitech_keyboardBitmapKeys.L;
-                case (DeviceKeys.SEMICOLON):
+                case (KeyboardKeys.SEMICOLON):
                     return Logitech_keyboardBitmapKeys.SEMICOLON;
-                case (DeviceKeys.APOSTROPHE):
+                case (KeyboardKeys.APOSTROPHE):
                     return Logitech_keyboardBitmapKeys.APOSTROPHE;
-                case (DeviceKeys.HASHTAG):
+                case (KeyboardKeys.HASHTAG):
                     return Logitech_keyboardBitmapKeys.HASHTAG;
-                case (DeviceKeys.ENTER):
+                case (KeyboardKeys.ENTER):
                     return Logitech_keyboardBitmapKeys.ENTER;
-                case (DeviceKeys.NUM_FOUR):
+                case (KeyboardKeys.NUM_FOUR):
                     return Logitech_keyboardBitmapKeys.NUM_FOUR;
-                case (DeviceKeys.NUM_FIVE):
+                case (KeyboardKeys.NUM_FIVE):
                     return Logitech_keyboardBitmapKeys.NUM_FIVE;
-                case (DeviceKeys.NUM_SIX):
+                case (KeyboardKeys.NUM_SIX):
                     return Logitech_keyboardBitmapKeys.NUM_SIX;
-                case (DeviceKeys.LEFT_SHIFT):
+                case (KeyboardKeys.LEFT_SHIFT):
                     return Logitech_keyboardBitmapKeys.LEFT_SHIFT;
-                case (DeviceKeys.BACKSLASH_UK):
+                case (KeyboardKeys.BACKSLASH_UK):
                     if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.OEM102;
                     else
                         return Logitech_keyboardBitmapKeys.BACKSLASH_UK;
-                case (DeviceKeys.Z):
+                case (KeyboardKeys.Z):
                     return Logitech_keyboardBitmapKeys.Z;
-                case (DeviceKeys.X):
+                case (KeyboardKeys.X):
                     return Logitech_keyboardBitmapKeys.X;
-                case (DeviceKeys.C):
+                case (KeyboardKeys.C):
                     return Logitech_keyboardBitmapKeys.C;
-                case (DeviceKeys.V):
+                case (KeyboardKeys.V):
                     return Logitech_keyboardBitmapKeys.V;
-                case (DeviceKeys.B):
+                case (KeyboardKeys.B):
                     return Logitech_keyboardBitmapKeys.B;
-                case (DeviceKeys.N):
+                case (KeyboardKeys.N):
                     return Logitech_keyboardBitmapKeys.N;
-                case (DeviceKeys.M):
+                case (KeyboardKeys.M):
                     return Logitech_keyboardBitmapKeys.M;
-                case (DeviceKeys.COMMA):
+                case (KeyboardKeys.COMMA):
                     return Logitech_keyboardBitmapKeys.COMMA;
-                case (DeviceKeys.PERIOD):
+                case (KeyboardKeys.PERIOD):
                     return Logitech_keyboardBitmapKeys.PERIOD;
-                case (DeviceKeys.FORWARD_SLASH):
+                case (KeyboardKeys.FORWARD_SLASH):
                     return Logitech_keyboardBitmapKeys.FORWARD_SLASH;
-                case (DeviceKeys.OEM8):
+                case (KeyboardKeys.OEM8):
                     return Logitech_keyboardBitmapKeys.FORWARD_SLASH;
-                case (DeviceKeys.OEM102):
+                case (KeyboardKeys.OEM102):
                     return Logitech_keyboardBitmapKeys.OEM102;
-                case (DeviceKeys.RIGHT_SHIFT):
+                case (KeyboardKeys.RIGHT_SHIFT):
                     return Logitech_keyboardBitmapKeys.RIGHT_SHIFT;
-                case (DeviceKeys.ARROW_UP):
+                case (KeyboardKeys.ARROW_UP):
                     return Logitech_keyboardBitmapKeys.ARROW_UP;
-                case (DeviceKeys.NUM_ONE):
+                case (KeyboardKeys.NUM_ONE):
                     return Logitech_keyboardBitmapKeys.NUM_ONE;
-                case (DeviceKeys.NUM_TWO):
+                case (KeyboardKeys.NUM_TWO):
                     return Logitech_keyboardBitmapKeys.NUM_TWO;
-                case (DeviceKeys.NUM_THREE):
+                case (KeyboardKeys.NUM_THREE):
                     return Logitech_keyboardBitmapKeys.NUM_THREE;
-                case (DeviceKeys.NUM_ENTER):
+                case (KeyboardKeys.NUM_ENTER):
                     return Logitech_keyboardBitmapKeys.NUM_ENTER;
-                case (DeviceKeys.LEFT_CONTROL):
+                case (KeyboardKeys.LEFT_CONTROL):
                     return Logitech_keyboardBitmapKeys.LEFT_CONTROL;
-                case (DeviceKeys.LEFT_WINDOWS):
+                case (KeyboardKeys.LEFT_WINDOWS):
                     return Logitech_keyboardBitmapKeys.LEFT_WINDOWS;
-                case (DeviceKeys.LEFT_ALT):
+                case (KeyboardKeys.LEFT_ALT):
                     return Logitech_keyboardBitmapKeys.LEFT_ALT;
-                case (DeviceKeys.JPN_MUHENKAN):
+                case (KeyboardKeys.JPN_MUHENKAN):
                     return Logitech_keyboardBitmapKeys.JPN_MUHENKAN;
-                case (DeviceKeys.SPACE):
+                case (KeyboardKeys.SPACE):
                     return Logitech_keyboardBitmapKeys.SPACE;
-                case (DeviceKeys.JPN_HENKAN):
+                case (KeyboardKeys.JPN_HENKAN):
                     return Logitech_keyboardBitmapKeys.JPN_HENKAN;
-                case (DeviceKeys.JPN_HIRAGANA_KATAKANA):
+                case (KeyboardKeys.JPN_HIRAGANA_KATAKANA):
                     return Logitech_keyboardBitmapKeys.JPN_HIRAGANA_KATAKANA;
-                case (DeviceKeys.RIGHT_ALT):
+                case (KeyboardKeys.RIGHT_ALT):
                     return Logitech_keyboardBitmapKeys.RIGHT_ALT;
-                case (DeviceKeys.RIGHT_WINDOWS):
+                case (KeyboardKeys.RIGHT_WINDOWS):
                     return Logitech_keyboardBitmapKeys.RIGHT_WINDOWS;
-                case (DeviceKeys.FN_Key):
+                case (KeyboardKeys.FN_Key):
                     return Logitech_keyboardBitmapKeys.RIGHT_WINDOWS;
-                case (DeviceKeys.APPLICATION_SELECT):
+                case (KeyboardKeys.APPLICATION_SELECT):
                     return Logitech_keyboardBitmapKeys.APPLICATION_SELECT;
-                case (DeviceKeys.RIGHT_CONTROL):
+                case (KeyboardKeys.RIGHT_CONTROL):
                     return Logitech_keyboardBitmapKeys.RIGHT_CONTROL;
-                case (DeviceKeys.ARROW_LEFT):
+                case (KeyboardKeys.ARROW_LEFT):
                     return Logitech_keyboardBitmapKeys.ARROW_LEFT;
-                case (DeviceKeys.ARROW_DOWN):
+                case (KeyboardKeys.ARROW_DOWN):
                     return Logitech_keyboardBitmapKeys.ARROW_DOWN;
-                case (DeviceKeys.ARROW_RIGHT):
+                case (KeyboardKeys.ARROW_RIGHT):
                     return Logitech_keyboardBitmapKeys.ARROW_RIGHT;
-                case (DeviceKeys.NUM_ZERO):
+                case (KeyboardKeys.NUM_ZERO):
                     return Logitech_keyboardBitmapKeys.NUM_ZERO;
-                case (DeviceKeys.NUM_PERIOD):
+                case (KeyboardKeys.NUM_PERIOD):
                     return Logitech_keyboardBitmapKeys.NUM_PERIOD;
                 default:
                     return Logitech_keyboardBitmapKeys.UNKNOWN;

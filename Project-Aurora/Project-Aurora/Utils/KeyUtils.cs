@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SharpDX.RawInput;
 using Aurora.Devices.Layout.Layouts;
+using Aurora.Devices.Layout;
 
 namespace Aurora.Utils
 {
@@ -404,6 +405,11 @@ namespace Aurora.Utils
         public static KeyboardKeys GetKeyboardKey(this KeyboardInputEventArgs eventArgs)
         {
             return GetDeviceKey(eventArgs.Key, eventArgs.MakeCode, eventArgs.ScanCodeFlags.HasFlag(ScanCodeFlags.E0));
+        }
+
+        public static DeviceLED GetDeviceLED(this KeyboardInputEventArgs eventArgs)
+        {
+            return GetKeyboardKey(eventArgs).GetDeviceLED();
         }
 
         /// <summary>

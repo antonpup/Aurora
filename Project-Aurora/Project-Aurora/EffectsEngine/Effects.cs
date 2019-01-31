@@ -5,6 +5,7 @@ using System.Linq;
 using Aurora.Devices;
 using System.Drawing;
 using System.Timers;
+using Aurora.Devices.Layout;
 
 namespace Aurora
 {
@@ -132,7 +133,7 @@ namespace Aurora
         int pushedframes = 0;
         Timer fpsDebugTimer = new Timer(1000D);
 
-        Bitmap _forcedFrame = null;
+        Canvas _forcedFrame = null;
 
 
         private static object bitmap_lock = new object();
@@ -188,7 +189,7 @@ namespace Aurora
                 recordTimer.Stop();
         }
 
-        public void ForceImageRender(Bitmap forcedframe)
+        public void ForceImageRender(Canvas forcedframe)
         {
             _forcedFrame = forcedframe;
         }

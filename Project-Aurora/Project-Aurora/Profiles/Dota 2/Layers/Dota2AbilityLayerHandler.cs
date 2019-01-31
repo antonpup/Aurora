@@ -1,4 +1,6 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
 using Aurora.Settings;
@@ -26,10 +28,10 @@ namespace Aurora.Profiles.Dota_2.Layers
         [JsonIgnore]
         public Color CanNotCastAbilityColor { get { return Logic._CanNotCastAbilityColor ?? _CanNotCastAbilityColor ?? Color.Empty; } }
 
-        public List<Devices.DeviceKeys> _AbilityKeys { get; set; }
+        public List<DeviceLED> _AbilityKeys { get; set; }
 
         [JsonIgnore]
-        public List<Devices.DeviceKeys> AbilityKeys { get { return Logic._AbilityKeys ?? _AbilityKeys ?? new List<Devices.DeviceKeys>(); } }
+        public List<DeviceLED> AbilityKeys { get { return Logic._AbilityKeys ?? _AbilityKeys ?? new List<DeviceLED>(); } }
 
         public Dota2AbilityLayerHandlerProperties() : base() { }
 
@@ -41,7 +43,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             this._CanCastAbilityColor = Color.FromArgb(0, 255, 0);
             this._CanNotCastAbilityColor = Color.FromArgb(255, 0, 0);
-            this._AbilityKeys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.D, Devices.DeviceKeys.F, Devices.DeviceKeys.R };
+            this._AbilityKeys = (new List<KeyboardKeys>() { KeyboardKeys.Q, KeyboardKeys.W, KeyboardKeys.E, KeyboardKeys.D, KeyboardKeys.F, KeyboardKeys.R }).ConvertAll(s => s.GetDeviceLED());
         }
 
     }
@@ -73,7 +75,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                         Ability ability = dota2state.Abilities[index];
                         if (ability.Name.Contains("seasonal"))
                             continue;
-                        Devices.DeviceKeys key = Properties.AbilityKeys[index];
+                        DeviceLED key = Properties.AbilityKeys[index];
 
                         if (ability.IsUltimate)
                             key = Properties.AbilityKeys[5];

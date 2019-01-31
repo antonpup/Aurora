@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Devices.Layout;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -14,7 +15,7 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Canvas g, float scale = 1.0f, PointF offset = default(PointF))
         {
             // Offset has no effect on this. I think.
             if (_brush == null || _invalidated)
@@ -23,7 +24,7 @@ namespace Aurora.EffectsEngine.Animations
                 _invalidated = false;
             }
             
-            g.FillRectangle(_brush, g.VisibleClipBounds);
+            g.Fill(_brush);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
