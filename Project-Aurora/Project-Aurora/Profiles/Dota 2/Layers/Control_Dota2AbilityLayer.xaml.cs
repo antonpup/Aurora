@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
 using Aurora.Settings;
 using Aurora.Utils;
 using System;
@@ -89,7 +90,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Ability 1 Key", sender as TextBlock, ability1_keys_callback);
         }
 
-        private void ability1_keys_callback(DeviceKeys[] resulting_keys)
+        private void ability1_keys_callback(DeviceLED[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability1_keys_callback;
 
@@ -114,7 +115,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Ability 2 Key", sender as TextBlock, ability2_keys_callback);
         }
 
-        private void ability2_keys_callback(DeviceKeys[] resulting_keys)
+        private void ability2_keys_callback(DeviceLED[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability2_keys_callback;
 
@@ -139,7 +140,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Ability 3 Key", sender as TextBlock, ability3_keys_callback);
         }
 
-        private void ability3_keys_callback(DeviceKeys[] resulting_keys)
+        private void ability3_keys_callback(DeviceLED[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability3_keys_callback;
 
@@ -164,7 +165,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Ability 4 Key", sender as TextBlock, ability4_keys_callback);
         }
 
-        private void ability4_keys_callback(DeviceKeys[] resulting_keys)
+        private void ability4_keys_callback(DeviceLED[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability4_keys_callback;
 
@@ -189,7 +190,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Ability 5 Key", sender as TextBlock, ability5_keys_callback);
         }
 
-        private void ability5_keys_callback(DeviceKeys[] resulting_keys)
+        private void ability5_keys_callback(DeviceLED[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability5_keys_callback;
 
@@ -214,7 +215,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Ultimate Ability Key", sender as TextBlock, ability6_keys_callback);
         }
 
-        private void ability6_keys_callback(DeviceKeys[] resulting_keys)
+        private void ability6_keys_callback(DeviceLED[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= ability6_keys_callback;
 

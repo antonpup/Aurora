@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Aurora.Devices.Layout;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -30,7 +31,7 @@ namespace Aurora.EffectsEngine.Animations
             _gradientBrush = brush;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Canvas g, float scale = 1.0f, PointF offset = default(PointF))
         {
             RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
             _scaledDimension.Offset(offset);
@@ -45,10 +46,7 @@ namespace Aurora.EffectsEngine.Animations
             rotationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
             rotationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
 
-            Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
-            g.FillRectangle(_newbrush.GetDrawingBrush(), _scaledDimension);
-            g.Transform = originalMatrix;
+            g.FillRectangle(_newbrush.GetDrawingBrush(), _scaledDimension, rotationMatrix);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

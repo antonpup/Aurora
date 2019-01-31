@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Aurora.Devices.Layout;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices
 {
@@ -1310,7 +1312,7 @@ namespace Aurora.Devices
     public class DeviceColorComposition
     {
         public readonly object bitmapLock = new object();
-        public Dictionary<DeviceKeys, Color> keyColors;
+        public Dictionary<LEDINT, System.Drawing.Color> deviceColours;
         public Bitmap keyBitmap;
     }
 
@@ -1390,19 +1392,11 @@ namespace Aurora.Devices
         bool IsPeripheralConnected();
 
         /// <summary>
-        /// Updates the device with a specified color arrangement.
-        /// </summary>
-        /// <param name="keyColors">A dictionary of DeviceKeys their corresponding Colors</param>
-        /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
-        /// <returns></returns>
-        bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
-
-        /// <summary>
         /// Updates the device with a specified color composition.
         /// </summary>
         /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
+        bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false);
     }
 }

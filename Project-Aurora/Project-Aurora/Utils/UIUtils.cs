@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,19 +15,19 @@ namespace Aurora.Utils
 {
     public static class UIUtils
     {
-        public static void SetSingleKey(TextBlock key_destination, List<DeviceKeys> keyslist, int position)
+        public static void SetSingleKey(TextBlock key_destination, List<DeviceLED> keyslist, int position)
         {
             if (keyslist.Count > position)
-                key_destination.Text = Enum.GetName(typeof(DeviceKeys), keyslist[position]);
+                key_destination.Text = keyslist[position].GetName();
             else
-                key_destination.Text = Enum.GetName(typeof(DeviceKeys), DeviceKeys.NONE);
+                key_destination.Text = "ERROR: OUT OF BOUNDS";
         }
 
-        public static List<Devices.DeviceKeys> SequenceToList(ItemCollection items)
+        public static List<DeviceLED> SequenceToList(ItemCollection items)
         {
-            List<Devices.DeviceKeys> newsequence = new List<Devices.DeviceKeys>();
+            List<DeviceLED> newsequence = new List<DeviceLED>();
 
-            foreach (Devices.DeviceKeys key in items)
+            foreach (DeviceLED key in items)
             {
                 newsequence.Add(key);
             }

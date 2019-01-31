@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
@@ -47,7 +48,7 @@ namespace Aurora.Settings.Layers
     {
         private static Random randomizer = new Random();
 
-        private Dictionary<Devices.DeviceKeys, Color> _GlitchColors = new Dictionary<Devices.DeviceKeys, Color>();
+        private Dictionary<DeviceLED, Color> _GlitchColors = new Dictionary<DeviceLED, Color>();
 
         private long previoustime = 0;
         private long currenttime = 0;
@@ -65,7 +66,7 @@ namespace Aurora.Settings.Layers
             {
                 previoustime = currenttime;
 
-                foreach(Devices.DeviceKeys key in Enum.GetValues(typeof(Devices.DeviceKeys)))
+                foreach(DeviceLED key in GlobalDeviceLayout.Instance.AllLeds)
                 {
                     Color clr = (Properties.AllowTransparency ? (randomizer.Next() % 2 == 0 ? Color.Transparent : Utils.ColorUtils.GenerateRandomColor()) : Utils.ColorUtils.GenerateRandomColor());
 

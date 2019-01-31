@@ -38,6 +38,8 @@ namespace Aurora.Devices.Layout
         public LEDINT LedID { get; private set; }
         public DeviceLayout Layout { get; private set; }
 
+        public bool IsNone => LedID == -1;
+
         public DynamicDeviceLED(LEDINT ledID, DeviceLayout layout)
         {
             LedID = ledID;

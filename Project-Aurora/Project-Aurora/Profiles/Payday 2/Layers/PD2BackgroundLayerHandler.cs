@@ -144,7 +144,7 @@ namespace Aurora.Profiles.Payday_2.Layers
 
                         Color effect_contours = Color.FromArgb(200, Color.Black);
                         float animation_stage_yoffset = 20.0f;
-                        float animation_repeat_keyframes = 250.0f; //Effects.canvas_width * 2.0f;
+                        float animation_repeat_keyframes = 250.0f; //GlobalDeviceLayout.Instance.CanvasWidth * 2.0f;
 
                         /* Effect visual:
 
@@ -156,27 +156,27 @@ namespace Aurora.Profiles.Payday_2.Layers
                          * !!!NOTE: TO BE REWORKED INTO ANIMATIONS!!!
 
                         EffectColorFunction line1_col_func = new EffectColorFunction(
-                            new EffectLine(-1f, Effects.canvas_width + assault_yoffset + animation_stage_yoffset),
+                            new EffectLine(-1f, GlobalDeviceLayout.Instance.CanvasWidth + assault_yoffset + animation_stage_yoffset),
                             new ColorSpectrum(effect_contours),
                             2);
 
                         EffectColorFunction line2_col_func = new EffectColorFunction(
-                            new EffectLine(-1f, Effects.canvas_width + assault_yoffset + 9.0f + animation_stage_yoffset),
+                            new EffectLine(-1f, GlobalDeviceLayout.Instance.CanvasWidth + assault_yoffset + 9.0f + animation_stage_yoffset),
                             new ColorSpectrum(effect_contours),
                             2);
 
                         EffectColorFunction line3_col_func = new EffectColorFunction(
-                            new EffectLine(new EffectPoint(Effects.canvas_width + assault_yoffset + 17.0f + animation_stage_yoffset, Effects.canvas_height / 2.0f), new EffectPoint(Effects.canvas_width + assault_yoffset + 34.0f + animation_stage_yoffset, Effects.canvas_height / 2.0f), true),
+                            new EffectLine(new EffectPoint(GlobalDeviceLayout.Instance.CanvasWidth + assault_yoffset + 17.0f + animation_stage_yoffset, GlobalDeviceLayout.Instance.CanvasHeight / 2.0f), new EffectPoint(GlobalDeviceLayout.Instance.CanvasWidth + assault_yoffset + 34.0f + animation_stage_yoffset, GlobalDeviceLayout.Instance.CanvasHeight / 2.0f), true),
                             new ColorSpectrum(effect_contours),
                             6);
 
                         EffectColorFunction line4_col_func = new EffectColorFunction(
-                            new EffectLine(-1f, Effects.canvas_width + assault_yoffset + 52.0f + animation_stage_yoffset),
+                            new EffectLine(-1f, GlobalDeviceLayout.Instance.CanvasWidth + assault_yoffset + 52.0f + animation_stage_yoffset),
                             new ColorSpectrum(effect_contours),
                             2);
 
                         EffectColorFunction line5_col_func = new EffectColorFunction(
-                            new EffectLine(-1f, Effects.canvas_width + assault_yoffset + 61.0f + animation_stage_yoffset),
+                            new EffectLine(-1f, GlobalDeviceLayout.Instance.CanvasWidth + assault_yoffset + 61.0f + animation_stage_yoffset),
                             new ColorSpectrum(effect_contours),
                             2);
 
@@ -206,7 +206,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                         ColorSpectrum suspicion_spec = new ColorSpectrum(Properties.LowSuspicionColor, Properties.HighSuspicionColor);
                         suspicion_spec.SetColorAt(0.5f, Properties.MediumSuspicionColor);
 
-                        Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Effects.editor_to_canvas_width / Effects.canvas_width), 1.0f / (Effects.editor_to_canvas_height / Effects.canvas_height)));
+                        Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Effects.editor_to_canvas_width / GlobalDeviceLayout.Instance.CanvasWidth), 1.0f / (Effects.editor_to_canvas_height / GlobalDeviceLayout.Instance.CanvasHeight)));
 
                         bg_layer.PercentEffect(suspicion_spec, suspicionSequence, percentSuspicious, 1.0D, Properties.SuspicionEffectType);
 

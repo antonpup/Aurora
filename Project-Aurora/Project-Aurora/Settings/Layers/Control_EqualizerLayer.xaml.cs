@@ -222,10 +222,10 @@ namespace Aurora.Settings.Layers
                 preview_image.SnapsToDevicePixels = true;
                 preview_image.HorizontalAlignment = HorizontalAlignment.Stretch;
                 preview_image.VerticalAlignment = VerticalAlignment.Stretch;
-                preview_image.MinWidth = Effects.canvas_width;
-                preview_image.MinHeight = Effects.canvas_height;
-                preview_image.Width = Effects.canvas_width * 4;
-                preview_image.Height = Effects.canvas_height * 4;
+                preview_image.MinWidth = GlobalDeviceLayout.Instance.CanvasWidth;
+                preview_image.MinHeight = GlobalDeviceLayout.Instance.CanvasHeight;
+                preview_image.Width = GlobalDeviceLayout.Instance.CanvasWidth * 4;
+                preview_image.Height = GlobalDeviceLayout.Instance.CanvasHeight * 4;
 
                 preview_window.Content = preview_image;
 

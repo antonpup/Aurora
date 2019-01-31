@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using Aurora.Devices.Layout;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -151,7 +152,7 @@ namespace Aurora.EffectsEngine.Animations
             return this;
         }
 
-        public virtual void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF)) { }
+        public virtual void Draw(Canvas g, float scale = 1.0f, PointF offset = default(PointF)) { }
         public virtual AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
             amount = GetTransitionValue(amount);

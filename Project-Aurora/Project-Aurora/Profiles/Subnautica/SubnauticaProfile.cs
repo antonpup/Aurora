@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 //using Aurora.Profiles.Subnautica.Layers;
 using Aurora.Settings;
@@ -9,7 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DK = Aurora.Devices.DeviceKeys;
+using DK = Aurora.Devices.Layout.Layouts.KeyboardKeys;
 
 namespace Aurora.Profiles.Subnautica {
 
@@ -70,9 +71,9 @@ namespace Aurora.Profiles.Subnautica {
                         _MaxVariablePath = "100",
                         _PrimaryColor = Color.FromArgb(255, 0, 0),
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence((new List<DK>{
                             DK.F1, DK.F2, DK.F3, DK.F4, DK.F5, DK.F6, DK.F7, DK.F8, DK.F9, DK.F10, DK.F11, DK.F12
-                        }),
+                        }).ConvertAll(s => s.GetDeviceLED())),
                         _BlinkThreshold = 0.25
                     }
                 }),
@@ -83,9 +84,9 @@ namespace Aurora.Profiles.Subnautica {
                         _MaxVariablePath = "100",
                         _PrimaryColor = Color.FromArgb(139, 69, 19),
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence((new List<DK> {
                             DK.Q, DK.W, DK.E, DK.R, DK.T, DK.Y, DK.U, DK.I, DK.O, DK.P
-                        }),
+                        }).ConvertAll(s => s.GetDeviceLED())),
                         _BlinkThreshold = 0.25
                     }
                 }),
@@ -96,9 +97,9 @@ namespace Aurora.Profiles.Subnautica {
                         _MaxVariablePath = "100",
                         _PrimaryColor = Color.FromArgb(0, 0, 255),
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence((new List<DK> {
                             DK.A, DK.S, DK.D, DK.F, DK.G, DK.H, DK.J, DK.K,DK.L
-                        }),
+                        }).ConvertAll(s => s.GetDeviceLED())),
                         _BlinkThreshold = 0.25
                     }
                 }),
@@ -109,9 +110,9 @@ namespace Aurora.Profiles.Subnautica {
                         _MaxVariablePath = "Player/OxygenCapacity",
                         _PrimaryColor = Color.FromArgb(0, 170, 65),
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence((new List<DK>{
                             DK.ONE, DK.TWO, DK.THREE, DK.FOUR, DK.FIVE, DK.SIX, DK.SEVEN, DK.EIGHT, DK.NINE, DK.ZERO, DK.MINUS, DK.EQUALS
-                        }),
+                        }).ConvertAll(s => s.GetDeviceLED())),
                         _BlinkThreshold = 0.25
                     }
                 }),

@@ -17,8 +17,8 @@ namespace Aurora.Devices.Layout
 
         private GlobalDeviceLayout parent;
 
-        public int Width => null;
-        public int Height => null;
+        public int Width => this.parent.CanvasWidth;
+        public int Height => this.parent.CanvasHeight;
 
         public Canvas(GlobalDeviceLayout parent) : this(parent, null) { }
 
@@ -70,48 +70,152 @@ namespace Aurora.Devices.Layout
             Fill(new SolidBrush(clr));
         }
 
-        private void FillRectangle(Bitmap colormap, Brush brush, Rectangle rect, float? angle = null, RotationPoint rotationPoint = RotationPoint.Center)
+        private RectangleF GetLocalRect(Point location, RectangleF globalRect)
+        {
+            RectangleF rect = globalRect.Clone();
+            rect.Offset(location.Negate());
+            return rect;
+        }
+
+        private PointF GetLocalPoint(PointF location, PointF globalPoint)
+        {
+            return globalPoint.Subtract(location);
+        }
+
+        private void FillRectangle(Bitmap colormap, Brush brush, RectangleF rect, Matrix transform = null)
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                if (angle != null && angle != 0f)
-                {
-                    PointF rotatePoint;
-                    switch (rotationPoint)
-                    {
-                        //TODO: Implement other rotation points
-                        default:
-                        case RotationPoint.Center:
-                            rotatePoint = rect.Middle();
-                            break;
-
-                    }
-
-                    Matrix myMatrix = new Matrix();
-                    myMatrix.RotateAt(angle ?? 0f, rotatePoint, MatrixOrder.Append);
-
-                    g.Transform = myMatrix;
-                }
+                g.Transform = transform;
                 g.FillRectangle(brush, rect);
             }
         }
 
-        private void FillRectangle(Point location, Bitmap colormap, Brush brush, Rectangle globalRect, float? angle = null, RotationPoint rotationPoint = RotationPoint.Center)
+        private void FillRectangle(Point location, Bitmap colormap, Brush brush, RectangleF globalRect, Matrix transform)
         {
-            using (Graphics g = Graphics.FromImage(colormap))
-            {
-                Rectangle rect = globalRect.Clone();
-                rect.Offset(location.Negate());
+            FillRectangle(colormap, brush, GetLocalRect(location, globalRect), transform);
+        }
 
-                FillRectangle(colormap, brush, rect, angle, rotationPoint);
+        public void FillRectangle(Brush brush, RectangleF globalRect, float? angle = null, RotationPoint rotationPoint = RotationPoint.Center)
+        {
+            Matrix myMatrix = new Matrix();
+
+            if (angle != null && angle != 0f)
+            {
+                PointF rotatePoint;
+                switch (rotationPoint)
+                {
+                    //TODO: Implement other rotation points
+                    default:
+                    case RotationPoint.Center:
+                        rotatePoint = globalRect.Middle();
+                        break;
+
+                }
+
+                myMatrix.RotateAt(angle ?? 0f, rotatePoint, MatrixOrder.Append);
+
+            }
+
+            foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
+            {
+                FillRectangle(location, colormap, brush, globalRect, myMatrix);
             }
         }
 
-        public void FillRectangle(Brush brush, Rectangle globalRect, float? angle = null, RotationPoint rotationPoint = RotationPoint.Center)
+        public void FillRectangle(Brush brush, RectangleF globalRect, Matrix transform)
         {
             foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
             {
-                FillRectangle(location, colormap, brush, globalRect, angle, rotationPoint);
+                FillRectangle(location, colormap, brush, globalRect, transform);
+            }
+        }
+
+        public void DrawEllipse(Bitmap colormap, Pen pen, RectangleF rect, Matrix transformMatrix)
+        {
+            using (Graphics g = Graphics.FromImage(colormap))
+            {
+                g.Transform = transformMatrix;
+                g.DrawEllipse(pen, rect);
+            }
+        }
+
+        public void DrawEllipse(Point location, Bitmap colormap, Pen pen, RectangleF globalRect, Matrix transformMatrix = null)
+        {
+            DrawEllipse(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
+        }
+
+        public void DrawEllipse(Pen pen, RectangleF globalRect, Matrix transformMatrix)
+        {
+            foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
+            {
+                DrawEllipse(location, colormap, pen, globalRect, transformMatrix);
+            }
+        }
+
+        public void FillEllipse(Bitmap colormap, Brush brush, RectangleF rect, Matrix transformMatrix = null)
+        {
+            using (Graphics g = Graphics.FromImage(colormap))
+            {
+                g.Transform = transformMatrix;
+                g.FillEllipse(brush, rect);
+            }
+        }
+
+        public void FillEllipse(Point location, Bitmap colormap, Brush brush, RectangleF globalRect, Matrix transformMatrix = null)
+        {
+            FillEllipse(colormap, brush, GetLocalRect(location, globalRect), transformMatrix);
+        }
+
+        public void FillEllipse(Brush brush, RectangleF globalRect, Matrix transformMatrix = null)
+        {
+            foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
+            {
+                FillEllipse(location, colormap, brush, globalRect, transformMatrix);
+            }
+        }
+
+        public void DrawLine(Bitmap colormap, Pen pen, PointF startPoint, PointF endPoint, Matrix transformMatrix = null)
+        {
+            using (Graphics g = Graphics.FromImage(colormap))
+            {
+                g.Transform = transformMatrix;
+                g.DrawLine(pen, startPoint, endPoint);
+            }
+        }
+
+        public void DrawLine(Point location, Bitmap colormap, Pen pen, PointF startPoint, PointF endPoint, Matrix transformMatrix = null)
+        {
+            DrawLine(colormap, pen, GetLocalPoint(location, startPoint), GetLocalPoint(location, endPoint), transformMatrix);
+        }
+
+        public void DrawLine(Pen pen, PointF startPoint, PointF endPoint, Matrix transformMatrix = null)
+        {
+            foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
+            {
+                DrawLine(location, colormap, pen, startPoint, endPoint, transformMatrix);
+            }
+        }
+
+        public void DrawRectangle(Bitmap colormap, Pen pen, RectangleF rect, Matrix transformMatrix)
+        {
+            using (Graphics g = Graphics.FromImage(colormap))
+            {
+                g.Transform = transformMatrix;
+                g.DrawRectangle(pen, Rectangle.Round(rect));
+            }
+        }
+
+        public void DrawRectangle(Point location, Bitmap colormap, Pen pen, RectangleF globalRect, Matrix transformMatrix = null)
+        {
+            DrawEllipse(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
+        }
+
+        public void DrawRectangle(Pen pen, RectangleF globalRect, Matrix transformMatrix)
+        {
+            foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
+            {
+                DrawRectangle(location, colormap, pen, globalRect, transformMatrix);
             }
         }
 

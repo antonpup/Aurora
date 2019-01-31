@@ -1,4 +1,6 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
@@ -107,7 +109,7 @@ namespace Aurora.Settings.Layers
         private bool _alwaysOnHasPlayed = false; // A dedicated variable has to be used to make 'Always On' work with the repeat count since the logic has changed
         private double _previousTriggerDoubleValue; // Used for tracking when a numeric gamestate value changes
         private bool _previousTriggerBoolValue; // Used for tracking when a boolean gamestate value changes
-        private HashSet<DeviceKeys> _pressedKeys = new HashSet<DeviceKeys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
+        private HashSet<DeviceLED> _pressedKeys = new HashSet<DeviceLED>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
 
         public AnimationLayerHandler() {
             _ID = "Animation";
@@ -148,7 +150,7 @@ namespace Aurora.Settings.Layers
                 EffectLayer temp = new EffectLayer();
 
                 // Default values for the destination rect (the area that the canvas is drawn to) and animation offset
-                Rectangle destRect = new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
+                Rectangle destRect = new Rectangle(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
                 PointF offset = Properties.KeyTriggerTranslate ? anim.offset : PointF.Empty;
 
                 // When ScaleToKeySequenceBounds is true, additional calculations are needed on the destRect and offset:
@@ -169,8 +171,8 @@ namespace Aurora.Settings.Layers
                     // and that's our new X offset.
                     // This probably makes no sense and I'll forget how it works immediately, but hopefully it helps a little in
                     // future if this code ever needs to be revised. It's embarassing how long it took to work this equation out.
-                    offset.X = (offset.X - affectedRegion.X) * (Effects.canvas_width / affectedRegion.Width);
-                    offset.Y = (offset.Y - affectedRegion.Y) * (Effects.canvas_height / affectedRegion.Height);
+                    offset.X = (offset.X - affectedRegion.X) * (GlobalDeviceLayout.Instance.CanvasWidth / affectedRegion.Width);
+                    offset.Y = (offset.Y - affectedRegion.Y) * (GlobalDeviceLayout.Instance.CanvasHeight / affectedRegion.Height);
                 }
 
                 // Draw the animation to a temporary canvas
@@ -179,7 +181,7 @@ namespace Aurora.Settings.Layers
                 
                 // Draw from this temp canvas to the actual layer, performing the scale down if it's needed.
                 using (Graphics g = animationLayer.GetGraphics())
-                    g.DrawImage(temp.GetBitmap(), destRect, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), GraphicsUnit.Pixel);
+                    g.DrawImage(temp.GetBitmap(), destRect, new Rectangle(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), GraphicsUnit.Pixel);
 
                 temp.Dispose();
             });
@@ -267,12 +269,17 @@ namespace Aurora.Settings.Layers
                 _previousTriggerBoolValue = resolvedTriggerValue;
             }
         }
+        
+        private void StartAnimation()
+        {
+            StartAnimation(DeviceLED.None);
+        }
 
         /// <summary>
         /// Triggers a new animation to play depending on the StackMode setting.
         /// </summary>
         /// <param name="targetKey">The key to center the animation around.</param>
-        private void StartAnimation(DeviceKeys targetKey = default(DeviceKeys)) {
+        private void StartAnimation(DeviceLED targetKey) {
             RunningAnimation anim = null; // Store a reference to the new animation (or the restarted one)
             if (runningAnimations.Count == 0)
                 // If there are no running animations, we will always start a new one
@@ -310,12 +317,12 @@ namespace Aurora.Settings.Layers
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
             // If triggering on any key or the pressed key is in the trigger list AND the pressed key has not already been handled (i.e. it's not being held)
-            if ((Properties.TriggerAnyKey || Properties.TriggerKeySequence.keys.Contains(e.GetDeviceKey())) && !_pressedKeys.Contains(e.GetDeviceKey())) {
+            if ((Properties.TriggerAnyKey || Properties.TriggerKeySequence.keys.Contains(e.GetDeviceLED())) && !_pressedKeys.Contains(e.GetDeviceLED())) {
                 // Start an animation if trigger is for 'press' event
                 if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
-                    StartAnimation(e.GetDeviceKey());
+                    StartAnimation(e.GetDeviceLED());
                 // Mark it as handled
-                _pressedKeys.Add(e.GetDeviceKey());
+                _pressedKeys.Add(e.GetDeviceLED());
             }
         }
 
@@ -327,18 +334,18 @@ namespace Aurora.Settings.Layers
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
             // If the pressed list contains the now released key (ensures we don't trigger on a key not in the sequence)
-            if (_pressedKeys.Contains(e.GetDeviceKey())) {
+            if (_pressedKeys.Contains(e.GetDeviceLED())) {
                 // Start animation if trigger is for 'release' event
                 if (Properties.TriggerMode == AnimationTriggerMode.OnKeyRelease)
-                    StartAnimation(e.GetDeviceKey());
+                    StartAnimation(e.GetDeviceLED());
                 // Remove it from the pressed keys so it can be re-detected by the KeyDown event handler
-                _pressedKeys.Remove(e.GetDeviceKey());
+                _pressedKeys.Remove(e.GetDeviceLED());
             }
 
             // If we are in "while key held" mode and the user wishes to immediately terminate animations for a key when that key
             // is released (instead of letting the animation finish first), remove any animations assigned to the given key.
             if ((Properties.TriggerMode == AnimationTriggerMode.OnKeyPress || Properties.TriggerMode == AnimationTriggerMode.WhileKeyHeld) && Properties.WhileKeyHeldTerminateRunning)
-                runningAnimations.RemoveAll(anim => anim.assignedKey == e.GetDeviceKey());
+                runningAnimations.RemoveAll(anim => anim.assignedKey.Equals(e.GetDeviceLED()));
         }
 
         /// <summary>
@@ -373,8 +380,8 @@ namespace Aurora.Settings.Layers
         class RunningAnimation {
             public float currentTime = 0;
             public int playTimes = 0;
-            public DeviceKeys assignedKey = DeviceKeys.NONE;
-            public PointF offset => assignedKey == DeviceKeys.NONE ? PointF.Empty : Effects.GetBitmappingFromDeviceKey(assignedKey).Center;
+            public DeviceLED assignedKey = KeyboardKeys.NONE.GetDeviceLED();
+            public PointF offset => (KeyboardKeys)assignedKey.LedID == KeyboardKeys.NONE ? PointF.Empty : GlobalDeviceLayout.Instance.GetDeviceLEDBitmapRegion(assignedKey).Center;
 
             public RunningAnimation Reset() {
                 currentTime = 0;

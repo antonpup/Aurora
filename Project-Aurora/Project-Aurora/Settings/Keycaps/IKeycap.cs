@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Devices.Layout;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,6 @@ namespace Aurora.Settings.Keycaps
     {
         void SetColor(Color key_color);
 
-        Devices.DeviceKeys GetKey();
+        DeviceLED GetKey();
     }
 }

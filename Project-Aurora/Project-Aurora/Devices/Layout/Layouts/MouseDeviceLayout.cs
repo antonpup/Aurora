@@ -20,6 +20,9 @@ namespace Aurora.Devices.Layout.Layouts
     /// </summary>
     public enum MouseLights : LEDINT
     {
+        //TODO: Deal with this
+        All = 0,
+
         /// <summary>
         /// Peripheral Logo
         /// </summary>

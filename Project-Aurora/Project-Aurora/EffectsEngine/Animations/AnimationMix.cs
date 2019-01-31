@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Devices.Layout;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -117,7 +118,7 @@ namespace Aurora.EffectsEngine.Animations
             return return_val;
         }
 
-        public void Draw(Graphics g, float time, float scale = 1.0f, PointF offset = default(PointF))
+        public void Draw(Canvas g, float time, float scale = 1.0f, PointF offset = default(PointF))
         {
             Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 

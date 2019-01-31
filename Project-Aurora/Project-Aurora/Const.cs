@@ -1,6 +1,7 @@
 ﻿using Aurora.Devices;
 using Aurora.Profiles;
 using Aurora.Settings;
+using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using NLog;
 using System;
@@ -83,7 +84,6 @@ namespace Aurora
         public static NetworkListener net_listener;
         public static Configuration Configuration;
         public static DeviceManager dev_manager;
-        public static KeyboardLayoutManager kbLayout;
         public static Effects effengine;
         public static KeyRecorder key_recorder;
 
