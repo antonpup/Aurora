@@ -1633,7 +1633,7 @@ namespace Aurora.Devices.Layout.Layouts
             string content = File.ReadAllText(layoutPath, Encoding.UTF8);
             KeyboardLayout keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-            virtualGroup = new VirtualGroup(keyboard.Keys);
+            virtualGroup = new VirtualGroup(this, keyboard.Keys);
 
             LayoutKeyConversion = keyboard.KeyConversion ?? new Dictionary<LEDINT, LEDINT>();
 

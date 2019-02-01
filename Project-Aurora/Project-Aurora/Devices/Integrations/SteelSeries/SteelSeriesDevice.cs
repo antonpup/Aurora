@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using SteelSeries.GameSenseSDK;
 using System.ComponentModel;
 using Aurora.Devices.Layout.Layouts;
+using Aurora.Devices.Layout;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.SteelSeries
 {
@@ -144,76 +146,111 @@ namespace Aurora.Devices.SteelSeries
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(MouseDeviceLayout device, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
+
+            List<byte> hids = new List<byte>();
+            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
+            {
+                if (e.Cancel) return false;
+
+                Color color = (Color)key.Value;
+                //Apply and strip Alpha
+                color = Color.FromArgb(255,
+                    Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+
+                if (e.Cancel) return false;
+
+                //TODO: Deal with 'Peripheral' light
+                /*if (key.Key == MouseLights.Peripheral)
+                {
+                    SendColorToPeripheral(color, forced);
+                }*/
+
+                SendColorToPeripheralZone((MouseLights)key.Key, color);
+            }
+
+            if (e.Cancel) return false;
+            SendColorsToKeyboard(hids, colors);
+
+            return true;
+        }
+
+        public bool UpdateDevice(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
+        {
+            if (e.Cancel) return false;
+
+            List<byte> hids = new List<byte>();
+            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
+            {
+                if (e.Cancel) return false;
+                //CorsairLedId localKey = ToCorsair(key.Key);
+
+                Color color = (Color)key.Value;
+                //Apply and strip Alpha
+                color = Color.FromArgb(255,
+                    Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+
+                if (e.Cancel) return false;
+                   
+ 
+                byte hid = GetHIDCode((KeyboardKeys)key.Key);
+
+                if (hid != (byte)USBHIDCodes.ERROR)
+                {
+                    hids.Add(hid);
+                    colors.Add(Tuple.Create(color.R, color.G, color.B));
+                }
+                    
+            }
+
+            if (e.Cancel) return false;
+            SendColorsToKeyboard(hids, colors);
+
+            return true;
+        }
+
+        public bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool updateResult = true;
 
             try
             {
                 // workaround for heartbeat/keepalive events every 10sec
                 SendKeepalive();
 
-                if (e.Cancel) return false;
-
-                List<byte> hids = new List<byte>();
-                List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
-
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                foreach (DeviceLayout layout in devices)
                 {
-                    if (e.Cancel) return false;
-                    //CorsairLedId localKey = ToCorsair(key.Key);
-
-                    Color color = (Color)key.Value;
-                    //Apply and strip Alpha
-                    color = Color.FromArgb(255,
-                        Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-
-                    if (e.Cancel) return false;
-                    if (key.Key == DeviceKeys.Peripheral)
+                    switch (layout)
                     {
-                        SendColorToPeripheral(color, forced);
-                    }
-                    else if (key.Key == DeviceKeys.Peripheral_Logo ||
-                             key.Key == DeviceKeys.Peripheral_FrontLight ||
-                             key.Key == DeviceKeys.Peripheral_ScrollWheel)
-                    {
-                        SendColorToPeripheralZone(key.Key, color);
-                        SendColorToPeripheral(color, forced);
-                    }
-                    else
-                    {
-                        byte hid = GetHIDCode(key.Key);
-
-                        if (hid != (byte)USBHIDCodes.ERROR)
-                        {
-                            hids.Add(hid);
-                            colors.Add(Tuple.Create(color.R, color.G, color.B));
-                        }
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, e, forced))
+                                updateResult = false;
+                            break;
                     }
                 }
-
-                if (e.Cancel) return false;
-                SendColorsToKeyboard(hids, colors);
-
-                return true;
             }
             catch (Exception ex)
             {
                 Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
                 return false;
             }
-        }
-
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
 
-            return update_result;
+            return updateResult;
         }
 
         public bool IsKeyboardConnected()
@@ -269,18 +306,14 @@ namespace Aurora.Devices.SteelSeries
             }
         }
 
-        private void SendColorToPeripheralZone(DeviceKeys zone, Color color)
+        private void SendColorToPeripheralZone(MouseLights zone, Color color)
         {
             if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
             {
-                if (zone == DeviceKeys.Peripheral_Logo)
-                {
+                if (zone == MouseLights.Peripheral_Logo)
                     gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B);
-                }
-                else if (zone == DeviceKeys.Peripheral_ScrollWheel)
-                {
+                else if (zone == MouseLights.Peripheral_ScrollWheel)
                     gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
-                }
                 //else if (zone == DeviceKeys.Peripheral_FrontLight)
                 //{
                 //NYI
@@ -384,10 +417,7 @@ namespace Aurora.Devices.SteelSeries
                 case (KeyboardKeys.JPN_HALFFULLWIDTH):
                     return (byte)USBHIDCodes.TILDE;
                 case (KeyboardKeys.OEM5):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
-                        return (byte)USBHIDCodes.ERROR;
-                    else
-                        return (byte)USBHIDCodes.TILDE;
+                    return (byte)USBHIDCodes.TILDE;
                 case (KeyboardKeys.TILDE):
                     return (byte)USBHIDCodes.TILDE;
                 case (KeyboardKeys.ONE):
@@ -509,10 +539,7 @@ namespace Aurora.Devices.SteelSeries
                 case (KeyboardKeys.LEFT_SHIFT):
                     return (byte)USBHIDCodes.LEFT_SHIFT;
                 case (KeyboardKeys.BACKSLASH_UK):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
-                        return (byte)USBHIDCodes.ERROR;
-                    else
-                        return (byte)USBHIDCodes.BACKSLASH_UK;
+                    return (byte)USBHIDCodes.BACKSLASH_UK;
                 case (KeyboardKeys.Z):
                     return (byte)USBHIDCodes.Z;
                 case (KeyboardKeys.X):

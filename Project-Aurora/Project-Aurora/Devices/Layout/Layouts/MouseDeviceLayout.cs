@@ -52,8 +52,8 @@ namespace Aurora.Devices.Layout.Layouts
     {
         public enum PreferredMouse
         {
-            //[Description("None")]
-            //None = 0,
+            [Description("None")]
+            None = 0,
 
             [Description("Generic Mouse")]
             Generic_Mouse = 1,
@@ -162,6 +162,11 @@ namespace Aurora.Devices.Layout.Layouts
         public override string GetLEDName(short ledID)
         {
             return ((MouseLights)ledID).GetDescription();
+        }
+
+        protected override void loadLayouts()
+        {
+            throw new NotImplementedException();
         }
     }
 

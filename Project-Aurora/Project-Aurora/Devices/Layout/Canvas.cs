@@ -44,6 +44,11 @@ namespace Aurora.Devices.Layout
             }
         }
 
+        public Bitmap GetDeviceBitmap((byte type, byte id) key)
+        {
+            return deviceBitmaps[key].colormap;
+        }
+
         public enum RotationPoint
         {
             TopLeft,
