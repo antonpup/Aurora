@@ -15,6 +15,8 @@ using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Layout
 {
+    public delegate void NewLayerRendered(Canvas c);
+
     public class GlobalDeviceLayout : ObjectSettings<GlobalDeviceLayoutSettings>, IInit
     {
         public Dictionary<(byte type, byte id), DeviceLayout> DeviceLookup = null;
@@ -39,6 +41,9 @@ namespace Aurora.Devices.Layout
         public List<DeviceLED> AllLeds { get; }
         public int CanvasWidthCenter => CanvasWidth / 2;
         public int CanvasHeightCenter => CanvasHeight / 2;
+
+        public event NewLayerRendered NewLayerRender = delegate { };
+
 
         private GlobalDeviceLayout()
         {
@@ -71,7 +76,22 @@ namespace Aurora.Devices.Layout
             }
         }
 
+        public void PushFrame(Canvas canvas, bool applyBrightnessModifier = true)
+        {
+            //Apply global brightness
+            if (applyBrightnessModifier)
+                canvas *= this.Settings.GlobalBrightness;
 
+            //Give bitmap to DeviceLayouts
+            foreach (KeyValuePair<(byte type, byte id), DeviceLayout> device in this.DeviceLookup)
+                device.Value.UpdateColors(canvas.GetDeviceBitmap(device.Key));
+
+            //Push to DeviceManager
+
+
+            //Call NewLayerRender
+            NewLayerRender?.Invoke(canvas);
+        }
 
         public (DeviceLayout layout, LEDINT led) GetDeviceFromDeviceLED(DeviceLED led)
         {

@@ -414,37 +414,37 @@
     <Compile Include="Controls\LogicCheckEdit.xaml.cs">
       <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Integrations\AtmoOrb\AtmoOrbDevice.cs" />
-    <Compile Include="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
-    <Compile Include="Devices\Integrations\Clevo\ClevoDevice.cs" />
+    <None Include="Devices\Integrations\AtmoOrb\AtmoOrbDevice.cs" />
+    <None Include="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
+    <None Include="Devices\Integrations\Clevo\ClevoDevice.cs" />
     <Compile Include="Devices\Integrations\Corsair\CorsairInstallInstructions.xaml.cs">
       <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
-    <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
-    <Compile Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
-    <Compile Include="Devices\Integrations\Drevo\DrevoDevice.cs" />
-    <Compile Include="Devices\Integrations\Drevo\DrevoLayoutMap.cs" />
-    <Compile Include="Devices\Integrations\Drevo\DrevoRadiSDK.cs" />
-    <Compile Include="Devices\Integrations\Dualshock4\Dualshock4Device.cs" />
+    <None Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
+    <None Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
+    <None Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
+    <None Include="Devices\Integrations\Drevo\DrevoDevice.cs" />
+    <None Include="Devices\Integrations\Drevo\DrevoLayoutMap.cs" />
+    <None Include="Devices\Integrations\Drevo\DrevoRadiSDK.cs" />
+    <None Include="Devices\Integrations\Dualshock4\Dualshock4Device.cs" />
     <Compile Include="Devices\Integrations\Dualshock4\DS4InstallInstructions.xaml.cs">
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Integrations\LightFX\LightFX.cs" />
-    <Compile Include="Devices\Integrations\LightFX\LightFXSDK.cs" />
+    <None Include="Devices\Integrations\LightFX\LightFX.cs" />
+    <None Include="Devices\Integrations\LightFX\LightFXSDK.cs" />
     <Compile Include="Devices\Integrations\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Integrations\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Integrations\Razer\RazerDevice.cs" />
-    <Compile Include="Devices\Integrations\Razer\RazerLayoutMap.cs" />
-    <Compile Include="Devices\Integrations\Roccat\RoccatDevice.cs" />
+    <None Include="Devices\Integrations\Razer\RazerDevice.cs" />
+    <None Include="Devices\Integrations\Razer\RazerLayoutMap.cs" />
+    <None Include="Devices\Integrations\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\Integrations\Roccat\RoccatInstallInstructions.xaml.cs">
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Integrations\ScriptedDevice\ScriptedDevice.cs" />
+    <None Include="Devices\Integrations\ScriptedDevice\ScriptedDevice.cs" />
     <Compile Include="Devices\Integrations\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\Integrations\SteelSeries\SteelSeriesDevice.cs" />
     <Compile Include="Devices\Integrations\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
@@ -460,7 +460,7 @@
     <Compile Include="Devices\Layout\Layouts\MouseDeviceLayout.cs" />
     <Compile Include="Devices\Layout\LayoutUtils.cs" />
     <Compile Include="Devices\Layout\VirtualGroup.cs" />
-    <Compile Include="Devices\Integrations\UnifiedHID\UnifiedHID.cs" />
+    <None Include="Devices\Integrations\UnifiedHID\UnifiedHID.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
@@ -1299,9 +1299,9 @@
     <Content Include="Settings\ColorZone.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Devices\DeviceManager.cs" />
-    <Compile Include="Devices\Integrations\Corsair\CorsairDevice.cs" />
+    <None Include="Devices\Integrations\Corsair\CorsairDevice.cs" />
     <Compile Include="Devices\Device.cs" />
-    <Compile Include="Devices\Integrations\Logitech\LogitechDevice.cs" />
+    <None Include="Devices\Integrations\Logitech\LogitechDevice.cs" />
     <Compile Include="EffectsEngine\EffectColor.cs" />
     <Compile Include="EffectsEngine\ColorSpectrum.cs" />
     <Compile Include="EffectsEngine\EffectFrame.cs" />
@@ -1462,7 +1462,7 @@
     <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\GenericUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
-    <Compile Include="Devices\Integrations\Logitech\LogitechGSDK.cs" />
+    <None Include="Devices\Integrations\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

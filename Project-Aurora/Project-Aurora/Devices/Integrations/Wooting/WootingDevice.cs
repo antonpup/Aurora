@@ -1,6 +1,7 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Utils;
-using CoolerMaster;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Wooting;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Wooting
 {
@@ -113,7 +115,7 @@ namespace Aurora.Devices.Wooting
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateKeyboard(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
@@ -123,13 +125,13 @@ namespace Aurora.Devices.Wooting
                     if (!this.isInitialized)
                         return false;
 
-                    foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                    foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
                     {
                         if (e.Cancel) return false;
 
 
-                        Color clr = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
-                        WootingKey.Keys devKey = DeviceKeyToWootingKey(key.Key);
+                        Color clr = Color.FromArgb(255, ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
+                        WootingKey.Keys devKey = DeviceKeyToWootingKey((KeyboardKeys)key.Key);
                         if (devKey == WootingKey.Keys.None)
                             continue;
                         //(byte row, byte column) coordinates = WootingRgbControl.KeyMap[devKey];
@@ -152,11 +154,11 @@ namespace Aurora.Devices.Wooting
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+            bool update_result = UpdateKeyboard((KeyboardDeviceLayout)devices.First(s => s is KeyboardDeviceLayout), e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
@@ -191,141 +193,141 @@ namespace Aurora.Devices.Wooting
             return default_registry;
         }
 
-        public static Dictionary<DeviceKeys, WootingKey.Keys> KeyMap = new Dictionary<DeviceKeys, WootingKey.Keys> {
+        public static Dictionary<KeyboardKeys, WootingKey.Keys> KeyMap = new Dictionary<KeyboardKeys, WootingKey.Keys> {
             //Row 0
-            { DeviceKeys.ESC, WootingKey.Keys.Esc },
-            { DeviceKeys.F1, WootingKey.Keys.F1 },
-            { DeviceKeys.F2, WootingKey.Keys.F2 },
-            { DeviceKeys.F3, WootingKey.Keys.F3 },
-            { DeviceKeys.F4, WootingKey.Keys.F4 },
-            { DeviceKeys.F5, WootingKey.Keys.F5 },
-            { DeviceKeys.F6, WootingKey.Keys.F6 },
-            { DeviceKeys.F7, WootingKey.Keys.F7 },
-            { DeviceKeys.F8, WootingKey.Keys.F8 },
-            { DeviceKeys.F9, WootingKey.Keys.F9 },
-            { DeviceKeys.F10, WootingKey.Keys.F10 },
-            { DeviceKeys.F11, WootingKey.Keys.F11 },
-            { DeviceKeys.F12, WootingKey.Keys.F12 },
-            { DeviceKeys.PRINT_SCREEN, WootingKey.Keys.PrintScreen },
-            { DeviceKeys.PAUSE_BREAK, WootingKey.Keys.PauseBreak },
-            { DeviceKeys.SCROLL_LOCK, WootingKey.Keys.Mode_ScrollLock },
-            { DeviceKeys.Profile_Key1, WootingKey.Keys.A1 },
-            { DeviceKeys.Profile_Key2,  WootingKey.Keys.A2 },
-            { DeviceKeys.Profile_Key3, WootingKey.Keys.A3 },
-            { DeviceKeys.Profile_Key4, WootingKey.Keys.Mode },
+            { KeyboardKeys.ESC, WootingKey.Keys.Esc },
+            { KeyboardKeys.F1, WootingKey.Keys.F1 },
+            { KeyboardKeys.F2, WootingKey.Keys.F2 },
+            { KeyboardKeys.F3, WootingKey.Keys.F3 },
+            { KeyboardKeys.F4, WootingKey.Keys.F4 },
+            { KeyboardKeys.F5, WootingKey.Keys.F5 },
+            { KeyboardKeys.F6, WootingKey.Keys.F6 },
+            { KeyboardKeys.F7, WootingKey.Keys.F7 },
+            { KeyboardKeys.F8, WootingKey.Keys.F8 },
+            { KeyboardKeys.F9, WootingKey.Keys.F9 },
+            { KeyboardKeys.F10, WootingKey.Keys.F10 },
+            { KeyboardKeys.F11, WootingKey.Keys.F11 },
+            { KeyboardKeys.F12, WootingKey.Keys.F12 },
+            { KeyboardKeys.PRINT_SCREEN, WootingKey.Keys.PrintScreen },
+            { KeyboardKeys.PAUSE_BREAK, WootingKey.Keys.PauseBreak },
+            { KeyboardKeys.SCROLL_LOCK, WootingKey.Keys.Mode_ScrollLock },
+            { KeyboardKeys.Profile_Key1, WootingKey.Keys.A1 },
+            { KeyboardKeys.Profile_Key2,  WootingKey.Keys.A2 },
+            { KeyboardKeys.Profile_Key3, WootingKey.Keys.A3 },
+            { KeyboardKeys.Profile_Key4, WootingKey.Keys.Mode },
 
             //Row 1
-            { DeviceKeys.TILDE, WootingKey.Keys.Tilda },
-            { DeviceKeys.ONE, WootingKey.Keys.N1 },
-            { DeviceKeys.TWO, WootingKey.Keys.N2 },
-            { DeviceKeys.THREE, WootingKey.Keys.N3 },
-            { DeviceKeys.FOUR, WootingKey.Keys.N4 },
-            { DeviceKeys.FIVE, WootingKey.Keys.N5 },
-            { DeviceKeys.SIX, WootingKey.Keys.N6 },
-            { DeviceKeys.SEVEN, WootingKey.Keys.N7 },
-            { DeviceKeys.EIGHT, WootingKey.Keys.N8 },
-            { DeviceKeys.NINE, WootingKey.Keys.N9 },
-            { DeviceKeys.ZERO, WootingKey.Keys.N0 },
-            { DeviceKeys.MINUS, WootingKey.Keys.Minus },
-            { DeviceKeys.EQUALS, WootingKey.Keys.Equals },
-            { DeviceKeys.BACKSPACE, WootingKey.Keys.Backspace },
-            { DeviceKeys.INSERT, WootingKey.Keys.Insert },
-            { DeviceKeys.HOME, WootingKey.Keys.Home },
-            { DeviceKeys.PAGE_UP, WootingKey.Keys.PageUp },
-            { DeviceKeys.NUM_LOCK, WootingKey.Keys.NumLock },
-            { DeviceKeys.NUM_SLASH, WootingKey.Keys.NumSlash },
-            { DeviceKeys.NUM_ASTERISK, WootingKey.Keys.NumMulti },
-            { DeviceKeys.NUM_MINUS, WootingKey.Keys.NumMinus },
+            { KeyboardKeys.TILDE, WootingKey.Keys.Tilda },
+            { KeyboardKeys.ONE, WootingKey.Keys.N1 },
+            { KeyboardKeys.TWO, WootingKey.Keys.N2 },
+            { KeyboardKeys.THREE, WootingKey.Keys.N3 },
+            { KeyboardKeys.FOUR, WootingKey.Keys.N4 },
+            { KeyboardKeys.FIVE, WootingKey.Keys.N5 },
+            { KeyboardKeys.SIX, WootingKey.Keys.N6 },
+            { KeyboardKeys.SEVEN, WootingKey.Keys.N7 },
+            { KeyboardKeys.EIGHT, WootingKey.Keys.N8 },
+            { KeyboardKeys.NINE, WootingKey.Keys.N9 },
+            { KeyboardKeys.ZERO, WootingKey.Keys.N0 },
+            { KeyboardKeys.MINUS, WootingKey.Keys.Minus },
+            { KeyboardKeys.EQUALS, WootingKey.Keys.Equals },
+            { KeyboardKeys.BACKSPACE, WootingKey.Keys.Backspace },
+            { KeyboardKeys.INSERT, WootingKey.Keys.Insert },
+            { KeyboardKeys.HOME, WootingKey.Keys.Home },
+            { KeyboardKeys.PAGE_UP, WootingKey.Keys.PageUp },
+            { KeyboardKeys.NUM_LOCK, WootingKey.Keys.NumLock },
+            { KeyboardKeys.NUM_SLASH, WootingKey.Keys.NumSlash },
+            { KeyboardKeys.NUM_ASTERISK, WootingKey.Keys.NumMulti },
+            { KeyboardKeys.NUM_MINUS, WootingKey.Keys.NumMinus },
 
             //Row2
-            { DeviceKeys.TAB, WootingKey.Keys.Tab },
-            { DeviceKeys.Q, WootingKey.Keys.Q },
-            { DeviceKeys.W, WootingKey.Keys.W },
-            { DeviceKeys.E, WootingKey.Keys.E },
-            { DeviceKeys.R, WootingKey.Keys.R},
-            { DeviceKeys.T, WootingKey.Keys.T },
-            { DeviceKeys.Y, WootingKey.Keys.Y },
-            { DeviceKeys.U, WootingKey.Keys.U },
-            { DeviceKeys.I, WootingKey.Keys.I },
-            { DeviceKeys.O, WootingKey.Keys.O },
-            { DeviceKeys.P, WootingKey.Keys.P },
-            { DeviceKeys.OPEN_BRACKET, WootingKey.Keys.OpenBracket },
-            { DeviceKeys.CLOSE_BRACKET, WootingKey.Keys.CloseBracket },
-            { DeviceKeys.BACKSLASH, WootingKey.Keys.ANSI_Backslash },
-            { DeviceKeys.DELETE, WootingKey.Keys.Delete },
-            { DeviceKeys.END, WootingKey.Keys.End },
-            { DeviceKeys.PAGE_DOWN, WootingKey.Keys.PageDown },
-            { DeviceKeys.NUM_SEVEN, WootingKey.Keys.Num7 },
-            { DeviceKeys.NUM_EIGHT, WootingKey.Keys.Num8 },
-            { DeviceKeys.NUM_NINE, WootingKey.Keys.Num9 },
-            { DeviceKeys.NUM_PLUS, WootingKey.Keys.NumPlus },
+            { KeyboardKeys.TAB, WootingKey.Keys.Tab },
+            { KeyboardKeys.Q, WootingKey.Keys.Q },
+            { KeyboardKeys.W, WootingKey.Keys.W },
+            { KeyboardKeys.E, WootingKey.Keys.E },
+            { KeyboardKeys.R, WootingKey.Keys.R},
+            { KeyboardKeys.T, WootingKey.Keys.T },
+            { KeyboardKeys.Y, WootingKey.Keys.Y },
+            { KeyboardKeys.U, WootingKey.Keys.U },
+            { KeyboardKeys.I, WootingKey.Keys.I },
+            { KeyboardKeys.O, WootingKey.Keys.O },
+            { KeyboardKeys.P, WootingKey.Keys.P },
+            { KeyboardKeys.OPEN_BRACKET, WootingKey.Keys.OpenBracket },
+            { KeyboardKeys.CLOSE_BRACKET, WootingKey.Keys.CloseBracket },
+            { KeyboardKeys.BACKSLASH, WootingKey.Keys.ANSI_Backslash },
+            { KeyboardKeys.DELETE, WootingKey.Keys.Delete },
+            { KeyboardKeys.END, WootingKey.Keys.End },
+            { KeyboardKeys.PAGE_DOWN, WootingKey.Keys.PageDown },
+            { KeyboardKeys.NUM_SEVEN, WootingKey.Keys.Num7 },
+            { KeyboardKeys.NUM_EIGHT, WootingKey.Keys.Num8 },
+            { KeyboardKeys.NUM_NINE, WootingKey.Keys.Num9 },
+            { KeyboardKeys.NUM_PLUS, WootingKey.Keys.NumPlus },
 
             //Row3
-            { DeviceKeys.CAPS_LOCK, WootingKey.Keys.CapsLock },
-            { DeviceKeys.A, WootingKey.Keys.A },
-            { DeviceKeys.S, WootingKey.Keys.S },
-            { DeviceKeys.D, WootingKey.Keys.D },
-            { DeviceKeys.F, WootingKey.Keys.F },
-            { DeviceKeys.G, WootingKey.Keys.G },
-            { DeviceKeys.H, WootingKey.Keys.H },
-            { DeviceKeys.J, WootingKey.Keys.J },
-            { DeviceKeys.K, WootingKey.Keys.K },
-            { DeviceKeys.L, WootingKey.Keys.L },
-            { DeviceKeys.SEMICOLON, WootingKey.Keys.SemiColon },
-            { DeviceKeys.APOSTROPHE, WootingKey.Keys.Apostophe },
-            { DeviceKeys.HASHTAG, WootingKey.Keys.ISO_Hash },
-            { DeviceKeys.ENTER, WootingKey.Keys.Enter },
-            { DeviceKeys.NUM_FOUR, WootingKey.Keys.Num4 },
-            { DeviceKeys.NUM_FIVE, WootingKey.Keys.Num5 },
-            { DeviceKeys.NUM_SIX, WootingKey.Keys.Num6 },
+            { KeyboardKeys.CAPS_LOCK, WootingKey.Keys.CapsLock },
+            { KeyboardKeys.A, WootingKey.Keys.A },
+            { KeyboardKeys.S, WootingKey.Keys.S },
+            { KeyboardKeys.D, WootingKey.Keys.D },
+            { KeyboardKeys.F, WootingKey.Keys.F },
+            { KeyboardKeys.G, WootingKey.Keys.G },
+            { KeyboardKeys.H, WootingKey.Keys.H },
+            { KeyboardKeys.J, WootingKey.Keys.J },
+            { KeyboardKeys.K, WootingKey.Keys.K },
+            { KeyboardKeys.L, WootingKey.Keys.L },
+            { KeyboardKeys.SEMICOLON, WootingKey.Keys.SemiColon },
+            { KeyboardKeys.APOSTROPHE, WootingKey.Keys.Apostophe },
+            { KeyboardKeys.HASHTAG, WootingKey.Keys.ISO_Hash },
+            { KeyboardKeys.ENTER, WootingKey.Keys.Enter },
+            { KeyboardKeys.NUM_FOUR, WootingKey.Keys.Num4 },
+            { KeyboardKeys.NUM_FIVE, WootingKey.Keys.Num5 },
+            { KeyboardKeys.NUM_SIX, WootingKey.Keys.Num6 },
 
             //Row4
-            { DeviceKeys.LEFT_SHIFT, WootingKey.Keys.LeftShift },
-            { DeviceKeys.BACKSLASH_UK, WootingKey.Keys.ISO_Blackslash },
-            { DeviceKeys.Z, WootingKey.Keys.Z },
-            { DeviceKeys.X, WootingKey.Keys.X },
-            { DeviceKeys.C, WootingKey.Keys.C },
-            { DeviceKeys.V, WootingKey.Keys.V },
-            { DeviceKeys.B, WootingKey.Keys.B },
-            { DeviceKeys.N, WootingKey.Keys.N },
-            { DeviceKeys.M, WootingKey.Keys.M },
-            { DeviceKeys.COMMA, WootingKey.Keys.Comma },
-            { DeviceKeys.PERIOD, WootingKey.Keys.Period },
-            { DeviceKeys.FORWARD_SLASH, WootingKey.Keys.Slash },
+            { KeyboardKeys.LEFT_SHIFT, WootingKey.Keys.LeftShift },
+            { KeyboardKeys.BACKSLASH_UK, WootingKey.Keys.ISO_Blackslash },
+            { KeyboardKeys.Z, WootingKey.Keys.Z },
+            { KeyboardKeys.X, WootingKey.Keys.X },
+            { KeyboardKeys.C, WootingKey.Keys.C },
+            { KeyboardKeys.V, WootingKey.Keys.V },
+            { KeyboardKeys.B, WootingKey.Keys.B },
+            { KeyboardKeys.N, WootingKey.Keys.N },
+            { KeyboardKeys.M, WootingKey.Keys.M },
+            { KeyboardKeys.COMMA, WootingKey.Keys.Comma },
+            { KeyboardKeys.PERIOD, WootingKey.Keys.Period },
+            { KeyboardKeys.FORWARD_SLASH, WootingKey.Keys.Slash },
 
-            { DeviceKeys.RIGHT_SHIFT, WootingKey.Keys.RightShift },
+            { KeyboardKeys.RIGHT_SHIFT, WootingKey.Keys.RightShift },
 
-            { DeviceKeys.ARROW_UP, WootingKey.Keys.Up },
+            { KeyboardKeys.ARROW_UP, WootingKey.Keys.Up },
 
-            { DeviceKeys.NUM_ONE, WootingKey.Keys.Num1 },
-            { DeviceKeys.NUM_TWO, WootingKey.Keys.Num2 },
-            { DeviceKeys.NUM_THREE, WootingKey.Keys.Num3 },
-            { DeviceKeys.NUM_ENTER, WootingKey.Keys.NumEnter },
+            { KeyboardKeys.NUM_ONE, WootingKey.Keys.Num1 },
+            { KeyboardKeys.NUM_TWO, WootingKey.Keys.Num2 },
+            { KeyboardKeys.NUM_THREE, WootingKey.Keys.Num3 },
+            { KeyboardKeys.NUM_ENTER, WootingKey.Keys.NumEnter },
 
             //Row5
-            { DeviceKeys.LEFT_CONTROL, WootingKey.Keys.LeftCtrl },
-            { DeviceKeys.LEFT_WINDOWS, WootingKey.Keys.LeftWin },
-            { DeviceKeys.LEFT_ALT, WootingKey.Keys.LeftAlt },
+            { KeyboardKeys.LEFT_CONTROL, WootingKey.Keys.LeftCtrl },
+            { KeyboardKeys.LEFT_WINDOWS, WootingKey.Keys.LeftWin },
+            { KeyboardKeys.LEFT_ALT, WootingKey.Keys.LeftAlt },
 
 
 
-            { DeviceKeys.SPACE, WootingKey.Keys.Space },
+            { KeyboardKeys.SPACE, WootingKey.Keys.Space },
 
 
 
-            { DeviceKeys.RIGHT_ALT, WootingKey.Keys.RightAlt },
-            { DeviceKeys.RIGHT_WINDOWS, WootingKey.Keys.RightWin },
-            { DeviceKeys.FN_Key, WootingKey.Keys.Function },
-            { DeviceKeys.RIGHT_CONTROL, WootingKey.Keys.RightControl },
-            { DeviceKeys.ARROW_LEFT, WootingKey.Keys.Left },
-            { DeviceKeys.ARROW_DOWN, WootingKey.Keys.Down },
-            { DeviceKeys.ARROW_RIGHT, WootingKey.Keys.Right },
+            { KeyboardKeys.RIGHT_ALT, WootingKey.Keys.RightAlt },
+            { KeyboardKeys.RIGHT_WINDOWS, WootingKey.Keys.RightWin },
+            { KeyboardKeys.FN_Key, WootingKey.Keys.Function },
+            { KeyboardKeys.RIGHT_CONTROL, WootingKey.Keys.RightControl },
+            { KeyboardKeys.ARROW_LEFT, WootingKey.Keys.Left },
+            { KeyboardKeys.ARROW_DOWN, WootingKey.Keys.Down },
+            { KeyboardKeys.ARROW_RIGHT, WootingKey.Keys.Right },
 
-            { DeviceKeys.NUM_ZERO, WootingKey.Keys.Num0 },
-            { DeviceKeys.NUM_PERIOD, WootingKey.Keys.NumPeriod },
+            { KeyboardKeys.NUM_ZERO, WootingKey.Keys.Num0 },
+            { KeyboardKeys.NUM_PERIOD, WootingKey.Keys.NumPeriod },
         };
 
-        public static WootingKey.Keys DeviceKeyToWootingKey(DeviceKeys key)
+        public static WootingKey.Keys DeviceKeyToWootingKey(KeyboardKeys key)
         {
             if (KeyMap.TryGetValue(key, out WootingKey.Keys w_key))
                 return w_key;

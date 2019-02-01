@@ -118,7 +118,6 @@ namespace Aurora
         }
     }
 
-    public delegate void NewLayerRendered(Bitmap bitmap);
 
     public class Effects
     {
@@ -138,7 +137,6 @@ namespace Aurora
 
         private static object bitmap_lock = new object();
 
-        public event NewLayerRendered NewLayerRender = delegate { };
 
         
         /// <summary>
@@ -169,14 +167,6 @@ namespace Aurora
                 nextsecond = currentsecond + 1000L;
 
             currentsecond += (long)recordTimer.Interval;
-
-            if (previousframe != null)
-            {
-                Bitmap tempbmp = new Bitmap(previousframe);
-
-                renderedframes++;
-                tempbmp.Save("renders\\" + (filenamecount++) + ".bmp", System.Drawing.Imaging.ImageFormat.Bmp);
-            }
 
             if (currentsecond >= nextsecond)
             {
@@ -220,72 +210,14 @@ namespace Aurora
                 foreach (EffectLayer layer in over_layers_array)
                     background += layer;
 
-                //Apply Brightness
-                Dictionary<DeviceKeys, Color> peripehralColors = new Dictionary<DeviceKeys, Color>();
-
-                foreach (Devices.DeviceKeys key in possible_peripheral_keys)
-                {
-                    if(!peripehralColors.ContainsKey(key))
-                        peripehralColors.Add(key, background.Get(key));
-                }
-
-                background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
-
-                foreach (Devices.DeviceKeys key in possible_peripheral_keys)
-                    background.Set(key, Utils.ColorUtils.BlendColors(peripehralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
-
-
                 //if (Global.Configuration.UseVolumeAsBrightness)
                     background *= Global.Configuration.GlobalBrightness;
 
-                if (_forcedFrame != null)
-                {
-                    using (Graphics g = background.GetGraphics())
-                    {
-                        g.Clear(Color.Black);
-
-                        g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
-                    }
-                }
-
-                Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>();
-                Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
-
-                foreach (Devices.DeviceKeys key in allKeys)
-                    keyColors[key] = background.Get(key);
-
-                Effects.keyColors = new Dictionary<DeviceKeys, Color>(keyColors);
 
                 pushedframes++;
 
-                DeviceColorComposition dcc = new DeviceColorComposition()
-                {
-                    keyColors = new Dictionary<DeviceKeys, Color>(keyColors),
-                    keyBitmap = background.GetBitmap()
-                };
-
-                Global.dev_manager.UpdateDevices(dcc);
-
-                var hander = NewLayerRender;
-                if (hander != null)
-                    hander.Invoke(background.GetBitmap());
-
-                if (isrecording)
-                {
-
-                    EffectLayer pizelated_render = new EffectLayer();
-                    foreach (Devices.DeviceKeys key in allKeys)
-                    {
-                        pizelated_render.Set(key, background.Get(key));
-                    }
-
-                    using (Bitmap map = pizelated_render.GetBitmap())
-                    {
-                        previousframe = new Bitmap(map);
-                    }
-                }
-
-
+                GlobalDeviceLayout.Instance.PushFrame(background.GetCanvas());
+                
                 frame.Dispose();
             }
 

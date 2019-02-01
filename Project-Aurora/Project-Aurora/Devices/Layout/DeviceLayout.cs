@@ -150,6 +150,22 @@ namespace Aurora.Devices.Layout
             return new DeviceLED(DeviceTypeID, this.DeviceID, ledID);
         }
 
+        internal void UpdateColors(Bitmap colormap)
+        {
+            Dictionary<LEDINT, System.Drawing.Color> colors = new Dictionary<LEDINT, System.Drawing.Color>();
+
+            foreach (KeyValuePair<LEDINT, BitmapRectangle> keyRegion in this.VirtualGroup.BitmapMap)
+            {
+                colors.Add(keyRegion.Key, BitmapUtils.GetRegionColor(colormap, keyRegion.Value));
+            }
+
+            this.DeviceColours = new DeviceColorComposition()
+            {
+                deviceColours = colors,
+                keyBitmap = colormap
+            };
+        }
+
         public virtual void Dispose()
         {
 

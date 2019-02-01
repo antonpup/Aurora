@@ -17,6 +17,9 @@ namespace Aurora.Devices.Layout
         private Dictionary<byte, ObservableCollection<DeviceLayout>> _devices = new Dictionary<byte, ObservableCollection<DeviceLayout>>();
         public Dictionary<byte, ObservableCollection<DeviceLayout>> Devices { get => _devices; set => UpdateVar(ref _devices, value); }
 
+        private float _globalBrightness = 1.0f;
+        public float GlobalBrightness { get => _globalBrightness; set => UpdateVar(ref _globalBrightness, value); }
+
         public GlobalDeviceLayoutSettings()
         {
             
