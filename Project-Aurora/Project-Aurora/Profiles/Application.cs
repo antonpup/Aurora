@@ -160,7 +160,7 @@ namespace Aurora.Profiles
         {
             ApplicationProfile profile = (ApplicationProfile)Activator.CreateInstance(Config.ProfileType);
             profile.ProfileName = profileName;
-            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetUnusedFilename(GetProfileFolderPath(), profile.ProfileName) + ".json");
             return profile;
         }
 
@@ -169,7 +169,7 @@ namespace Aurora.Profiles
             if (Disposed)
                 return;
 
-            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetUnusedFilename(GetProfileFolderPath(), profile.ProfileName) + ".json");
             this.Profiles.Add(profile);
         }
 
@@ -255,6 +255,14 @@ namespace Aurora.Profiles
                 filename = filename.Replace(c, '_');
 
             return filename;
+        }
+
+        protected string GetUnusedFilename(string dir, string filename) {
+            var safeName = GetValidFilename(filename);
+            if (!File.Exists(Path.Combine(dir, safeName + ".json"))) return safeName;
+            var i = 0;
+            while (File.Exists(Path.Combine(dir, safeName + "-" + ++i + ".json")));
+            return safeName + "-" + i;
         }
 
         public virtual string GetProfileFolderPath()
