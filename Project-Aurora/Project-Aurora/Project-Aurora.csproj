@@ -328,6 +328,9 @@
     <Compile Include="Controls\Control_DeviceItem.xaml.cs">
       <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
+      <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_PluginManager.xaml.cs">
       <DependentUpon>Control_PluginManager.xaml</DependentUpon>
     </Compile>
@@ -590,6 +593,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Conditions\Condition_PeripheralInput.cs" />
     <Compile Include="Settings\Conditions\ComparisonOperator.cs" />
     <Compile Include="Settings\Conditions\ConditionAttribute.cs" />
     <Compile Include="Settings\Conditions\Condition_GameState.cs" />
@@ -613,6 +617,7 @@
       <DependentUpon>Control_SubconditionHolder.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Conditions\ICondition.cs" />
+    <Compile Include="Settings\Layers\OverrideLogic.cs" />
     <Compile Include="Settings\ProfileImporter.cs" />
     <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
@@ -644,6 +649,9 @@
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
     <Compile Include="Settings\Window_GSIHttpDebug.xaml.cs">
       <DependentUpon>Window_GSIHttpDebug.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Window_OverridesEditor.xaml.cs">
+      <DependentUpon>Window_OverridesEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
@@ -1507,6 +1515,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Control_FieldPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Control_PluginManager.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -2056,6 +2068,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_VariableRegistryEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Window_OverridesEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

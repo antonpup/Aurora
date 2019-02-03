@@ -1,0 +1,88 @@
+﻿<Window x:Class="Aurora.Settings.Window_OverridesEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings"
+             xmlns:conditions="clr-namespace:Aurora.Settings.Conditions"
+        xmlns:controls="clr-namespace:Aurora.Controls"
+        mc:Ignorable="d" 
+             d:DesignHeight="450" Width="710"
+             Background="#181818">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Description" Margin="8" />
+
+        <TabControl Grid.Row="1" Margin="8,0">
+            <!-- Lookup table tab -->
+            <TabItem Header="Lookup table">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="The lookup table replaces the target property (e.g. colour or duration) with the first value in the list below that has a condition that evaluates to true. If none of the below conditions match, the property will not be overriden and whatever you've specified in the normal interface will be used." TextWrapping="Wrap" Margin="8" />
+                    <ScrollViewer Grid.Row="1">
+                        <!-- Item list -->
+                        <ItemsControl ItemsSource="{Binding LookupTable}" AlternationCount="2">
+                            <ItemsControl.ItemTemplate>
+                                <!-- Item template -->
+                                <DataTemplate>
+                                    <Grid x:Name="ItemGrid">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="40" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Main item content -->
+                                        <controls:Control_FieldPresenter Value="{Binding Value, Mode=TwoWay}" Type="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.VarType}" Grid.Column="0" VerticalAlignment="Center" Margin="8,4,8,8" />
+                                        <TextBlock Text="When" FontStyle="Italic" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <conditions:Control_ConditionPresenter Condition="{Binding Condition, Mode=TwoWay}" Grid.Column="2" Margin="8,4,8,8" />
+
+                                        <!-- Delete button -->
+                                        <Button Margin="6" Grid.Column="3" VerticalAlignment="Center" ToolTip="Remove this lookup entry" Click="DeleteLookupEntry_Click">
+                                            <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" Margin="2" />
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- Alternate row backgrounds so it's easier to tell them apart -->
+                                    <DataTemplate.Triggers>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                            <Setter Property="Background" Value="#04FFFFFF" TargetName="ItemGrid"/>
+                                        </Trigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <Button Content="Add lookup entry" Grid.Row="2" Margin="0,4" HorizontalAlignment="Right" Click="AddNewLookup_Click" />
+                </Grid>
+            </TabItem>
+
+            <!-- Dynamic value tab -->
+            <!--<TabItem Header="Dynamic value">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Description" TextWrapping="Wrap" Margin="4,0,4,8" />
+                </Grid>
+            </TabItem>-->
+        </TabControl>
+
+        <!-- Dialog buttons  -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,10">
+            <Button Content="Okay" Padding="5,2" IsDefault="True" />
+            <Button Content="Cancel" Margin="10,0" Padding="5,2" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

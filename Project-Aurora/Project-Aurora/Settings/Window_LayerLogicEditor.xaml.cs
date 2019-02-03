@@ -36,7 +36,7 @@ namespace Aurora.Settings
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            ((Layers.Layer)this.DataContext).Logics.Add(new LogicItem());
+            //((Layers.Layer)this.DataContext).OverrideLogic.Add(new LogicItem());
         }
 
         private void btnAddCheck_Click(object sender, RoutedEventArgs e)

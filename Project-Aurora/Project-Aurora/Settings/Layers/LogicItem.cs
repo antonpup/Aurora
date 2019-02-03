@@ -117,7 +117,7 @@ namespace Aurora.Settings.Layers
                     object var = vars.Item2;
                     if (var is RealColor)
                         var = ((RealColor)var).GetDrawingColor();
-                    ((ILogic)handler.Properties).Logic.SetValueFromString(str, var);
+                    ((IValueOverridable)handler.Properties).Overrides.SetValueFromString(str, var);
                     //handler.Properties._PrimaryColor = (Color)Action.Item2;
                     break;
                 default:

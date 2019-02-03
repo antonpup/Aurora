@@ -12,18 +12,18 @@ using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
-    public interface ILogic
+    public interface IValueOverridable
     {
-        IStringProperty Logic { get; set; }
+        IStringProperty Overrides { get; set; }
     }
 
-    public abstract class LayerHandlerProperties<TProperty> : StringProperty<TProperty>, ILogic where TProperty : LayerHandlerProperties<TProperty>
+    public abstract class LayerHandlerProperties<TProperty> : StringProperty<TProperty>, IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
     {
         [GameStateIgnoreAttribute]
         [JsonIgnore]
         public TProperty Logic { get; set; }
 
-        IStringProperty ILogic.Logic
+        IStringProperty IValueOverridable.Overrides
         {
             get
             {

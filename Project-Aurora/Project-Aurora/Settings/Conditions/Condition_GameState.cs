@@ -92,4 +92,19 @@ namespace Aurora.Settings.Conditions {
                 Operand2Path = string.Empty;
         }
     }
+
+    [Condition("String Game State Variable")]
+    public class ConditionGSIString : ICondition {
+        public UserControl GetControl(Application application) {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Evaluate(IGameState gameState) {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetApplication(Application application) {
+            throw new System.NotImplementedException();
+        }
+    }
 }

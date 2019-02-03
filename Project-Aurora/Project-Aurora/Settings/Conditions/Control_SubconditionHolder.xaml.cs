@@ -32,7 +32,7 @@ namespace Aurora.Settings.Conditions {
     }
 
     /// <summary>
-    /// The datatype that is used as the DataContext for `Control_ConditionNot`.
+    /// The datatype that is used as the DataContext for `Control_SubconditionHolder`.
     /// </summary>
     internal class Control_SubconditionHolder_Context {
         public ObservableCollection<ICondition> SubConditions { get; set; }
