@@ -38,45 +38,44 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 
 ## Natively Supported Games
 
-* Dota 2
-* CS:GO
-* Grand Theft Auto V
-* Rocket League
-* Overwatch
-* Payday 2
-* The Division
-* League of Legends
-* Hotline Miami
-* The Talos Principle
+* American Truck Simulator
+* Battlefield 1
 * Battlefield 3
 * Blacklight: Retribution
-* Magic: The Gathering - Duels of the Planeswalkers 2012
-* Middle-earth: Shadow of Mordor
-* Serious Sam 3
-* Robot Roller-Derby Disco Dodgeball
-* XCOM: Enemy Unknown
-* Evolve Stage 2
-* Metro: Last Light
-* Guild Wars 2
-* Worms W.M.D
 * Blade and Soul
 * Borderlands 2
-* Minecraft
-* Euro Truck Simulator 2
-* American Truck Simulator
-* Rise of the Tomb Raider
-* Dying Light
-* Quantum Conumdrum
-* Move or Die
-* Battlefield 1
-* Dishonored
-* The Witcher 3
-* Minecraft
-* Killing Floor 2
+* CS:GO
 * DOOM (2016)
-* Factorio
-* Quake Champions
 * Diablo III
+* Dishonored
+* Dota 2
+* Dying Light
+* Euro Truck Simulator 2
+* Evolve Stage 2
+* Factorio
+* Grand Theft Auto V
+* Guild Wars 2
+* Hotline Miami
+* Killing Floor 2
+* League of Legends
+* Magic: The Gathering - Duels of the Planeswalkers 2012
+* Metro: Last Light
+* Middle-earth: Shadow of Mordor
+* Minecraft
+* Move or Die
+* Overwatch
+* Payday 2
+* Quake Champions
+* Quantum Conumdrum
+* Rise of the Tomb Raider
+* Robot Roller-Derby Disco Dodgeball
+* Rocket League
+* Serious Sam 3
+* The Division
+* The Talos Principle
+* The Witcher 3
+* Worms W.M.D
+* XCOM: Enemy Unknown
 
 ## Natively Supported Devices
 
@@ -95,25 +94,25 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * G203
 * G403
 * G502
+* G703
 * G900
 * G903
-* G703
 * G PRO
 
 ### Corsair
 * Most Keyboards, Mice, Headsets and mousepads should work.
 #### Keyboards
-* K68
 * K65
+* K68
 * K70 LUX
 * K95
 * K95 Platinum
 * STRAFE Non-RGB/RGB
 #### Mice
-* Scimitar RGB
 * Dark Core RGB
-* M65 RGB
 * Glaive RGB
+* M65 RGB
+* Scimitar RGB
 #### Other Peripherals
 * ST100 Headset Stand
 * MM800 Mousepad
@@ -121,24 +120,24 @@ If you don't see some of these devices in the menu, select a similar one and it 
 ### Razer
 * Most Chroma enabled devices should work
 #### Keyboards
+* BlackWidow Chroma
 * Huntsman
 * Huntsman Elite
-* BlackWidow Chroma
 #### Mice
 * Abyssus Essential
-* Naga Hex/Trinity
+* Basilisk
+* DeathAdder Elite
 * Lancehead
 * Mamba & Elite
-* DeathAdder Elite
-* Basilisk
+* Naga Hex/Trinity
 #### Mousepads
 * Firefly
 ### Cooler Master
+* CK372
+* CK551
+* CK552
 * Masterkeys Pro L, M and S RGB/White
 * MK750
-* CK372
-* CK552
-* CK551
 
 ### Roccat
 #### Keyboards
@@ -148,14 +147,14 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ### SteelSeries
 #### Keyboards
-* Apex M800
 * Apex M750
 * Apex M750 TKL
+* Apex M800
 #### Mice
+* Rival 300
+* Rival 310
 * Rival 600
 * Rival 700
-* Rival 310
-* Rival 300
 
 ### Wooting
 * One
@@ -176,13 +175,13 @@ Dota 2 Demo
 
 [![Dota 2 Demo](http://img.youtube.com/vi/iqwYU-blkhk/0.jpg)](https://www.youtube.com/watch?v=iqwYU-blkhk)
 
-Rocket League Demo
-
-[![Rocket League Demo](http://img.youtube.com/vi/XhXQt0LU520/0.jpg)](https://www.youtube.com/watch?v=XhXQt0LU520)
-
 Grand Theft Auto V Demo
 
 [![Grand Theft Auto V Demo](http://img.youtube.com/vi/irBmmA_ndPY/0.jpg)](https://www.youtube.com/watch?v=irBmmA_ndPY)
+
+Rocket League Demo
+
+[![Rocket League Demo](http://img.youtube.com/vi/XhXQt0LU520/0.jpg)](https://www.youtube.com/watch?v=XhXQt0LU520)
 
 Robot Roller-Derby Disco Dodgeball Demo
 
@@ -190,70 +189,70 @@ Robot Roller-Derby Disco Dodgeball Demo
 
 
 ## Screenshots
+![CSGO Settings](https://puu.sh/tfKRK/61f3bb3757.png)
 ![Desktop Settings](https://puu.sh/tfKzm/1ce3b0cd5c.png)
 ![Dota 2 Settings](https://puu.sh/tfKNj/98229d2f69.png)
-![CSGO Settings](https://puu.sh/tfKRK/61f3bb3757.png)
-![GTA 5 Settings](https://puu.sh/tfKWL/d72e10b288.png)
-![Rocket League Settings](https://puu.sh/tfL4N/30f5b9cfea.png)
-![Payday 2 Settings](https://puu.sh/tfLcn/4978a48199.png)
 ![Euro Truck Simulator 2 / American Truck Simulator Settings](https://i.imgur.com/oaCpWd0.png)
+![GTA 5 Settings](https://puu.sh/tfKWL/d72e10b288.png)
+![Payday 2 Settings](https://puu.sh/tfLcn/4978a48199.png)
+![Rocket League Settings](https://puu.sh/tfL4N/30f5b9cfea.png)
 ![Skype Integration Settings](https://puu.sh/tfLfu/57b1df348a.png)
 
 
 ## In-depth features
 General
 
-* Display volume percentage on the keyboard
-* Display CPU and Memory usage on the keyboard
-* Layering system for effects
-* Define custom layers with individual effects
-* Key selection via freeform region
-* Customizable “away from keyboard” effects
-* Set global peripheral brightness on the fly without having to leave your game
+* Ability to select your mouse, and it's orientation (left/right handed)
+* Ability to select your preferred keyboard layout and brand
+* Add other programs to define custom lighting layers for daytime and nighttime themes
+* Automatic updater
 * Completely turn off peripheral lights after a specific time
+* Customizable gradient layers
+* Customizable “away from keyboard” effects
+* Define custom layers with individual effects
+* Display CPU and Memory usage on the keyboard
+* Display shortcut keys with Shortcuts Assistant
+* Display volume percentage on the keyboard
+* Import/Export for profile settings
 * Interactive keyboard effects such as: Key Fade, Key Wave, and Arrow Flow
+* Key selection via freeform region
+* Layering system for effects
 * Preview lighting effects without having to launch the game
+* Scripting support for custom lighting effects & custom devices
+* Set global peripheral brightness on the fly without having to leave your game
 * Simultaneous support for different brands of RGB peripheral devices
 * Support for a wide range of models from all the top brands of RGB peripherals
 * Support for almost any Logitech LED and Razer Chroma supported games
-* Add other programs to define custom lighting layers for daytime and nighttime themes
-* Display shortcut keys with Shortcuts Assistant
-* Automatic updater
-* Ability to select your preferred keyboard layout and brand
-* Ability to select your mouse, and it's orientation (left/right handed)
-* Import/Export for profile settings
-* Customizable gradient layers
-* Scripting support for custom lighting effects & custom devices
 
 Dota 2 features
 
-* Team-based background lighting
-* Respawn effect
-* Killstreak effect
-* Health and Mana indicators
 * Ability and Item indicators
+* Health and Mana indicators
 * Hero ability effects
+* Killstreak effect
+* Respawn effect
+* Team-based background lighting
 
 CS:GO features
 
-* Team-based background lighting
-* Health and Ammo indicators
 * Bomb effect
-* Kill indicators
 * Burning and Flashbang effects
 * Chat/Console typing keys
+* Health and Ammo indicators
+* Kill indicators
+* Team-based background lighting
 
 Grand Theft Auto V features
 
-* Dynamic background lighting (based on current character or race position)
 * Custom police siren effects
+* Dynamic background lighting (based on current character or race position)
 
 Rocket League features
 
-* Team-based background lighting
-* Score-split for background effect
 * Boost indicator
 * Goal Explosions
+* Score-split for background effect
+* Team-based background lighting
 
 Overwatch features
 
@@ -262,8 +261,8 @@ Overwatch features
 Payday 2 features
 
 * Assault-based background lighting effects
-* Suspicion background effect
 * Player health and ammo indicators
+* Suspicion background effect
 
 The Division features
 
@@ -286,12 +285,12 @@ Borderlands 2 features
 * Health and Shield indicators
 
 Minecraft features
-* Healthbar
-* XP bar
 * Armor and hunger bars (not on the default profile but can easily be added)
-* Flame effect when player burns
-* Raindrops when world is raining
 * Background based on time-of-day
+* Flame effect when player burns
+* Healthbar
+* Raindrops when world is raining
+* XP bar
 
 Euro Truck Simulator 2 / American Truck Simulator features
 
@@ -324,12 +323,6 @@ The Witcher 3 features
 
 * Current active sign as background.
 * Health, Toxicity, and Stamina indicators.
-
-Minecraft features
-
-* Health, hunger, experience, and other indicators
-* Day/Night indicator
-* Rain and Fire indicator
 
 
 Killing Floor 2 features
