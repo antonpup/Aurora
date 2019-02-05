@@ -103,10 +103,11 @@ namespace Aurora.Devices.Layout
 
         public void FillRectangle(Brush brush, RectangleF globalRect, float? angle = null, RotationPoint rotationPoint = RotationPoint.Center)
         {
-            Matrix myMatrix = new Matrix();
+            Matrix myMatrix = null;
 
             if (angle != null && angle != 0f)
             {
+                myMatrix = new Matrix();
                 PointF rotatePoint;
                 switch (rotationPoint)
                 {
@@ -128,7 +129,7 @@ namespace Aurora.Devices.Layout
             }
         }
 
-        public void FillRectangle(Brush brush, RectangleF globalRect, Matrix transform = null)
+        public void FillRectangle(Brush brush, RectangleF globalRect, Matrix transform)
         {
             foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
             {

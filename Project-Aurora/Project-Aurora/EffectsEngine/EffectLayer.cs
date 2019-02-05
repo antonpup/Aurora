@@ -704,7 +704,7 @@ namespace Aurora.EffectsEngine
                     flash_amount = Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI);
                 }
             }
-            Rectangle rect = freeform.Rectangle;
+            RectangleF rect = freeform.RectangleF;
 
 
             if (percentEffectType == PercentEffectType.AllAtOnce)
@@ -715,11 +715,11 @@ namespace Aurora.EffectsEngine
             {
                 double progress = progress_total * rect.Width;
 
-                Rectangle prgRect = new Rectangle(rect.X, rect.Y, (int)progress, rect.Height);
+                RectangleF prgRect = new RectangleF(rect.X, rect.Y, (int)progress, rect.Height);
 
                 LinearGradientBrush brush = spectrum.ToLinearGradient(rect.Width, 0, rect.X, 0, flash_amount);
 				brush.WrapMode = WrapMode.Tile;
-                canvas.FillRectangle(brush, rect);
+                canvas.FillRectangle(brush, prgRect);
             }
 
             return this;

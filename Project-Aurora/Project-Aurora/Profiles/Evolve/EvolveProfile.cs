@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,7 +32,7 @@ namespace Aurora.Profiles.Evolve
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.DarkRed,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_CONTROL })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D, KeyboardKeys.SPACE, KeyboardKeys.LEFT_CONTROL })
                     }
                 }
                 ),
@@ -40,7 +41,7 @@ namespace Aurora.Profiles.Evolve
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.OrangeRed,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.ONE, KeyboardKeys.TWO, KeyboardKeys.THREE, KeyboardKeys.FOUR })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

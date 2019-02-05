@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,7 +32,7 @@ namespace Aurora.Profiles.Metro_Last_Light
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Orange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D, KeyboardKeys.LEFT_CONTROL, KeyboardKeys.SPACE, KeyboardKeys.LEFT_SHIFT })
                     }
                 }
                 ),
@@ -40,7 +41,7 @@ namespace Aurora.Profiles.Metro_Last_Light
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.R, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.E })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.ONE, KeyboardKeys.TWO, KeyboardKeys.THREE, KeyboardKeys.R, KeyboardKeys.C, KeyboardKeys.V, KeyboardKeys.E })
                     }
                 }
                 ),
@@ -49,7 +50,7 @@ namespace Aurora.Profiles.Metro_Last_Light
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Blue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.G, Devices.DeviceKeys.T, Devices.DeviceKeys.F, Devices.DeviceKeys.M, Devices.DeviceKeys.Q, Devices.DeviceKeys.N })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.G, KeyboardKeys.T, KeyboardKeys.F, KeyboardKeys.M, KeyboardKeys.Q, KeyboardKeys.N })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -64,16 +65,16 @@ namespace Aurora.Settings
             this.freeform = freeform;
         }
 
-        public KeySequence(DeviceLED[] keys)
+        public KeySequence(IEnumerable<DeviceLED> keys)
         {
             this.keys = new List<DeviceLED>(keys);
             type = KeySequenceType.Sequence;
             freeform = new FreeFormObject();
         }
 
-        public KeySequence(List<DeviceLED> keys)
+        public KeySequence(IEnumerable<KeyboardKeys> keys)
         {
-            this.keys = new List<DeviceLED>(keys);
+            this.keys = keys.ToList().ConvertAll(s => s.GetDeviceLED());
             type = KeySequenceType.Sequence;
             freeform = new FreeFormObject();
         }

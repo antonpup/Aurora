@@ -34,8 +34,8 @@ namespace Aurora.Utils
                     return typeof(SortedDictionary<float, System.Drawing.Color>);
                 case "System.Collections.Generic.Queue`1[[System.Windows.Forms.Keys, System.Windows.Forms]]":
                     return typeof(Queue<System.Windows.Forms.Keys>);
-                case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]":
-                    return typeof(Dictionary<Devices.DeviceKeys, System.Drawing.Color>);
+                //case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]":
+                //    return typeof(Dictionary<Devices.DeviceKeys, System.Drawing.Color>);
                     //Resolve typo'd AbilityLayerHandler type
                 case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler":
                     return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
@@ -51,8 +51,9 @@ namespace Aurora.Utils
                 case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
                 case "Aurora.Profiles.ColorEnhanceProfile":
                     return typeof(Profiles.WrapperProfile);
-                case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
-                    return typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice);
+                //TODO Return this back
+                //case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
+                //    return typeof(Devices.UnifiedHID.UnifiedHIDDevice);
                 default:
                     if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
                         return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));

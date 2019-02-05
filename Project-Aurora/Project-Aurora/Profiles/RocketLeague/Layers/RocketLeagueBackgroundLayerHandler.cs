@@ -281,7 +281,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
                     goal_explosion_mix.AddTrack(goal_explosion_track_3);
                     goal_explosion_mix.AddTrack(goal_explosion_track_4);
 
-                    goal_explosion_mix.Draw(bg_layer.GetGraphics(), goalEffect_keyframe);
+                    goal_explosion_mix.Draw(bg_layer.GetCanvas(), goalEffect_keyframe);
                     goalEffect_keyframe += (currenttime - previoustime) / 1000.0f;
 
                     if (goalEffect_keyframe >= goalEffect_animationTime)

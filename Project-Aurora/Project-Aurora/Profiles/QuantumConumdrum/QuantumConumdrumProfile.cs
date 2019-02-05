@@ -1,3 +1,5 @@
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
@@ -32,7 +34,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.DodgerBlue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE})
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D, KeyboardKeys.SPACE})
                     }
                 }
                 ),
@@ -41,7 +43,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Pink,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Q})
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.Q})
                     }
                 }
                 ),
@@ -50,7 +52,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.E})
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.E})
                     }
                 }
                 ),
@@ -59,7 +61,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.ONE})
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.ONE})
                     }
                 }
                 ),
@@ -68,7 +70,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Green,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.THREE})
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.THREE})
                     }
                 }
                 ),

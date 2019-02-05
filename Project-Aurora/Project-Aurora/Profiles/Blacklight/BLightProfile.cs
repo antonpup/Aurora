@@ -4,6 +4,8 @@ using Aurora.Settings.Layers;
 using System.Drawing;
 using System.Runtime.Serialization;
 using System.Linq;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Devices.Layout;
 
 namespace Aurora.Profiles.Blacklight
 {
@@ -31,7 +33,7 @@ namespace Aurora.Profiles.Blacklight
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Orange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
+                        _Sequence = new KeySequence((new List<KeyboardKeys> { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D }).ConvertAll(s => s.GetDeviceLED()))
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

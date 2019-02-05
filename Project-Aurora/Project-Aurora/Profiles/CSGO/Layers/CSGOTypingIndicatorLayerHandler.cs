@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
@@ -30,12 +31,12 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.TILDE, Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR, Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT, Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS, Devices.DeviceKeys.BACKSPACE,
-                                                    Devices.DeviceKeys.TAB, Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.R, Devices.DeviceKeys.T, Devices.DeviceKeys.Y, Devices.DeviceKeys.U, Devices.DeviceKeys.I, Devices.DeviceKeys.O, Devices.DeviceKeys.P, Devices.DeviceKeys.CLOSE_BRACKET, Devices.DeviceKeys.OPEN_BRACKET, Devices.DeviceKeys.BACKSLASH,
-                                                    Devices.DeviceKeys.CAPS_LOCK, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.F, Devices.DeviceKeys.G, Devices.DeviceKeys.H, Devices.DeviceKeys.J, Devices.DeviceKeys.K, Devices.DeviceKeys.L, Devices.DeviceKeys.SEMICOLON, Devices.DeviceKeys.APOSTROPHE, Devices.DeviceKeys.HASHTAG, Devices.DeviceKeys.ENTER,
-                                                    Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.BACKSLASH_UK, Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.N, Devices.DeviceKeys.M, Devices.DeviceKeys.COMMA, Devices.DeviceKeys.PERIOD, Devices.DeviceKeys.FORWARD_SLASH, Devices.DeviceKeys.RIGHT_SHIFT,
-                                                    Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.LEFT_WINDOWS, Devices.DeviceKeys.LEFT_ALT, Devices.DeviceKeys.SPACE, Devices.DeviceKeys.RIGHT_ALT, Devices.DeviceKeys.RIGHT_WINDOWS, Devices.DeviceKeys.APPLICATION_SELECT, Devices.DeviceKeys.RIGHT_CONTROL,
-                                                    Devices.DeviceKeys.ARROW_UP, Devices.DeviceKeys.ARROW_LEFT, Devices.DeviceKeys.ARROW_DOWN, Devices.DeviceKeys.ARROW_RIGHT, Devices.DeviceKeys.ESC
+            this._Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.TILDE, KeyboardKeys.ONE, KeyboardKeys.TWO, KeyboardKeys.THREE, KeyboardKeys.FOUR, KeyboardKeys.FIVE, KeyboardKeys.SIX, KeyboardKeys.SEVEN, KeyboardKeys.EIGHT, KeyboardKeys.NINE, KeyboardKeys.ZERO, KeyboardKeys.MINUS, KeyboardKeys.EQUALS, KeyboardKeys.BACKSPACE,
+                                                    KeyboardKeys.TAB, KeyboardKeys.Q, KeyboardKeys.W, KeyboardKeys.E, KeyboardKeys.R, KeyboardKeys.T, KeyboardKeys.Y, KeyboardKeys.U, KeyboardKeys.I, KeyboardKeys.O, KeyboardKeys.P, KeyboardKeys.CLOSE_BRACKET, KeyboardKeys.OPEN_BRACKET, KeyboardKeys.BACKSLASH,
+                                                    KeyboardKeys.CAPS_LOCK, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D, KeyboardKeys.F, KeyboardKeys.G, KeyboardKeys.H, KeyboardKeys.J, KeyboardKeys.K, KeyboardKeys.L, KeyboardKeys.SEMICOLON, KeyboardKeys.APOSTROPHE, KeyboardKeys.HASHTAG, KeyboardKeys.ENTER,
+                                                    KeyboardKeys.LEFT_SHIFT, KeyboardKeys.BACKSLASH_UK, KeyboardKeys.Z, KeyboardKeys.X, KeyboardKeys.C, KeyboardKeys.V, KeyboardKeys.B, KeyboardKeys.N, KeyboardKeys.M, KeyboardKeys.COMMA, KeyboardKeys.PERIOD, KeyboardKeys.FORWARD_SLASH, KeyboardKeys.RIGHT_SHIFT,
+                                                    KeyboardKeys.LEFT_CONTROL, KeyboardKeys.LEFT_WINDOWS, KeyboardKeys.LEFT_ALT, KeyboardKeys.SPACE, KeyboardKeys.RIGHT_ALT, KeyboardKeys.RIGHT_WINDOWS, KeyboardKeys.APPLICATION_SELECT, KeyboardKeys.RIGHT_CONTROL,
+                                                    KeyboardKeys.ARROW_UP, KeyboardKeys.ARROW_LEFT, KeyboardKeys.ARROW_DOWN, KeyboardKeys.ARROW_RIGHT, KeyboardKeys.ESC
                                                   });
             this._TypingKeysColor = Color.FromArgb(0, 255, 0);
         }

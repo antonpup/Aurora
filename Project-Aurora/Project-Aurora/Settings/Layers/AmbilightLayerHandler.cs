@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Newtonsoft.Json;
 using System;
