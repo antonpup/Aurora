@@ -1,3 +1,5 @@
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
@@ -261,6 +263,10 @@ namespace Aurora.Settings.Layers
                         break;
                 }
 
+                Devices.Layout.Canvas g = equalizer_layer.GetCanvas();
+                int wave_step_amount = _local_fft.Length / GlobalDeviceLayout.Instance.CanvasWidth;
+
+                switch (Properties.EQType)
                 // The region in which to draw the equalizer.
                 var rect = Properties.Sequence.GetAffectedRegion(); //new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
 
@@ -269,8 +275,13 @@ namespace Aurora.Settings.Layers
 
                 using (Graphics g = equalizer_layer.GetGraphics())
                 {
+                    case EqualizerType.Waveform:
+                        for (int x = 0; x < GlobalDeviceLayout.Instance.CanvasWidth; x++)
+                        {
+                            float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
                     g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
+                            Brush brush = GetBrush(fft_val, x, GlobalDeviceLayout.Instance.CanvasWidth);
                     int wave_step_amount = _local_fft.Length / (int)rect.Width;
 
                     switch (Properties.EQType)
@@ -280,8 +291,16 @@ namespace Aurora.Settings.Layers
                             {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
 
+                            g.DrawLine(new Pen(brush), new PointF(x, GlobalDeviceLayout.Instance.CanvasHeightCenter), new PointF(x, GlobalDeviceLayout.Instance.CanvasHeightCenter - fft_val / scaled_max_amplitude * 500.0f));
+                        }
+                        break;
+                    case EqualizerType.Waveform_Bottom:
+                        for (int x = 0; x < GlobalDeviceLayout.Instance.CanvasWidth; x++)
+                        {
+                            float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
                                 Brush brush = GetBrush(fft_val, x, rect.Width);
 
+                            Brush brush = GetBrush(fft_val, x, GlobalDeviceLayout.Instance.CanvasWidth);
                                 g.DrawLine(new Pen(brush), x + rect.X, (rect.Height / 2) + rect.Y, x + rect.X, (rect.Height / 2) + rect.Y - Math.Max(Math.Min(fft_val / scaled_max_amplitude * 500.0f, rect.Height / 2), -rect.Height / 2));
                             }
                             break;
@@ -290,80 +309,90 @@ namespace Aurora.Settings.Layers
                             {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
 
+                            g.DrawLine(new Pen(brush), x, GlobalDeviceLayout.Instance.CanvasHeight, x, GlobalDeviceLayout.Instance.CanvasHeight - Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f);
+                        }
+                        break;
+                    case EqualizerType.PowerBars:
                                 Brush brush = GetBrush(fft_val, x, rect.Width);
 
+                        //Perform FFT again to get frequencies
+                        FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _local_fft);
                                 g.DrawLine(new Pen(brush), x + rect.X, rect.Height + rect.Y, x + rect.X, rect.Height + rect.Y - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, rect.Height));
                             }
                             break;
                         case EqualizerType.PowerBars:
 
-                            //Perform FFT again to get frequencies
-                            FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _local_fft);
+                        while (flux_array.Count < freqs.Length)
+                        {
+                            flux_array.Add(0.0f);
+                        }
 
-                            while (flux_array.Count < freqs.Length)
+                        int startF = 0;
+                        int endF = 0;
+
+                        float threshhold = 300.0f;
+
+                        for (int x = 0; x < freqs.Length - 1; x++)
+                        {
+                            startF = freqToBin(freqs[x]);
+                            endF = freqToBin(freqs[x + 1]);
+
+                            float flux = 0.0f;
+
+                            for (int j = startF; j <= endF; j++)
                             {
-                                flux_array.Add(0.0f);
+                                float curr_fft = (float)Math.Sqrt(_local_fft[j].X * _local_fft[j].X + _local_fft[j].Y * _local_fft[j].Y);
+                                float prev_fft = (float)Math.Sqrt(_local_fft_previous[j].X * _local_fft_previous[j].X + _local_fft_previous[j].Y * _local_fft_previous[j].Y);
+
+                                float value = curr_fft - prev_fft;
+                                float flux_calc = (value + Math.Abs(value)) / 2;
+                                if (flux < flux_calc)
+                                    flux = flux_calc;
+
+                                flux = flux > threshhold ? 0.0f : flux;
                             }
 
-                            int startF = 0;
-                            int endF = 0;
+                            flux_array[x] = flux;
+                        }
 
-                            float threshhold = 300.0f;
-
-                            for (int x = 0; x < freqs.Length - 1; x++)
-                            {
-                                startF = freqToBin(freqs[x]);
-                                endF = freqToBin(freqs[x + 1]);
-
-                                float flux = 0.0f;
-
-                                for (int j = startF; j <= endF; j++)
-                                {
-                                    float curr_fft = (float)Math.Sqrt(_local_fft[j].X * _local_fft[j].X + _local_fft[j].Y * _local_fft[j].Y);
-                                    float prev_fft = (float)Math.Sqrt(_local_fft_previous[j].X * _local_fft_previous[j].X + _local_fft_previous[j].Y * _local_fft_previous[j].Y);
-
-                                    float value = curr_fft - prev_fft;
-                                    float flux_calc = (value + Math.Abs(value)) / 2;
-                                    if (flux < flux_calc)
-                                        flux = flux_calc;
-
-                                    flux = flux > threshhold ? 0.0f : flux;
-                                }
-
-                                flux_array[x] = flux;
-                            }
-
-                            //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
-
+                        //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
                             float bar_width = rect.Width / (float)(freqs.Length - 1);
 
-                            for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
-                            {
-                                float fft_val = flux_array[f_x] / scaled_max_amplitude;
+                        float bar_width = GlobalDeviceLayout.Instance.CanvasWidth / (float)(freqs.Length - 1);
 
-                                fft_val = Math.Min(1.0f, fft_val);
+                        for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
+                        {
+                            float fft_val = flux_array[f_x] / scaled_max_amplitude;
 
-                                if (previous_freq_results[f_x] - fft_val > 0.10)
-                                    fft_val = previous_freq_results[f_x] - 0.15f;
+                            fft_val = Math.Min(1.0f, fft_val);
 
+                            if (previous_freq_results[f_x] - fft_val > 0.10)
+                                fft_val = previous_freq_results[f_x] - 0.15f;
                                 float x = (f_x * bar_width) + rect.X;
                                 float y = rect.Height + rect.Y;
                                 float height = fft_val * rect.Height;
 
-                                previous_freq_results[f_x] = fft_val;
+                            float x = f_x * bar_width;
+                            float y = GlobalDeviceLayout.Instance.CanvasHeight;
+                            float width = bar_width;
+                            float height = fft_val * GlobalDeviceLayout.Instance.CanvasHeight;
 
-                                Brush brush = GetBrush(-(f_x % 2), f_x, freq_results.Length - 1);
+                            previous_freq_results[f_x] = fft_val;
 
+                            Brush brush = GetBrush(-(f_x % 2), f_x, freq_results.Length - 1);
                                 g.FillRectangle(brush, x, y - height, bar_width, height);
                             }
 
-                            break;
-                    }
+                            g.FillRectangle(brush, x, y - height, width, height);
+                        }
+
+                        break;
+                    
                 }
 
                 var hander = NewLayerRender;
                 if (hander != null)
-                    hander.Invoke(equalizer_layer.GetBitmap());
+                    hander.Invoke(equalizer_layer.GetCanvas());
                 return equalizer_layer;
 
             }
