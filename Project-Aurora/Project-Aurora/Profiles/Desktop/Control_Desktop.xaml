@@ -58,7 +58,6 @@
                 <Grid>
                     <CheckBox x:Name="profile_enabled" Content="Enable Aurora to provide lighting effects for desktop" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
                     <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="This is a profile for Desktop effects. This profile will be active during non-gaming profiles."/><LineBreak/><Run/><LineBreak/><Run Text="This profile includes CPU and RAM usage indicators, a shortcuts assistant, color zones, and interactive effects."/></TextBlock>
-                    <Button Content="Open Editor" Margin="72,119,622,64" Click="Button_Click" />
                 </Grid>
             </TabItem>
         </TabControl>

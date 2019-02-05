@@ -106,6 +106,13 @@ namespace Aurora.Controls {
                 bind.Converter = new Utils.ColorConverter();
                 picker.SetBinding(ColorPicker.SelectedColorProperty, bind);
                 return picker;
+            } },
+
+            { typeof(RealColor), bind => {
+                var picker = new ColorPicker{ ColorMode = ColorMode.ColorCanvas };
+                bind.Converter = new RealColorConverter();
+                picker.SetBinding(ColorPicker.SelectedColorProperty, bind);
+                return picker;
             } }
         };
     }

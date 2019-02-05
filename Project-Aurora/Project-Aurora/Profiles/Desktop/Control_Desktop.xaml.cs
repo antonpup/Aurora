@@ -60,9 +60,5 @@ namespace Aurora.Profiles.Desktop
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e) {
-            new Window_OverridesEditor().ShowDialog();
-        }
     }
 }

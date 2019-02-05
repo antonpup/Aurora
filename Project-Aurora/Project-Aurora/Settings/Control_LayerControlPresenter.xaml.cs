@@ -67,13 +67,10 @@ namespace Aurora.Settings
             lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
 
             grdLayerConfigs.Visibility = Visibility.Hidden;
-            grdLayerConditions.Visibility = Visibility.Hidden;
             btnConfig.Visibility = Visibility.Visible;
-            btnCondition.Visibility = Visibility.Visible;
+            btnOverrides.Visibility = Visibility.Visible;
             grd_LayerControl.IsHitTestVisible = true;
             grd_LayerControl.Effect = null;
-            layerConditionEditor.Condition = layer.Handler.VisibleCondition;
-            layerConditionEditor.Application = layer.AssociatedApplication;
             isSettingNewLayer = false;
         }
 
@@ -235,7 +232,7 @@ namespace Aurora.Settings
                 grdLayerConfigs.Visibility = v ? Visibility.Hidden : Visibility.Visible;
                 grd_LayerControl.IsHitTestVisible = v;
                 grd_LayerControl.Effect = v ? null : new System.Windows.Media.Effects.BlurEffect();
-                btnCondition.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
+                btnOverrides.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -268,13 +265,9 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnCondition_Click(object sender, RoutedEventArgs e) {
+        private void btnOverrides_Click(object sender, RoutedEventArgs e) {
             if (IsLoaded && !isSettingNewLayer) {
-                bool v = grdLayerConditions.IsVisible;
-                grdLayerConditions.Visibility = v ? Visibility.Hidden : Visibility.Visible;
-                grd_LayerControl.IsHitTestVisible = v;
-                grd_LayerControl.Effect = v ? null : new System.Windows.Media.Effects.BlurEffect();
-                btnConfig.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
+                new Overrides.Window_OverridesEditor(Layer).ShowDialog();
             }
         }
 

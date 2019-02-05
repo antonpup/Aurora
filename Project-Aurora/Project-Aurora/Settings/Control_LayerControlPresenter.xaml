@@ -34,7 +34,7 @@
             <Button x:Name="btnLogic" Content="View Layer Logic" HorizontalAlignment="Left" Margin="283,10,0,0" VerticalAlignment="Top" Click="btnLogic_Click" Visibility="Hidden"/>
             <Button x:Name="btnReset" Content="Reset Layer" HorizontalAlignment="Left" Margin="283,39,0,0" VerticalAlignment="Top" Width="75" Click="btnReset_Click"/>
         </Grid>
-        
+
         <Grid x:Name="grdLayerConfigs" Margin="4" HorizontalAlignment="Right" Width="484" Height="188" VerticalAlignment="Top" Background="#FF323232" Visibility="Collapsed">
             <CheckBox x:Name="chkLayerSmoothing" Content="Enable smoothing for this layer" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="chkLayerSmoothing_Checked" Unchecked="chkLayerSmoothing_Checked"/>
             <CheckBox x:Name="chk_ExcludeMask" Content="Enable Key/Region exclusion" HorizontalAlignment="Left" Margin="213,10,0,0" VerticalAlignment="Top" Checked="chk_ExcludeMask_Checked" Unchecked="chk_ExcludeMask_Checked"/>
@@ -44,19 +44,10 @@
             <TextBlock x:Name="lbl_Opacity_Text" HorizontalAlignment="Left" Margin="166,30,0,0" TextWrapping="Wrap" Text="100 %" VerticalAlignment="Top"/>
         </Grid>
 
-        <Grid x:Name="grdLayerConditions" Margin="4" HorizontalAlignment="Right" Width="560" VerticalAlignment="Stretch" Background="#FF323232" Visibility="Visible">
-            <Label Content="Condition editor" FontSize="16" Margin="8,3" />
-            <Border Margin="4,38,4,4" BorderBrush="#292929" BorderThickness="1">
-                <ScrollViewer VerticalScrollBarVisibility="Visible">
-                    <conditions:Control_ConditionPresenter x:Name="layerConditionEditor" ConditionChanged="ConditionPresenter_ConditionChanged" VerticalAlignment="Top" />
-                </ScrollViewer>
-            </Border>
-        </Grid>
-
         <Button x:Name="btnConfig" HorizontalAlignment="Right" Margin="0,9,10,0" VerticalAlignment="Top" Click="btnConfig_Click" ToolTip="Toggles the visibility of additional layer configurations">
             <Image Source="/Aurora;component/Resources/LayerConfig_icon.png" Width="23" Height="23" Margin="2"/>
         </Button>
-        <Button x:Name="btnCondition" HorizontalAlignment="Right" Margin="0,9,47,0" VerticalAlignment="Top" Click="btnCondition_Click" ToolTip="Show layer visibility condition settings">
+        <Button x:Name="btnOverrides" HorizontalAlignment="Right" Margin="0,9,47,0" VerticalAlignment="Top" Click="btnOverrides_Click" ToolTip="Show layer conditional override settings">
             <Image Source="/Aurora;component/Resources/LayerConditions_icon.png" Width="23" Height="23" Margin="2"/>
         </Button>
     </Grid>

@@ -35,6 +35,7 @@ namespace Aurora.Settings.Layers
             }
         }
 
+        [Overrides.LogicOverridable("Primary Color")]
         public Color? _PrimaryColor { get; set; }
 
         [JsonIgnore]
@@ -66,6 +67,7 @@ namespace Aurora.Settings.Layers
 
     public class LayerHandlerProperties2Color<TProperty> : LayerHandlerProperties<TProperty> where TProperty : LayerHandlerProperties2Color<TProperty>
     {
+        [Overrides.LogicOverridable("Secondary Color")]
         public Color? _SecondaryColor { get; set; }
 
         [JsonIgnore]

@@ -618,6 +618,7 @@
     </Compile>
     <Compile Include="Settings\Conditions\ICondition.cs" />
     <Compile Include="Settings\Layers\OverrideLogic.cs" />
+    <Compile Include="Settings\Overrides\LogicOverridableAttribute.cs" />
     <Compile Include="Settings\ProfileImporter.cs" />
     <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
@@ -650,7 +651,7 @@
     <Compile Include="Settings\Window_GSIHttpDebug.xaml.cs">
       <DependentUpon>Window_GSIHttpDebug.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Window_OverridesEditor.xaml.cs">
+    <Compile Include="Settings\Overrides\Window_OverridesEditor.xaml.cs">
       <DependentUpon>Window_OverridesEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
@@ -2071,7 +2072,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Window_OverridesEditor.xaml">
+    <Page Include="Settings\Overrides\Window_OverridesEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

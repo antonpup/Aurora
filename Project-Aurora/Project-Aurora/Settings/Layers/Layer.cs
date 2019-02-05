@@ -206,8 +206,6 @@ namespace Aurora.Settings.Layers
             {
                 _OverrideLogic = value;
                 AnythingChanged?.Invoke(this, null);
-
-                #warning Need an observable dictionary?
                 //if (value != null)
                 //    _OverrideLogic.CollectionChanged += (sender, e) => AnythingChanged?.Invoke(this, null);
             }
@@ -234,15 +232,11 @@ namespace Aurora.Settings.Layers
 
         public EffectLayer Render(IGameState gs)
         {
-            var test = new Dictionary<string, OverrideLogic> {
-                { "_EffectSpeed", Window_OverridesEditor.Test }
-            };
-
-            //if (_OverrideLogic != null)
+            if (_OverrideLogic != null)
             // For every property which has an override logic assigned
-                //foreach (var kvp in test)
+                foreach (var kvp in _OverrideLogic)
                     // Set the value of the logic evaluation as the override for this property
-                    //((IValueOverridable)_Handler.Properties).Overrides.SetValueFromString(kvp.Key, kvp.Value.Evaluate(gs));
+                    ((IValueOverridable)_Handler.Properties).Overrides.SetValueFromString(kvp.Key, kvp.Value.Evaluate(gs));
 
             return Handler.VisibleCondition.Evaluate(gs) ? _Handler.PostRenderFX(_Handler.Render(gs)) : new EffectLayer();
         }
