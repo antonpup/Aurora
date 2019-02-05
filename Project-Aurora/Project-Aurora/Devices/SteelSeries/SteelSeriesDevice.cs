@@ -176,7 +176,7 @@ namespace Aurora.Devices.SteelSeries
                              key.Key == DeviceKeys.Peripheral_FrontLight ||
                              key.Key == DeviceKeys.Peripheral_ScrollWheel)
                     {
-                        SendColorToPeripheralZone(key.Key, color);
+                        //SendColorToPeripheralZone(key.Key, color);
                         SendColorToPeripheral(color, forced);
                     }
                     else
