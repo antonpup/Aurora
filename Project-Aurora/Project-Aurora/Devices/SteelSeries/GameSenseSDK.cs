@@ -115,7 +115,7 @@ namespace SteelSeries.GameSenseSDK
             List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
 
             payload.data = "{";
-            payload.data += "\"" + zones[zone + 1] + "\":{";
+            payload.data += "\"" + zones[zone - 1] + "\":{";
             payload.data += "\"color\":";
             payload.data += "[" + red + ", " + green + ", " + blue + "]";
             payload.data += "}";
