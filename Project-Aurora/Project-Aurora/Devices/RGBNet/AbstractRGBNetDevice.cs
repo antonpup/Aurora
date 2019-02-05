@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Aurora.Settings;
+using RGB.NET.Brushes;
 using RGB.NET.Core;
 using RGB.NET.Groups;
 using Color = System.Drawing.Color;
@@ -64,10 +65,13 @@ namespace Aurora.Devices.RGBNet
 
                 try
                 {
-                    _surface.LoadDevices(_deviceProvider, throwExceptions: true);
+                    _surface.LoadDevices(_deviceProvider, throwExceptions: true,exclusiveAccessIfPossible: true);
                     _ledGroup?.Detach(); //DarthAffe 03.02.2019: This should never run, but safety first
                     _ledGroup = new ListLedGroup(_deviceProvider.Devices.SelectMany(d => d)) { Brush = _brush };
-
+                    ILedGroup ledGroup = new ListLedGroup(_surface.Leds);
+                    RGB.NET.Core.Color c = new RGB.NET.Core.Color(27, 184, 235);
+                    ledGroup.Brush = new SolidColorBrush(c);
+                    _surface.Update();
                     return IsInitialized();
                 }
                 catch (Exception ex)

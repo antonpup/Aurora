@@ -172,6 +172,7 @@ namespace Aurora.Devices.RGBNet
             { LedId.Mousepad14, DeviceKeys.MOUSEPADLIGHT14 },
             { LedId.Mousepad15, DeviceKeys.MOUSEPADLIGHT15 },
 
+            // { LedId.Cooler1, DeviceKeys.Peripheral },
             { LedId.Mouse1, DeviceKeys.Peripheral_Logo },
             { LedId.Mouse2, DeviceKeys.Peripheral_FrontLight },
             { LedId.Mouse3, DeviceKeys.Peripheral_ScrollWheel },

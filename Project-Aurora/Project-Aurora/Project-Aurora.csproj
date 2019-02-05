@@ -163,6 +163,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RGB.NET.Brushes, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Brushes.0.1.15\lib\net45\RGB.NET.Brushes.dll</HintPath>
+    </Reference>
     <Reference Include="RGB.NET.Core, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Core.0.1.15\lib\net45\RGB.NET.Core.dll</HintPath>
     </Reference>
