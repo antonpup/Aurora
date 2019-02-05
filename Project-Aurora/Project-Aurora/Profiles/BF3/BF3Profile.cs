@@ -4,6 +4,7 @@ using Aurora.Settings.Layers;
 using System.Drawing;
 using System.Runtime.Serialization;
 using System.Linq;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Profiles.BF3
 {
@@ -31,7 +32,7 @@ namespace Aurora.Profiles.BF3
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.White,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D })
                     }
                 }),
                 new Layer("Other Actions", new SolidColorLayerHandler()
@@ -39,7 +40,7 @@ namespace Aurora.Profiles.BF3
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.G, Devices.DeviceKeys.E, Devices.DeviceKeys.F, Devices.DeviceKeys.TAB })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.SPACE, KeyboardKeys.LEFT_SHIFT, KeyboardKeys.G, KeyboardKeys.E, KeyboardKeys.F, KeyboardKeys.TAB })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

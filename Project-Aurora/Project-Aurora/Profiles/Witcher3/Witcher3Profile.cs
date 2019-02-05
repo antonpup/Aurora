@@ -1,4 +1,6 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
@@ -29,11 +31,11 @@ namespace Aurora.Profiles.Witcher3
                         _PrimaryColor =  Color.Red,
                         _SecondaryColor = Color.DarkRed,
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4,
-                            Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8,
-                            Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
-                        }),
+                        _Sequence = new KeySequence(new List<KeyboardKeys> {
+                            KeyboardKeys.F1, KeyboardKeys.F2, KeyboardKeys.F3, KeyboardKeys.F4,
+                            KeyboardKeys.F5, KeyboardKeys.F6, KeyboardKeys.F7, KeyboardKeys.F8,
+                            KeyboardKeys.F9, KeyboardKeys.F10, KeyboardKeys.F11, KeyboardKeys.F12
+                        }.ConvertAll(s => s.GetDeviceLED())),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
                         _VariablePath = "Player/CurrentHealth",
@@ -47,11 +49,11 @@ namespace Aurora.Profiles.Witcher3
                         _PrimaryColor =  Color.Olive,
                         _SecondaryColor = Color.DarkOliveGreen,
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR,
-                            Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT,
-                            Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
-                        }),
+                        _Sequence = new KeySequence(new List<KeyboardKeys> {
+                            KeyboardKeys.ONE, KeyboardKeys.TWO, KeyboardKeys.THREE, KeyboardKeys.FOUR,
+                            KeyboardKeys.FIVE, KeyboardKeys.SIX, KeyboardKeys.SEVEN, KeyboardKeys.EIGHT,
+                            KeyboardKeys.NINE, KeyboardKeys.ZERO, KeyboardKeys.MINUS, KeyboardKeys.EQUALS
+                        }.ConvertAll(s => s.GetDeviceLED())),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
                         _VariablePath = "Player/Toxicity",
@@ -65,11 +67,11 @@ namespace Aurora.Profiles.Witcher3
                         _PrimaryColor =  Color.Orange,
                         _SecondaryColor = Color.DarkOrange,
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_FOUR,
-                            Devices.DeviceKeys.NUM_FIVE, Devices.DeviceKeys.NUM_SIX, Devices.DeviceKeys.NUM_SEVEN, Devices.DeviceKeys.NUM_EIGHT,
-                            Devices.DeviceKeys.NUM_NINE
-                        }),
+                        _Sequence = new KeySequence(new List<KeyboardKeys> {
+                            KeyboardKeys.NUM_ONE, KeyboardKeys.NUM_TWO, KeyboardKeys.NUM_THREE, KeyboardKeys.NUM_FOUR,
+                            KeyboardKeys.NUM_FIVE, KeyboardKeys.NUM_SIX, KeyboardKeys.NUM_SEVEN, KeyboardKeys.NUM_EIGHT,
+                            KeyboardKeys.NUM_NINE
+                        }.ConvertAll(s => s.GetDeviceLED())),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
                         _VariablePath = "Player/Stamina",

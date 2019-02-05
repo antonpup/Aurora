@@ -1301,7 +1301,7 @@
     <Compile Include="Devices\DeviceManager.cs" />
     <None Include="Devices\Integrations\Corsair\CorsairDevice.cs" />
     <Compile Include="Devices\Device.cs" />
-    <None Include="Devices\Integrations\Logitech\LogitechDevice.cs" />
+    <Compile Include="Devices\Integrations\Logitech\LogitechDevice.cs" />
     <Compile Include="EffectsEngine\EffectColor.cs" />
     <Compile Include="EffectsEngine\ColorSpectrum.cs" />
     <Compile Include="EffectsEngine\EffectFrame.cs" />
@@ -1462,7 +1462,7 @@
     <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\GenericUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
-    <None Include="Devices\Integrations\Logitech\LogitechGSDK.cs" />
+    <Compile Include="Devices\Integrations\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

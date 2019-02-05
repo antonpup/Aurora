@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout.Layouts;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.ETS2.Layers;
 using Aurora.Settings;
@@ -67,7 +68,7 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1, Color.FromArgb(0, 255, 0) }
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.W }),
+                        _Sequence = new KeySequence(new KeyboardKeys[]{ KeyboardKeys.W }),
                         _VariablePath = "Truck/gameThrottle",
                         _MaxVariablePath = "1",
                         _PercentType = PercentEffectType.AllAtOnce
@@ -83,7 +84,7 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1, Color.FromArgb(255, 0, 0) }
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.S }),
+                        _Sequence = new KeySequence(new KeyboardKeys[]{ KeyboardKeys.S }),
                         _VariablePath = "Truck/gameBrake",
                         _MaxVariablePath = "1",
                         _PercentType = PercentEffectType.AllAtOnce
@@ -93,11 +94,11 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Bright Keys", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = brightColor,
-                        _Sequence = new KeySequence(new DeviceKeys[] {
-                            DeviceKeys.A, DeviceKeys.D, // Steering
-                            DeviceKeys.LEFT_SHIFT, DeviceKeys.LEFT_CONTROL, // Gear up/down
-                            DeviceKeys.F, // Hazard light
-                            DeviceKeys.H // Horn
+                        _Sequence = new KeySequence(new KeyboardKeys[] {
+                            KeyboardKeys.A, KeyboardKeys.D, // Steering
+                            KeyboardKeys.LEFT_SHIFT, KeyboardKeys.LEFT_CONTROL, // Gear up/down
+                            KeyboardKeys.F, // Hazard light
+                            KeyboardKeys.H // Horn
                         })
                     }
                 }),
@@ -114,9 +115,9 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1, Color.FromArgb(255, 0, 0) },
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[] {
-                            DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE,
-                            DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO
+                        _Sequence = new KeySequence(new KeyboardKeys[] {
+                            KeyboardKeys.ONE, KeyboardKeys.TWO, KeyboardKeys.THREE, KeyboardKeys.FOUR, KeyboardKeys.FIVE,
+                            KeyboardKeys.SIX, KeyboardKeys.SEVEN, KeyboardKeys.EIGHT, KeyboardKeys.NINE, KeyboardKeys.ZERO
                         }),
                         _VariablePath = "Truck/engineRpm",
                         _MaxVariablePath = "Truck/engineRpmMax"
@@ -201,7 +202,7 @@ namespace Aurora.Profiles.ETS2 {
                     Properties = new ETS2BeaconLayerProperties {
                         _BeaconStyle = ETS2_BeaconStyle.Fancy_Flash,
                         _PrimaryColor = hazardColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 })
+                        _Sequence = new KeySequence(new KeyboardKeys[]{ KeyboardKeys.F5, KeyboardKeys.F6, KeyboardKeys.F7, KeyboardKeys.F8 })
                     }
                 }),
 
@@ -250,8 +251,8 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1f, Color.FromArgb(0, 255, 0) }
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[] {
-                            DeviceKeys.NUM_ONE, DeviceKeys.NUM_FOUR, DeviceKeys.NUM_SEVEN, DeviceKeys.NUM_LOCK
+                        _Sequence = new KeySequence(new KeyboardKeys[] {
+                            KeyboardKeys.NUM_ONE, KeyboardKeys.NUM_FOUR, KeyboardKeys.NUM_SEVEN, KeyboardKeys.NUM_LOCK
                         }),
                         _VariablePath = "Truck/fuel",
                         _MaxVariablePath = "Truck/fuelCapacity"
@@ -270,8 +271,8 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1f, Color.FromArgb(0, 255, 0) }
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[] {
-                            DeviceKeys.NUM_THREE, DeviceKeys.NUM_SIX, DeviceKeys.NUM_NINE, DeviceKeys.NUM_ASTERISK
+                        _Sequence = new KeySequence(new KeyboardKeys[] {
+                            KeyboardKeys.NUM_THREE, KeyboardKeys.NUM_SIX, KeyboardKeys.NUM_NINE, KeyboardKeys.NUM_ASTERISK
                         }),
                         _VariablePath = "Truck/airPressure",
                         _MaxVariablePath = "Truck/airPressureMax"

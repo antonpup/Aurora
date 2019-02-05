@@ -1,4 +1,6 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Drawing;
@@ -32,7 +34,7 @@ namespace Aurora.Profiles.ShadowOfMordor
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Blue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE })
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D, KeyboardKeys.SPACE }.ConvertAll(s => s.GetDeviceLED()))
                     }
                 }
                 ),
@@ -41,7 +43,7 @@ namespace Aurora.Profiles.ShadowOfMordor
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.LightBlue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.V, Devices.DeviceKeys.I, Devices.DeviceKeys.K, Devices.DeviceKeys.M })
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.LEFT_CONTROL, KeyboardKeys.V, KeyboardKeys.I, KeyboardKeys.K, KeyboardKeys.M }.ConvertAll(s => s.GetDeviceLED()))
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

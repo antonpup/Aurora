@@ -1,4 +1,6 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,7 +33,7 @@ namespace Aurora.Profiles.XCOM
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Orange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.Q, Devices.DeviceKeys.E, Devices.DeviceKeys.HOME, Devices.DeviceKeys.Z })
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D, KeyboardKeys.Q, KeyboardKeys.E, KeyboardKeys.HOME, KeyboardKeys.Z }.ConvertAll(s => s.GetDeviceLED()))
                     }
                 }
                 ),
@@ -40,7 +42,7 @@ namespace Aurora.Profiles.XCOM
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.DarkOrange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.ENTER, Devices.DeviceKeys.ESC, Devices.DeviceKeys.V, Devices.DeviceKeys.X, Devices.DeviceKeys.BACKSPACE, Devices.DeviceKeys.F1, Devices.DeviceKeys.R, Devices.DeviceKeys.B, Devices.DeviceKeys.Y })
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.ENTER, KeyboardKeys.ESC, KeyboardKeys.V, KeyboardKeys.X, KeyboardKeys.BACKSPACE, KeyboardKeys.F1, KeyboardKeys.R, KeyboardKeys.B, KeyboardKeys.Y }.ConvertAll(s => s.GetDeviceLED()))
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

@@ -56,7 +56,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
             // Render all particles
             foreach (var particle in particles) {
-                particle.mix.Draw(layer.GetGraphics(), particle.time);
+                particle.mix.Draw(layer.GetCanvas(), particle.time);
                 particle.time += .1f;
             }
 

@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using System.Drawing;
 
 namespace Aurora.Profiles.Overlays.SkypeOverlay
@@ -32,8 +33,8 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
 
             //Missed Messages Indicator
             mm_enabled = true;
-            mm_sequence = new KeySequence(new Devices.DeviceKeys[] {
-                Devices.DeviceKeys.PRINT_SCREEN, Devices.DeviceKeys.SCROLL_LOCK, Devices.DeviceKeys.PAUSE_BREAK
+            mm_sequence = new KeySequence(new KeyboardKeys[] {
+                KeyboardKeys.PRINT_SCREEN, KeyboardKeys.SCROLL_LOCK, KeyboardKeys.PAUSE_BREAK
             });
             mm_color_primary = Color.Orange;
             mm_color_secondary = Color.Black;
@@ -41,9 +42,9 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
 
             //Incoming Call Indicator
             call_enabled = true;
-            call_sequence = new KeySequence(new Devices.DeviceKeys[] {
-                Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP,
-                Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN
+            call_sequence = new KeySequence(new KeyboardKeys[] {
+                KeyboardKeys.INSERT, KeyboardKeys.HOME, KeyboardKeys.PAGE_UP,
+                KeyboardKeys.DELETE, KeyboardKeys.END, KeyboardKeys.PAGE_DOWN
             });
             call_color_primary = Color.Green;
             call_color_secondary = Color.Red;

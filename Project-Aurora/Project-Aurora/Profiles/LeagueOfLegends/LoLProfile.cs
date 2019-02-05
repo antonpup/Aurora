@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = System.Drawing.Color.Blue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.R })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.Q, KeyboardKeys.W, KeyboardKeys.E, KeyboardKeys.R })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

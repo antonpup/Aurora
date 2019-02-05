@@ -80,7 +80,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
             // Render all droplets
             foreach (var droplet in raindrops) {
-                droplet.mix.Draw(layer.GetGraphics(), droplet.time);
+                droplet.mix.Draw(layer.GetCanvas(), droplet.time);
                 droplet.time += .1f;
             }
 

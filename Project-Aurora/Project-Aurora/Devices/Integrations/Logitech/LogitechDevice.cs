@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Logitech
 {
@@ -703,16 +704,66 @@ namespace Aurora.Devices.Logitech
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(MouseDeviceLayout device, DoWorkEventArgs e, bool forced = false)
+        {
+            try
+            {
+                foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
+                {
+                    if (e.Cancel) return false;
+
+                    MouseLights kkey = (MouseLights)key.Key;
+
+
+                    if (kkey == MouseLights.Peripheral_Logo || kkey == MouseLights.All)
+                    {
+                        SendColorToPeripheral(key.Value, forced || !peripheral_updated);
+                    }
+                    
+                }
+
+                return true;
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error(exc.ToString());
+                return false;
+            }
+        }
+
+        public bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+            bool updateResult = true;
+
+            try
+            {
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
+                return false;
+            }
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
 
-            return update_result;
+            return updateResult;
         }
 
         public static KeyboardKeys ToDeviceKey(keyboardNames key)
@@ -983,9 +1034,9 @@ namespace Aurora.Devices.Logitech
                 case (KeyboardKeys.JPN_HALFFULLWIDTH):
                     return Logitech_keyboardBitmapKeys.TILDE;
                 case (KeyboardKeys.OEM5):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.UNKNOWN;
-                    else
+                    else*/
                         return Logitech_keyboardBitmapKeys.TILDE;
                 case (KeyboardKeys.TILDE):
                     return Logitech_keyboardBitmapKeys.TILDE;
@@ -1108,9 +1159,9 @@ namespace Aurora.Devices.Logitech
                 case (KeyboardKeys.LEFT_SHIFT):
                     return Logitech_keyboardBitmapKeys.LEFT_SHIFT;
                 case (KeyboardKeys.BACKSLASH_UK):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.OEM102;
-                    else
+                    else*/
                         return Logitech_keyboardBitmapKeys.BACKSLASH_UK;
                 case (KeyboardKeys.Z):
                     return Logitech_keyboardBitmapKeys.Z;

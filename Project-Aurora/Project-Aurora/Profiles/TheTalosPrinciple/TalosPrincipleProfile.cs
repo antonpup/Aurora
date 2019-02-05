@@ -1,4 +1,6 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,7 +33,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.LightBlue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D }.ConvertAll(s => s.GetDeviceLED()))
                     }
                 }
                 ),
@@ -40,7 +42,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Purple,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.H, Devices.DeviceKeys.X, Devices.DeviceKeys.TAB })
+                        _Sequence = new KeySequence(new List<KeyboardKeys> { KeyboardKeys.SPACE, KeyboardKeys.LEFT_SHIFT, KeyboardKeys.H, KeyboardKeys.X, KeyboardKeys.TAB }.ConvertAll(s => s.GetDeviceLED()))
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),
