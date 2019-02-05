@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Aurora.Profiles;
 using Newtonsoft.Json;
 
@@ -15,7 +16,7 @@ namespace Aurora.Settings.Conditions {
         [JsonProperty]
         private ObservableCollection<ICondition> subconditions = new ObservableCollection<ICondition>();
         
-        public UserControl GetControl(Application app) => new Control_SubconditionHolder(subconditions, app, "Require atleast one of the following is true...");
+        public Visual GetControl(Application app) => new Control_SubconditionHolder(subconditions, app, "Require atleast one of the following is true...");
         public bool Evaluate(IGameState gameState) => subconditions.Any(subcondition => subcondition?.Evaluate(gameState) ?? false);
 
         public void SetApplication(Application application) {
@@ -34,7 +35,7 @@ namespace Aurora.Settings.Conditions {
         [JsonProperty]
         private ObservableCollection<ICondition> subconditions = new ObservableCollection<ICondition>();
         
-        public UserControl GetControl(Application app) => new Control_SubconditionHolder(subconditions, app, "Require all of the following are true...");
+        public Visual GetControl(Application app) => new Control_SubconditionHolder(subconditions, app, "Require all of the following are true...");
         public bool Evaluate(IGameState gameState) => subconditions.All(subcondition => subcondition?.Evaluate(gameState) ?? false);
 
         public void SetApplication(Application application) {
@@ -53,7 +54,7 @@ namespace Aurora.Settings.Conditions {
         [JsonProperty]
         public ICondition SubCondition { get; set; } = new ConditionTrue();
         
-        public UserControl GetControl(Application app) => new Control_ConditionNot(this, app);
+        public Visual GetControl(Application app) => new Control_ConditionNot(this, app);
         public bool Evaluate(IGameState gameState) => !SubCondition.Evaluate(gameState);
 
         public void SetApplication(Application application) {
@@ -69,7 +70,7 @@ namespace Aurora.Settings.Conditions {
     [Condition("True Constant")]
     public class ConditionTrue : ICondition {
         
-        public UserControl GetControl(Application application) => null;
+        public Visual GetControl(Application application) => null;
         public bool Evaluate(IGameState _) => true;
 
         public void SetApplication(Application application) { }
@@ -81,7 +82,7 @@ namespace Aurora.Settings.Conditions {
         
         public bool State { get; set; }
         
-        public UserControl GetControl(Application application) => new Control_ConditionDebug(this);
+        public Visual GetControl(Application application) => new Control_ConditionDebug(this);
         public bool Evaluate(IGameState _) => State;
 
         public void SetApplication(Application application) { }

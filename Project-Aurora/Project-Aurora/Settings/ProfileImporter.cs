@@ -206,9 +206,9 @@ namespace Aurora.Settings {
                                                         Properties = new Layers.LayerHandlerProperties()
                                                         {
                                                             _Sequence = affected_keys,
-                                                            _PrimaryColor = System.Drawing.ColorTranslator.FromHtml(transitionInfo.Element("value0").Element("color").Value)
+                                                            _PrimaryColor = System.Drawing.ColorTranslator.FromHtml(transitionInfo.Element("value0").Element("color").Value),
+                                                            _Opacity = int.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("opacity").Value) / 255.0f
                                                         },
-                                                        Opacity = int.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("opacity").Value) / 255.0f
                                                     }
                                                 });
                                             }

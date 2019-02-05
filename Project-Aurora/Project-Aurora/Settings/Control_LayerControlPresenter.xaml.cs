@@ -63,7 +63,7 @@ namespace Aurora.Settings
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
             chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
             keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
-            sldr_Opacity.Value = (int)(Layer.Handler.Opacity * 100.0f);
+            sldr_Opacity.Value = (int)(Layer.Handler._Opacity ?? 1f * 100.0f);
             lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
 
             grdLayerConfigs.Visibility = Visibility.Hidden;
@@ -260,7 +260,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Slider)
             {
-                Layer.Handler.Opacity = (float)((sender as Slider).Value) / 100.0f;
+                Layer.Handler._Opacity = (float)((sender as Slider).Value) / 100.0f;
                 this.lbl_Opacity_Text.Text = $"{(int)((sender as Slider).Value)} %";
             }
         }
@@ -269,10 +269,6 @@ namespace Aurora.Settings
             if (IsLoaded && !isSettingNewLayer) {
                 new Overrides.Window_OverridesEditor(Layer).ShowDialog();
             }
-        }
-
-        private void ConditionPresenter_ConditionChanged(object sender, Conditions.ConditionChangeEventArgs e) {
-            Layer.Handler.VisibleCondition = e.NewCondition;
         }
     }
 }

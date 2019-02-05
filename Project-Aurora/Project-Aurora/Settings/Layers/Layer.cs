@@ -238,7 +238,7 @@ namespace Aurora.Settings.Layers
                     // Set the value of the logic evaluation as the override for this property
                     ((IValueOverridable)_Handler.Properties).Overrides.SetValueFromString(kvp.Key, kvp.Value.Evaluate(gs));
 
-            return Handler.VisibleCondition.Evaluate(gs) ? _Handler.PostRenderFX(_Handler.Render(gs)) : new EffectLayer();
+            return _Handler.PostRenderFX(_Handler.Render(gs));//Handler.VisibleCondition.Evaluate(gs) ? _Handler.PostRenderFX(_Handler.Render(gs)) : new EffectLayer();
         }
 
         public void SetProfile(Application profile)

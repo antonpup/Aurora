@@ -1,5 +1,6 @@
 ﻿using Aurora.Profiles;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Aurora.Settings.Conditions {
 
@@ -15,7 +16,7 @@ namespace Aurora.Settings.Conditions {
         /// <summary>The control assigned to this condition. Stored as a reference
         /// so that the application be updated if required.</summary>
         private Control_ConditionGSIBoolean control;
-        public UserControl GetControl(Application application) {
+        public Visual GetControl(Application application) {
             if (control == null)
                 control = new Control_ConditionGSIBoolean(this, application);
             return control;
@@ -57,7 +58,7 @@ namespace Aurora.Settings.Conditions {
 
         // Control assigned to this condition
         private Control_ConditionGSINumeric control;
-        public UserControl GetControl(Application application) {
+        public Visual GetControl(Application application) {
             if (control == null)
                 control = new Control_ConditionGSINumeric(this, application);
             return control;
@@ -95,7 +96,7 @@ namespace Aurora.Settings.Conditions {
 
     [Condition("String Game State Variable")]
     public class ConditionGSIString : ICondition {
-        public UserControl GetControl(Application application) {
+        public Visual GetControl(Application application) {
             throw new System.NotImplementedException();
         }
 

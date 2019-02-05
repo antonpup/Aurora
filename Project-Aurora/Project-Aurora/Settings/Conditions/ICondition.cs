@@ -15,7 +15,7 @@ namespace Aurora.Settings.Conditions {
         bool Evaluate(IGameState gameState);
 
         /// <summary>Should return a control that is bound to this condition.</summary>
-        UserControl GetControl(Application application);
+        System.Windows.Media.Visual GetControl(Application application);
 
         /// <summary>Indicates the UserControl should be updated with a new application.</summary>
         void SetApplication(Application application);

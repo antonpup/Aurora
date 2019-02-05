@@ -24,17 +24,17 @@ namespace Aurora.Controls {
             var control = (Control_FieldPresenter)fieldPresenter;
             var t = (Type)eventArgs.NewValue;
 
-            if (t.IsEnum) {
+            if (t.IsEnum)
                 // If the type to edit is an enum, create a combobox containing all values of that enum
-                var cb = new ComboBox { DisplayMemberPath = "Label", SelectedValuePath = "Value" };
-                cb.ItemsSource = t.GetEnumValues().Cast<object>().Select(@enum => new {
-                    Label = t.GetMember(@enum.ToString()).FirstOrDefault()?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString(),
-                    Value = @enum
-                });
-                cb.SetBinding(ComboBox.SelectedValueProperty, new Binding("Value") { Source = control });
-                control.SubControl.Content = cb;
+                control.SubControl.Content = new ComboBox {
+                    DisplayMemberPath = "Label", SelectedValuePath = "Value",
+                    ItemsSource = t.GetEnumValues().Cast<object>().Select(@enum => new {
+                        Label = t.GetMember(@enum.ToString()).FirstOrDefault()?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString(),
+                        Value = @enum
+                    })
+                }.SetBindingChain(ComboBox.SelectedValueProperty, new Binding("Value") { Source = control });
 
-            } else
+            else
                 // Else, see if there is a control defined in the TypeControlMap, use that control, otherwise tell the user they cannot edit this type
                 control.SubControl.Content = TypeControlMap.ContainsKey(t)
                     ? TypeControlMap[t].Invoke(new Binding("Value") { Source = control })
@@ -65,55 +65,45 @@ namespace Aurora.Controls {
         /// be used as the control's value's binding and should return the control to display to the user.</summary>
         private static Dictionary<Type, Func<Binding, Visual>> TypeControlMap = new Dictionary<Type, Func<Binding, Visual>> {
 
-            { typeof(bool), bind => {
-                var cb = new CheckBox();
-                cb.SetBinding(CheckBox.IsCheckedProperty, bind);
-                return cb;
-            } },
+            // Boolean
+            { typeof(bool), bind => new CheckBox().SetBindingChain(CheckBox.IsCheckedProperty, bind) },
 
-            { typeof(string), bind => {
-                var tb = new TextBox();
-                tb.SetBinding(TextBox.TextProperty, bind);
-                return tb;
-            } },
+            // String
+            { typeof(string), bind => new TextBox().SetBindingChain(TextBox.TextProperty, bind) },
 
-            { typeof(int), bind => {
-                var stepper = new IntegerUpDown();
-                stepper.SetBinding(IntegerUpDown.ValueProperty, bind);
-                return stepper;
-            } },
+            // Numbers
+            { typeof(int), bind => new IntegerUpDown().SetBindingChain(IntegerUpDown.ValueProperty, bind) },
+            { typeof(long), bind => new LongUpDown().SetBindingChain(LongUpDown.ValueProperty, bind) },
+            { typeof(double), bind => new DoubleUpDown().SetBindingChain(DoubleUpDown.ValueProperty, bind) },
+            { typeof(float), bind => new SingleUpDown().SetBindingChain(SingleUpDown.ValueProperty, bind) },
 
-            { typeof(long), bind => {
-                var stepper = new LongUpDown();
-                stepper.SetBinding(LongUpDown.ValueProperty, bind);
-                return stepper;
-            } },
+            // Colours
+            { typeof(System.Drawing.Color), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new Utils.ColorConverter()) },
+            { typeof(RealColor), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new RealColorConverter()) },
 
-            { typeof(double), bind => {
-                var stepper = new DoubleUpDown();
-                stepper.SetBinding(DoubleUpDown.ValueProperty, bind);
-                return stepper;
-            } },
-
-            { typeof(float), bind => {
-                var stepper = new SingleUpDown();
-                stepper.SetBinding(SingleUpDown.ValueProperty, bind);
-                return stepper;
-            } },
-
-            { typeof(System.Drawing.Color), bind => {
-                var picker = new ColorPicker{ ColorMode = ColorMode.ColorCanvas };
-                bind.Converter = new Utils.ColorConverter();
-                picker.SetBinding(ColorPicker.SelectedColorProperty, bind);
-                return picker;
-            } },
-
-            { typeof(RealColor), bind => {
-                var picker = new ColorPicker{ ColorMode = ColorMode.ColorCanvas };
-                bind.Converter = new RealColorConverter();
-                picker.SetBinding(ColorPicker.SelectedColorProperty, bind);
-                return picker;
+            // Gradient colour
+            { typeof(Settings.LayerEffectConfig), bind => {
+                // Still needs some work to become properly useful since the animation effect and speed and stuff are stored
+                // in the layer effect config in addition to the brush, so this causes those values to also get overridden.
+                var canvas = new ColorBox.ColorBox();
+                var src = (Control_FieldPresenter)bind.Source;
+                canvas.Brush = ((Settings.LayerEffectConfig)src.Value).brush.GetMediaBrush();
+                canvas.BrushChanged += (sender, e) => { ((Settings.LayerEffectConfig)src.Value).brush = new EffectsEngine.EffectBrush(e.Brush); };
+                return canvas;
             } }
         };
+    }
+    
+    static class FrameworkElementExtension {
+        /// <summary>
+        /// Tiny extension for the FrameworkElement that allows to set a binding on an element and return that element (so it can be chained).
+        /// Used in the TypeControlMap to shorten the code.
+        /// </summary>
+        public static FrameworkElement SetBindingChain(this FrameworkElement self, DependencyProperty dp, Binding binding, IValueConverter converter = null) {
+            if (converter != null)
+                binding.Converter = converter;
+            self.SetBinding(dp, binding);
+            return self;
+        }
     }
 }
