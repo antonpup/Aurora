@@ -96,7 +96,7 @@ namespace Aurora.Devices.Layout
             }
         }
 
-        private void FillRectangle(Point location, Bitmap colormap, Brush brush, RectangleF globalRect, Matrix transform)
+        private void FillRectangle(Point location, Bitmap colormap, Brush brush, RectangleF globalRect, Matrix transform = null)
         {
             FillRectangle(colormap, brush, GetLocalRect(location, globalRect), transform);
         }
@@ -128,13 +128,16 @@ namespace Aurora.Devices.Layout
             }
         }
 
-        public void FillRectangle(Brush brush, RectangleF globalRect, Matrix transform)
+        public void FillRectangle(Brush brush, RectangleF globalRect, Matrix transform = null)
         {
             foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
             {
                 FillRectangle(location, colormap, brush, globalRect, transform);
             }
         }
+
+        public void FillRectangle(Brush brush, float x, float y, float width, float height, Matrix transform = null) => FillRectangle(brush, new RectangleF(x,y,width,height), transform);
+        
 
         public void DrawEllipse(Bitmap colormap, Pen pen, RectangleF rect, Matrix transformMatrix)
         {
@@ -202,6 +205,8 @@ namespace Aurora.Devices.Layout
             }
         }
 
+        public void DrawLine(Pen pen, float start_x, float start_y, float end_x, float end_y, Matrix transformMatrix = null) => DrawLine(pen, new PointF(start_x, start_y), new PointF(end_x, end_y), transformMatrix);
+
         public void DrawRectangle(Bitmap colormap, Pen pen, RectangleF rect, Matrix transformMatrix)
         {
             using (Graphics g = Graphics.FromImage(colormap))
@@ -213,7 +218,7 @@ namespace Aurora.Devices.Layout
 
         public void DrawRectangle(Point location, Bitmap colormap, Pen pen, RectangleF globalRect, Matrix transformMatrix = null)
         {
-            DrawEllipse(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
+            DrawRectangle(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
         }
 
         public void DrawRectangle(Pen pen, RectangleF globalRect, Matrix transformMatrix)

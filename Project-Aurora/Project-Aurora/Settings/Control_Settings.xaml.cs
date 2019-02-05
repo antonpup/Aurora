@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Win32.TaskScheduler;
+using Aurora.Devices.Layout;
 
 namespace Aurora.Settings
 {
@@ -147,7 +148,7 @@ namespace Aurora.Settings
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
         }
 
-        private void OnLayerRendered(System.Drawing.Bitmap map)
+        private void OnLayerRendered(Devices.Layout.Canvas map)
         {
             try
             {
@@ -182,13 +183,13 @@ namespace Aurora.Settings
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.effengine.NewLayerRender += OnLayerRendered;
+            GlobalDeviceLayout.Instance.NewLayerRender += OnLayerRendered;
             this.ctrlPluginManager.Host = Global.PluginManager;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.effengine.NewLayerRender -= OnLayerRendered;
+            GlobalDeviceLayout.Instance.NewLayerRender -= OnLayerRendered;
         }
 
         private void app_exit_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -326,7 +327,7 @@ namespace Aurora.Settings
 
                     button.Content = "Assign Keys";
 
-                    Devices.DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceLED[] recorded_keys = Global.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {
@@ -670,7 +671,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void devices_kb_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /*private void devices_kb_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -723,7 +724,7 @@ namespace Aurora.Settings
 
                 Global.kbLayout.LoadBrandDefault();
             }
-        }
+        }*/
 
         private void devices_disable_keyboard_lighting_Checked(object sender, RoutedEventArgs e)
         {
@@ -980,7 +981,7 @@ namespace Aurora.Settings
 
                 winBitmapView.Title = "Keyboard Bitmap View";
                 winBitmapView.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-                Global.effengine.NewLayerRender += Effengine_NewLayerRender;
+                GlobalDeviceLayout.Instance.NewLayerRender += Effengine_NewLayerRender;
 
                 imgBitmap.SnapsToDevicePixels = true;
                 imgBitmap.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -1001,7 +1002,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void Effengine_NewLayerRender(System.Drawing.Bitmap bitmap)
+        private void Effengine_NewLayerRender(Aurora.Devices.Layout.Canvas bitmap)
         {
             try
             {
@@ -1034,7 +1035,7 @@ namespace Aurora.Settings
         private void WinBitmapView_Closed(object sender, EventArgs e)
         {
             winBitmapView = null;
-            Global.effengine.NewLayerRender -= Effengine_NewLayerRender;
+            GlobalDeviceLayout.Instance.NewLayerRender -= Effengine_NewLayerRender;
             bitmapViewOpen = false;
         }
 
