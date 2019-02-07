@@ -1,0 +1,16 @@
+{
+  "HealthMaximum": {
+    "baseAddress": "118147720",
+    "pointers": [ "80", "32", "84" ]
+  },
+
+  "HealthCurrent": {
+    "baseAddress": "118147720",
+    "pointers": [ "80", "32", "88" ]
+  },
+
+  "RankCurrent": {
+    "baseAddress": "117992880",
+    "pointers": [ "88" ]
+  }
+}
