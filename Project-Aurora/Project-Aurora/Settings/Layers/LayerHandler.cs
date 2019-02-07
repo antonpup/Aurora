@@ -37,10 +37,20 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
 
+        // Special opacity design for use with the overrides system.
         [LogicOverridable("Opacity")]
         public float? _Opacity { get; set; }
         [JsonIgnore]
         public float Opacity => Logic._Opacity ?? _Opacity ?? 1f;
+        
+        // This is a special enabled that is designed only for use with the overrides system
+        // and allows the overrides to disable layers on certain conditions.
+        // Note that this is NOT the variable that is changed when the user presses the checkbox
+        // on an item in the layer list.
+        [LogicOverridable("Enabled")]
+        public bool? _Enabled { get; set; }
+        [JsonIgnore]
+        public bool Enabled => Logic._Enabled ?? _Enabled ?? true;
 
         public LayerHandlerProperties()
         {
