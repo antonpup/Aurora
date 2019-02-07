@@ -7,13 +7,13 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Keys = System.Windows.Forms.Keys;
 
-namespace Aurora.Settings.Conditions {
+namespace Aurora.Settings.Overrides.Logic {
 
     /// <summary>
     /// Condition that is true when a specific keyboard button is held down.
     /// </summary>
-    [Condition("While Key Held")]
-    public class ConditionKeyDown : ICondition {
+    [OverrideLogic("While Key Held")]
+    public class BooleanKeyDown : IEvaluatableBoolean {
 
         /// <summary>The key to be checked to see if it is held down.</summary>
         public Keys TargetKey { get; set; } = Keys.LShiftKey;
@@ -28,6 +28,7 @@ namespace Aurora.Settings.Conditions {
 
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
         public bool Evaluate(IGameState gameState) => Global.InputEvents.PressedKeys.Contains(TargetKey);
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         /// <summary>Do nothing - this is an application-independent condition.</summary>
         public void SetApplication(Application application) { }
@@ -37,8 +38,8 @@ namespace Aurora.Settings.Conditions {
     /// <summary>
     /// Condition that is true when a specific mouse button is held down.
     /// </summary>
-    [Condition("While Mouse Button Held")]
-    public class ConditionMouseDown : ICondition {
+    [OverrideLogic("While Mouse Button Held")]
+    public class BooleanMouseDown : IEvaluatableBoolean {
 
         /// <summary>The mouse button to be checked to see if it is held down.</summary>
         public System.Windows.Forms.MouseButtons TargetButton { get; set; } = System.Windows.Forms.MouseButtons.Left;
@@ -52,6 +53,7 @@ namespace Aurora.Settings.Conditions {
 
         /// <summary>True if the global event bus's pressed mouse button list contains the target button.</summary>
         public bool Evaluate(IGameState gameState) => Global.InputEvents.PressedButtons.Contains(TargetButton);
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         /// <summary>Do nothing - this is an application-independent condition.</summary>
         public void SetApplication(Application application) { }
@@ -61,8 +63,8 @@ namespace Aurora.Settings.Conditions {
     /// <summary>
     /// Condition that is true when the specified lock key (e.g. caps lock) is active.
     /// </summary>
-    [Condition("While Lock Key Active")]
-    public class ConditionLockKeyActive : ICondition {
+    [OverrideLogic("While Lock Key Active")]
+    public class BooleanLockKeyActive : IEvaluatableBoolean {
 
         public Keys TargetKey { get; set; } = Keys.CapsLock;
 
@@ -75,6 +77,7 @@ namespace Aurora.Settings.Conditions {
 
         /// <summary>Return true if the target lock key is active.</summary>
         public bool Evaluate(IGameState gameState) => System.Windows.Forms.Control.IsKeyLocked(TargetKey);
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         /// <summary>Do nothing - this is an application-independent condition.</summary>
         public void SetApplication(Application application) { }

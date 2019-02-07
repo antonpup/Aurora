@@ -75,7 +75,7 @@ namespace Aurora.Controls {
             { typeof(int), bind => new IntegerUpDown().SetBindingChain(IntegerUpDown.ValueProperty, bind) },
             { typeof(long), bind => new LongUpDown().SetBindingChain(LongUpDown.ValueProperty, bind) },
             { typeof(double), bind => new DoubleUpDown().SetBindingChain(DoubleUpDown.ValueProperty, bind) },
-            { typeof(float), bind => new SingleUpDown().SetBindingChain(SingleUpDown.ValueProperty, bind) },
+            { typeof(float), bind => new SingleUpDown{ Increment = .1f }.SetBindingChain(SingleUpDown.ValueProperty, bind) },
 
             // Colours
             { typeof(System.Drawing.Color), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new Utils.ColorConverter()) },

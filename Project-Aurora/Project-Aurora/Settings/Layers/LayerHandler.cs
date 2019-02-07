@@ -1,6 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
-using Aurora.Settings.Conditions;
+using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;

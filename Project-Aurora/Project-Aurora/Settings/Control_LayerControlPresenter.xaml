@@ -8,7 +8,7 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:local="clr-namespace:Aurora.Settings"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-    xmlns:conditions="clr-namespace:Aurora.Settings.Conditions" x:Class="Aurora.Settings.Control_LayerControlPresenter"
+    xmlns:conditions="clr-namespace:Aurora.Settings.Overrides.Logic" x:Class="Aurora.Settings.Control_LayerControlPresenter"
              mc:Ignorable="d" d:DesignWidth="602" d:DesignHeight="201.525">
     <UserControl.Resources>
         <ResourceDictionary>

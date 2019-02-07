@@ -593,31 +593,36 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Conditions\Condition_PeripheralInput.cs" />
-    <Compile Include="Settings\Conditions\ComparisonOperator.cs" />
-    <Compile Include="Settings\Conditions\ConditionAttribute.cs" />
-    <Compile Include="Settings\Conditions\Condition_GameState.cs" />
-    <Compile Include="Settings\Conditions\Control_ConditionDebug.xaml.cs">
-      <DependentUpon>Control_ConditionDebug.xaml</DependentUpon>
+    <Compile Include="Settings\Overrides\Logic\Boolean_PeripheralInput.cs" />
+    <Compile Include="Settings\Overrides\Logic\ComparisonOperator.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml.cs">
+      <DependentUpon>Control_OverrideLookupTable.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Conditions\Control_ConditionGSIBoolean.xaml.cs">
-      <DependentUpon>Control_ConditionGSIBoolean.xaml</DependentUpon>
+    <Compile Include="Settings\Overrides\Logic\EvaluatableRegistry.cs" />
+    <Compile Include="Settings\Overrides\Logic\IOverrideLogic.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLogicAttribute.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_BooleanDebug.xaml.cs">
+      <DependentUpon>Control_BooleanDebug.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Conditions\Control_ConditionGSINumeric.xaml.cs">
-      <DependentUpon>Control_ConditionGSINumeric.xaml</DependentUpon>
+    <Compile Include="Settings\Overrides\Logic\Control_BooleanGSIBoolean.xaml.cs">
+      <DependentUpon>Control_BooleanGSIBoolean.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Conditions\Control_ConditionNot.xaml.cs">
-      <DependentUpon>Control_ConditionNot.xaml</DependentUpon>
+    <Compile Include="Settings\Overrides\Logic\Control_BooleanGSINumeric.xaml.cs">
+      <DependentUpon>Control_BooleanGSINumeric.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Conditions\Control_ConditionPresenter.xaml.cs">
-      <DependentUpon>Control_ConditionPresenter.xaml</DependentUpon>
+    <Compile Include="Settings\Overrides\Logic\Control_BooleanNot.xaml.cs">
+      <DependentUpon>Control_BooleanNot.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Conditions\Condition_Operators.cs" />
-    <Compile Include="Settings\Conditions\Control_SubconditionHolder.xaml.cs">
-      <DependentUpon>Control_SubconditionHolder.xaml</DependentUpon>
+    <Compile Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml.cs">
+      <DependentUpon>Control_EvaluatablePresenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Conditions\ICondition.cs" />
-    <Compile Include="Settings\Layers\OverrideLogic.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean_Operators.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml.cs">
+      <DependentUpon>Control_SublogicHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\IEvaluatable.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLookupTable.cs" />
     <Compile Include="Settings\Overrides\LogicOverridableAttribute.cs" />
     <Compile Include="Settings\ProfileImporter.cs" />
     <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
@@ -1892,27 +1897,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Conditions\Control_ConditionDebug.xaml">
+    <Page Include="Settings\Overrides\Logic\Control_BooleanDebug.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Conditions\Control_ConditionGSIBoolean.xaml">
+    <Page Include="Settings\Overrides\Logic\Control_BooleanGSIBoolean.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Conditions\Control_ConditionGSINumeric.xaml">
+    <Page Include="Settings\Overrides\Logic\Control_BooleanGSINumeric.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Conditions\Control_ConditionNot.xaml">
+    <Page Include="Settings\Overrides\Logic\Control_BooleanNot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Conditions\Control_ConditionPresenter.xaml">
+    <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Conditions\Control_SubconditionHolder.xaml">
+    <Page Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Aurora.Settings.Conditions {
+namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Enum listing various logic operators for the numeric condition.
     /// </summary>

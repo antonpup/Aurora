@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides.Logic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -197,9 +198,9 @@ namespace Aurora.Settings.Layers
             }
         }*/
 
-        protected Dictionary<string, OverrideLogic> _OverrideLogic;
+        protected Dictionary<string, IOverrideLogic> _OverrideLogic;
 
-        public Dictionary<string, OverrideLogic> OverrideLogic
+        public Dictionary<string, IOverrideLogic> OverrideLogic
         {
             get { return _OverrideLogic; }
             set

@@ -2,19 +2,20 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Aurora.Settings.Conditions {
+namespace Aurora.Settings.Overrides.Logic {
 
     /// <summary>
     /// Condition that accesses a specific game state variable (of boolean type) and returns the state.
     /// </summary>
-    [Condition("Boolean Game State Variable")]
-    public class ConditionGSIBoolean : ICondition {
+    [OverrideLogic("Boolean Game State Variable")]
+    public class BooleanGSIBoolean : IEvaluatableBoolean {
 
         /// <summary>The path to the variable the user wants to evaluate.</summary>
         public string VariablePath { get; set; } = "";
 
         /// <summary>The control assigned to this condition. Stored as a reference
         /// so that the application be updated if required.</summary>
+        [Newtonsoft.Json.JsonIgnore]
         private Control_ConditionGSIBoolean control;
         public Visual GetControl(Application application) {
             if (control == null)
@@ -32,6 +33,7 @@ namespace Aurora.Settings.Conditions {
                 } catch { }
             return result;
         }
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         /// <summary>Update the assigned control with the new application.</summary>
         public void SetApplication(Application application) {
@@ -48,8 +50,8 @@ namespace Aurora.Settings.Conditions {
     /// <summary>
     /// Condition that accesses some specified game state variables (of numeric type) and returns a comparison between them.
     /// </summary>
-    [Condition("Numeric Game State Variable")]
-    public class ConditionGSINumeric : ICondition {
+    [OverrideLogic("Numeric Game State Variable")]
+    public class BooleanGSINumeric : IEvaluatableBoolean {
 
         // Path to the two GSI variables (or numbers themselves) and the operator to compare them with
         public string Operand1Path { get; set; }
@@ -57,6 +59,7 @@ namespace Aurora.Settings.Conditions {
         public ComparisonOperator Operator { get; set; } = ComparisonOperator.EQ;
 
         // Control assigned to this condition
+        [Newtonsoft.Json.JsonIgnore]
         private Control_ConditionGSINumeric control;
         public Visual GetControl(Application application) {
             if (control == null)
@@ -81,6 +84,7 @@ namespace Aurora.Settings.Conditions {
                 default: return false;
             }
         }
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         /// <summary>Update the assigned control with the new application.</summary>
         public void SetApplication(Application application) {
@@ -91,21 +95,6 @@ namespace Aurora.Settings.Conditions {
                 Operand1Path = string.Empty;
             if (application != null && !double.TryParse(Operand2Path, out _) && !string.IsNullOrWhiteSpace(Operand2Path) && !application.ParameterLookup.ContainsKey(Operand2Path))
                 Operand2Path = string.Empty;
-        }
-    }
-
-    [Condition("String Game State Variable")]
-    public class ConditionGSIString : ICondition {
-        public Visual GetControl(Application application) {
-            throw new System.NotImplementedException();
-        }
-
-        public bool Evaluate(IGameState gameState) {
-            throw new System.NotImplementedException();
-        }
-
-        public void SetApplication(Application application) {
-            throw new System.NotImplementedException();
         }
     }
 }

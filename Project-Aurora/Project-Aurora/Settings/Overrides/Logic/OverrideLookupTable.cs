@@ -1,26 +1,43 @@
 ﻿using Aurora.Profiles;
-using Aurora.Settings.Conditions;
+using Aurora.Settings.Overrides.Logic;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Media;
 
-namespace Aurora.Settings.Layers {
+namespace Aurora.Settings.Overrides.Logic {
 
-    public class OverrideLogic {
+    public class OverrideLookupTable : IOverrideLogic {
 
+        /// <summary>The type of variable that the user can set as the output when editing entries.</summary>
         public Type VarType { get; set; }
+
+        /// <summary>The collection of entries that make up this LookupTable.</summary>
         public ObservableCollection<LookupTableEntry> LookupTable { get; set; }
         
-        public OverrideLogic(Type type, ObservableCollection<LookupTableEntry> lookupTable = null) {
+        /// <summary>
+        /// Creates a new LookupTable.
+        /// </summary>
+        /// <param name="type">The type of variable being edited (e.g. float, System.Drawing.Color, etc.)</param>
+        /// <param name="lookupTable">Optionally a collection of existing LookupTableEntries to add to the new table.</param>
+        public OverrideLookupTable(Type type, IEnumerable<LookupTableEntry> lookupTable = null) {
             VarType = type;
-            LookupTable = lookupTable ?? new ObservableCollection<LookupTableEntry>();
+            LookupTable = lookupTable == null ? new ObservableCollection<LookupTableEntry>() : new ObservableCollection<LookupTableEntry>(lookupTable);
+            LookupTable.CollectionChanged += (sender, e) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("LookupTable"));
         }
+
+        /// <summary>
+        /// Event that fires when the table changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Adds a new entry to the LookupTable based on the current VarType
         /// </summary>
         public void CreateNewLookup() {
-            LookupTable.Add(new LookupTableEntry(Activator.CreateInstance(VarType), new ConditionTrue()));
+            LookupTable.Add(new LookupTableEntry(Activator.CreateInstance(VarType), new BooleanTrue()));
         }
 
         /// <summary>
@@ -33,11 +50,13 @@ namespace Aurora.Settings.Layers {
                     return entry.Value;
             return null;
         }
-
-        /// <summary>Returns whether or not the logic is "empty", I.E. if nothing will happen when evaluated and can be deleted.</summary>
+        /// <summary>
+        /// Gets the control allowing the user to edit this LookupTable.
+        /// </summary>
+        [JsonIgnore]       
+        public Visual Control => _control ?? (_control = new Control_OverrideLookupTable(this));
         [JsonIgnore]
-        public bool IsEmpty => LookupTable.Count == 0;
-
+        private Control_OverrideLookupTable _control;
 
         /// <summary>
         /// Represents a single entry in a LookupTable.
@@ -53,9 +72,9 @@ namespace Aurora.Settings.Layers {
             public object Value { get; set; }
 
             /// <summary>A boolean condition that should be met for this entry to be valid.</summary>
-            public ICondition Condition { get; set; }
+            public IEvaluatableBoolean Condition { get; set; }
             
-            public LookupTableEntry(object value, ICondition condition) {
+            public LookupTableEntry(object value, IEvaluatableBoolean condition) {
                 Value = value;
                 Condition = condition;
             }
