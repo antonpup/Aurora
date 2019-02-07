@@ -77,6 +77,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Factorio
 * Quake Champions
 * Diablo III
+* Resident Evil 2 (2019)
 
 ## Natively Supported Devices
 
