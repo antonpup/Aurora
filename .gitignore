@@ -243,3 +243,8 @@ Project-Aurora/.vs/*
 Project-Aurora/Project-Aurora/Resources/Win64/
 
 Project-Aurora/Project-Aurora/Resources/Win32/
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/Aurora/v15/Browse.VC.opendb
+/.vs/Aurora/v15/Browse.VC.db

@@ -166,7 +166,43 @@ namespace Aurora.Devices.SteelSeries
                         Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
                     if (e.Cancel) return false;
-                    if (key.Key == DeviceKeys.Peripheral)
+
+                    switch (key.Key)
+                    {
+
+                        case DeviceKeys.Peripheral:
+                            SendColorToPeripheral(color, forced);
+                            break;
+                        case DeviceKeys.Peripheral_Logo:
+                        case DeviceKeys.Peripheral_FrontLight:
+                        case DeviceKeys.Peripheral_ScrollWheel:
+                            SendColorToPeripheralZone(key.Key, color);
+                            break;
+                        case DeviceKeys.MOUSEPADLIGHT1:
+                        case DeviceKeys.MOUSEPADLIGHT2:
+                        case DeviceKeys.MOUSEPADLIGHT3:
+                        case DeviceKeys.MOUSEPADLIGHT4:
+                        case DeviceKeys.MOUSEPADLIGHT5:
+                        case DeviceKeys.MOUSEPADLIGHT6:
+                        case DeviceKeys.MOUSEPADLIGHT7:
+                        case DeviceKeys.MOUSEPADLIGHT8:
+                        case DeviceKeys.MOUSEPADLIGHT9:
+                        case DeviceKeys.MOUSEPADLIGHT10:
+                        case DeviceKeys.MOUSEPADLIGHT11:
+                        case DeviceKeys.MOUSEPADLIGHT12:
+                            gameSenseSDK.setMousepadColor(1, color.R, color.G, color.B);
+                            break;
+                        default:
+                            byte hid = GetHIDCode(key.Key);
+
+                            if (hid != (byte)USBHIDCodes.ERROR)
+                            {
+                                hids.Add(hid);
+                                colors.Add(Tuple.Create(color.R, color.G, color.B));
+                            }
+
+                    }
+                    /* if (key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(color, forced);
                     }
@@ -233,7 +269,7 @@ namespace Aurora.Devices.SteelSeries
                             hids.Add(hid);
                             colors.Add(Tuple.Create(color.R, color.G, color.B));
                         }
-                    }
+                    } */
                 }
 
                 if (e.Cancel) return false;
