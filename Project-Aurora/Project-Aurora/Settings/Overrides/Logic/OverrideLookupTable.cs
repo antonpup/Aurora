@@ -20,8 +20,9 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>
         /// Creates a new LookupTable.
         /// </summary>
-        /// <param name="type">The type of variable being edited (e.g. float, System.Drawing.Color, etc.)</param>
-        public OverrideLookupTable(Type type) : this(type, null) { }
+        /// <param name="varType">The type of variable being edited (e.g. float, System.Drawing.Color, etc.)</param>
+        [JsonConstructor]
+        public OverrideLookupTable(Type varType) : this(varType, null) { }
 
         /// <summary>
         /// Creates a new LookupTable.
