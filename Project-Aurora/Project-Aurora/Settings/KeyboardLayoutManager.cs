@@ -545,7 +545,10 @@ namespace Aurora.Settings
                     case PreferredKeyboardLocalization.hu:
                         culture = "hu-HU";
                         break;
-                }
+                    case PreferredKeyboardLocalization.it:
+                        culture = "it-IT";
+                        break;
+                    }
 
                 switch (culture)
                 {
@@ -615,10 +618,14 @@ namespace Aurora.Settings
                         _loaded_localization = PreferredKeyboardLocalization.hu;
                         LoadCulture("hu");
                         break;
-                    default:
-                        _loaded_localization = PreferredKeyboardLocalization.intl;
-                        LoadCulture("intl");
+                    case ("it-IT"):
+                        _loaded_localization = PreferredKeyboardLocalization.it;
+                        LoadCulture("it");
                         break;
+                    default:
+                    _loaded_localization = PreferredKeyboardLocalization.intl;
+                    LoadCulture("intl");
+                    break;
 
                 }
             }
