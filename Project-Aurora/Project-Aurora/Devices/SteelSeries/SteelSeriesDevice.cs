@@ -180,40 +180,18 @@ namespace Aurora.Devices.SteelSeries
                             SendColorToPeripheralZone(key.Key, color);
                             break;
                         case DeviceKeys.MOUSEPADLIGHT1:
-                            colors_mousepad[0] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT2:
-                            colors_mousepad[1] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT3:
-                            colors_mousepad[2] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT4:
-                            colors_mousepad[3] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT5:
-                            colors_mousepad[4] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT6:
-                            colors_mousepad[5] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT7:
-                            colors_mousepad[6] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT8:
-                            colors_mousepad[7] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT9:
-                            colors_mousepad[8] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT10:
-                            colors_mousepad[9] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT11:
-                            colors_mousepad[10] = Tuple.Create(color.R, color.G, color.B);
-                            break;
                         case DeviceKeys.MOUSEPADLIGHT12:
-                            colors_mousepad[11] = Tuple.Create(color.R, color.G, color.B);
+                            colors_mousepad[Convert.ToInt32(key.Key) - 201] = Tuple.Create(color.R, color.G, color.B);
                             break;
                         default:
                             byte hid = GetHIDCode(key.Key);
@@ -353,6 +331,7 @@ namespace Aurora.Devices.SteelSeries
 
         private void SendColorsToMousepad(Tuple<byte, byte, byte>[] colors_mousepad)
         {
+            // no globals exist for mousepads being enabled but if they aren't enabled colors_mousepad won't be intialized
             if(colors_mousepad[0] != null)
             {
                 gameSenseSDK.setMousepadColor(colors_mousepad);
