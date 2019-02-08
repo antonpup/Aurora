@@ -154,6 +154,7 @@ namespace Aurora.Devices.SteelSeries
 
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+                Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
 
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
@@ -179,18 +180,40 @@ namespace Aurora.Devices.SteelSeries
                             SendColorToPeripheralZone(key.Key, color);
                             break;
                         case DeviceKeys.MOUSEPADLIGHT1:
+                            colors_mousepad[0] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT2:
+                            colors_mousepad[1] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT3:
+                            colors_mousepad[2] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT4:
+                            colors_mousepad[3] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT5:
+                            colors_mousepad[4] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT6:
+                            colors_mousepad[5] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT7:
+                            colors_mousepad[6] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT8:
+                            colors_mousepad[7] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT9:
+                            colors_mousepad[8] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT10:
+                            colors_mousepad[9] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT11:
+                            colors_mousepad[10] = Tuple.Create(color.R, color.G, color.B);
+                            break;
                         case DeviceKeys.MOUSEPADLIGHT12:
-                            gameSenseSDK.setMousepadColor(1, color.R, color.G, color.B);
+                            colors_mousepad[11] = Tuple.Create(color.R, color.G, color.B);
                             break;
                         default:
                             byte hid = GetHIDCode(key.Key);
@@ -200,9 +223,9 @@ namespace Aurora.Devices.SteelSeries
                                 hids.Add(hid);
                                 colors.Add(Tuple.Create(color.R, color.G, color.B));
                             }
-
+                            break;
                     }
-                    /* if (key.Key == DeviceKeys.Peripheral)
+                    /*if (key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(color, forced);
                     }
@@ -273,7 +296,7 @@ namespace Aurora.Devices.SteelSeries
 
                 if (e.Cancel) return false;
                 SendColorsToKeyboard(hids, colors);
-
+                SendColorsToMousepad(colors_mousepad);
                 return true;
             }
             catch (Exception ex)
@@ -391,6 +414,14 @@ namespace Aurora.Devices.SteelSeries
             else
             {
                 keyboard_updated = false;
+            }
+        }
+
+        private void SendColorsToMousepad(Tuple<byte, byte, byte>[] colors_mousepad)
+        {
+            if(colors_mousepad[0] != null)
+            {
+                gameSenseSDK.setMousepadColor(colors_mousepad);
             }
         }
 
