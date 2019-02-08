@@ -107,27 +107,6 @@ namespace SteelSeries.GameSenseSDK
             sendPostRequest("http://" + sseAddress + "/game_event", json);
         }
 
-        public void setMousepadColor(int zone, byte red, byte green, byte blue)
-        {
-            GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
-            payload.game = sseGameName;
-            payload.Event = "COLOR";
-
-            List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
-
-            payload.data = "{";
-            payload.data += "\"" + zones[zone - 1] + "\":{";
-            payload.data += "\"color\":";
-            payload.data += "[" + red + ", " + green + ", " + blue + "]";
-            payload.data += "}";
-            payload.data += "}";
-
-            // sending POST request
-            String json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/game_event", json);
-
-        }
-
         public void setMousepadColor(Tuple<byte, byte, byte>[] colors)
         {
             GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
@@ -137,14 +116,12 @@ namespace SteelSeries.GameSenseSDK
             List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
 
             payload.data = "{";
-            payload.data += "\"mousepad\":{";
 
             for(int i = 0; i < 12; i++)
             {
-                payload.data += "\""+ zones[i] +"\":[" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "],";
+                payload.data += "\""+ zones[i] +"\":{\"color\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "]},";
             }
             payload.data = payload.data.TrimEnd(',');
-            payload.data += "}";
             payload.data += "}";
 
             // sending POST request
@@ -225,33 +202,6 @@ namespace SteelSeries.GameSenseSDK
                 (on-device ""rgb-3-zone"" show: color)
                 (on-device ""rgb-4-zone"" show: color)
                 (on-device ""rgb-5-zone"" show: color)))
-
-        (when (mousepad:? data)
-            (let* ((mpone (mpone: data))
-                   (colorone (color: mpone))
-                   (colortwo (color: mptwo))
-                   (colorthree (color: mpthree))
-                   (colorfour (color: mpfour))
-                   (colorfive (color: mpfive))
-                   (colorsix (color: mpsix))
-                   (colorseven (color: mpseven))
-                   (coloreight (color: mpeight))
-                   (colornine (color: mpnine))
-                   (colorten (color: mpten))
-                   (coloreleven (color: mpeleven))
-                   (colortwelve (color: mptwelve)))
-                (on-device ""rgb-12-zone"" show-on-zone: colorone ome:)
-				(on-device ""rgb-12-zone"" show-on-zone: colortwo two:)
-				(on-device ""rgb-12-zone"" show-on-zone: colorthree three:)
-				(on-device ""rgb-12-zone"" show-on-zone: colorfour four:)
-				(on-device ""rgb-12-zone"" show-on-zone: colorfive five:)
-				(on-device ""rgb-12-zone"" show-on-zone: colorsix six:)
-				(on-device ""rgb-12-zone"" show-on-zone: colorseven seven:)
-				(on-device ""rgb-12-zone"" show-on-zone: coloreight eight:)
-				(on-device ""rgb-12-zone"" show-on-zone: colornine nine:)
-				(on-device ""rgb-12-zone"" show-on-zone: colorten ten:)
-				(on-device ""rgb-12-zone"" show-on-zone: coloreleven eleven:)
-				(on-device ""rgb-12-zone"" show-on-zone: colortwelve twelve:)))
 
         (when (mpone:? data)
             (let* ((mpone (mpone: data))

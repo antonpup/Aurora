@@ -225,73 +225,7 @@ namespace Aurora.Devices.SteelSeries
                             }
                             break;
                     }
-                    /*if (key.Key == DeviceKeys.Peripheral)
-                    {
-                        SendColorToPeripheral(color, forced);
-                    }
-                    else if (key.Key == DeviceKeys.Peripheral_Logo ||
-                             key.Key == DeviceKeys.Peripheral_FrontLight ||
-                             key.Key == DeviceKeys.Peripheral_ScrollWheel)
-                    {
-                        SendColorToPeripheralZone(key.Key, color);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT1)
-                    {
-                        gameSenseSDK.setMousepadColor(1, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT2)
-                    {
-                        gameSenseSDK.setMousepadColor(2, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT3)
-                    {
-                        gameSenseSDK.setMousepadColor(3, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT4)
-                    {
-                        gameSenseSDK.setMousepadColor(4, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT5)
-                    {
-                        gameSenseSDK.setMousepadColor(5, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT6)
-                    {
-                        gameSenseSDK.setMousepadColor(6, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT7)
-                    {
-                        gameSenseSDK.setMousepadColor(7, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT8)
-                    {
-                        gameSenseSDK.setMousepadColor(8, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT9)
-                    {
-                        gameSenseSDK.setMousepadColor(9, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT10)
-                    {
-                        gameSenseSDK.setMousepadColor(10, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT11)
-                    {
-                        gameSenseSDK.setMousepadColor(11, color.R, color.G, color.B);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT12)
-                    {
-                        gameSenseSDK.setMousepadColor(12, color.R, color.G, color.B);
-                    }
-                    else
-                    {
-                        byte hid = GetHIDCode(key.Key);
-                        if (hid != (byte)USBHIDCodes.ERROR)
-                        {
-                            hids.Add(hid);
-                            colors.Add(Tuple.Create(color.R, color.G, color.B));
-                        }
-                    } */
+
                 }
 
                 if (e.Cancel) return false;
