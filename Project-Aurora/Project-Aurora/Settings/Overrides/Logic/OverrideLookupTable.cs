@@ -16,7 +16,13 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>The collection of entries that make up this LookupTable.</summary>
         public ObservableCollection<LookupTableEntry> LookupTable { get; set; }
-        
+
+        /// <summary>
+        /// Creates a new LookupTable.
+        /// </summary>
+        /// <param name="type">The type of variable being edited (e.g. float, System.Drawing.Color, etc.)</param>
+        public OverrideLookupTable(Type type) : this(type, null) { }
+
         /// <summary>
         /// Creates a new LookupTable.
         /// </summary>

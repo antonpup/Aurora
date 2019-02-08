@@ -17,7 +17,7 @@ namespace Aurora.Settings.Overrides {
     /// Interaction logic for Window_OverridesEditor.xaml
     /// </summary>
     public partial class Window_OverridesEditor : Window {
-        
+
         public Window_OverridesEditor(Layer layer) {
             // Store the layer and ensure it has an override logic assigned to it.
             Layer = layer;
@@ -53,6 +53,12 @@ namespace Aurora.Settings.Overrides {
     /// </summary>
     public partial class Window_OverridesEditor : INotifyPropertyChanged {
 
+        // List of all IOverrideLogic types that the user can select
+        public Dictionary<string, Type> OverrideTypes { get; } = new Dictionary<string, Type> {
+            { "None", null },
+            { "Lookup Table", typeof(OverrideLookupTable) }
+        };
+
         // Property change event
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(params string[] affectedProperties) {
@@ -69,18 +75,29 @@ namespace Aurora.Settings.Overrides {
             get => _selectedProperty;
             set {
                 _selectedProperty = value;
-                OnPropertyChanged("SelectedProperty", "SelectedLogic");
+                OnPropertyChanged("SelectedProperty", "SelectedLogic", "SelectedLogicType");
             }
         }
 
         // The override logic for the currently selected property
-        public IOverrideLogic SelectedLogic {
-            get {
-                if (_selectedProperty == null) // Return nothing if nothing in the list is selected
-                    return null;
-                if (!Layer.OverrideLogic.ContainsKey(_selectedProperty.Item1)) // Create a new logic for this property if it doesn't already exist
-                    Layer.OverrideLogic[_selectedProperty.Item1] = new OverrideLookupTable(_selectedProperty.Item3);
-                return Layer.OverrideLogic[_selectedProperty.Item1];
+        public IOverrideLogic SelectedLogic => _selectedProperty == null || !Layer.OverrideLogic.ContainsKey(_selectedProperty.Item1)
+            ? null // Return nothing if nothing in the list is selected or there is no logic for this property
+            : Layer.OverrideLogic[_selectedProperty.Item1];
+
+        // The type of logic in use by the selected property
+        public Type SelectedLogicType {
+            get => SelectedLogic?.GetType();
+
+            // When this is set, it means the user has changed the dropdown value
+            set {
+                // If there is a property selected in the list and the logic type is not set to the same value as it already was
+                if (_selectedProperty != null && SelectedLogic?.GetType() != value) {
+                    if (value == null) // If the value is null, that means the user selected the "None" option, so remove the override for this property
+                        Layer.OverrideLogic.Remove(_selectedProperty.Item1);
+                    else // Else if the user selected a non-"None" option, create a new instance of that OverrideLogic and assign it to this property
+                        Layer.OverrideLogic[_selectedProperty.Item1] = (IOverrideLogic)Activator.CreateInstance(value, _selectedProperty.Item3);
+                    OnPropertyChanged("SelectedLogic", "SelectedLogicType"); // Raise an event to update the control
+                }
             }
         }
     }
@@ -109,6 +126,14 @@ namespace Aurora.Settings.Overrides {
             }.TryGetValue((Type)value, out string val) ? val : "icons8-diamonds-30.png";
             return new BitmapImage(new Uri($"/Aurora;component/Resources/{imageName}", UriKind.Relative));
         }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Simple converter that returns true if the given property has a value or false if it is null.
+    /// </summary>
+    public class HasValueToBoolConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value != null;
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }
