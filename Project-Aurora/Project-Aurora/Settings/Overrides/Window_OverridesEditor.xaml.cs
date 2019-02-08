@@ -9,6 +9,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings.Overrides {
     /// <summary>
@@ -37,10 +39,11 @@ namespace Aurora.Settings.Overrides {
             return layer.Handler.Properties.GetType().GetProperties() // Get all properties on the layer handler's property list
                 .Where(prop => prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true).Length > 0) // Filter to only return the PropertyInfos that have Overridable
                 .Select(prop => new Tuple<string, string, Type>( // Return the name and type of these properties.
-                    prop.Name,
+                    prop.Name, // The actual C# property name
                     ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name, // Get the name specified in the attribute (so it is prettier for the user)
                     Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType // If the property is a nullable type (e.g. bool?), will instead return the non-nullable type (bool)
                 ))
+                .OrderBy(tup => tup.Item2)
                 .ToList();
         }
     }
@@ -87,9 +90,25 @@ namespace Aurora.Settings.Overrides {
     /// <summary>
     /// Simple converter to convert a type to it's name (instead of using ToString beacuse that gives the fully qualified name).
     /// </summary>
-    public class PrettyTypeNameConverter : System.Windows.Data.IValueConverter {
+    public class PrettyTypeNameConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((Type)value).Name;
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Simple converter to convert a type to a pretty icon used in the list.
+    /// </summary>
+    public class TypeToIconConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            var imageName = new Dictionary<Type, string> {
+                { typeof(bool), "icons8-checked-checkbox-30.png" },
+                { typeof(float), "icons8-numbers-30.png" },
+                { typeof(int), "icons8-numbers-30.png" },
+                { typeof(long), "icons8-numbers-30.png" },
+                { typeof(Color), "icons8-paint-palette-30.png" }
+            }.TryGetValue((Type)value, out string val) ? val : "icons8-diamonds-30.png";
+            return new BitmapImage(new Uri($"/Aurora;component/Resources/{imageName}", UriKind.Relative));
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
 }

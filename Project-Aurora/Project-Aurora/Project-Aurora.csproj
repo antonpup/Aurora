@@ -1436,6 +1436,10 @@
     <Resource Include="Resources\ch_128x128.png" />
     <Resource Include="Resources\re2_256x256.png" />
     <Resource Include="Resources\LayerConditions_icon.png" />
+    <Resource Include="Resources\icons8-numbers-30.png" />
+    <Resource Include="Resources\icons8-paint-palette-30.png" />
+    <Resource Include="Resources\icons8-diamonds-30.png" />
+    <Resource Include="Resources\icons8-checked-checkbox-30.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -12,6 +12,7 @@
              Background="#5D8394">
     <Window.Resources>
         <overrides:PrettyTypeNameConverter x:Key="PrettyTypeNameConv" />
+        <overrides:TypeToIconConverter x:Key="TypeToIconConv" />
     </Window.Resources>
     
     <Grid>
@@ -34,12 +35,11 @@
                     <ListBox x:Name="OverridablePropList" SelectedItem="{Binding SelectedProperty}" Margin="0,0,0,8">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock>
-                                    <Run Text="{Binding Item2, Mode=OneTime}" />
-                                    <Run Text="[" />
-                                    <Run Text="{Binding Item3, Converter={StaticResource PrettyTypeNameConv}, Mode=OneTime}" />
-                                    <Run Text="]" />
-                                </TextBlock>
+                                <Grid>
+                                    <Image Source="{Binding Item3, Converter={StaticResource TypeToIconConv}}" ToolTip="{Binding Item3, Converter={StaticResource PrettyTypeNameConv}, Mode=OneTime}" Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4" />
+                                    <TextBlock Text="{Binding Item2, Mode=OneTime}" Margin="38,1,0,0" />
+                                    <TextBlock Text="{Binding Item3, Converter={StaticResource PrettyTypeNameConv}, Mode=OneTime}" Margin="38,16,0,0" Opacity="0.3" />
+                                </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
