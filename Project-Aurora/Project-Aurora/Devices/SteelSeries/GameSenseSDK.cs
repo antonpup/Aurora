@@ -8,6 +8,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace SteelSeries.GameSenseSDK
 {
@@ -70,46 +71,43 @@ namespace SteelSeries.GameSenseSDK
             setupLISPHandlers();
         }
 
-        public string setPeripheryColor(byte red, byte green, byte blue)
+        public void setPeripheryColor(byte red, byte green, byte blue)
         {
-            return sendColor("periph", red, green, blue);
+            sendColor("periph", red, green, blue);
         }
 
-        public string setMouseColor(byte red, byte green, byte blue)
+        public void setMouseColor(byte red, byte green, byte blue)
         {
-            return sendColor("mouse", red, green, blue);
+            sendColor("mouse", red, green, blue);
         }
 
-        public string setMouseScrollWheelColor(byte red, byte green, byte blue)
+        public void setMouseScrollWheelColor(byte red, byte green, byte blue)
         {
-            return sendColor("mousewheel", red, green, blue);
+            sendColor("mousewheel", red, green, blue);
         }
 
-        public string setMouseLogoColor(byte red, byte green, byte blue)
+        public void setMouseLogoColor(byte red, byte green, byte blue)
         {
-            return sendColor("mouselogo", red, green, blue);
+            sendColor("mouselogo", red, green, blue);
         }
 
-        public string setHeadsetColor(byte red, byte green, byte blue)
+        public void setHeadsetColor(byte red, byte green, byte blue)
         {
-            return sendColor("headset", red, green, blue);
+            sendColor("headset", red, green, blue);
         }
 
-        public string sendColor(String deviceType, byte red, byte green, byte blue)
+        public void sendColor(String deviceType, byte red, byte green, byte blue)
         {
             GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
             payload.game = sseGameName;
             payload.Event = "COLOR";
-            payload.data = "\""+ deviceType + "\":{\"color\": [" + red + ", " + green + ", " + blue + "]},";
-
-            return payload.data;
-
+            payload.data = "{\""+ deviceType + "\":{\"color\": [" + red + ", " + green + ", " + blue + "]}}";
             // sending POST request
-            //String json = JsonConvert.SerializeObject(payload);
-            //sendPostRequest("http://" + sseAddress + "/game_event", json);
+            String json = JsonConvert.SerializeObject(payload);
+            sendPostRequest("http://" + sseAddress + "/game_event", json);
         }
 
-        public string setMousepadColor(Tuple<byte, byte, byte>[] colors)
+        public void setMousepadColor(Tuple<byte, byte, byte>[] colors)
         {
             GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
             payload.game = sseGameName;
@@ -117,26 +115,30 @@ namespace SteelSeries.GameSenseSDK
 
             List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
 
+            payload.data = "{";
+
             for(int i = 0; i < 12; i++)
             {
                 payload.data += "\""+ zones[i] +"\":{\"color\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "]},";
             }
-            //payload.data = payload.data.TrimEnd(',');
-
-            return payload.data;
+            payload.data = payload.data.TrimEnd(',');
+            payload.data += "}";
 
             // sending POST request
-            //String json = JsonConvert.SerializeObject(payload);
-            //sendPostRequest("http://" + sseAddress + "/game_event", json);
+            String json = JsonConvert.SerializeObject(payload);
+
+            //Debug.Write(json);
+            sendPostRequest("http://" + sseAddress + "/game_event", json);
 
         }
 
-        public string setKeyboardColors(List<byte> hids, List<Tuple<byte, byte, byte>> colors)
+        public void setKeyboardColors(List<byte> hids, List<Tuple<byte, byte, byte>> colors)
         {
             GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
             payload.game = sseGameName;
             payload.Event = "COLOR";
 
+            payload.data = "{";
             payload.data += "\"keyboard\":{";
             payload.data += "\"hids\":";
             payload.data += JsonConvert.SerializeObject(hids);
@@ -149,25 +151,7 @@ namespace SteelSeries.GameSenseSDK
             // JSON doesn't allow trailing commas
             payload.data = payload.data.TrimEnd(',');
             payload.data += "]";
-            payload.data += "},";
-
-            return payload.data;
-
-            // sending POST request
-            //String json = JsonConvert.SerializeObject(payload);
-            //sendPostRequest("http://" + sseAddress + "/game_event", json);
-        }
-
-        public void sendFullColorRequest(string data)
-        {
-            GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
-            payload.game = sseGameName;
-            payload.Event = "COLOR";
-
-
-            payload.data = "{";
-            payload.data += data;
-            payload.data = payload.data.TrimEnd(',');
+            payload.data += "}";
             payload.data += "}";
 
             // sending POST request
