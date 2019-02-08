@@ -155,9 +155,11 @@ namespace Aurora.Devices.SteelSeries
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
                 Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
-
+                string dataForPayload = "";
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
+                    
+
                     if (e.Cancel) return false;
                     //CorsairLedId localKey = ToCorsair(key.Key);
 
@@ -172,12 +174,12 @@ namespace Aurora.Devices.SteelSeries
                     {
 
                         case DeviceKeys.Peripheral:
-                            SendColorToPeripheral(color, forced);
+                            dataForPayload += SendColorToPeripheral(color, forced);
                             break;
                         case DeviceKeys.Peripheral_Logo:
                         case DeviceKeys.Peripheral_FrontLight:
                         case DeviceKeys.Peripheral_ScrollWheel:
-                            SendColorToPeripheralZone(key.Key, color);
+                            dataForPayload += SendColorToPeripheralZone(key.Key, color);
                             break;
                         case DeviceKeys.MOUSEPADLIGHT1:
                         case DeviceKeys.MOUSEPADLIGHT2:
@@ -207,8 +209,11 @@ namespace Aurora.Devices.SteelSeries
                 }
 
                 if (e.Cancel) return false;
-                SendColorsToKeyboard(hids, colors);
-                SendColorsToMousepad(colors_mousepad);
+                dataForPayload += SendColorsToKeyboard(hids, colors);
+                dataForPayload += SendColorsToMousepad(colors_mousepad);
+
+                gameSenseSDK.sendFullColorRequest(dataForPayload);
+
                 return true;
             }
             catch (Exception ex)
@@ -250,26 +255,29 @@ namespace Aurora.Devices.SteelSeries
             return new VariableRegistry();
         }
 
-        private void SendColorToPeripheral(Color color, bool forced = false)
+        private string SendColorToPeripheral(Color color, bool forced = false)
         {
+
+            string data = "";
+
             if ((!previous_peripheral_Color.Equals(color) || forced))
             {
                 if (Global.Configuration.allow_peripheral_devices)
                 {
                     if (!Global.Configuration.devices_disable_mouse && !Global.Configuration.devices_disable_headset)
                     {
-                        gameSenseSDK.setPeripheryColor(color.R, color.G, color.B);
+                        data += gameSenseSDK.setPeripheryColor(color.R, color.G, color.B);
                     }
                     else
                     {
                         if (!Global.Configuration.devices_disable_mouse)
                         {
-                            gameSenseSDK.setMouseColor(color.R, color.G, color.B);
+                            data += gameSenseSDK.setMouseColor(color.R, color.G, color.B);
                         }
 
                         if (!Global.Configuration.devices_disable_headset)
                         {
-                            gameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
+                            data += gameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
                         }
                     }
 
@@ -281,19 +289,25 @@ namespace Aurora.Devices.SteelSeries
                     peripheral_updated = false;
                 }
             }
+
+            return data;
+
         }
 
-        private void SendColorToPeripheralZone(DeviceKeys zone, Color color)
+        private string SendColorToPeripheralZone(DeviceKeys zone, Color color)
         {
+
+            string data = "";
+
             if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
             {
                 if (zone == DeviceKeys.Peripheral_Logo)
                 {
-                    gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B);
+                    data += gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B);
                 }
                 else if (zone == DeviceKeys.Peripheral_ScrollWheel)
                 {
-                    gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
+                    data += gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
                 }
                 //else if (zone == DeviceKeys.Peripheral_FrontLight)
                 //{
@@ -311,15 +325,21 @@ namespace Aurora.Devices.SteelSeries
             {
                 peripheral_updated = false;
             }
+
+            return data;
+
         }
 
-        private void SendColorsToKeyboard(List<byte> hids, List<Tuple<byte, byte, byte>> colors)
+        private string SendColorsToKeyboard(List<byte> hids, List<Tuple<byte, byte, byte>> colors)
         {
+
+            string data = "";
+
             if (!Global.Configuration.devices_disable_keyboard)
             {
                 if (hids.Count != 0)
                 {
-                    gameSenseSDK.setKeyboardColors(hids, colors);
+                    data += gameSenseSDK.setKeyboardColors(hids, colors);
                 }
                 keyboard_updated = true;
             }
@@ -327,15 +347,22 @@ namespace Aurora.Devices.SteelSeries
             {
                 keyboard_updated = false;
             }
+
+            return data;
+
         }
 
-        private void SendColorsToMousepad(Tuple<byte, byte, byte>[] colors_mousepad)
+        private string SendColorsToMousepad(Tuple<byte, byte, byte>[] colors_mousepad)
         {
+
+            string data = "";
             // no globals exist for mousepads being enabled but if they aren't enabled colors_mousepad won't be intialized
             if(colors_mousepad[0] != null)
             {
-                gameSenseSDK.setMousepadColor(colors_mousepad);
+                data += gameSenseSDK.setMousepadColor(colors_mousepad);
             }
+
+            return data;
         }
 
         private void SendKeepalive(bool forced = false)
