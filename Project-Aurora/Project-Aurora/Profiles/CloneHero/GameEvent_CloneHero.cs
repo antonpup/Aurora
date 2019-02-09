@@ -94,20 +94,10 @@ namespace Aurora.Profiles.CloneHero
             Process[] process_search = Process.GetProcessesByName("Clone Hero");
             if (process_search.Length != 0)
             {
-                ProcessModuleCollection modules = process_search[0].Modules;
-                ProcessModule dll = null;
-                foreach (ProcessModule i in modules)
-                {
-                    if (i.ModuleName == "mono-2.0-bdwgc.dll")
-                    {
-                        dll = i;
-                        break;
-                    }
-                }
 
                 try
                 {
-                    using (MemoryReader memread = new MemoryReader(process_search[0], dll, true))
+                    using (MemoryReader memread = new MemoryReader(process_search[0], "mono-2.0-bdwgc.dll", true))
                     {
                         (_game_state as GameState_CloneHero).Player.NoteStreak = memread.ReadInt(pointers.NoteStreak.baseAddress, pointers.NoteStreak.pointers);
 
