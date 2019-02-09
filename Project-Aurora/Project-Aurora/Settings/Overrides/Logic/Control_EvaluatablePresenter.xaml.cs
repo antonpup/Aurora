@@ -25,7 +25,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public Control_EvaluatablePresenter() {
             InitializeComponent();
 
-            ListCollectionView lcv = new ListCollectionView(EvaluatableRegistry.Get<IEvaluatableBoolean>().OrderBy(kvp => kvp.Value.CategoryStr).ThenBy(kvp => kvp.Value.Name).ToList());
+            ListCollectionView lcv = new ListCollectionView(EvaluatableRegistry.Get<IEvaluatableBoolean>().OrderBy(kvp => (int)kvp.Value.Category).ThenBy(kvp => kvp.Value.Name).ToList());
             lcv.GroupDescriptions.Add(new PropertyGroupDescription("Value.CategoryStr"));
             ConditionSelection.ItemsSource = lcv;
         }

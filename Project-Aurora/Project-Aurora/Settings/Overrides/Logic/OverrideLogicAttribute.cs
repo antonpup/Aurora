@@ -30,9 +30,9 @@ namespace Aurora.Settings.Overrides.Logic {
     }
 
     public enum OverrideLogicCategory {
-        [Description("Misc.")] Misc,
         [Description("Logic")] Logic,
         [Description("State Variable")] State,
-        [Description("Input")] Input
+        [Description("Input")] Input,
+        [Description("Misc.")] Misc
     }
 }
