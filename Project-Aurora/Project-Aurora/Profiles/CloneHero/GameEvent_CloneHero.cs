@@ -105,72 +105,79 @@ namespace Aurora.Profiles.CloneHero
                     }
                 }
 
-                using (MemoryReader memread = new MemoryReader(process_search[0], dll, true))
+                try
                 {
-                    (_game_state as GameState_CloneHero).Player.NoteStreak = memread.ReadInt(pointers.NoteStreak.baseAddress, pointers.NoteStreak.pointers);
-
-                    #region NoteStreak Extras
-
-                    // Breaks up the note streak into the 1x, 2x, 3x, 4x zones for easy lighting options
-                    int streak = (_game_state as GameState_CloneHero).Player.NoteStreak;
-                    if (streak >= 0 && streak <= 10)
+                    using (MemoryReader memread = new MemoryReader(process_search[0], dll, true))
                     {
-                        (_game_state as GameState_CloneHero).Player.NoteStreak1x = streak;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak2x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak3x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak4x = 0;
+                        (_game_state as GameState_CloneHero).Player.NoteStreak = memread.ReadInt(pointers.NoteStreak.baseAddress, pointers.NoteStreak.pointers);
 
-                        // This accounts for how CH changes the color once the bar fills up
-                        if (streak == 10)
+                        #region NoteStreak Extras
+
+                        // Breaks up the note streak into the 1x, 2x, 3x, 4x zones for easy lighting options
+                        int streak = (_game_state as GameState_CloneHero).Player.NoteStreak;
+                        if (streak >= 0 && streak <= 10)
                         {
-                            (_game_state as GameState_CloneHero).Player.NoteStreak2x = 10;
-                        }
-                    }
-                    else if (streak > 10 && streak <= 20)
-                    {
-                        (_game_state as GameState_CloneHero).Player.NoteStreak1x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak2x = streak - 10;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak3x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak4x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak1x = streak;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak2x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak3x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak4x = 0;
 
-                        // This accounts for how CH changes the color once the bar fills up
-                        if (streak == 20)
+                            // This accounts for how CH changes the color once the bar fills up
+                            if (streak == 10)
+                            {
+                                (_game_state as GameState_CloneHero).Player.NoteStreak2x = 10;
+                            }
+                        }
+                        else if (streak > 10 && streak <= 20)
                         {
-                            (_game_state as GameState_CloneHero).Player.NoteStreak3x = 10;
-                        }
-                    }
-                    else if (streak > 20 && streak <= 30)
-                    {
-                        (_game_state as GameState_CloneHero).Player.NoteStreak1x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak2x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak3x = streak - 20;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak4x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak1x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak2x = streak - 10;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak3x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak4x = 0;
 
-                        // This accounts for how CH changes the color once the bar fills up
-                        if (streak == 30)
+                            // This accounts for how CH changes the color once the bar fills up
+                            if (streak == 20)
+                            {
+                                (_game_state as GameState_CloneHero).Player.NoteStreak3x = 10;
+                            }
+                        }
+                        else if (streak > 20 && streak <= 30)
                         {
-                            (_game_state as GameState_CloneHero).Player.NoteStreak4x = 10;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak1x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak2x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak3x = streak - 20;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak4x = 0;
+
+                            // This accounts for how CH changes the color once the bar fills up
+                            if (streak == 30)
+                            {
+                                (_game_state as GameState_CloneHero).Player.NoteStreak4x = 10;
+                            }
                         }
+                        else if (streak > 30 && streak <= 40)
+                        {
+                            (_game_state as GameState_CloneHero).Player.NoteStreak1x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak2x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak3x = 0;
+                            (_game_state as GameState_CloneHero).Player.NoteStreak4x = streak - 30;
+                        }
+                        #endregion
+
+                        (_game_state as GameState_CloneHero).Player.SPActivated = memread.ReadInt(pointers.SPActivated.baseAddress, pointers.SPActivated.pointers) == 1 ? true : false;
+
+                        (_game_state as GameState_CloneHero).Player.SPPercent = memread.ReadFloat(pointers.SPPercent.baseAddress, pointers.SPPercent.pointers) * 100;
+
+                        (_game_state as GameState_CloneHero).Player.IsAtMenu = memread.ReadInt(pointers.IsAtMenu.baseAddress, pointers.IsAtMenu.pointers) == 1 ? true : false;
+
+                        (_game_state as GameState_CloneHero).Player.NotesTotal = memread.ReadInt(pointers.NotesTotal.baseAddress, pointers.NotesTotal.pointers);
+
+                        (_game_state as GameState_CloneHero).Player.IsFC = !((_game_state as GameState_CloneHero).Player.NoteStreak < (_game_state as GameState_CloneHero).Player.NotesTotal);
+
                     }
-                    else if (streak > 30 && streak <= 40)
-                    {
-                        (_game_state as GameState_CloneHero).Player.NoteStreak1x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak2x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak3x = 0;
-                        (_game_state as GameState_CloneHero).Player.NoteStreak4x = streak - 30;
-                    }
-                    #endregion
-
-                    (_game_state as GameState_CloneHero).Player.SPActivated = memread.ReadInt(pointers.SPActivated.baseAddress, pointers.SPActivated.pointers) == 1 ? true : false;
-
-                    (_game_state as GameState_CloneHero).Player.SPPercent = memread.ReadFloat(pointers.SPPercent.baseAddress, pointers.SPPercent.pointers) * 100;
-
-                    (_game_state as GameState_CloneHero).Player.IsAtMenu = memread.ReadInt(pointers.IsAtMenu.baseAddress, pointers.IsAtMenu.pointers) == 1 ? true : false;
-
-                    (_game_state as GameState_CloneHero).Player.NotesTotal = memread.ReadInt(pointers.NotesTotal.baseAddress, pointers.NotesTotal.pointers);
-
-                    (_game_state as GameState_CloneHero).Player.IsFC = !((_game_state as GameState_CloneHero).Player.NoteStreak < (_game_state as GameState_CloneHero).Player.NotesTotal);
-
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
                 }
 
             }
