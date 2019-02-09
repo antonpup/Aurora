@@ -161,8 +161,28 @@ namespace Aurora.Profiles.CloneHero
 
                         (_game_state as GameState_CloneHero).Player.NotesTotal = memread.ReadInt(pointers.NotesTotal.baseAddress, pointers.NotesTotal.pointers);
 
-                        (_game_state as GameState_CloneHero).Player.IsFC = !((_game_state as GameState_CloneHero).Player.NoteStreak < (_game_state as GameState_CloneHero).Player.NotesTotal);
+                        #region FC Indicator
 
+                        // Resets at the beginning of a new song
+                        if ((_game_state as GameState_CloneHero).Player.NoteStreak == 0 && (_game_state as GameState_CloneHero).Player.NotesTotal == 0)
+                        {
+                            (_game_state as GameState_CloneHero).Player.IsFC = true;
+                        }
+
+                        // Doing this check is necessary to prevent a weird bug
+                        if ((_game_state as GameState_CloneHero).Player.IsFC)
+                        {
+                            if ((_game_state as GameState_CloneHero).Player.NoteStreak < (_game_state as GameState_CloneHero).Player.NotesTotal)
+                            {
+                                (_game_state as GameState_CloneHero).Player.IsFC = false;
+                            }
+                            else
+                            {
+                                (_game_state as GameState_CloneHero).Player.IsFC = true;
+                            }
+                        }
+
+                        #endregion
                     }
                 }
                 catch (Exception e)
