@@ -88,7 +88,7 @@ namespace Aurora.Profiles.Borderlands2
 
             if (process_search.Length != 0)
             {
-                using (MemoryReader memread = new MemoryReader(process_search[0]))
+                using (MemoryReader memread = new MemoryReader(process_search[0], false))
                 {
                     (_game_state as GameState_Borderlands2).Player.MaximumHealth = memread.ReadFloat(pointers.Health_maximum.baseAddress, pointers.Health_maximum.pointers);
                     (_game_state as GameState_Borderlands2).Player.CurrentHealth = memread.ReadFloat(pointers.Health_current.baseAddress, pointers.Health_current.pointers);

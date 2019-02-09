@@ -144,7 +144,8 @@ namespace Aurora.Profiles
                 new QuakeChampions.QuakeChampions(),
                 new Diablo3.Diablo3(),
                 new DeadCells.DeadCells(),
-                new Subnautica.Subnautica()
+                new Subnautica.Subnautica(),
+                new CloneHero.CloneHero()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

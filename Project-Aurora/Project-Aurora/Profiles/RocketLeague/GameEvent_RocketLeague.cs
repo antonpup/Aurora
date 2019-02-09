@@ -89,7 +89,7 @@ namespace Aurora.Profiles.RocketLeague
 
             if (process_search.Length != 0)
             {
-                using (MemoryReader memread = new MemoryReader(process_search[0]))
+                using (MemoryReader memread = new MemoryReader(process_search[0], false))
                 {
                     PlayerTeam parsed_team = PlayerTeam.Undefined;
                     if(Enum.TryParse<PlayerTeam>(memread.ReadInt(pointers.Team.baseAddress, pointers.Team.pointers).ToString(), out parsed_team))
