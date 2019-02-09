@@ -343,6 +343,9 @@
     <Compile Include="Controls\Control_Ruler.xaml.cs">
       <DependentUpon>Control_Ruler.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_SingleKeyEditor.xaml.cs">
+      <DependentUpon>Control_SingleKeyEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_VariableIItem.xaml.cs">
       <DependentUpon>Control_VariableIItem.xaml</DependentUpon>
     </Compile>
@@ -1542,6 +1545,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Control_Ruler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_SingleKeyEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

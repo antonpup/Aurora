@@ -12,7 +12,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that is true when a specific keyboard button is held down.
     /// </summary>
-    [OverrideLogic("While Key Held")]
+    [OverrideLogic("Key Held", category: OverrideLogicCategory.Input)]
     public class BooleanKeyDown : IEvaluatableBoolean {
 
         /// <summary>The key to be checked to see if it is held down.</summary>
@@ -20,7 +20,6 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Create a control where the user can select the key they wish to detect.</summary>
         public Visual GetControl(Application application) {
-            // TODO: make this so that the user presses a key to use it instead of having to find it in a list.
             var c = new Controls.Control_FieldPresenter { Type = typeof(Keys), Margin = new System.Windows.Thickness(0, 0, 0, 6) };
             c.SetBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay });
             return c;
@@ -38,7 +37,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that is true when a specific mouse button is held down.
     /// </summary>
-    [OverrideLogic("While Mouse Button Held")]
+    [OverrideLogic("Mouse Button Held", category: OverrideLogicCategory.Input)]
     public class BooleanMouseDown : IEvaluatableBoolean {
 
         /// <summary>The mouse button to be checked to see if it is held down.</summary>
@@ -63,7 +62,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that is true when the specified lock key (e.g. caps lock) is active.
     /// </summary>
-    [OverrideLogic("While Lock Key Active")]
+    [OverrideLogic("Lock Key Active", category: OverrideLogicCategory.Input)]
     public class BooleanLockKeyActive : IEvaluatableBoolean {
 
         public Keys TargetKey { get; set; } = Keys.CapsLock;

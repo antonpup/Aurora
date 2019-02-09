@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
@@ -23,7 +24,10 @@ namespace Aurora.Settings.Overrides.Logic {
         /// </summary>
         public Control_EvaluatablePresenter() {
             InitializeComponent();
-            ConditionSelection.ItemsSource = EvaluatableRegistry.Get<IEvaluatableBoolean>();
+
+            ListCollectionView lcv = new ListCollectionView(EvaluatableRegistry.Get<IEvaluatableBoolean>().OrderBy(kvp => kvp.Value.CategoryStr).ThenBy(kvp => kvp.Value.Name).ToList());
+            lcv.GroupDescriptions.Add(new PropertyGroupDescription("Value.CategoryStr"));
+            ConditionSelection.ItemsSource = lcv;
         }
 
         // Fires when the condition selection combobox changes. Creates a new condition to replace the old one.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,25 @@ namespace Aurora.Settings.Overrides.Logic {
     public class OverrideLogicAttribute : Attribute {
 
         /// <param name="name">The name of the condition (will appear in the dropdown list).</param>
-        public OverrideLogicAttribute(string name) {
+        public OverrideLogicAttribute(string name, OverrideLogicCategory category = OverrideLogicCategory.Misc) {
             Name = name;
+            Category = category;
         }
 
         /// <summary>The name of the condition (will appear in the dropdown list).</summary>
         public string Name { get; }
+
+        /// <summary>The category this condition belongs to (items will be grouped by this in the dropdown list).</summary>
+        public OverrideLogicCategory Category { get; }
+
+        /// <summary>Gets the description of the category as a string.</summary>
+        public string CategoryStr => Utils.EnumUtils.GetDescription(Category);
+    }
+
+    public enum OverrideLogicCategory {
+        [Description("Misc.")] Misc,
+        [Description("Logic")] Logic,
+        [Description("State Variable")] State,
+        [Description("Input")] Input
     }
 }

@@ -24,8 +24,13 @@ namespace Aurora.Controls {
             var control = (Control_FieldPresenter)fieldPresenter;
             var t = (Type)eventArgs.NewValue;
 
-            if (t.IsEnum)
-                // If the type to edit is an enum, create a combobox containing all values of that enum
+            // Create a control to handle this type:-
+            if (TypeControlMap.ContainsKey(t)) {
+                // If there is a defined control (in TypeControlMap) for this type, use that control
+                control.SubControl.Content = TypeControlMap[t].Invoke(new Binding("Value") { Source = control });
+
+            } else if (t.IsEnum) {
+                // If there is no predifined type but the type to edit is an enum, create a combobox containing all values of that enum
                 control.SubControl.Content = new ComboBox {
                     DisplayMemberPath = "Label", SelectedValuePath = "Value",
                     ItemsSource = t.GetEnumValues().Cast<object>().Select(@enum => new {
@@ -34,11 +39,9 @@ namespace Aurora.Controls {
                     })
                 }.SetBindingChain(ComboBox.SelectedValueProperty, new Binding("Value") { Source = control });
 
-            else
-                // Else, see if there is a control defined in the TypeControlMap, use that control, otherwise tell the user they cannot edit this type
-                control.SubControl.Content = TypeControlMap.ContainsKey(t)
-                    ? TypeControlMap[t].Invoke(new Binding("Value") { Source = control })
-                    : new TextBlock { Text = "Field type not supported.", Foreground = Brushes.Red };
+            } else
+                // If there is no predefined type and the type is not an enum, we don't know what to do
+                control.SubControl.Content = new TextBlock { Text = "Field type not supported.", Foreground = Brushes.Red };
         }
 
         public static readonly DependencyProperty TypeProperty = DependencyProperty.Register("Type", typeof(Type), typeof(Control_FieldPresenter), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnTypeChange));
@@ -90,7 +93,10 @@ namespace Aurora.Controls {
                 canvas.Brush = ((Settings.LayerEffectConfig)src.Value).brush.GetMediaBrush();
                 canvas.BrushChanged += (sender, e) => { ((Settings.LayerEffectConfig)src.Value).brush = new EffectsEngine.EffectBrush(e.Brush); };
                 return canvas;
-            } }
+            } },
+
+            // Single key inputs
+            { typeof(System.Windows.Forms.Keys), bind => new Control_SingleKeyEditor().SetBindingChain(Control_SingleKeyEditor.SelectedKeyProperty, bind, bindingMode: BindingMode.TwoWay) }
         };
     }
     
@@ -99,9 +105,11 @@ namespace Aurora.Controls {
         /// Tiny extension for the FrameworkElement that allows to set a binding on an element and return that element (so it can be chained).
         /// Used in the TypeControlMap to shorten the code.
         /// </summary>
-        public static FrameworkElement SetBindingChain(this FrameworkElement self, DependencyProperty dp, Binding binding, IValueConverter converter = null) {
+        public static FrameworkElement SetBindingChain(this FrameworkElement self, DependencyProperty dp, Binding binding, IValueConverter converter = null, BindingMode? bindingMode = null) {
             if (converter != null)
                 binding.Converter = converter;
+            if (bindingMode.HasValue)
+                binding.Mode = bindingMode.Value;
             self.SetBinding(dp, binding);
             return self;
         }

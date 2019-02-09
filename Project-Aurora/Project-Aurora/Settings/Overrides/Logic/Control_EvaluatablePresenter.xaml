@@ -9,7 +9,17 @@
     <Grid>
         <!-- Condition type selection -->
         <Label Content="Condition Type:" FontWeight="Bold" Margin="0,6,0,0" />
-        <ComboBox x:Name="ConditionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="100,6,0,0" Height="26" VerticalAlignment="Top" SelectionChanged="ConditionSelection_SelectionChanged" />
+        <ComboBox x:Name="ConditionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="100,6,0,0" Height="26" VerticalAlignment="Top" SelectionChanged="ConditionSelection_SelectionChanged">
+            <ComboBox.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" Background="#1FFF" FontWeight="Bold" Margin="0,4,0,0" Padding="4,0,4,2" />
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ComboBox.GroupStyle>
+        </ComboBox>
 
         <!-- Condition control -->
         <ContentPresenter x:Name="ContentContainer" Margin="0,36,0,0" />

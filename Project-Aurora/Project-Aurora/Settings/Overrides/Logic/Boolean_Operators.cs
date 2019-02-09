@@ -10,7 +10,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that checks a set of subconditions for atleast one of them being true.
     /// </summary>
-    [OverrideLogic("Logical Or")]
+    [OverrideLogic("Or", category: OverrideLogicCategory.Logic)]
     public class BooleanOr : IEvaluatableBoolean {
 
         [JsonProperty]
@@ -30,7 +30,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that checks a set of subconditions and requires them all to be true.
     /// </summary>
-    [OverrideLogic("Logical And")]
+    [OverrideLogic("And", category: OverrideLogicCategory.Logic)]
     public class BooleanAnd : IEvaluatableBoolean {
 
         [JsonProperty]
@@ -51,7 +51,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that inverts another condition.AUR
     /// </summary>
-    [OverrideLogic("Logical Not")]
+    [OverrideLogic("Not", category: OverrideLogicCategory.Logic)]
     public class BooleanNot : IEvaluatableBoolean {
 
         [JsonProperty]
@@ -71,7 +71,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that always returns true. Useful as a default condition as it means that
     /// the layer will always be visible.
     /// </summary>
-    [OverrideLogic("True Constant")]
+    [OverrideLogic("True Constant", category: OverrideLogicCategory.Logic)]
     public class BooleanTrue : IEvaluatableBoolean {
         
         public Visual GetControl(Application application) => null;
@@ -85,7 +85,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Manually togglable condition. Useful for testing.
     /// </summary>
-    [OverrideLogic("Manually Togglable")]
+    [OverrideLogic("Manually Togglable", category: OverrideLogicCategory.Misc)]
     public class BooleanTogglable : IEvaluatableBoolean {
         
         public bool State { get; set; }

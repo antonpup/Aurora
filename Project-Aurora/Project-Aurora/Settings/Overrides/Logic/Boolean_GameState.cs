@@ -7,7 +7,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that accesses a specific game state variable (of boolean type) and returns the state.
     /// </summary>
-    [OverrideLogic("Boolean Game State Variable")]
+    [OverrideLogic("Boolean State Variable", category: OverrideLogicCategory.State)]
     public class BooleanGSIBoolean : IEvaluatableBoolean {
 
         /// <summary>The path to the variable the user wants to evaluate.</summary>
@@ -50,7 +50,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that accesses some specified game state variables (of numeric type) and returns a comparison between them.
     /// </summary>
-    [OverrideLogic("Numeric Game State Variable")]
+    [OverrideLogic("Numeric State Variable", category: OverrideLogicCategory.State)]
     public class BooleanGSINumeric : IEvaluatableBoolean {
 
         // Path to the two GSI variables (or numbers themselves) and the operator to compare them with
