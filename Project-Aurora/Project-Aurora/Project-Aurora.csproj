@@ -424,6 +424,15 @@
     <Compile Include="Profiles\Battlefield1\Control_Battlefield1.xaml.cs">
       <DependentUpon>Control_Battlefield1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\CloneHero\Control_CloneHero.xaml.cs">
+      <DependentUpon>Control_CloneHero.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CloneHero\CloneHeroApplication.cs" />
+    <Compile Include="Profiles\CloneHero\CloneHeroPointers.cs" />
+    <Compile Include="Profiles\CloneHero\CloneHeroProfile.cs" />
+    <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
+    <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
+    <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredApplication.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredPointers.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredProfile.cs" />
@@ -524,6 +533,20 @@
       <DependentUpon>Control_DeadCells.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\DeadCells\DeadCellsApplication.cs" />
+    <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
+      <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml.cs">
+      <DependentUpon>Control_RocketLeagueBackgroundLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
     <Compile Include="Profiles\Subnautica\Control_Subnautica.xaml.cs" />
     <Compile Include="Profiles\Subnautica\GSI\GameState_Subnautica.cs" />
     <Compile Include="Profiles\Subnautica\GSI\Nodes\GameStateNode.cs" />
@@ -739,13 +762,6 @@
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\LightingStateManager.cs" />
-    <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
-    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
-    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
-    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml.cs">
-      <DependentUpon>Control_RocketLeagueBackgroundLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\StringProperty.cs" />
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
@@ -771,13 +787,6 @@
     <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponsNode.cs" />
     <Compile Include="Profiles\Payday 2\PD2Application.cs" />
     <Compile Include="Profiles\Payday 2\PD2Profile.cs" />
-    <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
-      <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
     <Compile Include="Profiles\Serious Sam 3\Control_SSam3.xaml.cs">
       <DependentUpon>Control_SSam3.xaml</DependentUpon>
     </Compile>
@@ -1370,6 +1379,7 @@
     <Content Include="Logi\LGS\LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\ch_128x128.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1400,6 +1410,10 @@
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="..\..\..\..\..\..\Desktop\CloneHero.json">
+      <Link>Pointers\CloneHero.json</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Pointers\Dishonored.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1548,6 +1562,10 @@
     <Page Include="Profiles\Blacklight\Control_BLight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Dishonored\Control_Dishonored.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1737,10 +1755,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Profiles\DOOM\Control_DOOM.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1754,6 +1768,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\DyingLight\Control_DyingLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\RocketLeague\Control_RocketLeague.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1778,10 +1800,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Payday 2\Control_PD2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\RocketLeague\Control_RocketLeague.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

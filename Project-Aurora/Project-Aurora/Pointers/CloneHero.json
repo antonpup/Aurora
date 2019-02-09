@@ -1,0 +1,26 @@
+﻿{
+    "NoteStreak": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "848" ]
+    },
+    "SPActivated": {
+        "baseAddress": "4854560",
+        "pointers": [ "664", "776", "272" ]
+    },
+    "SPPercent": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "828" ]
+    },
+    "IsAtMenu": {
+        "baseAddress": "4813696",
+        "pointers": [ "760" ]
+    },
+    "Score": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "856" ]
+    },
+    "NotesTotal": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "624", "40", "40", "120" ]
+    }
+}
