@@ -43,6 +43,9 @@ namespace Aurora.Settings.Overrides.Logic {
             if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.ContainsKey(VariablePath))
                 VariablePath = string.Empty;
         }
+
+        public IEvaluatableBoolean Clone() => new BooleanGSIBoolean { VariablePath = VariablePath };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
@@ -96,5 +99,8 @@ namespace Aurora.Settings.Overrides.Logic {
             if (application != null && !double.TryParse(Operand2Path, out _) && !string.IsNullOrWhiteSpace(Operand2Path) && !application.ParameterLookup.ContainsKey(Operand2Path))
                 Operand2Path = string.Empty;
         }
+
+        public IEvaluatableBoolean Clone() => new BooleanGSINumeric { Operand1Path = Operand1Path, Operand2Path = Operand2Path, Operator = Operator };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

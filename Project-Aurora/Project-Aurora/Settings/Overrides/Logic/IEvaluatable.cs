@@ -17,6 +17,9 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Indicates the UserControl should be updated with a new application.</summary>
         void SetApplication(Application application);
+
+        /// <summary>Creates a copy of this IEvaluatable.</summary>
+        IEvaluatable Clone();
     }
 
     /// <summary>
@@ -26,5 +29,8 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Should evaluate the current condition (maybe based on the current game state) and return
         /// a bool indicating the result of the evaluation.</summary>
         new bool Evaluate(IGameState gameState);
+
+        /// <summary>Creates a copy of this IEvaluatableBoolean.</summary>
+        new IEvaluatableBoolean Clone();
     }
 }

@@ -9,7 +9,7 @@
     <Grid>
         <!-- Condition type selection -->
         <Label Content="Condition Type:" FontWeight="Bold" Margin="0,6,0,0" />
-        <ComboBox x:Name="ConditionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="100,6,0,0" Height="26" VerticalAlignment="Top" SelectionChanged="ConditionSelection_SelectionChanged">
+        <ComboBox x:Name="ConditionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="100,6,50,0" Height="26" VerticalAlignment="Top" SelectionChanged="ConditionSelection_SelectionChanged">
             <ComboBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -20,8 +20,16 @@
                 </GroupStyle>
             </ComboBox.GroupStyle>
         </ComboBox>
+        
+        <!-- Menu button -->
+        <Button Height="26" Width="26" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,5.5,0,0" Click="PasteButton_Click"> <!-- We use 5.5 because for some reason the edge is blurry if we use 6. -->
+            <Image Source="/Aurora;component/Resources/Layers_Paste.png" Width="18" Height="18" Opacity=".6" />
+        </Button>
+        <Button Height="26" Width="26" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,5.5,25,0" Click="CopyButton_Click">
+            <Image Source="/Aurora;component/Resources/Layers_Copy.png" Width="18" Height="18" Opacity=".6" />
+        </Button>
 
-        <!-- Condition control -->
+        <!-- Evaluatable control -->
         <ContentPresenter x:Name="ContentContainer" Margin="0,36,0,0" />
     </Grid>
 </UserControl>

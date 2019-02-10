@@ -31,6 +31,9 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Do nothing - this is an application-independent condition.</summary>
         public void SetApplication(Application application) { }
+
+        public IEvaluatableBoolean Clone() => new BooleanKeyDown { TargetKey = TargetKey };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
     
 
@@ -56,6 +59,9 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Do nothing - this is an application-independent condition.</summary>
         public void SetApplication(Application application) { }
+
+        public IEvaluatableBoolean Clone() => new BooleanMouseDown { TargetButton = TargetButton };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
@@ -80,5 +86,8 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Do nothing - this is an application-independent condition.</summary>
         public void SetApplication(Application application) { }
+
+        public IEvaluatableBoolean Clone() => new BooleanLockKeyActive { TargetKey = TargetKey };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

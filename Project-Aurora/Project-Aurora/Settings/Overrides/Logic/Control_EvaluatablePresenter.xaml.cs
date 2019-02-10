@@ -40,6 +40,25 @@ namespace Aurora.Settings.Overrides.Logic {
             Condition = newCondition;
         }
 
+        /// <summary>
+        /// Copies the current IEvaluatable to the clipboard
+        /// </summary>
+        private void CopyButton_Click(object sender, RoutedEventArgs e) {
+            if (Condition != null)
+                Global.Clipboard = Condition.Clone(); // We clone it so if the user changes the evaluatable after pressing copy, the changes don't effect the one on the clipboard.
+        }
+
+        /// <summary>
+        /// Replaces the current IEvaluatable with the one on the clipboard
+        /// </summary>
+        private void PasteButton_Click(object sender, RoutedEventArgs e) {
+            if (Global.Clipboard is IEvaluatableBoolean clipboardContents && MessageBox.Show("Are you sure you wish to REPLACE this expression with the one on your clipboard?", "Confirm paste", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
+                var @new = clipboardContents.Clone(); // We clone again when pasting so that if the user pastes it in two places, they aren't the same object
+                ConditionChanged?.Invoke(this, new ConditionChangeEventArgs { OldCondition = Condition, NewCondition = @new });
+                Condition = @new;
+            }
+        }
+
         #region Dependency Objects
         // Condition Property (the condition whose UserControl this component should host)
         private static void OnConditionChange(DependencyObject conditionPresenter, DependencyPropertyChangedEventArgs eventArgs) {

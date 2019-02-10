@@ -620,7 +620,7 @@
     <Compile Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml.cs">
       <DependentUpon>Control_EvaluatablePresenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Overrides\Logic\Boolean_Operators.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean_LogicOperators.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml.cs">
       <DependentUpon>Control_SublogicHolder.xaml</DependentUpon>
     </Compile>

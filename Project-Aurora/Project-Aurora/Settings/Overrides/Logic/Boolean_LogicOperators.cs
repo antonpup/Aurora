@@ -24,6 +24,9 @@ namespace Aurora.Settings.Overrides.Logic {
             foreach (var subcondition in subconditions)
                 subcondition.SetApplication(application);
         }
+
+        public IEvaluatableBoolean Clone() => new BooleanOr { subconditions = new ObservableCollection<IEvaluatableBoolean>(subconditions.Select(e => e.Clone())) };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
@@ -44,6 +47,9 @@ namespace Aurora.Settings.Overrides.Logic {
             foreach (var subcondition in subconditions)
                 subcondition.SetApplication(application);
         }
+
+        public IEvaluatableBoolean Clone() => new BooleanAnd { subconditions = new ObservableCollection<IEvaluatableBoolean>(subconditions.Select(e => { var x = e.Clone(); return x; })) };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
@@ -64,6 +70,9 @@ namespace Aurora.Settings.Overrides.Logic {
         public void SetApplication(Application application) {
             SubCondition.SetApplication(application);
         }
+
+        public IEvaluatableBoolean Clone() => new BooleanNot { SubCondition = SubCondition.Clone() };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
@@ -79,6 +88,9 @@ namespace Aurora.Settings.Overrides.Logic {
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         public void SetApplication(Application application) { }
+
+        public IEvaluatableBoolean Clone() => new BooleanTrue();
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
@@ -95,5 +107,8 @@ namespace Aurora.Settings.Overrides.Logic {
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         public void SetApplication(Application application) { }
+
+        public IEvaluatableBoolean Clone() => new BooleanTogglable { State = State };
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }
