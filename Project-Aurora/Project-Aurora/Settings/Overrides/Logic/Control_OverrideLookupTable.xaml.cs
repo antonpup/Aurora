@@ -19,20 +19,23 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     public partial class Control_OverrideLookupTable : UserControl {
 
-        private OverrideLookupTable table;
+        public OverrideLookupTable Table { get; }
+        public Profiles.Application Application { get; }
 
-        public Control_OverrideLookupTable(OverrideLookupTable context) {
+        public Control_OverrideLookupTable(OverrideLookupTable context, Profiles.Application application) {
             InitializeComponent();
-            DataContext = table = context;
+            Table = context;
+            Application = application;
+            DataContext = this;
         }
 
         private void AddNewLookup_Click(object sender, RoutedEventArgs e) {
-            table?.CreateNewLookup();
+            Table?.CreateNewLookup();
         }
 
         private void DeleteLookupEntry_Click(object sender, RoutedEventArgs e) {
             var dc = (OverrideLookupTable.LookupTableEntry)((Button)sender).DataContext;
-            table.LookupTable.Remove(dc);
+            Table.LookupTable.Remove(dc);
         }
     }
 }

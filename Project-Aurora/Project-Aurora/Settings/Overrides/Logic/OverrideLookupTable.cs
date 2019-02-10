@@ -57,11 +57,11 @@ namespace Aurora.Settings.Overrides.Logic {
                     return entry.Value;
             return null;
         }
+
         /// <summary>
         /// Gets the control allowing the user to edit this LookupTable.
-        /// </summary>
-        [JsonIgnore]       
-        public Visual Control => _control ?? (_control = new Control_OverrideLookupTable(this));
+        /// </summary>   
+        public Visual GetControl(Application application) => _control ?? (_control = new Control_OverrideLookupTable(this, application));
         [JsonIgnore]
         private Control_OverrideLookupTable _control;
 

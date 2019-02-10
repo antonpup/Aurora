@@ -44,7 +44,7 @@
             <ScrollViewer>
                 <StackPanel Orientation="Vertical">
                     <!-- Item list -->
-                    <ItemsControl ItemsSource="{Binding LookupTable}" AlternationCount="2">
+                    <ItemsControl ItemsSource="{Binding Path=Table.LookupTable}" AlternationCount="2">
                         <ItemsControl.ItemTemplate>
                             <!-- Item template -->
                             <DataTemplate>
@@ -59,7 +59,7 @@
                                     <!-- Main item content -->
                                     <controls:Control_FieldPresenter Value="{Binding Value, Mode=TwoWay}" Type="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.VarType}" Grid.Column="0" VerticalAlignment="Center" Margin="8,4,8,8" />
                                     <TextBlock Text="When" FontStyle="Italic" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    <local:Control_EvaluatablePresenter Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.Layer.AssociatedApplication}" Condition="{Binding Condition, Mode=TwoWay}" Grid.Column="2" Margin="8,4,8,8" />
+                                    <local:Control_EvaluatablePresenter Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Application}" Condition="{Binding Condition, Mode=TwoWay}" Grid.Column="2" Margin="8,4,8,8" />
 
                                     <!-- Delete button -->
                                     <Button Margin="6" Grid.Column="3" VerticalAlignment="Center" ToolTip="Remove this lookup entry" Click="DeleteLookupEntry_Click">

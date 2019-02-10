@@ -67,7 +67,7 @@ namespace Aurora.Settings.Overrides {
             get => _selectedProperty;
             set {
                 _selectedProperty = value;
-                OnPropertyChanged("SelectedProperty", "SelectedLogic", "SelectedLogicType");
+                OnPropertyChanged("SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
             }
         }
 
@@ -88,10 +88,13 @@ namespace Aurora.Settings.Overrides {
                         Layer.OverrideLogic.Remove(_selectedProperty.Item1);
                     else // Else if the user selected a non-"None" option, create a new instance of that OverrideLogic and assign it to this property
                         Layer.OverrideLogic[_selectedProperty.Item1] = (IOverrideLogic)Activator.CreateInstance(value, _selectedProperty.Item3);
-                    OnPropertyChanged("SelectedLogic", "SelectedLogicType"); // Raise an event to update the control
+                    OnPropertyChanged("SelectedLogic", "SelectedLogicType", "SelectedLogicControl"); // Raise an event to update the control
                 }
             }
         }
+
+        // The control for the currently selected logic
+        public System.Windows.Media.Visual SelectedLogicControl => SelectedLogic?.GetControl(Layer?.AssociatedApplication);
         #endregion
 
         #region Dependency Objects
@@ -101,7 +104,7 @@ namespace Aurora.Settings.Overrides {
             // Ensure the layer has the property-override map
             if (layer.OverrideLogic == null)
                 layer.OverrideLogic = new Dictionary<string, IOverrideLogic>();
-            control.OnPropertyChanged("Layer", "AvailableLayerProperties", "SelectedProperty", "SelectedLogic", "SelectedLogicType");
+            control.OnPropertyChanged("Layer", "AvailableLayerProperties", "SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
         }
 
         public static readonly DependencyProperty LayerProperty = DependencyProperty.Register("Layer", typeof(Layer), typeof(Control_OverridesEditor), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnLayerChange));

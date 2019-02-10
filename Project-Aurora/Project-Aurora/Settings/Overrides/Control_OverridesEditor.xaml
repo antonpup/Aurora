@@ -52,7 +52,7 @@
                 <Grid>
                     <Label Content="Override mode:" Margin="0,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <ComboBox ItemsSource="{Binding OverrideTypes}" SelectedValue="{Binding SelectedLogicType, Mode=TwoWay}" DisplayMemberPath="Key" SelectedValuePath="Value" IsEnabled="{Binding SelectedProperty, Converter={StaticResource HasValToBoolConv}}" Margin="96,4,0,0" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <ContentControl Margin="0,28,0,0" Content="{Binding Path=SelectedLogic.Control}" />
+                    <ContentControl Margin="0,28,0,0" Content="{Binding SelectedLogicControl}" />
                 </Grid>
             </Border>
         </Grid>
