@@ -71,7 +71,7 @@ begin
   case CurStep of
     ssInstall:
       begin
-        MsgBox(ExpandConstant('The setup will now try to close running instances of Aurora if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+        MsgBox(ExpandConstant('The installer will now try to close running instances of Aurora if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
         TaskKill('Aurora.exe');
         TaskKill('Aurora-SkypeIntegration.exe');
         TaskKill('Aurora-Updater.exe');
@@ -84,7 +84,7 @@ begin
   case CurUninstallStep of
     usUninstall:
       begin
-        MsgBox(ExpandConstant('The setup will now try to close running instances of Aurora if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+        MsgBox(ExpandConstant('The uninstaller will now try to close running instances of Aurora if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
         TaskKill('Aurora.exe');
         TaskKill('Aurora-SkypeIntegration.exe');
         TaskKill('Aurora-Updater.exe');
