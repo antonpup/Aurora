@@ -58,6 +58,61 @@ Name: "{commondesktop}\Aurora"; Filename: "{app}\Aurora.exe"; Tasks: desktopicon
 //  unzip(ExpandConstant(src), ExpandConstant(target));
 //end;
 
+function CmdLineParamExists(const Value: string): Boolean; // stackoverflow.com/a/48349992
+var
+  I: Integer;  
+begin
+  Result := False;
+  for I := 1 to ParamCount do
+    if CompareText(ParamStr(I), Value) = 0 then
+    begin
+      Result := True;
+      Exit;
+    end;
+end;
+
+function GetUninstallString(): String; // stackoverflow.com/a/2099805 but slightly modified to work with 64bit machines
+var
+  sUnInstPath: String;
+  sUnInstallString: String;
+begin
+  sUnInstPath := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
+  sUnInstallString := '';
+  if not RegQueryStringValue(HKLM, sUnInstPath, 'UninstallString', sUnInstallString) then
+    begin
+      if not RegQueryStringValue(HKCU, sUnInstPath, 'UninstallString', sUnInstallString) then
+        begin
+          sUnInstPath := ExpandConstant('SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
+          if not RegQueryStringValue(HKLM, sUnInstPath, 'UninstallString', sUnInstallString) then
+            RegQueryStringValue(HKCU, sUnInstPath, 'UninstallString', sUnInstallString);
+        end;
+    end;
+
+  Result := sUnInstallString;
+end;
+
+function UnInstallOldVersion(): Integer;
+var
+  sUnInstallString: String;
+  iResultCode: Integer;
+begin
+  Result := 0;
+  sUnInstallString := GetUninstallString();
+  if sUnInstallString <> '' then begin
+    sUnInstallString := RemoveQuotes(sUnInstallString);
+    if Exec(sUnInstallString, '/verysilent /keepsettings','', SW_HIDE, ewWaitUntilTerminated, iResultCode) then
+      Result := 3
+    else
+      Result := 2;
+  end else
+    Result := 1;
+end;
+
+function KeepSettings: Boolean;
+begin
+  Result := CmdLineParamExists('/keepsettings');
+end;
+
 procedure TaskKill(FileName: String);
 var
   ResultCode: Integer;
@@ -71,10 +126,14 @@ begin
   case CurStep of
     ssInstall:
       begin
-        MsgBox(ExpandConstant('The installer will now try to close running instances of Aurora if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+        if (not WizardSilent()) then
+          begin
+            MsgBox(ExpandConstant('The installer will now try to close running instances of {#SetupSetting("AppName")} and uninstall them. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+          end;
         TaskKill('Aurora.exe');
         TaskKill('Aurora-SkypeIntegration.exe');
         TaskKill('Aurora-Updater.exe');
+        UnInstallOldVersion();
       end;
   end;
 end;
@@ -84,15 +143,29 @@ begin
   case CurUninstallStep of
     usUninstall:
       begin
-        MsgBox(ExpandConstant('The uninstaller will now try to close running instances of Aurora if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
-        TaskKill('Aurora.exe');
-        TaskKill('Aurora-SkypeIntegration.exe');
-        TaskKill('Aurora-Updater.exe');
-
-        if MsgBox(ExpandConstant('Do you want to remove all the settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
+        if (not UninstallSilent()) then
           begin
-             DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
+            MsgBox(ExpandConstant('The uninstaller will now try to close running instances of {#SetupSetting("AppName")} if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+            TaskKill('Aurora.exe');
+            TaskKill('Aurora-SkypeIntegration.exe');
+            TaskKill('Aurora-Updater.exe');
+
+            if ((not KeepSettings()) and(MsgBox(ExpandConstant('Do you want to remove all the settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)) then
+              begin
+                DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
+              end
           end
+        else
+          begin
+            TaskKill('Aurora.exe');
+            TaskKill('Aurora-SkypeIntegration.exe');
+            TaskKill('Aurora-Updater.exe');
+
+            if (not KeepSettings()) then
+              begin
+                DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
+              end;
+          end;
       end;
   end;
 end; 
