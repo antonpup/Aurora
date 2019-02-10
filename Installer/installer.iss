@@ -25,6 +25,7 @@ SolidCompression=yes
 UninstallDisplayIcon={app}\Aurora.exe
 SetupIconFile=Aurora_updater.ico
 WizardImageFile=Aurora-wizard.bmp
+CloseApplications=yes
 
 //#include <idp.iss>
 
@@ -57,11 +58,37 @@ Name: "{commondesktop}\Aurora"; Filename: "{app}\Aurora.exe"; Tasks: desktopicon
 //  unzip(ExpandConstant(src), ExpandConstant(target));
 //end;
 
+procedure TaskKill(FileName: String);
+var
+  ResultCode: Integer;
+begin
+    Exec(ExpandConstant('taskkill.exe'), '/f /im ' + '"' + FileName + '"', '', SW_HIDE,
+     ewWaitUntilTerminated, ResultCode);
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  case CurStep of
+    ssInstall:
+      begin
+        MsgBox(ExpandConstant('The setup will now try to close running instances of Aurora if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+        TaskKill('Aurora.exe');
+        TaskKill('Aurora-SkypeIntegration.exe');
+        TaskKill('Aurora-Updater.exe');
+      end;
+  end;
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   case CurUninstallStep of
     usUninstall:
       begin
+        MsgBox(ExpandConstant('The setup will now try to close running instances of Aurora if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+        TaskKill('Aurora.exe');
+        TaskKill('Aurora-SkypeIntegration.exe');
+        TaskKill('Aurora-Updater.exe');
+
         if MsgBox(ExpandConstant('Do you want to remove all the settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
           begin
              DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
@@ -76,14 +103,15 @@ end;
 #ELSE
   #DEFINE AW "A"
 #ENDIF
+
 function VCRedistX64NeedsInstall: Boolean;
 begin
-  Result := not RegKeyExists(HKEY_CLASSES_ROOT,'Installer\Dependencies\,,amd64,14.0,bundle\Dependents\{5b295ba9-ef89-4aeb-8acc-b61adb0b9b5f}');
+  Result := not RegKeyExists(HKEY_LOCAL_MACHINE,'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64');
 end;
-
+                                             
 function VCRedistX86NeedsInstall: Boolean;
 begin
-  Result := not RegKeyExists(HKEY_CLASSES_ROOT,'Installer\Dependencies\,,x86,14.0,bundle\Dependents\{ec9c2282-a836-48a6-9e41-c2f0bf8d678b}');
+  Result := not RegKeyExists(HKEY_LOCAL_MACHINE,'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x86');
 end;
 
 [Run]
