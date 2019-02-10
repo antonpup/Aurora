@@ -11,19 +11,36 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         
+        <!-- Description -->
         <TextBlock Text="The lookup table replaces the target property (e.g. colour or duration) with the first value in the list below that has a condition that evaluates to true. If none of the below conditions match, the property will not be overriden and whatever you've specified in the normal interface will be used." Margin="8" TextWrapping="Wrap" />
         
+        <!-- Add lookup entry button -->
         <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6,0" Click="AddNewLookup_Click">
             <DockPanel Margin="2,0">
                 <Image Source="/Aurora;component/Resources/Layers_Add.png" Width="18" Height="18"/>
                 <TextBlock>Add new table entry</TextBlock>
             </DockPanel>
         </Button>
-        
-        <Border Margin="6" Grid.Row="2" BorderBrush="#3FFF" BorderThickness="1">
+
+        <!-- LookupTable Header -->
+        <Border Margin="6,6,6,0" Grid.Row="2" BorderBrush="#3FFF" BorderThickness="1,1,1,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Value" FontWeight="Bold" HorizontalAlignment="Center" Grid.Column="0" />
+                <Label Content="Condition" FontWeight="Bold" HorizontalAlignment="Center" Grid.Column="2" />
+            </Grid>
+        </Border>
+        <!-- LookupTable -->
+        <Border Margin="6,0,6,6" Grid.Row="3" BorderBrush="#3FFF" BorderThickness="1">
             <ScrollViewer>
                 <StackPanel Orientation="Vertical">
                     <!-- Item list -->

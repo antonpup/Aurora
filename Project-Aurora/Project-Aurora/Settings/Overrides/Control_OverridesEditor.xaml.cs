@@ -14,44 +14,40 @@ using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings.Overrides {
     /// <summary>
-    /// Interaction logic for Window_OverridesEditor.xaml
+    /// Interaction logic for Control_OverridesEditor.xaml
     /// </summary>
-    public partial class Window_OverridesEditor : Window {
-
-        public Window_OverridesEditor(Layer layer) {
-            // Store the layer and ensure it has an override logic assigned to it.
-            Layer = layer;
-            if (Layer.OverrideLogic == null)
-                Layer.OverrideLogic = new Dictionary<string, IOverrideLogic>();
-
+    public partial class Control_OverridesEditor : UserControl, INotifyPropertyChanged {
+        
+        public Control_OverridesEditor() {
             // Setup UI and databinding stuff
             InitializeComponent();
-            Title = $"Overrides Editor for '{layer.Name}'";
-            OverridablePropList.ItemsSource = GetAllOverridableProperties(layer);
             DataContext = this;
         }
+
+        #region Events
+        // Property change event
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(params string[] affectedProperties) {
+            foreach (var prop in affectedProperties)
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// For the given layer, returns a list of all properties on the handler of that layer that have the OverridableAttribute 
         /// applied (i.e. have been marked overridable for the overrides system).
         /// </summary>
-        private List<Tuple<string, string, Type>> GetAllOverridableProperties (Layer layer) {
-            return layer.Handler.Properties.GetType().GetProperties() // Get all properties on the layer handler's property list
-                .Where(prop => prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true).Length > 0) // Filter to only return the PropertyInfos that have Overridable
-                .Select(prop => new Tuple<string, string, Type>( // Return the name and type of these properties.
-                    prop.Name, // The actual C# property name
-                    ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name, // Get the name specified in the attribute (so it is prettier for the user)
-                    Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType // If the property is a nullable type (e.g. bool?), will instead return the non-nullable type (bool)
-                ))
-                .OrderBy(tup => tup.Item2)
-                .ToList();
-        }
-    }
-
-    /// <summary>
-    /// State properties for the Window_OverridesEditor class.
-    /// </summary>
-    public partial class Window_OverridesEditor : INotifyPropertyChanged {
+        public List<Tuple<string, string, Type>> AvailableLayerProperties => Layer?.Handler.Properties.GetType().GetProperties() // Get all properties on the layer handler's property list
+            .Where(prop => prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true).Length > 0) // Filter to only return the PropertyInfos that have Overridable
+            .Select(prop => new Tuple<string, string, Type>( // Return the name and type of these properties.
+                prop.Name, // The actual C# property name
+                ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name, // Get the name specified in the attribute (so it is prettier for the user)
+                Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType // If the property is a nullable type (e.g. bool?), will instead return the non-nullable type (bool)
+            ))
+            .OrderBy(tup => tup.Item2)
+            .ToList();
 
         // List of all IOverrideLogic types that the user can select
         public Dictionary<string, Type> OverrideTypes { get; } = new Dictionary<string, Type> {
@@ -59,15 +55,11 @@ namespace Aurora.Settings.Overrides {
             { "Lookup Table", typeof(OverrideLookupTable) }
         };
 
-        // Property change event
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(params string[] affectedProperties) {
-            foreach (var prop in affectedProperties)
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
-
         // The layer being edited by the window
-        public Layer Layer { get; }
+        public Layer Layer {
+            get => (Layer)GetValue(LayerProperty);
+            set => SetValue(LayerProperty, value);
+        }
 
         // The name of the selected property that is being edited
         private Tuple<string, string, Type> _selectedProperty;
@@ -100,6 +92,20 @@ namespace Aurora.Settings.Overrides {
                 }
             }
         }
+        #endregion
+
+        #region Dependency Objects
+        private static void OnLayerChange(DependencyObject overridesEditor, DependencyPropertyChangedEventArgs eventArgs) {
+            var control = (Control_OverridesEditor)overridesEditor;
+            var layer = (Layer)eventArgs.NewValue;
+            // Ensure the layer has the property-override map
+            if (layer.OverrideLogic == null)
+                layer.OverrideLogic = new Dictionary<string, IOverrideLogic>();
+            control.OnPropertyChanged("Layer", "AvailableLayerProperties", "SelectedProperty", "SelectedLogic", "SelectedLogicType");
+        }
+
+        public static readonly DependencyProperty LayerProperty = DependencyProperty.Register("Layer", typeof(Layer), typeof(Control_OverridesEditor), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnLayerChange));
+        #endregion
     }
 
 

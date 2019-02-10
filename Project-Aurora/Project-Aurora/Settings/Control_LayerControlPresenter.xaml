@@ -8,7 +8,8 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:local="clr-namespace:Aurora.Settings"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-    xmlns:conditions="clr-namespace:Aurora.Settings.Overrides.Logic" x:Class="Aurora.Settings.Control_LayerControlPresenter"
+    xmlns:conditions="clr-namespace:Aurora.Settings.Overrides.Logic"
+    xmlns:overrides="clr-namespace:Aurora.Settings.Overrides" x:Class="Aurora.Settings.Control_LayerControlPresenter"
              mc:Ignorable="d" d:DesignWidth="602" d:DesignHeight="201.525">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -43,6 +44,8 @@
             <Slider x:Name="sldr_Opacity" HorizontalAlignment="Left" Margin="61,30,0,0" VerticalAlignment="Top" Width="100" Minimum="0" SmallChange="1" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="1" Maximum="100" Value="100" ValueChanged="sldr_Opacity_ValueChanged" />
             <TextBlock x:Name="lbl_Opacity_Text" HorizontalAlignment="Left" Margin="166,30,0,0" TextWrapping="Wrap" Text="100 %" VerticalAlignment="Top"/>
         </Grid>
+
+        <overrides:Control_OverridesEditor x:Name="overridesEditor" Background="#FF323232" Visibility="Collapsed" />
 
         <Button x:Name="btnConfig" HorizontalAlignment="Right" Margin="0,9,10,0" VerticalAlignment="Top" Click="btnConfig_Click" ToolTip="Toggles the visibility of additional layer configurations">
             <Image Source="/Aurora;component/Resources/LayerConfig_icon.png" Width="23" Height="23" Margin="2"/>

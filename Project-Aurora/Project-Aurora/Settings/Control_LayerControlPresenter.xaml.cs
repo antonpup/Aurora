@@ -72,6 +72,8 @@ namespace Aurora.Settings
             grd_LayerControl.IsHitTestVisible = true;
             grd_LayerControl.Effect = null;
             isSettingNewLayer = false;
+
+            overridesEditor.Layer = layer;
         }
 
         private void cmbLayerType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -267,7 +269,10 @@ namespace Aurora.Settings
 
         private void btnOverrides_Click(object sender, RoutedEventArgs e) {
             if (IsLoaded && !isSettingNewLayer) {
-                new Overrides.Window_OverridesEditor(Layer).ShowDialog();
+                bool v = overridesEditor.IsVisible;
+                overridesEditor.Visibility = v ? Visibility.Hidden : Visibility.Visible;
+                grd_LayerControl.IsHitTestVisible = v;
+                btnConfig.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
             }
         }
     }
