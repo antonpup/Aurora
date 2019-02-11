@@ -7,9 +7,9 @@
              mc:Ignorable="d"
              d:DesignWidth="100" d:DesignHeight="40">
     <Grid>
-        <!-- Condition type selection -->
-        <Label Content="Condition Type:" FontWeight="Bold" Margin="0,6,0,0" />
-        <ComboBox x:Name="ConditionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="100,6,50,0" Height="26" VerticalAlignment="Top" SelectionChanged="ConditionSelection_SelectionChanged">
+        <!-- Expression type selection -->
+        <Label Content="Expression Type:" FontWeight="Bold" Margin="0,6,0,0" />
+        <ComboBox x:Name="expressionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="104,6,50,0" Height="26" VerticalAlignment="Top" SelectionChanged="ExpressionSelection_SelectionChanged">
             <ComboBox.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>

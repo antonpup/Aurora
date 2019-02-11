@@ -21,12 +21,17 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Fetches a specific subset of logic operand types (e.g. all booleans).
         /// Caches results to that subsequent calls are marginally faster.</summary>
         /// <typeparam name="T">The type to fetch (e.g. IEvaluatableBoolean).</typeparam>
-        public static Dictionary<Type, OverrideLogicAttribute> Get<T>() where T : IEvaluatable {
-            if (!specificOverrideLogics.ContainsKey(typeof(T)))
-                specificOverrideLogics[typeof(T)] = allOverrideLogics
-                    .Where(kvp => typeof(T).IsAssignableFrom(kvp.Key))
+        public static Dictionary<Type, OverrideLogicAttribute> Get<T>() where T : IEvaluatable => Get(typeof(T));
+
+        /// <summary>Fetches a specific subset of logic operand types (e.g. all booleans).
+        /// Caches results to that subsequent calls are marginally faster.</summary>
+        /// <param name="t">The type to fetch (e.g. IEvaluatableBoolean).</param>
+        public static Dictionary<Type, OverrideLogicAttribute> Get(Type t) {
+            if (!specificOverrideLogics.ContainsKey(t))
+                specificOverrideLogics[t] = allOverrideLogics
+                    .Where(kvp => t.IsAssignableFrom(kvp.Key))
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            return specificOverrideLogics[typeof(T)];
+            return specificOverrideLogics[t];
         }
 
         /// <summary>Fetches all logic operands that have been found with the OverrideLogicAttribute attached.</summary>
