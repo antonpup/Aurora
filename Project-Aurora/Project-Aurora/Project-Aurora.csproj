@@ -597,12 +597,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\Boolean_PeripheralInput.cs" />
-    <Compile Include="Settings\Overrides\Logic\ComparisonOperator.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_NumericBinaryOpHolder.xaml.cs">
+      <DependentUpon>Control_NumericBinaryOpHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Number_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\Operators.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml.cs">
       <DependentUpon>Control_OverrideLookupTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\EvaluatableRegistry.cs" />
     <Compile Include="Settings\Overrides\Logic\IOverrideLogic.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number_Maths.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLogicAttribute.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean_GameState.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_BooleanDebug.xaml.cs">
@@ -1931,6 +1936,10 @@
     <Page Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_NumericBinaryOpHolder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml">
       <SubType>Designer</SubType>

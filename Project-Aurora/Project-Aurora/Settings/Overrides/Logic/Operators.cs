@@ -12,4 +12,15 @@ namespace Aurora.Settings.Overrides.Logic {
         [Description(">")] GT,
         [Description("≥")] GTE
     }
+
+    /// <summary>
+    /// Enum listing various mathematical operators for the numeric expressions.
+    /// </summary>
+    public enum MathsOperator {
+        [Description("+")] Add,
+        [Description("-")] Sub,
+        [Description("×")] Mul,
+        [Description("÷")] Div,
+        [Description("Mod")] Mod
+    }
 }
