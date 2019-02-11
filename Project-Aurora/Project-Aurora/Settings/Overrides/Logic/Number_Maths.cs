@@ -14,7 +14,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that performs a binary mathematical operation on two operands.
     /// </summary>
-    [OverrideLogic("Maths Operation", category: OverrideLogicCategory.Maths)]
+    [OverrideLogic("Arithmetic Operation", category: OverrideLogicCategory.Maths)]
     public class NumberMathsOperation : IEvaluatableNumber {
 
         // The operands and the operator
@@ -43,8 +43,8 @@ namespace Aurora.Settings.Overrides.Logic {
                 case MathsOperator.Add: return op1 + op2;
                 case MathsOperator.Sub: return op1 - op2;
                 case MathsOperator.Mul: return op1 * op2;
-                case MathsOperator.Div: return op1 / op2;
-                case MathsOperator.Mod: return op1 % op2;
+                case MathsOperator.Div: return op2 == 0 ? 0 : op1 / op2; // Return 0 if user tried to divide by zero. Easier than having to deal with Infinity (which C# returns).
+                case MathsOperator.Mod: return op2 == 0 ? 0 : op1 % op2;
                 default: return 0;
             }
         }
@@ -67,7 +67,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that compares two numerical evaluatables and returns a boolean depending on the comparison.
     /// </summary>
-    [OverrideLogic("Maths Comparison", category: OverrideLogicCategory.Maths)]
+    [OverrideLogic("Arithmetic Comparison", category: OverrideLogicCategory.Maths)]
     public class BooleanMathsComparison : IEvaluatableBoolean {
 
         // The operands and the operator

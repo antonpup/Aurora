@@ -26,7 +26,13 @@ namespace Aurora.Settings.Overrides.Logic {
             { EvaluatableType.Boolean, typeof(IEvaluatableBoolean) },
             { EvaluatableType.Number, typeof(IEvaluatableNumber) }
         };
+        private static Dictionary<EvaluatableType, Func<IEvaluatable>> enumToDefaultDictionary = new Dictionary<EvaluatableType, Func<IEvaluatable>> {
+            { EvaluatableType.All, () => null },
+            { EvaluatableType.Boolean, () => new BooleanTrue() },
+            { EvaluatableType.Number, () => new NumberConstant() }
+        };
         public static Type Resolve(EvaluatableType inType) => enumToTypeDictionary.TryGetValue(inType, out Type outType) ? outType : typeof(IEvaluatable);
+        public static IEvaluatable GetDefault(EvaluatableType inType) => enumToDefaultDictionary.TryGetValue(inType, out Func<IEvaluatable> outFunc) ? outFunc() : null;
     }
     #endregion
 

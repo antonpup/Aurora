@@ -600,6 +600,9 @@
     <Compile Include="Settings\Overrides\Logic\Control_NumericBinaryOpHolder.xaml.cs">
       <DependentUpon>Control_NumericBinaryOpHolder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml.cs">
+      <DependentUpon>Control_OverrideDynamicValue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Overrides\Logic\Number_GameState.cs" />
     <Compile Include="Settings\Overrides\Logic\Operators.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml.cs">
@@ -608,6 +611,7 @@
     <Compile Include="Settings\Overrides\Logic\EvaluatableRegistry.cs" />
     <Compile Include="Settings\Overrides\Logic\IOverrideLogic.cs" />
     <Compile Include="Settings\Overrides\Logic\Number_Maths.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideDynamicValue.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLogicAttribute.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean_GameState.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_BooleanDebug.xaml.cs">
@@ -672,6 +676,7 @@
     </Compile>
     <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\InputEvents.cs" />
+    <Compile Include="Utils\MathUtils.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
     <Compile Include="Profiles\BF3\BF3Application.cs" />
@@ -1930,6 +1935,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

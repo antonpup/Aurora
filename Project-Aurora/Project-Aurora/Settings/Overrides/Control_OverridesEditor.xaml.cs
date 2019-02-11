@@ -52,6 +52,7 @@ namespace Aurora.Settings.Overrides {
         // List of all IOverrideLogic types that the user can select
         public Dictionary<string, Type> OverrideTypes { get; } = new Dictionary<string, Type> {
             { "None", null },
+            { "Dynamic Value", typeof(OverrideDynamicValue) },
             { "Lookup Table", typeof(OverrideLookupTable) }
         };
 
