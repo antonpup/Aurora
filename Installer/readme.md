@@ -14,3 +14,6 @@ Uninstaller parameters:
 
 - "/keepsettings"
 -- Description: When supplied, it will ask no prompts about deleting settings, keeps settings folder no matter other supplied parameters.
+
+- "/keepstartuptask"
+-- Description: When supplied, uninstaller will not delete "AuroraStartup" task in Task Scheduler.

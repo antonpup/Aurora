@@ -25,7 +25,8 @@ SolidCompression=yes
 UninstallDisplayIcon={app}\Aurora.exe
 SetupIconFile=Aurora_updater.ico
 WizardImageFile=Aurora-wizard.bmp
-CloseApplications=yes
+CloseApplications=no 
+// ^ This line is important because when it is set to yes it would ask user to exit Aurora. But uninstaller/installer already kills Aurora processes.
 
 //#include <idp.iss>
 
@@ -57,6 +58,14 @@ Name: "{commondesktop}\Aurora"; Filename: "{app}\Aurora.exe"; Tasks: desktopicon
 //begin
 //  unzip(ExpandConstant(src), ExpandConstant(target));
 //end;
+
+function ExecuteHidden(const command: string; const parameters: string): Integer;
+var
+  ResultCode: Integer;
+begin
+  Exec(command, parameters, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  Result := ResultCode;
+end;
 
 function CmdLineParamExists(const Value: string): Boolean; // stackoverflow.com/a/48349992
 var
@@ -100,7 +109,7 @@ begin
   sUnInstallString := GetUninstallString();
   if sUnInstallString <> '' then begin
     sUnInstallString := RemoveQuotes(sUnInstallString);
-    if Exec(sUnInstallString, '/verysilent /keepsettings','', SW_HIDE, ewWaitUntilTerminated, iResultCode) then
+    if ExecuteHidden(sUnInstallString,'/verysilent /keepsettings /keepstartuptask') = 0 then
       Result := 3
     else
       Result := 2;
@@ -113,12 +122,14 @@ begin
   Result := CmdLineParamExists('/keepsettings');
 end;
 
-procedure TaskKill(FileName: String);
-var
-  ResultCode: Integer;
+function KeepStartupTask: Boolean;
 begin
-    Exec(ExpandConstant('taskkill.exe'), '/f /im ' + '"' + FileName + '"', '', SW_HIDE,
-     ewWaitUntilTerminated, ResultCode);
+  Result := CmdLineParamExists('/keepstartuptask');
+end;
+
+procedure TaskKill(FileName: String);
+begin
+  ExecuteHidden('taskkill.exe','/f /im ' + '"' + FileName + '"')
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
@@ -165,6 +176,10 @@ begin
               begin
                 DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
               end;
+          end;
+        if (not KeepStartupTask()) then
+          begin
+            ExecuteHidden('schtasks.exe', '/delete /tn "AuroraStartup" /f');
           end;
       end;
   end;
