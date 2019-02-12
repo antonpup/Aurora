@@ -67,6 +67,7 @@ namespace Aurora.Settings
             lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
 
             grdLayerConfigs.Visibility = Visibility.Hidden;
+            overridesEditor.Visibility = Visibility.Hidden;
             btnConfig.Visibility = Visibility.Visible;
             btnOverrides.Visibility = Visibility.Visible;
             grd_LayerControl.IsHitTestVisible = true;
