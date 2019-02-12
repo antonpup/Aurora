@@ -536,6 +536,7 @@ namespace Aurora.Devices.CoolerMaster
 
         private bool keyboard_updated = false;
         private bool peripheral_updated = false;
+        private bool mouse_updated = false;
 
         private readonly object action_lock = new object();
 
@@ -692,6 +693,22 @@ namespace Aurora.Devices.CoolerMaster
             keyboard_updated = true;
         }
 
+        private void SendColorsToMouse(bool forced = false)
+        {
+            if (Global.Configuration.devices_disable_mouse)
+                return;
+
+            if (!CoolerMasterSDK.Keyboards.Contains(CurrentDevice))
+                return;
+
+            List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
+            if (devices.Count > 0)
+                SwitchToDevice(devices.First());
+
+            CoolerMasterSDK.SetAllLedColor(color_matrix);
+            mouse_updated = true;
+        }
+
         private void SendColorToPeripheral(Color color, bool forced = false)
         {
             peripheral_updated = false;
@@ -724,10 +741,10 @@ namespace Aurora.Devices.CoolerMaster
                          Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.dvorak))
                         dev_key = DeviceKeys.BACKSLASH;
 
-                    if (Effects.possible_peripheral_keys.Contains(key.Key))
-                    {
+                    //if (Effects.possible_peripheral_keys.Contains(key.Key))
+                    //{
                         //Temp until mice support is added
-                        continue;
+                        //continue;
 
                         //Move this to the SendColorsToMouse as they do not need to be set on every key, they only need to be directed to the correct method for setting key/light
                         /*List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
@@ -735,7 +752,7 @@ namespace Aurora.Devices.CoolerMaster
                             SwitchToDevice(devices.First());
                         else
                             return false;*/
-                    }
+                    //}
 
 
                     if (dev_key == DeviceKeys.ADDITIONALLIGHT10)
@@ -745,6 +762,8 @@ namespace Aurora.Devices.CoolerMaster
                 }
                 if (e.Cancel) return false;
                 SendColorsToKeyboard(forced || !keyboard_updated);
+                SendColorsToMouse(forced || !mouse_updated);
+
                 return true;
             }
             catch (Exception exc)
