@@ -600,10 +600,14 @@
     <Compile Include="Settings\Overrides\Logic\Control_NumericBinaryOpHolder.xaml.cs">
       <DependentUpon>Control_NumericBinaryOpHolder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_NumericUnaryOpHolder.xaml.cs">
+      <DependentUpon>Control_NumericUnaryOpHolder.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml.cs">
       <DependentUpon>Control_OverrideDynamicValue.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\Number_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number_Waves.cs" />
     <Compile Include="Settings\Overrides\Logic\Operators.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml.cs">
       <DependentUpon>Control_OverrideLookupTable.xaml</DependentUpon>
@@ -1935,6 +1939,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_NumericUnaryOpHolder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

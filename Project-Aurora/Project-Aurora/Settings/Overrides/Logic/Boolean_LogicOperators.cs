@@ -68,7 +68,7 @@ namespace Aurora.Settings.Overrides.Logic {
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         public void SetApplication(Application application) {
-            SubCondition.SetApplication(application);
+            SubCondition?.SetApplication(application);
         }
 
         public IEvaluatableBoolean Clone() => new BooleanNot { SubCondition = SubCondition.Clone() };

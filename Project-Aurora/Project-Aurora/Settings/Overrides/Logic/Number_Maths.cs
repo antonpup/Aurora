@@ -52,13 +52,13 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Updates the user control and the operands with a new application context.</summary>
         public void SetApplication(Application application) {
-            control.Application = application;
-            Operand1.SetApplication(application);
-            Operand2.SetApplication(application);
+            control?.SetApplication(application);
+            Operand1?.SetApplication(application);
+            Operand2?.SetApplication(application);
         }
 
         /// <summary>Creates a copy of this maths operation.</summary>
-        public IEvaluatableNumber Clone() => new NumberMathsOperation { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone() };
+        public IEvaluatableNumber Clone() => new NumberMathsOperation { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
@@ -106,13 +106,13 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Updates the user control and the operands with a new application context.</summary>
         public void SetApplication(Application application) {
-            control.Application = application;
-            Operand1.SetApplication(application);
-            Operand2.SetApplication(application);
+            control?.SetApplication(application);
+            Operand1?.SetApplication(application);
+            Operand2?.SetApplication(application);
         }
 
         /// <summary>Creates a copy of this mathematical comparison.</summary>
-        public IEvaluatableBoolean Clone() => new BooleanMathsComparison { Operand1 = Operand1, Operand2 = Operand2 };
+        public IEvaluatableBoolean Clone() => new BooleanMathsComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 

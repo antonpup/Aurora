@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Profiles;
 
 namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
@@ -35,6 +36,12 @@ namespace Aurora.Settings.Overrides.Logic {
         #region Properties
         public Profiles.Application Application { get; set; }
         #endregion
+
+        #region Methods
+        public void SetApplication(Profiles.Application application) {
+            Application = application;
+        }
+        #endregion Methods
 
         #region Dependency Properties
         public static readonly DependencyProperty Operand1Property = DependencyProperty.Register("Operand1", typeof(IEvaluatableNumber), typeof(Control_NumericBinaryOpHolder), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
