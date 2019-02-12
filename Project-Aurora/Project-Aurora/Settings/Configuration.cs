@@ -210,6 +210,12 @@ namespace Aurora.Settings
         Masterkeys_Pro_M = 502,
         [Description("Cooler Master - Masterkeys MK750")]
         Masterkeys_MK750 = 503,
+        [Description("Cooler Master - CK372")]
+        Masterkeys_CK372 = 504,
+        [Description("Cooler Master - CK550/552")]
+        Masterkeys_CK550_552 = 505,
+        [Description("Cooler Master - CK551")]
+        Masterkeys_CK551 = 506,
 
         //Roccat range is 600-699
         [Description("Roccat Ryos")]
@@ -305,6 +311,14 @@ namespace Aurora.Settings
         Clevo_Touchpad = 400,
 
         //Cooler Master range is 500-599
+        [Description("Cooler Master - MasterMouse Pro L")]
+        CoolerMaster_MM_ProL = 500,
+        [Description("Cooler Master - MasterMouse Pro S")]
+        CoolerMaster_MM_ProS = 501,
+        [Description("Cooler Master - MM520")]
+        CoolerMaster_MM520 = 502,
+        [Description("Cooler Master - MM530")]
+        CoolerMaster_MM530 = 503,
 
         //Roccat range is 600-699
 

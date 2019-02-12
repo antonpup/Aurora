@@ -672,6 +672,12 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK750)
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_CK372)
+                layoutConfigPath = Path.Combine(layoutsPath, "cm_ck_372.json");
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_CK550_552)
+                layoutConfigPath = Path.Combine(layoutsPath, "cm_ck_550_552.json");
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_CK551)
+                layoutConfigPath = Path.Combine(layoutsPath, "cm_ck_551.json");
             else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
@@ -790,6 +796,18 @@ namespace Aurora.Settings
                         break;
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
+                        break;
+                    case PreferredMouse.CoolerMaster_MM520:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "cm_mm520_features.json");
+                        break;
+                    case PreferredMouse.CoolerMaster_MM530:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "cm_mm530_features.json");
+                        break;
+                    case PreferredMouse.CoolerMaster_MM_ProL:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "cm_mm_prol_features.json");
+                        break;
+                    case PreferredMouse.CoolerMaster_MM_ProS:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "cm_mm_pros_features.json");
                         break;
                 }
 
