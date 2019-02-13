@@ -85,6 +85,10 @@ namespace Aurora.Settings.Layers
 
         [JsonIgnore]
         public int EffectWidth { get { return Logic._EffectWidth ?? _EffectWidth ?? 0; } }
+        
+        public bool? _UsePressBuffer { get; set; }
+        [JsonIgnore]
+        public bool UsePressBuffer => Logic._UsePressBuffer ?? _UsePressBuffer ?? true;
 
         public InteractiveLayerHandlerProperties() : base() { }
 
@@ -168,7 +172,7 @@ namespace Aurora.Settings.Layers
             {
                 if (TimeOfLastPress.ContainsKey(device_key))
                 {
-                    if ((currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
+                    if (Properties.UsePressBuffer && (currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
                         return;
                     else
                         TimeOfLastPress.Remove(device_key);
@@ -290,7 +294,7 @@ namespace Aurora.Settings.Layers
             {
                 foreach (var lengthPresses in TimeOfLastPress.ToList())
                 {
-                    if (currenttime - lengthPresses.Value > pressBuffer)
+                    if (!Properties.UsePressBuffer || currenttime - lengthPresses.Value > pressBuffer)
                     {
                         TimeOfLastPress.Remove(lengthPresses.Key);
                     }
