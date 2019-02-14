@@ -70,13 +70,5 @@ namespace Aurora.Profiles.ResidentEvil2
             if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
                 (profile_manager.Config.Event._game_state as GameState_ResidentEvil2).Player.Rank = (sender as IntegerUpDown).Value.Value;
         }
-
-        private void cz_ColorZonesListUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                profile_manager.SaveProfiles();
-            }
-        }
     }
 }

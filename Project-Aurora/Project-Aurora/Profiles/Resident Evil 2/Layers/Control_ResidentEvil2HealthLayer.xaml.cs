@@ -40,6 +40,14 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
         {
             if (this.DataContext is ResidentEvil2HealthLayerHandler && !settingsset)
             {
+                if (!this.status_style.HasItems)
+                {
+                    this.status_style.Items.Add(ResidentEvil2HealthLayerHandlerProperties.HealthDisplayType.Static);
+                    this.status_style.Items.Add(ResidentEvil2HealthLayerHandlerProperties.HealthDisplayType.Scanning);
+                }
+
+                this.status_style.SelectedItem = (this.DataContext as ResidentEvil2HealthLayerHandler).Properties._DisplayType ?? ResidentEvil2HealthLayerHandlerProperties.HealthDisplayType.Static;
+
                 settingsset = true;
             }
         }
@@ -59,6 +67,14 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
+        }
+
+        private void status_style_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && this.DataContext is ResidentEvil2HealthLayerHandler)
+            {
+                (this.DataContext as ResidentEvil2HealthLayerHandler).Properties._DisplayType = (ResidentEvil2HealthLayerHandlerProperties.HealthDisplayType)this.status_style.SelectedItem;
+            }
         }
     }
 }
