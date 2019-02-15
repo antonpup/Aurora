@@ -100,23 +100,6 @@ begin
   Result := sUnInstallString;
 end;
 
-function UnInstallOldVersion(): Integer;
-var
-  sUnInstallString: String;
-  iResultCode: Integer;
-begin
-  Result := 0;
-  sUnInstallString := GetUninstallString();
-  if sUnInstallString <> '' then begin
-    sUnInstallString := RemoveQuotes(sUnInstallString);
-    if ExecuteHidden(sUnInstallString,'/verysilent /keepsettings /keepstartuptask') = 0 then
-      Result := 3
-    else
-      Result := 2;
-  end else
-    Result := 1;
-end;
-
 function KeepSettings: Boolean;
 begin
   Result := CmdLineParamExists('/keepsettings');
@@ -133,6 +116,8 @@ begin
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
+var
+   sUnInstallString: String;
 begin
   case CurStep of
     ssInstall:
@@ -144,7 +129,14 @@ begin
         TaskKill('Aurora.exe');
         TaskKill('Aurora-SkypeIntegration.exe');
         TaskKill('Aurora-Updater.exe');
-        UnInstallOldVersion();
+        
+        sUnInstallString := GetUninstallString();
+        if sUnInstallString <> '' then 
+          begin
+            sUnInstallString := RemoveQuotes(sUnInstallString);
+            ExecuteHidden(sUnInstallString,'/verysilent /keepsettings /keepstartuptask');
+          end;
+
       end;
   end;
 end;
@@ -161,10 +153,15 @@ begin
             TaskKill('Aurora-SkypeIntegration.exe');
             TaskKill('Aurora-Updater.exe');
 
-            if ((not KeepSettings()) and(MsgBox(ExpandConstant('Do you want to remove all the settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)) then
+            if ((not KeepSettings()) and (MsgBox(ExpandConstant('Do you want to remove all the settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)) then
               begin
-                DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
-              end
+                
+                if (MsgBox(ExpandConstant('Do you really confirm removing all settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)
+                  begin
+                    DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
+                  end;
+
+              end;
           end
         else
           begin
