@@ -153,10 +153,9 @@ begin
             TaskKill('Aurora-SkypeIntegration.exe');
             TaskKill('Aurora-Updater.exe');
 
-            if ((not KeepSettings()) and (MsgBox(ExpandConstant('Do you want to remove all the settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)) then
+            if ((not KeepSettings()) and (MsgBox(ExpandConstant('Do you want to remove all the settings and user data?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)) then
               begin
-                
-                if (MsgBox(ExpandConstant('Do you really confirm removing all settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)
+                if (MsgBox(ExpandConstant('Do you really confirm removing all settings and user data?'), mbError, MB_YESNO or MB_DEFBUTTON2) = IDYES) then
                   begin
                     DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
                   end;
