@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using Aurora;
+using System.ComponentModel;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace LedCSharp
@@ -130,13 +131,36 @@ namespace LedCSharp
 
     public class LogitechGSDK
     {
+        public enum LGDLL
+        {
+            [Description("LGS")]
+            LGS,
+            [Description("GHUB")]
+            GHUB
+        }
+
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool SetDllDirectory(string path);
 
         static LogitechGSDK()
         {
+            //InitDLL(LGDLL.GHUB);
+        }
+
+        private static bool initd = false;
+        public static void InitDLL(LGDLL? dll = null)
+        {
+            if (initd)
+                return;
+
+            bool ghub = false;
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            bool ghub = Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "LGHUB"));
+
+            if (dll == null)
+                ghub = Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "LGHUB"));
+            else
+                ghub = dll.Equals(LGDLL.GHUB);
+
             if (ghub)
                 Global.logger.LogLine("Loading GHUB DLL", Logging_Level.Info);
             else
@@ -144,6 +168,7 @@ namespace LedCSharp
             path = Path.Combine(path, "Logi", ghub ? "GHUB" : "LGS");
             bool ok = SetDllDirectory(path);
             if (!ok) throw new System.ComponentModel.Win32Exception();
+            initd = true;
         }
 
         //LED SDK
@@ -154,6 +179,8 @@ namespace LedCSharp
         public const int LOGI_DEVICETYPE_MONOCHROME = (1 << LOGI_DEVICETYPE_MONOCHROME_ORD);
         public const int LOGI_DEVICETYPE_RGB = (1 << LOGI_DEVICETYPE_RGB_ORD);
         public const int LOGI_DEVICETYPE_PERKEY_RGB = (1 << LOGI_DEVICETYPE_PERKEY_RGB_ORD);
+        public const int LOGI_DEVICETYPE_ALL = (LOGI_DEVICETYPE_MONOCHROME | LOGI_DEVICETYPE_RGB | LOGI_DEVICETYPE_PERKEY_RGB);
+
         public const int LOGI_LED_BITMAP_WIDTH = 21;
         public const int LOGI_LED_BITMAP_HEIGHT = 6;
         public const int LOGI_LED_BITMAP_BYTES_PER_KEY = 4;
@@ -219,6 +246,9 @@ namespace LedCSharp
 
         [DllImport("LogitechLed ", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSetLightingForKeyWithKeyName(keyboardNames keyCode, int redPercentage, int greenPercentage, int bluePercentage);
+
+        [DllImport("LogitechLed ", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool LogiLedSetLightingForTargetZone(byte deviceType, int zone, int redPercentage, int greenPercentage, int bluePercentage);
 
         [DllImport("LogitechLed ", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSaveLightingForKey(keyboardNames keyName);

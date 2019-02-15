@@ -106,6 +106,27 @@ namespace SteelSeries.GameSenseSDK
             sendPostRequest("http://" + sseAddress + "/game_event", json);
         }
 
+        public void setMousepadColor(int zone, byte red, byte green, byte blue)
+        {
+            GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
+            payload.game = sseGameName;
+            payload.Event = "COLOR";
+
+            List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
+
+            payload.data = "{";
+            payload.data += "\"" + zones[zone - 1] + "\":{";
+            payload.data += "\"color\":";
+            payload.data += "[" + red + ", " + green + ", " + blue + "]";
+            payload.data += "}";
+            payload.data += "}";
+
+            // sending POST request
+            String json = JsonConvert.SerializeObject(payload);
+            sendPostRequest("http://" + sseAddress + "/game_event", json);
+
+        }
+
         public void setKeyboardColors(List<byte> hids, List<Tuple<byte, byte, byte>> colors)
         {
             GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
@@ -175,10 +196,58 @@ namespace SteelSeries.GameSenseSDK
                 (on-device ""rgb-2-zone"" show: color)
                 (on-device ""rgb-3-zone"" show: color)
                 (on-device ""rgb-4-zone"" show: color)
-                (on-device ""rgb-5-zone"" show: color)
-                (on-device ""rgb-12-zone"" show: color)))
+                (on-device ""rgb-5-zone"" show: color)))
 
-        (when (mouse:? data)
+        (when (mpone:? data)
+            (let* ((mpone (mpone: data))
+                   (color (color: mpone)))
+                (on-device ""rgb-12-zone"" show-on-zone: color one:)))
+        (when (mptwo:? data)
+            (let* ((mptwo (mptwo: data))
+                   (color (color: mptwo)))
+                (on-device ""rgb-12-zone"" show-on-zone: color two:)))
+        (when (mpthree:? data)
+            (let* ((mpthree (mpthree: data))
+                   (color (color: mpthree)))
+                (on-device ""rgb-12-zone"" show-on-zone: color three:)))
+        (when (mpfour:? data)
+            (let* ((mpfour (mpfour: data))
+                   (color (color: mpfour)))
+                (on-device ""rgb-12-zone"" show-on-zone: color four:)))
+        (when (mpfive:? data)
+            (let* ((mpfive (mpfive: data))
+                   (color (color: mpfive)))
+                (on-device ""rgb-12-zone"" show-on-zone: color five:)))
+        (when (mpsix:? data)
+            (let* ((mpsix (mpsix: data))
+                   (color (color: mpsix)))
+                (on-device ""rgb-12-zone"" show-on-zone: color six:)))
+        (when (mpseven:? data)
+            (let* ((mpseven (mpseven: data))
+                   (color (color: mpseven)))
+                (on-device ""rgb-12-zone"" show-on-zone: color seven:)))
+        (when (mpeight:? data)
+            (let* ((mpeight (mpeight: data))
+                   (color (color: mpeight)))
+                (on-device ""rgb-12-zone"" show-on-zone: color eight:)))
+        (when (mpnine:? data)
+            (let* ((mpnine (mpnine: data))
+                   (color (color: mpnine)))
+                (on-device ""rgb-12-zone"" show-on-zone: color nine:)))
+        (when (mpten:? data)
+            (let* ((mpten (mpten: data))
+                   (color (color: mpten)))
+                (on-device ""rgb-12-zone"" show-on-zone: color ten:)))
+        (when (mpeleven:? data)
+            (let* ((mpeleven (mpeleven: data))
+                   (color (color: mpeleven)))
+                (on-device ""rgb-12-zone"" show-on-zone: color eleven:)))
+        (when (mptwelve:? data)
+            (let* ((mptwelve (mptwelve: data))
+                   (color (color: mptwelve)))
+                (on-device ""rgb-12-zone"" show-on-zone: color twelve:)))
+
+            (when (mouse:? data)
             (let* ((mouse (mouse: data))
                    (color (color: mouse)))
                 (on-device ""mouse"" show: color)))

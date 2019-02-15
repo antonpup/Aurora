@@ -51,6 +51,7 @@ namespace Aurora.Settings
                         definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
                         service.RootFolder.RegisterTaskDefinition(StartupTaskID, definition);
                         this.run_at_win_startup.IsChecked = task.Enabled;
+                        startDelayAmount.Value = task.Definition.Triggers.FirstOrDefault(t => t.TriggerType == TaskTriggerType.Logon) is LogonTrigger trigger ? (int)trigger.Delay.TotalSeconds : 0;
                     }
                     else
                     {
@@ -1059,5 +1060,15 @@ namespace Aurora.Settings
         }
 
         private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => new Window_GSIHttpDebug().Show();
+
+        private void startDelayAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+            using (TaskService service = new TaskService()) {
+                var task = service.FindTask(StartupTaskID);
+                if (task != null && task.Definition.Triggers.FirstOrDefault(t => t.TriggerType == TaskTriggerType.Logon) is LogonTrigger trigger) {
+                    trigger.Delay = new TimeSpan(0, 0, ((IntegerUpDown)sender).Value ?? 0);
+                    task.RegisterChanges();
+                }
+            }
+        }
     }
 }

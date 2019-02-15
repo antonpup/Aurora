@@ -153,7 +153,7 @@ namespace Aurora.Settings
 
         public T GetVariable<T>(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && _variables[name].Value.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
                 return (T)_variables[name].Value;
 
             return default(T);
@@ -161,7 +161,7 @@ namespace Aurora.Settings
 
         public T GetVariableDefault<T>(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && _variables[name].Default.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
                 return (T)_variables[name].Default;
 
             return Activator.CreateInstance<T>();
@@ -169,7 +169,7 @@ namespace Aurora.Settings
 
         public bool GetVariableMax<T>(string name, out T value)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && _variables[name].Max.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
                 value = (T)_variables[name].Max;
                 return true;
@@ -181,7 +181,7 @@ namespace Aurora.Settings
 
         public bool GetVariableMin<T>(string name, out T value)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && _variables[name].Min.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
                 value = (T)_variables[name].Min;
                 return true;

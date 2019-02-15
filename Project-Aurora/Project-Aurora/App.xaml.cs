@@ -131,8 +131,11 @@ namespace Aurora
                 Global.isDebug = true;
 #endif
                 Global.Initialize();
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-
+                string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                Directory.SetCurrentDirectory(path);
+                string logiDll = Path.Combine(path, "LogitechLed.dll");
+                if (File.Exists(logiDll))
+                    File.Delete(logiDll);
                 StringBuilder systeminfo_sb = new StringBuilder(string.Empty);
                 systeminfo_sb.Append("\r\n========================================\r\n");
 
