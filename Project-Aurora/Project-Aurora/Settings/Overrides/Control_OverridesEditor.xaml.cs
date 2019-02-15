@@ -111,6 +111,14 @@ namespace Aurora.Settings.Overrides {
 
         public static readonly DependencyProperty LayerProperty = DependencyProperty.Register("Layer", typeof(Layer), typeof(Control_OverridesEditor), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnLayerChange));
         #endregion
+
+        #region Methods
+        public void ForcePropertyListUpdate() {
+            // Inform bindings that the available properties list has changed.
+            // This may also change the selected property, and therefore the selected logic etc.
+            OnPropertyChanged("AvailableLayerProperties", "SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
+        }
+        #endregion
     }
 
 
