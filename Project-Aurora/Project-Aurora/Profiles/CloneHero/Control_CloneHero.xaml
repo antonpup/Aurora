@@ -24,7 +24,7 @@
                     <Label Content="Streak:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <xctk:IntegerUpDown x:Name="preview_streak" HorizontalAlignment="Left" Margin="110,15,0,0" VerticalAlignment="Top" ValueChanged="preview_streak_amount_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100" />
 
-                    <Label Content="SP Activated:" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
+                    <Label Content="SP Active:" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="preview_sp_enabled" HorizontalAlignment="Left" Margin="110,45,0,0" VerticalAlignment="Top" Checked="preview_sp_active" Unchecked="preview_sp_deactive" />
                     <TextBlock x:Name="preview_sp_enabled_label" HorizontalAlignment="Left" Margin="135,45,0,0" TextWrapping="Wrap" Text="false" VerticalAlignment="Top"/>
 
@@ -39,6 +39,21 @@
                     <Label Content="FC Indicator:" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="preview_fc_enabled" HorizontalAlignment="Left" Margin="110,135,0,0" VerticalAlignment="Top" Checked="preview_fc_active" Unchecked="preview_fc_deactive" />
                     <TextBlock x:Name="preview_fc_enabled_label" HorizontalAlignment="Left" Margin="135,135,0,0" TextWrapping="Wrap" Text="true" VerticalAlignment="Top"/>
+
+                    <Label Content="Solo Active:" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="preview_solo_enabled" HorizontalAlignment="Left" Margin="110,165,0,0" VerticalAlignment="Top" Checked="preview_solo_active" Unchecked="preview_solo_deactive" />
+                    <TextBlock x:Name="preview_solo_enabled_label" HorizontalAlignment="Left" Margin="135,165,0,0" TextWrapping="Wrap" Text="false" VerticalAlignment="Top"/>
+
+                    <Label Content="Solo Percent:" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_solo_percent" HorizontalAlignment="Left" Margin="110,195,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_solo_percent_ValueChanged"/>
+                    <TextBlock x:Name="preview_solo_percent_label" HorizontalAlignment="Left" Margin="235,195,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
+
+                    <Label Content="Pressed Frets:" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="preview_green_enabled" HorizontalAlignment="Left" Margin="110,225,0,0" VerticalAlignment="Top" Checked="preview_green_active" Unchecked="preview_green_deactive" />
+                    <CheckBox x:Name="preview_red_enabled" HorizontalAlignment="Left" Margin="130,225,0,0" VerticalAlignment="Top" Checked="preview_red_active" Unchecked="preview_red_deactive" />
+                    <CheckBox x:Name="preview_yellow_enabled" HorizontalAlignment="Left" Margin="150,225,0,0" VerticalAlignment="Top" Checked="preview_yellow_active" Unchecked="preview_yellow_deactive" />
+                    <CheckBox x:Name="preview_blue_enabled" HorizontalAlignment="Left" Margin="170,225,0,0" VerticalAlignment="Top" Checked="preview_blue_active" Unchecked="preview_blue_deactive" />
+                    <CheckBox x:Name="preview_orange_enabled" HorizontalAlignment="Left" Margin="190,225,0,0" VerticalAlignment="Top" Checked="preview_orange_active" Unchecked="preview_orange_deactive" />
                 </Grid>
             </TabItem>
         </TabControl>

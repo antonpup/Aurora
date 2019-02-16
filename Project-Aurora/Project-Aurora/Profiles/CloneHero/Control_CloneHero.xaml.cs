@@ -188,6 +188,118 @@ namespace Aurora.Profiles.CloneHero
                 (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsFC = false;
             }
         }
+        private void preview_solo_active(object sender, RoutedEventArgs e)
+        {
+            this.preview_solo_enabled_label.Text = "true";
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsSoloActive = true;
+            }
+        }
+        private void preview_solo_deactive(object sender, RoutedEventArgs e)
+        {
+            this.preview_solo_enabled_label.Text = "false";
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsSoloActive = false;
+            }
+        }
+        private void preview_solo_percent_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (sender is Slider)
+            {
+                this.preview_solo_percent_label.Text = (int)((sender as Slider).Value) + "%";
+                if (IsLoaded)
+                {
+                    (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.SoloPercent = (int)((sender as Slider).Value);
+                }
+            }
+        }
+
+        #region frets
+
+        // Green
+        private void preview_green_active(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsGreenPressed = true;
+            }
+        }
+        private void preview_green_deactive(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsGreenPressed = false;
+            }
+        }
+
+        // Red
+        private void preview_red_active(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsRedPressed = true;
+            }
+        }
+        private void preview_red_deactive(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsRedPressed = false;
+            }
+        }
+
+        // Yellow
+        private void preview_yellow_active(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsYellowPressed = true;
+            }
+        }
+        private void preview_yellow_deactive(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsYellowPressed = false;
+            }
+        }
+
+        // Blue
+        private void preview_blue_active(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsBluePressed = true;
+            }
+        }
+        private void preview_blue_deactive(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsBluePressed = false;
+            }
+        }
+
+        // Orange
+        private void preview_orange_active(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsOrangePressed = true;
+            }
+        }
+        private void preview_orange_deactive(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsOrangePressed = false;
+            }
+        }
+
+        #endregion
+
         /*
         private void preview_mana_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
