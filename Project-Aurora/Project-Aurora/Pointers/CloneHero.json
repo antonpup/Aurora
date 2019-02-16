@@ -3,11 +3,11 @@
         "baseAddress": "4791784",
         "pointers": [ "152", "848" ]
     },
-    "SPActivated": {
+    "IsStarPowerActive": {
         "baseAddress": "4854560",
         "pointers": [ "664", "776", "272" ]
     },
-    "SPPercent": {
+    "StarPowerPercent": {
         "baseAddress": "4791784",
         "pointers": [ "152", "828" ]
     },
@@ -22,5 +22,33 @@
     "NotesTotal": {
         "baseAddress": "4791784",
         "pointers": [ "152", "624", "40", "40", "120" ]
+    },
+    "IsSoloActive": {
+        "baseAddress": "21617568",
+        "pointers": [ "0", "56", "1976" ]
+    },
+    "SoloPercent": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "688", "112" ]
+    },
+    "IsGreenPressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "640", "24", "32", "24" ]
+    },
+    "IsRedPressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "704", "728" ]
+    },
+    "IsYellowPressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "704", "552" ]
+    },
+    "IsBluePressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "704", "376" ]
+    },
+    "IsOrangePressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "704", "200" ]
     }
 }

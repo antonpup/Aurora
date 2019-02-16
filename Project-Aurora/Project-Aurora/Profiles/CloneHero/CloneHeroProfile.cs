@@ -58,7 +58,7 @@ namespace Aurora.Profiles.CloneHero
                 new Layer("Star Power Activated", new ConditionalLayerHandler{
                     Properties = new ConditionalLayerProperties
                     {
-                        _ConditionPath = "Player/SPActivated",
+                        _ConditionPath = "Player/IsStarPowerActive",
                         _PrimaryColor = Color.FromArgb(0, 227, 255),
                         _SecondaryColor = Color.FromArgb(0, 150, 150, 150),
                         _Sequence = new KeySequence(new FreeFormObject((float)0.78, (float)0, (float)545.25, (float)215.8, 0))
@@ -76,7 +76,7 @@ namespace Aurora.Profiles.CloneHero
                         _SecondaryColor = Color.Black,
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "Player/SPPercent",
+                        _VariablePath = "Player/StarPowerPercent",
                         _MaxVariablePath = "100",
                     },
                 }),

@@ -116,7 +116,7 @@ namespace Aurora.Profiles.CloneHero
 
                 if (IsLoaded)
                 {
-                    (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.SPPercent = (int)((sender as Slider).Value);
+                    (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.StarPowerPercent = (int)((sender as Slider).Value);
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace Aurora.Profiles.CloneHero
 
                 if (IsLoaded)
                 {
-                    (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.SPActivated = ((sender as Slider).Value) == 1 ? true : false;
+                    (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsStarPowerActive = ((sender as Slider).Value) == 1 ? true : false;
                 }
             }
         }
@@ -145,7 +145,7 @@ namespace Aurora.Profiles.CloneHero
             this.preview_sp_enabled_label.Text = "true";
             if (IsLoaded)
             {
-                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.SPActivated = true;
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsStarPowerActive = true;
             }
         }
         private void preview_sp_deactive(object sender, RoutedEventArgs e)
@@ -153,7 +153,7 @@ namespace Aurora.Profiles.CloneHero
             this.preview_sp_enabled_label.Text = "false";
             if (IsLoaded)
             {
-                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.SPActivated = false;
+                (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsStarPowerActive = false;
             }
         }
         private void preview_menu_active(object sender, RoutedEventArgs e)

@@ -14,12 +14,21 @@
         public int NoteStreak3x = 0;
         public int NoteStreak4x = 0;
 
-        public bool SPActivated = false;
-        public float SPPercent = 0;
+        public bool IsStarPowerActive = false;
+        public float StarPowerPercent = 0;
         public bool IsAtMenu = false;
         public int NotesTotal = 0;
 
         public bool IsFC = true;
+
+        public bool IsSoloActive;
+        public int SoloPercent;
+
+        public bool IsGreenPressed;
+        public bool IsRedPressed;
+        public bool IsYellowPressed;
+        public bool IsBluePressed;
+        public bool IsOrangePressed;
 
         internal Player_CloneHero(string json_data) : base(json_data)
         {
