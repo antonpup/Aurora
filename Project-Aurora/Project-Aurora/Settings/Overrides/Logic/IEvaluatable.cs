@@ -18,18 +18,20 @@ namespace Aurora.Settings.Overrides.Logic {
      some way of converting the enum to interface type so that the code can generate a list of the matching classes. That's what this is: */
 
     /// <summary>Enum of all evaluatable types.</summary>
-    public enum EvaluatableType { All, Boolean, Number }
+    public enum EvaluatableType { All, Boolean, Number, String }
     /// <summary>Class that stores a dictionary to convert EvaluatableType enums into the interface type.</summary>
     public static class EvaluatableTypeResolver {
         private static Dictionary<EvaluatableType, Type> enumToTypeDictionary = new Dictionary<EvaluatableType, Type> {
             { EvaluatableType.All, typeof(IEvaluatable) },
             { EvaluatableType.Boolean, typeof(IEvaluatableBoolean) },
-            { EvaluatableType.Number, typeof(IEvaluatableNumber) }
+            { EvaluatableType.Number, typeof(IEvaluatableNumber) },
+            { EvaluatableType.String, typeof(IEvaluatableString) }
         };
         private static Dictionary<EvaluatableType, Func<IEvaluatable>> enumToDefaultDictionary = new Dictionary<EvaluatableType, Func<IEvaluatable>> {
             { EvaluatableType.All, () => null },
             { EvaluatableType.Boolean, () => new BooleanTrue() },
-            { EvaluatableType.Number, () => new NumberConstant() }
+            { EvaluatableType.Number, () => new NumberConstant() },
+            { EvaluatableType.String, () => new StringConstant() }
         };
         public static Type Resolve(EvaluatableType inType) => enumToTypeDictionary.TryGetValue(inType, out Type outType) ? outType : typeof(IEvaluatable);
         public static IEvaluatable GetDefault(EvaluatableType inType) => enumToDefaultDictionary.TryGetValue(inType, out Func<IEvaluatable> outFunc) ? outFunc() : null;
@@ -74,7 +76,18 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Should evaluate the current expression and return a double with the result of the evaluation.</summary>
         new double Evaluate(IGameState gameState);
 
-        /// <summary>Creates a copy of this IEvaluatableNumber</summary>
+        /// <summary>Creates a copy of this IEvaluatableNumber.</summary>
         new IEvaluatableNumber Clone();
+    }
+
+    /// <summary>
+    /// Interface that defines a string logic operand that can be evaluated into a string of characters.
+    /// </summary>
+    public interface IEvaluatableString : IEvaluatable {
+        /// <summary>Should evaluate the current expression and return a string with the result.</summary>
+        new string Evaluate(IGameState gameState);
+
+        /// <summary>Creates a copy of this IEvaluatableString.</summary>
+        new IEvaluatableString Clone();
     }
 }

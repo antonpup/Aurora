@@ -34,6 +34,7 @@ namespace Aurora.Settings.Overrides.Logic {
         [Description("State Variable")] State,
         [Description("Input")] Input,
         [Description("Misc.")] Misc,
-        [Description("Maths (Advanced)")] Maths
+        [Description("Maths (Advanced)")] Maths,
+        [Description("String (Advanced")] String
     }
 }
