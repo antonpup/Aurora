@@ -150,3 +150,6 @@ This fork includes a script for Raspberry PI and Aurora to transmit lighting inf
 * [rpi_ws281x](https://github.com/jgarff/rpi_ws281x) - Used for NeoPixel LED lighting
 * [LedStrip](https://github.com/glnds/LedStrip) - Used for LED lighting
 * [Gson](https://github.com/google/gson) - Used for Json parsing
+* [FastLED](https://github.com/FastLED/FastLED) - Used for LED lighting on ESP8266
+* [ArduinoJson](https://github.com/bblanchon/ArduinoJson) - Used for Json parsing on ESP8266
+* [Arduino](https://github.com/esp8266/Arduino) - Arduino core for ESP8266 WiFi chip
