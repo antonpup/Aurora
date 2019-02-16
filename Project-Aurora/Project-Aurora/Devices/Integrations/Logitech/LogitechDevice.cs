@@ -461,7 +461,7 @@ namespace Aurora.Devices.Logitech
                     MouseLights kkey = (MouseLights)key.Key;
 
 
-                    if (kkey == MouseLights.Peripheral_Logo || kkey == MouseLights.All)
+                    if (kkey == MouseLights.Peripheral_Logo)
                     {
                         SendColorToPeripheral(key.Value, forced || !peripheral_updated);
                     }
@@ -477,7 +477,7 @@ namespace Aurora.Devices.Logitech
             }
         }
 
-        public bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
@@ -485,6 +485,8 @@ namespace Aurora.Devices.Logitech
 
             try
             {
+                SendColorToPeripheral(globalColor, forced || !peripheral_updated);
+
                 foreach (DeviceLayout layout in devices)
                 {
                     switch (layout)
@@ -499,6 +501,8 @@ namespace Aurora.Devices.Logitech
                             break;
                     }
                 }
+
+
             }
             catch (Exception ex)
             {

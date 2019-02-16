@@ -23,6 +23,9 @@ namespace Aurora.Devices.Layout.Layouts
     /// </summary>
     public enum KeyboardKeys : LEDINT
     {
+        [Description("Global")]
+        Global = 0,
+
         /// <summary>
         /// Escape key
         /// </summary>

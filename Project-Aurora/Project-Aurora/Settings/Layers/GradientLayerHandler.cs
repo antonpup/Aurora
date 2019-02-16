@@ -58,13 +58,13 @@ namespace Aurora.Settings.Layers
             else
             {
 
-                Rectangle rect =    Properties.Sequence.freeform.Rectangle;
+                Rectangle rect =    Properties.Sequence.freeform.RectangleBitmap;
 
                 temp_layer = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig, rect);
 
                 Devices.Layout.Canvas g = gradient_layer.GetCanvas();
                 //TODO: Fix and apply rotation
-                g.DrawImage(temp_layer.GetBitmap(), rect, rect, GraphicsUnit.Pixel);
+                g.DrawImage(temp_layer.GetCanvas(), rect, rect, GraphicsUnit.Pixel);
             }
 
             return gradient_layer;

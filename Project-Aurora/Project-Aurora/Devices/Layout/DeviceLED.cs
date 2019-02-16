@@ -13,6 +13,7 @@ namespace Aurora.Devices.Layout
     public struct DeviceLED
     {
         public static readonly DeviceLED None = new DeviceLED(0, 0, LEDINT.MinValue);
+        public static readonly DeviceLED Global = new DeviceLED(0, 0, 0);
 
         public byte DeviceTypeID { get; private set; }
         public byte DeviceID { get; private set; }

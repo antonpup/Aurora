@@ -1396,6 +1396,6 @@ namespace Aurora.Devices
         /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false);
+        bool UpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false);
     }
 }

@@ -79,6 +79,48 @@ namespace Aurora.Settings
             freeform = new FreeFormObject();
         }
 
+        public RectangleF GetAffectedRegion()
+        {
+            switch (type)
+            {
+                case KeySequenceType.FreeForm:
+                    return new RectangleF(LayoutUtils.PixelToByte(this.freeform.X), LayoutUtils.PixelToByte(this.freeform.Y), LayoutUtils.PixelToByte(this.freeform.Width), LayoutUtils.PixelToByte(this.freeform.Height));
+                default:
+
+                    float left = 0.0f;
+                    float top = left;
+                    float right = top;
+                    float bottom = right;
+
+                    foreach (DeviceLED key in this.keys)
+                    {
+                        BitmapRectangle keyMapping = GlobalDeviceLayout.Instance.GetDeviceLEDBitmapRegion(key);
+
+                        if (left == top && top == right && right == bottom && bottom == 0.0f)
+                        {
+                            left = keyMapping.Left;
+                            top = keyMapping.Top;
+                            right = keyMapping.Right;
+                            bottom = keyMapping.Bottom;
+                        }
+                        else
+                        {
+                            if (keyMapping.Left < left)
+                                left = keyMapping.Left;
+                            if (keyMapping.Top < top)
+                                top = keyMapping.Top;
+                            if (keyMapping.Right > right)
+                                right = keyMapping.Right;
+                            if (keyMapping.Bottom > bottom)
+                                bottom = keyMapping.Bottom;
+                        }
+                    }
+
+                    return new RectangleF(left, top, (right - left), (bottom - top));
+            }
+
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

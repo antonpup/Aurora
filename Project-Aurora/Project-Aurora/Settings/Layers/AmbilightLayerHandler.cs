@@ -226,11 +226,9 @@ namespace Aurora.Settings.Layers
 
             if (Properties.AmbilightType == AmbilightType.Default)
             {
-                using (Graphics g = ambilight_layer.GetGraphics())
-                {
-                    if (screen_image != null)
-                        g.DrawImageUnscaled(screen_image, 0, 0);
-                }
+                Canvas g = ambilight_layer.GetCanvas();
+                if (screen_image != null)
+                    g.DrawImageUnscaled(screen_image, 0, 0);
             }
             else if (Properties.AmbilightType == AmbilightType.AverageColor)
             {

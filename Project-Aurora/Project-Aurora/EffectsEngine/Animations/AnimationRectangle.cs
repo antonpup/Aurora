@@ -56,11 +56,7 @@ namespace Aurora.EffectsEngine.Animations
             transformationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
             transformationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
 
-            Matrix originalMatrix = g.Transform;
-            g.Transform = transformationMatrix;
-            g.DrawRectangle(_pen, _scaledDimension.X, _scaledDimension.Y, _scaledDimension.Width, _scaledDimension.Height);
-            g.Transform = originalMatrix;
-
+            g.DrawRectangle(_pen, new RectangleF(_scaledDimension.X, _scaledDimension.Y, _scaledDimension.Width, _scaledDimension.Height), transformationMatrix);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

@@ -154,7 +154,7 @@ namespace Aurora.Devices.Wooting
             }
         }
 
-        public bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 

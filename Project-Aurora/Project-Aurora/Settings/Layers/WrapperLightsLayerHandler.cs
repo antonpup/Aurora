@@ -185,7 +185,7 @@ namespace Aurora.Settings.Layers
             SetExtraKey(KeyboardKeys.LOGO, ngw_state.Extra_Keys.logo);
             SetExtraKey(KeyboardKeys.LOGO2, ngw_state.Extra_Keys.badge);
             //TODO: Deal with MouseLights.ALL
-            SetExtraKey(MouseLights.All, ngw_state.Extra_Keys.peripheral);
+            SetExtraKey(DeviceLED.Global, ngw_state.Extra_Keys.peripheral);
             //Reversing the mousepad lights from left to right, razer takes it from right to left
             //TODO: Deal with these
             /*SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);

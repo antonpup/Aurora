@@ -44,7 +44,7 @@ namespace Aurora.Profiles.RocketLeague
                     {
                         _PercentType = PercentEffectType.AllAtOnce,
                         //TODO: Sort out Peripheral lights
-                        _Sequence = new KeySequence(new List<MouseLights> { MouseLights.All }.ConvertAll(s => s.GetDeviceLED()) ),
+                        _Sequence = new KeySequence(new List<DeviceLED>{DeviceLED.Global} ),
                         _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
