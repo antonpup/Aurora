@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Canvas = Aurora.Devices.Layout.Canvas;
 
 namespace Aurora.Settings.Layers
 {
@@ -176,12 +177,12 @@ namespace Aurora.Settings.Layers
                 }
 
                 // Draw the animation to a temporary canvas
-                using (Graphics g = temp.GetGraphics())
-                    Properties.AnimationMix.Draw(g, anim.currentTime, 1f, offset);
-                
+                Canvas g = temp.GetCanvas();
+                Properties.AnimationMix.Draw(g, anim.currentTime, 1f, offset);
+
                 // Draw from this temp canvas to the actual layer, performing the scale down if it's needed.
-                using (Graphics g = animationLayer.GetGraphics())
-                    g.DrawImage(temp.GetBitmap(), destRect, new Rectangle(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), GraphicsUnit.Pixel);
+                g = animationLayer.GetCanvas();
+                g.DrawImage(temp.GetCanvas(), destRect, new Rectangle(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), GraphicsUnit.Pixel);
 
                 temp.Dispose();
             });

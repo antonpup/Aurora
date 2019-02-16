@@ -160,7 +160,7 @@ namespace Aurora.Profiles.CSGO.Layers
                     bomb_effect_layer.Set(Properties.Sequence, bombcolor);
 
                     if (Properties.PeripheralUse)
-                        bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, bombcolor);
+                        bomb_effect_layer.SetGlobal(bombcolor);
                 }
                 else if (csgostate.Round.Bomb == BombState.Defused)
                 {
@@ -170,7 +170,7 @@ namespace Aurora.Profiles.CSGO.Layers
                         bomb_effect_layer.Set(Properties.Sequence, Properties.CTColor);
 
                         if (Properties.PeripheralUse)
-                            bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, Properties.CTColor);
+                            bomb_effect_layer.SetGlobal(Properties.CTColor);
                     }
                 }
                 else if (csgostate.Round.Bomb == BombState.Exploded)
@@ -181,7 +181,7 @@ namespace Aurora.Profiles.CSGO.Layers
                         bomb_effect_layer.Set(Properties.Sequence, Properties.TColor);
 
                         if (Properties.PeripheralUse)
-                            bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, Properties.TColor);
+                            bomb_effect_layer.SetGlobal(Properties.TColor);
                     }
                 }
                 else

@@ -332,7 +332,7 @@ namespace Aurora.Settings.Layers
                         if (time_value > 1.0f)
                             continue;
 
-                        input.animation.Draw(interactive_layer.GetGraphics(), time_value);
+                        input.animation.Draw(interactive_layer.GetCanvas(), time_value);
                     }
                 }
                 catch (Exception exc)

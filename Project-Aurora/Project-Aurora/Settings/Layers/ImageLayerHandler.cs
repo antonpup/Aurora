@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Canvas = Aurora.Devices.Layout.Canvas;
 
 namespace Aurora.Settings.Layers
 {
@@ -77,41 +79,26 @@ namespace Aurora.Settings.Layers
 
                 if (Properties.Sequence.type == KeySequenceType.Sequence)
                 {
-                    using (Graphics g = temp_layer.GetGraphics())
-                    {
-                        g.DrawImage(_loaded_image, new RectangleF(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), new RectangleF(0, 0, _loaded_image.Width, _loaded_image.Height), GraphicsUnit.Pixel);
-                    }
+                    Canvas g = temp_layer.GetCanvas();
+                    g.DrawImage(_loaded_image, new Rectangle(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), new Rectangle(0, 0, _loaded_image.Width, _loaded_image.Height), GraphicsUnit.Pixel);
 
                     foreach (var key in Properties.Sequence.keys)
                         image_layer.Set(key, Utils.ColorUtils.AddColors(image_layer.Get(key), temp_layer.Get(key)));
                 }
                 else
                 {
-                    float x_pos = (float)Math.Round((Properties.Sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                    float y_pos = (float)Math.Round((Properties.Sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                    float width = (float)Math.Round((double)(Properties.Sequence.freeform.Width * Effects.editor_to_canvas_width));
-                    float height = (float)Math.Round((double)(Properties.Sequence.freeform.Height * Effects.editor_to_canvas_height));
+                    Rectangle rect = Properties.Sequence.freeform.RectangleBitmap;
 
-                    if (width < 3) width = 3;
-                    if (height < 3) height = 3;
+                    Canvas g = temp_layer.GetCanvas();
+                    g.DrawImage(_loaded_image, rect, new Rectangle(0, 0, _loaded_image.Width, _loaded_image.Height), GraphicsUnit.Pixel);
 
-                    Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
+                    g = image_layer.GetCanvas();
+                    PointF rotatePoint = new PointF(rect.X + (rect.Width / 2.0f), rect.Y + (rect.Height / 2.0f));
 
-                    using (Graphics g = temp_layer.GetGraphics())
-                    {
-                        g.DrawImage(_loaded_image, rect, new RectangleF(0, 0, _loaded_image.Width, _loaded_image.Height), GraphicsUnit.Pixel);
-                    }
+                    Matrix myMatrix = new Matrix();
+                    myMatrix.RotateAt(Properties.Sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);
 
-                    using (Graphics g = image_layer.GetGraphics())
-                    {
-                        PointF rotatePoint = new PointF(x_pos + (width / 2.0f), y_pos + (height / 2.0f));
-
-                        Matrix myMatrix = new Matrix();
-                        myMatrix.RotateAt(Properties.Sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);
-
-                        g.Transform = myMatrix;
-                        g.DrawImage(temp_layer.GetBitmap(), rect, rect, GraphicsUnit.Pixel);
-                    }
+                    g.DrawImage(temp_layer.GetCanvas(), rect, rect, GraphicsUnit.Pixel, myMatrix);
                 }
             }
 

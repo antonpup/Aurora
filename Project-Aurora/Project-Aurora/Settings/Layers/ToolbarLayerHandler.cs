@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
 using Aurora.Devices.Layout.Layouts;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
@@ -41,7 +42,7 @@ namespace Aurora.Settings.Layers {
     /// </summary>
     public class ToolbarLayerHandler : LayerHandler<ToolbarLayerHandlerProperties> {
 
-        private KeyboardKeys activeKey = KeyboardKeys.NONE;
+        private DeviceLED activeKey = DeviceLED.None;
 
         public ToolbarLayerHandler() {
             _ID = "Toolbar";
@@ -74,7 +75,7 @@ namespace Aurora.Settings.Layers {
         /// </summary>
         private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
             if (Properties.Sequence.keys.FindIndex(s => ((KeyboardKeys)s.LedID).Equals(e.GetKeyboardKey())) != -1)
-                activeKey = e.GetKeyboardKey();
+                activeKey = e.GetKeyboardKey().GetDeviceLED();
         }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace Aurora.Settings.Layers {
         private void InputEvents_Scroll(object sender, SharpDX.RawInput.MouseInputEventArgs e) {
             if (Properties.EnableScroll && Properties.Sequence.keys.Count > 1) {
                 // If there's no active key or the ks doesn't contain it (e.g. the sequence was just changed), make the first one active.
-                if (activeKey == KeyboardKeys.NONE || !Properties.Sequence.keys.Contains(activeKey))
+                if (activeKey.IsNone || !Properties.Sequence.keys.Contains(activeKey))
                     activeKey = Properties.Sequence.keys[0];
 
                 // If there's an active key make scroll move up/down

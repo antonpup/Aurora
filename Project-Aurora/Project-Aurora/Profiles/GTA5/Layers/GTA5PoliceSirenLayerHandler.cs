@@ -121,7 +121,7 @@ namespace Aurora.Profiles.GTA5.Layers
                             siren_keyframe = siren_keyframe % 2;
 
                             if (Properties.PeripheralUse)
-                                sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                                sirens_layer.SetGlobal(lefts);
                             break;
                         case GTA5_PoliceEffects.Alt_Half:
                             switch (siren_keyframe % 2)
@@ -131,14 +131,14 @@ namespace Aurora.Profiles.GTA5.Layers
                                     lefts = Color.Black;
 
                                     if (Properties.PeripheralUse)
-                                        sirens_layer.Set(Devices.DeviceKeys.Peripheral, rights);
+                                        sirens_layer.SetGlobal(rights);
                                     break;
                                 default:
                                     lefts = rights;
                                     rights = Color.Black;
 
                                     if (Properties.PeripheralUse)
-                                        sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                                        sirens_layer.SetGlobal(lefts);
                                     break;
                             }
                             siren_keyframe = siren_keyframe % 2;
@@ -160,7 +160,7 @@ namespace Aurora.Profiles.GTA5.Layers
                             siren_keyframe = siren_keyframe % 4;
 
                             if (Properties.PeripheralUse)
-                                sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                                sirens_layer.SetGlobal(lefts);
                             break;
                         case GTA5_PoliceEffects.Alt_Half_Blink:
                             switch (siren_keyframe % 8)
@@ -170,35 +170,35 @@ namespace Aurora.Profiles.GTA5.Layers
                                     lefts = Color.Black;
 
                                     if (Properties.PeripheralUse)
-                                        sirens_layer.Set(Devices.DeviceKeys.Peripheral, rights);
+                                        sirens_layer.SetGlobal(rights);
                                     break;
                                 case 4:
                                     rights = lefts;
                                     lefts = Color.Black;
 
                                     if (Properties.PeripheralUse)
-                                        sirens_layer.Set(Devices.DeviceKeys.Peripheral, rights);
+                                        sirens_layer.SetGlobal(rights);
                                     break;
                                 case 2:
                                     lefts = rights;
                                     rights = Color.Black;
 
                                     if (Properties.PeripheralUse)
-                                        sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                                        sirens_layer.SetGlobal(lefts);
                                     break;
                                 case 0:
                                     lefts = rights;
                                     rights = Color.Black;
 
                                     if (Properties.PeripheralUse)
-                                        sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                                        sirens_layer.SetGlobal(lefts);
                                     break;
                                 default:
                                     rights = Color.Black;
                                     lefts = Color.Black;
 
                                     if (Properties.PeripheralUse)
-                                        sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                                        sirens_layer.SetGlobal(lefts);
                                     break;
                             }
                             siren_keyframe = siren_keyframe % 8;
@@ -217,7 +217,7 @@ namespace Aurora.Profiles.GTA5.Layers
                             siren_keyframe = siren_keyframe % 2;
 
                             if (Properties.PeripheralUse)
-                                sirens_layer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                                sirens_layer.SetGlobal(lefts);
                             break;
                     }
 

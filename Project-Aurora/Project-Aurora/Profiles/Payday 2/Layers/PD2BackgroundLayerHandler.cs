@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.Payday_2.GSI;
 using Aurora.Profiles.Payday_2.GSI.Nodes;
 using Aurora.Settings;
@@ -195,7 +196,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                     bg_layer.Fill(bg_color);
 
                     if (Properties.PeripheralUse)
-                        bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
+                        bg_layer.SetGlobal(bg_color);
                 }
                 else if (pd2.Level.Phase == LevelPhase.Stealth && pd2.Game.State == GameStates.Ingame)
                 {
@@ -206,12 +207,12 @@ namespace Aurora.Profiles.Payday_2.Layers
                         ColorSpectrum suspicion_spec = new ColorSpectrum(Properties.LowSuspicionColor, Properties.HighSuspicionColor);
                         suspicion_spec.SetColorAt(0.5f, Properties.MediumSuspicionColor);
 
-                        Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Effects.editor_to_canvas_width / GlobalDeviceLayout.Instance.CanvasWidth), 1.0f / (Effects.editor_to_canvas_height / GlobalDeviceLayout.Instance.CanvasHeight)));
+                        Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, GlobalDeviceLayout.Instance.CanvasWidth,  GlobalDeviceLayout.Instance.CanvasHeight));
 
                         bg_layer.PercentEffect(suspicion_spec, suspicionSequence, percentSuspicious, 1.0D, Properties.SuspicionEffectType);
 
                         if (Properties.PeripheralUse)
-                            bg_layer.Set(Devices.DeviceKeys.Peripheral, suspicion_spec.GetColorAt((float)percentSuspicious));
+                            bg_layer.SetGlobal(suspicion_spec.GetColorAt((float)percentSuspicious));
                     }
                 }
                 else if (pd2.Level.Phase == LevelPhase.Point_of_no_return && pd2.Game.State == GameStates.Ingame)
@@ -232,14 +233,14 @@ namespace Aurora.Profiles.Payday_2.Layers
                     bg_layer.Fill(no_return_color);
 
                     if (Properties.PeripheralUse)
-                        bg_layer.Set(Devices.DeviceKeys.Peripheral, no_return_color);
+                        bg_layer.SetGlobal(no_return_color);
                 }
                 else
                 {
                     bg_layer.Fill(bg_color);
 
                     if (Properties.PeripheralUse)
-                        bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
+                        bg_layer.SetGlobal(bg_color);
                 }
 
             }

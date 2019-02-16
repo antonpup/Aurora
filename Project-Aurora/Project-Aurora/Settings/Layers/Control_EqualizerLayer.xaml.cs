@@ -1,3 +1,5 @@
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Canvas = Aurora.Devices.Layout.Canvas;
 
 namespace Aurora.Settings.Layers
 {
@@ -247,14 +250,15 @@ namespace Aurora.Settings.Layers
             preview_window_open = false;
         }
 
-        private void Control_EqualizerLayer_NewLayerRender(System.Drawing.Bitmap bitmap)
+        private void Control_EqualizerLayer_NewLayerRender(Canvas bitmap)
         {
             try
             {
                 Dispatcher.Invoke(
                     () =>
                     {
-                        using (MemoryStream memory = new MemoryStream())
+                        //TODO: Fix this
+                        /*using (MemoryStream memory = new MemoryStream())
                         {
                             bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
                             memory.Position = 0;
@@ -265,7 +269,7 @@ namespace Aurora.Settings.Layers
                             bitmapimage.EndInit();
 
                             preview_image.Source = bitmapimage;
-                        }
+                        }*/
                     });
             }
             catch (Exception ex)

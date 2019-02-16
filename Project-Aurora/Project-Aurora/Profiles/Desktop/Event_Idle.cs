@@ -137,11 +137,11 @@ namespace Aurora.Profiles.Desktop
                         float transition_value = 1.0f - raindrops[raindrop];
                         float radius = transition_value * GlobalDeviceLayout.Instance.CanvasBiggest;
 
-                        layer.GetGraphics().DrawEllipse(new Pen(drop_spec.GetColorAt(transition_value), 2),
-                            pt.X - radius,
+                        layer.GetCanvas().DrawEllipse(new Pen(drop_spec.GetColorAt(transition_value), 2),
+                            new RectangleF(pt.X - radius,
                             pt.Y - radius,
                             2 * radius,
-                            2 * radius);
+                            2 * radius));
 
                         raindrops[raindrop] -= getDeltaTime() * 0.05f * Global.Configuration.idle_speed;
                     }
@@ -193,10 +193,8 @@ namespace Aurora.Profiles.Desktop
 
                     layer.Fill(Global.Configuration.idle_effect_secondary_color);
 
-                    using (Graphics g = layer.GetGraphics())
-                    {
-                        matrix_lines.Draw(g, (currenttime % 1000000L) / 1000.0f);
-                    }
+                    Canvas g = layer.GetCanvas();
+                    matrix_lines.Draw(g, (currenttime % 1000000L) / 1000.0f);
 
                     layers.Enqueue(layer);
                     break;
