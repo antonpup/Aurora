@@ -37,7 +37,7 @@
     },
     "IsRedPressed": {
         "baseAddress": "4791784",
-        "pointers": [ "152", "640", "24", "56", "376" ]
+        "pointers": [ "152", "640", "32", "120", "24" ]
     },
     "IsYellowPressed": {
         "baseAddress": "4791784",
