@@ -32,30 +32,86 @@ namespace Aurora.Profiles.CloneHero
                 }
                 ),
 
+                new Layer("Orange Fret", new ConditionalLayerHandler{
+                    Properties = new ConditionalLayerProperties
+                    {
+                        _ConditionPath = "Player/IsOrangePressed",
+                        _PrimaryColor = Color.FromArgb(255, 134, 0),
+                        _SecondaryColor = Color.Black,
+                        _Sequence = new KeySequence(new[] { DK.O, DK.P, DK.L, DK.SEMICOLON, DK.PERIOD, DK.FORWARD_SLASH })
+                    }
+                }
+                ),
+
+                new Layer("Blue Fret", new ConditionalLayerHandler{
+                    Properties = new ConditionalLayerProperties
+                    {
+                        _ConditionPath = "Player/IsBluePressed",
+                        _PrimaryColor = Color.Blue,
+                        _SecondaryColor = Color.Black,
+                        _Sequence = new KeySequence(new[] { DK.U, DK.I, DK.J, DK.K, DK.M, DK.COMMA })
+                    }
+                }
+                ),
+
+                new Layer("Yellow Fret", new ConditionalLayerHandler{
+                    Properties = new ConditionalLayerProperties
+                    {
+                        _ConditionPath = "Player/IsYellowPressed",
+                        _PrimaryColor = Color.Yellow,
+                        _SecondaryColor = Color.Black,
+                        _Sequence = new KeySequence(new[] { DK.T, DK.Y, DK.G, DK.H, DK.B, DK.N })
+                    }
+                }
+                ),
+
+                new Layer("Red Fret", new ConditionalLayerHandler{
+                    Properties = new ConditionalLayerProperties
+                    {
+                        _ConditionPath = "Player/IsRedPressed",
+                        _PrimaryColor = Color.Red,
+                        _SecondaryColor = Color.Black,
+                        _Sequence = new KeySequence(new[] { DK.E, DK.R, DK.D, DK.F, DK.C, DK.V })
+                    }
+                }
+                ),
+
+                new Layer("Green Fret", new ConditionalLayerHandler{
+                    Properties = new ConditionalLayerProperties
+                    {
+                        _ConditionPath = "Player/IsGreenPressed",
+                        _PrimaryColor = Color.FromArgb(0, 255, 69),
+                        _SecondaryColor = Color.Black,
+                        _Sequence = new KeySequence(new[] { DK.Q, DK.W, DK.A, DK.S, DK.Z, DK.X })
+                    }
+                }
+                ),
+
                 new Layer("FC Indicator", new ConditionalLayerHandler{
                     Properties = new ConditionalLayerProperties
                     {
                         _ConditionPath = "Player/IsFC",
-                        _PrimaryColor = Color.FromArgb(255, 181, 0),
+                        _PrimaryColor = Color.FromArgb(208, 181, 0),
                         _SecondaryColor = Color.FromArgb(100, 100, 100),
                         _Sequence = new KeySequence(new[] {
-                            DK.Peripheral, DK.ADDITIONALLIGHT1, DK.ADDITIONALLIGHT2,
-                            DK.ADDITIONALLIGHT3, DK.ADDITIONALLIGHT4, DK.ADDITIONALLIGHT5,
-                            DK.ADDITIONALLIGHT6, DK.ADDITIONALLIGHT7, DK.ADDITIONALLIGHT8,
-                            DK.ADDITIONALLIGHT9, DK.ADDITIONALLIGHT10, DK.ADDITIONALLIGHT11,
-                            DK.ADDITIONALLIGHT12, DK.ADDITIONALLIGHT13, DK.ADDITIONALLIGHT14,
-                            DK.ADDITIONALLIGHT15, DK.ADDITIONALLIGHT16, DK.ADDITIONALLIGHT17,
-                            DK.ADDITIONALLIGHT18, DK.ADDITIONALLIGHT19, DK.ADDITIONALLIGHT20,
-                            DK.ADDITIONALLIGHT21, DK.ADDITIONALLIGHT22, DK.ADDITIONALLIGHT23,
-                            DK.ADDITIONALLIGHT24, DK.ADDITIONALLIGHT25, DK.ADDITIONALLIGHT26,
-                            DK.ADDITIONALLIGHT27, DK.ADDITIONALLIGHT28, DK.ADDITIONALLIGHT29,
-                            DK.ADDITIONALLIGHT30, DK.ADDITIONALLIGHT31, DK.ADDITIONALLIGHT32
+                            DK.OPEN_BRACKET, DK.CLOSE_BRACKET, DK.APOSTROPHE
                         }),
                     }
                 }
                 ),
 
-                new Layer("Star Power Activated", new ConditionalLayerHandler{
+                new Layer("Boundaries", new ConditionalLayerHandler{
+                    Properties = new ConditionalLayerProperties
+                    {
+                        _ConditionPath = "Player/IsStarPowerActive",
+                        _PrimaryColor = Color.FromArgb(0, 227, 255),
+                        _SecondaryColor = Color.FromArgb(130, 130, 130),
+                        _Sequence = new KeySequence(new FreeFormObject((float)-0.78, (float)35.13, (float)551.5, (float)180.7, 0))
+                    }
+                }
+                ),
+
+                new Layer("Star Power Active", new ConditionalLayerHandler{
                     Properties = new ConditionalLayerProperties
                     {
                         _ConditionPath = "Player/IsStarPowerActive",
@@ -86,7 +142,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new FreeFormObject((float)165, (float)-169.41, (float)217, (float)546.82, -90)),
+                        _Sequence = new KeySequence(new FreeFormObject((float)-2.75, (float)-2.61, (float)553.3, (float)36, 0)),
                         _PrimaryColor = Color.FromArgb(199, 0, 255),
                         _SecondaryColor = Color.Transparent,
                         _BlinkThreshold = 0.0,
@@ -101,7 +157,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new FreeFormObject((float)165, (float)-169.41, (float)217, (float)546.82, -90)),
+                        _Sequence = new KeySequence(new FreeFormObject((float)-2.75, (float)-2.61, (float)553.3, (float)36, 0)),
                         _PrimaryColor = Color.FromArgb(0, 255, 59),
                         _SecondaryColor = Color.Transparent,
                         _BlinkThreshold = 0.0,
@@ -116,7 +172,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new FreeFormObject((float)165, (float)-169.41, (float)217, (float)546.82, -90)),
+                        _Sequence = new KeySequence(new FreeFormObject((float)-2.75, (float)-2.61, (float)553.3, (float)36, 0)),
                         _PrimaryColor = Color.FromArgb(255, 146, 0),
                         _SecondaryColor = Color.Transparent,
                         _BlinkThreshold = 0.0,
@@ -131,7 +187,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new FreeFormObject((float)165, (float)-169.41, (float)217, (float)546.82, -90)),
+                        _Sequence = new KeySequence(new FreeFormObject((float)-2.75, (float)-2.61, (float)553.3, (float)36, 0)),
                         _PrimaryColor = Color.FromArgb(255, 247, 44),
                         _SecondaryColor = Color.Transparent,
                         _BlinkThreshold = 0.0,
