@@ -37,18 +37,18 @@
     },
     "IsRedPressed": {
         "baseAddress": "4791784",
-        "pointers": [ "152", "704", "728" ]
+        "pointers": [ "152", "640", "24", "56", "376" ]
     },
     "IsYellowPressed": {
         "baseAddress": "4791784",
-        "pointers": [ "152", "704", "552" ]
+        "pointers": [ "152", "640", "40", "208", "24" ]
     },
     "IsBluePressed": {
         "baseAddress": "4791784",
-        "pointers": [ "152", "704", "376" ]
+        "pointers": [ "152", "640", "32", "136", "24" ]
     },
     "IsOrangePressed": {
         "baseAddress": "4791784",
-        "pointers": [ "152", "704", "200" ]
+        "pointers": [ "152", "640", "24", "64", "24" ]
     }
 }
