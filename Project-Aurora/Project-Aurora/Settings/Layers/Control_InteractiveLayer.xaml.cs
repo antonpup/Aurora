@@ -52,6 +52,7 @@ namespace Aurora.Settings.Layers
                 this.interactive_effects_width_label.Text = (this.DataContext as InteractiveLayerHandler).Properties._EffectWidth + " px";
                 this.interactive_effects_width_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectWidth;
                 this.interactive_effects_start_on_key_up_enabled.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._WaitOnKeyUp;
+                this.usePressBuffer.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._UsePressBuffer ?? true;
                 this.KeySequence_keys.Sequence = (this.DataContext as InteractiveLayerHandler).Properties._Sequence;
                 this.KeySequence_keys.FreestyleEnabled = false;
 
@@ -151,6 +152,11 @@ namespace Aurora.Settings.Layers
             {
                 (this.DataContext as InteractiveLayerHandler).Properties._WaitOnKeyUp = (sender as CheckBox).IsChecked.Value;
             }
+        }
+
+        private void usePressBuffer_Checked(object sender, RoutedEventArgs e) {
+            if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+                (this.DataContext as InteractiveLayerHandler).Properties._UsePressBuffer = (sender as CheckBox).IsChecked.Value;
         }
     }
 }
