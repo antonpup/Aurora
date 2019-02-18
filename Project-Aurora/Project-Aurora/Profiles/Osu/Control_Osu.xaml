@@ -26,6 +26,7 @@
                         <Hyperlink NavigateUri="https://gitlab.com/wibble199/aurora-gsi-osu/tags" RequestNavigate="Hyperlink_RequestNavigate">Aurora GSI OsuSync plugin GitLab repo</Hyperlink>
                         <Run Text="and manually download it into your plugins directory. Note if you do it this way you will need to right-click the saved DLL, choose 'Properties' then click the 'Unblock' button." />
                     </TextBlock>
+                    <TextBlock Text="5. Finally, restart OsuSync. You should see that when it starts up it says 'Load AuroraGSI'." />
 
                     <StackPanel Orientation="Horizontal" Margin="0,8">
                         <Button Content="OsuSync GitHub repository" Padding="6,2" Click="OpenOsuSyncRepo_Click" />
