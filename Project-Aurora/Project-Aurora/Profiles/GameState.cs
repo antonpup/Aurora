@@ -188,6 +188,11 @@ namespace Aurora.Profiles
         public int CurrentMillisecond { get { return Utils.Time.GetMilliSeconds(); } }
 
         /// <summary>
+        /// The total number of milliseconds since the epoch
+        /// </summary>
+        public long MillisecondsSinceEpoch => Utils.Time.GetMillisecondsSinceEpoch();
+
+        /// <summary>
         /// Used RAM
         /// </summary>
         public long MemoryUsed { get { return PerformanceInfo.GetTotalMemoryInMiB() - PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }

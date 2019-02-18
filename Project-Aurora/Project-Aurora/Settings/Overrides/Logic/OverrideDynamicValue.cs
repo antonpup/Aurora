@@ -104,7 +104,18 @@ namespace Aurora.Settings.Overrides.Logic {
                     new DCPD("Green", EvaluatableType.Number, "A value between 0 and 1 for the amount of green in the color."),
                     new DCPD("Blue", EvaluatableType.Number, "A value between 0 and 1 for the amount of blue in the color.")
                 }
-            )}
+            ) },
+
+            { typeof(KeySequence), new DCD(
+                p => new KeySequence(new FreeFormObject(Convert.ToSingle(p["X"]), Convert.ToSingle(p["Y"]), Convert.ToSingle(p["Width"]), Convert.ToSingle(p["Height"]), Convert.ToSingle(p["Angle"]))),
+                new[] {
+                    new DCPD("X", EvaluatableType.Number),
+                    new DCPD("Y", EvaluatableType.Number),
+                    new DCPD("Width", EvaluatableType.Number),
+                    new DCPD("Height", EvaluatableType.Number),
+                    new DCPD("Angle", EvaluatableType.Number)
+                }
+            ) }
         };
 
         #region Dynamic Constructor Helper Methods
