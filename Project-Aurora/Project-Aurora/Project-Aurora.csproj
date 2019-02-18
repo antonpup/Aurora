@@ -1464,6 +1464,7 @@
     <Resource Include="Resources\Question_Help.png" />
     <Resource Include="Resources\icons8-keyboard-30.png" />
     <Resource Include="Resources\osu_256x256.png" />
+    <Resource Include="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
