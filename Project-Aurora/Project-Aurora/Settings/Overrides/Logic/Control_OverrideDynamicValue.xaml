@@ -16,8 +16,8 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <DockPanel>
-                            <TextBlock DockPanel.Dock="Left" Margin="0,10,0,0">
-                                <Run Text="{Binding Item1, Mode=OneWay}" />
+                            <TextBlock DockPanel.Dock="Left" Margin="0,10,0,0" >
+                                <Run Text="{Binding Item1, Mode=OneWay}" TextDecorations="Underline" Cursor="Help" ToolTip="{Binding Item4, Mode=OneWay}" />
                                 <Run Text="=" />
                             </TextBlock>
                             <local:Control_EvaluatablePresenter Expression="{Binding Item3, Mode=OneWay}" EvalType="{Binding Item2}" Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Application}" ExpressionChanged="VariableEvaluatable_ExpressionChanged" />

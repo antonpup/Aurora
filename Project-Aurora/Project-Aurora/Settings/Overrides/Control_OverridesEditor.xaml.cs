@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -117,6 +118,11 @@ namespace Aurora.Settings.Overrides {
             // Inform bindings that the available properties list has changed.
             // This may also change the selected property, and therefore the selected logic etc.
             OnPropertyChanged("AvailableLayerProperties", "SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
+        }
+
+        private void HelpButton_Click(object sender, RoutedEventArgs e) {
+            // Open the overrides page on the documentation page
+            Process.Start(new ProcessStartInfo(@"https://project-aurora.gitbook.io/guide/advanced-topics/overrides-system"));
         }
         #endregion
     }

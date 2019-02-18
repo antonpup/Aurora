@@ -49,5 +49,9 @@
                 <ContentControl Margin="0,28,0,0" Content="{Binding SelectedLogicControl}" />
             </Grid>
         </Border>
+
+        <Button Margin="0,9,10,0" Grid.ColumnSpan="999" HorizontalAlignment="Right" VerticalAlignment="Top" Click="HelpButton_Click">
+            <Image Source="/Aurora;component/Resources/Question_Help.png" Width="23" Height="23" Margin="2"/>
+        </Button>
     </Grid>
 </UserControl>

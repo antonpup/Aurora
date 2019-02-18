@@ -513,6 +513,16 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Question_Help {
+            get {
+                object obj = ResourceManager.GetObject("Question_Help", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RazerInstall_Step1 {
             get {
                 object obj = ResourceManager.GetObject("RazerInstall_Step1", resourceCulture);
