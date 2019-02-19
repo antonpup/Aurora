@@ -309,7 +309,8 @@ namespace Aurora.Settings
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
         SteelSeries_Rival_300_HP_OMEN_Edition = 701,
-
+        [Description("SteelSeries - QcK Prism Mousepad + Mouse")]
+        SteelSeries_QcK_Prism = 702,
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900
