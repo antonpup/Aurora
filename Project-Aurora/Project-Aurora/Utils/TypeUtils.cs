@@ -50,5 +50,10 @@ namespace Aurora.Utils
                 .ToDictionary(type => type, type => (T)Attribute.GetCustomAttribute(type, typeof(T))) // Attempt to get the specified attibute of them
                 .Where(kvp => kvp.Value != null); // Filter out any where the attribute is null (i.e. doesn't exist)
         }
+
+        /// <summary>
+        /// Checks if the given type implements the given interface type.
+        /// </summary>
+        public static bool IsInterface(Type type, Type @interface) => @interface.IsAssignableFrom(type);
     }
 }
