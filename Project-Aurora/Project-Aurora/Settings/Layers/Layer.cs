@@ -213,11 +213,6 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        public bool LogicPass
-        {
-            get { return true; } //Check every logic and return whether or not the layer is visible/enabled
-        }
-
         /// <summary>
         /// 
         /// </summary>

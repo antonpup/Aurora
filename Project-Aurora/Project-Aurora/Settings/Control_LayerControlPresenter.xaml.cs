@@ -87,12 +87,6 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnLogic_Click(object sender, RoutedEventArgs e)
-        {
-            Window_LayerLogicEditor logic_edit = new Window_LayerLogicEditor(this._Layer);
-            logic_edit.ShowDialog();
-        }
-
         private void ResetLayer(LayerHandlerEntry type)
         {
             if (IsLoaded && !isSettingNewLayer)

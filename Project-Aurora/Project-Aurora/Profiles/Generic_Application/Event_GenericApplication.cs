@@ -36,7 +36,7 @@ namespace Aurora.Profiles.Generic_Application
 
             foreach (var layer in timeLayers.Reverse().ToArray())
             {
-                if (layer.Enabled && layer.LogicPass)
+                if (layer.Enabled)
                     layers.Enqueue(layer.Render(_game_state));
             }
 

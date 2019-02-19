@@ -367,9 +367,6 @@
     <Compile Include="Controls\LayerEditor.xaml.cs">
       <DependentUpon>LayerEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LogicCheckEdit.xaml.cs">
-      <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
     <Compile Include="Devices\Clevo\ClevoSetKBLED.cs" />
     <Compile Include="Devices\Clevo\ClevoDevice.cs" />
@@ -1327,9 +1324,6 @@
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\ScriptBase.cs" />
     <Compile Include="Settings\VariableRegistry.cs" />
-    <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
-      <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Control_LayerManager.xaml.cs">
       <DependentUpon>Control_LayerManager.xaml</DependentUpon>
     </Compile>
@@ -1344,7 +1338,6 @@
       <DependentUpon>Control_DefaultLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\Layer.cs" />
-    <Compile Include="Settings\Layers\LogicItem.cs" />
     <Compile Include="Profiles\Application.cs" />
     <Compile Include="Settings\KeyboardLayoutManager.cs" />
     <Compile Include="Settings\KeyRecorder.cs" />
@@ -1613,10 +1606,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\LayerEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\LogicCheckEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2105,10 +2094,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Window_GSIHttpDebug.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Window_LayerLogicEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
