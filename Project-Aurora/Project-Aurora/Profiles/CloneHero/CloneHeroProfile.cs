@@ -1,4 +1,5 @@
 ﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine.Animations;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System;
@@ -31,6 +32,21 @@ namespace Aurora.Profiles.CloneHero
                     }
                 }
                 ),
+
+                new Layer("Combo Break", new AnimationLayerHandler {
+                    Properties = new AnimationLayerHandlerProperties {
+                        _AnimationMix = new AnimationMix(new[] {
+                            new AnimationTrack("Filled Rectangle Track", 0.5f)
+                                .SetFrame(0, new AnimationFilledRectangle(0, 0, 800, 300, Color.Red))
+                                .SetFrame(0.4f, new AnimationFilledRectangle(0, 0, 800, 300, Color.FromArgb(0, 255, 0, 0)))
+                        }),
+                        _AnimationDuration = 0.4f,
+                        _AnimationRepeat = 1,
+                        _TriggerMode = AnimationTriggerMode.OnLow,
+                        _TriggerPath = "Player/NoteStreak",
+                        _StackMode = AnimationStackMode.Stack
+                    }
+                }),
 
                 new Layer("Orange Fret", new ConditionalLayerHandler{
                     Properties = new ConditionalLayerProperties
@@ -100,7 +116,7 @@ namespace Aurora.Profiles.CloneHero
                 }
                 ),
 
-                new Layer("Boundaries", new ConditionalLayerHandler{
+                new Layer("Star Power Indicator", new ConditionalLayerHandler{
                     Properties = new ConditionalLayerProperties
                     {
                         _ConditionPath = "Player/IsStarPowerActive",
@@ -111,23 +127,12 @@ namespace Aurora.Profiles.CloneHero
                 }
                 ),
 
-                new Layer("Star Power Active", new ConditionalLayerHandler{
-                    Properties = new ConditionalLayerProperties
-                    {
-                        _ConditionPath = "Player/IsStarPowerActive",
-                        _PrimaryColor = Color.FromArgb(0, 227, 255),
-                        _SecondaryColor = Color.FromArgb(0, 150, 150, 150),
-                        _Sequence = new KeySequence(new FreeFormObject((float)0.78, (float)0, (float)545.25, (float)215.8, 0))
-                    }
-                }
-                ),
-
                 new Layer("Star Power Percent", new PercentLayerHandler()
                 {
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new FreeFormObject((float)572.6, (float)-32.39, (float)217, (float)274.35, -90)),
+                        _Sequence = new KeySequence(new FreeFormObject((float)646.37, (float)41.39, (float)195, (float)148.65, -90)),
                         _PrimaryColor = Color.FromArgb(0, 227, 255),
                         _SecondaryColor = Color.Black,
                         _BlinkThreshold = 0.0,
@@ -135,6 +140,21 @@ namespace Aurora.Profiles.CloneHero
                         _VariablePath = "Player/StarPowerPercent",
                         _MaxVariablePath = "100",
                     },
+                }),
+
+                new Layer("Note Hit", new AnimationLayerHandler {
+                    Properties = new AnimationLayerHandlerProperties {
+                        _AnimationMix = new AnimationMix(new[] {
+                            new AnimationTrack("Filled Rectangle Track", 0.5f)
+                                .SetFrame(0, new AnimationFilledCircle(70, 19, 6, Color.FromArgb(246, 125, 0), 12, 0.0057f))
+                                .SetFrame(0.26f, new AnimationFilledCircle(69, -3, 4, Color.FromArgb(246, 125, 0), 8, 0.1347f))
+                        }),
+                        _AnimationDuration = 0.4f,
+                        _AnimationRepeat = 1,
+                        _TriggerMode = AnimationTriggerMode.OnHigh,
+                        _TriggerPath = "Player/Score",
+                        _StackMode = AnimationStackMode.Stack
+                    }
                 }),
 
                 new Layer("Note Streak 4x", new PercentLayerHandler()

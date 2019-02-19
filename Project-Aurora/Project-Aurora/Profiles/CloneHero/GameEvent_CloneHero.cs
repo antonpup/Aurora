@@ -186,19 +186,15 @@ namespace Aurora.Profiles.CloneHero
 
                         (_game_state as GameState_CloneHero).Player.SoloPercent = memread.ReadInt(pointers.SoloPercent.baseAddress, pointers.SoloPercent.pointers);
 
+                        (_game_state as GameState_CloneHero).Player.Score = memread.ReadInt(pointers.Score.baseAddress, pointers.Score.pointers);
+
                         (_game_state as GameState_CloneHero).Player.IsGreenPressed = memread.ReadInt(pointers.IsGreenPressed.baseAddress, pointers.IsGreenPressed.pointers) > 0 ? true : false;
                         (_game_state as GameState_CloneHero).Player.IsRedPressed = memread.ReadInt(pointers.IsRedPressed.baseAddress, pointers.IsRedPressed.pointers) > 0 ? true : false;
                         (_game_state as GameState_CloneHero).Player.IsYellowPressed = memread.ReadInt(pointers.IsYellowPressed.baseAddress, pointers.IsYellowPressed.pointers) > 0 ? true : false;
                         (_game_state as GameState_CloneHero).Player.IsBluePressed = memread.ReadInt(pointers.IsBluePressed.baseAddress, pointers.IsBluePressed.pointers) > 0 ? true : false;
                         (_game_state as GameState_CloneHero).Player.IsOrangePressed = memread.ReadInt(pointers.IsOrangePressed.baseAddress, pointers.IsOrangePressed.pointers) > 0 ? true : false;
-
+                        Console.WriteLine(memread.ReadInt(pointers.IsGreenPressed.baseAddress, pointers.IsGreenPressed.pointers));
                     }
-
-                    using (MemoryReader memread = new MemoryReader(process_search[0], "UnityPlayer.dll", true))
-                    {
-                        (_game_state as GameState_CloneHero).Player.IsSoloActive = memread.ReadInt(pointers.IsSoloActive.baseAddress, pointers.IsSoloActive.pointers) == 1 ? true : false;
-                    }
-
                 }
                 catch (Exception e)
                 {

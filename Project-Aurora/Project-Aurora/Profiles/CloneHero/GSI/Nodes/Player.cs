@@ -21,8 +21,9 @@
 
         public bool IsFC = true;
 
-        public bool IsSoloActive;
         public int SoloPercent;
+
+        public int Score;
 
         public bool IsGreenPressed;
         public bool IsRedPressed;

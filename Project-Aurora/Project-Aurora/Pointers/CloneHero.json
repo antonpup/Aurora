@@ -23,10 +23,6 @@
         "baseAddress": "4791784",
         "pointers": [ "152", "624", "40", "40", "120" ]
     },
-    "IsSoloActive": {
-        "baseAddress": "21617568",
-        "pointers": [ "0", "56", "1976" ]
-    },
     "SoloPercent": {
         "baseAddress": "4791784",
         "pointers": [ "152", "688", "112" ]

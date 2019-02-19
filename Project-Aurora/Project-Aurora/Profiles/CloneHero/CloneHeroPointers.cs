@@ -22,8 +22,10 @@
         public PointerData NotesTotal;
 
         // Solo Pointers
-        public PointerData IsSoloActive; //This one is a UnityPlayer.dll pointer
         public PointerData SoloPercent;
+
+        //Score
+        public PointerData Score;
 
         // Note Pressed Pointers
         public PointerData IsGreenPressed;

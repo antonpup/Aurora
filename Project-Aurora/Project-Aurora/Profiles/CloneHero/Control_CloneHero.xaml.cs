@@ -188,7 +188,7 @@ namespace Aurora.Profiles.CloneHero
                 (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsFC = false;
             }
         }
-        private void preview_solo_active(object sender, RoutedEventArgs e)
+        /*private void preview_solo_active(object sender, RoutedEventArgs e)
         {
             this.preview_solo_enabled_label.Text = "true";
             if (IsLoaded)
@@ -203,7 +203,7 @@ namespace Aurora.Profiles.CloneHero
             {
                 (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsSoloActive = false;
             }
-        }
+        }*/
         private void preview_solo_percent_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (sender is Slider)
@@ -212,6 +212,28 @@ namespace Aurora.Profiles.CloneHero
                 if (IsLoaded)
                 {
                     (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.SoloPercent = (int)((sender as Slider).Value);
+                }
+            }
+        }
+
+        private void preview_notes_total_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
+            {
+                if (IsLoaded)
+                {
+                    (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.NotesTotal = (sender as IntegerUpDown).Value.Value;
+                }
+            }
+        }
+
+        private void preview_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
+            {
+                if (IsLoaded)
+                {
+                    (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.Score = (sender as IntegerUpDown).Value.Value;
                 }
             }
         }
