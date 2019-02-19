@@ -214,9 +214,11 @@ namespace Aurora.Devices.Roccat
                     }
                     if (Global.Configuration.roccat_first_time)
                     {
-                        RoccatInstallInstructions instructions = new RoccatInstallInstructions();
-                        instructions.ShowDialog();
-
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            RoccatInstallInstructions instructions = new RoccatInstallInstructions();
+                            instructions.ShowDialog();
+                        });
                         Global.Configuration.roccat_first_time = false;
                         Settings.ConfigManager.Save(Global.Configuration);
                     }

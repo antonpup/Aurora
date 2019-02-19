@@ -190,7 +190,7 @@ namespace Aurora.Devices
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     resumed = true;
                     suspended = false;
-                    this.InitializeOnce();
+                    this.Initialize();
                     break;
             }
         }
@@ -224,7 +224,7 @@ namespace Aurora.Devices
 
             if (anyInitialized)
             {
-                //_InitializeOnceAllowed = true;
+                _InitializeOnceAllowed = true;
                 NewDevicesInitialized?.Invoke(this, new EventArgs());
             }
 
@@ -281,7 +281,7 @@ namespace Aurora.Devices
 
         public void InitializeOnce()
         {
-            if (!anyInitialized)// && _InitializeOnceAllowed)
+            if (!anyInitialized && _InitializeOnceAllowed)
                 Initialize();
         }
 

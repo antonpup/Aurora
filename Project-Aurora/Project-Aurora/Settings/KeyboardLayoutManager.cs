@@ -545,7 +545,10 @@ namespace Aurora.Settings
                     case PreferredKeyboardLocalization.hu:
                         culture = "hu-HU";
                         break;
-                }
+                    case PreferredKeyboardLocalization.it:
+                        culture = "it-IT";
+                        break;
+                    }
 
                 switch (culture)
                 {
@@ -615,10 +618,14 @@ namespace Aurora.Settings
                         _loaded_localization = PreferredKeyboardLocalization.hu;
                         LoadCulture("hu");
                         break;
-                    default:
-                        _loaded_localization = PreferredKeyboardLocalization.intl;
-                        LoadCulture("intl");
+                    case ("it-IT"):
+                        _loaded_localization = PreferredKeyboardLocalization.it;
+                        LoadCulture("it");
                         break;
+                    default:
+                    _loaded_localization = PreferredKeyboardLocalization.intl;
+                    LoadCulture("intl");
+                    break;
 
                 }
             }
@@ -633,6 +640,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
+			else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
+                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
