@@ -54,6 +54,11 @@
         public PlayerStatus Status = PlayerStatus.OffGame;
 
         /// <summary>
+        /// Player's poison status. Poison status is separate from health status.
+        /// </summary>
+        public bool Poison = false;
+
+        /// <summary>
         /// The dynamic difficulty of the game. Changes as player kills enemies or gets hurt.
         /// </summary>
         public int Rank = 0;

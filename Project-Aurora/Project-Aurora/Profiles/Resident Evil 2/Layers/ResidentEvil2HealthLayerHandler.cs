@@ -69,6 +69,7 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
             .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Red))
             .SetFrame(animationTimes[2], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Red))
             .SetFrame(breakTimes[2], new AnimationFill(Color.Black));
+        static FreeFormObject poison = new FreeFormObject(0, 150, 1200, 90);
 
         AnimationMix mixFine = new AnimationMix(new[] { hbFine });
         AnimationMix mixLiteFine = new AnimationMix(new[] { hbLiteFine });
@@ -117,6 +118,11 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
                             break;
                     }
 
+                    if (re2state.Player.Poison && !(re2state.Player.Status == Player_ResidentEvil2.PlayerStatus.OffGame || re2state.Player.Status == Player_ResidentEvil2.PlayerStatus.Dead))
+                    {
+                        bg_layer.DrawFreeForm(poison, Color.Purple);
+                    }
+
                     return bg_layer;
                 }
                 else if (Properties.DisplayType == ResidentEvil2HealthLayerHandlerProperties.HealthDisplayType.Scanning)
@@ -161,6 +167,11 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
                     if (heartbeat_keyframe >= heartbeat_animationTime)
                     {
                         heartbeat_keyframe = 0;
+                    }
+
+                    if (re2state.Player.Poison && !(re2state.Player.Status == Player_ResidentEvil2.PlayerStatus.OffGame || re2state.Player.Status == Player_ResidentEvil2.PlayerStatus.Dead))
+                    {
+                        bg_layer.DrawFreeForm(poison, Color.Purple);
                     }
 
                     return bg_layer;

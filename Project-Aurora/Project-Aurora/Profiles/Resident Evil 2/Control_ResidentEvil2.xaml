@@ -24,6 +24,7 @@
                     <Label Content="Status:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <Label Content="Rank:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
                     <ComboBox x:Name="preview_status" HorizontalAlignment="Left" Margin="55,13,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="preview_status_SelectionChanged" SelectedIndex="0" Grid.ColumnSpan="2"/>
+                    <CheckBox x:Name="preview_poison" Content="Poisoned" HorizontalAlignment="Left" Margin="105,16,0,0" VerticalAlignment="Top" Checked="preview_poison_Checked" Unchecked="preview_poison_Checked" Grid.Column="1"/>
                     <xctk:IntegerUpDown x:Name="preview_rank" HorizontalAlignment="Left" Height="24" Margin="55,43,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_rank_ValueChanged" DefaultValue="0" Value="0" Minimum="1" Maximum="9" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>

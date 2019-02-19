@@ -10,6 +10,7 @@
     {
         public PointerData HealthMaximum;
         public PointerData HealthCurrent;
+        public PointerData PlayerPoisoned;
         public PointerData RankCurrent;
     }
 }

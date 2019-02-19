@@ -65,6 +65,12 @@ namespace Aurora.Profiles.ResidentEvil2
             }
         }
 
+        private void preview_poison_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+                (profile_manager.Config.Event._game_state as GameState_ResidentEvil2).Player.Poison = (sender as CheckBox).IsChecked.Value;
+        }
+
         private void preview_rank_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)

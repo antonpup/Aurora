@@ -92,6 +92,7 @@ namespace Aurora.Profiles.ResidentEvil2
                 {
                     (_game_state as GameState_ResidentEvil2).Player.MaximumHealth = memread.ReadInt(pointers.HealthMaximum.baseAddress, pointers.HealthMaximum.pointers);
                     (_game_state as GameState_ResidentEvil2).Player.CurrentHealth = memread.ReadInt(pointers.HealthCurrent.baseAddress, pointers.HealthCurrent.pointers);
+                    (_game_state as GameState_ResidentEvil2).Player.Poison = memread.ReadInt(pointers.PlayerPoisoned.baseAddress, pointers.PlayerPoisoned.pointers) == 1;
                     (_game_state as GameState_ResidentEvil2).Player.Rank = memread.ReadInt(pointers.RankCurrent.baseAddress, pointers.RankCurrent.pointers);
 
                     int maxHealth = (_game_state as GameState_ResidentEvil2).Player.MaximumHealth;
