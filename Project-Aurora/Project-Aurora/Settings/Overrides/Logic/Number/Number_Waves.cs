@@ -6,12 +6,21 @@ using System.Windows.Media;
 
 namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
-    /// 
+    /// A special operator that takes the given (x) input (between 0 and 1) and converts it to a waveform (y) between 0 and 1.
     /// </summary>
     [OverrideLogic("Wave Function", category: OverrideLogicCategory.Maths)]
     public class NumberWaveFunction : IEvaluatableNumber {
 
+        /// <summary>Creates a new wave function evaluatable with the default parameters.</summary>
+        public NumberWaveFunction() { }
+        /// <summary>Creates a new wave function evaluatable with the given evaluatable and default wave type.</summary>
+        public NumberWaveFunction(IEvaluatableNumber operand) { Operand = operand; }
+        /// <summary>Creates a new wave function evaluatable with the given evaluatable and given wave type.</summary>
+        public NumberWaveFunction(IEvaluatableNumber operand, WaveFunctionType type) { Operand = operand; WaveFunc = type; }
+
+        /// <summary>The number that will be used as a basis (sometimes the x value) for the wave function.</summary>
         public IEvaluatableNumber Operand { get; set; } = new NumberConstant();
+        /// <summary>The type of wave to generate.</summary>
         public WaveFunctionType WaveFunc { get; set; } = WaveFunctionType.Sine;
 
         [JsonIgnore]
@@ -25,6 +34,9 @@ namespace Aurora.Settings.Overrides.Logic {
             return control;
         }
 
+        /// <summary>
+        /// Evaluates this wave function generator using the result of the operand and the given wave type.
+        /// </summary>
         public double Evaluate(IGameState gameState) {
             var op = Operand.Evaluate(gameState);
             switch (WaveFunc) {

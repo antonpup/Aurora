@@ -117,7 +117,7 @@ namespace Aurora.Profiles
         {
             if (PropertyLookup.ContainsKey(name))
             {
-                PropertyLookup[name].Item2((T)(object)this, value);
+                PropertyLookup[name]?.Item2((T)(object)this, value);
             }
         }
 

@@ -15,8 +15,13 @@ namespace Aurora.Settings.Overrides.Logic {
     [OverrideLogic("Key Held", category: OverrideLogicCategory.Input)]
     public class BooleanKeyDown : IEvaluatableBoolean {
 
+        /// <summary>Creates a new key held condition with the default key (Space) as the trigger key.</summary>
+        public BooleanKeyDown() { }
+        /// <summary>Creates a new key held condition with the given key as the trigger key.</summary>
+        public BooleanKeyDown(Keys target) { TargetKey = target; }
+
         /// <summary>The key to be checked to see if it is held down.</summary>
-        public Keys TargetKey { get; set; } = Keys.LShiftKey;
+        public Keys TargetKey { get; set; } = Keys.Space;
 
         /// <summary>Create a control where the user can select the key they wish to detect.</summary>
         public Visual GetControl(Application application) {
@@ -42,6 +47,11 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     [OverrideLogic("Mouse Button Held", category: OverrideLogicCategory.Input)]
     public class BooleanMouseDown : IEvaluatableBoolean {
+
+        /// <summary>Creates a new key held condition with the default mouse button (Left) as the trigger button.</summary>
+        public BooleanMouseDown() { }
+        /// <summary>Creates a new key held condition with the given mouse button as the trigger button.</summary>
+        public BooleanMouseDown(System.Windows.Forms.MouseButtons target) { TargetButton = target; }
 
         /// <summary>The mouse button to be checked to see if it is held down.</summary>
         public System.Windows.Forms.MouseButtons TargetButton { get; set; } = System.Windows.Forms.MouseButtons.Left;
@@ -70,6 +80,11 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     [OverrideLogic("Lock Key Active", category: OverrideLogicCategory.Input)]
     public class BooleanLockKeyActive : IEvaluatableBoolean {
+
+        /// <summary>Creates a new key held condition with the default lock type (CapsLock) as the lock type.</summary>
+        public BooleanLockKeyActive() { }
+        /// <summary>Creates a new key held condition with the given button as the lock type button.</summary>
+        public BooleanLockKeyActive(Keys target) { TargetKey = target; }
 
         public Keys TargetKey { get; set; } = Keys.CapsLock;
 

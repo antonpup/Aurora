@@ -7,12 +7,12 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Interaction logic for Control_SubconditionHolder.xaml
     /// </summary>
     public partial class Control_SubconditionHolder : UserControl {
-        public Control_SubconditionHolder(ObservableCollection<IEvaluatableBoolean> subconditions, Profiles.Application application, string title="") {
+        public Control_SubconditionHolder(IHasSubConditons parent, Profiles.Application application, string title="") {
             InitializeComponent();
-            DataContext = new Control_SubconditionHolder_Context { SubConditions = subconditions, Application = application, Title = title };
+            DataContext = new Control_SubconditionHolder_Context { Parent = parent, Application = application, Title = title };
         }
 
-        private ObservableCollection<IEvaluatableBoolean> SubConditions => ((Control_SubconditionHolder_Context)DataContext).SubConditions;
+        private ObservableCollection<IEvaluatableBoolean> SubConditions => ((Control_SubconditionHolder_Context)DataContext).Parent.SubConditions;
 
         private void AddSubconditionButton_Click(object sender, System.Windows.RoutedEventArgs e) {
             SubConditions.Add(new BooleanTrue());
@@ -37,7 +37,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// The datatype that is used as the DataContext for `Control_SubconditionHolder`.
     /// </summary>
     internal class Control_SubconditionHolder_Context {
-        public ObservableCollection<IEvaluatableBoolean> SubConditions { get; set; }
+        public IHasSubConditons Parent { get; set; }
         public Profiles.Application Application { get; set; }
         public string Title { get; set; }
     }

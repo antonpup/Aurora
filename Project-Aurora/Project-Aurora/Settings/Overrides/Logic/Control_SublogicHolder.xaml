@@ -9,7 +9,7 @@
     <Grid>
         <Label Content="{Binding Title}" />
 
-        <ItemsControl Margin="12,28,0,26" ItemsSource="{Binding SubConditions}">
+        <ItemsControl Margin="12,28,0,26" ItemsSource="{Binding Parent.SubConditions}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="6,0,0,6">

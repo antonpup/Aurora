@@ -638,6 +638,7 @@
       <DependentUpon>Control_SublogicHolder.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\IEvaluatable.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLogicBuilder.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLookupTable.cs" />
     <Compile Include="Settings\Overrides\LogicOverridableAttribute.cs" />
     <Compile Include="Settings\Overrides\Logic\String\Control_StringComparison.xaml.cs">

@@ -17,6 +17,21 @@ namespace Aurora.Settings.Overrides.Logic {
     [OverrideLogic("Arithmetic Operation", category: OverrideLogicCategory.Maths)]
     public class NumberMathsOperation : IEvaluatableNumber {
 
+        /// <summary>Creates a new maths operation that has no values pre-set.</summary>
+        public NumberMathsOperation() { }
+        /// <summary>Creates a new evaluatable that returns the result of the two given numbers added together.</summary>
+        public NumberMathsOperation(double value1, double value2) { Operand1 = new NumberConstant(value1); Operand2 = new NumberConstant(value2); }
+        /// <summary>Creates a new evaluatable that returns the result of the two given numbers with the given operator.</summary>
+        public NumberMathsOperation(double value1, MathsOperator op, double value2) { Operand1 = new NumberConstant(value1); Operand2 = new NumberConstant(value2); Operator = op; }
+        /// <summary>Creates a new evaluatable that returns the result of the given evaluatable and given number added together.</summary>
+        public NumberMathsOperation(IEvaluatableNumber eval, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); }
+        /// <summary>Creates a new evaluatable that returns the result of the given evaluatable and given number with the given operator.</summary>
+        public NumberMathsOperation(IEvaluatableNumber eval, MathsOperator op, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); Operator = op; }
+        /// <summary>Creates a new evaluatable that returns the result of the two given evaluatables added together.</summary>
+        public NumberMathsOperation(IEvaluatableNumber eval1, IEvaluatableNumber eval2) { Operand1 = eval1; Operand2 = eval2; }
+        /// <summary>Creates a new evaluatable that returns the result of the two given evaluatables with the given operator.</summary>
+        public NumberMathsOperation(IEvaluatableNumber eval1, MathsOperator op, IEvaluatableNumber eval2) { Operand1 = eval1; Operand2 = eval2; Operator = op; }
+
         // The operands and the operator
         public IEvaluatableNumber Operand1 { get; set; } = new NumberConstant();
         public IEvaluatableNumber Operand2 { get; set; } = new NumberConstant();
@@ -69,6 +84,21 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     [OverrideLogic("Arithmetic Comparison", category: OverrideLogicCategory.Maths)]
     public class BooleanMathsComparison : IEvaluatableBoolean {
+
+        /// <summary>Creates a new maths comparison that has no values pre-set.</summary>
+        public BooleanMathsComparison() { }
+        /// <summary>Creates a new evaluatable that returns whether or not the two given numbers are equal.</summary>
+        public BooleanMathsComparison(double value1, double value2) { Operand1 = new NumberConstant(value1); Operand2 = new NumberConstant(value2); }
+        /// <summary>Creates a new evaluatable that returns the result of the two given numbers compared using the given operator.</summary>
+        public BooleanMathsComparison(double value1, ComparisonOperator op, double value2) { Operand1 = new NumberConstant(value1); Operand2 = new NumberConstant(value2); Operator = op; }
+        /// <summary>Creates a new evaluatable that returns whether or not the given evaluatable and given number are equal.</summary>
+        public BooleanMathsComparison(IEvaluatableNumber eval, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); }
+        /// <summary>Creates a new evaluatable that returns the result of the given evaluatable and given number when compared using the given operator.</summary>
+        public BooleanMathsComparison(IEvaluatableNumber eval, ComparisonOperator op, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); Operator = op; }
+        /// <summary>Creates a new evaluatable that returns the whether or not the two given evaluatables are equal.</summary>
+        public BooleanMathsComparison(IEvaluatableNumber eval1, IEvaluatableNumber eval2) { Operand1 = eval1; Operand2 = eval2; }
+        /// <summary>Creates a new evaluatable that returns the result of the two given evaluatables when compared using the given operator.</summary>
+        public BooleanMathsComparison(IEvaluatableNumber eval1, ComparisonOperator op, IEvaluatableNumber eval2) { Operand1 = eval1; Operand2 = eval2; Operator = op; }
 
         // The operands and the operator
         public IEvaluatableNumber Operand1 { get; set; } = new NumberConstant();
@@ -123,6 +153,11 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     [OverrideLogic("Number Constant", category: OverrideLogicCategory.Maths)]
     public class NumberConstant : IEvaluatableNumber {
+
+        /// <summary>Creates a new constant with the zero as the constant value.</summary>
+        public NumberConstant() { }
+        /// <summary>Creats a new constant with the given value as the constant value.</summary>
+        public NumberConstant(double value) { Value = value; }
 
         // The constant value
         public double Value { get; set; }

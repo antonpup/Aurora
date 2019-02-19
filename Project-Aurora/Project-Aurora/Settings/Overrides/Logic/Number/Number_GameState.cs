@@ -13,6 +13,11 @@ namespace Aurora.Settings.Overrides.Logic {
     [OverrideLogic("Numeric State Variable", category: OverrideLogicCategory.State)]
     public class NumberGSINumeric : IEvaluatableNumber {
 
+        /// <summary>Creates a new numeric game state lookup evaluatable that doesn't target anything.</summary>
+        public NumberGSINumeric() { }
+        /// <summary>Creates a new evaluatable that returns the game state variable at the given path.</summary>
+        public NumberGSINumeric(string path) { VariablePath = path; }
+
         // Path to the GSI variable
         public string VariablePath { get; set; }
 

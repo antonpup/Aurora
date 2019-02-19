@@ -10,6 +10,11 @@ namespace Aurora.Settings.Overrides.Logic {
     [OverrideLogic("Boolean State Variable", category: OverrideLogicCategory.State)]
     public class BooleanGSIBoolean : IEvaluatableBoolean {
 
+        /// <summary>Creates an empty boolean state variable lookup.</summary>
+        public BooleanGSIBoolean() { }
+        /// <summary>Creates a evaluatable that returns the boolean variable at the given path.</summary>
+        public BooleanGSIBoolean(string variablePath) { VariablePath = variablePath; }
+
         /// <summary>The path to the variable the user wants to evaluate.</summary>
         public string VariablePath { get; set; } = "";
 
@@ -55,6 +60,17 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     [OverrideLogic("Numeric State Variable", category: OverrideLogicCategory.State)]
     public class BooleanGSINumeric : IEvaluatableBoolean {
+
+        /// <summary>Creates a blank numeric game state lookup evaluatable.</summary>
+        public BooleanGSINumeric() { }
+        /// <summary>Creates a numeric game state lookup that returns true when the variable at the given path equals the given value.</summary>
+        public BooleanGSINumeric(string path1, double val) { Operand1Path = path1; Operand2Path = val.ToString(); }
+        /// <summary>Creates a numeric game state lookup that returns true when the variable at path1 equals the given variable at path2.</summary>
+        public BooleanGSINumeric(string path1, string path2) { Operand1Path = path1; Operand2Path = path2; }
+        /// <summary>Creates a numeric game state lookup that returns a boolean depending on the given operator's comparison between the variable at the given path and the value.</summary>
+        public BooleanGSINumeric(string path1, ComparisonOperator op, double val) { Operand1Path = path1; Operand2Path = val.ToString(); Operator = op; }
+        /// <summary>Creates a numeric game state lookup that returns a boolean depending on the given operator's comparison between the variable at path1 and the variable at path2.</summary>
+        public BooleanGSINumeric(string path1, ComparisonOperator op, string path2) { Operand1Path = path1; Operand2Path = path2; Operator = op; }
 
         // Path to the two GSI variables (or numbers themselves) and the operator to compare them with
         public string Operand1Path { get; set; }
