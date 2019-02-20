@@ -597,6 +597,9 @@
     <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
       <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml.cs">
+      <DependentUpon>Control_NumericMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Overrides\Logic\Number\Control_NumericUnaryOpHolder.xaml.cs">
       <DependentUpon>Control_NumericUnaryOpHolder.xaml</DependentUpon>
     </Compile>
@@ -1935,6 +1938,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -149,6 +149,67 @@ namespace Aurora.Settings.Overrides.Logic {
 
 
     /// <summary>
+    /// Evaluatable that takes a number in a given range and maps it onto another range.
+    /// </summary>
+    [OverrideLogic("Numeric Map", category: OverrideLogicCategory.Maths)]
+    public class NumberMap : IEvaluatableNumber {
+
+        /// <summary>Creates a new numeric map with the default constant parameters.</summary>
+        public NumberMap() { }
+        /// <summary>Creates a new numeric map to map the given value with the given constant range onto the range 0 → 1.</summary>
+        public NumberMap(IEvaluatableNumber value, double fromMin, double fromMax) : this(value, new NumberConstant(fromMin), new NumberConstant(fromMax)) { }
+        /// <summary>Creates a new numeric map to map the given value with the given dynamic range onto the range 0 → 1.</summary>
+        public NumberMap(IEvaluatableNumber value, IEvaluatableNumber fromMin, IEvaluatableNumber fromMax) { Value = value; FromMin = fromMin; FromMax = fromMax; }
+        /// <summary>Creates a new numeric map to map the given value with the given constant from range onto the given constant to range.</summary>
+        public NumberMap(IEvaluatableNumber value, double fromMin, double fromMax, double toMin, double toMax) : this(value, new NumberConstant(fromMin), new NumberConstant(fromMax), new NumberConstant(toMin), new NumberConstant(toMax)) { }
+        /// <summary>Creates a new numeric map to map the given value with the given dynamic from range onto the given constant to range.</summary>
+        public NumberMap(IEvaluatableNumber value, IEvaluatableNumber fromMin, IEvaluatableNumber fromMax, double toMin, double toMax) : this(value, fromMin, fromMax, new NumberConstant(toMin), new NumberConstant(toMax)) { }
+        /// <summary>Creates a new numeric map to map the given value with the given dynamic from range onto the given dynamic to range.</summary>
+        public NumberMap(IEvaluatableNumber value, IEvaluatableNumber fromMin, IEvaluatableNumber fromMax, IEvaluatableNumber toMin, IEvaluatableNumber toMax) { Value = value; FromMin = fromMin; FromMax = fromMax; ToMin = toMin; ToMax = toMax; }
+
+        // The value to run through the map
+        public IEvaluatableNumber Value { get; set; } = new NumberConstant(25);
+        // The values representing the starting range of the map
+        public IEvaluatableNumber FromMin { get; set; } = new NumberConstant(0);
+        public IEvaluatableNumber FromMax { get; set; } = new NumberConstant(100);
+        // The values representing the end range of the map
+        public IEvaluatableNumber ToMin { get; set; } = new NumberConstant(0);
+        public IEvaluatableNumber ToMax { get; set; } = new NumberConstant(1);
+
+        // The control to edit the map parameters
+        [JsonIgnore]
+        private Control_NumericMap control;
+        public Visual GetControl(Application application) => control ?? (control = new Control_NumericMap(this, application));
+
+        /// <summary>Evaluate the from range and to range and return the value in the new range.</summary>
+        public double Evaluate(IGameState gameState) {
+            // Evaluate all components
+            double value = Value.Evaluate(gameState);
+            double fromMin = FromMin.Evaluate(gameState), fromMax = FromMax.Evaluate(gameState);
+            double toMin = ToMin.Evaluate(gameState), toMax = ToMax.Evaluate(gameState);
+
+            // Perform actual equation
+            return Utils.MathUtils.Clamp((value - fromMin) * ((toMax - toMin) / (fromMax - fromMin)) + toMin, toMin, toMax);
+            // Here is an example of it running: https://www.desmos.com/calculator/n1d9ia7sqb
+        }
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+
+        /// <summary> Updates the applications on all sub evaluatables.</summary>
+        public void SetApplication(Application application) {
+            Value?.SetApplication(application);
+            FromMin?.SetApplication(application);
+            ToMin?.SetApplication(application);
+            FromMax?.SetApplication(application);
+            ToMax?.SetApplication(application);
+        }
+
+        public IEvaluatableNumber Clone() => new NumberMap { Value = Value.Clone(), FromMin = FromMin.Clone(), ToMin = ToMin.Clone(), FromMax = FromMax.Clone(), ToMax = ToMax.Clone() };
+        IEvaluatable IEvaluatable.Clone() => Clone();
+    }
+
+
+
+    /// <summary>
     /// Evaluatable that resolves to a numerical constant.
     /// </summary>
     [OverrideLogic("Number Constant", category: OverrideLogicCategory.Maths)]
