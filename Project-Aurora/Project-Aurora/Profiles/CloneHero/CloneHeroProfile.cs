@@ -108,7 +108,7 @@ namespace Aurora.Profiles.CloneHero
                     {
                         _ConditionPath = "Player/IsFC",
                         _PrimaryColor = Color.FromArgb(208, 181, 0),
-                        _SecondaryColor = Color.FromArgb(100, 100, 100),
+                        _SecondaryColor = Color.FromArgb(200, 100, 100, 100),
                         _Sequence = new KeySequence(new[] {
                             DK.OPEN_BRACKET, DK.CLOSE_BRACKET, DK.APOSTROPHE
                         }),
@@ -121,7 +121,7 @@ namespace Aurora.Profiles.CloneHero
                     {
                         _ConditionPath = "Player/IsStarPowerActive",
                         _PrimaryColor = Color.FromArgb(0, 227, 255),
-                        _SecondaryColor = Color.FromArgb(130, 130, 130),
+                        _SecondaryColor = Color.FromArgb(200, 100, 100, 100),
                         _Sequence = new KeySequence(new FreeFormObject((float)-0.78, (float)35.13, (float)551.5, (float)180.7, 0))
                     }
                 }
