@@ -30,6 +30,6 @@
         </Button>
 
         <!-- Evaluatable control -->
-        <ContentPresenter x:Name="ContentContainer" Margin="0,36,0,0" />
+        <ContentPresenter x:Name="ContentContainer" Margin="0,36,0,0" VerticalAlignment="Top" />
     </Grid>
 </UserControl>

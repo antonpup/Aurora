@@ -7,8 +7,8 @@ namespace Aurora.Settings.Overrides.Logic {
     public enum StringComparisonOperator {
         [Description("Equals")] Equal,
         [Description("Doesn't equal")] NotEqual,
-        [Description("Before")] Before,
-        [Description("After")] After,
+        [Description("Alphabetical Before")] Before,
+        [Description("Alphabetical After")] After,
 
         [Description("Equal length")] EqualLength,
         [Description("Shorter than")] ShorterThan,

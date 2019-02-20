@@ -95,6 +95,14 @@ namespace Aurora.Controls {
                 return canvas;
             } },
 
+            // KeySequences
+            { typeof(Settings.KeySequence), bind => new Controls.KeySequence {
+                    Title = "Assigned Keys",
+                    RecordingTag = "FieldPresenterKeySequence",
+                    Height = 120,
+                }.SetBindingChain(Controls.KeySequence.SequenceProperty, bind, bindingMode: BindingMode.TwoWay)
+            },
+
             // Single key inputs
             { typeof(System.Windows.Forms.Keys), bind => new Control_SingleKeyEditor().SetBindingChain(Control_SingleKeyEditor.SelectedKeyProperty, bind, bindingMode: BindingMode.TwoWay) }
         };

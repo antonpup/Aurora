@@ -20,8 +20,16 @@ namespace Aurora.Settings.Overrides.Logic {
 
         // Control allowing the user to edit the comparison
         [Newtonsoft.Json.JsonIgnore]
-        private Control_StringComparison control;
-        public Visual GetControl(Application application) => control ?? (control = new Control_StringComparison(this, application));
+        private Control_BinaryOperationHolder control;
+        public Visual GetControl(Application application) {
+            if (control == null) {
+                control = new Control_BinaryOperationHolder(application, EvaluatableType.String, typeof(StringComparisonOperator));
+                control.SetBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay });
+                control.SetBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay });
+                control.SetBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
+            }
+            return control;
+        }
 
         /// <summary>Compares the two strings with the given operator</summary>
         public bool Evaluate(IGameState gameState) {

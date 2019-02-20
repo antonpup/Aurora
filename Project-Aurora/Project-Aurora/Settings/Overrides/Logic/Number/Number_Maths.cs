@@ -39,13 +39,13 @@ namespace Aurora.Settings.Overrides.Logic {
         
         // The control allowing the user to edit the evaluatable
         [JsonIgnore]
-        private Control_NumericBinaryOpHolder control;
+        private Control_BinaryOperationHolder control;
         public Visual GetControl(Application application) {
             if (control == null) {
-                control = new Control_NumericBinaryOpHolder(application, typeof(MathsOperator));
-                control.SetBinding(Control_NumericBinaryOpHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_NumericBinaryOpHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_NumericBinaryOpHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
+                control = new Control_BinaryOperationHolder(application, EvaluatableType.Number, typeof(MathsOperator));
+                control.SetBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay });
+                control.SetBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay });
+                control.SetBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
             }
             return control;
         }
@@ -107,13 +107,13 @@ namespace Aurora.Settings.Overrides.Logic {
 
         // The control allowing the user to edit the evaluatable
         [JsonIgnore]
-        private Control_NumericBinaryOpHolder control;
+        private Control_BinaryOperationHolder control;
         public Visual GetControl(Application application) {
             if (control == null) {
-                control = new Control_NumericBinaryOpHolder(application, typeof(ComparisonOperator));
-                control.SetBinding(Control_NumericBinaryOpHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_NumericBinaryOpHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_NumericBinaryOpHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
+                control = new Control_BinaryOperationHolder(application, EvaluatableType.Number, typeof(ComparisonOperator));
+                control.SetBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay });
+                control.SetBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay });
+                control.SetBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
             }
             return control;
         }

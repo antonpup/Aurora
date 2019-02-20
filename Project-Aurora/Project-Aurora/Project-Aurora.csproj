@@ -594,8 +594,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
-    <Compile Include="Settings\Overrides\Logic\Number\Control_NumericBinaryOpHolder.xaml.cs">
-      <DependentUpon>Control_NumericBinaryOpHolder.xaml</DependentUpon>
+    <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
+      <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\Number\Control_NumericUnaryOpHolder.xaml.cs">
       <DependentUpon>Control_NumericUnaryOpHolder.xaml</DependentUpon>
@@ -638,9 +638,6 @@
     <Compile Include="Settings\Overrides\Logic\OverrideLogicBuilder.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLookupTable.cs" />
     <Compile Include="Settings\Overrides\LogicOverridableAttribute.cs" />
-    <Compile Include="Settings\Overrides\Logic\String\Control_StringComparison.xaml.cs">
-      <DependentUpon>Control_StringComparison.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Overrides\Logic\String\Operators.cs" />
     <Compile Include="Settings\Overrides\Logic\String\String_Constant.cs" />
     <Compile Include="Settings\Overrides\Logic\String\String_GameState.cs" />
@@ -1953,7 +1950,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Overrides\Logic\Number\Control_NumericBinaryOpHolder.xaml">
+    <Page Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -2088,10 +2085,6 @@
     <Page Include="Settings\Layers\Control_SolidColorLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\String\Control_StringComparison.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Window_GSIHttpDebug.xaml">
       <SubType>Designer</SubType>

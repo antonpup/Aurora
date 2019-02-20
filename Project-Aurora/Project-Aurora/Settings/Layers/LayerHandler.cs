@@ -33,7 +33,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public Color PrimaryColor { get { return Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty; } }
 
-        [LogicOverridable("Affected Keys (Freeform)")]
+        [LogicOverridable("Affected Keys")]
         public KeySequence _Sequence { get; set; }
         [JsonIgnore]
         public KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
