@@ -147,7 +147,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>A simple description of the parameter for the user.</summary>
         public string description;
 
-        public DynamicConstructorParamDefinition(string name, EvaluatableType type, string description="") {
+        public DynamicConstructorParamDefinition(string name, EvaluatableType type, string description=null) {
             this.name = name;
             this.type = type;
             this.description = description;
