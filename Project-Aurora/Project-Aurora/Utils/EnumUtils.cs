@@ -18,7 +18,7 @@ namespace Aurora.Utils
     {
         public static string GetDescription(this Enum enumObj)
         {
-            return enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(DescriptionAttribute), false) is DescriptionAttribute attr ? attr.Description : "";
+            return enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(DescriptionAttribute), false) is DescriptionAttribute attr ? attr.Description : enumObj.ToString();
         }
 
         public static string GetCategory(this Enum enumObj) {
