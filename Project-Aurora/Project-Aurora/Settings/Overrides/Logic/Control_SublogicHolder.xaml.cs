@@ -15,7 +15,7 @@ namespace Aurora.Settings.Overrides.Logic {
         private ObservableCollection<IEvaluatableBoolean> SubConditions => ((Control_SubconditionHolder_Context)DataContext).Parent.SubConditions;
 
         private void AddSubconditionButton_Click(object sender, System.Windows.RoutedEventArgs e) {
-            SubConditions.Add(new BooleanTrue());
+            SubConditions.Add(new BooleanConstant());
         }
 
         // We cannot do a TwoWay binding on the items of an ObservableCollection if that item may be replaced (it would be fine if only the instance's

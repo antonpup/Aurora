@@ -78,6 +78,43 @@ namespace Aurora.Settings.Overrides.Logic {
     }
 
 
+    
+    /// <summary>
+    /// Returns the absolute value of the given evaluatable.
+    /// </summary>
+    [OverrideLogic("Absolute", category: OverrideLogicCategory.Maths)]
+    public class NumberAbsValue : IEvaluatableNumber {
+
+        /// <summary>Creates a new absolute operation with the default operand.</summary>
+        public NumberAbsValue() { }
+        /// <summary>Creates a new absolute evaluatable with the given operand.</summary>
+        public NumberAbsValue(IEvaluatableNumber op) { Operand = op; }
+
+        /// <summary>The operand to absolute.</summary>
+        public IEvaluatableNumber Operand { get; set; } = new NumberConstant();
+
+        // Get the control allowing the user to set the operand
+        [JsonIgnore]
+        private Control_NumericUnaryOpHolder control;
+        public Visual GetControl(Application application) {
+            if (control == null) {
+                control = new Control_NumericUnaryOpHolder(application, "Absolute");
+                control.SetBinding(Control_NumericUnaryOpHolder.OperandProperty, new Binding("Operand") { Source = this, Mode = BindingMode.TwoWay });
+            }
+            return control;
+        }
+
+        /// <summary>Evaluate the operand and return the absolute value of it.</summary>
+        public double Evaluate(IGameState gameState) => Math.Abs(Operand.Evaluate(gameState));
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+
+        public void SetApplication(Application application) => Operand?.SetApplication(application);
+
+        public IEvaluatableNumber Clone() => new NumberAbsValue { Operand = Operand.Clone() };
+        IEvaluatable IEvaluatable.Clone() => Clone();
+    }
+
+
 
     /// <summary>
     /// Evaluatable that compares two numerical evaluatables and returns a boolean depending on the comparison.

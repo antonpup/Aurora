@@ -44,7 +44,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// Adds a new entry to the LookupTable based on the current VarType
         /// </summary>
         public void CreateNewLookup() {
-            LookupTable.Add(new LookupTableEntry(Activator.CreateInstance(VarType), new BooleanTrue()));
+            LookupTable.Add(new LookupTableEntry(Activator.CreateInstance(VarType), new BooleanConstant()));
         }
 
         /// <summary>

@@ -29,7 +29,7 @@ namespace Aurora.Settings.Overrides.Logic {
         };
         private static Dictionary<EvaluatableType, Func<IEvaluatable>> enumToDefaultDictionary = new Dictionary<EvaluatableType, Func<IEvaluatable>> {
             { EvaluatableType.All, () => null },
-            { EvaluatableType.Boolean, () => new BooleanTrue() },
+            { EvaluatableType.Boolean, () => new BooleanConstant() },
             { EvaluatableType.Number, () => new NumberConstant() },
             { EvaluatableType.String, () => new StringConstant() }
         };

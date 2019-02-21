@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using Aurora.Profiles;
 using Newtonsoft.Json;
@@ -83,7 +84,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         [JsonProperty]
-        public IEvaluatableBoolean SubCondition { get; set; } = new BooleanTrue();
+        public IEvaluatableBoolean SubCondition { get; set; } = new BooleanConstant();
 
         public Visual GetControl(Application app) => new Control_ConditionNot(this, app);
         public bool Evaluate(IGameState gameState) => !SubCondition.Evaluate(gameState);
@@ -102,37 +103,40 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that always returns true. Useful as a default condition as it means that
     /// the layer will always be visible.
     /// </summary>
-    [OverrideLogic("True Constant", category: OverrideLogicCategory.Logic)]
-    public class BooleanTrue : IEvaluatableBoolean {
+    [OverrideLogic("Boolean Constant", category: OverrideLogicCategory.Logic)]
+    public class BooleanConstant : IEvaluatableBoolean {
 
-        public Visual GetControl(Application application) => null;
-        public bool Evaluate(IGameState _) => true;
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+        /// <summary>Creates a new constant true boolean.</summary>
+        public BooleanConstant() { }
+        /// <summary>Creates a new constant boolean with the given state.</summary>
+        public BooleanConstant(bool state) { }
 
-        public void SetApplication(Application application) { }
-
-        public IEvaluatableBoolean Clone() => new BooleanTrue();
-        IEvaluatable IEvaluatable.Clone() => Clone();
-    }
-
-
-    /// <summary>
-    /// Manually togglable condition. Useful for testing.
-    /// </summary>
-    [OverrideLogic("Manually Togglable", category: OverrideLogicCategory.Misc)]
-    public class BooleanTogglable : IEvaluatableBoolean {
-
+        /// <summary>The value held by this constant value.</summary>
         public bool State { get; set; }
 
-        public Visual GetControl(Application application) => new Control_ConditionDebug(this);
+        // Create a checkbox to use to set the constant value
+        [JsonIgnore]
+        private CheckBox control;
+        public Visual GetControl(Application application) {
+            if (control == null) {
+                control = new CheckBox { Content = "True/False" };
+                control.SetBinding(CheckBox.IsCheckedProperty, new Binding("State") { Source = this, Mode = BindingMode.TwoWay });
+            }
+            return control;
+        }
+
+        // Simply return the current state
         public bool Evaluate(IGameState _) => State;
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
+        // Application-independent evaluatable, do nothing.
         public void SetApplication(Application application) { }
 
-        public IEvaluatableBoolean Clone() => new BooleanTogglable { State = State };
+        // Creates a new BooleanConstant
+        public IEvaluatableBoolean Clone() => new BooleanConstant { State = State };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
+
 
     /// <summary>
     /// Indicates that the implementing class has a SubCondition collection property.

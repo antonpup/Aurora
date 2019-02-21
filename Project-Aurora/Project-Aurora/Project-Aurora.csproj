@@ -618,9 +618,6 @@
     <Compile Include="Settings\Overrides\Logic\OverrideDynamicValue.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLogicAttribute.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_GameState.cs" />
-    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanDebug.xaml.cs">
-      <DependentUpon>Control_BooleanDebug.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIBoolean.xaml.cs">
       <DependentUpon>Control_BooleanGSIBoolean.xaml</DependentUpon>
     </Compile>
@@ -1918,10 +1915,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\XCOM\Control_XCOM.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanDebug.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,9 +6,13 @@
              xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
              mc:Ignorable="d" 
              d:DesignWidth="600">
+    <UserControl.Resources>
+        <local:NullableToVisibilityConverter x:Key="NullableToVisConv" />
+    </UserControl.Resources>
     <Grid>
         <!-- Controls -->
-        <ComboBox x:Name="operatorSelection" SelectedValue="{Binding SelectedOperator}" SelectedValuePath="Value" DisplayMemberPath="Key" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" />
+        <ComboBox ItemsSource="{Binding OperatorList}" SelectedValue="{Binding SelectedOperator}" Visibility="{Binding OperatorList, Converter={StaticResource NullableToVisConv}}" SelectedValuePath="Value" DisplayMemberPath="Key" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" />
+        <TextBlock Text="{Binding StaticOperator}" TextAlignment="Right" Visibility="{Binding StaticOperator, Converter={StaticResource NullableToVisConv}}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="96" />
         <local:Control_EvaluatablePresenter Expression="{Binding Operand, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="119,0,19,0" />
 
         <!-- Left bracket -->

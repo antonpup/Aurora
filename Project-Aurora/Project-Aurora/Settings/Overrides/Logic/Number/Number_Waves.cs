@@ -40,7 +40,9 @@ namespace Aurora.Settings.Overrides.Logic {
         public double Evaluate(IGameState gameState) {
             var op = Operand.Evaluate(gameState);
             switch (WaveFunc) {
-                case WaveFunctionType.Sine: return .5 * (Math.Sin(op * 2 * Math.PI) + 1); // Convert the function to take a value from 0-1 and return 0-1. This saves the user from doing complex radian conversion
+                // The wave functions are generated on https://www.desmos.com/calculator/x9xl6m9ryf
+                case WaveFunctionType.Sine: return .5 * (Math.Sin((op + .75) * 2 * Math.PI) + 1); // Convert the function to take a value from 0-1 and return 0-1. This saves the user from doing complex radian conversion
+                case WaveFunctionType.Triangle: return 2 * Math.Abs(((op + .5) % 1) - .5); // Make a triangle wave that starts at 0, at 0.5 it returns 1 then at 1 returns 0.
                 default: return 0;
             }
         }
@@ -57,6 +59,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
 
     public enum WaveFunctionType {
-        Sine
+        Sine,
+        Triangle
     }
 }
