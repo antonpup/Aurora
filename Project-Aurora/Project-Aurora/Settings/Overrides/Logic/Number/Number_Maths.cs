@@ -226,8 +226,8 @@ namespace Aurora.Settings.Overrides.Logic {
             double toMin = ToMin.Evaluate(gameState), toMax = ToMax.Evaluate(gameState);
 
             // Perform actual equation
-            return Utils.MathUtils.Clamp((value - fromMin) * ((toMax - toMin) / (fromMax - fromMin)) + toMin, toMin, toMax);
-            // Here is an example of it running: https://www.desmos.com/calculator/n1d9ia7sqb
+            return Utils.MathUtils.Clamp((value - fromMin) * ((toMax - toMin) / (fromMax - fromMin)) + toMin, Math.Min(toMin, toMax), Math.Max(toMin, toMax));
+            // Here is an example of it running: https://www.desmos.com/calculator/nzbiiz7vxv
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
