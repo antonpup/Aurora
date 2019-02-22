@@ -71,7 +71,7 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
 
         private void status_style_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && this.DataContext is ResidentEvil2HealthLayerHandler)
+            if (IsLoaded && settingsset && this.DataContext is ResidentEvil2HealthLayerHandler)
             {
                 (this.DataContext as ResidentEvil2HealthLayerHandler).Properties._DisplayType = (ResidentEvil2HealthLayerHandlerProperties.HealthDisplayType)this.status_style.SelectedItem;
             }
