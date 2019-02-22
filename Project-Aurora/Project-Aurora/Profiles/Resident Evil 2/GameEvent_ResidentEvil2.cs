@@ -108,6 +108,12 @@ namespace Aurora.Profiles.ResidentEvil2
                     else if (currentHealth > 360) (_game_state as GameState_ResidentEvil2).Player.Status = Player_ResidentEvil2.PlayerStatus.Caution;
                     else if (currentHealth > 0) (_game_state as GameState_ResidentEvil2).Player.Status = Player_ResidentEvil2.PlayerStatus.Danger;
                     else (_game_state as GameState_ResidentEvil2).Player.Status = Player_ResidentEvil2.PlayerStatus.Dead;
+
+                    if ((_game_state as GameState_ResidentEvil2).Player.Status == Player_ResidentEvil2.PlayerStatus.Dead)
+                    {
+                        (_game_state as GameState_ResidentEvil2).Player.Poison = false;
+                        (_game_state as GameState_ResidentEvil2).Player.Rank = 0;
+                    }
                 }
             }
 

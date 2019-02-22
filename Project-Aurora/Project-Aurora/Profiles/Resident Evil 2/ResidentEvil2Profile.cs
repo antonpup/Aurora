@@ -19,8 +19,17 @@ namespace Aurora.Profiles.ResidentEvil2
             base.Reset();
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
-                new Layer("Rank Indicator Layer", new Layers.ResidentEvil2RankLayerHandler()),
-                new Layer("Status Indicator Layer", new Layers.ResidentEvil2HealthLayerHandler())
+                new Layer("Rank Indicator", new Layers.ResidentEvil2RankLayerHandler()),
+                new Layer("Poison Indicator", new ConditionalLayerHandler{
+                    Properties = new ConditionalLayerProperties
+                    {
+                        _ConditionPath = "Player/Poison",
+                        _PrimaryColor = Color.FromArgb(255, 128, 0, 128),
+                        _SecondaryColor = Color.FromArgb(0, 0, 0, 0),
+                        _Sequence = new KeySequence(new FreeFormObject(0, 140, 840, 80))
+                    }
+                }),
+                new Layer("Status Indicator", new Layers.ResidentEvil2HealthLayerHandler())
             };
         }
     }
