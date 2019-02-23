@@ -158,6 +158,9 @@ namespace Aurora.Devices.SteelSeries
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
                 Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
 
+                // to guarantee mouse events happen after other two zone devices
+                Color[] colors_periph = new Color[3];
+
                 // Create a new color event, we'll pass this on to whatever should add to it
 
                 GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
@@ -183,9 +186,13 @@ namespace Aurora.Devices.SteelSeries
                             SendColorToPeripheral(color, payload, forced);
                             break;
                         case DeviceKeys.Peripheral_Logo:
+                            colors_periph[0] = color;
+                            break;
                         case DeviceKeys.Peripheral_FrontLight:
+                            colors_periph[1] = color;
+                            break;
                         case DeviceKeys.Peripheral_ScrollWheel:
-                            SendColorToPeripheralZone(key.Key, color, payload);
+                            colors_periph[2] = color;
                             break;
                         case DeviceKeys.MOUSEPADLIGHT1:
                         case DeviceKeys.MOUSEPADLIGHT2:
@@ -217,6 +224,10 @@ namespace Aurora.Devices.SteelSeries
 
                 SendColorsToKeyboard(hids, colors, payload);
                 SendColorsToMousepad(colors_mousepad, payload);
+
+                SendColorToPeripheralZone(DeviceKeys.Peripheral_Logo, colors_periph[0], payload);
+                SendColorToPeripheralZone(DeviceKeys.Peripheral_FrontLight, colors_periph[1], payload);
+                SendColorToPeripheralZone(DeviceKeys.Peripheral_ScrollWheel, colors_periph[2], payload);
 
                 gameSenseSDK.sendFullColorRequest(payload);
 

@@ -110,13 +110,25 @@ namespace SteelSeries.GameSenseSDK
         public void setMousepadColor(Tuple<byte, byte, byte>[] colors, GameSensePayloadPeripheryColorEventJSON payload)
         {
             List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
-
-            payload.data += "\"mousepad\":{";
-
-            for (int i = 0; i < 12; i++)
+            if(colors[2] == null)
             {
-                payload.data += "\"" + zones[i] + "\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "],";
+                payload.data += "\"mousepadtwozone\":{";
+
+                for (int i = 0; i < 2; i++)
+                {
+                    payload.data += "\"" + zones[i] + "\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "],";
+                }
             }
+            else
+            {
+                payload.data += "\"mousepad\":{";
+
+                for (int i = 0; i < 12; i++)
+                {
+                    payload.data += "\"" + zones[i] + "\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "],";
+                }
+            }
+            
             // JSON doesn't allow trailing commas
             payload.data = payload.data.TrimEnd(',');
             payload.data += "},";
@@ -219,6 +231,12 @@ namespace SteelSeries.GameSenseSDK
                 (on-device ""rgb-12-zone"" show-on-zone: mpten ten:)
                 (on-device ""rgb-12-zone"" show-on-zone: mpeleven eleven:)
                 (on-device ""rgb-12-zone"" show-on-zone: mptwelve twelve:)))
+        (when (mousepadtwozone:? data)
+            (let* ((mousepadtwozone (mousepadtwozone: data))
+                    (mpone (mpone: mousepad))
+                    (mptwo (mptwo: mousepad)))
+                (on-device ""rgb-2-zone"" show-on-zone: mpone one:)
+                (on-device ""rgb-2-zone"" show-on-zone: mptwo two:)))
         (when (mouse:? data)
             (let* ((mouse (mouse: data))
                    (color (color: mouse)))

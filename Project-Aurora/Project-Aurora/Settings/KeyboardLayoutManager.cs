@@ -791,6 +791,9 @@ namespace Aurora.Settings
                     case PreferredMouse.SteelSeries_QcK_Prism:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_prism_features.json");
                         break;
+                    case PreferredMouse.SteelSeries_QcK_2_Zone:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_2zone_features.json");
+                        break;
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
                         break;
