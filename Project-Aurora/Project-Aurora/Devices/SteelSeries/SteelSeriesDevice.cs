@@ -156,7 +156,8 @@ namespace Aurora.Devices.SteelSeries
 
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
-                Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
+                List<Tuple<byte, byte, byte>> colorsMousepad = new List<Tuple<byte, byte, byte>>();
+                //Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
 
                 // Create a new color event, we'll pass this on to whatever should add to it
 
@@ -199,7 +200,8 @@ namespace Aurora.Devices.SteelSeries
                         case DeviceKeys.MOUSEPADLIGHT10:
                         case DeviceKeys.MOUSEPADLIGHT11:
                         case DeviceKeys.MOUSEPADLIGHT12:
-                            colors_mousepad[Convert.ToInt32(key.Key) - 201] = Tuple.Create(color.R, color.G, color.B);
+                            // colors_mousepad[Convert.ToInt32(key.Key) - 201] = Tuple.Create(color.R, color.G, color.B);
+                            colorsMousepad.Add(Tuple.Create(color.R, color.G, color.B));
                             break;
                         default:
                             byte hid = GetHIDCode(key.Key);
@@ -216,7 +218,7 @@ namespace Aurora.Devices.SteelSeries
                 if (e.Cancel) return false;
 
                 SendColorsToKeyboard(hids, colors, payload);
-                SendColorsToMousepad(colors_mousepad, payload);
+                SendColorsToMousepad(colorsMousepad, payload);
 
                 gameSenseSDK.sendFullColorRequest(payload);
 
@@ -340,10 +342,10 @@ namespace Aurora.Devices.SteelSeries
             }
         }
 
-        private void SendColorsToMousepad(Tuple<byte, byte, byte>[] colors_mousepad, GameSensePayloadPeripheryColorEventJSON payload)
+        private void SendColorsToMousepad(List<Tuple<byte, byte, byte>> colors_mousepad, GameSensePayloadPeripheryColorEventJSON payload)
         {
             // no globals exist for mousepads being enabled but if they aren't enabled colors_mousepad won't be intialized
-            if (colors_mousepad[0] != null)
+            if (colors_mousepad.Count != 0)
             {
                 gameSenseSDK.setMousepadColor(colors_mousepad, payload);
             }

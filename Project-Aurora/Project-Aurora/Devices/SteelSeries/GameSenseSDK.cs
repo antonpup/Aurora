@@ -107,31 +107,30 @@ namespace SteelSeries.GameSenseSDK
             payload.data += "\"" + deviceType + "\":{\"color\": [" + red + ", " + green + ", " + blue + "]},";
         }
 
-        public void setMousepadColor(Tuple<byte, byte, byte>[] colors, GameSensePayloadPeripheryColorEventJSON payload)
+        public void setMousepadColor(List<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
         {
-            List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
-            if(colors[2] == null)
+            if(colors.Count == 2)
             {
                 payload.data += "\"mousepadtwozone\":{";
-
-                for (int i = 0; i < 2; i++)
+                payload.data += "\"colors\":[";
+                foreach (Tuple<byte, byte, byte> color in colors)
                 {
-                    payload.data += "\"" + zones[i] + "\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "],";
+                    payload.data += "[" + color.Item1 + ", " + color.Item2 + ", " + color.Item3 + "],";
                 }
+                payload.data = payload.data.TrimEnd(',');
+                payload.data += "]},";
             }
-            else
+            else if (colors.Count == 12)
             {
                 payload.data += "\"mousepad\":{";
-
-                for (int i = 0; i < 12; i++)
+                payload.data += "\"colors\":[";
+                foreach (Tuple<byte, byte, byte> color in colors)
                 {
-                    payload.data += "\"" + zones[i] + "\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "],";
+                    payload.data += "[" + color.Item1 + ", " + color.Item2 + ", " + color.Item3 + "],";
                 }
+                payload.data = payload.data.TrimEnd(',');
+                payload.data += "]},";
             }
-            
-            // JSON doesn't allow trailing commas
-            payload.data = payload.data.TrimEnd(',');
-            payload.data += "},";
         }
 
         public void setKeyboardColors(List<byte> hids, List<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
@@ -203,40 +202,15 @@ namespace SteelSeries.GameSenseSDK
                 (on-device ""rgb-3-zone"" show: color)
                 (on-device ""rgb-4-zone"" show: color)
                 (on-device ""rgb-5-zone"" show: color)
-                (on-device ""rgb-12-zone"" show: color)
-                (on-device ""headset"" show-on-zone: color earcups:)))
+                (on-device ""rgb-12-zone"" show: color)))
         (when (mousepad:? data)
             (let* ((mousepad (mousepad: data))
-                    (mpone (mpone: mousepad))
-                    (mptwo (mptwo: mousepad))
-                    (mpthree (mpthree: mousepad))
-                    (mpfour (mpfour: mousepad))
-                    (mpfive (mpfive: mousepad))
-                    (mpsix (mpsix: mousepad))
-                    (mpseven (mpseven: mousepad))
-                    (mpeight (mpeight: mousepad))
-                    (mpnine (mpnine: mousepad))
-                    (mpten (mpten: mousepad))
-                    (mpeleven (mpeleven: mousepad))
-                    (mptwelve (mptwelve: mousepad)))
-                (on-device ""box"" show-on-zone: mpone one:)
-                (on-device ""box"" show-on-zone: mptwo two:)
-                (on-device ""box"" show-on-zone: mpthree three:)
-                (on-device ""box"" show-on-zone: mpfour four:)
-                (on-device ""box"" show-on-zone: mpfive five:)
-                (on-device ""box"" show-on-zone: mpsix six:)
-                (on-device ""box"" show-on-zone: mpseven seven:)
-                (on-device ""box"" show-on-zone: mpeight eight:)
-                (on-device ""box"" show-on-zone: mpnine nine:)
-                (on-device ""box"" show-on-zone: mpten ten:)
-                (on-device ""box"" show-on-zone: mpeleven eleven:)
-                (on-device ""box"" show-on-zone: mptwelve twelve:)))
+                    (colors (colors: mousepad)))
+                (on-device ""rgb-12-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve:))))
         (when (mousepadtwozone:? data)
             (let* ((mousepadtwozone (mousepadtwozone: data))
-                    (mpone (mpone: mousepadtwozone))
-                    (mptwo (mptwo: mousepadtwozone)))
-                (on-device ""box"" show-on-zone: mpone one:)
-                (on-device ""box"" show-on-zone: mptwo two:)))
+                    (colors (colors: mousepadtwozone)))
+                (on-device ""indicator"" show-on-zones: mpone '(one: two:))))
         (when (mouse:? data)
             (let* ((mouse (mouse: data))
                    (color (color: mouse)))
