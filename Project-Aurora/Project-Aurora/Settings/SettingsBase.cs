@@ -19,5 +19,12 @@ namespace Aurora.Settings
                     new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
                     );
         }
+
+        public SettingsBase()
+        {
+            this.Default();
+        }
+
+        public virtual void Default() { }
     }
 }

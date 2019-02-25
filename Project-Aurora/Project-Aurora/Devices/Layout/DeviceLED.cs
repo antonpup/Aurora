@@ -9,16 +9,16 @@ using LEDINT = System.Int16;
 namespace Aurora.Devices.Layout
 {
     //TODO: Need to make this so that it gets saved as a number rather than an object in json
-    [JsonConverter(typeof(DeviceLEDConverter))]
+    //[JsonConverter(typeof(DeviceLEDConverter))]
     public struct DeviceLED
     {
         public static readonly DeviceLED None = new DeviceLED(0, 0, LEDINT.MinValue);
         public static readonly DeviceLED Global = new DeviceLED(0, 0, 0);
 
-        public byte DeviceTypeID { get; private set; }
-        public byte DeviceID { get; private set; }
-        public LEDINT LedID { get; private set; }
-
+        public byte DeviceTypeID { get; set; }
+        public byte DeviceID { get; set; }
+        public LEDINT LedID { get; set; }
+        
         public DeviceLED(byte deviceTypeID, byte deviceID, LEDINT ledID)
         {
             this.DeviceTypeID = deviceTypeID;
@@ -65,6 +65,12 @@ namespace Aurora.Devices.Layout
             return GlobalDeviceLayout.Instance.GetDeviceLEDName(this);
         }
 
+        public DeviceLED Sanitize()
+        {
+            return GlobalDeviceLayout.Instance.SanitizeDeviceLED(this);
+        }
+
+        [JsonIgnore]
         public bool IsNone => this.Equals(None);
 
         public static bool operator ==(DeviceLED lhs, DeviceLED rhs)
@@ -111,7 +117,7 @@ namespace Aurora.Devices.Layout
             }
             else
             {
-                throw new Exception();
+                //throw new Exception();
                 return null;
             }
         }

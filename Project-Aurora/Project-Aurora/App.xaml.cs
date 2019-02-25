@@ -19,6 +19,7 @@ using SharpDX.RawInput;
 using NLog;
 using System.Reflection;
 using System.Text;
+using Aurora.Devices.Layout;
 using RazerSdkWrapper;
 using RazerSdkWrapper.Utils;
 using RazerSdkWrapper.Data;
@@ -202,9 +203,8 @@ namespace Aurora
                 Global.logger.Info("Loading Plugins");
                 (Global.PluginManager = new PluginManager()).Initialize();
 
-                Global.logger.Info("Loading KB Layouts");
-                Global.kbLayout = new KeyboardLayoutManager();
-                Global.kbLayout.LoadBrandDefault();
+                Global.logger.Info("Loading Global Device Layout");
+                GlobalDeviceLayout.Instance.Initialize();
 
                 Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();

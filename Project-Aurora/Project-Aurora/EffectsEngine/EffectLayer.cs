@@ -66,6 +66,7 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             //TODO: Get Canvas
+            this.canvas = GlobalDeviceLayout.Instance.GetCanvas();
             //colormap = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
             if (color != null && color.IsEmpty)

@@ -19,6 +19,7 @@ using Aurora.Settings.Keycaps;
 using Aurora.Profiles;
 using Aurora.Settings.Layers;
 using Aurora.Profiles.Aurora_Wrapper;
+using Aurora.Devices.Layout;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -92,7 +93,7 @@ namespace Aurora
             width = Width;
             height = Height;
 
-            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
+            GlobalDeviceLayout.Instance.LayoutChanged += KbLayout_KeyboardLayoutUpdated;
 
             ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
@@ -141,7 +142,7 @@ namespace Aurora
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
         {
-            virtial_kb = Global.kbLayout.Virtual_keyboard;
+            virtial_kb = GlobalDeviceLayout.Instance.GetControl();
 
             keyboard_grid.Children.Clear();
             keyboard_grid.Children.Add(virtial_kb);
@@ -180,7 +181,7 @@ namespace Aurora
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
-            virtial_kb = Global.kbLayout.Virtual_keyboard;
+            virtial_kb = GlobalDeviceLayout.Instance.GetControl();
 
             keyboard_grid.Children.Clear();
             keyboard_grid.Children.Add(virtial_kb);
@@ -248,13 +249,7 @@ namespace Aurora
                             }
 
 
-                            Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights = new Dictionary<Devices.DeviceKeys, System.Drawing.Color>();
-
-                            if (IsActive)
-                            {
-                                keylights = Global.effengine.GetKeyboardLights();
-                                Global.kbLayout.SetKeyboardColors(keylights);
-                            }
+                            GlobalDeviceLayout.Instance.UpdateDeviceControlColors();
 
                             if (Global.key_recorder.IsRecording())
                                 this.keyboard_record_message.Visibility = Visibility.Visible;

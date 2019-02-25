@@ -103,11 +103,12 @@ namespace Aurora.Controls
             txtblk_DeviceStatus.Text = Device.Device.GetDeviceDetails().TrimEnd(' ');
             txtblk_DevicePerformance.Text = Device.Device.GetDeviceUpdatePerformance();
 
-            if(Device is Devices.ScriptedDevice.ScriptedDevice)
+            //TODO: Return this
+            /*if(Device is Devices.ScriptedDevice.ScriptedDevice)
                 btnToggleEnableDisable.IsEnabled = false;
             else
-            {
-                if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
+            {*/
+            if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
                 {
                     btnToggleEnableDisable.Content = "Enable";
                     btnToggleOnOff.IsEnabled = false;
@@ -117,7 +118,7 @@ namespace Aurora.Controls
                     btnToggleEnableDisable.Content = "Disable";
                     btnToggleOnOff.IsEnabled = true;
                 }
-            }
+            //}
 
             if(Device.Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
                 btnViewOptions.IsEnabled = false;

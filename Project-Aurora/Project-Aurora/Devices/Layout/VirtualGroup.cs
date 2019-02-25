@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Utils;
+using Aurora.Settings;
 using Aurora.Settings.Keycaps;
 using Newtonsoft.Json;
 using System;
@@ -83,6 +84,9 @@ namespace Aurora.Devices.Layout
 
         public VirtualRegion origin_region;
 
+        [JsonProperty("key_conversion")]
+        public Dictionary<LEDINT, LEDINT> KeyConversion = null;
+
         public List<VirtualLight> grouped_keys = new List<VirtualLight>();
 
         //probably redundant
@@ -106,8 +110,15 @@ namespace Aurora.Devices.Layout
         {
             get
             {
+                if (virtualLayout == null)
+                    CreateUserControl();
                 return virtualLayout;
             }
+        }
+
+        public VirtualGroup()
+        {
+
         }
 
         public VirtualGroup(DeviceLayout layout)
@@ -122,10 +133,10 @@ namespace Aurora.Devices.Layout
             double current_height = 0;
             double current_width = 0;
 
-            int width_bit = 0;
+            /*int width_bit = 0;
             int height_bit = 0;
             int width_bit_max = 1;
-            int height_bit_max = 1;
+            int height_bit_max = 1;*/
 
             foreach (var key in keys)
             {
@@ -152,11 +163,11 @@ namespace Aurora.Devices.Layout
                     layout_height = current_height;
 
 
-                int key_tly = LayoutUtils.PixelToByte(key.margin_top.Value) + height_bit;
-                int key_tlx = LayoutUtils.PixelToByte(key.margin_left.Value) + width_bit;
+                /*int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
+                int key_tlx = KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + width_bit;
 
-                int key_bry = key_tly + LayoutUtils.PixelToByte(key.height.Value);
-                int key_brx = key_tlx + LayoutUtils.PixelToByte(key.width.Value);
+                int key_bry = key_tly + KeyboardLayoutManager.PixelToByte(key.height.Value);
+                int key_brx = key_tlx + KeyboardLayoutManager.PixelToByte(key.width.Value);
 
                 if (width_bit_max < key_brx) width_bit_max = key_brx;
                 if (height_bit_max < key_bry) height_bit_max = key_bry;
@@ -164,22 +175,22 @@ namespace Aurora.Devices.Layout
 
                 if (key.line_break.Value)
                 {
-                    height_bit += 3;
+                    height_bit += KeyboardLayoutManager.PixelToByte(37);
                     width_bit = 0;
                 }
                 else
                 {
                     width_bit = key_brx;
                     height_bit = key_tly;
-                }
+                }*/
 
             }
 
             _region.Width = (float)layout_width;
             _region.Height = (float)layout_height;
 
-            _region_bitmap.Width = width_bit_max;
-            _region_bitmap.Height = height_bit_max;
+            /*_region_bitmap.Width = width_bit_max;
+            _region_bitmap.Height = height_bit_max;*/
 
             //NormalizeKeys();
         }
@@ -194,25 +205,25 @@ namespace Aurora.Devices.Layout
             if (insertion_region == VirtualRegion.TopRight)
             {
                 location_x = _region.Width;
-                location_x_bit = _region_bitmap.Width;
+                //location_x_bit = _region_bitmap.Width;
             }
             else if (insertion_region == VirtualRegion.BottomLeft)
             {
                 location_y = _region.Height;
-                location_y_bit = _region_bitmap.Height;
+                //location_y_bit = _region_bitmap.Height;
             }
             else if (insertion_region == VirtualRegion.BottomRight)
             {
                 location_x = _region.Width;
                 location_y = _region.Height;
-                location_x_bit = _region_bitmap.Width;
-                location_y_bit = _region_bitmap.Height;
+                //location_x_bit = _region_bitmap.Width;
+                //location_y_bit = _region_bitmap.Height;
             }
 
             float added_width = 0.0f;
             float added_height = 0.0f;
-            int added_width_bits = 0;
-            int added_height_bits = 0;
+            //int added_width_bits = 0;
+            //int added_height_bits = 0;
 
             foreach (var key in keys)
             {
@@ -223,6 +234,8 @@ namespace Aurora.Devices.Layout
                 //key.margin_top_bits += location_y_bit;
 
                 grouped_keys.Add(key);
+                if (KeyText.ContainsKey(key.tag))
+                    KeyText.Remove(key.tag);
                 KeyText.Add(key.tag, key.visualName);
 
                 if (key.width + key.margin_left > _region.Width)
@@ -242,25 +255,33 @@ namespace Aurora.Devices.Layout
                 }
 
 
-                if (LayoutUtils.PixelToByte(key.width.Value) + LayoutUtils.PixelToByte(key.margin_left.Value) > _region_bitmap.Width)
-                    _region_bitmap.Width += LayoutUtils.PixelToByte(key.width.Value) + LayoutUtils.PixelToByte(key.margin_left.Value) - location_x_bit;
-                else if (LayoutUtils.PixelToByte(key.margin_left.Value) + added_width_bits < 0)
+                /*if (KeyboardLayoutManager.PixelToByte(key.width.Value) + KeyboardLayoutManager.PixelToByte(key.margin_left.Value) > _region_bitmap.Width)
+                    _region_bitmap.Width += KeyboardLayoutManager.PixelToByte(key.width.Value) + KeyboardLayoutManager.PixelToByte(key.margin_left.Value) - location_x_bit;
+                else if (KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + added_width_bits < 0)
                 {
-                    added_width_bits = -LayoutUtils.PixelToByte(key.margin_left.Value);
-                    _region_bitmap.Width -= LayoutUtils.PixelToByte(key.margin_left.Value);
+                    added_width_bits = -KeyboardLayoutManager.PixelToByte(key.margin_left.Value);
+                    _region_bitmap.Width -= KeyboardLayoutManager.PixelToByte(key.margin_left.Value);
                 }
 
-                if (LayoutUtils.PixelToByte(key.height.Value) + LayoutUtils.PixelToByte(key.margin_top.Value) > _region_bitmap.Height)
-                    _region_bitmap.Height += LayoutUtils.PixelToByte(key.height.Value) + LayoutUtils.PixelToByte(key.margin_top.Value) - location_y_bit;
-                else if (LayoutUtils.PixelToByte(key.margin_top.Value) + added_height_bits < 0)
+                if (KeyboardLayoutManager.PixelToByte(key.height.Value) + KeyboardLayoutManager.PixelToByte(key.margin_top.Value) > _region_bitmap.Height)
+                    _region_bitmap.Height += KeyboardLayoutManager.PixelToByte(key.height.Value) + KeyboardLayoutManager.PixelToByte(key.margin_top.Value) - location_y_bit;
+                else if (KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + added_height_bits < 0)
                 {
-                    added_height_bits = -LayoutUtils.PixelToByte(key.margin_top.Value);
-                    _region_bitmap.Height -= LayoutUtils.PixelToByte(key.margin_top.Value);
-                }
+                    added_height_bits = -KeyboardLayoutManager.PixelToByte(key.margin_top.Value);
+                    _region_bitmap.Height -= KeyboardLayoutManager.PixelToByte(key.margin_top.Value);
+                }*/
 
             }
 
             NormalizeKeys();
+        }
+
+        internal void UpdateColors(DeviceColorComposition deviceColours)
+        {
+            foreach (var clr in deviceColours.deviceColours)
+            {
+                this.virtualKeyboardMap[clr.Key].SetColor(clr.Value.ToMediaColor());
+            }
         }
 
         private void NormalizeKeys()
@@ -333,9 +354,14 @@ namespace Aurora.Devices.Layout
 
             foreach (var key in applicable_keys)
             {
+                VirtualLight otherKey = keys[key.tag];
+                if (key.tag != otherKey.tag)
+                    KeyText.Remove(key.tag);
+                key.UpdateFromOtherLight(otherKey);
                 if (KeyText.ContainsKey(key.tag))
                     KeyText[key.tag] = key.visualName;
-                key.UpdateFromOtherLight(keys[key.tag]);
+                else
+                    KeyText.Add(key.tag, key.visualName);
             }
         }
 
@@ -348,10 +374,10 @@ namespace Aurora.Devices.Layout
             double current_height = 0;
             double current_width = 0;
 
-            int width_bit = 0;
+            /*int width_bit = 0;
             int height_bit = 0;
             int width_bit_max = 1;
-            int height_bit_max = 1;
+            int height_bit_max = 1;*/
 
             foreach (var key in grouped_keys)
             {
@@ -374,12 +400,13 @@ namespace Aurora.Devices.Layout
                 if (layout_height < current_height)
                     layout_height = current_height;
 
+                KeyText.Remove(key.tag);
 
-                int key_tly = LayoutUtils.PixelToByte(key.margin_top.Value) + height_bit;
-                int key_tlx = LayoutUtils.PixelToByte(key.margin_left.Value) + width_bit;
+                /*int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
+                int key_tlx = KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + width_bit;
 
-                int key_bry = key_tly + LayoutUtils.PixelToByte(key.height.Value);
-                int key_brx = key_tlx + LayoutUtils.PixelToByte(key.width.Value);
+                int key_bry = key_tly + KeyboardLayoutManager.PixelToByte(key.height.Value);
+                int key_brx = key_tlx + KeyboardLayoutManager.PixelToByte(key.width.Value);
 
                 if (width_bit_max < key_brx) width_bit_max = key_brx;
                 if (height_bit_max < key_bry) height_bit_max = key_bry;
@@ -394,62 +421,76 @@ namespace Aurora.Devices.Layout
                 {
                     width_bit = key_brx;
                     height_bit = key_tly;
-                }
+                }*/
 
             }
 
             _region.Width = (float)layout_width;
             _region.Height = (float)layout_height;
 
-            _region_bitmap.Width = width_bit_max;
-            _region_bitmap.Height = height_bit_max;
+            //_region_bitmap.Width = width_bit_max;
+            //_region_bitmap.Height = height_bit_max;
 
         }
 
         public void CalculateBitmap()
         {
-            int width_bit = 0;
-            int height_bit = 0;
-            int width_bit_max = 1;
-            int height_bit_max = 1;
-            BitmapMap.Clear();
+            double cur_width = 0;
+            double cur_height = 0;
+            double width_max = 1;
+            double height_max = 1;
+            this.BitmapMap.Clear();
 
             foreach (VirtualLight key in this.grouped_keys)
             {
-                int key_tly = LayoutUtils.PixelToByte(key.margin_top.Value) + height_bit;
-                int key_tlx = LayoutUtils.PixelToByte(key.margin_left.Value) + width_bit;
+                if (key.tag.Equals(-1))
+                    continue;
 
-                int key_bry = key_tly + LayoutUtils.PixelToByte(key.height.Value);
-                int key_brx = key_tlx + LayoutUtils.PixelToByte(key.width.Value);
+                double width = key.width.Value;
+                int width_bit = LayoutUtils.PixelToByte(width);
+                double height = key.height.Value;
+                int height_bit = LayoutUtils.PixelToByte(height);
+                double x_offset = key.margin_left.Value;
+                double y_offset = key.margin_top.Value;
+                double br_x, br_y;
 
                 if (key.absolute_location.Value)
-                    this.BitmapMap[key.tag] = new BitmapRectangle(LayoutUtils.PixelToByte(key.margin_left.Value), LayoutUtils.PixelToByte(key.margin_top.Value), key_brx - key_tlx, key_bry - key_tly);
-                else
-                    this.BitmapMap[key.tag] = new BitmapRectangle(key_tlx, key_tly, key_brx - key_tlx, key_bry - key_tly);
-
-                if (!key.absolute_location.Value)
                 {
-                    if (width_bit_max < key_brx) width_bit_max = key_brx;
-                    if (height_bit_max < key_bry) height_bit_max = key_bry;
+                    this.BitmapMap[key.tag] = new BitmapRectangle(LayoutUtils.PixelToByte(x_offset), LayoutUtils.PixelToByte(y_offset), width_bit, height_bit);
+                    br_x = (x_offset + width);
+                    br_y = (y_offset + height);
+                }
+                else
+                {
+                    double x = x_offset + cur_width;
+                    double y = y_offset + cur_height;
 
+                    this.BitmapMap[key.tag] = new BitmapRectangle(LayoutUtils.PixelToByte(x), LayoutUtils.PixelToByte(y), width_bit, height_bit);
+
+                    br_x = (x + width);
+                    br_y = (y + height);
 
                     if (key.line_break.Value)
                     {
-                        //TODO: rework so it isn't fixed
-                        height_bit += LayoutUtils.PixelToByte(37);
-                        width_bit = 0;
+                        cur_height += 37;
+                        cur_width = 0;
                     }
                     else
                     {
-                        width_bit = key_brx;
-                        if (key_tly > height_bit)
-                            height_bit = key_tly;
+                        cur_width = br_x;
+                        if (y > cur_height)
+                            cur_height = y;
                     }
                 }
+                if (br_x > width_max) width_max = br_x;
+                if (br_y > height_max) height_max = br_y;
             }
-
+            //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
+            _region_bitmap.Width = LayoutUtils.PixelToByte(this.Region.Width) + 1;
+            _region_bitmap.Height = LayoutUtils.PixelToByte(this.Region.Height) + 1;
         }
 
+        private string layoutsPath = "kb_layouts";
         private Grid CreateUserControl(bool abstractKeycaps = false)
         {
             //Abstract keycaps are used for stuff like the animation editor
@@ -460,15 +501,15 @@ namespace Aurora.Devices.Layout
 
             new_virtual_keyboard.HorizontalAlignment = HorizontalAlignment.Left;
             new_virtual_keyboard.VerticalAlignment = VerticalAlignment.Top;
-
+            /*new_virtual_keyboard.DataContext = this.parent;
             //Bind Margin
             Binding bind = new Binding();
-            bind.Source = this;
+            bind.Source = this.parent;
             bind.Path = new System.Windows.PropertyPath("Location");
             bind.Mode = abstractKeycaps ? BindingMode.OneWay : BindingMode.TwoWay;
             bind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             bind.Converter = new PointToMarginConverter();
-            BindingOperations.SetBinding(new_virtual_keyboard, Grid.MarginProperty, bind);
+            BindingOperations.SetBinding(new_virtual_keyboard, Grid.MarginProperty, bind);*/
 
             double layout_height = 0;
             double layout_width = 0;
@@ -496,7 +537,7 @@ namespace Aurora.Devices.Layout
                     keycap = new Control_GhostKeycap(dynamicDeviceLED, key, image_path);
                 else
                 {
-                    switch (Global.Configuration.virtualkeyboard_keycap_type)
+                    switch (GlobalDeviceLayout.Instance.Settings.VirtualKeyboardKeycapType)
                     {
                         case KeycapType.Default_backglow:
                             keycap = new Control_DefaultKeycapBackglow(dynamicDeviceLED, key, image_path);
@@ -617,7 +658,7 @@ namespace Aurora.Devices.Layout
 
             if (!abstractKeycaps)
             {
-                virtualLayout.Children.Clear();
+                virtualLayout?.Children?.Clear();
                 virtualLayout = new_virtual_keyboard;
             }
 
