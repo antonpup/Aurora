@@ -159,6 +159,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ### Wooting
 * One
+* Two
 
 ### Alienware
 * All laptop models until AW15 R3/AW17 R4 (AW broke support for per-key RGB)
