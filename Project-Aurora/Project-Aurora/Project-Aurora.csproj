@@ -433,6 +433,23 @@
     <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
+      <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2HealthLayer.xaml.cs">
+      <DependentUpon>Control_ResidentEvil2HealthLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Resident Evil 2\Layers\ResidentEvil2RankLayerHandler.cs" />
+    <Compile Include="Profiles\Resident Evil 2\Layers\ResidentEvil2HealthLayerHandler.cs" />
+    <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Application.cs" />
+    <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Pointers.cs" />
+    <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Profile.cs" />
+    <Compile Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml.cs">
+      <DependentUpon>Control_ResidentEvil2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Resident Evil 2\GameEvent_ResidentEvil2.cs" />
+    <Compile Include="Profiles\Resident Evil 2\GSI\GameState_ResidentEvil2.cs" />
+    <Compile Include="Profiles\Resident Evil 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredApplication.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredPointers.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredProfile.cs" />
@@ -1380,6 +1397,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\ch_128x128.png" />
+    <Resource Include="Resources\re2_256x256.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1418,6 +1436,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Pointers\Borderlands2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Pointers\ResidentEvil2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Pointers\RocketLeague.json">
@@ -1563,6 +1584,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
+    <Page Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1751,6 +1773,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2HealthLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
