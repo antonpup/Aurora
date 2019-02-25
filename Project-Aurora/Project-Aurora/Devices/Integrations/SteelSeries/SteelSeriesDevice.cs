@@ -528,7 +528,7 @@ namespace Aurora.Devices.SteelSeries
                     return (byte)USBHIDCodes.SEMICOLON;
                 case (KeyboardKeys.APOSTROPHE):
                     return (byte)USBHIDCodes.APOSTROPHE;
-                case (KeyboardKeys.HASHTAG):
+                case (KeyboardKeys.HASH):
                     return (byte)USBHIDCodes.HASHTAG;
                 case (KeyboardKeys.ENTER):
                     return (byte)USBHIDCodes.ENTER;

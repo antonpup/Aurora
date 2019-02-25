@@ -48,9 +48,14 @@ namespace Aurora.Profiles
 
     public class ProfilesManagerSettings : SettingsBase
     {
-        public ProfilesManagerSettings()
+        public ProfilesManagerSettings() : base()
         {
 
+        }
+
+        public override void Default()
+        {
+            
         }
 
         [OnDeserialized]

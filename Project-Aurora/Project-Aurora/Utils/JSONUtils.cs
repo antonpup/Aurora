@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Aurora.Devices.Layout;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,12 @@ namespace Aurora.Utils
         {
             switch (typeName)
             {
+                case "Aurora.Devices.DeviceKeys":
+                    return typeof(DeviceLED);
+                case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[Aurora.Settings.KeySequence, Aurora]]":
+                    return typeof(Dictionary<DeviceLED, Aurora.Settings.KeySequence>);
+                case "System.Collections.Generic.List`1[[Aurora.Devices.DeviceKeys, Aurora]]":
+                    return typeof(List<DeviceLED>);
                 case "System.Collections.Generic.List`1[[System.Drawing.Color, System.Drawing]]":
                     return typeof(List<System.Drawing.Color>);
                 case "System.Collections.Generic.SortedDictionary`2[[System.Single, mscorlib],[System.Drawing.Color, System.Drawing]]":

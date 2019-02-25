@@ -8,6 +8,8 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using Microsoft.Win32;
+using Aurora.Devices.Layout;
+using System.Linq;
 
 namespace Aurora.Devices
 {
@@ -18,7 +20,7 @@ namespace Aurora.Devices
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
 
-        private Tuple<DeviceColorComposition, bool> currentComp = null;
+        private (Color, List<DeviceLayout>, bool) currentComp;
         private bool newFrame = false;
 
         public DeviceContainer(Device device)
@@ -39,14 +41,14 @@ namespace Aurora.Devices
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             newFrame = false;
-            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
-                currentComp.Item2);
+            Device.UpdateDevice(currentComp.Item1, currentComp.Item2, doWorkEventArgs,
+                currentComp.Item3);
         }
 
-        public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
+        public void UpdateDevice(Color GlobalColor, List<DeviceLayout> devices, bool forced = false)
         {
             newFrame = true;
-            currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
+            currentComp = (GlobalColor, devices, forced);
             lock (Worker)
             {
                 if (Worker.IsBusy)
@@ -97,22 +99,25 @@ namespace Aurora.Devices
         public DeviceManager()
         {
             devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
+            devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
+            devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
+
+            /*
             devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
             devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
             devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
             devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
             devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
             devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
-            devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
             devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
-            devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
             devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
             devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
             devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
             devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
+            */
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
-            if (Directory.Exists(devices_scripts_path))
+            /*if (Directory.Exists(devices_scripts_path))
             {
                 foreach (string device_script in Directory.EnumerateFiles(devices_scripts_path, "*.*"))
                 {
@@ -158,7 +163,7 @@ namespace Aurora.Devices
                         Global.logger.Error("An error occured while trying to load script {0}. Exception: {1}", device_script, exc);
                     }
                 }
-            }
+            }*/
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
@@ -330,7 +335,7 @@ namespace Aurora.Devices
             }
         }
 
-        public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
+        public void UpdateDevices(Color GlobalColor, List<DeviceLayout> deviceLayouts, bool forced = false)
         {
             foreach (DeviceContainer device in devices)
             {
@@ -343,7 +348,7 @@ namespace Aurora.Devices
                         continue;
                     }
                     
-                    device.UpdateDevice(composition, forced);
+                    device.UpdateDevice(GlobalColor, deviceLayouts, forced);
                 }
             }
         }

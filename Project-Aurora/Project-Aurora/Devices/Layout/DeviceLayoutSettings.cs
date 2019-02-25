@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Devices.Layout.Layouts;
 using Aurora.Settings;
 
 namespace Aurora.Devices.Layout
@@ -20,15 +21,21 @@ namespace Aurora.Devices.Layout
         private float _globalBrightness = 1.0f;
         public float GlobalBrightness { get => _globalBrightness; set => UpdateVar(ref _globalBrightness, value); }
 
-        public GlobalDeviceLayoutSettings()
-        {
-            
-        }
+        private KeycapType virtualKeyboardKeycapType = KeycapType.Default;
+        public KeycapType VirtualKeyboardKeycapType { get => virtualKeyboardKeycapType; set => UpdateVar(ref virtualKeyboardKeycapType, value); }
+
+        public GlobalDeviceLayoutSettings() : base() { }
 
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
             //TODO: Check if the Dictionary index (Device type ID) matches device type id of matching DeviceLayouts
+        }
+
+        public override void Default()
+        {
+            _devices.Add(KeyboardDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new KeyboardDeviceLayout() { Style = KeyboardDeviceLayout.PreferredKeyboard.Wooting_One, Language = KeyboardDeviceLayout.PreferredKeyboardLocalization.uk } });
+            _devices.Add(MouseDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new MouseDeviceLayout() { Style = MouseDeviceLayout.PreferredMouse.SteelSeries_Rival_300 } });
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,9 @@ namespace Aurora.Devices.Layout
     {
         protected Dictionary<(byte type, byte id), (Point location, Bitmap colormap)> deviceBitmaps = new Dictionary<(byte, byte), (Point location, Bitmap colormap)>();
 
-        protected Color GlobalColour = Color.Transparent;
+        protected Color globalColour = Color.Transparent;
+
+        public Color GlobalColour => globalColour;
 
         private GlobalDeviceLayout parent;
 
@@ -65,7 +68,7 @@ namespace Aurora.Devices.Layout
             switch (brush)
             {
                 case SolidBrush s:
-                    this.GlobalColour = s.Color;
+                    this.globalColour = s.Color;
                     break;
                 default:
                     Global.logger.Warn($"Brush of type {brush.GetType()} is not supported by SetGlobalColor!");
@@ -110,7 +113,8 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transform;
+                if (transform != null)
+                    g.Transform = transform;
                 g.FillRectangle(brush, rect);
             }
         }
@@ -156,6 +160,11 @@ namespace Aurora.Devices.Layout
             }
         }
 
+        internal void Save(MemoryStream memory, ImageFormat bmp)
+        {
+            throw new NotImplementedException();
+        }
+
         public void FillRectangle(Brush brush, float x, float y, float width, float height, Matrix transform = null) => FillRectangle(brush, new RectangleF(x,y,width,height), transform);
         
 
@@ -163,7 +172,8 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transformMatrix;
+                if (transformMatrix != null)
+                    g.Transform = transformMatrix;
                 g.DrawEllipse(pen, rect);
             }
         }
@@ -185,7 +195,8 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transformMatrix;
+                if (transformMatrix != null)
+                    g.Transform = transformMatrix;
                 g.FillEllipse(brush, rect);
             }
         }
@@ -207,7 +218,8 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transformMatrix;
+                if (transformMatrix != null)
+                    g.Transform = transformMatrix;
                 g.DrawLine(pen, startPoint, endPoint);
             }
         }
@@ -231,7 +243,8 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transformMatrix;
+                if (transformMatrix != null)
+                    g.Transform = transformMatrix;
                 g.DrawRectangle(pen, Rectangle.Round(rect));
             }
         }
@@ -393,7 +406,7 @@ namespace Aurora.Devices.Layout
                 }
             }
 
-            res.GlobalColour = Utils.ColorUtils.AddColors(lhs.GlobalColour, rhs.GlobalColour);
+            res.globalColour = Utils.ColorUtils.AddColors(lhs.globalColour, rhs.globalColour);
 
 
             return res;
@@ -434,7 +447,7 @@ namespace Aurora.Devices.Layout
                 colormap.UnlockBits(srcData);
 
             }
-            lhs.GlobalColour = Utils.ColorUtils.MultiplyColorByScalar(lhs.GlobalColour, value);
+            lhs.globalColour = Utils.ColorUtils.MultiplyColorByScalar(lhs.globalColour, value);
             return lhs;
         }
 

@@ -896,7 +896,7 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.SEMICOLON;
                 case (KeyboardKeys.APOSTROPHE):
                     return Logitech_keyboardBitmapKeys.APOSTROPHE;
-                case (KeyboardKeys.HASHTAG):
+                case (KeyboardKeys.HASH):
                     return Logitech_keyboardBitmapKeys.HASHTAG;
                 case (KeyboardKeys.ENTER):
                     return Logitech_keyboardBitmapKeys.ENTER;

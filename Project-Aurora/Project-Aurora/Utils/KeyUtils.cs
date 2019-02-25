@@ -58,10 +58,9 @@ namespace Aurora.Utils
         {
             KeyboardKeys key = getDeviceKey(forms_key, scanCode, isExtendedKey);
             //Global.logger.LogLine(key.ToString() + ":" + ((int)key).ToString());
-            if (Global.kbLayout.LayoutKeyConversion.ContainsKey(key))
-                return Global.kbLayout.LayoutKeyConversion[key];
 
-            return key;
+            //Correct the KeyboardKey to be correct for the layout
+            return (KeyboardKeys)key.GetDeviceLED().Sanitize().LedID;
         }
 
         /// <summary>
@@ -103,10 +102,10 @@ namespace Aurora.Utils
             }
         }
         /// <summary>
-        /// Converts Devices.DeviceKeys to Forms.Keys
+        /// Converts KeyboardKeys to Forms.Keys
         /// </summary>
-        /// <param name="deviceKeys">The Forms.Key to be converted</param>
-        /// <returns>The resulting Devices.DeviceKeys</returns>
+        /// <param name="keyboardKeys">The KeyboardKeys to be converted</param>
+        /// <returns>The resulting Forms.Keys</returns>
         public static Keys GetFormsKey(KeyboardKeys keyboardKeys)
         {
             switch (keyboardKeys)
@@ -899,7 +898,7 @@ namespace Aurora.Utils
                 case (CorsairLedId.ApostropheAndDoubleQuote):
                     return KeyboardKeys.APOSTROPHE;
                 case (CorsairLedId.NonUsTilde):
-                    return KeyboardKeys.HASHTAG;
+                    return KeyboardKeys.HASH;
                 case (CorsairLedId.Enter):
                     return KeyboardKeys.ENTER;
                 case (CorsairLedId.Keypad4):

@@ -60,7 +60,7 @@ namespace Aurora.Controls
 
             UpdateVirtualKeyboard();
 
-            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
+            GlobalDeviceLayout.Instance.LayoutChanged += KbLayout_KeyboardLayoutUpdated;
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
@@ -74,7 +74,7 @@ namespace Aurora.Controls
 
         private void UpdateVirtualKeyboard()
         {
-            Grid virtial_kb = Global.kbLayout.AbstractVirtualKeyboard;
+            Grid virtial_kb = GlobalDeviceLayout.Instance.GetControl(true);
 
             keyboard_grid.Children.Clear();
             keyboard_grid.Children.Add(virtial_kb);

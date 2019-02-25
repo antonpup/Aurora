@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
 using Aurora.Profiles.Desktop;
 using Aurora.Profiles.GTA5;
 using Aurora.Profiles.Payday_2.GSI.Nodes;
@@ -81,8 +82,8 @@ namespace Aurora.Utils
 
     public class DeviceKeysToStringVC : IValueConverter
     {
-        protected Type EnumType = typeof(DeviceKeys);
-        protected Enum DefaultEnum = DeviceKeys.NONE;
+        protected Type EnumType = typeof(DeviceLED);
+        protected DeviceLED DefaultEnum = DeviceLED.None;
 
         public DeviceKeysToStringVC() { }
 
@@ -93,21 +94,16 @@ namespace Aurora.Utils
 
 
             if (value == null || string.IsNullOrEmpty(value.ToString()) || (value.GetType() != EnumType && value.GetType() != typeof(string)))
-                return DefaultEnum.GetDescription();
+                return GlobalDeviceLayout.Instance.GetDeviceLEDName(DefaultEnum);
 
-            DeviceKeys key = (DeviceKeys)value;
+            DeviceLED key = (DeviceLED)value;
 
-            return Global.kbLayout.KeyText.ContainsKey(key) ? Global.kbLayout.KeyText[key] : key.GetDescription();
+            return GlobalDeviceLayout.Instance.GetDeviceLEDName(key);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (EnumType == null)
-                return null;
-
-            if (value == null || string.IsNullOrEmpty(value.ToString()))
-                return (Enum)Enum.Parse(EnumType, DefaultEnum.ToString());
-            return this.StringToEnum(EnumType, value.ToString());
+            throw new NotImplementedException();
         }
     }
 
