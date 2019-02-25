@@ -88,7 +88,7 @@ namespace Aurora.Profiles.ResidentEvil2
 
             if (process_search.Length != 0)
             {
-                using (MemoryReader memread = new MemoryReader(process_search[0]))
+                using (MemoryReader memread = new MemoryReader(process_search[0],false))
                 {
                     (_game_state as GameState_ResidentEvil2).Player.MaximumHealth = memread.ReadInt(pointers.HealthMaximum.baseAddress, pointers.HealthMaximum.pointers);
                     (_game_state as GameState_ResidentEvil2).Player.CurrentHealth = memread.ReadInt(pointers.HealthCurrent.baseAddress, pointers.HealthCurrent.pointers);

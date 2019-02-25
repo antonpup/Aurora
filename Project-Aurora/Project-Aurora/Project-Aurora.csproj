@@ -1583,7 +1583,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
+	<Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
+	 <Generator>MSBuild:Compile</Generator>
+	 <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1781,10 +1784,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2HealthLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
