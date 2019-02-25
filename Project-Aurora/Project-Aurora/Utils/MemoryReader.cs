@@ -14,18 +14,61 @@ namespace Aurora.Utils
         private IntPtr moduleAddress;
         private bool is64Bit = false;
 
-        public MemoryReader(Process process)
+        public MemoryReader(Process process, bool is64Bit)
         {
-            this.process = process;
-            processHandle = Utils.MemoryUtils.OpenProcess(0x0010, false, process.Id);
-            moduleAddress = process.MainModule.BaseAddress;
+                this.process = process;
+                processHandle = Utils.MemoryUtils.OpenProcess(0x0010, false, process.Id);
+                moduleAddress = process.MainModule.BaseAddress;
+                this.is64Bit = is64Bit;
         }
 
-        public MemoryReader(string ProcessName)
+        public MemoryReader(string ProcessName, bool is64Bit)
         {
-            Process process = Process.GetProcessesByName(ProcessName).FirstOrDefault();
+                Process process = Process.GetProcessesByName(ProcessName).FirstOrDefault();
+                processHandle = Utils.MemoryUtils.OpenProcess(0x0010, false, process.Id);
+                moduleAddress = process.MainModule.BaseAddress;
+                this.is64Bit = is64Bit;
+        }
+
+        public MemoryReader(Process process, ProcessModule module, bool is64Bit)
+        {
+                this.process = process;
+                processHandle = Utils.MemoryUtils.OpenProcess(0x0010, false, process.Id);
+                try
+                {
+                    moduleAddress = module.BaseAddress;
+                }
+                catch (System.NullReferenceException)
+                {
+                    moduleAddress = process.MainModule.BaseAddress;
+                }
+                this.is64Bit = is64Bit;
+        }
+
+        public MemoryReader(Process process, string module, bool is64Bit)
+        {
+            ProcessModuleCollection modules = process.Modules;
+            ProcessModule dll = null;
+            foreach (ProcessModule i in modules)
+            {
+                if (i.ModuleName == module)
+                {
+                    dll = i;
+                    break;
+                }
+            }
+
+            this.process = process;
             processHandle = Utils.MemoryUtils.OpenProcess(0x0010, false, process.Id);
-            moduleAddress = process.MainModule.BaseAddress;
+            try
+            {
+                moduleAddress = dll.BaseAddress;
+            }
+            catch (System.NullReferenceException)
+            {
+                moduleAddress = process.MainModule.BaseAddress;
+            }
+            this.is64Bit = is64Bit;
         }
 
         public int ReadInt(IntPtr address)
@@ -37,7 +80,14 @@ namespace Aurora.Utils
 
         public int ReadInt(int baseAddress, int[] offsets)
         {
-            return ReadInt(CalculateAddress(baseAddress, offsets));
+            if (is64Bit)
+            {
+                return ReadInt(CalculateAddress64(baseAddress, offsets));
+            }
+            else
+            {
+                return ReadInt(CalculateAddress(baseAddress, offsets));
+            }
         }
 
         public long ReadLong(IntPtr address)
@@ -49,7 +99,14 @@ namespace Aurora.Utils
 
         public long ReadLong(int baseAddress, int[] offsets)
         {
-            return ReadLong(CalculateAddress(baseAddress, offsets));
+            if (is64Bit)
+            {
+                return ReadLong(CalculateAddress64(baseAddress, offsets));
+            }
+            else
+            {
+                return ReadLong(CalculateAddress(baseAddress, offsets));
+            }
         }
 
         public float ReadFloat(IntPtr address)
@@ -61,7 +118,14 @@ namespace Aurora.Utils
 
         public float ReadFloat(int baseAddress, int[] offsets)
         {
-            return ReadFloat(CalculateAddress(baseAddress, offsets));
+            if (is64Bit)
+            {
+                return ReadFloat(CalculateAddress64(baseAddress, offsets));
+            }
+            else
+            {
+                return ReadFloat(CalculateAddress(baseAddress, offsets));
+            }
         }
 
         public double ReadDouble(IntPtr address)
@@ -73,7 +137,14 @@ namespace Aurora.Utils
 
         public double ReadDouble(int baseAddress, int[] offsets)
         {
-            return ReadDouble(CalculateAddress(baseAddress, offsets));
+            if (is64Bit)
+            {
+                return ReadDouble(CalculateAddress64(baseAddress, offsets));
+            }
+            else
+            {
+                return ReadDouble(CalculateAddress(baseAddress, offsets));
+            }
         }
 
         private IntPtr CalculateAddress(int baseAddress, int[] offsets)
@@ -92,7 +163,25 @@ namespace Aurora.Utils
 
                 currentAddress = IntPtr.Add(currentAddress, offsets[offsets.Length - 1]);
             }
+            return currentAddress;
+        }
 
+        private IntPtr CalculateAddress64(int baseAddress, int[] offsets)
+        {
+            IntPtr currentAddress = IntPtr.Add(moduleAddress, baseAddress);
+
+            if (offsets.Length > 0)
+            {
+                currentAddress = (IntPtr)ReadLong(currentAddress);
+
+                for (int x = 0; x < offsets.Length - 1; x++)
+                {
+                    currentAddress = IntPtr.Add(currentAddress, offsets[x]);
+                    currentAddress = (IntPtr)ReadLong(currentAddress);
+                }
+
+                currentAddress = IntPtr.Add(currentAddress, offsets[offsets.Length - 1]);
+            }
             return currentAddress;
         }
 
@@ -131,5 +220,6 @@ namespace Aurora.Utils
             // GC.SuppressFinalize(this);
         }
         #endregion
+
     }
 }

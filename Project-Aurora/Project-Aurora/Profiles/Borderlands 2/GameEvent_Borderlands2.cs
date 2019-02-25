@@ -88,12 +88,19 @@ namespace Aurora.Profiles.Borderlands2
 
             if (process_search.Length != 0)
             {
-                using (MemoryReader memread = new MemoryReader(process_search[0]))
+                try
                 {
-                    (_game_state as GameState_Borderlands2).Player.MaximumHealth = memread.ReadFloat(pointers.Health_maximum.baseAddress, pointers.Health_maximum.pointers);
-                    (_game_state as GameState_Borderlands2).Player.CurrentHealth = memread.ReadFloat(pointers.Health_current.baseAddress, pointers.Health_current.pointers);
-                    (_game_state as GameState_Borderlands2).Player.MaximumShield = memread.ReadFloat(pointers.Shield_maximum.baseAddress, pointers.Shield_maximum.pointers);
-                    (_game_state as GameState_Borderlands2).Player.CurrentShield = memread.ReadFloat(pointers.Shield_current.baseAddress, pointers.Shield_current.pointers);
+                    using (MemoryReader memread = new MemoryReader(process_search[0], false))
+                    {
+                        (_game_state as GameState_Borderlands2).Player.MaximumHealth = memread.ReadFloat(pointers.Health_maximum.baseAddress, pointers.Health_maximum.pointers);
+                        (_game_state as GameState_Borderlands2).Player.CurrentHealth = memread.ReadFloat(pointers.Health_current.baseAddress, pointers.Health_current.pointers);
+                        (_game_state as GameState_Borderlands2).Player.MaximumShield = memread.ReadFloat(pointers.Shield_maximum.baseAddress, pointers.Shield_maximum.pointers);
+                        (_game_state as GameState_Borderlands2).Player.CurrentShield = memread.ReadFloat(pointers.Shield_current.baseAddress, pointers.Shield_current.pointers);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
                 }
             }
 

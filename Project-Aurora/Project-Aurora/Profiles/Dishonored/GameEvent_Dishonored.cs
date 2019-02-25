@@ -88,14 +88,21 @@ namespace Aurora.Profiles.Dishonored
 
             if (process_search.Length != 0)
             {
-                using (MemoryReader memread = new MemoryReader(process_search[0]))
+                try
                 {
-                    (_game_state as GameState_Dishonored).Player.MaximumHealth = memread.ReadInt(pointers.MaximumHealth.baseAddress, pointers.MaximumHealth.pointers);
-                    (_game_state as GameState_Dishonored).Player.CurrentHealth = memread.ReadInt(pointers.CurrentHealth.baseAddress, pointers.CurrentHealth.pointers);
-                    (_game_state as GameState_Dishonored).Player.MaximumMana = memread.ReadInt(pointers.MaximumMana.baseAddress, pointers.MaximumMana.pointers);
-                    (_game_state as GameState_Dishonored).Player.CurrentMana = memread.ReadInt(pointers.CurrentMana.baseAddress, pointers.CurrentMana.pointers);
-                    (_game_state as GameState_Dishonored).Player.ManaPots = memread.ReadInt(pointers.ManaPots.baseAddress, pointers.ManaPots.pointers);
-                    (_game_state as GameState_Dishonored).Player.HealthPots = memread.ReadInt(pointers.HealthPots.baseAddress, pointers.HealthPots.pointers);
+                    using (MemoryReader memread = new MemoryReader(process_search[0], false))
+                    {
+                        (_game_state as GameState_Dishonored).Player.MaximumHealth = memread.ReadInt(pointers.MaximumHealth.baseAddress, pointers.MaximumHealth.pointers);
+                        (_game_state as GameState_Dishonored).Player.CurrentHealth = memread.ReadInt(pointers.CurrentHealth.baseAddress, pointers.CurrentHealth.pointers);
+                        (_game_state as GameState_Dishonored).Player.MaximumMana = memread.ReadInt(pointers.MaximumMana.baseAddress, pointers.MaximumMana.pointers);
+                        (_game_state as GameState_Dishonored).Player.CurrentMana = memread.ReadInt(pointers.CurrentMana.baseAddress, pointers.CurrentMana.pointers);
+                        (_game_state as GameState_Dishonored).Player.ManaPots = memread.ReadInt(pointers.ManaPots.baseAddress, pointers.ManaPots.pointers);
+                        (_game_state as GameState_Dishonored).Player.HealthPots = memread.ReadInt(pointers.HealthPots.baseAddress, pointers.HealthPots.pointers);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
                 }
             }
 
