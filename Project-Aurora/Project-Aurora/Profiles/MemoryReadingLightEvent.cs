@@ -112,7 +112,7 @@ namespace Aurora.Profiles {
 
             // Render all layers
             foreach (var layer in Application.Profile.Layers.Reverse())
-                if (layer.Enabled && layer.LogicPass)
+                if (layer.Enabled)
                     layers.Enqueue(layer.Render(_game_state));
 
             //Scripts
