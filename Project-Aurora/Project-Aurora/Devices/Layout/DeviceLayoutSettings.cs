@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -23,6 +24,9 @@ namespace Aurora.Devices.Layout
 
         private KeycapType virtualKeyboardKeycapType = KeycapType.Default;
         public KeycapType VirtualKeyboardKeycapType { get => virtualKeyboardKeycapType; set => UpdateVar(ref virtualKeyboardKeycapType, value); }
+
+        private SmoothingMode smoothingMode = SmoothingMode.Default;
+        public SmoothingMode SmoothingMode { get => smoothingMode; set => UpdateVar(ref smoothingMode, value); }
 
         public GlobalDeviceLayoutSettings() : base() { }
 

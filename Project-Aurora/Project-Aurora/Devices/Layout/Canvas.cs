@@ -87,6 +87,8 @@ namespace Aurora.Devices.Layout
                 using (Graphics g = Graphics.FromImage(colormap))
                 {
                     Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
+                    //Can't see why it would make a difference here, so might as well play it safe and not bother
+                    //g.SmoothingMode = this.parent.Settings.SmoothingMode;
                     g.FillRectangle(brush, rect);
                 }
             }
@@ -109,45 +111,54 @@ namespace Aurora.Devices.Layout
             return globalPoint.Subtract(location);
         }
 
+        private Matrix CorrectMatrix(Point location, Matrix transform)
+        {
+            transform = transform?.Clone() ?? new Matrix();
+            transform.Translate(-location.X, -location.Y, MatrixOrder.Append);
+            return transform;
+        }
+
         private void FillRectangle(Bitmap colormap, Brush brush, RectangleF rect, Matrix transform = null)
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
                 if (transform != null)
                     g.Transform = transform;
+
+                g.SmoothingMode = this.parent.Settings.SmoothingMode;
+
                 g.FillRectangle(brush, rect);
             }
         }
 
         private void FillRectangle(Point location, Bitmap colormap, Brush brush, RectangleF globalRect, Matrix transform = null)
         {
-            FillRectangle(colormap, brush, GetLocalRect(location, globalRect), transform);
+            FillRectangle(colormap, brush, globalRect, CorrectMatrix(location, transform));
         }
 
         public void FillRectangle(Brush brush, RectangleF globalRect, float? angle = null, RotationPoint rotationPoint = RotationPoint.Center)
         {
-            Matrix myMatrix = null;
-
-            if (angle != null && angle != 0f)
-            {
-                myMatrix = new Matrix();
-                PointF rotatePoint;
-                switch (rotationPoint)
-                {
-                    //TODO: Implement other rotation points
-                    default:
-                    case RotationPoint.Center:
-                        rotatePoint = globalRect.Middle();
-                        break;
-
-                }
-
-                myMatrix.RotateAt(angle ?? 0f, rotatePoint, MatrixOrder.Append);
-
-            }
-
             foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
             {
+                Matrix myMatrix = null;
+                RectangleF localRect = GetLocalRect(location, globalRect);
+                if (angle != null && angle != 0f)
+                {
+                    myMatrix = new Matrix();
+                    PointF rotatePoint;
+                    switch (rotationPoint)
+                    {
+                        //TODO: Implement other rotation points
+                        default:
+                        case RotationPoint.Center:
+                            rotatePoint = globalRect.Middle();
+                            break;
+
+                    }
+
+                    myMatrix.RotateAt(angle ?? 0f, rotatePoint, MatrixOrder.Append);
+                }
+
                 FillRectangle(location, colormap, brush, globalRect, myMatrix);
             }
         }
@@ -184,13 +195,14 @@ namespace Aurora.Devices.Layout
             {
                 if (transformMatrix != null)
                     g.Transform = transformMatrix;
+                g.SmoothingMode = this.parent.Settings.SmoothingMode;
                 g.DrawEllipse(pen, rect);
             }
         }
 
         public void DrawEllipse(Point location, Bitmap colormap, Pen pen, RectangleF globalRect, Matrix transformMatrix = null)
         {
-            DrawEllipse(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
+            DrawEllipse(colormap, pen, globalRect, CorrectMatrix(location, transformMatrix));
         }
 
         public void DrawEllipse(Pen pen, RectangleF globalRect, Matrix transformMatrix = null)
@@ -207,13 +219,14 @@ namespace Aurora.Devices.Layout
             {
                 if (transformMatrix != null)
                     g.Transform = transformMatrix;
+                g.SmoothingMode = this.parent.Settings.SmoothingMode;
                 g.FillEllipse(brush, rect);
             }
         }
 
         public void FillEllipse(Point location, Bitmap colormap, Brush brush, RectangleF globalRect, Matrix transformMatrix = null)
         {
-            FillEllipse(colormap, brush, GetLocalRect(location, globalRect), transformMatrix);
+            FillEllipse(colormap, brush, globalRect, CorrectMatrix(location, transformMatrix));
         }
 
         public void FillEllipse(Brush brush, RectangleF globalRect, Matrix transformMatrix = null)
@@ -230,13 +243,14 @@ namespace Aurora.Devices.Layout
             {
                 if (transformMatrix != null)
                     g.Transform = transformMatrix;
+                g.SmoothingMode = this.parent.Settings.SmoothingMode;
                 g.DrawLine(pen, startPoint, endPoint);
             }
         }
 
         public void DrawLine(Point location, Bitmap colormap, Pen pen, PointF startPoint, PointF endPoint, Matrix transformMatrix = null)
         {
-            DrawLine(colormap, pen, GetLocalPoint(location, startPoint), GetLocalPoint(location, endPoint), transformMatrix);
+            DrawLine(colormap, pen, startPoint, endPoint, CorrectMatrix(location, transformMatrix));
         }
 
         public void DrawLine(Pen pen, PointF startPoint, PointF endPoint, Matrix transformMatrix = null)
@@ -255,13 +269,14 @@ namespace Aurora.Devices.Layout
             {
                 if (transformMatrix != null)
                     g.Transform = transformMatrix;
+                g.SmoothingMode = this.parent.Settings.SmoothingMode;
                 g.DrawRectangle(pen, Rectangle.Round(rect));
             }
         }
 
         public void DrawRectangle(Point location, Bitmap colormap, Pen pen, RectangleF globalRect, Matrix transformMatrix = null)
         {
-            DrawRectangle(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
+            DrawRectangle(colormap, pen, globalRect, CorrectMatrix(location, transformMatrix));
         }
 
         public void DrawRectangle(Pen pen, RectangleF globalRect, Matrix transformMatrix)
