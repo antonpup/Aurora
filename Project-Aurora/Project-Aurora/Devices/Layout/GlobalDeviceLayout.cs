@@ -234,7 +234,7 @@ namespace Aurora.Devices.Layout
             if ((layout = GetDeviceFromDeviceLED(led).layout).VirtualGroup.BitmapMap.TryGetValue(led.LedID, out BitmapRectangle rect))
             {
                 if (!local)
-                    rect.AddOffset(layout.Location);
+                    rect = rect.AddOffset(layout.Location.ToPixel());
 
                 return rect;
             }

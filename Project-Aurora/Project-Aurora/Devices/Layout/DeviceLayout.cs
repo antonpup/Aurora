@@ -57,16 +57,16 @@ namespace Aurora.Devices.Layout
     public abstract class DeviceLayout : Settings.SettingsBase, IDisposable
     {
         #region settings
-        private System.Drawing.Point location = new System.Drawing.Point();
-        [JsonIgnore]
+        private System.Drawing.Point location = new System.Drawing.Point(0,0);
+        //[JsonIgnore]
         public System.Drawing.Point Location { get { return location; } set { UpdateVar(ref location, value); } }
 
         private short selectedSDK = -1;
-        [JsonIgnore]
+        //[JsonIgnore]
         public short SelectedSDK { get { return selectedSDK; } set { UpdateVar(ref selectedSDK, value); } }
 
         private bool enabled = true;
-        [JsonIgnore]
+        //[JsonIgnore]
         public bool Enabled { get { return enabled; } set { UpdateVar(ref enabled, value); } }
         #endregion
 
