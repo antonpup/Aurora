@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Aurora.Devices.Layout.Layouts;
 using Aurora.Settings;
+using Newtonsoft.Json;
 
 namespace Aurora.Devices.Layout
 {
@@ -25,8 +26,13 @@ namespace Aurora.Devices.Layout
         private KeycapType virtualKeyboardKeycapType = KeycapType.Default;
         public KeycapType VirtualKeyboardKeycapType { get => virtualKeyboardKeycapType; set => UpdateVar(ref virtualKeyboardKeycapType, value); }
 
-        private SmoothingMode smoothingMode = SmoothingMode.Default;
-        public SmoothingMode SmoothingMode { get => smoothingMode; set => UpdateVar(ref smoothingMode, value); }
+        private bool antiAliasing = false;
+        public bool AntiAliasing { get => antiAliasing; set => UpdateVar(ref antiAliasing, value); }
+
+        //Apparently, according to this: https://docs.microsoft.com/en-us/dotnet/api/system.drawing.drawing2d.smoothingmode?view=netframework-4.7.2 most of the modes are equivalent to eachother and really the
+        //only difference is AntiAliasing or no AntiAliasing so no point in having the option to select those
+        [JsonIgnore]
+        public SmoothingMode SmoothingMode => antiAliasing ? SmoothingMode.AntiAlias : SmoothingMode.None;
 
         public GlobalDeviceLayoutSettings() : base() { }
 
