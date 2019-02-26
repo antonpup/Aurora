@@ -27,7 +27,7 @@ namespace Aurora.EffectsEngine
         /// <summary>
         /// Creates a new instance of the EffectLayer class with default parameters.
         /// </summary>
-        public EffectLayer() : this("Effect Layer", Color.FromArgb(0, 0, 0))
+        public EffectLayer() : this("Effect Layer", Color.FromArgb(0, 0, 0, 0))
         {
         }
 
@@ -53,7 +53,7 @@ namespace Aurora.EffectsEngine
         /// Creates a new instance of the EffectLayer class with a specified layer name.
         /// </summary>
         /// <param name="name">A layer name</param>
-        public EffectLayer(string name) : this(name, Color.FromArgb(0,0,0))
+        public EffectLayer(string name) : this(name, Color.FromArgb(0,0,0,0))
         {
         }
 
@@ -69,7 +69,7 @@ namespace Aurora.EffectsEngine
             this.canvas = GlobalDeviceLayout.Instance.GetCanvas();
             //colormap = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
-            if (color != null && color.IsEmpty)
+            if (color != null && !color.IsEmpty)
                 Fill(color);
         }
 

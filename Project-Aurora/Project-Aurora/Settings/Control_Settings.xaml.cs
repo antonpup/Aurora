@@ -157,8 +157,7 @@ namespace Aurora.Settings
                 Dispatcher.Invoke(
                             () =>
                             {
-                                //TODO: Set this up to work with multiple bitmaps
-                                /*using (MemoryStream memory = new MemoryStream())
+                                using (MemoryStream memory = new MemoryStream())
                                 {
                                     //Fix conflict with AtomOrb due to async
                                     lock (map)
@@ -175,7 +174,7 @@ namespace Aurora.Settings
                                     this.debug_bitmap_preview.Width = 4 * bitmapimage.Width;
                                     this.debug_bitmap_preview.Height = 4 * bitmapimage.Height;
                                     this.debug_bitmap_preview.Source = bitmapimage;
-                                }*/
+                                }
                             });
             }
             catch (Exception ex)
@@ -1012,9 +1011,7 @@ namespace Aurora.Settings
                 Dispatcher.Invoke(
                     () =>
                     {
-                        //TODO: Set this up to work with multiple bitmaps
-
-                        /*lock (bitmap)
+                        lock (bitmap)
                         {
                             using (MemoryStream memory = new MemoryStream())
                             {
@@ -1028,7 +1025,7 @@ namespace Aurora.Settings
 
                                 imgBitmap.Source = bitmapimage;
                             }
-                        }*/
+                        }
                     });
             }
             catch (Exception ex)
