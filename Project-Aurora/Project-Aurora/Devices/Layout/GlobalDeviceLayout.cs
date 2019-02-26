@@ -1,8 +1,10 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -26,19 +28,19 @@ namespace Aurora.Devices.Layout
         private bool isIntialized = false;
         public bool Initialized => isIntialized;
 
-        public event EventHandler LayoutChanged;
+        public delegate void LayoutUpdatedEventHandler(object sender);
+        public event LayoutUpdatedEventHandler LayoutChanged;
 
         public static GlobalDeviceLayout Instance { get; } = new GlobalDeviceLayout();
 
-        //TODO: Create and update these values
-        public int CanvasWidth { get; }
-        public int CanvasHeight { get; }
-        public int Width { get; }
-        public int Height { get; }
+        public int CanvasWidth => LayoutUtils.PixelToByte(this.Width);
+        public int CanvasHeight => LayoutUtils.PixelToByte(this.Height);
+        public float Width { get; protected set; }
+        public float Height { get; protected set; }
 
         public int CanvasBiggest => CanvasWidth > CanvasHeight ? CanvasWidth : CanvasHeight;
 
-        public List<DeviceLED> AllLeds { get; }
+        public List<DeviceLED> AllLeds { get; protected set; }
         public int CanvasWidthCenter => CanvasWidth / 2;
         public int CanvasHeightCenter => CanvasHeight / 2;
 
@@ -57,22 +59,109 @@ namespace Aurora.Devices.Layout
 
             LoadSettings();
 
+            this.initialiseDevices();
             this.deviceLayoutsChanged();
 
             return (isIntialized = true);
         }
 
-        private void deviceLayoutsChanged()
+        private void initialiseDevices()
         {
             DeviceLookup = new Dictionary<(byte type, byte id), DeviceLayout>();
+
+            foreach (KeyValuePair<byte, ObservableCollection<DeviceLayout>> deviceType in this.Settings.Devices)
+            {
+                deviceType.Value.CollectionChanged += deviceLayoutsOrderChanged;
+
+                for (byte i = 0; i < deviceType.Value.Count; i++)
+                {
+                    DeviceLayout deviceLayout = deviceType.Value[i];
+                    DeviceLookup.Add((type: deviceLayout.GetDeviceTypeID, id: i), deviceLayout);
+                    deviceLayout.DeviceID = i;
+
+                    initialiseDevice(deviceLayout);
+                }
+            }
+        }
+
+        private void initialiseDevice(DeviceLayout deviceLayout)
+        {
+            deviceLayout.Initialize();
+            deviceLayout.PropertyChanged += this.DeviceLayout_PropertyChanged;
+            deviceLayout.LayoutUpdated += this.DeviceLayout_LayoutUpdated;
+        }
+
+        private void DeviceLayout_PropertyChanged(object sender, PropertyChangedExEventArgs e)
+        {
+            if (sender is DeviceLayout deviceLayout)
+                deviceLayout.GenerateLayout();
+        }
+
+        private void DeviceLayout_LayoutUpdated(object sender)
+        {
+            this.deviceLayoutsChanged();
+        }
+
+        private void deviceLayoutsChanged()
+        {
+            //DeviceLookup = new Dictionary<(byte type, byte id), DeviceLayout>();
+            AllLeds = new List<DeviceLED>();
+            float maxWidth = 0;
+            float maxHeight = 0;
+
             foreach (KeyValuePair<byte, ObservableCollection<DeviceLayout>> deviceType in this.Settings.Devices)
             {
                 for (byte i = 0; i < deviceType.Value.Count; i++)
                 {
                     DeviceLayout deviceLayout = deviceType.Value[i];
-                    DeviceLookup.Add((type: deviceLayout.DeviceID, id: i), deviceLayout);
 
+                    //Ensure LyoutUpdated event handler is being used
+                    //deviceLayout.LayoutUpdated -= this.DeviceLayout_LayoutUpdated;
+
+                    //Update global width and height
+                    float w = deviceLayout.Location.X + deviceLayout.VirtualGroup.Region.Width;
+                    float h = deviceLayout.Location.Y + deviceLayout.VirtualGroup.Region.Height;
+                    if (w > maxWidth) maxWidth = w;
+                    if (h > maxHeight) maxHeight = h;
+
+                    //Update AllLeds
+                    AllLeds.AddRange(deviceLayout.GetAllDeviceLEDs());
                 }
+            }
+
+            this.Width = maxWidth;
+            this.Height = maxHeight;
+            LayoutChanged?.Invoke(this);
+        }
+
+        private void deviceLayoutsOrderChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            DeviceLookup = new Dictionary<(byte type, byte id), DeviceLayout>();
+
+            foreach (KeyValuePair<byte, ObservableCollection<DeviceLayout>> deviceType in this.Settings.Devices)
+            {
+                for (byte i = 0; i < deviceType.Value.Count; i++)
+                {
+                    DeviceLayout deviceLayout = deviceType.Value[i];
+                    DeviceLookup.Add((type: deviceLayout.GetDeviceTypeID, id: i), deviceLayout);
+                    deviceLayout.DeviceID = i;
+                }
+            }
+        }
+
+        public void AddDeviceLayout(DeviceLayout deviceLayout)
+        {
+            initialiseDevice(deviceLayout);
+
+            if (this.Settings.Devices.ContainsKey(deviceLayout.GetDeviceTypeID))
+                this.Settings.Devices[deviceLayout.GetDeviceTypeID].Add(deviceLayout);
+            else
+            {
+                ObservableCollection<DeviceLayout> deviceLayouts = new ObservableCollection<DeviceLayout>();
+                this.Settings.Devices.Add(deviceLayout.GetDeviceTypeID, deviceLayouts);
+                //Add events for updating lookup on order changed and trigger it. Must be after it's been added to the main Devices Dict as otherwise it won't be processed in deviceLayoutsOrderChanged
+                deviceLayouts.CollectionChanged += deviceLayoutsOrderChanged;
+                deviceLayouts.Add(deviceLayout);
             }
         }
 
@@ -87,10 +176,16 @@ namespace Aurora.Devices.Layout
                 device.Value.UpdateColors(canvas.GetDeviceBitmap(device.Key));
 
             //Push to DeviceManager
-
+            Global.dev_manager.UpdateDevices(canvas.GlobalColour, this.DeviceLookup.Values.ToList());
 
             //Call NewLayerRender
             NewLayerRender?.Invoke(canvas);
+        }
+
+        public void UpdateDeviceControlColors()
+        {
+            foreach (KeyValuePair<(byte type, byte id), DeviceLayout> device in this.DeviceLookup)
+                device.Value.VirtualGroup.UpdateColors(device.Value.DeviceColours);
         }
 
         public (DeviceLayout layout, LEDINT led) GetDeviceFromDeviceLED(DeviceLED led)
@@ -127,13 +222,19 @@ namespace Aurora.Devices.Layout
             return layout.GetLEDName(led);
         }
 
+        public DeviceLED SanitizeDeviceLED(DeviceLED deviceLED)
+        {
+            (DeviceLayout layout, LEDINT led) = GetDeviceFromDeviceLED(deviceLED);
+            return layout.GetDeviceLED(layout.Sanitize(led));
+        }
+
         public BitmapRectangle GetDeviceLEDBitmapRegion(DeviceLED led, bool local = false)
         {
             DeviceLayout layout;
             if ((layout = GetDeviceFromDeviceLED(led).layout).VirtualGroup.BitmapMap.TryGetValue(led.LedID, out BitmapRectangle rect))
             {
                 if (!local)
-                    rect.AddOffset(layout.Location);
+                    rect = rect.AddOffset(layout.Location.ToPixel());
 
                 return rect;
             }
@@ -146,19 +247,22 @@ namespace Aurora.Devices.Layout
             return new Canvas(this);
         }
 
-        public Grid GetControl()
+        public Grid GetControl(bool abstractView = false)
         {
+            if (abstractView)
+                throw new NotImplementedException();
+
             Grid grid = new Grid();
             
             foreach (DeviceLayout deviceLayout in AllLayouts)
             {
-                Grid deviceGrid = new Grid();
+                Grid deviceGrid = deviceLayout.VirtualGroup.VirtualLayout;
                 deviceGrid.Margin = deviceLayout.Location.GetMargin();
-                deviceGrid.Children.Add(deviceLayout.VirtualGroup.VirtualLayout);
 
                 grid.Children.Add(deviceGrid);
             }
-
+            grid.Width = Width;
+            grid.Height = Height;
             return grid;
         }
 

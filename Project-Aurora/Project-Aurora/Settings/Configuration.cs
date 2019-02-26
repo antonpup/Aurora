@@ -392,9 +392,9 @@ namespace Aurora.Settings
         public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
-        public PreferredKeyboard keyboard_brand;
-        public PreferredKeyboardLocalization keyboard_localization;
-        public PreferredMouse mouse_preference;
+        //public PreferredKeyboard keyboard_brand;
+        //public PreferredKeyboardLocalization keyboard_localization;
+        //public PreferredMouse mouse_preference;
         public KeycapType virtualkeyboard_keycap_type;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
@@ -458,9 +458,6 @@ namespace Aurora.Settings
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
-            keyboard_brand = PreferredKeyboard.None;
-            keyboard_localization = PreferredKeyboardLocalization.None;
-            mouse_preference = PreferredMouse.None;
             virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
@@ -469,8 +466,12 @@ namespace Aurora.Settings
             devices_disable_mouse = false;
             devices_disable_headset = false;
             devices_disabled = new HashSet<Type>();
-            devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
-            devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
+            //TODO: Return this
+            //devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
+            //devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
+
+
+
             OverlaysInPreview = false;
 
             //Blackout and Night theme
@@ -528,11 +529,12 @@ namespace Aurora.Settings
 
             Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder, Error = DeserializeErrorHandler });
 
-            if (!config.unified_hid_disabled)
+            //TODO: Return this
+            /*if (!config.unified_hid_disabled)
             {
                 config.devices_disabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
                 config.unified_hid_disabled = true;
-            }
+            }*/
 
             return config;
         }
@@ -541,7 +543,8 @@ namespace Aurora.Settings
         {
             if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice") && e.CurrentObject is HashSet<Type> dd)
             {
-                dd.Add(typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice));
+                //TODO: Return this
+                //dd.Add(typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice));
                 e.ErrorContext.Handled = true;
             }
         }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.ETS2.GSI;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Profiles.ETS2.Layers {
     public class ETS2BlinkerLayerHandlerProperties : LayerHandlerProperties2Color<ETS2BlinkerLayerHandlerProperties> {
@@ -36,8 +37,8 @@ namespace Aurora.Profiles.ETS2.Layers {
         public override void Default() {
             base.Default();
 
-            this._LeftBlinkerSequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4 });
-            this._RightBlinkerSequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12 });
+            this._LeftBlinkerSequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.F1, KeyboardKeys.F2, KeyboardKeys.F3, KeyboardKeys.F4 });
+            this._RightBlinkerSequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.F9, KeyboardKeys.F10, KeyboardKeys.F11, KeyboardKeys.F12 });
             this._BlinkerOffColor = Color.Empty;
             this._BlinkerOnColor = Color.FromArgb(255, 127, 0);
         }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Aurora.Devices.Layout;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -28,14 +29,20 @@ namespace Aurora.Utils
         {
             switch (typeName)
             {
+                case "Aurora.Devices.DeviceKeys":
+                    return typeof(DeviceLED);
+                case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[Aurora.Settings.KeySequence, Aurora]]":
+                    return typeof(Dictionary<DeviceLED, Aurora.Settings.KeySequence>);
+                case "System.Collections.Generic.List`1[[Aurora.Devices.DeviceKeys, Aurora]]":
+                    return typeof(List<DeviceLED>);
                 case "System.Collections.Generic.List`1[[System.Drawing.Color, System.Drawing]]":
                     return typeof(List<System.Drawing.Color>);
                 case "System.Collections.Generic.SortedDictionary`2[[System.Single, mscorlib],[System.Drawing.Color, System.Drawing]]":
                     return typeof(SortedDictionary<float, System.Drawing.Color>);
                 case "System.Collections.Generic.Queue`1[[System.Windows.Forms.Keys, System.Windows.Forms]]":
                     return typeof(Queue<System.Windows.Forms.Keys>);
-                case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]":
-                    return typeof(Dictionary<Devices.DeviceKeys, System.Drawing.Color>);
+                //case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]":
+                //    return typeof(Dictionary<Devices.DeviceKeys, System.Drawing.Color>);
                     //Resolve typo'd AbilityLayerHandler type
                 case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler":
                     return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
@@ -51,8 +58,9 @@ namespace Aurora.Utils
                 case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
                 case "Aurora.Profiles.ColorEnhanceProfile":
                     return typeof(Profiles.WrapperProfile);
-                case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
-                    return typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice);
+                //TODO Return this back
+                //case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
+                //    return typeof(Devices.UnifiedHID.UnifiedHIDDevice);
                 default:
                     if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
                         return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));

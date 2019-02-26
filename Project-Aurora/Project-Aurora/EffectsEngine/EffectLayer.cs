@@ -27,7 +27,7 @@ namespace Aurora.EffectsEngine
         /// <summary>
         /// Creates a new instance of the EffectLayer class with default parameters.
         /// </summary>
-        public EffectLayer() : this("Effect Layer", Color.FromArgb(0, 0, 0))
+        public EffectLayer() : this("Effect Layer", Color.FromArgb(0, 0, 0, 0))
         {
         }
 
@@ -53,7 +53,7 @@ namespace Aurora.EffectsEngine
         /// Creates a new instance of the EffectLayer class with a specified layer name.
         /// </summary>
         /// <param name="name">A layer name</param>
-        public EffectLayer(string name) : this(name, Color.FromArgb(0,0,0))
+        public EffectLayer(string name) : this(name, Color.FromArgb(0,0,0,0))
         {
         }
 
@@ -66,9 +66,10 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             //TODO: Get Canvas
+            this.canvas = GlobalDeviceLayout.Instance.GetCanvas();
             //colormap = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
-            if (color != null && color.IsEmpty)
+            if (color != null && !color.IsEmpty)
                 Fill(color);
         }
 
@@ -369,6 +370,12 @@ namespace Aurora.EffectsEngine
             return this;
         }
 
+        public EffectLayer SetGlobal(Color color)
+        {
+            this.canvas.SetGlobalColor(color);
+            return this;
+        }
+
         /// <summary>
         /// Sets a specific Devices.DeviceKeys on the bitmap with a specified color.
         /// </summary>
@@ -398,7 +405,7 @@ namespace Aurora.EffectsEngine
             }
             else
             {
-                canvas.FillRectangle(new SolidBrush(color), sequence.freeform.Rectangle, sequence.freeform.Angle);       
+                canvas.FillRectangle(new SolidBrush(color), sequence.freeform.RectangleBitmap, sequence.freeform.Angle);       
             }
 
             return this;
@@ -661,7 +668,7 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            Rectangle rect = freeform.Rectangle;
+            Rectangle rect = freeform.RectangleBitmap;
             if (percentEffectType == PercentEffectType.AllAtOnce)
             {
                 canvas.FillRectangle(new SolidBrush(Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, progress_total)), rect, freeform.Angle);
@@ -704,7 +711,7 @@ namespace Aurora.EffectsEngine
                     flash_amount = Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI);
                 }
             }
-            Rectangle rect = freeform.Rectangle;
+            RectangleF rect = freeform.RectangleBitmap;
 
 
             if (percentEffectType == PercentEffectType.AllAtOnce)
@@ -715,11 +722,11 @@ namespace Aurora.EffectsEngine
             {
                 double progress = progress_total * rect.Width;
 
-                Rectangle prgRect = new Rectangle(rect.X, rect.Y, (int)progress, rect.Height);
+                RectangleF prgRect = new RectangleF(rect.X, rect.Y, (int)progress, rect.Height);
 
                 LinearGradientBrush brush = spectrum.ToLinearGradient(rect.Width, 0, rect.X, 0, flash_amount);
 				brush.WrapMode = WrapMode.Tile;
-                canvas.FillRectangle(brush, rect);
+                canvas.FillRectangle(brush, prgRect);
             }
 
             return this;
@@ -733,7 +740,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public EffectLayer DrawFreeForm(Settings.FreeFormObject freeform, Color color)
         {
-            Rectangle rect = freeform.Rectangle;
+            Rectangle rect = freeform.RectangleBitmap;
             canvas.FillRectangle(new SolidBrush(color), rect, freeform.Angle);
 
             return this;

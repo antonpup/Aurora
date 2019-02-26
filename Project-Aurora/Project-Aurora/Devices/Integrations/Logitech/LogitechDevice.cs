@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Logitech
 {
@@ -351,25 +352,19 @@ namespace Aurora.Devices.Logitech
         {
             return this.isInitialized;
         }
-
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
                 {
                     if (e.Cancel) return false;
 
-                    Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key.Key);
+                    KeyboardKeys kkey = (KeyboardKeys)key.Key;
 
-                    if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN &&
-                        (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral))
-                    {
-                        if (!Global.Configuration.devices_disable_mouse ||
-                            !Global.Configuration.devices_disable_headset)
-                            SendColorToPeripheral((Color)key.Value, forced || !peripheral_updated);
-                    }
-                    else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN)
+                    Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(kkey);
+
+                    if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN)
                     {
                         double alpha_amt = (key.Value.A / 255.0);
                         int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
@@ -379,60 +374,60 @@ namespace Aurora.Devices.Logitech
                         if (!Global.Configuration.devices_disable_keyboard)
                         {
                             LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
-                            switch (key.Key)
+                            switch (kkey)
                             {
-                                case DeviceKeys.OEM8:
+                                case KeyboardKeys.OEM8:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(220, red_amt, green_amt,
                                         blue_amt);
                                     break;
-                                case DeviceKeys.G1:
+                                case KeyboardKeys.G1:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_1, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.G2:
+                                case KeyboardKeys.G2:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_2, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.G3:
+                                case KeyboardKeys.G3:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_3, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.G4:
+                                case KeyboardKeys.G4:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_4, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.G5:
+                                case KeyboardKeys.G5:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_5, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.G6:
+                                case KeyboardKeys.G6:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_6, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.G7:
+                                case KeyboardKeys.G7:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_7, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.G8:
+                                case KeyboardKeys.G8:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_8, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.G9:
+                                case KeyboardKeys.G9:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_9, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.LOGO:
+                                case KeyboardKeys.LOGO:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_LOGO, red_amt,
                                         green_amt, blue_amt);
                                     break;
-                                case DeviceKeys.LOGO2:
+                                case KeyboardKeys.LOGO2:
                                     LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_BADGE, red_amt,
                                         green_amt, blue_amt);
                                     break;
                             }
                         }
                     }
-                    else if (localKey != Logitech_keyboardBitmapKeys.UNKNOWN)
+                    else
                     {
                         if (!Global.Configuration.devices_disable_keyboard)
                         {
@@ -455,16 +450,70 @@ namespace Aurora.Devices.Logitech
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(MouseDeviceLayout device, DoWorkEventArgs e, bool forced = false)
+        {
+            try
+            {
+                foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
+                {
+                    if (e.Cancel) return false;
+
+                    MouseLights kkey = (MouseLights)key.Key;
+
+
+                    if (kkey == MouseLights.Peripheral_Logo)
+                    {
+                        SendColorToPeripheral(key.Value, forced || !peripheral_updated);
+                    }
+                    
+                }
+
+                return true;
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error(exc.ToString());
+                return false;
+            }
+        }
+
+        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+            bool updateResult = true;
+
+            try
+            {
+                SendColorToPeripheral(globalColor, forced || !peripheral_updated);
+
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
+                return false;
+            }
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
 
-            return update_result;
+            return updateResult;
         }
 
         public static KeyboardKeys ToDeviceKey(keyboardNames key)
@@ -735,9 +784,9 @@ namespace Aurora.Devices.Logitech
                 case (KeyboardKeys.JPN_HALFFULLWIDTH):
                     return Logitech_keyboardBitmapKeys.TILDE;
                 case (KeyboardKeys.OEM5):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.UNKNOWN;
-                    else
+                    else*/
                         return Logitech_keyboardBitmapKeys.TILDE;
                 case (KeyboardKeys.TILDE):
                     return Logitech_keyboardBitmapKeys.TILDE;
@@ -847,7 +896,7 @@ namespace Aurora.Devices.Logitech
                     return Logitech_keyboardBitmapKeys.SEMICOLON;
                 case (KeyboardKeys.APOSTROPHE):
                     return Logitech_keyboardBitmapKeys.APOSTROPHE;
-                case (KeyboardKeys.HASHTAG):
+                case (KeyboardKeys.HASH):
                     return Logitech_keyboardBitmapKeys.HASHTAG;
                 case (KeyboardKeys.ENTER):
                     return Logitech_keyboardBitmapKeys.ENTER;
@@ -860,9 +909,9 @@ namespace Aurora.Devices.Logitech
                 case (KeyboardKeys.LEFT_SHIFT):
                     return Logitech_keyboardBitmapKeys.LEFT_SHIFT;
                 case (KeyboardKeys.BACKSLASH_UK):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.OEM102;
-                    else
+                    else*/
                         return Logitech_keyboardBitmapKeys.BACKSLASH_UK;
                 case (KeyboardKeys.Z):
                     return Logitech_keyboardBitmapKeys.Z;

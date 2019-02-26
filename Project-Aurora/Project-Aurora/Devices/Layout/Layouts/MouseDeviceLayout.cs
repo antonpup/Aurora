@@ -20,9 +20,6 @@ namespace Aurora.Devices.Layout.Layouts
     /// </summary>
     public enum MouseLights : LEDINT
     {
-        //TODO: Deal with this
-        All = 0,
-
         /// <summary>
         /// Peripheral Logo
         /// </summary>
@@ -55,12 +52,16 @@ namespace Aurora.Devices.Layout.Layouts
             [Description("None")]
             None = 0,
 
-            [Description("Generic Mouse")]
-            Generic_Mouse = 1,
+            [Description("Generic Peripheral")]
+            Generic_Peripheral = 1,
+            [Description("Razer/Corsair Mousepad + Mouse")]
+            Generic_Mousepad = 2,
 
             //Logitech range is 100-199
             [Description("Logitech - G900")]
             Logitech_G900 = 100,
+            [Description("Logitech - G502")]
+            Logitech_G502 = 101,
 
             //Corsair range is 200-299
             [Description("Corsair - Sabre")]
@@ -74,19 +75,31 @@ namespace Aurora.Devices.Layout.Layouts
 
             //Clevo range is 400-499
             [Description("Clevo - Touchpad")]
-            Clevo_Touchpad = 400
+            Clevo_Touchpad = 400,
 
             //Cooler Master range is 500-599
 
             //Roccat range is 600-699
 
             //Steelseries range is 700-799
+            [Description("SteelSeries - Rival 300")]
+            SteelSeries_Rival_300 = 700,
+            [Description("SteelSeries - Rival 300 HP OMEN Edition")]
+            SteelSeries_Rival_300_HP_OMEN_Edition = 701,
+
+            //Asus range is 900-999
+            [Description("Asus - Pugio")]
+            Asus_Pugio = 900
         }
 
-        public new const byte DeviceTypeID = 1;
+        [JsonIgnore]
+        public new static readonly byte DeviceTypeID = 1;
+
+        [JsonIgnore]
+        public override byte GetDeviceTypeID { get { return DeviceTypeID; } }
 
         private PreferredMouse style = PreferredMouse.None;
-        [JsonIgnore]
+        //[JsonIgnore]
         public PreferredMouse Style { get { return style; } set { UpdateVar(ref style, value); } }
 
         private static string cultures_folder = "kb_layouts";
@@ -97,17 +110,29 @@ namespace Aurora.Devices.Layout.Layouts
             layoutsPath = Path.Combine(Global.ExecutingDirectory, cultures_folder);
         }
 
+        private class MouseLayout
+        {
+            [JsonProperty("grouped_keys")]
+            public VirtualLight[] Keys = null;
+        }
+
         public override void GenerateLayout()
         {
             string mouse_feature_path = "";
 
-            switch (this.Style)
+            switch (Style)
             {
-                case PreferredMouse.Generic_Mouse:
+                case PreferredMouse.Generic_Peripheral:
                     mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
+                    break;
+                case PreferredMouse.Generic_Mousepad:
+                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
                     break;
                 case PreferredMouse.Logitech_G900:
                     mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
+                    break;
+                case PreferredMouse.Logitech_G502:
+                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g502_features.json");
                     break;
                 case PreferredMouse.Corsair_Sabre:
                     mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_sabre_features.json");
@@ -121,13 +146,23 @@ namespace Aurora.Devices.Layout.Layouts
                 case PreferredMouse.Clevo_Touchpad:
                     mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json");
                     break;
+                case PreferredMouse.SteelSeries_Rival_300:
+                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_features.json");
+                    break;
+                case PreferredMouse.SteelSeries_Rival_300_HP_OMEN_Edition:
+                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_hp_omen_edition_features.json");
+                    break;
+                case PreferredMouse.Asus_Pugio:
+                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
+                    break;
             }
 
             if (!string.IsNullOrWhiteSpace(mouse_feature_path))
             {
                 string feature_content = File.ReadAllText(mouse_feature_path, Encoding.UTF8);
-                VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-                this.virtualGroup = featureConfig;
+                MouseLayout mouse = JsonConvert.DeserializeObject<MouseLayout>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                virtualGroup = new VirtualGroup(this, mouse.Keys);
+                virtualGroup.CalculateBitmap();
                 /*if (mouse_orientation == MouseOrientationType.LeftHanded)
                 {
                     if (featureConfig.origin_region == KeyboardRegion.TopRight)

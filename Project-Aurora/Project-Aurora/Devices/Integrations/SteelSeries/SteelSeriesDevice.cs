@@ -215,7 +215,7 @@ namespace Aurora.Devices.SteelSeries
             return true;
         }
 
-        public bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
@@ -239,6 +239,8 @@ namespace Aurora.Devices.SteelSeries
                                 updateResult = false;
                             break;
                     }
+
+                    SendColorToPeripheral(globalColor);
                 }
             }
             catch (Exception ex)
@@ -526,7 +528,7 @@ namespace Aurora.Devices.SteelSeries
                     return (byte)USBHIDCodes.SEMICOLON;
                 case (KeyboardKeys.APOSTROPHE):
                     return (byte)USBHIDCodes.APOSTROPHE;
-                case (KeyboardKeys.HASHTAG):
+                case (KeyboardKeys.HASH):
                     return (byte)USBHIDCodes.HASHTAG;
                 case (KeyboardKeys.ENTER):
                     return (byte)USBHIDCodes.ENTER;

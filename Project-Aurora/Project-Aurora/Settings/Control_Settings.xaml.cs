@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Win32.TaskScheduler;
+using Aurora.Devices.Layout;
 
 namespace Aurora.Settings
 {
@@ -31,6 +32,8 @@ namespace Aurora.Settings
         public Control_Settings()
         {
             InitializeComponent();
+
+            this.ComboBox_virtualkeyboard_keycap_type.DataContext = GlobalDeviceLayout.Instance.Settings;
 
             this.tabMain.DataContext = Global.Configuration;
 
@@ -134,10 +137,10 @@ namespace Aurora.Settings
             this.idle_effects_amount.Value = Global.Configuration.idle_amount;
             this.idle_effects_frequency.Value = (int)Global.Configuration.idle_frequency;
 
-            this.devices_kb_brand.SelectedItem = Global.Configuration.keyboard_brand;
+            /*this.devices_kb_brand.SelectedItem = Global.Configuration.keyboard_brand;
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
             this.devices_mouse_brand.SelectedItem = Global.Configuration.mouse_preference;
-            this.devices_mouse_orientation.SelectedItem = Global.Configuration.mouse_orientation;
+            this.devices_mouse_orientation.SelectedItem = Global.Configuration.mouse_orientation;*/
             this.ComboBox_virtualkeyboard_keycap_type.SelectedItem = Global.Configuration.virtualkeyboard_keycap_type;
             this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
             this.devices_disable_keyboard_lighting.IsChecked = Global.Configuration.devices_disable_keyboard;
@@ -147,7 +150,7 @@ namespace Aurora.Settings
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
         }
 
-        private void OnLayerRendered(System.Drawing.Bitmap map)
+        private void OnLayerRendered(Devices.Layout.Canvas map)
         {
             try
             {
@@ -182,13 +185,13 @@ namespace Aurora.Settings
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.effengine.NewLayerRender += OnLayerRendered;
+            GlobalDeviceLayout.Instance.NewLayerRender += OnLayerRendered;
             this.ctrlPluginManager.Host = Global.PluginManager;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.effengine.NewLayerRender -= OnLayerRendered;
+            GlobalDeviceLayout.Instance.NewLayerRender -= OnLayerRendered;
         }
 
         private void app_exit_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -326,7 +329,7 @@ namespace Aurora.Settings
 
                     button.Content = "Assign Keys";
 
-                    Devices.DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceLED[] recorded_keys = Global.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {
@@ -670,7 +673,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void devices_kb_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /*private void devices_kb_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -723,7 +726,7 @@ namespace Aurora.Settings
 
                 Global.kbLayout.LoadBrandDefault();
             }
-        }
+        }*/
 
         private void devices_disable_keyboard_lighting_Checked(object sender, RoutedEventArgs e)
         {
@@ -980,7 +983,7 @@ namespace Aurora.Settings
 
                 winBitmapView.Title = "Keyboard Bitmap View";
                 winBitmapView.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-                Global.effengine.NewLayerRender += Effengine_NewLayerRender;
+                GlobalDeviceLayout.Instance.NewLayerRender += Effengine_NewLayerRender;
 
                 imgBitmap.SnapsToDevicePixels = true;
                 imgBitmap.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -1001,7 +1004,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void Effengine_NewLayerRender(System.Drawing.Bitmap bitmap)
+        private void Effengine_NewLayerRender(Aurora.Devices.Layout.Canvas bitmap)
         {
             try
             {
@@ -1034,7 +1037,7 @@ namespace Aurora.Settings
         private void WinBitmapView_Closed(object sender, EventArgs e)
         {
             winBitmapView = null;
-            Global.effengine.NewLayerRender -= Effengine_NewLayerRender;
+            GlobalDeviceLayout.Instance.NewLayerRender -= Effengine_NewLayerRender;
             bitmapViewOpen = false;
         }
 

@@ -1,4 +1,6 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.ETS2.GSI;
 using Aurora.Settings;
@@ -30,7 +32,7 @@ namespace Aurora.Profiles.ETS2.Layers {
         public override void Default() {
             base.Default();
 
-            this._Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 });
+            this._Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.F5, KeyboardKeys.F6, KeyboardKeys.F7, KeyboardKeys.F8 });
             this._PrimaryColor = Color.FromArgb(255, 128, 0);
             this._BeaconStyle = ETS2_BeaconStyle.Fancy_Flash;
             this._Speed = 1f;
@@ -84,7 +86,7 @@ namespace Aurora.Profiles.ETS2.Layers {
 
                     // Sets half the sequence on and half off, then swaps. If odd number of keys, first half will be bigger
                     case ETS2_BeaconStyle.Half_Alternating:
-                        List<DeviceKeys> half;
+                        List<DeviceLED> half;
                         if (frame < 5)
                             // First half
                             half = Properties.Sequence.keys.GetRange(0, (int)Math.Ceiling((double)Properties.Sequence.keys.Count / 2));

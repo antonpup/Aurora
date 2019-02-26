@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Aurora.Devices.Layout;
+using System.Drawing;
 
 namespace Aurora.Settings
 {
@@ -110,6 +111,7 @@ namespace Aurora.Settings
         }
 
         public Rectangle Rectangle => new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+        public Rectangle RectangleBitmap => new Rectangle(LayoutUtils.PixelToByte(X), LayoutUtils.PixelToByte(Y), LayoutUtils.PixelToByte(Width), LayoutUtils.PixelToByte(Height));
         public RectangleF RectangleF => new RectangleF(X, Y, Width, Height);
 
         /// <summary>

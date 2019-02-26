@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,7 +32,7 @@ namespace Aurora.Profiles.Guild_Wars_2
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Orange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE, Devices.DeviceKeys.Q, Devices.DeviceKeys.E, Devices.DeviceKeys.V, Devices.DeviceKeys.R })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.W, KeyboardKeys.A, KeyboardKeys.S, KeyboardKeys.D, KeyboardKeys.SPACE, KeyboardKeys.Q, KeyboardKeys.E, KeyboardKeys.V, KeyboardKeys.R })
                     }
                 }
                 ),
@@ -40,7 +41,7 @@ namespace Aurora.Profiles.Guild_Wars_2
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Green,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.TILDE, Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR, Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT, Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.TILDE, KeyboardKeys.ONE, KeyboardKeys.TWO, KeyboardKeys.THREE, KeyboardKeys.FOUR, KeyboardKeys.FIVE, KeyboardKeys.SIX, KeyboardKeys.SEVEN, KeyboardKeys.EIGHT, KeyboardKeys.NINE, KeyboardKeys.ZERO })
                     }
                 }
                 ),
@@ -49,7 +50,7 @@ namespace Aurora.Profiles.Guild_Wars_2
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.T, Devices.DeviceKeys.TAB })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.T, KeyboardKeys.TAB })
                     }
                 }
                 ),
@@ -58,7 +59,7 @@ namespace Aurora.Profiles.Guild_Wars_2
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Brown,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.O, Devices.DeviceKeys.Y, Devices.DeviceKeys.G, Devices.DeviceKeys.H, Devices.DeviceKeys.I, Devices.DeviceKeys.K, Devices.DeviceKeys.F12, Devices.DeviceKeys.F11, Devices.DeviceKeys.P, Devices.DeviceKeys.ENTER, Devices.DeviceKeys.M, Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.LEFT_ALT })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.O, KeyboardKeys.Y, KeyboardKeys.G, KeyboardKeys.H, KeyboardKeys.I, KeyboardKeys.K, KeyboardKeys.F12, KeyboardKeys.F11, KeyboardKeys.P, KeyboardKeys.ENTER, KeyboardKeys.M, KeyboardKeys.LEFT_CONTROL, KeyboardKeys.LEFT_ALT })
                     }
                 }
                 ),
@@ -67,7 +68,7 @@ namespace Aurora.Profiles.Guild_Wars_2
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.F, Devices.DeviceKeys.C })
+                        _Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.F, KeyboardKeys.C })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

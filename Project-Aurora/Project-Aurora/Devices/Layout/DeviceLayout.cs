@@ -57,25 +57,25 @@ namespace Aurora.Devices.Layout
     public abstract class DeviceLayout : Settings.SettingsBase, IDisposable
     {
         #region settings
-        private System.Drawing.Point location = new System.Drawing.Point();
-        [JsonIgnore]
+        private System.Drawing.Point location = new System.Drawing.Point(0,0);
+        //[JsonIgnore]
         public System.Drawing.Point Location { get { return location; } set { UpdateVar(ref location, value); } }
 
         private short selectedSDK = -1;
-        [JsonIgnore]
+        //[JsonIgnore]
         public short SelectedSDK { get { return selectedSDK; } set { UpdateVar(ref selectedSDK, value); } }
 
         private bool enabled = true;
-        [JsonIgnore]
+        //[JsonIgnore]
         public bool Enabled { get { return enabled; } set { UpdateVar(ref enabled, value); } }
         #endregion
 
         //Needs to be changed in child classes by redefining with new keyword
         [JsonIgnore]
-        public const byte DeviceTypeID = 255;
+        public static readonly byte DeviceTypeID = 255;
 
         [JsonIgnore]
-        public byte GetDeviceTypeID { get { return DeviceTypeID; } }
+        public virtual byte GetDeviceTypeID { get { return DeviceTypeID; } }
 
         [JsonIgnore]
         public byte DeviceID { get; set; }
@@ -138,16 +138,27 @@ namespace Aurora.Devices.Layout
             LayoutUpdated?.Invoke(this);
         }
 
-        public static DeviceLED GetGenericDeviceLED(LEDINT ledID)
+        //Shit broke
+        /*public static DeviceLED GetGenericDeviceLED(LEDINT ledID)
         {
             //Returns it for the first device of this type
             return new DeviceLED(DeviceTypeID, 0, ledID);
-        }
+        }*/
 
         public DeviceLED GetDeviceLED(LEDINT ledID)
         {
             //Returns it for the first device of this type
             return new DeviceLED(DeviceTypeID, this.DeviceID, ledID);
+        }
+
+        public virtual LEDINT Sanitize(LEDINT ledID)
+        {
+            return ledID;
+        }
+
+        public List<DeviceLED> GetAllDeviceLEDs()
+        {
+            return this.virtualGroup.grouped_keys.ConvertAll(s => GetDeviceLED(s.tag));
         }
 
         internal void UpdateColors(Bitmap colormap)

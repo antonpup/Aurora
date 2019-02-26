@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
@@ -60,7 +61,7 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.NUM_LOCK, Devices.DeviceKeys.NUM_SLASH, Devices.DeviceKeys.NUM_ASTERISK, Devices.DeviceKeys.NUM_MINUS, Devices.DeviceKeys.NUM_SEVEN, Devices.DeviceKeys.NUM_EIGHT, Devices.DeviceKeys.NUM_NINE, Devices.DeviceKeys.NUM_PLUS, Devices.DeviceKeys.NUM_FOUR, Devices.DeviceKeys.NUM_FIVE, Devices.DeviceKeys.NUM_SIX, Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_ZERO, Devices.DeviceKeys.NUM_PERIOD, Devices.DeviceKeys.NUM_ENTER });
+            this._Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.NUM_LOCK, KeyboardKeys.NUM_SLASH, KeyboardKeys.NUM_ASTERISK, KeyboardKeys.NUM_MINUS, KeyboardKeys.NUM_SEVEN, KeyboardKeys.NUM_EIGHT, KeyboardKeys.NUM_NINE, KeyboardKeys.NUM_PLUS, KeyboardKeys.NUM_FOUR, KeyboardKeys.NUM_FIVE, KeyboardKeys.NUM_SIX, KeyboardKeys.NUM_ONE, KeyboardKeys.NUM_TWO, KeyboardKeys.NUM_THREE, KeyboardKeys.NUM_ZERO, KeyboardKeys.NUM_PERIOD, KeyboardKeys.NUM_ENTER });
             this._CTColor = Color.FromArgb(158, 205, 255);
             this._TColor = Color.FromArgb(221, 99, 33);
             this._FlashColor = Color.FromArgb(255, 0, 0);
@@ -159,7 +160,7 @@ namespace Aurora.Profiles.CSGO.Layers
                     bomb_effect_layer.Set(Properties.Sequence, bombcolor);
 
                     if (Properties.PeripheralUse)
-                        bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, bombcolor);
+                        bomb_effect_layer.SetGlobal(bombcolor);
                 }
                 else if (csgostate.Round.Bomb == BombState.Defused)
                 {
@@ -169,7 +170,7 @@ namespace Aurora.Profiles.CSGO.Layers
                         bomb_effect_layer.Set(Properties.Sequence, Properties.CTColor);
 
                         if (Properties.PeripheralUse)
-                            bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, Properties.CTColor);
+                            bomb_effect_layer.SetGlobal(Properties.CTColor);
                     }
                 }
                 else if (csgostate.Round.Bomb == BombState.Exploded)
@@ -180,7 +181,7 @@ namespace Aurora.Profiles.CSGO.Layers
                         bomb_effect_layer.Set(Properties.Sequence, Properties.TColor);
 
                         if (Properties.PeripheralUse)
-                            bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, Properties.TColor);
+                            bomb_effect_layer.SetGlobal(Properties.TColor);
                     }
                 }
                 else

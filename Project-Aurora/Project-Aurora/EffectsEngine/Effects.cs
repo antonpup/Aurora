@@ -190,11 +190,12 @@ namespace Aurora
 
             lock (bitmap_lock)
             {
-                EffectLayer background = new EffectLayer("Global Background", Color.FromArgb(0, 0, 0));
+                EffectLayer background = new EffectLayer("Global Background", Color.FromArgb(0,0,0));
 
                 EffectLayer[] over_layers_array = frame.GetOverlayLayers().ToArray();
                 EffectLayer[] layers_array = frame.GetLayers().ToArray();
-
+                Func<Color> getS = () => background.GetCanvas().GetColor(Aurora.Devices.Layout.Layouts.KeyboardKeys.S.GetDeviceLED());
+                //Global.logger.LogLine($"pre s colour {getS()}");
                 foreach (EffectLayer layer in layers_array)
                     background += layer;
 

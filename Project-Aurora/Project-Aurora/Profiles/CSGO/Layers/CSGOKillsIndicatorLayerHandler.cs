@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
@@ -35,7 +36,7 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.G1, Devices.DeviceKeys.G2, Devices.DeviceKeys.G3, Devices.DeviceKeys.G4, Devices.DeviceKeys.G5 });
+            this._Sequence = new KeySequence(new KeyboardKeys[] { KeyboardKeys.G1, KeyboardKeys.G2, KeyboardKeys.G3, KeyboardKeys.G4, KeyboardKeys.G5 });
             this._RegularKillColor = Color.FromArgb(0, 255, 0);
             this._HeadshotKillColor = Color.FromArgb(255, 80, 0);
         }

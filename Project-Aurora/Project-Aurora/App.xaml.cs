@@ -19,6 +19,7 @@ using SharpDX.RawInput;
 using NLog;
 using System.Reflection;
 using System.Text;
+using Aurora.Devices.Layout;
 
 namespace Aurora
 {
@@ -195,9 +196,8 @@ namespace Aurora
                 Global.logger.Info("Loading Plugins");
                 (Global.PluginManager = new PluginManager()).Initialize();
 
-                Global.logger.Info("Loading KB Layouts");
-                Global.kbLayout = new KeyboardLayoutManager();
-                Global.kbLayout.LoadBrandDefault();
+                Global.logger.Info("Loading Global Device Layout");
+                GlobalDeviceLayout.Instance.Initialize();
 
                 Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();
@@ -328,6 +328,7 @@ namespace Aurora
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
+            GlobalDeviceLayout.Instance.SaveSettings();
             Global.LightingStateManager.SaveAll();
             Global.PluginManager.SaveSettings();
 

@@ -154,7 +154,7 @@ namespace Aurora.Devices.Wooting
             }
         }
 
-        public bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
@@ -275,7 +275,7 @@ namespace Aurora.Devices.Wooting
             { KeyboardKeys.L, WootingKey.Keys.L },
             { KeyboardKeys.SEMICOLON, WootingKey.Keys.SemiColon },
             { KeyboardKeys.APOSTROPHE, WootingKey.Keys.Apostophe },
-            { KeyboardKeys.HASHTAG, WootingKey.Keys.ISO_Hash },
+            { KeyboardKeys.HASH, WootingKey.Keys.ISO_Hash },
             { KeyboardKeys.ENTER, WootingKey.Keys.Enter },
             { KeyboardKeys.NUM_FOUR, WootingKey.Keys.Num4 },
             { KeyboardKeys.NUM_FIVE, WootingKey.Keys.Num5 },

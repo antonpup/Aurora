@@ -64,12 +64,12 @@ namespace Aurora.Devices.Layout
     {
         public static DeviceLED GetDeviceLED(this KeyboardKeys key)
         {
-            return KeyboardDeviceLayout.GetGenericDeviceLED((LEDINT)key);
+            return new DeviceLED(KeyboardDeviceLayout.DeviceTypeID, 0, (LEDINT)key);
         }
 
         public static DeviceLED GetDeviceLED(this MouseLights light)
         {
-            return MouseDeviceLayout.GetGenericDeviceLED((LEDINT)light);
+            return new DeviceLED(MouseDeviceLayout.DeviceTypeID, 0, (LEDINT)light);
         }
     }
 }

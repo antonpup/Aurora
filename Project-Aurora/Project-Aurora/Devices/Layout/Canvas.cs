@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,10 @@ namespace Aurora.Devices.Layout
     public class Canvas : ICloneable, IDisposable
     {
         protected Dictionary<(byte type, byte id), (Point location, Bitmap colormap)> deviceBitmaps = new Dictionary<(byte, byte), (Point location, Bitmap colormap)>();
+
+        protected Color globalColour = Color.Transparent;
+
+        public Color GlobalColour => globalColour;
 
         private GlobalDeviceLayout parent;
 
@@ -58,8 +63,25 @@ namespace Aurora.Devices.Layout
             Center
         }
 
+        public void SetGlobalColor(Brush brush)
+        {
+            switch (brush)
+            {
+                case SolidBrush s:
+                    this.globalColour = s.Color;
+                    break;
+                default:
+                    Global.logger.Warn($"Brush of type {brush.GetType()} is not supported by SetGlobalColor!");
+                    break;
+                    //throw new NotImplementedException();
+            }
+        }
+
+        public void SetGlobalColor(Color clr) => SetGlobalColor(new SolidBrush(clr));
+
         public void Fill(Brush brush)
         {
+            SetGlobalColor(brush);
             foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
             {
                 using (Graphics g = Graphics.FromImage(colormap))
@@ -91,22 +113,24 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transform;
+                if (transform != null)
+                    g.Transform = transform;
                 g.FillRectangle(brush, rect);
             }
         }
 
-        private void FillRectangle(Point location, Bitmap colormap, Brush brush, RectangleF globalRect, Matrix transform)
+        private void FillRectangle(Point location, Bitmap colormap, Brush brush, RectangleF globalRect, Matrix transform = null)
         {
             FillRectangle(colormap, brush, GetLocalRect(location, globalRect), transform);
         }
 
         public void FillRectangle(Brush brush, RectangleF globalRect, float? angle = null, RotationPoint rotationPoint = RotationPoint.Center)
         {
-            Matrix myMatrix = new Matrix();
+            Matrix myMatrix = null;
 
             if (angle != null && angle != 0f)
             {
+                myMatrix = new Matrix();
                 PointF rotatePoint;
                 switch (rotationPoint)
                 {
@@ -136,11 +160,30 @@ namespace Aurora.Devices.Layout
             }
         }
 
+        internal void Save(MemoryStream memory, ImageFormat bmp)
+        {
+            using (Bitmap bitmap = new Bitmap(this.Width, this.Height))
+            {
+                using (Graphics g = Graphics.FromImage(bitmap))
+                {
+                    foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
+                    {
+                        g.DrawImage(colormap, location);
+                    }
+                }
+                bitmap.Save(memory, bmp);
+            }
+        }
+
+        public void FillRectangle(Brush brush, float x, float y, float width, float height, Matrix transform = null) => FillRectangle(brush, new RectangleF(x,y,width,height), transform);
+        
+
         public void DrawEllipse(Bitmap colormap, Pen pen, RectangleF rect, Matrix transformMatrix)
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transformMatrix;
+                if (transformMatrix != null)
+                    g.Transform = transformMatrix;
                 g.DrawEllipse(pen, rect);
             }
         }
@@ -150,7 +193,7 @@ namespace Aurora.Devices.Layout
             DrawEllipse(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
         }
 
-        public void DrawEllipse(Pen pen, RectangleF globalRect, Matrix transformMatrix)
+        public void DrawEllipse(Pen pen, RectangleF globalRect, Matrix transformMatrix = null)
         {
             foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
             {
@@ -162,7 +205,8 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transformMatrix;
+                if (transformMatrix != null)
+                    g.Transform = transformMatrix;
                 g.FillEllipse(brush, rect);
             }
         }
@@ -184,7 +228,8 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transformMatrix;
+                if (transformMatrix != null)
+                    g.Transform = transformMatrix;
                 g.DrawLine(pen, startPoint, endPoint);
             }
         }
@@ -202,18 +247,21 @@ namespace Aurora.Devices.Layout
             }
         }
 
+        public void DrawLine(Pen pen, float start_x, float start_y, float end_x, float end_y, Matrix transformMatrix = null) => DrawLine(pen, new PointF(start_x, start_y), new PointF(end_x, end_y), transformMatrix);
+
         public void DrawRectangle(Bitmap colormap, Pen pen, RectangleF rect, Matrix transformMatrix)
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                g.Transform = transformMatrix;
+                if (transformMatrix != null)
+                    g.Transform = transformMatrix;
                 g.DrawRectangle(pen, Rectangle.Round(rect));
             }
         }
 
         public void DrawRectangle(Point location, Bitmap colormap, Pen pen, RectangleF globalRect, Matrix transformMatrix = null)
         {
-            DrawEllipse(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
+            DrawRectangle(colormap, pen, GetLocalRect(location, globalRect), transformMatrix);
         }
 
         public void DrawRectangle(Pen pen, RectangleF globalRect, Matrix transformMatrix)
@@ -229,13 +277,30 @@ namespace Aurora.Devices.Layout
             SetLed(deviceLED, new SolidBrush(color));
         }
 
+        internal void DrawImage(Image canvas, Rectangle destRect, Rectangle rectangle, GraphicsUnit pixel, Matrix transform = null) { }
+        internal void DrawImage(Canvas canvas, Rectangle destRect, Rectangle rectangle, GraphicsUnit pixel, Matrix transform = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetLed(DeviceLED deviceLED, Brush brush)
         {
-            (Bitmap colormap, BitmapRectangle rect) = GetDeviceLEDRectangle(deviceLED) ?? (null, null);
+            if (deviceLED.Equals(DeviceLED.Global))
+            {
+                SetGlobalColor(brush);
+                return;
+            }
+
+            (Bitmap colormap, BitmapRectangle rect) = GetDeviceLEDRectangle(deviceLED, true) ?? (null, null);
             if (rect != null)
             {
                 FillRectangle(colormap, brush, rect.Rectangle);
             }
+        }
+
+        internal void DrawImageUnscaled(Image screen_image, int v1, int v2)
+        {
+            throw new NotImplementedException();
         }
 
         private Rectangle GetRect(Point location, Bitmap colormap)
@@ -243,13 +308,12 @@ namespace Aurora.Devices.Layout
             return new Rectangle(location, colormap.Size);
         }
 
-        private (Bitmap colormap, BitmapRectangle rect)? GetDeviceLEDRectangle(DeviceLED deviceLED)
+        private (Bitmap colormap, BitmapRectangle rect)? GetDeviceLEDRectangle(DeviceLED deviceLED, bool local = false)
         {
             if (deviceBitmaps.TryGetValue(deviceLED.GetLookupKey(), out (Point location, Bitmap colormap) val))
             {
                 (Point location, Bitmap colormap) = val;
-                BitmapRectangle ledRegion = this.parent.GetDeviceLEDBitmapRegion(deviceLED);
-
+                BitmapRectangle ledRegion = this.parent.GetDeviceLEDBitmapRegion(deviceLED, local);
                 return (colormap: colormap, rect: ledRegion);
             }
 
@@ -331,7 +395,7 @@ namespace Aurora.Devices.Layout
 
         public Color GetColor(DeviceLED deviceLED)
         {
-            (Bitmap colormap, BitmapRectangle rect) = GetDeviceLEDRectangle(deviceLED) ?? (null, null);
+            (Bitmap colormap, BitmapRectangle rect) = GetDeviceLEDRectangle(deviceLED, true) ?? (null, null);
             if (rect != null)
                 return BitmapUtils.GetRegionColor(colormap, rect.Rectangle);
 
@@ -350,6 +414,9 @@ namespace Aurora.Devices.Layout
                     g.DrawImage(rhs.deviceBitmaps[bm.Key].colormap, 0, 0);
                 }
             }
+
+            res.globalColour = Utils.ColorUtils.AddColors(lhs.globalColour, rhs.globalColour);
+
 
             return res;
         }
@@ -389,6 +456,7 @@ namespace Aurora.Devices.Layout
                 colormap.UnlockBits(srcData);
 
             }
+            lhs.globalColour = Utils.ColorUtils.MultiplyColorByScalar(lhs.globalColour, value);
             return lhs;
         }
 
