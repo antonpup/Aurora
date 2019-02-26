@@ -162,7 +162,17 @@ namespace Aurora.Devices.Layout
 
         internal void Save(MemoryStream memory, ImageFormat bmp)
         {
-            throw new NotImplementedException();
+            using (Bitmap bitmap = new Bitmap(this.Width, this.Height))
+            {
+                using (Graphics g = Graphics.FromImage(bitmap))
+                {
+                    foreach ((Point location, Bitmap colormap) in deviceBitmaps.Values)
+                    {
+                        g.DrawImage(colormap, location);
+                    }
+                }
+                bitmap.Save(memory, bmp);
+            }
         }
 
         public void FillRectangle(Brush brush, float x, float y, float width, float height, Matrix transform = null) => FillRectangle(brush, new RectangleF(x,y,width,height), transform);
