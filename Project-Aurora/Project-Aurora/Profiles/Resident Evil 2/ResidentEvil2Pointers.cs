@@ -1,11 +1,7 @@
-﻿namespace Aurora.Profiles.ResidentEvil2
-{
-    public class PointerData
-    {
-        public int baseAddress { get; set; }
-        public int[] pointers { get; set; }
-    }
+﻿using Aurora.Utils;
 
+namespace Aurora.Profiles.ResidentEvil2
+{
     public class ResidentEvil2Pointers
     {
         public PointerData HealthMaximum;

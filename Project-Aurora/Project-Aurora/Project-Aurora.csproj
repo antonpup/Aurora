@@ -436,6 +436,7 @@
     <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\MemoryReadingLightEvent.cs" />
     <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
       <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
     </Compile>
@@ -1646,9 +1647,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-	<Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
-	 <Generator>MSBuild:Compile</Generator>
-	 <SubType>Designer</SubType>
+    <Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml">
       <Generator>MSBuild:Compile</Generator>

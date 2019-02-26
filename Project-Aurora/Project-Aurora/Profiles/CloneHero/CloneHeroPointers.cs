@@ -1,11 +1,7 @@
-﻿namespace Aurora.Profiles.CloneHero
-{
-    public class PointerData
-    {
-        public int baseAddress { get; set; }
-        public int[] pointers { get; set; }
-    }
+﻿using Aurora.Utils;
 
+namespace Aurora.Profiles.CloneHero
+{
     public class CloneHeroPointers
     {
         // Current Note Streak

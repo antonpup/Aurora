@@ -1,11 +1,7 @@
-﻿namespace Aurora.Profiles.Borderlands2
-{
-    public class PointerData
-    {
-        public int baseAddress { get; set; }
-        public int[] pointers { get; set; }
-    }
+﻿using Aurora.Utils;
 
+namespace Aurora.Profiles.Borderlands2
+{
     public class Borderlands2Pointers
     {
         public PointerData Health_maximum;
