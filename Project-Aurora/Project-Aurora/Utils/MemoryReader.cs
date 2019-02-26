@@ -83,19 +83,10 @@ namespace Aurora.Utils
 
         private IntPtr CalculateAddress(int baseAddress, int[] offsets)
         {
-            IntPtr currentAddress = IntPtr.Add(moduleAddress, baseAddress);
-
-            if (offsets.Length > 0)
-            {
+            IntPtr currentAddress = IntPtr.Add(moduleAddress, baseAddress);            
+            for (int x = 0; x < offsets.Length; x++) {
                 currentAddress = (IntPtr)(is64Bit ? ReadLong(currentAddress) : ReadInt(currentAddress));
-
-                for (int x = 0; x < offsets.Length - 1; x++)
-                {
-                    currentAddress = IntPtr.Add(currentAddress, offsets[x]);
-                    currentAddress = (IntPtr)(is64Bit ? ReadLong(currentAddress) : ReadInt(currentAddress));
-                }
-
-                currentAddress = IntPtr.Add(currentAddress, offsets[offsets.Length - 1]);
+                currentAddress = IntPtr.Add(currentAddress, offsets[x]);
             }
             return currentAddress;
         }
