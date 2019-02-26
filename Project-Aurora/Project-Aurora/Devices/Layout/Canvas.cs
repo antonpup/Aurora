@@ -281,7 +281,7 @@ namespace Aurora.Devices.Layout
                 return;
             }
 
-            (Bitmap colormap, BitmapRectangle rect) = GetDeviceLEDRectangle(deviceLED) ?? (null, null);
+            (Bitmap colormap, BitmapRectangle rect) = GetDeviceLEDRectangle(deviceLED, true) ?? (null, null);
             if (rect != null)
             {
                 FillRectangle(colormap, brush, rect.Rectangle);
@@ -298,13 +298,12 @@ namespace Aurora.Devices.Layout
             return new Rectangle(location, colormap.Size);
         }
 
-        private (Bitmap colormap, BitmapRectangle rect)? GetDeviceLEDRectangle(DeviceLED deviceLED)
+        private (Bitmap colormap, BitmapRectangle rect)? GetDeviceLEDRectangle(DeviceLED deviceLED, bool local = false)
         {
             if (deviceBitmaps.TryGetValue(deviceLED.GetLookupKey(), out (Point location, Bitmap colormap) val))
             {
                 (Point location, Bitmap colormap) = val;
-                BitmapRectangle ledRegion = this.parent.GetDeviceLEDBitmapRegion(deviceLED);
-
+                BitmapRectangle ledRegion = this.parent.GetDeviceLEDBitmapRegion(deviceLED, local);
                 return (colormap: colormap, rect: ledRegion);
             }
 
@@ -386,7 +385,7 @@ namespace Aurora.Devices.Layout
 
         public Color GetColor(DeviceLED deviceLED)
         {
-            (Bitmap colormap, BitmapRectangle rect) = GetDeviceLEDRectangle(deviceLED) ?? (null, null);
+            (Bitmap colormap, BitmapRectangle rect) = GetDeviceLEDRectangle(deviceLED, true) ?? (null, null);
             if (rect != null)
                 return BitmapUtils.GetRegionColor(colormap, rect.Rectangle);
 

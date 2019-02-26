@@ -15,8 +15,11 @@ namespace Aurora.Devices.Layout
         public static readonly DeviceLED None = new DeviceLED(0, 0, LEDINT.MinValue);
         public static readonly DeviceLED Global = new DeviceLED(0, 0, 0);
 
+        [JsonProperty("type")]
         public byte DeviceTypeID { get; set; }
+        [JsonProperty("id")]
         public byte DeviceID { get; set; }
+        [JsonProperty("led")]
         public LEDINT LedID { get; set; }
         
         public DeviceLED(byte deviceTypeID, byte deviceID, LEDINT ledID)

@@ -366,6 +366,7 @@ namespace Aurora
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
+            GlobalDeviceLayout.Instance.SaveSettings();
             Global.LightingStateManager.SaveAll();
             Global.PluginManager.SaveSettings();
 
