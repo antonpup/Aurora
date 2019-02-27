@@ -1,5 +1,4 @@
-﻿using Aurora.Utils;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,6 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using System.ComponentModel;
+using Aurora.Devices.Layout.Layouts;
+using Aurora.Devices.Layout;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Clevo
 {
@@ -148,6 +150,178 @@ namespace Aurora.Devices.Clevo
             throw new NotImplementedException();
         }
 
+        public bool UpdateDevice(List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool updateResult = true;
+
+            try
+            {
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("Clevo device, error when updating device. Error: " + ex);
+                return false;
+            }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return updateResult;
+        }
+
+        public bool UpdateDevice(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
+        {
+            if (e.Cancel) return false;
+
+            List<byte> hids = new List<byte>();
+            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
+            {
+                if (e.Cancel) return false;
+                if (useGlobalPeriphericColors)
+                {
+                    if (pair.Key == DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
+                    {
+                        ColorKBLeft = pair.Value;
+                        ColorKBCenter = pair.Value;
+                        ColorKBRight = pair.Value;
+                        ColorTouchpad = pair.Value;
+                        ColorUpdated = true;
+                    }
+                }
+                else
+                {
+                    // TouchPad (It would be nice to have a Touchpad Peripheral)
+                    if (pair.Key == DeviceKeys.Peripheral)
+                    {
+                        ColorTouchpad = pair.Value;
+                        ColorUpdated = true;
+                    }
+                }
+            }
+
+            if (e.Cancel) return false;
+            if (!useGlobalPeriphericColors)
+            {
+                // Clevo 3 region keyboard
+
+                // Left Side (From ESC to Half Spacebar)
+                BitmapRectangle keymap_esc = Effects.GetBitmappingFromDeviceKey(DeviceKeys.ESC);
+                BitmapRectangle keymap_space = Effects.GetBitmappingFromDeviceKey(DeviceKeys.SPACE);
+                PointF spacebar_center = keymap_space.Center; // Key Center
+
+                int spacebar_x = (int)spacebar_center.X - keymap_esc.Left;
+                int height = (int)spacebar_center.Y - keymap_esc.Top;
+
+                BitmapRectangle region_left =
+                    new BitmapRectangle(keymap_esc.Left, keymap_esc.Top, spacebar_x, height);
+
+                Color RegionLeftColor;
+
+                lock (colorComposition.bitmapLock)
+                    RegionLeftColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_left);
+
+                if (!ColorKBLeft.Equals(RegionLeftColor))
+                {
+                    ColorKBLeft = RegionLeftColor;
+                    ColorUpdated = true;
+                }
+
+                if (e.Cancel) return false;
+
+                // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
+                BitmapRectangle keymap_f11 = Effects.GetBitmappingFromDeviceKey(DeviceKeys.F11);
+
+                int f11_x_width = Convert.ToInt32(keymap_f11.Center.X - spacebar_x);
+
+                BitmapRectangle region_center =
+                    new BitmapRectangle(spacebar_x, keymap_esc.Top, f11_x_width, height);
+
+                Color RegionCenterColor;
+                lock (colorComposition.bitmapLock)
+                    RegionCenterColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_center);
+
+                if (!ColorKBCenter.Equals(RegionCenterColor))
+                {
+                    ColorKBCenter = RegionCenterColor;
+                    ColorUpdated = true;
+                }
+
+                if (e.Cancel) return false;
+
+                // Right Side
+                BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
+                BitmapRectangle region_right = new BitmapRectangle(Convert.ToInt32(keymap_f11.Center.X),
+                    keymap_esc.Top, Convert.ToInt32(keymap_numenter.Center.X - keymap_f11.Center.X), height);
+
+                Color RegionRightColor;
+                lock (colorComposition.bitmapLock)
+                    RegionRightColor = Utils.BitmapUtils.GetRegionColor(colorComposition.keyBitmap, region_right);
+
+                if (!ColorKBRight.Equals(RegionRightColor))
+                {
+                    ColorKBRight = RegionRightColor;
+                    ColorUpdated = true;
+                }
+
+            }
+
+            if (e.Cancel) return false;
+            SendColorsToKeyboard(forced);
+
+            return true;
+        }
+
+        public bool UpdateDevice(MouseDeviceLayout device, DoWorkEventArgs e, bool forced = false)
+        {
+            if (e.Cancel) return false;
+
+            List<byte> hids = new List<byte>();
+            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+
+            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
+            {
+                if (e.Cancel) return false;
+
+                Color color = (Color)key.Value;
+                //Apply and strip Alpha
+                color = Color.FromArgb(255,
+                    Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+
+                if (e.Cancel) return false;
+
+                //TODO: Deal with 'Peripheral' light
+                /*if (key.Key == MouseLights.Peripheral)
+                {
+                    SendColorToPeripheral(color, forced);
+                }*/
+
+                SendColorToPeripheralZone((MouseLights)key.Key, color);
+            }
+
+            if (e.Cancel) return false;
+            SendColorsToKeyboard(hids, colors);
+
+            return true;
+        }
+        /*
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
@@ -264,7 +438,7 @@ namespace Aurora.Devices.Clevo
 
             return update_result;
         }
-
+        */
         private void SendColorsToKeyboard(bool forced = false)
         {
             if (forced || ColorUpdated)
@@ -313,6 +487,11 @@ namespace Aurora.Devices.Clevo
         public VariableRegistry GetRegisteredVariables()
         {
             return new VariableRegistry();
+        }
+
+        public bool UpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            throw new NotImplementedException();
         }
     }
 }
