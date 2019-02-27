@@ -1,16 +1,19 @@
 ﻿using Corale.Colore.Core;
 using Corale.Colore.Razer.Keyboard;
+using Corale.Colore.Razer.Mouse;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
+using MouseCustom = Corale.Colore.Razer.Mouse.Effects.CustomGrid;
 using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
 using System.ComponentModel;
 using Aurora.Devices.Layout;
 using System.Drawing;
 using Aurora.Devices.Layout.Layouts;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Razer
 {
@@ -20,8 +23,10 @@ namespace Aurora.Devices.Razer
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
+        private bool mouse_updated = false;
         private bool peripheral_updated = false;
         private KeyboardCustom grid = KeyboardCustom.Create();
+        private MouseCustom MouseGrid = MouseCustom.Create();
         private MousepadCustom MousepadGrid = MousepadCustom.Create();
         //private bool bladeLayout = true;
 
@@ -208,8 +213,6 @@ namespace Aurora.Devices.Razer
                                 updateResult = false;
                             break;
                     }
-
-             //       SendColorToPeripheral(globalColor);
                 }
             }
             catch (Exception ex)
@@ -226,20 +229,373 @@ namespace Aurora.Devices.Razer
 
         public bool UpdateDevice(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
         {
-            if ((coord = GetKeyCoord(key.Key)) != null)
+            try
             {
-                SetOneKey(coord, key.Value);
+                foreach (KeyValuePair<LEDINT, System.Drawing.Color> key in device.DeviceColours.deviceColours)
+                {
+                    if (e.Cancel) return false;
+                    int[] coord = null;
+
+                    if ((coord = GetKeyCoord((KeyboardKeys)key.Key, device.Style)) != null)
+                    {
+                        grid[coord[0], coord[1]] = new Corale.Colore.Core.Color(key.Value.R, key.Value.G, key.Value.B);
+                    }
+                    else
+                    {
+                        Key localKey = ToRazer((KeyboardKeys)key.Key);
+                        if(localKey != Key.Invalid)
+                            grid[localKey] = new Corale.Colore.Core.Color(key.Value.R, key.Value.G, key.Value.B);
+                    }
+                }
+                if (e.Cancel) return false;
+
+                keyboard.SetCustom(grid);
+                keyboard_updated = true;
+
+                return true;
             }
-            else
+            catch (Exception exc)
             {
-                Key localKey = ToRazer(key.Key);
-                SetOneKey(localKey, key.Value);
+                Global.logger.Error("Razer device, error when updating device. Error: " + exc);
+                Console.WriteLine(exc);
+                return false;
             }
+        }
+
+        private Key ToRazer(KeyboardKeys key)
+        {
+            switch (key)
+            {
+                case (KeyboardKeys.ESC):
+                    return Key.Escape;
+                case (KeyboardKeys.F1):
+                    return Key.F1;
+                case (KeyboardKeys.F2):
+                    return Key.F2;
+                case (KeyboardKeys.F3):
+                    return Key.F3;
+                case (KeyboardKeys.F4):
+                    return Key.F4;
+                case (KeyboardKeys.F5):
+                    return Key.F5;
+                case (KeyboardKeys.F6):
+                    return Key.F6;
+                case (KeyboardKeys.F7):
+                    return Key.F7;
+                case (KeyboardKeys.F8):
+                    return Key.F8;
+                case (KeyboardKeys.F9):
+                    return Key.F9;
+                case (KeyboardKeys.F10):
+                    return Key.F10;
+                case (KeyboardKeys.F11):
+                    return Key.F11;
+                case (KeyboardKeys.F12):
+                    return Key.F12;
+                case (KeyboardKeys.PRINT_SCREEN):
+                    return Key.PrintScreen;
+                case (KeyboardKeys.SCROLL_LOCK):
+                    return Key.Scroll;
+                case (KeyboardKeys.PAUSE_BREAK):
+                    return Key.Pause;
+                case (KeyboardKeys.TILDE):
+                    return Key.OemTilde;
+                case (KeyboardKeys.ONE):
+                    return Key.D1;
+                case (KeyboardKeys.TWO):
+                    return Key.D2;
+                case (KeyboardKeys.THREE):
+                    return Key.D3;
+                case (KeyboardKeys.FOUR):
+                    return Key.D4;
+                case (KeyboardKeys.FIVE):
+                    return Key.D5;
+                case (KeyboardKeys.SIX):
+                    return Key.D6;
+                case (KeyboardKeys.SEVEN):
+                    return Key.D7;
+                case (KeyboardKeys.EIGHT):
+                    return Key.D8;
+                case (KeyboardKeys.NINE):
+                    return Key.D9;
+                case (KeyboardKeys.ZERO):
+                    return Key.D0;
+                case (KeyboardKeys.MINUS):
+                    return Key.OemMinus;
+                case (KeyboardKeys.EQUALS):
+                    return Key.OemEquals;
+                case (KeyboardKeys.BACKSPACE):
+                    return Key.Backspace;
+                case (KeyboardKeys.INSERT):
+                    return Key.Insert;
+                case (KeyboardKeys.HOME):
+                    return Key.Home;
+                case (KeyboardKeys.PAGE_UP):
+                    return Key.PageUp;
+                case (KeyboardKeys.NUM_LOCK):
+                    return Key.NumLock;
+                case (KeyboardKeys.NUM_SLASH):
+                    return Key.NumDivide;
+                case (KeyboardKeys.NUM_ASTERISK):
+                    return Key.NumMultiply;
+                case (KeyboardKeys.NUM_MINUS):
+                    return Key.NumSubtract;
+                case (KeyboardKeys.TAB):
+                    return Key.Tab;
+                case (KeyboardKeys.Q):
+                    return Key.Q;
+                case (KeyboardKeys.W):
+                    return Key.W;
+                case (KeyboardKeys.E):
+                    return Key.E;
+                case (KeyboardKeys.R):
+                    return Key.R;
+                case (KeyboardKeys.T):
+                    return Key.T;
+                case (KeyboardKeys.Y):
+                    return Key.Y;
+                case (KeyboardKeys.U):
+                    return Key.U;
+                case (KeyboardKeys.I):
+                    return Key.I;
+                case (KeyboardKeys.O):
+                    return Key.O;
+                case (KeyboardKeys.P):
+                    return Key.P;
+                case (KeyboardKeys.OPEN_BRACKET):
+                    return Key.OemLeftBracket;
+                case (KeyboardKeys.CLOSE_BRACKET):
+                    return Key.OemRightBracket;
+                case (KeyboardKeys.BACKSLASH):
+                    return Key.OemBackslash;
+                case (KeyboardKeys.DELETE):
+                    return Key.Delete;
+                case (KeyboardKeys.END):
+                    return Key.End;
+                case (KeyboardKeys.PAGE_DOWN):
+                    return Key.PageDown;
+                case (KeyboardKeys.NUM_SEVEN):
+                    return Key.Num7;
+                case (KeyboardKeys.NUM_EIGHT):
+                    return Key.Num8;
+                case (KeyboardKeys.NUM_NINE):
+                    return Key.Num9;
+                case (KeyboardKeys.NUM_PLUS):
+                    return Key.NumAdd;
+                case (KeyboardKeys.CAPS_LOCK):
+                    return Key.CapsLock;
+                case (KeyboardKeys.A):
+                    return Key.A;
+                case (KeyboardKeys.S):
+                    return Key.S;
+                case (KeyboardKeys.D):
+                    return Key.D;
+                case (KeyboardKeys.F):
+                    return Key.F;
+                case (KeyboardKeys.G):
+                    return Key.G;
+                case (KeyboardKeys.H):
+                    return Key.H;
+                case (KeyboardKeys.J):
+                    return Key.J;
+                case (KeyboardKeys.K):
+                    return Key.K;
+                case (KeyboardKeys.L):
+                    return Key.L;
+                case (KeyboardKeys.SEMICOLON):
+                    return Key.OemSemicolon;
+                case (KeyboardKeys.APOSTROPHE):
+                    return Key.OemApostrophe;
+                case (KeyboardKeys.HASH):
+                    return Key.EurPound;
+                case (KeyboardKeys.ENTER):
+                    return Key.Enter;
+                case (KeyboardKeys.NUM_FOUR):
+                    return Key.Num4;
+                case (KeyboardKeys.NUM_FIVE):
+                    return Key.Num5;
+                case (KeyboardKeys.NUM_SIX):
+                    return Key.Num6;
+                case (KeyboardKeys.LEFT_SHIFT):
+                    return Key.LeftShift;
+                case (KeyboardKeys.BACKSLASH_UK):
+                    return Key.EurBackslash;
+                case (KeyboardKeys.Z):
+                    return Key.Z;
+                case (KeyboardKeys.X):
+                    return Key.X;
+                case (KeyboardKeys.C):
+                    return Key.C;
+                case (KeyboardKeys.V):
+                    return Key.V;
+                case (KeyboardKeys.B):
+                    return Key.B;
+                case (KeyboardKeys.N):
+                    return Key.N;
+                case (KeyboardKeys.M):
+                    return Key.M;
+                case (KeyboardKeys.COMMA):
+                    return Key.OemComma;
+                case (KeyboardKeys.PERIOD):
+                    return Key.OemPeriod;
+                case (KeyboardKeys.FORWARD_SLASH):
+                    return Key.OemSlash;
+                case (KeyboardKeys.OEM8):
+                    return Key.OemSlash;
+                case (KeyboardKeys.RIGHT_SHIFT):
+                    return Key.RightShift;
+                case (KeyboardKeys.ARROW_UP):
+                    return Key.Up;
+                case (KeyboardKeys.NUM_ONE):
+                    return Key.Num1;
+                case (KeyboardKeys.NUM_TWO):
+                    return Key.Num2;
+                case (KeyboardKeys.NUM_THREE):
+                    return Key.Num3;
+                case (KeyboardKeys.NUM_ENTER):
+                    return Key.NumEnter;
+                case (KeyboardKeys.LEFT_CONTROL):
+                    return Key.LeftControl;
+                case (KeyboardKeys.LEFT_WINDOWS):
+                    return Key.LeftWindows;
+                case (KeyboardKeys.LEFT_ALT):
+                    return Key.LeftAlt;
+                case (KeyboardKeys.SPACE):
+                    return Key.Space;
+                case (KeyboardKeys.RIGHT_ALT):
+                    return Key.RightAlt;
+                //case (KeyboardKeys.RIGHT_WINDOWS):
+                //    return Key.Right;
+                case (KeyboardKeys.APPLICATION_SELECT):
+                    return Key.RightMenu;
+                case (KeyboardKeys.RIGHT_CONTROL):
+                    return Key.RightControl;
+                case (KeyboardKeys.ARROW_LEFT):
+                    return Key.Left;
+                case (KeyboardKeys.ARROW_DOWN):
+                    return Key.Down;
+                case (KeyboardKeys.ARROW_RIGHT):
+                    return Key.Right;
+                case (KeyboardKeys.NUM_ZERO):
+                    return Key.Num0;
+                case (KeyboardKeys.NUM_PERIOD):
+                    return Key.NumDecimal;
+                case (KeyboardKeys.FN_Key):
+                    return Key.Function;
+                case (KeyboardKeys.G1):
+                    return Key.Macro1;
+                case (KeyboardKeys.G2):
+                    return Key.Macro2;
+                case (KeyboardKeys.G3):
+                    return Key.Macro3;
+                case (KeyboardKeys.G4):
+                    return Key.Macro4;
+                case (KeyboardKeys.G5):
+                    return Key.Macro5;
+                case (KeyboardKeys.LOGO):
+                    return Key.Logo;
+                default:
+                    return Key.Invalid;
+            }
+        }
+
+        private int[] GetKeyCoord(KeyboardKeys key, KeyboardDeviceLayout.PreferredKeyboard keyLayout)
+        {
+            Dictionary<KeyboardKeys, int[]> layout = RazerLayoutMap.GenericKeyboard;
+
+            if (keyLayout == KeyboardDeviceLayout.PreferredKeyboard.Razer_Blade)
+                layout = RazerLayoutMap.Blade;
+
+            if (layout.ContainsKey(key))
+                return layout[key];
+
+            return null;
         }
 
         public bool UpdateDevice(MouseDeviceLayout device, DoWorkEventArgs e, bool forced = false)
         {
-            throw new NotImplementedException();
+            try
+            {
+                foreach (KeyValuePair<LEDINT, System.Drawing.Color> key in device.DeviceColours.deviceColours)
+                {
+                    if (e.Cancel) return false;
+
+                    GridLed localLed = ToRazer((MouseLights)key.Key);
+                    if (localLed != 0)
+                        MouseGrid[localLed] = new Corale.Colore.Core.Color(key.Value.R, key.Value.G, key.Value.B);
+                }
+                if (e.Cancel) return false;
+
+                mouse.SetGrid(MouseGrid);
+                mouse_updated = true;
+
+                return true;
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error("Razer device, error when updating device. Error: " + exc);
+                Console.WriteLine(exc);
+                return false;
+            }
+        }
+
+        private GridLed ToRazer(MouseLights light)
+        {
+            switch (light)
+            {
+                case MouseLights.Peripheral_Logo:
+                    return GridLed.Logo;
+                case MouseLights.Peripheral_ScrollWheel:
+                    return GridLed.ScrollWheel;
+
+                /* Additional lights supported by the SDK but not implemented in Aurora.
+                 * Once support for these zones is added, replace IMPLEMENT_ME with the
+                 * new zone name and it should work without any additional changes.
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.Backlight;  
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.Bottom1;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.Bottom2;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.Bottom3;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.Bottom4;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.Bottom5;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.LeftSide1;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.LeftSide2;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.LeftSide3;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.LeftSide4;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.LeftSide5;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.LeftSide6;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.LeftSide7;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.RightSide1;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.RightSide2;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.RightSide3;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.RightSide4;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.RightSide5;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.RightSide6;
+                case MouseLights.IMPLEMENT_ME:
+                    return GridLed.RightSide7;
+                */
+                default:
+                    return 0;
+
+            }
         }
     }
 }
