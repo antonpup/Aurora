@@ -181,23 +181,7 @@ namespace Aurora
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
-            virtial_kb = GlobalDeviceLayout.Instance.GetControl();
-
-            keyboard_grid.Children.Clear();
-            keyboard_grid.Children.Add(virtial_kb);
-            keyboard_grid.Children.Add(new LayerEditor());
-
-            keyboard_grid.Width = virtial_kb.Width;
-            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
-
-            keyboard_grid.Height = virtial_kb.Height;
-            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
-
-            keyboard_grid.UpdateLayout();
-
-            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
-            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
-            keyboard_viewbox.UpdateLayout();
+            KbLayout_KeyboardLayoutUpdated(null);
 
             UpdateManagerStackFocus(ctrlLayerManager);
 

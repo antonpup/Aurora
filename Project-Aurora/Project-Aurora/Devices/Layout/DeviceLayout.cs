@@ -130,7 +130,8 @@ namespace Aurora.Devices.Layout
         void OnDeserialized(StreamingContext context)
         {
             //Do we want to do this here?
-            Initialize();
+            //No
+            //Initialize();
         }
 
         protected void LayoutChanged()

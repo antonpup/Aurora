@@ -324,27 +324,16 @@ namespace Aurora.Devices.Logitech
             {
                 LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB);
 
-                if (Global.Configuration.allow_peripheral_devices)
-                {
-                    double alpha_amt = (color.A / 255.0);
-                    int red_amt = (int)(((color.R * alpha_amt) / 255.0) * 100.0);
-                    int green_amt = (int)(((color.G * alpha_amt) / 255.0) * 100.0);
-                    int blue_amt = (int)(((color.B * alpha_amt) / 255.0) * 100.0);
+                double alpha_amt = (color.A / 255.0);
+                int red_amt = (int)(((color.R * alpha_amt) / 255.0) * 100.0);
+                int green_amt = (int)(((color.G * alpha_amt) / 255.0) * 100.0);
+                int blue_amt = (int)(((color.B * alpha_amt) / 255.0) * 100.0);
 
-                    //System.Diagnostics.Debug.WriteLine("R: " + red_amt + " G: " + green_amt + " B: " + blue_amt);
+                //System.Diagnostics.Debug.WriteLine("R: " + red_amt + " G: " + green_amt + " B: " + blue_amt);
 
-                    LogitechGSDK.LogiLedSetLighting(red_amt, green_amt, blue_amt);
-                    previous_peripheral_Color = color;
-                    peripheral_updated = true;
-                }
-                else
-                {
-                    if (peripheral_updated)
-                    {
-                        LogitechGSDK.LogiLedRestoreLighting();
-                        peripheral_updated = false;
-                    }
-                }
+                LogitechGSDK.LogiLedSetLighting(red_amt, green_amt, blue_amt);
+                previous_peripheral_Color = color;
+                peripheral_updated = true;
             }
         }
 

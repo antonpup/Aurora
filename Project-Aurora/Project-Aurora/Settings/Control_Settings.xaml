@@ -8,6 +8,7 @@
              xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
              xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
+             xmlns:DeviceLayout="clr-namespace:Aurora.Devices.Layout"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
@@ -38,66 +39,6 @@
             <EnumValueConverters:IdleEffectsToStringVC x:Key="IdleEffectsToStringVC"/>
             <DataTemplate x:Key="IdleEffectsTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource IdleEffectsToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KbLayout" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboardLocalization" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:KbLayoutToStringVC x:Key="KbLayoutToStringVC"/>
-            <DataTemplate x:Key="KbLayoutTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KbLayoutToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KbBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboard" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:KbBrandToStringVC x:Key="KbBrandToStringVC"/>
-            <DataTemplate x:Key="KbBrandTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KbBrandToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="MouseBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredMouse" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
-            <DataTemplate x:Key="MouseBrandTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource MouseBrandToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="MouseOrientation" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:MouseOrientationType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:MouseOrientationToStringVC x:Key="MouseOrientationToStringVC"/>
-            <DataTemplate x:Key="MouseOrientationTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource MouseOrientationToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KeycapType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:KeycapType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
-            <DataTemplate x:Key="KeycapTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KeycapTypeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="BitmapAccuracy" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:BitmapAccuracy" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
-            <DataTemplate x:Key="BitmapAccuracyTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource BitmapAccuracyToStringVC}}" />
             </DataTemplate>
 
             <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -320,6 +261,11 @@
                             </TabItem>
                         </TabControl>
                     </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Device Layout">
+                <Grid>
+                    <DeviceLayout:Control_GlobalDeviceLayout Margin="10"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Device Manager">

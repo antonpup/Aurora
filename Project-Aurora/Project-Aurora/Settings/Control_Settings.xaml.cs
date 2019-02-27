@@ -38,7 +38,6 @@ namespace Aurora.Settings
         {
             InitializeComponent();
 
-            this.ComboBox_virtualkeyboard_keycap_type.DataContext = GlobalDeviceLayout.Instance.Settings;
 
             this.tabMain.DataContext = Global.Configuration;
 
@@ -127,11 +126,7 @@ namespace Aurora.Settings
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
             this.devices_mouse_brand.SelectedItem = Global.Configuration.mouse_preference;
             this.devices_mouse_orientation.SelectedItem = Global.Configuration.mouse_orientation;*/
-            this.ComboBox_virtualkeyboard_keycap_type.SelectedItem = Global.Configuration.virtualkeyboard_keycap_type;
             this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
-            this.devices_disable_keyboard_lighting.IsChecked = Global.Configuration.devices_disable_keyboard;
-            this.devices_disable_mouse_lighting.IsChecked = Global.Configuration.devices_disable_mouse;
-            this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
 

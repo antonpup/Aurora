@@ -338,19 +338,7 @@ namespace Aurora.Settings
         Asus_Pugio = 900
     }
 
-    public enum KeycapType
-    {
-        [Description("Default")]
-        Default = 0,
-        [Description("Default (with Backglow)")]
-        Default_backglow = 1,
-        [Description("Default (Backglow only)")]
-        Default_backglow_only = 2,
-        [Description("Colorized")]
-        Colorized = 3,
-        [Description("Colorized (blank)")]
-        Colorized_blank = 4
-    }
+    
 
     public enum ApplicationDetectionMode
     {
@@ -361,14 +349,7 @@ namespace Aurora.Settings
         ForegroroundApp = 1
     }
 
-    public enum BitmapAccuracy
-    {
-        Best = 1,
-        Great = 3,
-        Good = 6,
-        Okay = 9,
-        Fine = 12
-    }
+    
 
     public class Configuration : SettingsBase
     {
@@ -382,7 +363,6 @@ namespace Aurora.Settings
         public bool roccat_first_time;
 
         //General Program Settings
-        public bool allow_peripheral_devices;
         public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
 
@@ -424,12 +404,8 @@ namespace Aurora.Settings
         //public PreferredKeyboard keyboard_brand;
         //public PreferredKeyboardLocalization keyboard_localization;
         //public PreferredMouse mouse_preference;
-        public KeycapType virtualkeyboard_keycap_type;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
-        public bool devices_disable_keyboard;
-        public bool devices_disable_mouse;
-        public bool devices_disable_headset;
         public bool unified_hid_disabled = false;
         public HashSet<Type> devices_disabled;
         public bool OverlaysInPreview;
@@ -480,7 +456,6 @@ namespace Aurora.Settings
             dualshock_first_time = true;
 
             //General Program Settings
-            allow_peripheral_devices = true;
             UseVolumeAsBrightness = false;
             allow_wrappers_in_background = true;
             allow_all_logitech_bitmaps = true;
@@ -491,13 +466,9 @@ namespace Aurora.Settings
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
-            virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
             //additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
-            devices_disable_keyboard = false;
-            devices_disable_mouse = false;
-            devices_disable_headset = false;
             devices_disabled = new HashSet<Type>();
             devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
