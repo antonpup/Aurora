@@ -192,30 +192,30 @@ namespace Aurora.Devices.Clevo
             List<byte> hids = new List<byte>();
             List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
-            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
-            {
-                if (e.Cancel) return false;
-                if (useGlobalPeriphericColors)
-                {
-                    if (pair.Key == DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
-                    {
-                        ColorKBLeft = pair.Value;
-                        ColorKBCenter = pair.Value;
-                        ColorKBRight = pair.Value;
-                        ColorTouchpad = pair.Value;
-                        ColorUpdated = true;
-                    }
-                }
-                else
-                {
-                    // TouchPad (It would be nice to have a Touchpad Peripheral)
-                    if (pair.Key == DeviceKeys.Peripheral)
-                    {
-                        ColorTouchpad = pair.Value;
-                        ColorUpdated = true;
-                    }
-                }
-            }
+            //foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
+            //{
+            //    if (e.Cancel) return false;
+            //    if (useGlobalPeriphericColors)
+            //    {
+            //        if (key.Key == DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
+            //        {
+            //            ColorKBLeft = key.Value;
+            //            ColorKBCenter = key.Value;
+            //            ColorKBRight = key.Value;
+            //            ColorTouchpad = key.Value;
+            //            ColorUpdated = true;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // TouchPad (It would be nice to have a Touchpad Peripheral)
+            //        if (key.Key == DeviceKeys.Peripheral)
+            //        {
+            //            ColorTouchpad = key.Value;
+            //            ColorUpdated = true;
+            //        }
+            //    }
+            //}
 
             if (e.Cancel) return false;
             if (!useGlobalPeriphericColors)
@@ -223,8 +223,8 @@ namespace Aurora.Devices.Clevo
                 // Clevo 3 region keyboard
 
                 // Left Side (From ESC to Half Spacebar)
-                BitmapRectangle keymap_esc = Effects.GetBitmappingFromDeviceKey(DeviceKeys.ESC);
-                BitmapRectangle keymap_space = Effects.GetBitmappingFromDeviceKey(DeviceKeys.SPACE);
+                BitmapRectangle keymap_esc = Effects.GetBitmappingFromDeviceKey(KeyboardKeys.ESC);
+                BitmapRectangle keymap_space = Effects.GetBitmappingFromDeviceKey(KeyboardKeys.SPACE);
                 PointF spacebar_center = keymap_space.Center; // Key Center
 
                 int spacebar_x = (int)spacebar_center.X - keymap_esc.Left;
@@ -247,7 +247,7 @@ namespace Aurora.Devices.Clevo
                 if (e.Cancel) return false;
 
                 // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
-                BitmapRectangle keymap_f11 = Effects.GetBitmappingFromDeviceKey(DeviceKeys.F11);
+                BitmapRectangle keymap_f11 = Effects.GetBitmappingFromDeviceKey(KeyboardKeys.F11);
 
                 int f11_x_width = Convert.ToInt32(keymap_f11.Center.X - spacebar_x);
 
@@ -267,7 +267,7 @@ namespace Aurora.Devices.Clevo
                 if (e.Cancel) return false;
 
                 // Right Side
-                BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
+                BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(KeyboardKeys.NUM_ENTER);
                 BitmapRectangle region_right = new BitmapRectangle(Convert.ToInt32(keymap_f11.Center.X),
                     keymap_esc.Top, Convert.ToInt32(keymap_numenter.Center.X - keymap_f11.Center.X), height);
 
