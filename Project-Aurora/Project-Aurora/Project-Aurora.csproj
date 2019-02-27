@@ -455,7 +455,6 @@
     <Compile Include="Profiles\Resident Evil 2\GSI\GameState_ResidentEvil2.cs" />
     <Compile Include="Profiles\Resident Evil 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredApplication.cs" />
-    <Compile Include="Profiles\Dishonored\DishonoredPointers.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredProfile.cs" />
     <Compile Include="Profiles\Dishonored\Control_Dishonored.xaml.cs">
       <DependentUpon>Control_Dishonored.xaml</DependentUpon>
@@ -697,7 +696,6 @@
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Borderlands 2\Borderlands2Application.cs" />
-    <Compile Include="Profiles\Borderlands 2\Borderlands2Pointers.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Profile.cs" />
     <Compile Include="Profiles\Borderlands 2\Control_Borderlands2.xaml.cs">
       <DependentUpon>Control_Borderlands2.xaml</DependentUpon>

@@ -14,4 +14,11 @@ namespace Aurora.Profiles.Borderlands2
             gameState.Player.CurrentShield = reader.ReadFloat(pointers.Shield_current);
         }
     }
+
+    public class Borderlands2Pointers {
+        public PointerData Health_maximum;
+        public PointerData Health_current;
+        public PointerData Shield_maximum;
+        public PointerData Shield_current;
+    }
 }
