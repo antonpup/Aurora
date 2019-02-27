@@ -366,8 +366,8 @@
       <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
     </Compile>
     <None Include="Devices\Integrations\AtmoOrb\AtmoOrbDevice.cs" />
-    <Compile Include="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
-    <Compile Include="Devices\Integrations\Clevo\ClevoDevice.cs" />
+    <None Include="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
+    <None Include="Devices\Integrations\Clevo\ClevoDevice.cs" />
     <Compile Include="Devices\Integrations\Corsair\CorsairInstallInstructions.xaml.cs">
       <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -386,11 +386,12 @@
     <Compile Include="Devices\Integrations\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Integrations\Razer\RazerDevice.cs" />
     <Compile Include="Devices\Integrations\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <None Include="Devices\Integrations\Razer\RazerDevice.cs" />
-    <None Include="Devices\Integrations\Razer\RazerLayoutMap.cs" />
+    <None Include="Devices\Integrations\Razer\RazerDevice - OLD.cs" />
+    <Compile Include="Devices\Integrations\Razer\RazerLayoutMap.cs" />
     <None Include="Devices\Integrations\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\Integrations\Roccat\RoccatInstallInstructions.xaml.cs">
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
