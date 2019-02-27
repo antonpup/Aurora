@@ -439,7 +439,6 @@
     <Compile Include="Devices\Integrations\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <None Include="Devices\Integrations\Razer\RazerDevice - OLD.cs" />
     <Compile Include="Devices\Integrations\Razer\RazerLayoutMap.cs" />
     <None Include="Devices\Integrations\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\Integrations\Roccat\RoccatInstallInstructions.xaml.cs">
