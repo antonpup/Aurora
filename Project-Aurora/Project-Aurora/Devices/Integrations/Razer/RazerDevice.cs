@@ -10,6 +10,7 @@ using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
 using System.ComponentModel;
 using Aurora.Devices.Layout;
 using System.Drawing;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Devices.Razer
 {
@@ -186,6 +187,57 @@ namespace Aurora.Devices.Razer
         }
 
         public bool UpdateDevice(System.Drawing.Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool updateResult = true;
+
+            try
+            {
+
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+
+             //       SendColorToPeripheral(globalColor);
+                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("Razer device, error when updating device: " + ex);
+                return false;
+            }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return updateResult;
+        }
+
+        public bool UpdateDevice(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
+        {
+            if ((coord = GetKeyCoord(key.Key)) != null)
+            {
+                SetOneKey(coord, key.Value);
+            }
+            else
+            {
+                Key localKey = ToRazer(key.Key);
+                SetOneKey(localKey, key.Value);
+            }
+        }
+
+        public bool UpdateDevice(MouseDeviceLayout device, DoWorkEventArgs e, bool forced = false)
         {
             throw new NotImplementedException();
         }
