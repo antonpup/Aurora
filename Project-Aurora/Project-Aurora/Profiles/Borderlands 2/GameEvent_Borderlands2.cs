@@ -106,7 +106,7 @@ namespace Aurora.Profiles.Borderlands2
 
             foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
             {
-                if (layer.Enabled && layer.LogicPass)
+                if (layer.Enabled)
                     layers.Enqueue(layer.Render(_game_state));
             }
 

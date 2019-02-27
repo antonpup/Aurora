@@ -328,6 +328,9 @@
     <Compile Include="Controls\Control_DeviceItem.xaml.cs">
       <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
+      <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_PluginManager.xaml.cs">
       <DependentUpon>Control_PluginManager.xaml</DependentUpon>
     </Compile>
@@ -339,6 +342,9 @@
     </Compile>
     <Compile Include="Controls\Control_Ruler.xaml.cs">
       <DependentUpon>Control_Ruler.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_SingleKeyEditor.xaml.cs">
+      <DependentUpon>Control_SingleKeyEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Control_VariableIItem.xaml.cs">
       <DependentUpon>Control_VariableIItem.xaml</DependentUpon>
@@ -360,9 +366,6 @@
     </Compile>
     <Compile Include="Controls\LayerEditor.xaml.cs">
       <DependentUpon>LayerEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\LogicCheckEdit.xaml.cs">
-      <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
     <Compile Include="Devices\Clevo\ClevoSetKBLED.cs" />
@@ -590,6 +593,55 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
+      <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml.cs">
+      <DependentUpon>Control_NumericMap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Number\Control_NumericUnaryOpHolder.xaml.cs">
+      <DependentUpon>Control_NumericUnaryOpHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml.cs">
+      <DependentUpon>Control_OverrideDynamicValue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Number\Number_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Number_Waves.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Operators.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml.cs">
+      <DependentUpon>Control_OverrideLookupTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\EvaluatableRegistry.cs" />
+    <Compile Include="Settings\Overrides\Logic\IOverrideLogic.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Number_Maths.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideDynamicValue.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLogicAttribute.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIBoolean.xaml.cs">
+      <DependentUpon>Control_BooleanGSIBoolean.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml.cs">
+      <DependentUpon>Control_BooleanGSINumeric.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanNot.xaml.cs">
+      <DependentUpon>Control_BooleanNot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml.cs">
+      <DependentUpon>Control_EvaluatablePresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_LogicOperators.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml.cs">
+      <DependentUpon>Control_SublogicHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\IEvaluatable.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLogicBuilder.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLookupTable.cs" />
+    <Compile Include="Settings\Overrides\LogicOverridableAttribute.cs" />
+    <Compile Include="Settings\Overrides\Logic\String\Operators.cs" />
+    <Compile Include="Settings\Overrides\Logic\String\String_Constant.cs" />
+    <Compile Include="Settings\Overrides\Logic\String\String_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\String\String_LogicOperators.cs" />
     <Compile Include="Settings\ProfileImporter.cs" />
     <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
@@ -622,11 +674,15 @@
     <Compile Include="Settings\Window_GSIHttpDebug.xaml.cs">
       <DependentUpon>Window_GSIHttpDebug.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Overrides\Control_OverridesEditor.xaml.cs">
+      <DependentUpon>Control_OverridesEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\InputEvents.cs" />
+    <Compile Include="Utils\MathUtils.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
     <Compile Include="Profiles\BF3\BF3Application.cs" />
@@ -1265,9 +1321,6 @@
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\ScriptBase.cs" />
     <Compile Include="Settings\VariableRegistry.cs" />
-    <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
-      <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Control_LayerManager.xaml.cs">
       <DependentUpon>Control_LayerManager.xaml</DependentUpon>
     </Compile>
@@ -1282,7 +1335,6 @@
       <DependentUpon>Control_DefaultLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\Layer.cs" />
-    <Compile Include="Settings\Layers\LogicItem.cs" />
     <Compile Include="Profiles\Application.cs" />
     <Compile Include="Settings\KeyboardLayoutManager.cs" />
     <Compile Include="Settings\KeyRecorder.cs" />
@@ -1398,6 +1450,13 @@
     </Content>
     <Resource Include="Resources\ch_128x128.png" />
     <Resource Include="Resources\re2_256x256.png" />
+    <Resource Include="Resources\LayerConditions_icon.png" />
+    <Resource Include="Resources\icons8-numbers-30.png" />
+    <Resource Include="Resources\icons8-paint-palette-30.png" />
+    <Resource Include="Resources\icons8-diamonds-30.png" />
+    <Resource Include="Resources\icons8-checked-checkbox-30.png" />
+    <Resource Include="Resources\Question_Help.png" />
+    <Resource Include="Resources\icons8-keyboard-30.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1483,6 +1542,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Control_FieldPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Control_PluginManager.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1496,6 +1559,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Control_Ruler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_SingleKeyEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1536,10 +1603,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\LayerEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\LogicCheckEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1855,6 +1918,46 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIBoolean.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanNot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Number\Control_NumericUnaryOpHolder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Control_LayerControlPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1987,10 +2090,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Window_LayerLogicEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Settings\Control_LayerManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2008,6 +2107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_VariableRegistryEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Control_OverridesEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

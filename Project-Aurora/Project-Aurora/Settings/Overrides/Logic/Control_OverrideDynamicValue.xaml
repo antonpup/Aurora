@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="Aurora.Settings.Overrides.Logic.Control_OverrideDynamicValue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:UnderlineConverter x:Key="UnderlineConv" />
+        <local:CurosrConverter x:Key="CursorConv" />
+    </UserControl.Resources>
+    <DockPanel>
+        <!-- Description -->
+        <TextBlock Text="A dynamic value allows you to set the value of the selected property using another variable. For example, you can set the opacity of a layer to be the result of health divided by maxhealth, causing the layer to fade out as your character takes damage (in supported games). Not all property types can have a dynamic value created for them." Margin="8" TextWrapping="Wrap" DockPanel.Dock="Top" />
+
+        <!-- Parameter list -->
+        <ScrollViewer Margin="6,0,6,6">
+            <ItemsControl ItemsSource="{Binding Parameters}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Left" Margin="0,10,0,0" >
+                                <Run Text="{Binding Item1, Mode=OneWay}" TextDecorations="{Binding Item4, Converter={StaticResource UnderlineConv}}" Cursor="{Binding Item4, Converter={StaticResource CursorConv}}" ToolTip="{Binding Item4, Mode=OneWay}" />
+                                <Run Text="=" />
+                            </TextBlock>
+                            <local:Control_EvaluatablePresenter Expression="{Binding Item3, Mode=OneWay}" EvalType="{Binding Item2}" Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Application}" ExpressionChanged="VariableEvaluatable_ExpressionChanged" />
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
