@@ -141,7 +141,7 @@ namespace Aurora.Profiles.Osu {
                         },
                         _Frequencies = new SortedSet<float> { 60, 170, 310, 600, 1000, 1500, 2000, 2500 },
                     },
-                    Opacity = .2f
+                    _Opacity = .2f
                 })
             };
         }
