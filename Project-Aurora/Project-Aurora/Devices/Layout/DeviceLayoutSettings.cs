@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -12,6 +13,29 @@ using Newtonsoft.Json;
 
 namespace Aurora.Devices.Layout
 {
+    public enum KeycapType
+    {
+        [Description("Default")]
+        Default = 0,
+        [Description("Default (with Backglow)")]
+        Default_backglow = 1,
+        [Description("Default (Backglow only)")]
+        Default_backglow_only = 2,
+        [Description("Colorized")]
+        Colorized = 3,
+        [Description("Colorized (blank)")]
+        Colorized_blank = 4
+    }
+
+    public enum BitmapAccuracy
+    {
+        Best = 1,
+        Great = 3,
+        Good = 6,
+        Okay = 9,
+        Fine = 12
+    }
+
     //This should really be using NotifyPropertyChangedEx
     public class GlobalDeviceLayoutSettings : SettingsBase
     {
@@ -25,6 +49,9 @@ namespace Aurora.Devices.Layout
 
         private KeycapType virtualKeyboardKeycapType = KeycapType.Default;
         public KeycapType VirtualKeyboardKeycapType { get => virtualKeyboardKeycapType; set => UpdateVar(ref virtualKeyboardKeycapType, value); }
+
+        private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
+        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { UpdateVar(ref bitmapAccuracy, value); } }
 
         private bool antiAliasing = false;
         public bool AntiAliasing { get => antiAliasing; set => UpdateVar(ref antiAliasing, value); }

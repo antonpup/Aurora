@@ -279,75 +279,39 @@ namespace Aurora.Devices.SteelSeries
         {
             if ((!previous_peripheral_Color.Equals(color) || forced))
             {
-                if (Global.Configuration.allow_peripheral_devices)
-                {
-                    if (!Global.Configuration.devices_disable_mouse && !Global.Configuration.devices_disable_headset)
-                    {
-                        gameSenseSDK.setPeripheryColor(color.R, color.G, color.B);
-                    }
-                    else
-                    {
-                        if (!Global.Configuration.devices_disable_mouse)
-                        {
-                            gameSenseSDK.setMouseColor(color.R, color.G, color.B);
-                        }
+                gameSenseSDK.setPeripheryColor(color.R, color.G, color.B);
+                gameSenseSDK.setMouseColor(color.R, color.G, color.B);
+                gameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
 
-                        if (!Global.Configuration.devices_disable_headset)
-                        {
-                            gameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
-                        }
-                    }
-
-                    previous_peripheral_Color = color;
-                    peripheral_updated = true;
-                }
-                else
-                {
-                    peripheral_updated = false;
-                }
+                previous_peripheral_Color = color;
+                peripheral_updated = true;
             }
         }
 
         private void SendColorToPeripheralZone(MouseLights zone, Color color)
         {
-            if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
+            if (zone == MouseLights.Peripheral_Logo)
+                gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B);
+            else if (zone == MouseLights.Peripheral_ScrollWheel)
+                gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
+            //else if (zone == DeviceKeys.Peripheral_FrontLight)
+            //{
+            //NYI
+            //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
+            //}
+            /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
             {
-                if (zone == MouseLights.Peripheral_Logo)
-                    gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B);
-                else if (zone == MouseLights.Peripheral_ScrollWheel)
-                    gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
-                //else if (zone == DeviceKeys.Peripheral_FrontLight)
-                //{
-                //NYI
-                //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
-                //}
-                /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
-                {
-                    GameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
-                }*/
-
-                peripheral_updated = true;
-            }
-            else
-            {
-                peripheral_updated = false;
-            }
+                GameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
+            }*/
         }
 
         private void SendColorsToKeyboard(List<byte> hids, List<Tuple<byte, byte, byte>> colors)
         {
-            if (!Global.Configuration.devices_disable_keyboard)
+            if (hids.Count != 0)
             {
-                if (hids.Count != 0)
-                {
-                    gameSenseSDK.setKeyboardColors(hids, colors);
-                }
-                keyboard_updated = true;
+                gameSenseSDK.setKeyboardColors(hids, colors);
             }
-            else
-            {
-                keyboard_updated = false;
-            }
+            keyboard_updated = true;
         }
 
         private void SendKeepalive(bool forced = false)
