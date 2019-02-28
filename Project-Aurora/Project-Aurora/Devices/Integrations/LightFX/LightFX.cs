@@ -12,6 +12,9 @@ using Microsoft.Win32.SafeHandles;
 using System.IO;
 using System.Net.Sockets;
 using LightFXAPI;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.LightFX
 {
@@ -42,81 +45,6 @@ namespace Aurora.Devices.LightFX
             } else {
                 return devicename + ": Not initialized";
             }
-        }
-
-
-
-        public int deviceStatus()
-        {
-            if (usingHID) {
-
-                byte[] Buffer = new byte[byteDataLength];
-
-                Buffer[0] = 0x02;
-                Buffer[1] = 0x06;
-
-
-                bool write = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
-                Buffer[0] = 0x01;
-                int status = LightFXSDK.HIDRead(Buffer, Buffer.Length);
-                bool read = LightFXSDK.getReadStatus();
-                if (!read) {
-                    Global.logger.Info("Error Code: " + Marshal.GetLastWin32Error());
-                    return -1;
-                }
-
-                // Global.logger.Info("Read Status: " + write + ": " + read);
-
-                return status;
-            }
-            return -1;
-            //Marshal.FreeHGlobal(unmanagedPointer);
-        }
-
-        public void setColor(byte index, int bitmask, byte r, byte g, byte b)
-        {
-            if (usingHID) {
-                byte[] Buffer = new byte[byteDataLength];
-                Buffer[0] = 0x02;
-                Buffer[1] = 0x03;
-                Buffer[2] = index;
-                Buffer[3] = (byte)((bitmask & 0xFF0000) >> 16);
-                Buffer[4] = (byte)((bitmask & 0x00FF00) >> 8);
-                Buffer[5] = (byte)((bitmask & 0x0000FF));
-                Buffer[6] = r;
-                Buffer[7] = g;
-                Buffer[8] = b;
-                // bool result = DeviceIoControl(devHandle, 0xb0195, Buffer, (uint)Buffer.Length, IntPtr.Zero, 0, ref writtenByteLength, IntPtr.Zero);
-                bool result = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
-                Loop();
-            }
-            //bool result2 = ExecuteColors();
-            // Global.logger.Info("Color Status: " + result + ": " + result2);
-            //ExecuteColors();
-        }
-
-        public void Loop()
-        {
-            if (usingHID) {
-                byte[] Buffer = new byte[byteDataLength];
-                Buffer[0] = 0x02;
-                Buffer[1] = 0x04;
-                bool result = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
-            }
-        }
-
-        public bool ExecuteColors()
-        {
-            if (usingHID) {
-
-                byte[] Buffer = new byte[byteDataLength];
-                Buffer[0] = 0x02;
-                Buffer[1] = 0x05;
-
-                bool result = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
-                return result;
-            }
-            return false;
         }
 
         public void Reset(int status)
@@ -206,27 +134,6 @@ namespace Aurora.Devices.LightFX
             }
         }
 
-        public void LFXInit()
-        {
-            uint val = LightFXSDK.LFX_Initialize();
-            Global.logger.Debug("LFX: " + val);
-            if (val == LightFXSDK.LFX_SUCCESS) {
-                LightFXSDK.LFX_Reset();
-                LightFXSDK.LFX_SetTiming(40);
-                uint numDevice = 0;
-                isInitialized = true;
-                usingHID = false;
-                LightFXSDK.LFX_GetNumDevices(ref numDevice);
-                /*
-                for (uint devIndex = 0; devIndex < numDevices; devIndex++) {
-                    uint descSize = 255;
-                    char* description = new char[descSize];
-                    byte devType = 0;
-                    LightFXSDK.LFX_GetDeviceDescription(devIndex, description, descSize, &devType);
-                } */
-            }
-        }
-
         public void Shutdown()
         {
             lock (action_lock) {
@@ -271,9 +178,87 @@ namespace Aurora.Devices.LightFX
         {
             return isInitialized;
         }
+
+        public bool IsKeyboardConnected()
+        {
+            return isInitialized;
+        }
+
+        public bool IsPeripheralConnected()
+        {
+            return isInitialized;
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            if (default_registry == null)
+            {
+                default_registry = new VariableRegistry();
+                default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
+                default_registry.Register($"{devicename}_pid", 0, "Device PID: 0x", flags: VariableFlags.UseHEX);
+                default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
+            }
+            return default_registry;
+        }
         int ALIENFX_BUSY = 17;
         int ALIENFX_READY = 16;
         int ALIENFX_DEVICE_RESET = 6;
+
+        public void LFXInit()
+        {
+            uint val = LightFXSDK.LFX_Initialize();
+            Global.logger.Debug("LFX: " + val);
+            if (val == LightFXSDK.LFX_SUCCESS)
+            {
+                LightFXSDK.LFX_Reset();
+                LightFXSDK.LFX_SetTiming(40);
+                uint numDevice = 0;
+                isInitialized = true;
+                usingHID = false;
+                LightFXSDK.LFX_GetNumDevices(ref numDevice);
+                /*
+                for (uint devIndex = 0; devIndex < numDevices; devIndex++) {
+                    uint descSize = 255;
+                    char* description = new char[descSize];
+                    byte devType = 0;
+                    LightFXSDK.LFX_GetDeviceDescription(devIndex, description, descSize, &devType);
+                } */
+            }
+        }
+
+        public int deviceStatus()
+        {
+            if (usingHID)
+            {
+
+                byte[] Buffer = new byte[byteDataLength];
+
+                Buffer[0] = 0x02;
+                Buffer[1] = 0x06;
+
+
+                bool write = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
+                Buffer[0] = 0x01;
+                int status = LightFXSDK.HIDRead(Buffer, Buffer.Length);
+                bool read = LightFXSDK.getReadStatus();
+                if (!read)
+                {
+                    Global.logger.Info("Error Code: " + Marshal.GetLastWin32Error());
+                    return -1;
+                }
+
+                // Global.logger.Info("Read Status: " + write + ": " + read);
+
+                return status;
+            }
+            return -1;
+            //Marshal.FreeHGlobal(unmanagedPointer);
+        }
 
         public int AlienfxWaitForBusy()
         {
@@ -303,36 +288,121 @@ namespace Aurora.Devices.LightFX
             return status;
         }
 
-        DeviceKeys[] leftZoneKeys = {DeviceKeys.ESC , DeviceKeys.TAB , DeviceKeys.LEFT_FN, DeviceKeys.CAPS_LOCK, DeviceKeys.LEFT_SHIFT,
-                            DeviceKeys.LEFT_CONTROL, DeviceKeys.LEFT_FN , DeviceKeys.F1 , DeviceKeys.ONE , DeviceKeys.TWO  ,DeviceKeys.Q,
-                            DeviceKeys.A , DeviceKeys.Z,  DeviceKeys.LEFT_WINDOWS,  DeviceKeys.F2 , DeviceKeys.TILDE,
-                            DeviceKeys.W , DeviceKeys.E , DeviceKeys.D  ,DeviceKeys.S , DeviceKeys.X, DeviceKeys.LEFT_ALT,
-                            DeviceKeys.F3 ,DeviceKeys.THREE };
+        public void setColor(byte index, int bitmask, byte r, byte g, byte b)
+        {
+            if (usingHID)
+            {
+                byte[] Buffer = new byte[byteDataLength];
+                Buffer[0] = 0x02;
+                Buffer[1] = 0x03;
+                Buffer[2] = index;
+                Buffer[3] = (byte)((bitmask & 0xFF0000) >> 16);
+                Buffer[4] = (byte)((bitmask & 0x00FF00) >> 8);
+                Buffer[5] = (byte)((bitmask & 0x0000FF));
+                Buffer[6] = r;
+                Buffer[7] = g;
+                Buffer[8] = b;
+                // bool result = DeviceIoControl(devHandle, 0xb0195, Buffer, (uint)Buffer.Length, IntPtr.Zero, 0, ref writtenByteLength, IntPtr.Zero);
+                bool result = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
+                Loop();
+            }
+            //bool result2 = ExecuteColors();
+            // Global.logger.Info("Color Status: " + result + ": " + result2);
+            //ExecuteColors();
+        }
 
-        DeviceKeys[] midLeftZoneKeys = {  DeviceKeys.F4 ,  DeviceKeys.FOUR ,  DeviceKeys.C ,  DeviceKeys.SPACE
-                            ,  DeviceKeys.F5 ,  DeviceKeys.FIVE ,  DeviceKeys.R ,  DeviceKeys.F ,  DeviceKeys.V
-                            ,  DeviceKeys.F6 ,  DeviceKeys.SIX ,  DeviceKeys.T ,  DeviceKeys.G ,  DeviceKeys.B
-                           ,  DeviceKeys.F7 ,  DeviceKeys.SEVEN ,  DeviceKeys.Y, DeviceKeys.H ,  DeviceKeys.N};
+        public void Loop()
+        {
+            if (usingHID)
+            {
+                byte[] Buffer = new byte[byteDataLength];
+                Buffer[0] = 0x02;
+                Buffer[1] = 0x04;
+                bool result = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
+            }
+        }
 
-        DeviceKeys[] midRightZoneKeys = { DeviceKeys.F8 ,  DeviceKeys.F9 ,  DeviceKeys.F10 ,  DeviceKeys.F11 ,  DeviceKeys.F12 ,  DeviceKeys.HOME
-                         ,  DeviceKeys.EIGHT ,  DeviceKeys.NINE ,  DeviceKeys.ZERO ,  DeviceKeys.MINUS
-                             ,  DeviceKeys.U ,  DeviceKeys.I ,  DeviceKeys.O ,  DeviceKeys.P ,  DeviceKeys.OPEN_BRACKET
-                           ,  DeviceKeys.J ,  DeviceKeys.K ,  DeviceKeys.L ,  DeviceKeys.SEMICOLON ,  DeviceKeys.APOSTROPHE
-                         ,  DeviceKeys.M ,  DeviceKeys.COMMA ,  DeviceKeys.PERIOD ,  DeviceKeys.FORWARD_SLASH
-                             ,  DeviceKeys.RIGHT_CONTROL ,  DeviceKeys.RIGHT_ALT };
+        public bool ExecuteColors()
+        {
+            if (usingHID)
+            {
 
-        DeviceKeys[] rightZoneKeys = { DeviceKeys.END ,  DeviceKeys.DELETE ,  DeviceKeys.BACKSPACE ,  DeviceKeys.BACKSLASH
-                                      ,  DeviceKeys.RIGHT_SHIFT ,  DeviceKeys.ARROW_UP ,  DeviceKeys.ARROW_DOWN
-                                     ,  DeviceKeys.ARROW_RIGHT ,  DeviceKeys.ARROW_LEFT ,  DeviceKeys.ENTER ,  DeviceKeys.PAGE_DOWN
-                                     ,  DeviceKeys.PAGE_UP ,  DeviceKeys.PAGE_DOWN ,  DeviceKeys.CLOSE_BRACKET };
+                byte[] Buffer = new byte[byteDataLength];
+                Buffer[0] = 0x02;
+                Buffer[1] = 0x05;
 
-        DeviceKeys[] numpadZone = { DeviceKeys.NUM_ONE ,  DeviceKeys.NUM_TWO ,  DeviceKeys.NUM_THREE ,  DeviceKeys.NUM_FOUR
-                                      ,  DeviceKeys.NUM_FIVE ,  DeviceKeys.NUM_SIX ,  DeviceKeys.NUM_SEVEN
-                                     ,  DeviceKeys.NUM_EIGHT ,  DeviceKeys.NUM_NINE ,  DeviceKeys.NUM_ZERO ,  DeviceKeys.NUM_PERIOD
-                                     ,  DeviceKeys.NUM_LOCK ,  DeviceKeys.NUM_ENTER ,  DeviceKeys.NUM_ASTERISK, DeviceKeys.NUM_SLASH};
+                bool result = LightFXSDK.HIDWrite(Buffer, Buffer.Length);
+                return result;
+            }
+            return false;
+        }
+
+        KeyboardKeys[] leftZoneKeys = {KeyboardKeys.ESC , KeyboardKeys.TAB , KeyboardKeys.LEFT_FN, KeyboardKeys.CAPS_LOCK, KeyboardKeys.LEFT_SHIFT,
+                            KeyboardKeys.LEFT_CONTROL, KeyboardKeys.LEFT_FN , KeyboardKeys.F1 , KeyboardKeys.ONE , KeyboardKeys.TWO  ,KeyboardKeys.Q,
+                            KeyboardKeys.A , KeyboardKeys.Z,  KeyboardKeys.LEFT_WINDOWS,  KeyboardKeys.F2 , KeyboardKeys.TILDE,
+                            KeyboardKeys.W , KeyboardKeys.E , KeyboardKeys.D  ,KeyboardKeys.S , KeyboardKeys.X, KeyboardKeys.LEFT_ALT,
+                            KeyboardKeys.F3 ,KeyboardKeys.THREE };
+
+        KeyboardKeys[] midLeftZoneKeys = {  KeyboardKeys.F4 ,  KeyboardKeys.FOUR ,  KeyboardKeys.C ,  KeyboardKeys.SPACE
+                            ,  KeyboardKeys.F5 ,  KeyboardKeys.FIVE ,  KeyboardKeys.R ,  KeyboardKeys.F ,  KeyboardKeys.V
+                            ,  KeyboardKeys.F6 ,  KeyboardKeys.SIX ,  KeyboardKeys.T ,  KeyboardKeys.G ,  KeyboardKeys.B
+                           ,  KeyboardKeys.F7 ,  KeyboardKeys.SEVEN ,  KeyboardKeys.Y, KeyboardKeys.H ,  KeyboardKeys.N};
+
+        KeyboardKeys[] midRightZoneKeys = { KeyboardKeys.F8 ,  KeyboardKeys.F9 ,  KeyboardKeys.F10 ,  KeyboardKeys.F11 ,  KeyboardKeys.F12 ,  KeyboardKeys.HOME
+                         ,  KeyboardKeys.EIGHT ,  KeyboardKeys.NINE ,  KeyboardKeys.ZERO ,  KeyboardKeys.MINUS
+                             ,  KeyboardKeys.U ,  KeyboardKeys.I ,  KeyboardKeys.O ,  KeyboardKeys.P ,  KeyboardKeys.OPEN_BRACKET
+                           ,  KeyboardKeys.J ,  KeyboardKeys.K ,  KeyboardKeys.L ,  KeyboardKeys.SEMICOLON ,  KeyboardKeys.APOSTROPHE
+                         ,  KeyboardKeys.M ,  KeyboardKeys.COMMA ,  KeyboardKeys.PERIOD ,  KeyboardKeys.FORWARD_SLASH
+                             ,  KeyboardKeys.RIGHT_CONTROL ,  KeyboardKeys.RIGHT_ALT };
+
+        KeyboardKeys[] rightZoneKeys = { KeyboardKeys.END ,  KeyboardKeys.DELETE ,  KeyboardKeys.BACKSPACE ,  KeyboardKeys.BACKSLASH
+                                      ,  KeyboardKeys.RIGHT_SHIFT ,  KeyboardKeys.ARROW_UP ,  KeyboardKeys.ARROW_DOWN
+                                     ,  KeyboardKeys.ARROW_RIGHT ,  KeyboardKeys.ARROW_LEFT ,  KeyboardKeys.ENTER ,  KeyboardKeys.PAGE_DOWN
+                                     ,  KeyboardKeys.PAGE_UP ,  KeyboardKeys.PAGE_DOWN ,  KeyboardKeys.CLOSE_BRACKET };
+
+        KeyboardKeys[] numpadZone = { KeyboardKeys.NUM_ONE ,  KeyboardKeys.NUM_TWO ,  KeyboardKeys.NUM_THREE ,  KeyboardKeys.NUM_FOUR
+                                      ,  KeyboardKeys.NUM_FIVE ,  KeyboardKeys.NUM_SIX ,  KeyboardKeys.NUM_SEVEN
+                                     ,  KeyboardKeys.NUM_EIGHT ,  KeyboardKeys.NUM_NINE ,  KeyboardKeys.NUM_ZERO ,  KeyboardKeys.NUM_PERIOD
+                                     ,  KeyboardKeys.NUM_LOCK ,  KeyboardKeys.NUM_ENTER ,  KeyboardKeys.NUM_ASTERISK, KeyboardKeys.NUM_SLASH};
 
 
         bool NumLock = (((ushort)LightFXSDK.GetKeyState(0x90)) & 0xffff) != 0;
+
+        public bool UpdateDevice(System.Drawing.Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool updateResult = true;
+
+            try
+            {
+
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("LightFX device, error when updating device: " + ex);
+                return false;
+            }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return updateResult;
+        }
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -566,30 +636,6 @@ namespace Aurora.Devices.LightFX
             return update_result;
         }
 
-        public bool IsKeyboardConnected()
-        {
-            return isInitialized;
-        }
 
-        public bool IsPeripheralConnected()
-        {
-            return isInitialized;
-        }
-
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            if (default_registry == null) {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
-                default_registry.Register($"{devicename}_pid", 0, "Device PID: 0x", flags: VariableFlags.UseHEX);
-                default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
-            }
-            return default_registry;
-        }
     }
 }
