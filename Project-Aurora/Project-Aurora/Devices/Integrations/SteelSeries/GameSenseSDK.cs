@@ -71,69 +71,6 @@ namespace SteelSeries.GameSenseSDK
             setupLISPHandlers();
         }
 
-        /*public void setPeripheryColor(byte red, byte green, byte blue)
-        {
-            sendColor("periph", red, green, blue);
-        }
-
-        public void setMouseColor(byte red, byte green, byte blue)
-        {
-            sendColor("mouse", red, green, blue);
-        }
-
-        public void setMouseScrollWheelColor(byte red, byte green, byte blue)
-        {
-            sendColor("mousewheel", red, green, blue);
-        }
-
-        public void setMouseLogoColor(byte red, byte green, byte blue)
-        {
-            sendColor("mouselogo", red, green, blue);
-        }
-
-        public void setHeadsetColor(byte red, byte green, byte blue)
-        {
-            sendColor("headset", red, green, blue);
-        }
-
-        public void sendColor(String deviceType, byte red, byte green, byte blue)
-        {
-            PayloadColorEventJSON payload = new PayloadColorEventJSON();
-            payload.game = sseGameName;
-            payload.Event = "COLOR";
-            payload.data = "{\""+ deviceType + "\":{\"color\": [" + red + ", " + green + ", " + blue + "]}}";
-            // sending POST request
-            String json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/game_event", json);
-        }
-
-        public void setKeyboardColors(List<byte> hids, List<Tuple<byte, byte, byte>> colors)
-        {
-            PayloadColorEventJSON payload = new PayloadColorEventJSON();
-            payload.game = sseGameName;
-            payload.Event = "COLOR";
-
-            payload.data = "{";
-            payload.data += "\"keyboard\":{";
-            payload.data += "\"hids\":";
-            payload.data += JsonConvert.SerializeObject(hids);
-            payload.data += ",";
-            payload.data += "\"colors\":[";
-            foreach (Tuple<byte, byte, byte> color in colors)
-            {
-                payload.data += "[" + color.Item1 + ", " + color.Item2 + ", " + color.Item3 + "],";
-            }
-            // JSON doesn't allow trailing commas
-            payload.data = payload.data.TrimEnd(',');
-            payload.data += "]";
-            payload.data += "}";
-            payload.data += "}";
-
-            // sending POST request
-            String json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/game_event", json);
-        } */
-
         public void sendEventPayload(PayloadColorEventJSON payload)
         {
             payload.game = sseGameName;
