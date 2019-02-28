@@ -693,19 +693,17 @@ namespace Aurora.Devices.Creative
 
         public static readonly KeyValuePair<Mouse_LEDIndex, MouseLights>[] MouseMapping = {
 
-            /*  PENDING -- These correspond to LEDs along the side of the mouse.  Need new enums.
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED0, MouseLights.MOUSEPADLIGHT1),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED1, MouseLights.MOUSEPADLIGHT2),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED2, MouseLights.MOUSEPADLIGHT3),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED3, MouseLights.MOUSEPADLIGHT4),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED4, MouseLights.MOUSEPADLIGHT5),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED5, MouseLights.MOUSEPADLIGHT6),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED6, MouseLights.MOUSEPADLIGHT7),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED7, MouseLights.MOUSEPADLIGHT8),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED8, MouseLights.MOUSEPADLIGHT9),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED9, MouseLights.MOUSEPADLIGHT10),
-            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED10, MouseLights.MOUSEPADLIGHT11),
-            */
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED0, MouseLights.Peripheral_ExtraLightIndex),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED1, MouseLights.Peripheral_ExtraLightIndex+1),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED2, MouseLights.Peripheral_ExtraLightIndex+2),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED3, MouseLights.Peripheral_ExtraLightIndex+3),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED4, MouseLights.Peripheral_ExtraLightIndex+4),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED5, MouseLights.Peripheral_ExtraLightIndex+5),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED6, MouseLights.Peripheral_ExtraLightIndex+6),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED7, MouseLights.Peripheral_ExtraLightIndex+7),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED8, MouseLights.Peripheral_ExtraLightIndex+8),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED9, MouseLights.Peripheral_ExtraLightIndex+9),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED10, MouseLights.Peripheral_ExtraLightIndex+10),
             new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.Logo, MouseLights.Peripheral_Logo),
             new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.Wheel, MouseLights.Peripheral_ScrollWheel)
         };
