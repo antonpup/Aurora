@@ -102,15 +102,15 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
             devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
+            devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
+
             /*
             devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
-
             devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
             devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
             devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
             devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
             devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
-            devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
             devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
             devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
             devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device

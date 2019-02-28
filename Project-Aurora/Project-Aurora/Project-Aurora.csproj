@@ -373,7 +373,7 @@
     </Compile>
     <None Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
     <None Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
-    <None Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
+    <Compile Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
     <None Include="Devices\Integrations\Drevo\DrevoDevice.cs" />
     <None Include="Devices\Integrations\Drevo\DrevoLayoutMap.cs" />
     <None Include="Devices\Integrations\Drevo\DrevoRadiSDK.cs" />
