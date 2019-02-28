@@ -118,15 +118,21 @@ namespace Aurora.Devices.Layout
             return transform;
         }
 
+        private void applyTransform(Graphics g, Matrix transform)
+        {
+            if (transform != null)
+            {
+                g.Transform = transform;
+                if (transform.Elements.First() != 0)
+                    g.SmoothingMode = this.parent.Settings.SmoothingMode;
+            }
+        }
+
         private void FillRectangle(Bitmap colormap, Brush brush, RectangleF rect, Matrix transform = null)
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                if (transform != null)
-                    g.Transform = transform;
-
-                g.SmoothingMode = this.parent.Settings.SmoothingMode;
-
+                applyTransform(g, transform);
                 g.FillRectangle(brush, rect);
             }
         }
@@ -217,9 +223,7 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                if (transformMatrix != null)
-                    g.Transform = transformMatrix;
-                g.SmoothingMode = this.parent.Settings.SmoothingMode;
+                applyTransform(g, transformMatrix);
                 g.FillEllipse(brush, rect);
             }
         }
@@ -241,9 +245,7 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                if (transformMatrix != null)
-                    g.Transform = transformMatrix;
-                g.SmoothingMode = this.parent.Settings.SmoothingMode;
+                applyTransform(g, transformMatrix);
                 g.DrawLine(pen, startPoint, endPoint);
             }
         }
@@ -267,9 +269,7 @@ namespace Aurora.Devices.Layout
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                if (transformMatrix != null)
-                    g.Transform = transformMatrix;
-                g.SmoothingMode = this.parent.Settings.SmoothingMode;
+                applyTransform(g, transformMatrix);
                 g.DrawRectangle(pen, Rectangle.Round(rect));
             }
         }
