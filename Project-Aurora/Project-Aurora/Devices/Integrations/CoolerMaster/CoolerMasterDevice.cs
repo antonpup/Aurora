@@ -10,6 +10,8 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Aurora.Devices.Layout;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.CoolerMaster
 {
@@ -580,6 +582,82 @@ namespace Aurora.Devices.CoolerMaster
             peripheral_updated = false;
         }
 
+        public bool UpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool updateResult = true;
+
+            try
+            {
+
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        //case MouseDeviceLayout mouse:
+                        //    if (!UpdateDevice(mouse, e, forced))
+                        //        updateResult = false;
+                        //    break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("CoolerMaster device, error when updating device: " + ex);
+                return false;
+            }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return updateResult;
+        }
+
+        public bool UpdateDevice(KeyboardDeviceLayout keyboard, DoWorkEventArgs e, bool forced = false)
+        {
+            try
+            {
+                var coords = CoolerMasterKeys.KeyCoords;
+
+                if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
+                    coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice];
+
+                foreach (KeyValuePair<LEDINT, Color> key in keyboard.DeviceColours.deviceColours)
+                {
+                    if (e.Cancel) return false;
+
+                    int[] coordinates = new int[2];
+
+                    KeyboardKeys dev_key = (KeyboardKeys)key.Key;
+
+                    if (dev_key == KeyboardKeys.ENTER &&
+                        (keyboard.Language != KeyboardDeviceLayout.PreferredKeyboardLocalization.us &&
+                         keyboard.Language != KeyboardDeviceLayout.PreferredKeyboardLocalization.dvorak))
+                        dev_key = KeyboardKeys.BACKSLASH;
+
+
+                    if (dev_key == KeyboardKeys.ADDITIONALLIGHT10)
+                        Console.Write("");
+                    if (coords.TryGetValue(dev_key, out coordinates))
+                        SetOneKey(coordinates, (Color)key.Value);
+                }
+                if (e.Cancel) return false;
+                SendColorsToKeyboard(forced || !keyboard_updated);
+                return true;
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error("Failed to Update Device" + exc.ToString());
+                return false;
+            }
+        }
+
+        /*
         public bool UpdateDevice(Dictionary<KeyboardKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
@@ -608,11 +686,11 @@ namespace Aurora.Devices.CoolerMaster
                         continue;
 
                         //Move this to the SendColorsToMouse as they do not need to be set on every key, they only need to be directed to the correct method for setting key/light
-                        /*List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
-                        if (devices.Count > 0)
-                            SwitchToDevice(devices.First());
-                        else
-                            return false;*/
+                        //List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Mice.Contains(x));
+                        //if (devices.Count > 0)
+                        //    SwitchToDevice(devices.First());
+                        //else
+                        //    return false;
                     }
 
 
@@ -642,7 +720,7 @@ namespace Aurora.Devices.CoolerMaster
             lastUpdateTime = watch.ElapsedMilliseconds;
 
             return update_result;
-        }
+        }*/
 
     }
 }
