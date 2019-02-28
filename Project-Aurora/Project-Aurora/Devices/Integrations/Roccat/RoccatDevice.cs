@@ -32,6 +32,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using System.ComponentModel;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Roccat
 {
@@ -51,120 +54,120 @@ namespace Aurora.Devices.Roccat
         private VariableRegistry default_registry = null;
 
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
-        public static Dictionary<DeviceKeys, byte> DeviceKeysMap = new Dictionary<DeviceKeys, byte>
+        public static Dictionary<KeyboardKeys, byte> KeyboardKeysMap = new Dictionary<KeyboardKeys, byte>
         {
-            {DeviceKeys.ESC, 0 },
-            {DeviceKeys.F1, 1 },
-            {DeviceKeys.F2, 2 },
-            {DeviceKeys.F3, 3 },
-            {DeviceKeys.F4, 4 },
-            {DeviceKeys.F5, 5 },
-            {DeviceKeys.F6, 6 },
-            {DeviceKeys.F7, 7 },
-            {DeviceKeys.F8, 8 },
-            {DeviceKeys.F9, 9 },
-            {DeviceKeys.F10, 10 },
-            {DeviceKeys.F11, 11 },
-            {DeviceKeys.F12, 12 },
-            {DeviceKeys.PRINT_SCREEN, 13 },
-            {DeviceKeys.SCROLL_LOCK, 14 },
-            {DeviceKeys.PAUSE_BREAK, 15 },
-            {DeviceKeys.G1, 16 },
-            {DeviceKeys.TILDE, 17 },
-            {DeviceKeys.ONE, 18 },
-            {DeviceKeys.TWO, 19 },
-            {DeviceKeys.THREE, 20 },
-            {DeviceKeys.FOUR, 21 },
-            {DeviceKeys.FIVE, 22 },
-            {DeviceKeys.SIX, 23 },
-            {DeviceKeys.SEVEN, 24 },
-            {DeviceKeys.EIGHT, 25 },
-            {DeviceKeys.NINE, 26 },
-            {DeviceKeys.ZERO, 27 },
-            {DeviceKeys.MINUS, 28 },
-            {DeviceKeys.EQUALS, 29 },
-            {DeviceKeys.BACKSPACE, 30 },
-            {DeviceKeys.INSERT, 31 },
-            {DeviceKeys.HOME, 32 },
-            {DeviceKeys.PAGE_UP, 33 },
-            {DeviceKeys.NUM_LOCK, 34 },
-            {DeviceKeys.NUM_SLASH, 35 },
-            {DeviceKeys.NUM_ASTERISK, 36 },
-            {DeviceKeys.NUM_MINUS, 37 },
-            {DeviceKeys.G2, 38 },
-            {DeviceKeys.TAB, 39 },
-            {DeviceKeys.Q, 40 },
-            {DeviceKeys.W, 41 },
-            {DeviceKeys.E, 42 },
-            {DeviceKeys.R, 43 },
-            {DeviceKeys.T, 44 },
-            {DeviceKeys.Y, 45 },
-            {DeviceKeys.U, 46 },
-            {DeviceKeys.I, 47 },
-            {DeviceKeys.O, 48 },
-            {DeviceKeys.P, 49 },
-            {DeviceKeys.OPEN_BRACKET, 50 },
-            {DeviceKeys.CLOSE_BRACKET, 51 },
-            {DeviceKeys.BACKSLASH, 52 },
-            {DeviceKeys.DELETE, 53 },
-            {DeviceKeys.END, 54 },
-            {DeviceKeys.PAGE_DOWN, 55 },
-            {DeviceKeys.NUM_SEVEN, 56 },
-            {DeviceKeys.NUM_EIGHT, 57 },
-            {DeviceKeys.NUM_NINE, 58 },
-            {DeviceKeys.NUM_PLUS, 59 },
-            {DeviceKeys.G3, 60 },
-            {DeviceKeys.CAPS_LOCK, 61 },
-            {DeviceKeys.A, 62 },
-            {DeviceKeys.S, 63 },
-            {DeviceKeys.D, 64 },
-            {DeviceKeys.F, 65 },
-            {DeviceKeys.G, 66 },
-            {DeviceKeys.H, 67 },
-            {DeviceKeys.J, 68 },
-            {DeviceKeys.K, 69 },
-            {DeviceKeys.L, 70 },
-            {DeviceKeys.SEMICOLON, 71 },
-            {DeviceKeys.APOSTROPHE, 72 },
-            {DeviceKeys.ENTER, 73 },
-            {DeviceKeys.NUM_FOUR, 74 },
-            {DeviceKeys.NUM_FIVE, 75 },
-            {DeviceKeys.NUM_SIX, 76 },
-            {DeviceKeys.G4, 77 },
-            {DeviceKeys.LEFT_SHIFT, 78 },
-            {DeviceKeys.BACKSLASH_UK, 79 },
-            {DeviceKeys.Z, 80 },
-            {DeviceKeys.X, 81 },
-            {DeviceKeys.C, 82 },
-            {DeviceKeys.V, 83 },
-            {DeviceKeys.B, 84 },
-            {DeviceKeys.N, 85 },
-            {DeviceKeys.M, 86 },
-            {DeviceKeys.COMMA, 87 },
-            {DeviceKeys.PERIOD, 88 },
-            {DeviceKeys.FORWARD_SLASH, 89 },
-            {DeviceKeys.RIGHT_SHIFT, 90 },
-            {DeviceKeys.ARROW_UP, 91 },
-            {DeviceKeys.NUM_ONE, 92 },
-            {DeviceKeys.NUM_TWO, 93 },
-            {DeviceKeys.NUM_THREE, 94 },
-            {DeviceKeys.NUM_ENTER, 95 },
-            {DeviceKeys.G5, 96 },
-            {DeviceKeys.LEFT_CONTROL, 97 },
-            {DeviceKeys.LEFT_WINDOWS, 98 },
-            {DeviceKeys.LEFT_ALT, 99 },
-            {DeviceKeys.SPACE, 100 },
-            {DeviceKeys.RIGHT_ALT, 101 },
-            {DeviceKeys.FN_Key, 102 },
-            {DeviceKeys.APPLICATION_SELECT, 103 },
-            {DeviceKeys.RIGHT_CONTROL, 104 },
-            {DeviceKeys.ARROW_LEFT, 105 },
-            {DeviceKeys.ARROW_DOWN, 106 },
-            {DeviceKeys.ARROW_RIGHT, 107 },
-            {DeviceKeys.NUM_ZERO, 108 },
-            {DeviceKeys.NUM_PERIOD, 109 }
+            {KeyboardKeys.ESC, 0 },
+            {KeyboardKeys.F1, 1 },
+            {KeyboardKeys.F2, 2 },
+            {KeyboardKeys.F3, 3 },
+            {KeyboardKeys.F4, 4 },
+            {KeyboardKeys.F5, 5 },
+            {KeyboardKeys.F6, 6 },
+            {KeyboardKeys.F7, 7 },
+            {KeyboardKeys.F8, 8 },
+            {KeyboardKeys.F9, 9 },
+            {KeyboardKeys.F10, 10 },
+            {KeyboardKeys.F11, 11 },
+            {KeyboardKeys.F12, 12 },
+            {KeyboardKeys.PRINT_SCREEN, 13 },
+            {KeyboardKeys.SCROLL_LOCK, 14 },
+            {KeyboardKeys.PAUSE_BREAK, 15 },
+            {KeyboardKeys.G1, 16 },
+            {KeyboardKeys.TILDE, 17 },
+            {KeyboardKeys.ONE, 18 },
+            {KeyboardKeys.TWO, 19 },
+            {KeyboardKeys.THREE, 20 },
+            {KeyboardKeys.FOUR, 21 },
+            {KeyboardKeys.FIVE, 22 },
+            {KeyboardKeys.SIX, 23 },
+            {KeyboardKeys.SEVEN, 24 },
+            {KeyboardKeys.EIGHT, 25 },
+            {KeyboardKeys.NINE, 26 },
+            {KeyboardKeys.ZERO, 27 },
+            {KeyboardKeys.MINUS, 28 },
+            {KeyboardKeys.EQUALS, 29 },
+            {KeyboardKeys.BACKSPACE, 30 },
+            {KeyboardKeys.INSERT, 31 },
+            {KeyboardKeys.HOME, 32 },
+            {KeyboardKeys.PAGE_UP, 33 },
+            {KeyboardKeys.NUM_LOCK, 34 },
+            {KeyboardKeys.NUM_SLASH, 35 },
+            {KeyboardKeys.NUM_ASTERISK, 36 },
+            {KeyboardKeys.NUM_MINUS, 37 },
+            {KeyboardKeys.G2, 38 },
+            {KeyboardKeys.TAB, 39 },
+            {KeyboardKeys.Q, 40 },
+            {KeyboardKeys.W, 41 },
+            {KeyboardKeys.E, 42 },
+            {KeyboardKeys.R, 43 },
+            {KeyboardKeys.T, 44 },
+            {KeyboardKeys.Y, 45 },
+            {KeyboardKeys.U, 46 },
+            {KeyboardKeys.I, 47 },
+            {KeyboardKeys.O, 48 },
+            {KeyboardKeys.P, 49 },
+            {KeyboardKeys.OPEN_BRACKET, 50 },
+            {KeyboardKeys.CLOSE_BRACKET, 51 },
+            {KeyboardKeys.BACKSLASH, 52 },
+            {KeyboardKeys.DELETE, 53 },
+            {KeyboardKeys.END, 54 },
+            {KeyboardKeys.PAGE_DOWN, 55 },
+            {KeyboardKeys.NUM_SEVEN, 56 },
+            {KeyboardKeys.NUM_EIGHT, 57 },
+            {KeyboardKeys.NUM_NINE, 58 },
+            {KeyboardKeys.NUM_PLUS, 59 },
+            {KeyboardKeys.G3, 60 },
+            {KeyboardKeys.CAPS_LOCK, 61 },
+            {KeyboardKeys.A, 62 },
+            {KeyboardKeys.S, 63 },
+            {KeyboardKeys.D, 64 },
+            {KeyboardKeys.F, 65 },
+            {KeyboardKeys.G, 66 },
+            {KeyboardKeys.H, 67 },
+            {KeyboardKeys.J, 68 },
+            {KeyboardKeys.K, 69 },
+            {KeyboardKeys.L, 70 },
+            {KeyboardKeys.SEMICOLON, 71 },
+            {KeyboardKeys.APOSTROPHE, 72 },
+            {KeyboardKeys.ENTER, 73 },
+            {KeyboardKeys.NUM_FOUR, 74 },
+            {KeyboardKeys.NUM_FIVE, 75 },
+            {KeyboardKeys.NUM_SIX, 76 },
+            {KeyboardKeys.G4, 77 },
+            {KeyboardKeys.LEFT_SHIFT, 78 },
+            {KeyboardKeys.BACKSLASH_UK, 79 },
+            {KeyboardKeys.Z, 80 },
+            {KeyboardKeys.X, 81 },
+            {KeyboardKeys.C, 82 },
+            {KeyboardKeys.V, 83 },
+            {KeyboardKeys.B, 84 },
+            {KeyboardKeys.N, 85 },
+            {KeyboardKeys.M, 86 },
+            {KeyboardKeys.COMMA, 87 },
+            {KeyboardKeys.PERIOD, 88 },
+            {KeyboardKeys.FORWARD_SLASH, 89 },
+            {KeyboardKeys.RIGHT_SHIFT, 90 },
+            {KeyboardKeys.ARROW_UP, 91 },
+            {KeyboardKeys.NUM_ONE, 92 },
+            {KeyboardKeys.NUM_TWO, 93 },
+            {KeyboardKeys.NUM_THREE, 94 },
+            {KeyboardKeys.NUM_ENTER, 95 },
+            {KeyboardKeys.G5, 96 },
+            {KeyboardKeys.LEFT_CONTROL, 97 },
+            {KeyboardKeys.LEFT_WINDOWS, 98 },
+            {KeyboardKeys.LEFT_ALT, 99 },
+            {KeyboardKeys.SPACE, 100 },
+            {KeyboardKeys.RIGHT_ALT, 101 },
+            {KeyboardKeys.FN_Key, 102 },
+            {KeyboardKeys.APPLICATION_SELECT, 103 },
+            {KeyboardKeys.RIGHT_CONTROL, 104 },
+            {KeyboardKeys.ARROW_LEFT, 105 },
+            {KeyboardKeys.ARROW_DOWN, 106 },
+            {KeyboardKeys.ARROW_RIGHT, 107 },
+            {KeyboardKeys.NUM_ZERO, 108 },
+            {KeyboardKeys.NUM_PERIOD, 109 }
         };
-        public enum DeviceLayout : byte
+        public enum RoccatDeviceLayout : byte
         {
             ISO = 0,
             ANSI = 1,
@@ -278,7 +281,7 @@ namespace Aurora.Devices.Roccat
         private void send_to_roccat_generic(System.Drawing.Color color)
         {
             //Alpha necessary for Global Brightness modifier
-            color = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+            //color = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
             talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(color.R, color.G, color.B)); ;
         }
 
@@ -297,9 +300,74 @@ namespace Aurora.Devices.Roccat
             throw new NotImplementedException();
         }
 
+        public bool IsKeyboardConnected()
+        {
+            return false;
+        }
+
+        public bool IsPeripheralConnected()
+        {
+            return this.IsInitialized();
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            if (default_registry == null)
+            {
+
+                default_registry = new VariableRegistry();
+                default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
+                default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
+                default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
+            }
+
+            return default_registry;
+        }
+
         byte[] stateStruct = new byte[110];
         Roccat_Talk.TalkFX.Color[] colorStruct = new Roccat_Talk.TalkFX.Color[110];
-        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
+
+        public bool UpdateDevice(System.Drawing.Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool updateResult = true;
+
+            try
+            {
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("Roccat device, error when updating device: " + ex);
+                return false;
+            }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return updateResult;
+        }
+
+        private bool UpdateDevice(KeyboardDeviceLayout kb, DoWorkEventArgs e, bool forced)
         {
             if (RyosTalkFX == null || !RyosInitialized)
                 return false;
@@ -308,56 +376,27 @@ namespace Aurora.Devices.Roccat
 
             try
             {
-                DeviceLayout layout = DeviceLayout.ISO;
-                if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.dvorak
-                    || Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.us
-                    || Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.ru)
-                    layout = DeviceLayout.ANSI;
-                else if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.jpn)
-                    layout = DeviceLayout.JP;
+                RoccatDeviceLayout layout = RoccatDeviceLayout.ISO;
+                if (kb.Language == KeyboardDeviceLayout.PreferredKeyboardLocalization.dvorak
+                    || kb.Language == KeyboardDeviceLayout.PreferredKeyboardLocalization.us
+                    || kb.Language == KeyboardDeviceLayout.PreferredKeyboardLocalization.ru)
+                    layout = RoccatDeviceLayout.ANSI;
+                else if (kb.Language == KeyboardDeviceLayout.PreferredKeyboardLocalization.jpn)
+                    layout = RoccatDeviceLayout.JP;
 
-                foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
+                foreach (KeyValuePair<LEDINT, System.Drawing.Color> key in kb.DeviceColours.deviceColours)
                 {
                     if (e.Cancel) return false;
-                    DeviceKeys dev_key = key.Key;
+                    KeyboardKeys dev_key = (KeyboardKeys)key.Key;
                     //Solution to slightly different mapping rather than giving a whole different dictionary
-                    if (layout == DeviceLayout.ANSI)
+                    if (layout == RoccatDeviceLayout.ANSI)
                     {
-                        if (dev_key == DeviceKeys.ENTER)
-                            dev_key = DeviceKeys.BACKSLASH;
-                        if (dev_key == DeviceKeys.HASHTAG)
-                            dev_key = DeviceKeys.ENTER;
+                        if (dev_key == KeyboardKeys.ENTER)
+                            dev_key = KeyboardKeys.BACKSLASH;
+                        if (dev_key == KeyboardKeys.HASH)
+                            dev_key = KeyboardKeys.ENTER;
                     }
-
-                    //set peripheral color to Roccat generic peripheral if enabled
-                    if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_enable_generic") == true)
-                    {
-                        generic_deactivated_first_time = true;
-                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral)
-                        {
-                            //Send to generic roccat device if color not equal or 1. time after generic got enabled
-                            if (!previous_peripheral_Color.Equals(key.Value) || generic_activated_first_time == true)
-                            {
-                                send_to_roccat_generic(key.Value);
-                                //talkFX.RestoreLedRgb(); //Does not even here work
-
-                                previous_peripheral_Color = key.Value;
-                                generic_activated_first_time = false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (generic_deactivated_first_time == true)
-                        {
-                            Restoregeneric();
-                            generic_deactivated_first_time = false;
-                            //Global.logger.LogLine("first time");
-                        }
-                        generic_activated_first_time = true;
-                    }
-
-                    if (DeviceKeysMap.TryGetValue(dev_key, out byte i))
+                    if (KeyboardKeysMap.TryGetValue(dev_key, out byte i))
                     {
                         //Global.logger.LogLine("Roccat update device: " + key + " , " + key.Value);
                         Color roccatColor = ConvertToRoccatColor(key.Value);
@@ -381,18 +420,52 @@ namespace Aurora.Devices.Roccat
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        private bool UpdateDevice(MouseDeviceLayout mouse, DoWorkEventArgs e, bool forced)
         {
-            watch.Restart();
+            if (RyosTalkFX == null || !RyosInitialized)
+                return false;
 
             if (e.Cancel) return false;
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+            try
+            {
+                foreach (KeyValuePair<LEDINT, System.Drawing.Color> key in mouse.DeviceColours.deviceColours)
+                {
+                    if (e.Cancel) return false;
+                    if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_enable_generic") == true)
+                    {
+                        generic_deactivated_first_time = true;
+                        if ((MouseLights)key.Key == MouseLights.Peripheral_Logo)
+                        {
+                            //Send to generic roccat device if color not equal or 1. time after generic got enabled
+                            if (!previous_peripheral_Color.Equals(key.Value) || generic_activated_first_time == true)
+                            {
+                                send_to_roccat_generic(key.Value);
+                                //talkFX.RestoreLedRgb(); //Does not even here work
 
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
+                                previous_peripheral_Color = key.Value;
+                                generic_activated_first_time = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (generic_deactivated_first_time == true)
+                        {
+                            Restoregeneric();
+                            generic_deactivated_first_time = false;
+                            //Global.logger.LogLine("first time");
+                        }
+                        generic_activated_first_time = true;
+                    }
+                }
+                return true;
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error("Roccat device, error when updating device. Error: " + exc);
+                return false;
+            }
         }
 
         private byte IsLedOn(Roccat_Talk.TalkFX.Color roccatColor)
@@ -404,38 +477,10 @@ namespace Aurora.Devices.Roccat
             return 1;
         }
 
-        public bool IsKeyboardConnected()
-        {
-            return false;
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return this.IsInitialized();
-        }
-
         private Roccat_Talk.TalkFX.Color ConvertToRoccatColor(System.Drawing.Color color)
         {
             return new Roccat_Talk.TalkFX.Color(color.R, color.G, color.B);
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            if (default_registry == null)
-            {
-
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
-                default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
-                default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
-            }
-
-            return default_registry;
-        }
     }
 }
