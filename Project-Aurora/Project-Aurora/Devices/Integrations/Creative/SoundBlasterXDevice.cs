@@ -1,5 +1,7 @@
 ﻿using Aurora.Settings;
 using Aurora.Utils;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SBAuroraReactive;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Creative
 {
@@ -314,7 +317,410 @@ namespace Aurora.Devices.Creative
             return (sbKeyboard != null || sbMouse != null);
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool IsKeyboardConnected()
+        {
+            return (sbKeyboard != null);
+        }
+
+        public bool IsPeripheralConnected()
+        {
+            return (sbMouse != null);
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (IsInitialized() ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
+        }
+
+        public bool UpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool updateResult = true;
+
+            try
+            {
+
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("SoundBlasterX device, error when updating device: " + ex);
+                return false;
+            }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return updateResult;
+        }
+
+        public bool UpdateDevice(KeyboardDeviceLayout keyboard, DoWorkEventArgs e, bool forced = false)
+        {
+            uint maxKbLength = 0;
+            Dictionary<Color, List<Keyboard_LEDIndex>> kbIndices = null;
+            if (sbKeyboard != null)
+                kbIndices = new Dictionary<Color, List<Keyboard_LEDIndex>>();
+
+            foreach (KeyValuePair<LEDINT, Color> kv in keyboard.DeviceColours.deviceColours)
+            {
+                if (e.Cancel) return false;
+
+                if (kbIndices != null)
+                {
+                    var kbLedIdx = GetKeyboardMappingLedIndex((KeyboardKeys)kv.Key);
+                    if (kbLedIdx != Keyboard_LEDIndex.NotApplicable)
+                    {
+                        if (!kbIndices.ContainsKey(kv.Value))
+                            kbIndices[kv.Value] = new List<Keyboard_LEDIndex>(1);
+
+                        var list = kbIndices[kv.Value];
+                        list.Add(kbLedIdx);
+                        if (list.Count > maxKbLength)
+                            maxKbLength = (uint)list.Count;
+                    }
+                }
+            }
+
+            uint numKbGroups = 0;
+            uint[] kbGroupsArr = null;
+            LedPattern[] kbPatterns = null;
+            LedColour[] kbColors = null;
+            if (kbIndices != null)
+            {
+                numKbGroups = (uint)kbIndices.Count;
+                kbGroupsArr = new uint[numKbGroups * (maxKbLength + 1)];
+                kbPatterns = new LedPattern[numKbGroups];
+                kbColors = new LedColour[numKbGroups];
+                uint currGroup = 0;
+                foreach (var kv in kbIndices)
+                {
+                    if (e.Cancel) return false;
+
+                    kbPatterns[currGroup] = LedPattern.Static;
+                    kbColors[currGroup].a = kv.Key.A;
+                    kbColors[currGroup].r = kv.Key.R;
+                    kbColors[currGroup].g = kv.Key.G;
+                    kbColors[currGroup].b = kv.Key.B;
+                    uint i = currGroup * (maxKbLength + 1);
+                    kbGroupsArr[i++] = (uint)kv.Value.Count;
+                    foreach (Keyboard_LEDIndex idx in kv.Value)
+                        kbGroupsArr[i++] = (uint)idx;
+
+                    currGroup++;
+                }
+                kbIndices = null;
+            }
+
+            lock (action_lock)
+            {
+                if (e.Cancel) return false;
+                if (sbKeyboard != null && numKbGroups > 0)
+                {
+                    try
+                    {
+                        if (sbKeyboardSettings == null)
+                        {
+                            sbKeyboardSettings = new LedSettings();
+                            sbKeyboardSettings.persistentInDevice = false;
+                            sbKeyboardSettings.globalPatternMode = false;
+                            sbKeyboardSettings.pattern = LedPattern.Static;
+                            sbKeyboardSettings.payloadData = new LedPayloadData();
+                        }
+
+                        sbKeyboardSettings.payloadData = sbKeyboard.LedPayloadInitialize(sbKeyboardSettings.payloadData.Value, numKbGroups, maxKbLength, 1);
+                        sbKeyboardSettings.payloadData = sbKeyboard.LedPayloadFillupAll(sbKeyboardSettings.payloadData.Value, numKbGroups, kbPatterns, maxKbLength + 1, kbGroupsArr, 1, 1, kbColors);
+                        sbKeyboard.SetLedSettings(sbKeyboardSettings);
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.Error("Failed to Update Device " + sbKeyboardInfo.friendlyName + ": " + exc.ToString());
+                        return false;
+                    }
+                    finally
+                    {
+                        if (sbKeyboardSettings != null && sbKeyboardSettings.payloadData.HasValue && sbKeyboardSettings.payloadData.Value.opaqueSize > 0)
+                            sbKeyboardSettings.payloadData = sbKeyboard.LedPayloadCleanup(sbKeyboardSettings.payloadData.Value, numKbGroups);
+                    }
+                }
+            }
+            return true;
+        }
+
+        static KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>[] KeyboardMapping_All = {
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Esc, KeyboardKeys.ESC),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F1, KeyboardKeys.F1),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F2, KeyboardKeys.F2),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F3, KeyboardKeys.F3),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F4, KeyboardKeys.F4),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F5, KeyboardKeys.F5),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F6, KeyboardKeys.F6),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F7, KeyboardKeys.F7),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F8, KeyboardKeys.F8),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F9, KeyboardKeys.F9),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F10, KeyboardKeys.F10),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F11, KeyboardKeys.F11),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F12, KeyboardKeys.F12),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.M1, KeyboardKeys.G1),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.BackQuote, KeyboardKeys.TILDE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit1, KeyboardKeys.ONE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit2, KeyboardKeys.TWO),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit3, KeyboardKeys.THREE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit4, KeyboardKeys.FOUR),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit5, KeyboardKeys.FIVE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit6, KeyboardKeys.SIX),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit7, KeyboardKeys.SEVEN),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit8, KeyboardKeys.EIGHT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit9, KeyboardKeys.NINE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Digit0, KeyboardKeys.ZERO),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Minus, KeyboardKeys.MINUS),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Equal, KeyboardKeys.EQUALS),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Backspace, KeyboardKeys.BACKSPACE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.M2, KeyboardKeys.G2),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Tab, KeyboardKeys.TAB),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Q, KeyboardKeys.Q),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.W, KeyboardKeys.W),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.E, KeyboardKeys.E),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.R, KeyboardKeys.R),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.T, KeyboardKeys.T),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Y, KeyboardKeys.Y),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.U, KeyboardKeys.U),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.I, KeyboardKeys.I),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.O, KeyboardKeys.O),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.P, KeyboardKeys.P),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.OpenBracket, KeyboardKeys.OPEN_BRACKET),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.ClosedBracket, KeyboardKeys.CLOSE_BRACKET),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.BackSlash, KeyboardKeys.BACKSLASH),         //Only on US
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.M3, KeyboardKeys.G3),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.CapsLock, KeyboardKeys.CAPS_LOCK),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.A, KeyboardKeys.A),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.S, KeyboardKeys.S),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.D, KeyboardKeys.D),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.F, KeyboardKeys.F),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.G, KeyboardKeys.G),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.H, KeyboardKeys.H),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.J, KeyboardKeys.J),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.K, KeyboardKeys.K),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.L, KeyboardKeys.L),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Semicolon, KeyboardKeys.SEMICOLON),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Apostrophe, KeyboardKeys.APOSTROPHE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.NonUS57, KeyboardKeys.HASH),             //Only on European
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Enter, KeyboardKeys.ENTER),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.M4, KeyboardKeys.G4),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.LeftShift, KeyboardKeys.LEFT_SHIFT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.NonUS61, KeyboardKeys.BACKSLASH_UK),        //Only on European
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Z, KeyboardKeys.Z),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.X, KeyboardKeys.X),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.C, KeyboardKeys.C),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.V, KeyboardKeys.V),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.B, KeyboardKeys.B),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.N, KeyboardKeys.N),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.M, KeyboardKeys.M),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Comma, KeyboardKeys.COMMA),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Fullstop, KeyboardKeys.PERIOD),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.ForwardSlash, KeyboardKeys.FORWARD_SLASH),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.RightShift, KeyboardKeys.RIGHT_SHIFT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.M5, KeyboardKeys.G5),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.LeftCtrl, KeyboardKeys.LEFT_CONTROL),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.LeftWindows, KeyboardKeys.LEFT_WINDOWS),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.LeftAlt, KeyboardKeys.LEFT_ALT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Space, KeyboardKeys.SPACE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.RightAlt, KeyboardKeys.RIGHT_ALT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Fn, KeyboardKeys.FN_Key),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Menu, KeyboardKeys.APPLICATION_SELECT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.RightCtrl, KeyboardKeys.RIGHT_CONTROL),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PadMinus, KeyboardKeys.NUM_MINUS),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PadAsterisk, KeyboardKeys.NUM_ASTERISK),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PadForwardSlash, KeyboardKeys.NUM_SLASH),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PadNumLock, KeyboardKeys.NUM_LOCK),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PageUp, KeyboardKeys.PAGE_UP),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Home, KeyboardKeys.HOME),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Insert, KeyboardKeys.INSERT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PadPlus, KeyboardKeys.NUM_PLUS),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad9, KeyboardKeys.NUM_NINE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad8, KeyboardKeys.NUM_EIGHT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad7, KeyboardKeys.NUM_SEVEN),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PageDown, KeyboardKeys.PAGE_DOWN),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.End, KeyboardKeys.END),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Delete, KeyboardKeys.DELETE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PrintScreen, KeyboardKeys.PRINT_SCREEN),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad6, KeyboardKeys.NUM_SIX),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad5, KeyboardKeys.NUM_FIVE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad4, KeyboardKeys.NUM_FOUR),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad1, KeyboardKeys.NUM_ONE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.UpArrow, KeyboardKeys.ARROW_UP),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.LeftArrow, KeyboardKeys.ARROW_LEFT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.ScrollLock, KeyboardKeys.SCROLL_LOCK),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PadEnter, KeyboardKeys.NUM_ENTER),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad3, KeyboardKeys.NUM_THREE),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad2, KeyboardKeys.NUM_TWO),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.PadFullstop, KeyboardKeys.NUM_PERIOD),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pad0, KeyboardKeys.NUM_ZERO),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.RightArrow, KeyboardKeys.ARROW_RIGHT),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.DownArrow, KeyboardKeys.ARROW_DOWN),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Pause, KeyboardKeys.PAUSE_BREAK),
+            new KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>(Keyboard_LEDIndex.Logo, KeyboardKeys.LOGO)
+        };
+
+        public static readonly KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>[] KeyboardMapping_US;
+        public static readonly KeyValuePair<Keyboard_LEDIndex, KeyboardKeys>[] KeyboardMapping_European;
+
+        static SoundBlasterXDevice()
+        {
+            KeyboardMapping_US = KeyboardMapping_All.Where(x => (x.Key != Keyboard_LEDIndex.NonUS57 && x.Key != Keyboard_LEDIndex.NonUS61)).ToArray();
+            KeyboardMapping_European = KeyboardMapping_All.Where(x => (x.Key != Keyboard_LEDIndex.BackSlash)).ToArray();
+        }
+
+        public Keyboard_LEDIndex GetKeyboardMappingLedIndex(KeyboardKeys devKey)
+        {
+            var mapping = sbKeyboardInfo.deviceId.Equals(EnumeratedDevice.SoundBlasterXVanguardK08_USEnglish) ? KeyboardMapping_US : KeyboardMapping_European;
+            for (int i = 0; i < mapping.Length; i++)
+            {
+                if (mapping[i].Value.Equals(devKey))
+                    return mapping[i].Key;
+            }
+
+            return Keyboard_LEDIndex.NotApplicable;
+        }
+
+        public bool UpdateDevice(MouseDeviceLayout mouse, DoWorkEventArgs e, bool forced = false)
+        {
+            LedColour[] mouseColors = null;
+            foreach (KeyValuePair<LEDINT, Color> kv in mouse.DeviceColours.deviceColours)
+            {
+                if (e.Cancel) return false;
+                if (sbMouse != null)
+                {
+                    int moosIdx = GetMouseMappingIndex((MouseLights)kv.Key);
+                    if (moosIdx >= 0 && moosIdx <= MouseMapping.Length)
+                    {
+                        if (mouseColors == null)
+                            mouseColors = new LedColour[MouseMapping.Length];
+
+                        mouseColors[moosIdx].a = kv.Value.A;
+                        mouseColors[moosIdx].r = kv.Value.R;
+                        mouseColors[moosIdx].g = kv.Value.G;
+                        mouseColors[moosIdx].b = kv.Value.B;
+                    }
+                }
+            }
+
+            lock (action_lock)
+            {
+                if (e.Cancel) return false;
+                if (sbMouse != null && mouseColors != null)
+                {
+                    if (sbMouseSettings == null)
+                    {
+                        sbMouseSettings = new LedSettings();
+                        sbMouseSettings.persistentInDevice = false;
+                        sbMouseSettings.globalPatternMode = false;
+                        sbMouseSettings.pattern = LedPattern.Static;
+                        sbMouseSettings.payloadData = new LedPayloadData();
+                    }
+
+                    if (sbMouseSettings.payloadData.Value.opaqueSize == 0)
+                    {
+                        var mousePatterns = new LedPattern[mouseColors.Length];
+                        var mouseGroups = new uint[MouseMapping.Length * 2];
+                        for (int i = 0; i < MouseMapping.Length; i++)
+                        {
+                            mouseGroups[(i * 2) + 0] = 1;                           //1 LED in group
+                            mouseGroups[(i * 2) + 1] = (uint)MouseMapping[i].Key;   //Which LED it is
+                            mousePatterns[i] = LedPattern.Static;               //LED has a host-controlled static color
+                        }
+
+                        try
+                        {
+                            sbMouseSettings.payloadData = sbMouse.LedPayloadInitialize(sbMouseSettings.payloadData.Value, sbMouseInfo.totalNumLeds, 1, 1);
+                            sbMouseSettings.payloadData = sbMouse.LedPayloadFillupAll(sbMouseSettings.payloadData.Value, (uint)mouseColors.Length, mousePatterns, 2, mouseGroups, 1, 1, mouseColors);
+                        }
+                        catch (Exception exc)
+                        {
+                            Global.logger.Error("Failed to setup data for " + sbMouseInfo.friendlyName + ": " + exc.ToString());
+                            if (sbMouseSettings.payloadData.Value.opaqueSize > 0)
+                                sbMouseSettings.payloadData = sbMouse.LedPayloadCleanup(sbMouseSettings.payloadData.Value, sbMouseInfo.totalNumLeds);
+
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            for (int i = 0; i < mouseColors.Length; i++)
+                                sbMouseSettings.payloadData = sbMouse.LedPayloadFillupLedColour(sbMouseSettings.payloadData.Value, (uint)i, 1, mouseColors[i], false);
+                        }
+                        catch (Exception exc)
+                        {
+                            Global.logger.Error("Failed to fill color data for " + sbMouseInfo.friendlyName + ": " + exc.ToString());
+                            return false;
+                        }
+                    }
+
+                    try
+                    {
+                        sbMouse.SetLedSettings(sbMouseSettings);
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.Error("Failed to Update Device " + sbMouseInfo.friendlyName + ": " + exc.ToString());
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public static readonly KeyValuePair<Mouse_LEDIndex, MouseLights>[] MouseMapping = {
+
+            /*  PENDING -- These correspond to LEDs along the side of the mouse.  Need new enums.
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED0, MouseLights.MOUSEPADLIGHT1),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED1, MouseLights.MOUSEPADLIGHT2),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED2, MouseLights.MOUSEPADLIGHT3),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED3, MouseLights.MOUSEPADLIGHT4),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED4, MouseLights.MOUSEPADLIGHT5),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED5, MouseLights.MOUSEPADLIGHT6),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED6, MouseLights.MOUSEPADLIGHT7),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED7, MouseLights.MOUSEPADLIGHT8),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED8, MouseLights.MOUSEPADLIGHT9),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED9, MouseLights.MOUSEPADLIGHT10),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.LED10, MouseLights.MOUSEPADLIGHT11),
+            */
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.Logo, MouseLights.Peripheral_Logo),
+            new KeyValuePair<Mouse_LEDIndex, MouseLights>(Mouse_LEDIndex.Wheel, MouseLights.Peripheral_ScrollWheel)
+        };
+
+        public static int GetMouseMappingIndex(MouseLights devKey)
+        {
+            int i;
+            for (i = 0; i < MouseMapping.Length; i++)
+                if (MouseMapping[i].Value.Equals(devKey))
+                    break;
+
+            return i;
+        }
+
+        /*public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             uint maxKbLength = 0;
             Dictionary<Color, List<Keyboard_LEDIndex>> kbIndices = null;
@@ -494,188 +900,7 @@ namespace Aurora.Devices.Creative
             lastUpdateTime = watch.ElapsedMilliseconds;
 
             return update_result;
-        }
+        }*/
 
-        public bool IsKeyboardConnected()
-        {
-            return (sbKeyboard != null);
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return (sbMouse != null);
-        }
-
-        public string GetDeviceUpdatePerformance()
-        {
-            return (IsInitialized() ? lastUpdateTime + " ms" : "");
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
-
-        static KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping_All = {
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Esc, DeviceKeys.ESC),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F1, DeviceKeys.F1),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F2, DeviceKeys.F2),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F3, DeviceKeys.F3),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F4, DeviceKeys.F4),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F5, DeviceKeys.F5),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F6, DeviceKeys.F6),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F7, DeviceKeys.F7),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F8, DeviceKeys.F8),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F9, DeviceKeys.F9),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F10, DeviceKeys.F10),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F11, DeviceKeys.F11),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F12, DeviceKeys.F12),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.M1, DeviceKeys.G1),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.BackQuote, DeviceKeys.TILDE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit1, DeviceKeys.ONE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit2, DeviceKeys.TWO),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit3, DeviceKeys.THREE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit4, DeviceKeys.FOUR),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit5, DeviceKeys.FIVE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit6, DeviceKeys.SIX),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit7, DeviceKeys.SEVEN),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit8, DeviceKeys.EIGHT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit9, DeviceKeys.NINE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Digit0, DeviceKeys.ZERO),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Minus, DeviceKeys.MINUS),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Equal, DeviceKeys.EQUALS),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Backspace, DeviceKeys.BACKSPACE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.M2, DeviceKeys.G2),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Tab, DeviceKeys.TAB),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Q, DeviceKeys.Q),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.W, DeviceKeys.W),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.E, DeviceKeys.E),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.R, DeviceKeys.R),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.T, DeviceKeys.T),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Y, DeviceKeys.Y),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.U, DeviceKeys.U),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.I, DeviceKeys.I),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.O, DeviceKeys.O),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.P, DeviceKeys.P),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.OpenBracket, DeviceKeys.OPEN_BRACKET),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.ClosedBracket, DeviceKeys.CLOSE_BRACKET),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.BackSlash, DeviceKeys.BACKSLASH),         //Only on US
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.M3, DeviceKeys.G3),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.CapsLock, DeviceKeys.CAPS_LOCK),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.A, DeviceKeys.A),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.S, DeviceKeys.S),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.D, DeviceKeys.D),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.F, DeviceKeys.F),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.G, DeviceKeys.G),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.H, DeviceKeys.H),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.J, DeviceKeys.J),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.K, DeviceKeys.K),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.L, DeviceKeys.L),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Semicolon, DeviceKeys.SEMICOLON),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Apostrophe, DeviceKeys.APOSTROPHE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.NonUS57, DeviceKeys.HASHTAG),             //Only on European
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Enter, DeviceKeys.ENTER),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.M4, DeviceKeys.G4),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.LeftShift, DeviceKeys.LEFT_SHIFT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.NonUS61, DeviceKeys.BACKSLASH_UK),        //Only on European
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Z, DeviceKeys.Z),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.X, DeviceKeys.X),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.C, DeviceKeys.C),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.V, DeviceKeys.V),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.B, DeviceKeys.B),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.N, DeviceKeys.N),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.M, DeviceKeys.M),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Comma, DeviceKeys.COMMA),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Fullstop, DeviceKeys.PERIOD),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.ForwardSlash, DeviceKeys.FORWARD_SLASH),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.RightShift, DeviceKeys.RIGHT_SHIFT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.M5, DeviceKeys.G5),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.LeftCtrl, DeviceKeys.LEFT_CONTROL),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.LeftWindows, DeviceKeys.LEFT_WINDOWS),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.LeftAlt, DeviceKeys.LEFT_ALT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Space, DeviceKeys.SPACE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.RightAlt, DeviceKeys.RIGHT_ALT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Fn, DeviceKeys.FN_Key),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Menu, DeviceKeys.APPLICATION_SELECT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.RightCtrl, DeviceKeys.RIGHT_CONTROL),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PadMinus, DeviceKeys.NUM_MINUS),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PadAsterisk, DeviceKeys.NUM_ASTERISK),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PadForwardSlash, DeviceKeys.NUM_SLASH),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PadNumLock, DeviceKeys.NUM_LOCK),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PageUp, DeviceKeys.PAGE_UP),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Home, DeviceKeys.HOME),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Insert, DeviceKeys.INSERT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PadPlus, DeviceKeys.NUM_PLUS),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad9, DeviceKeys.NUM_NINE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad8, DeviceKeys.NUM_EIGHT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad7, DeviceKeys.NUM_SEVEN),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PageDown, DeviceKeys.PAGE_DOWN),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.End, DeviceKeys.END),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Delete, DeviceKeys.DELETE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PrintScreen, DeviceKeys.PRINT_SCREEN),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad6, DeviceKeys.NUM_SIX),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad5, DeviceKeys.NUM_FIVE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad4, DeviceKeys.NUM_FOUR),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad1, DeviceKeys.NUM_ONE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.UpArrow, DeviceKeys.ARROW_UP),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.LeftArrow, DeviceKeys.ARROW_LEFT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.ScrollLock, DeviceKeys.SCROLL_LOCK),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PadEnter, DeviceKeys.NUM_ENTER),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad3, DeviceKeys.NUM_THREE),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad2, DeviceKeys.NUM_TWO),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.PadFullstop, DeviceKeys.NUM_PERIOD),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pad0, DeviceKeys.NUM_ZERO),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.RightArrow, DeviceKeys.ARROW_RIGHT),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.DownArrow, DeviceKeys.ARROW_DOWN),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Pause, DeviceKeys.PAUSE_BREAK),
-            new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Logo, DeviceKeys.LOGO)
-        };
-
-        public static readonly KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping_US;
-        public static readonly KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping_European;
-
-        static SoundBlasterXDevice()
-        {
-            KeyboardMapping_US = KeyboardMapping_All.Where(x => (x.Key != Keyboard_LEDIndex.NonUS57 && x.Key != Keyboard_LEDIndex.NonUS61)).ToArray();
-            KeyboardMapping_European = KeyboardMapping_All.Where(x => (x.Key != Keyboard_LEDIndex.BackSlash)).ToArray();
-        }
-
-        public Keyboard_LEDIndex GetKeyboardMappingLedIndex(DeviceKeys devKey)
-        {
-            var mapping = sbKeyboardInfo.deviceId.Equals(EnumeratedDevice.SoundBlasterXVanguardK08_USEnglish) ? KeyboardMapping_US : KeyboardMapping_European;
-            for (int i=0; i<mapping.Length; i++)
-            {
-                if (mapping[i].Value.Equals(devKey))
-                    return mapping[i].Key;
-            }
-
-            return Keyboard_LEDIndex.NotApplicable;
-        }
-
-        public static readonly KeyValuePair<Mouse_LEDIndex, DeviceKeys>[] MouseMapping = {
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED0, DeviceKeys.MOUSEPADLIGHT1),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED1, DeviceKeys.MOUSEPADLIGHT2),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED2, DeviceKeys.MOUSEPADLIGHT3),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED3, DeviceKeys.MOUSEPADLIGHT4),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED4, DeviceKeys.MOUSEPADLIGHT5),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED5, DeviceKeys.MOUSEPADLIGHT6),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED6, DeviceKeys.MOUSEPADLIGHT7),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED7, DeviceKeys.MOUSEPADLIGHT8),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED8, DeviceKeys.MOUSEPADLIGHT9),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED9, DeviceKeys.MOUSEPADLIGHT10),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.LED10, DeviceKeys.MOUSEPADLIGHT11),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.Logo, DeviceKeys.Peripheral_Logo),
-            new KeyValuePair<Mouse_LEDIndex, DeviceKeys>(Mouse_LEDIndex.Wheel, DeviceKeys.Peripheral_ScrollWheel)
-        };
-
-        public static int GetMouseMappingIndex(DeviceKeys devKey)
-        {
-            int i;
-            for (i=0; i<MouseMapping.Length; i++)
-                if (MouseMapping[i].Value.Equals(devKey))
-                    break;
-
-            return i;
-        }
     }
 }
