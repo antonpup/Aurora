@@ -436,6 +436,7 @@
     <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\MemoryReadingLightEvent.cs" />
     <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
       <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
     </Compile>
@@ -454,7 +455,6 @@
     <Compile Include="Profiles\Resident Evil 2\GSI\GameState_ResidentEvil2.cs" />
     <Compile Include="Profiles\Resident Evil 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredApplication.cs" />
-    <Compile Include="Profiles\Dishonored\DishonoredPointers.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredProfile.cs" />
     <Compile Include="Profiles\Dishonored\Control_Dishonored.xaml.cs">
       <DependentUpon>Control_Dishonored.xaml</DependentUpon>
@@ -702,7 +702,6 @@
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Borderlands 2\Borderlands2Application.cs" />
-    <Compile Include="Profiles\Borderlands 2\Borderlands2Pointers.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Profile.cs" />
     <Compile Include="Profiles\Borderlands 2\Control_Borderlands2.xaml.cs">
       <DependentUpon>Control_Borderlands2.xaml</DependentUpon>
@@ -1654,9 +1653,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-	<Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
-	 <Generator>MSBuild:Compile</Generator>
-	 <SubType>Designer</SubType>
+    <Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml">
       <Generator>MSBuild:Compile</Generator>
