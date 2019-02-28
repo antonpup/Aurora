@@ -440,7 +440,7 @@
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Integrations\Razer\RazerLayoutMap.cs" />
-    <None Include="Devices\Integrations\Roccat\RoccatDevice.cs" />
+    <Compile Include="Devices\Integrations\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\Integrations\Roccat\RoccatInstallInstructions.xaml.cs">
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
