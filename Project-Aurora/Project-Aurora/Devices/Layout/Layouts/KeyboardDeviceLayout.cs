@@ -1117,6 +1117,72 @@ namespace Aurora.Devices.Layout.Layouts
         ADDITIONALLIGHT19 = 180,
 
         /// <summary>
+        /// Additional Light 20
+        /// </summary>
+        [Description("Additional Light 20")]
+        ADDITIONALLIGHT20 = 181,
+
+        /// <summary>
+        /// Additional Light 21
+        /// </summary>
+        [Description("Additional Light 21")]
+        ADDITIONALLIGHT21 = 182,
+
+        /// <summary>
+        /// Additional Light 22
+        /// </summary>
+        [Description("Additional Light 22")]
+        ADDITIONALLIGHT22 = 183,
+
+        /// <summary>
+        /// Additional Light 23
+        /// </summary>
+        [Description("Additional Light 23")]
+        ADDITIONALLIGHT23 = 184,
+
+        /// <summary>
+        /// Additional Light 24
+        /// </summary>
+        [Description("Additional Light 24")]
+        ADDITIONALLIGHT24 = 185,
+
+        /// <summary>
+        /// Additional Light 25
+        /// </summary>
+        [Description("Additional Light 25")]
+        ADDITIONALLIGHT25 = 180,
+
+        /// <summary>
+        /// Additional Light 26
+        /// </summary>
+        [Description("Additional Light 26")]
+        ADDITIONALLIGHT26 = 186,
+
+        /// <summary>
+        /// Additional Light 27
+        /// </summary>
+        [Description("Additional Light 27")]
+        ADDITIONALLIGHT27 = 187,
+
+        /// <summary>
+        /// Additional Light 28
+        /// </summary>
+        [Description("Additional Light 28")]
+        ADDITIONALLIGHT28 = 188,
+
+        /// <summary>
+        /// Additional Light 29
+        /// </summary>
+        [Description("Additional Light 29")]
+        ADDITIONALLIGHT29 = 189,
+
+        /// <summary>
+        /// Additional Light 30
+        /// </summary>
+        [Description("Additional Light 30")]
+        ADDITIONALLIGHT30 = 190,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]
