@@ -420,8 +420,8 @@
     <Compile Include="Devices\Integrations\Corsair\CorsairInstallInstructions.xaml.cs">
       <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <None Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
-    <None Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
+    <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
+    <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
     <Compile Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
     <None Include="Devices\Integrations\Drevo\DrevoDevice.cs" />
     <None Include="Devices\Integrations\Drevo\DrevoLayoutMap.cs" />
