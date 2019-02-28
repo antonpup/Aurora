@@ -473,6 +473,12 @@
     <Compile Include="Profiles\Minecraft\Layers\MinecraftKeyConflictLayer.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftKeyBinding.cs" />
     <Compile Include="Profiles\Move or Die\MoDProfile.cs" />
+    <Compile Include="Profiles\Osu\Control_Osu.xaml.cs">
+      <DependentUpon>Control_Osu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Osu\GSI\GameState_Osu.cs" />
+    <Compile Include="Profiles\Osu\OsuApplication.cs" />
+    <Compile Include="Profiles\Osu\OsuProfile.cs" />
     <Compile Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml.cs">
       <DependentUpon>Control_QuakeChampions.xaml</DependentUpon>
     </Compile>
@@ -1457,6 +1463,8 @@
     <Resource Include="Resources\icons8-checked-checkbox-30.png" />
     <Resource Include="Resources\Question_Help.png" />
     <Resource Include="Resources\icons8-keyboard-30.png" />
+    <Resource Include="Resources\osu_256x256.png" />
+    <Resource Include="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1703,6 +1711,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Minecraft\Layers\Control_MinecraftKeyConflictLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Osu\Control_Osu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
