@@ -39,6 +39,32 @@ namespace Aurora.Devices.Layout.Layouts
         Peripheral_FrontLight = 162,
 
         /// <summary>
+        /// Peripheral Back-facing lights
+        /// </summary>
+        [Description("Peripheral Back Lights")]
+        Peripheral_BackLight = 163,
+
+        // Extra lights - intended to be used as an index, so the next is ExtraLightIndex+1 etc.
+
+        /// <summary>
+        /// Peripheral Extra lights
+        /// </summary>
+        [Description("Peripheral Extra Lights Index")]
+        Peripheral_ExtraLightIndex = 200,
+
+        /// <summary>
+        /// Peripheral Left Extra lights
+        /// </summary>
+        [Description("Peripheral Extra Lights Index")]
+        Peripheral_ExtraLightLeftIndex = 300,
+
+        /// <summary>
+        /// Peripheral Right Extra lights
+        /// </summary>
+        [Description("Peripheral Extra Lights Index")]
+        Peripheral_ExtraLightRightIndex = 400,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]

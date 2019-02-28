@@ -547,51 +547,46 @@ namespace Aurora.Devices.Razer
                     return GridLed.Logo;
                 case MouseLights.Peripheral_ScrollWheel:
                     return GridLed.ScrollWheel;
-
-                /* Additional lights supported by the SDK but not implemented in Aurora.
-                 * Once support for these zones is added, replace IMPLEMENT_ME with the
-                 * new zone name and it should work without any additional changes.
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_BackLight:
                     return GridLed.Backlight;  
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightIndex:
                     return GridLed.Bottom1;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightIndex+1:
                     return GridLed.Bottom2;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightIndex+2:
                     return GridLed.Bottom3;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightIndex+3:
                     return GridLed.Bottom4;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightIndex+4:
                     return GridLed.Bottom5;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightLeftIndex:
                     return GridLed.LeftSide1;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightLeftIndex+1:
                     return GridLed.LeftSide2;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightLeftIndex+2:
                     return GridLed.LeftSide3;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightLeftIndex+3:
                     return GridLed.LeftSide4;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightLeftIndex+4:
                     return GridLed.LeftSide5;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightLeftIndex+5:
                     return GridLed.LeftSide6;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightLeftIndex+6:
                     return GridLed.LeftSide7;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightRightIndex:
                     return GridLed.RightSide1;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightRightIndex+1:
                     return GridLed.RightSide2;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightRightIndex+2:
                     return GridLed.RightSide3;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightRightIndex+3:
                     return GridLed.RightSide4;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightRightIndex+4:
                     return GridLed.RightSide5;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightRightIndex+5:
                     return GridLed.RightSide6;
-                case MouseLights.IMPLEMENT_ME:
+                case MouseLights.Peripheral_ExtraLightRightIndex+6:
                     return GridLed.RightSide7;
-                */
                 default:
                     return 0;
 
