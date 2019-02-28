@@ -147,33 +147,46 @@ namespace Aurora.Devices.SteelSeries
             return this.isInitialized;
         }
 
+        public bool IsKeyboardConnected()
+        {
+            return isInitialized;
+        }
+
+        public bool IsPeripheralConnected()
+        {
+            return isInitialized;
+        }
+
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
+        }
+
         public bool UpdateDevice(MouseDeviceLayout device, PayloadColorEventJSON colorEvent, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
-
-            //List<byte> hids = new List<byte>();
-            //List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
             foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
             {
                 if (e.Cancel) return false;
 
                 Color color = (Color)key.Value;
-                //Apply and strip Alpha
-                color = Color.FromArgb(255,
-                    Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
-                List<byte> colorList = new List<byte>();
-                colorList.Add(color.R);
-                colorList.Add(color.G);
-                colorList.Add(color.B);
+                // JSON serializer doesn't understand keyvaluepairs, so single-item dictionaries are the way to go.
+                Dictionary<string, dynamic> colorPayload = new Dictionary<string, dynamic>();
+                colorPayload.Add("color", new int[] { color.R, color.G, color.B });
                 switch ((MouseLights)key.Key)
                 {
                     case MouseLights.Peripheral_ScrollWheel:
-                        colorEvent.data.Add("mousewheel", colorList);
+                        colorEvent.data.Add("mousewheel", colorPayload);
                         break;
                     case MouseLights.Peripheral_Logo:
-                        colorEvent.data.Add("mouselogo", colorList);
+                        colorEvent.data.Add("mouselogo", colorPayload);
                         break;
                 }
                     
@@ -242,18 +255,11 @@ namespace Aurora.Devices.SteelSeries
             if (e.Cancel) return false;
 
             List<byte> hids = new List<byte>();
-            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+            // The serializer considers byte arrays to be strings, we need ints
+            List<int[]> colors = new List<int[]>();
 
             foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
             {
-                if (e.Cancel) return false;
-                //CorsairLedId localKey = ToCorsair(key.Key);
-
-                Color color = (Color)key.Value;
-                //Apply and strip Alpha
-                color = Color.FromArgb(255,
-                    Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-
                 if (e.Cancel) return false;
  
                 byte hid = GetHIDCode((KeyboardKeys)key.Key);
@@ -261,7 +267,7 @@ namespace Aurora.Devices.SteelSeries
                 if (hid != (byte)USBHIDCodes.ERROR)
                 {
                     hids.Add(hid);
-                    colors.Add(Tuple.Create(color.R, color.G, color.B));
+                    colors.Add(new int[] { key.Value.R, key.Value.G, key.Value.B });
                 }
                     
                 SendColorsToKeyboard(hids, colors, payload);
@@ -274,11 +280,10 @@ namespace Aurora.Devices.SteelSeries
 
             if (e.Cancel) return false;
 
-         //   Dictionary<string, dynamic> keyboardPayload = new Dictionary<string, dynamic>();
-         //   keyboardPayload.Add("hids", hids);
-         //   keyboardPayload.Add("colors", colors);
-           // colorEvent.data.Add("keyboard", keyboardPayload);
-            //SendColorsToKeyboard(hids, colors);
+            Dictionary<string, dynamic> keyboardPayload = new Dictionary<string, dynamic>();
+            keyboardPayload.Add("hids", hids);
+            keyboardPayload.Add("colors", colors);
+            colorEvent.data.Add("keyboard", keyboardPayload);
 
             return true;
         }
@@ -293,7 +298,6 @@ namespace Aurora.Devices.SteelSeries
             {
                 PayloadColorEventJSON colorEvent = new PayloadColorEventJSON();
                 colorEvent.data = new Dictionary<string, dynamic>();
-                //colorEvent.data = new ExpandoObject();
                 // workaround for heartbeat/keepalive events every 10sec
                 SendKeepalive();
 
@@ -310,8 +314,6 @@ namespace Aurora.Devices.SteelSeries
                                 updateResult = false;
                             break;
                     }
-
-                    //SendColorToPeripheral(globalColor);
                 }
 
                 gameSenseSDK.sendEventPayload(colorEvent);
