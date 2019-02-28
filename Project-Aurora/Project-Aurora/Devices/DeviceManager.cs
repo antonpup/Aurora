@@ -105,6 +105,7 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
             devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
             devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
+            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
 
             /*
             devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
@@ -113,7 +114,6 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
             devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
             devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
-            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
             */
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 

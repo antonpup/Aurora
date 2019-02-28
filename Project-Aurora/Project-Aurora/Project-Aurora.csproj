@@ -374,9 +374,9 @@
     <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
     <Compile Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
-    <None Include="Devices\Integrations\Drevo\DrevoDevice.cs" />
-    <None Include="Devices\Integrations\Drevo\DrevoLayoutMap.cs" />
-    <None Include="Devices\Integrations\Drevo\DrevoRadiSDK.cs" />
+    <Compile Include="Devices\Integrations\Drevo\DrevoDevice.cs" />
+    <Compile Include="Devices\Integrations\Drevo\DrevoLayoutMap.cs" />
+    <Compile Include="Devices\Integrations\Drevo\DrevoRadiSDK.cs" />
     <None Include="Devices\Integrations\Dualshock4\Dualshock4Device.cs" />
     <Compile Include="Devices\Integrations\Dualshock4\DS4InstallInstructions.xaml.cs">
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>

@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Aurora.Settings;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
+using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Drevo
 {
@@ -153,7 +156,39 @@ namespace Aurora.Devices.Drevo
         }
 
         /// Updates the device with a specified color arrangement.
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool updateResult = true;
+
+            try
+            {
+
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("Drevo device, error when updating device: " + ex);
+                return false;
+            }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return updateResult;
+        }
+
+        private bool UpdateDevice(KeyboardDeviceLayout kb, DoWorkEventArgs e, bool forced)
         {
             if (e.Cancel) return false;
             try
@@ -164,7 +199,7 @@ namespace Aurora.Devices.Drevo
                 bitmap[2] = 0x00;
                 bitmap[3] = 0x7F;
                 int index = 0;
-                foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
+                foreach (KeyValuePair<LEDINT, Color> key in kb.DeviceColours.deviceColours)
                 {
                     if (e.Cancel) return false;
 
@@ -190,20 +225,6 @@ namespace Aurora.Devices.Drevo
                 Console.WriteLine(exc);
                 return false;
             }
-            return true;
-        }
-
-        /// Updates the device with a specified color composition.
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
         }
     }
 }
