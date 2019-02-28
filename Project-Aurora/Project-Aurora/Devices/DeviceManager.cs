@@ -105,6 +105,7 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
             devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
             devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
+            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
 
             /*
             devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
