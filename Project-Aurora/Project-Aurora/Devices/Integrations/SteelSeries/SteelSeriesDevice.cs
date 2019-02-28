@@ -11,6 +11,7 @@ using System.ComponentModel;
 using Aurora.Devices.Layout.Layouts;
 using Aurora.Devices.Layout;
 using LEDINT = System.Int16;
+using System.Dynamic;
 
 namespace Aurora.Devices.SteelSeries
 {
@@ -146,12 +147,12 @@ namespace Aurora.Devices.SteelSeries
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(MouseDeviceLayout device, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(MouseDeviceLayout device, PayloadColorEventJSON colorEvent, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
-            List<byte> hids = new List<byte>();
-            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
+            //List<byte> hids = new List<byte>();
+            //List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
             foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
             {
@@ -162,7 +163,22 @@ namespace Aurora.Devices.SteelSeries
                 color = Color.FromArgb(255,
                     Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
-                if (e.Cancel) return false;
+                List<byte> colorList = new List<byte>();
+                colorList.Add(color.R);
+                colorList.Add(color.G);
+                colorList.Add(color.B);
+                switch ((MouseLights)key.Key)
+                {
+                    case MouseLights.Peripheral_ScrollWheel:
+                        colorEvent.data.Add("mousewheel", colorList);
+                        break;
+                    case MouseLights.Peripheral_Logo:
+                        colorEvent.data.Add("mouselogo", colorList);
+                        break;
+                }
+                    
+
+                    if (e.Cancel) return false;
 
                 //TODO: Deal with 'Peripheral' light
                 /*if (key.Key == MouseLights.Peripheral)
@@ -170,16 +186,18 @@ namespace Aurora.Devices.SteelSeries
                     SendColorToPeripheral(color, forced);
                 }*/
 
-                SendColorToPeripheralZone((MouseLights)key.Key, color);
+                //SendColorToPeripheralZone((MouseLights)key.Key, color);
             }
 
             if (e.Cancel) return false;
-            SendColorsToKeyboard(hids, colors);
+            
+            
+            //SendColorsToKeyboard(hids, colors);
 
             return true;
         }
 
-        public bool UpdateDevice(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(KeyboardDeviceLayout device, PayloadColorEventJSON colorEvent, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
@@ -197,7 +215,6 @@ namespace Aurora.Devices.SteelSeries
                     Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
                 if (e.Cancel) return false;
-                   
  
                 byte hid = GetHIDCode((KeyboardKeys)key.Key);
 
@@ -210,7 +227,12 @@ namespace Aurora.Devices.SteelSeries
             }
 
             if (e.Cancel) return false;
-            SendColorsToKeyboard(hids, colors);
+
+         //   Dictionary<string, dynamic> keyboardPayload = new Dictionary<string, dynamic>();
+         //   keyboardPayload.Add("hids", hids);
+         //   keyboardPayload.Add("colors", colors);
+           // colorEvent.data.Add("keyboard", keyboardPayload);
+            //SendColorsToKeyboard(hids, colors);
 
             return true;
         }
@@ -223,6 +245,9 @@ namespace Aurora.Devices.SteelSeries
 
             try
             {
+                PayloadColorEventJSON colorEvent = new PayloadColorEventJSON();
+                colorEvent.data = new Dictionary<string, dynamic>();
+                //colorEvent.data = new ExpandoObject();
                 // workaround for heartbeat/keepalive events every 10sec
                 SendKeepalive();
 
@@ -231,17 +256,19 @@ namespace Aurora.Devices.SteelSeries
                     switch (layout)
                     {
                         case KeyboardDeviceLayout kb:
-                            if (!UpdateDevice(kb, e, forced))
+                            if (!UpdateDevice(kb, colorEvent, e, forced))
                                 updateResult = false;
                             break;
                         case MouseDeviceLayout mouse:
-                            if (!UpdateDevice(mouse, e, forced))
+                            if (!UpdateDevice(mouse, colorEvent, e, forced))
                                 updateResult = false;
                             break;
                     }
 
-                    SendColorToPeripheral(globalColor);
+                    //SendColorToPeripheral(globalColor);
                 }
+
+                gameSenseSDK.sendEventPayload(colorEvent);
             }
             catch (Exception ex)
             {
@@ -283,18 +310,18 @@ namespace Aurora.Devices.SteelSeries
                 {
                     if (!Global.Configuration.devices_disable_mouse && !Global.Configuration.devices_disable_headset)
                     {
-                        gameSenseSDK.setPeripheryColor(color.R, color.G, color.B);
+                        //gameSenseSDK.setPeripheryColor(color.R, color.G, color.B);
                     }
                     else
                     {
                         if (!Global.Configuration.devices_disable_mouse)
                         {
-                            gameSenseSDK.setMouseColor(color.R, color.G, color.B);
+                            //gameSenseSDK.setMouseColor(color.R, color.G, color.B);
                         }
 
                         if (!Global.Configuration.devices_disable_headset)
                         {
-                            gameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
+                            //gameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
                         }
                     }
 
@@ -312,10 +339,10 @@ namespace Aurora.Devices.SteelSeries
         {
             if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
             {
-                if (zone == MouseLights.Peripheral_Logo)
-                    gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B);
-                else if (zone == MouseLights.Peripheral_ScrollWheel)
-                    gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
+                //if (zone == MouseLights.Peripheral_Logo)
+                    //gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B);
+                //else if (zone == MouseLights.Peripheral_ScrollWheel)
+                    //gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
                 //else if (zone == DeviceKeys.Peripheral_FrontLight)
                 //{
                 //NYI
@@ -340,7 +367,7 @@ namespace Aurora.Devices.SteelSeries
             {
                 if (hids.Count != 0)
                 {
-                    gameSenseSDK.setKeyboardColors(hids, colors);
+                    //gameSenseSDK.setKeyboardColors(hids, colors);
                 }
                 keyboard_updated = true;
             }
