@@ -1,17 +1,17 @@
-﻿using Corale.Colore.Core;
-using Corale.Colore.Razer.Keyboard;
-using Corale.Colore.Razer.Mouse;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Aurora.Settings;
+using System.ComponentModel;
+using System.Drawing;
+using Corale.Colore.Core;
+using Corale.Colore.Razer.Keyboard;
+using Corale.Colore.Razer.Mouse;
 using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
 using MouseCustom = Corale.Colore.Razer.Mouse.Effects.CustomGrid;
 using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
-using System.ComponentModel;
+using Aurora.Settings;
 using Aurora.Devices.Layout;
-using System.Drawing;
 using Aurora.Devices.Layout.Layouts;
 using LEDINT = System.Int16;
 

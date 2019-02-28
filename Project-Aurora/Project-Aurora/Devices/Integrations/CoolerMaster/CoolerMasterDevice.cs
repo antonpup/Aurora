@@ -673,6 +673,26 @@ namespace Aurora.Devices.CoolerMaster
             }
         }
 
+        private void SetOneKey(int[] key, Color color)
+        {
+            //color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+            CoolerMasterSDK.KEY_COLOR key_color = new CoolerMasterSDK.KEY_COLOR(color.R, color.G, color.B);
+            color_matrix.KeyColor[key[0], key[1]] = key_color;
+        }
+
+        private void SendColorsToKeyboard(bool forced = false)
+        {
+            if (Global.Configuration.devices_disable_keyboard)
+                return;
+
+            if (!CoolerMasterSDK.Keyboards.Contains(CurrentDevice))
+                return;
+
+            CoolerMasterSDK.SetAllLedColor(color_matrix);
+            //previous_key_colors = key_colors;
+            keyboard_updated = true;
+        }
+
         /*
         public bool UpdateDevice(Dictionary<KeyboardKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
