@@ -294,7 +294,7 @@ namespace Aurora.Devices.Corsair
                     if ((MouseLights)key.Key == MouseLights.Peripheral_Logo)
                     {
                         SendColorToMouse(CorsairLedId.B1, (Color)(key.Value));
-                        SendColorToPeripheral((Color)(key.Value));
+                        //SendColorToPeripheral((Color)(key.Value));
                     }
                     else if ((MouseLights)key.Key == MouseLights.Peripheral_FrontLight)
                     {
@@ -459,7 +459,7 @@ namespace Aurora.Devices.Corsair
                 keyboard[localKey].Color = color;
         }
         */
-        private void SendColorToMousepad(CorsairLedId zoneKey, Color color)
+        /*private void SendColorToMousepad(CorsairLedId zoneKey, Color color)
         {
             if (Global.Configuration.devices_disable_mouse)
                 return;
@@ -481,9 +481,9 @@ namespace Aurora.Devices.Corsair
                     peripheral_updated = false;
                 }
 }
-        }
+        }*/
 
-        private void SendColorToPeripheral(Color color, bool forced = false)
+        /*private void SendColorToPeripheral(Color color, bool forced = false)
         {
             if ((!previous_peripheral_Color.Equals(color) || forced))
             {
@@ -519,7 +519,7 @@ namespace Aurora.Devices.Corsair
                         headset.Update(true);
                     }
 
-                   /* if (mousemat != null && !Global.Configuration.devices_disable_mouse)
+                   if (mousemat != null && !Global.Configuration.devices_disable_mouse)
                     {
                         if (mousemat[CorsairLedId.Zone1] != null)
                             mousemat[CorsairLedId.Zone1].Color = color;
@@ -553,9 +553,9 @@ namespace Aurora.Devices.Corsair
                             mousemat[CorsairLedId.Zone15].Color = color;
 
                         mousemat.Update(true);
-                    }*/
+                    }
 
-                    if (headsetstand != null && !Global.Configuration.devices_disable_headset)
+                    if (headsetstand != null)
                     {
                         if (headsetstand[CorsairLedId.HeadsetStandZone1] != null)
                             headsetstand[CorsairLedId.HeadsetStandZone1].Color = color;
@@ -590,7 +590,7 @@ namespace Aurora.Devices.Corsair
                     }
                 }
             }
-        }
+        }*/
 
         private void SendColorToMouse(CorsairLedId ledid, Color color, bool forced = false)
         {
