@@ -311,6 +311,19 @@ namespace Aurora
                     return;
                 }*/
 
+                Global.logger.Info("Fetching latest pointers");
+                try
+                {
+                    Utils.PointerUpdateUtils.UpdatePointers("dev");
+                }
+                catch (Exception exc)
+                {
+                    // If unable to get Pointers directory from GitHub API, just update pointers locally
+                    // Easy fix by just having another file in the directory where it has file names to refer to, would circumvent Octokit fully
+                    Global.logger.Error("Game pointers fetch exception, " + exc);
+                    Utils.PointerUpdateUtils.UpdateLocalPointers("dev");
+                }
+
                 Global.logger.Info("Starting GameStateListener");
                 try
                 {
