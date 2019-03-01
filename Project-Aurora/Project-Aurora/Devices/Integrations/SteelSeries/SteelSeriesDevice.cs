@@ -11,6 +11,7 @@ using System.ComponentModel;
 using Aurora.Devices.Layout.Layouts;
 using Aurora.Devices.Layout;
 using LEDINT = System.Int16;
+using System.Dynamic;
 
 namespace Aurora.Devices.SteelSeries
 {
@@ -146,115 +147,6 @@ namespace Aurora.Devices.SteelSeries
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(MouseDeviceLayout device, DoWorkEventArgs e, bool forced = false)
-        {
-            if (e.Cancel) return false;
-
-            List<byte> hids = new List<byte>();
-            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
-
-            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
-            {
-                if (e.Cancel) return false;
-
-                Color color = (Color)key.Value;
-                //Apply and strip Alpha
-                color = Color.FromArgb(255,
-                    Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-
-                if (e.Cancel) return false;
-
-                //TODO: Deal with 'Peripheral' light
-                /*if (key.Key == MouseLights.Peripheral)
-                {
-                    SendColorToPeripheral(color, forced);
-                }*/
-
-                SendColorToPeripheralZone((MouseLights)key.Key, color);
-            }
-
-            if (e.Cancel) return false;
-            SendColorsToKeyboard(hids, colors);
-
-            return true;
-        }
-
-        public bool UpdateDevice(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
-        {
-            if (e.Cancel) return false;
-
-            List<byte> hids = new List<byte>();
-            List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
-
-            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
-            {
-                if (e.Cancel) return false;
-                //CorsairLedId localKey = ToCorsair(key.Key);
-
-                Color color = (Color)key.Value;
-                //Apply and strip Alpha
-                color = Color.FromArgb(255,
-                    Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-
-                if (e.Cancel) return false;
-                   
- 
-                byte hid = GetHIDCode((KeyboardKeys)key.Key);
-
-                if (hid != (byte)USBHIDCodes.ERROR)
-                {
-                    hids.Add(hid);
-                    colors.Add(Tuple.Create(color.R, color.G, color.B));
-                }
-                    
-            }
-
-            if (e.Cancel) return false;
-            SendColorsToKeyboard(hids, colors);
-
-            return true;
-        }
-
-        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool updateResult = true;
-
-            try
-            {
-                // workaround for heartbeat/keepalive events every 10sec
-                SendKeepalive();
-
-                foreach (DeviceLayout layout in devices)
-                {
-                    switch (layout)
-                    {
-                        case KeyboardDeviceLayout kb:
-                            if (!UpdateDevice(kb, e, forced))
-                                updateResult = false;
-                            break;
-                        case MouseDeviceLayout mouse:
-                            if (!UpdateDevice(mouse, e, forced))
-                                updateResult = false;
-                            break;
-                    }
-
-                    SendColorToPeripheral(globalColor);
-                }
-            }
-            catch (Exception ex)
-            {
-                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
-                return false;
-            }
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return updateResult;
-        }
-
         public bool IsKeyboardConnected()
         {
             return isInitialized;
@@ -275,43 +167,105 @@ namespace Aurora.Devices.SteelSeries
             return new VariableRegistry();
         }
 
-        private void SendColorToPeripheral(Color color, bool forced = false)
+        public bool UpdateDevice(MouseDeviceLayout device, PayloadColorEventJSON colorEvent, DoWorkEventArgs e, bool forced = false)
         {
-            if ((!previous_peripheral_Color.Equals(color) || forced))
-            {
-                gameSenseSDK.setPeripheryColor(color.R, color.G, color.B);
-                gameSenseSDK.setMouseColor(color.R, color.G, color.B);
-                gameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
+            if (e.Cancel) return false;
 
-                previous_peripheral_Color = color;
-                peripheral_updated = true;
+            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
+            {
+                if (e.Cancel) return false;
+
+                Color color = (Color)key.Value;
+
+                // JSON serializer doesn't understand keyvaluepairs, so single-item dictionaries are the way to go.
+                Dictionary<string, dynamic> colorPayload = new Dictionary<string, dynamic>();
+                colorPayload.Add("color", new int[] { color.R, color.G, color.B });
+                switch ((MouseLights)key.Key)
+                {
+                    case MouseLights.Peripheral_ScrollWheel:
+                        colorEvent.data.Add("mousewheel", colorPayload);
+                        break;
+                    case MouseLights.Peripheral_Logo:
+                        colorEvent.data.Add("mouselogo", colorPayload);
+                        break;
+                }
             }
+
+            if (e.Cancel) return false;
+            return true;
         }
 
-        private void SendColorToPeripheralZone(MouseLights zone, Color color)
+        public bool UpdateDevice(KeyboardDeviceLayout device, PayloadColorEventJSON colorEvent, DoWorkEventArgs e, bool forced = false)
         {
-            if (zone == MouseLights.Peripheral_Logo)
-                gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B);
-            else if (zone == MouseLights.Peripheral_ScrollWheel)
-                gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B);
-            //else if (zone == DeviceKeys.Peripheral_FrontLight)
-            //{
-            //NYI
-            //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
-            //}
-            /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
+            if (e.Cancel) return false;
+
+            List<byte> hids = new List<byte>();
+            // The serializer considers byte arrays to be strings, we need ints
+            List<int[]> colors = new List<int[]>();
+
+            foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
             {
-                GameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
-            }*/
+                if (e.Cancel) return false;
+ 
+                byte hid = GetHIDCode((KeyboardKeys)key.Key);
+
+                if (hid != (byte)USBHIDCodes.ERROR)
+                {
+                    hids.Add(hid);
+                    colors.Add(new int[] { key.Value.R, key.Value.G, key.Value.B });
+                }
+            }
+
+            if (e.Cancel) return false;
+
+            Dictionary<string, dynamic> keyboardPayload = new Dictionary<string, dynamic>();
+            keyboardPayload.Add("hids", hids);
+            keyboardPayload.Add("colors", colors);
+            colorEvent.data.Add("keyboard", keyboardPayload);
+
+            return true;
         }
 
-        private void SendColorsToKeyboard(List<byte> hids, List<Tuple<byte, byte, byte>> colors)
+        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
-            if (hids.Count != 0)
+            watch.Restart();
+
+            bool updateResult = true;
+
+            try
             {
-                gameSenseSDK.setKeyboardColors(hids, colors);
+                PayloadColorEventJSON colorEvent = new PayloadColorEventJSON();
+                colorEvent.data = new Dictionary<string, dynamic>();
+                // workaround for heartbeat/keepalive events every 10sec
+                SendKeepalive();
+
+                foreach (DeviceLayout layout in devices)
+                {
+                    switch (layout)
+                    {
+                        case KeyboardDeviceLayout kb:
+                            if (!UpdateDevice(kb, colorEvent, e, forced))
+                                updateResult = false;
+                            break;
+                        case MouseDeviceLayout mouse:
+                            if (!UpdateDevice(mouse, colorEvent, e, forced))
+                                updateResult = false;
+                            break;
+                    }
+                }
+
+                gameSenseSDK.sendEventPayload(colorEvent);
             }
-            keyboard_updated = true;
+            catch (Exception ex)
+            {
+                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
+                return false;
+            }
+
+            watch.Stop();
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return updateResult;
         }
 
         private void SendKeepalive(bool forced = false)
