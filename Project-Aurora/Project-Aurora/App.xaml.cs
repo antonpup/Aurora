@@ -296,6 +296,19 @@ namespace Aurora
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
 
+                Global.logger.Info("Fetching latest pointers");
+                try
+                {
+                    Utils.PointerUpdateUtils.UpdatePointers("dev");
+                }
+                catch (Exception exc)
+                {
+                    // If unable to get Pointers directory from GitHub API, just update pointers locally
+                    // Easy fix by just having another file in the directory where it has file names to refer to, would circumvent Octokit fully
+                    Global.logger.Error("Game pointers fetch exception, " + exc);
+                    Utils.PointerUpdateUtils.UpdateLocalPointers("dev");
+                }
+
                 Global.logger.Info("Loading Applications");
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
@@ -310,19 +323,6 @@ namespace Aurora
                     Global.logger.LogLine("GameEventHander could not initialize", Logging_Level.Error);
                     return;
                 }*/
-
-                Global.logger.Info("Fetching latest pointers");
-                try
-                {
-                    Utils.PointerUpdateUtils.UpdatePointers("dev");
-                }
-                catch (Exception exc)
-                {
-                    // If unable to get Pointers directory from GitHub API, just update pointers locally
-                    // Easy fix by just having another file in the directory where it has file names to refer to, would circumvent Octokit fully
-                    Global.logger.Error("Game pointers fetch exception, " + exc);
-                    Utils.PointerUpdateUtils.UpdateLocalPointers("dev");
-                }
 
                 Global.logger.Info("Starting GameStateListener");
                 try
