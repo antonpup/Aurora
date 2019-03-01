@@ -33,7 +33,6 @@ namespace Aurora.Settings
         {
             InitializeComponent();
 
-            this.ComboBox_virtualkeyboard_keycap_type.DataContext = GlobalDeviceLayout.Instance.Settings;
 
             this.tabMain.DataContext = Global.Configuration;
 
@@ -141,11 +140,7 @@ namespace Aurora.Settings
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
             this.devices_mouse_brand.SelectedItem = Global.Configuration.mouse_preference;
             this.devices_mouse_orientation.SelectedItem = Global.Configuration.mouse_orientation;*/
-            this.ComboBox_virtualkeyboard_keycap_type.SelectedItem = Global.Configuration.virtualkeyboard_keycap_type;
             this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
-            this.devices_disable_keyboard_lighting.IsChecked = Global.Configuration.devices_disable_keyboard;
-            this.devices_disable_mouse_lighting.IsChecked = Global.Configuration.devices_disable_mouse;
-            this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
         }
@@ -727,39 +722,6 @@ namespace Aurora.Settings
                 Global.kbLayout.LoadBrandDefault();
             }
         }*/
-
-        private void devices_disable_keyboard_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_keyboard = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
-            }
-        }
-
-        private void devices_disable_mouse_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_mouse = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
-            }
-        }
-
-        private void devices_disable_headset_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_headset = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
-            }
-        }
 
         private void skype_overlay_enabled_Checked(object sender, RoutedEventArgs e)
         {

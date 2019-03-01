@@ -17,6 +17,28 @@ using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Layout
 {
+
+    public class TypeEntry
+    {
+        public Type Type { get; set; }
+
+        public string Title { get; set; }
+
+        public string Key { get; set; }
+
+        public TypeEntry(string key, string title, Type type)
+        {
+            this.Type = type;
+            this.Title = title;
+            this.Key = key;
+        }
+
+        public override string ToString()
+        {
+            return Title;
+        }
+    }
+
     public delegate void NewLayerRendered(Canvas c);
 
     public class GlobalDeviceLayout : ObjectSettings<GlobalDeviceLayoutSettings>, IInit
@@ -24,6 +46,8 @@ namespace Aurora.Devices.Layout
         public Dictionary<(byte type, byte id), DeviceLayout> DeviceLookup = null;
 
         public List<DeviceLayout> AllLayouts => DeviceLookup.Values.ToList();
+
+        public Dictionary<string, TypeEntry> DeviceLayoutTypes { get; private set; } = new Dictionary<string, TypeEntry>();
 
         private bool isIntialized = false;
         public bool Initialized => isIntialized;
@@ -57,12 +81,40 @@ namespace Aurora.Devices.Layout
             if (isIntialized)
                 return true;
 
+            RegisterDeviceLayoutType(new List<TypeEntry>
+            {
+                new TypeEntry("keyboard", "Keyboard", typeof(KeyboardDeviceLayout)),
+                new TypeEntry("mouse", "Mouse", typeof(MouseDeviceLayout))
+            });
+
             LoadSettings();
+            this.Settings.PropertyChanged += this.Settings_PropertyChanged;
 
             this.initialiseDevices();
             this.deviceLayoutsChanged();
 
             return (isIntialized = true);
+        }
+
+        private void Settings_PropertyChanged(object sender, PropertyChangedExEventArgs e)
+        {
+            if (e.PropertyName == nameof(GlobalDeviceLayoutSettings.BitmapAccuracy) || e.PropertyName == nameof(GlobalDeviceLayoutSettings.VirtualKeyboardKeycapType))
+            {
+                RegenerateAll();
+            }
+        }
+
+        bool ignoreLayoutUpdates = false;
+
+        private void RegenerateAll()
+        {
+            ignoreLayoutUpdates = true;
+
+            foreach (DeviceLayout layout in this.DeviceLookup.Values)
+                layout.GenerateLayout();
+
+            ignoreLayoutUpdates = false;
+            this.deviceLayoutsChanged();
         }
 
         private void initialiseDevices()
@@ -99,6 +151,9 @@ namespace Aurora.Devices.Layout
 
         private void DeviceLayout_LayoutUpdated(object sender)
         {
+            if (ignoreLayoutUpdates)
+                return;
+
             this.deviceLayoutsChanged();
         }
 
@@ -148,6 +203,53 @@ namespace Aurora.Devices.Layout
                 }
             }
         }
+
+        #region DeviceLayoutType Handling
+        //Basically just a modified version of what is done for LayerHandlers in LightStateManager. Could abstract it out into a base class, but doesn't seem super necessary atm
+
+
+        public void RegisterDeviceLayoutType(List<TypeEntry> layers)
+        {
+            foreach (var layer in layers)
+            {
+                RegisterDeviceLayoutType(layer);
+            }
+        }
+
+        public bool RegisterDeviceLayoutType(TypeEntry entry)
+        {
+            if (DeviceLayoutTypes.ContainsKey(entry.Key))
+                return false;
+
+            DeviceLayoutTypes.Add(entry.Key, entry);
+
+            return true;
+        }
+
+        public bool RegisterDeviceLayoutType(string key, string title, Type type, bool @default = true)
+        {
+            return RegisterDeviceLayoutType(new TypeEntry(key, title, type));
+        }
+
+        public Type GetLayerHandlerType(string key)
+        {
+            return DeviceLayoutTypes.ContainsKey(key) ? DeviceLayoutTypes[key].Type : null;
+        }
+
+        public DeviceLayout GetDeviceLayoutInstance(TypeEntry entry)
+        {
+            return (DeviceLayout)Activator.CreateInstance(entry.Type);
+        }
+
+        public DeviceLayout GetLayerHandlerInstance(string key)
+        {
+            if (DeviceLayoutTypes.ContainsKey(key))
+                return GetDeviceLayoutInstance(DeviceLayoutTypes[key]);
+
+            return null;
+        }
+
+        #endregion
 
         public void AddDeviceLayout(DeviceLayout deviceLayout)
         {

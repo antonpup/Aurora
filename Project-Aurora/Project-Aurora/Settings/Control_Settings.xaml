@@ -8,6 +8,7 @@
              xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
              xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
+             xmlns:DeviceLayout="clr-namespace:Aurora.Devices.Layout"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
@@ -38,66 +39,6 @@
             <EnumValueConverters:IdleEffectsToStringVC x:Key="IdleEffectsToStringVC"/>
             <DataTemplate x:Key="IdleEffectsTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource IdleEffectsToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KbLayout" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboardLocalization" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:KbLayoutToStringVC x:Key="KbLayoutToStringVC"/>
-            <DataTemplate x:Key="KbLayoutTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KbLayoutToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KbBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboard" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:KbBrandToStringVC x:Key="KbBrandToStringVC"/>
-            <DataTemplate x:Key="KbBrandTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KbBrandToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="MouseBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredMouse" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
-            <DataTemplate x:Key="MouseBrandTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource MouseBrandToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="MouseOrientation" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:MouseOrientationType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:MouseOrientationToStringVC x:Key="MouseOrientationToStringVC"/>
-            <DataTemplate x:Key="MouseOrientationTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource MouseOrientationToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KeycapType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:KeycapType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
-            <DataTemplate x:Key="KeycapTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KeycapTypeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="BitmapAccuracy" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:BitmapAccuracy" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
-            <DataTemplate x:Key="BitmapAccuracyTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource BitmapAccuracyToStringVC}}" />
             </DataTemplate>
 
             <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -242,14 +183,11 @@
                     <Button x:Name="wrapper_install_razer" Content="Install Aurora Wrapper Patch for Razer" HorizontalAlignment="Left" Margin="546,245,0,0" VerticalAlignment="Top" Click="wrapper_install_razer_Click"/>
                     <Button x:Name="wrapper_install_lightfx_32" Content="Install Aurora Wrapper Patch for LightFX (32 bit)" HorizontalAlignment="Left" Margin="546,171,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_32_Click"/>
                     <Button x:Name="wrapper_install_lightfx_64" Content="Install Aurora Wrapper Patch for LightFX (64 bit)" HorizontalAlignment="Left" Margin="546,196,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_64_Click"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,112,0,0" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="160,108,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectedItem="{Binding VirtualKeyboardKeycapType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <CheckBox x:Name="devices_disable_keyboard_lighting" Content="Disable Keyboard Lighting" Margin="10,192,670,60" Checked="devices_disable_keyboard_lighting_Checked" Unchecked="devices_disable_keyboard_lighting_Checked" />
-                    <CheckBox x:Name="devices_disable_mouse_lighting" Content="Disable Mouse Lighting" Margin="10,217,670,35" Checked="devices_disable_mouse_lighting_Checked" Unchecked="devices_disable_mouse_lighting_Checked" />
-                    <CheckBox x:Name="devices_disable_headset_lighting" Content="Disable Headset Lighting" Margin="10,241,670,11" Checked="devices_disable_headset_lighting_Checked" Unchecked="devices_disable_headset_lighting_Checked" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,137,0,0" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
-                    <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="160,133,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
+                </Grid>
+            </TabItem>
+            <TabItem Header="Device Layout">
+                <Grid>
+                    <DeviceLayout:Control_GlobalDeviceLayout Margin="10"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Device Manager">

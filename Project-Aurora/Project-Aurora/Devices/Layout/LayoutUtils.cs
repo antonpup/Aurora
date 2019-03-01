@@ -20,7 +20,7 @@ namespace Aurora.Devices.Layout
 
         public static int PixelToByte(double pixel)
         {
-            return (int)Math.Round(pixel / (double)(Global.Configuration.BitmapAccuracy));
+            return (int)Math.Round(pixel / (double)(GlobalDeviceLayout.Instance.Settings.BitmapAccuracy));
         }
 
         public static Point ToPixel(this Point p)

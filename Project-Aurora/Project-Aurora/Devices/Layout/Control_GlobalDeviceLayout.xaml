@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="Aurora.Devices.Layout.Control_GlobalDeviceLayout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Devices.Layout"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="KeycapType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:KeycapType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
+            <DataTemplate x:Key="KeycapTypeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource KeycapTypeToStringVC}}" />
+            </DataTemplate>
+
+            <ObjectDataProvider x:Key="BitmapAccuracy" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:BitmapAccuracy" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
+            <DataTemplate x:Key="BitmapAccuracyTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource BitmapAccuracyToStringVC}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
+        <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="160,10,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectedItem="{Binding Settings.VirtualKeyboardKeycapType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,37,0,0" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
+        <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="160,37,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding Settings.BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <CheckBox x:Name="chkAntiAliasing" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Content="Use Anti-Aliasing" IsChecked="{Binding Settings.AntiAliasing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    </Grid>
+</UserControl>

@@ -592,7 +592,7 @@ namespace Aurora.Devices.Layout
             }
 
             //TODO: DEAL WITH THIS
-            if (this.grouped_keys.Count == 0)
+            /*if (this.grouped_keys.Count == 0)
             {
                 //No items, display error
                 Label error_message = new Label();
@@ -650,11 +650,11 @@ namespace Aurora.Devices.Layout
                 new_virtual_keyboard.Height = 200;
             }
             else
-            {
+            {*/
                 //Update size
                 new_virtual_keyboard.Width = this.Region.Width;
                 new_virtual_keyboard.Height = this.Region.Height;
-            }
+            //}
 
             if (!abstractKeycaps)
             {

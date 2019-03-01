@@ -403,6 +403,9 @@
     </Compile>
     <Compile Include="Devices\Integrations\Wooting\WootingDevice.cs" />
     <Compile Include="Devices\Layout\Canvas.cs" />
+    <Compile Include="Devices\Layout\Control_GlobalDeviceLayout.xaml.cs">
+      <DependentUpon>Control_GlobalDeviceLayout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Devices\Layout\DeviceLayout.cs" />
     <Compile Include="Devices\Layout\DeviceLayoutSettings.cs" />
     <Compile Include="Devices\Layout\DeviceLED.cs" />
@@ -1529,6 +1532,10 @@
     <Page Include="Devices\Integrations\SteelSeries\SteelSeriesInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\Layout\Control_GlobalDeviceLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Profiles\ATS\Control_ATS.xaml">
       <Generator>MSBuild:Compile</Generator>
