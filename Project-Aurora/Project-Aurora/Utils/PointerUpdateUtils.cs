@@ -18,18 +18,23 @@ namespace Aurora.Utils
         private static GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-pointer-updater"));
 
         /// <summary>
-        /// Updates the Pointers directory with the most recent from a specified branch.
+        /// Updates the Pointers directory with the most recent from a specified branch. Files from the repo not found in the Pointers directory will be created.
         /// </summary>
         /// <param name="branch">The branch in antonpup/Aurora to pull the pointers from.</param>
         /// <param name="useOctokit">Get the pointers through GitHub's Content API using Octokit. Recommend this to be false to avoid rate limiting by GitHub's API.</param>
         /// <param name="backgroundTask">Set updating pointer files as a background task.</param>
         /// <returns></returns>
-        public static void UpdatePointers(string branch, bool useOctokit = false, bool backgroundTask = false)
+        public static void UpdateAllPointers(string branch, bool useOctokit = false, bool backgroundTask = false)
         {
             if (!backgroundTask) Task.Run(() => FetchAllPointers(branch, useOctokit)).Wait();
             else Task.Run(() => FetchAllPointers(branch, useOctokit));
         }
 
+        /// <summary>
+        /// Updates the Pointers directory with the most recent from a specified branch. Only updates the files found in the Pointers directory.
+        /// </summary>
+        /// <param name="branch">The branch in antonpup/Aurora to pull the pointers from.</param>
+        /// <param name="backgroundTask">Set updating pointer files as a background task.</param>
         public static void UpdateLocalPointers(string branch, bool backgroundTask = false)
         {
             if (!backgroundTask) Task.Run(() => FetchLocalPointers(branch)).Wait();
@@ -39,8 +44,7 @@ namespace Aurora.Utils
         private static async Task FetchAllPointers(string branch, bool useOctokit)
         {
             // Update pointer files in Aurora/Pointers/
-            string pointerPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            pointerPath += @"\Pointers\";
+            string pointerPath = Path.Combine(Global.ExecutingDirectory, "Pointers");
 
             string repoPath = "Project-Aurora/Project-Aurora/Pointers";
 
@@ -89,11 +93,10 @@ namespace Aurora.Utils
         {
             // This method will only update the pointer files found locally from the repo (as in if a file is deleted, it won't be pulled from the repo).
             // Truly an edge case, as every update will rewrite this folder.
-            // Not sure if this will hit some rate limit.
+            // Not sure if this will hit some rate limit on raw.githubusercontent.com
 
             // Update pointer files in Aurora/Pointers/
-            string pointerPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            pointerPath += @"\Pointers";
+            string pointerPath = Path.Combine(Global.ExecutingDirectory, "Pointers");
             string[] pointerFiles = Directory.GetFiles(pointerPath);
 
             foreach (string pFile in pointerFiles)
