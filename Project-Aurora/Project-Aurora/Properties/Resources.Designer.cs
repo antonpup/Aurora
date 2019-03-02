@@ -513,6 +513,16 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap overlays_icon {
+            get {
+                object obj = ResourceManager.GetObject("overlays_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap overwatch_icon {
             get {
                 object obj = ResourceManager.GetObject("overwatch_icon", resourceCulture);

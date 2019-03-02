@@ -85,8 +85,6 @@ namespace Aurora.Profiles
         public event EventHandler PreUpdate;
         public event EventHandler PostUpdate;
 
-        private ActiveProcessMonitor processMonitor;
-
         public LightingStateManager()
         {
             SettingsSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "ProfilesSettings.json");
@@ -99,11 +97,10 @@ namespace Aurora.Profiles
             if (Initialized)
                 return true;
 
-            processMonitor = new ActiveProcessMonitor();
-
             #region Initiate Defaults
             RegisterEvents(new List<ILightEvent> {
                 new Desktop.Desktop(),
+                new Overlay.Overlay(),
                 new Dota_2.Dota2(),
                 new CSGO.CSGO(),
                 new GTA5.GTA5(),
@@ -129,7 +126,7 @@ namespace Aurora.Profiles
                 new Blade_and_Soul.BnS(),
                 new Event_SkypeOverlay(),
                 new ROTTombRaider.ROTTombRaider(),
-				        new DyingLight.DyingLight(),
+				new DyingLight.DyingLight(),
                 new ETS2.ETS2(),
                 new ATS.ATS(),
                 new Move_or_Die.MoD(),
@@ -234,6 +231,8 @@ namespace Aurora.Profiles
 
             Global.Configuration.ProfileOrder.Remove("desktop");
             Global.Configuration.ProfileOrder.Insert(0, "desktop");
+            Global.Configuration.ProfileOrder.Remove("overlay");
+            Global.Configuration.ProfileOrder.Insert(1, "overlay");
         }
 
         public void SaveAll()
@@ -515,7 +514,7 @@ namespace Aurora.Profiles
         {
             if (Global.Configuration.detection_mode == ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
             {
-                processMonitor.GetActiveWindowsProcessname();
+                Global.ProcessMonitor.GetActiveWindowsProcessname();
                 nextProcessNameUpdate = currentTick + 1000L;
             }
         }
@@ -552,7 +551,7 @@ namespace Aurora.Profiles
                Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
                 return;
 
-            string raw_process_name = Path.GetFileName(processMonitor.ProcessPath);
+            string raw_process_name = Path.GetFileName(Global.ProcessMonitor.ProcessPath);
 
             UpdateProcess();
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
@@ -565,7 +564,7 @@ namespace Aurora.Profiles
             ILightEvent profile = GetCurrentProfile(out bool preview);
 
             timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
-
+            
             if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
                 Global.dev_manager.Shutdown();
@@ -576,12 +575,12 @@ namespace Aurora.Profiles
                 Global.dev_manager.InitializeOnce();
 
 
-            if (Global.Configuration.OverlaysInPreview || !preview)
+            if (!Global.Configuration.overlay_excluded_programs.Contains(raw_process_name) && (Global.Configuration.OverlaysInPreview || !preview))
             {
                 foreach (var underlay in Underlays)
                 {
                     ILightEvent @event = Events[underlay];
-                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                    if (@event != profile && @event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
                         @event.UpdateLights(newFrame);
                 }
             }
@@ -590,12 +589,12 @@ namespace Aurora.Profiles
             if (profile.IsEnabled)
                 profile.UpdateLights(newFrame);
 
-            if (Global.Configuration.OverlaysInPreview || !preview)
+            if (!Global.Configuration.overlay_excluded_programs.Contains(raw_process_name) && (Global.Configuration.OverlaysInPreview || !preview))
             {
                 foreach (var overlay in Overlays)
                 {
                     ILightEvent @event = Events[overlay];
-                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                    if (@event != profile && @event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
                         @event.UpdateLights(newFrame);
                 }
 
@@ -618,8 +617,8 @@ namespace Aurora.Profiles
         /// <summary>Gets the current application.</summary>
         /// <param name="preview">Boolean indicating whether the application is selected because it is previewing (true) or because the process is open (false).</param>
         public ILightEvent GetCurrentProfile(out bool preview) {
-            string process_name = Path.GetFileName(processMonitor.ProcessPath).ToLower();
-            string process_title = processMonitor.GetActiveWindowsProcessTitle();
+            string process_name = Path.GetFileName(Global.ProcessMonitor.ProcessPath).ToLower();
+            string process_title = Global.ProcessMonitor.GetActiveWindowsProcessTitle();
             ILightEvent profile = null;
             ILightEvent tempProfile = null;
             preview = false;

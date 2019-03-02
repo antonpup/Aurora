@@ -172,6 +172,14 @@
                     <TextBlock Text="sec" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="389,10,0,0" />
                 </Grid>
             </TabItem>
+            <TabItem Header="Overlays">
+                <Grid>
+                    <ListBox x:Name="overlayExcluded_listbox" HorizontalAlignment="Left" Height="199" Margin="9,30,0,0" VerticalAlignment="Top" Width="160"/>
+                    <TextBlock Text="Excluded Processes" HorizontalAlignment="Left" Margin="9,9,0,0" VerticalAlignment="Top" Width="113"/>
+                    <Button x:Name="overlayExcluded_add" Content="Add Process" HorizontalAlignment="Left" Margin="174,30,0,0" VerticalAlignment="Top" Click="overlayExcluded_add_Click"/>
+                    <Button x:Name="overlayExcluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="174,58,0,0" VerticalAlignment="Top" Click="overlayExcluded_remove_Click"/>
+                </Grid>
+            </TabItem>
             <TabItem Header="Volume Overlay">
                 <Grid>
                     <CheckBox x:Name="volume_overlay_enabled" Content="Enable Volume Overlay" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="volume_overlay_enabled_Checked" Unchecked="volume_overlay_enabled_Checked"/>

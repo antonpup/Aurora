@@ -106,6 +106,7 @@ namespace Aurora.Settings
             this.nighttime_end_hour_updown.Value = Global.Configuration.nighttime_end_hour;
             this.nighttime_end_minute_updown.Value = Global.Configuration.nighttime_end_minute;
 
+            this.overlayExcluded_listbox.ItemsSource = Global.Configuration.overlay_excluded_programs;
 
             this.volume_overlay_enabled.IsChecked = Global.Configuration.volume_overlay_settings.enabled;
             this.volume_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.low_color);
@@ -425,6 +426,18 @@ namespace Aurora.Settings
             }
 
             load_excluded_listbox();
+        }
+
+        private void overlayExcluded_add_Click(object sender, RoutedEventArgs e) {
+            Window_ProcessSelection dialog = new Window_ProcessSelection { ButtonLabel = "Exclude Process" };
+            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutableName)) // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
+                Global.Configuration.overlay_excluded_programs.Add(dialog.ChosenExecutableName);
+            ConfigManager.Save(Global.Configuration);
+        }
+
+        private void overlayExcluded_remove_Click(object sender, RoutedEventArgs e) {
+            Global.Configuration.overlay_excluded_programs.Remove(overlayExcluded_listbox.SelectedItem.ToString());
+            ConfigManager.Save(Global.Configuration);
         }
 
         private void volume_overlay_enabled_Checked(object sender, RoutedEventArgs e)

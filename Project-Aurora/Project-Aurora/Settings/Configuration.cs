@@ -10,6 +10,7 @@ using Aurora.Profiles.Overlays;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
+using System.Collections.ObjectModel;
 
 namespace Aurora.Settings
 {
@@ -437,6 +438,7 @@ namespace Aurora.Settings
         public VariableRegistry VarRegistry;
 
         //Overlay Settings
+        public ObservableCollection<string> overlay_excluded_programs;
         public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
 
@@ -503,6 +505,7 @@ namespace Aurora.Settings
             idle_frequency = 2.5f;
 
             //Overlay Settings
+            overlay_excluded_programs = new ObservableCollection<string>();
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
 

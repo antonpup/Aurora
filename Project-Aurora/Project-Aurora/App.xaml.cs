@@ -19,6 +19,7 @@ using SharpDX.RawInput;
 using NLog;
 using System.Reflection;
 using System.Text;
+using Aurora.Utils;
 
 namespace Aurora
 {
@@ -86,6 +87,7 @@ namespace Aurora
 
         //public static GameEventHandler geh;
         public static PluginManager PluginManager;
+        public static ActiveProcessMonitor ProcessMonitor;
         public static LightingStateManager LightingStateManager;
         public static NetworkListener net_listener;
         public static Configuration Configuration;
@@ -295,6 +297,9 @@ namespace Aurora
                 Utils.DesktopUtils.StartSessionWatch();
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
+
+                Global.logger.Info("Starting Process Monitor");
+                Global.ProcessMonitor = new ActiveProcessMonitor();
 
                 Global.logger.Info("Loading Applications");
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
