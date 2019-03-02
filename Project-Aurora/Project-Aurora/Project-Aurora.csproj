@@ -1107,6 +1107,9 @@
     <None Include="kb_layouts\generic_laptop_numpad.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\logitech_g213.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\logitech_g410.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
