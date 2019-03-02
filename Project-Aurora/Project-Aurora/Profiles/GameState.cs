@@ -265,6 +265,16 @@ namespace Aurora.Profiles
         /// </summary>
         public bool MicrophoneIsMuted => DefaultAudioInDevice?.AudioEndpointVolume.Mute ?? true;
 
+        /// <summary>
+        /// Gets the full filesystem path of the currently focussed application.
+        /// </summary>
+        public string ForegroundApplicationPath => Global.ProcessMonitor.ProcessPath;
+
+        /// <summary>
+        /// Gets the file name (exlcluding extension) of the currently focussed application.
+        /// </summary>
+        public string ForegroundApplicationName => System.IO.Path.GetFileNameWithoutExtension(Global.ProcessMonitor.ProcessPath);
+
         private static PerformanceCounter _CPUCounter;
 
         private static float _CPUUsage = 0.0f;
