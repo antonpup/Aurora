@@ -15,41 +15,85 @@ namespace Aurora.Utils
     /// </summary>
     public static class PointerUpdateUtils
     {
-        private static GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-pointer-updater"));
+        private static HashSet<string> appsToUpdate = new HashSet<string>();
+        private static GitHubClient octokitClient = new GitHubClient(new ProductHeaderValue("aurora-pointer-updater"));
+        private static readonly HttpClient pointerClient = new HttpClient()
+        {
+            // Just so if the thread decides to wait, it does not hang until the response times out
+            Timeout = new TimeSpan(0, 0, 3)
+        };
 
         /// <summary>
-        /// Updates the Pointers directory with the most recent from a specified branch. Files from the repo not found in the Pointers directory will be created.
+        /// Add application to pointer updater. Should be called in the constructor inheriting the Application class (e.g., Borderlands2 : Application).
+        /// </summary>
+        /// <param name="appPointerFile">The application's referenced pointer file.</param>
+        public static void MarkAppForUpdate(string appPointerFile)
+        {
+            appsToUpdate.Add(appPointerFile);
+        }
+
+        /// <summary>
+        /// Async task to fetch all pointer files contained in a specific branch from the Aurora repository.
+        /// It will download files marked for update by MarkAppForUpdate(string).
+        /// This will also retrieve deleted files.
         /// </summary>
         /// <param name="branch">The branch in antonpup/Aurora to pull the pointers from.</param>
         /// <param name="useOctokit">Get the pointers through GitHub's Content API using Octokit. Recommend this to be false to avoid rate limiting by GitHub's API.</param>
-        /// <param name="backgroundTask">Set updating pointer files as a background task.</param>
-        /// <returns></returns>
-        public static void UpdateAllPointers(string branch, bool useOctokit = false, bool backgroundTask = false)
+        public static async Task FetchPointers(string branch, bool useOctokit = false)
         {
-            if (!backgroundTask) Task.Run(() => FetchAllPointers(branch, useOctokit)).Wait();
-            else Task.Run(() => FetchAllPointers(branch, useOctokit));
+            // If no games to update, return
+            if (appsToUpdate.Count == 0) return;
+
+            // Update pointer files in Aurora/Pointers/
+            string pointerPath = Path.Combine(Global.ExecutingDirectory, "Pointers");
+            string repoPath = "Project-Aurora/Project-Aurora/Pointers";
+
+            foreach (string app in appsToUpdate)
+            {
+                if (useOctokit)
+                {
+                    // Use Octokit to get pointer files through API
+                    try
+                    {
+                        IReadOnlyCollection<RepositoryContent> repoFile = await octokitClient.Repository.Content.GetAllContentsByRef("antonpup", "Aurora", repoPath + "/" + app + ".json", branch);
+                        File.WriteAllText(Path.Combine(pointerPath, repoFile.ElementAt(0).Name), repoFile.ElementAt(0).Content);
+                    }
+                    catch (Exception e)
+                    {
+                        Global.logger.Error("FetchPointers Octokit exception, " + e);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        //TEMPLATE: https://github.com/antonpup/Aurora/raw/[BRANCH]/Project-Aurora/Project-Aurora/Pointers/[GAME].json
+                        // This should redirect to raw.githubusercontent.com and comply with 301 redirect requests
+                        string content = await pointerClient.GetStringAsync(@"https://github.com/antonpup/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + app + ".json");
+                        File.WriteAllText(Path.Combine(pointerPath, app) + ".json", content);
+                    }
+                    catch (Exception e)
+                    {
+                        Global.logger.Error("FetchPointers HTTP exception, " + e);
+                    }
+                }
+            }
         }
 
         /// <summary>
-        /// Updates the Pointers directory with the most recent from a specified branch. Only updates the files found in the Pointers directory.
+        /// Async task to fetch all pointer files contained in a specific branch from the Aurora repository.
+        /// It will download all files, including those for applications merged to the branch before a release.
         /// </summary>
         /// <param name="branch">The branch in antonpup/Aurora to pull the pointers from.</param>
-        /// <param name="backgroundTask">Set updating pointer files as a background task.</param>
-        public static void UpdateLocalPointers(string branch, bool backgroundTask = false)
-        {
-            if (!backgroundTask) Task.Run(() => FetchLocalPointers(branch)).Wait();
-            else Task.Run(() => FetchLocalPointers(branch));
-        }
-
-        private static async Task FetchAllPointers(string branch, bool useOctokit)
+        /// <param name="useOctokit">Get the pointers through GitHub's Content API using Octokit. Recommend this to be false to avoid rate limiting by GitHub's API.</param>
+        public static async Task FetchDevPointers(string branch, bool useOctokit = false)
         {
             // Update pointer files in Aurora/Pointers/
             string pointerPath = Path.Combine(Global.ExecutingDirectory, "Pointers");
-
             string repoPath = "Project-Aurora/Project-Aurora/Pointers";
 
             // API call to get directory in repo where pointer jsons are held
-            IReadOnlyCollection<RepositoryContent> content = await gClient.Repository.Content.GetAllContentsByRef("antonpup", "Aurora", repoPath, branch);
+            IReadOnlyCollection<RepositoryContent> content = await octokitClient.Repository.Content.GetAllContentsByRef("antonpup", "Aurora", repoPath, branch);
 
             foreach (RepositoryContent pointerRepoFiles in content)
             {
@@ -58,64 +102,29 @@ namespace Aurora.Utils
                     // Use Octokit to get pointer files through API
                     try
                     {
-                        IReadOnlyCollection<RepositoryContent> repoFile = await gClient.Repository.Content.GetAllContentsByRef("antonpup", "Aurora", repoPath + "/" + pointerRepoFiles.Name, branch);
-                        File.WriteAllText(pointerPath + repoFile.ElementAt(0).Name, repoFile.ElementAt(0).Content);
+                        IReadOnlyCollection<RepositoryContent> repoFile = await octokitClient.Repository.Content.GetAllContentsByRef("antonpup", "Aurora", repoPath + "/" + pointerRepoFiles.Name, branch);
+                        File.WriteAllText(Path.Combine(pointerPath, repoFile.ElementAt(0).Name), repoFile.ElementAt(0).Content);
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchAllPointers exception, " + e);
+                        Global.logger.Error("FetchDevPointers Octokit exception, " + e);
                     }
                 }
                 else
                 {
                     // Make an HTTP request to the raw server
-                    string game = pointerRepoFiles.Name;
+                    string app = pointerRepoFiles.Name;
 
-                    using (HttpClient client = new HttpClient())
-                    {
-                        try
-                        {
-                            //TEMPLATE: https://github.com/antonpup/Aurora/raw/[BRANCH]/Project-Aurora/Project-Aurora/Pointers/[GAME].json
-                            // This should redirect to raw.githubusercontent.com and comply with 301 redirect requests
-                            string fContent = await client.GetStringAsync(@"https://github.com/antonpup/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + game);
-                            File.WriteAllText(pointerPath + game, fContent);
-                        }
-                        catch (Exception e)
-                        {
-                            Global.logger.Error("FetchAllPointers exception, " + e);
-                        }
-                    }
-                }
-            }
-        }
-
-        static private async Task FetchLocalPointers(string branch)
-        {
-            // This method will only update the pointer files found locally from the repo (as in if a file is deleted, it won't be pulled from the repo).
-            // Truly an edge case, as every update will rewrite this folder.
-            // Not sure if this will hit some rate limit on raw.githubusercontent.com
-
-            // Update pointer files in Aurora/Pointers/
-            string pointerPath = Path.Combine(Global.ExecutingDirectory, "Pointers");
-            string[] pointerFiles = Directory.GetFiles(pointerPath);
-
-            foreach (string pFile in pointerFiles)
-            {
-                string[] splitPath = pFile.Split(new[] { "\\" }, StringSplitOptions.None);
-                string game = splitPath[splitPath.Length - 1];
-
-                using (HttpClient client = new HttpClient())
-                {
                     try
                     {
                         //TEMPLATE: https://github.com/antonpup/Aurora/raw/[BRANCH]/Project-Aurora/Project-Aurora/Pointers/[GAME].json
                         // This should redirect to raw.githubusercontent.com and comply with 301 redirect requests
-                        string content = await client.GetStringAsync(@"https://github.com/antonpup/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + game);
-                        File.WriteAllText(pFile, content);
+                        string fContent = await pointerClient.GetStringAsync(@"https://github.com/antonpup/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + app);
+                        File.WriteAllText(Path.Combine(pointerPath, app), fContent);
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchLocalPointers exception, " + e);
+                        Global.logger.Error("FetchDevPointers HTTP exception, " + e);
                     }
                 }
             }

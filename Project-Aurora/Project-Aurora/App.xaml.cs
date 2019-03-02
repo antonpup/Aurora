@@ -296,11 +296,11 @@ namespace Aurora
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
 
-                Global.logger.Info("Fetching latest pointers");
-                Utils.PointerUpdateUtils.UpdateLocalPointers("dev");
-
                 Global.logger.Info("Loading Applications");
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
+
+                Global.logger.Info("Fetching latest pointers");
+                Task.Run(() => Utils.PointerUpdateUtils.FetchDevPointers("dev"));
 
                 Global.logger.Info("Loading Device Manager");
                 Global.dev_manager.RegisterVariables();
