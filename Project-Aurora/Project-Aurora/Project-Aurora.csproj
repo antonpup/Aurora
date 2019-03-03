@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -526,6 +526,7 @@
     <Compile Include="Profiles\DeadCells\DeadCellsApplication.cs" />
     <Compile Include="Profiles\Subnautica\Control_Subnautica.xaml.cs" />
     <Compile Include="Profiles\Subnautica\GSI\GameState_Subnautica.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\VehicleSubNode.cs" />
     <Compile Include="Profiles\Subnautica\GSI\Nodes\GameStateNode.cs" />
     <Compile Include="Profiles\Subnautica\GSI\Nodes\NotificationNode.cs" />
     <Compile Include="Profiles\Subnautica\GSI\Nodes\PlayerNode.cs" />

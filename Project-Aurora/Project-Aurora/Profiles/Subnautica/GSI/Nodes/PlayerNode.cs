@@ -8,22 +8,48 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
     public class PlayerNode : Node<PlayerNode> {
 
         public string Biom;
+
         public bool InLifePod;
 
-        //public string type; //Base, Cyclops, Seamoth or Prawn
-        public string Type;
-        public bool InBase;
-        public bool InCyclops;
-        public bool InSeamoth;
-        public bool InPrawn;
+        public bool InSafeShallows;
+        public bool InLostRiver;
+        public bool InKelpForest;
+        public bool InGrassyPlateus;
+        public bool InUnderwaterIslands;
+        public bool InFloatingIsland;
+        public bool InLavaZone;
+        public bool InInactiveLavaZone;
+        public bool InMushroomForest;
+        public bool InBloodKelp;
+        public bool InSandDunes;
+        public bool InGrandReef;
+        public bool InBulbZone;
+        public bool InMountains;
+        public bool InSparseReef;
+        public bool InJellyshroom;
+        public bool InCrashZone;
+        public bool InCragField;
 
-        //public int Depth;
         //public int SurfaceDepth; //always 0?
+        public int Depth;
         public int DepthLevel;
 
         public int Health;
         public int Food;
         public int Water;
+
+        public int GameMode;
+        public bool InSurvivalMode;
+        public bool InCreativeMode;
+        public bool InFreedomMode;
+        public bool InHardcoreMode;
+        /*
+        Survival = 0,
+        Freedom = 1,
+        Hardcore = 2,
+        Creative = 3,
+        None = 4
+        */
 
         public bool CanBreathe;
         public int OxygenCapacity;
@@ -52,7 +78,12 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
         Mech = 4
         Run = 5
         */
+        //public bool IsWalking; //when walking? when walking in Base or Cyclops!
+        //public bool IsDiving; //Seagliding does not count
         public bool IsSeagliding;
+        //public bool IsInVehicle;
+        //public bool IsInMech;
+        //public bool IsRunning; //is also when in Water?
 
         public int Mode;
         /*
@@ -68,20 +99,38 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
 
             InLifePod = Biom == "Lifepod";
 
-            //Base, Cyclops, Seamoth or Prawn
-            Type = GetString("type");
-
-            InBase = Type == "Base";
-            InCyclops = Type == "Cyclops";
-            InSeamoth = Type == "Seamoth";
-            InPrawn = Type == "Prawn";
+            InSafeShallows = Biom == "safe" || Biom == "Lifepod";
+            InLostRiver = Biom == "lostriver";
+            InKelpForest = Biom == "kelpforest";
+            InGrassyPlateus = Biom == "grassy";
+            InUnderwaterIslands = Biom == "underwaterislands";
+            InFloatingIsland = Biom == "floatingisland";
+            InLavaZone = Biom == "lava";
+            InInactiveLavaZone = Biom == "ilz";
+            InMushroomForest = Biom == "mushroom";
+            InBloodKelp = Biom == "bloodkelp";
+            InSandDunes = Biom == "dunes";
+            InGrandReef = Biom == "grandreef";
+            InBulbZone = Biom == "koosh";
+            InMountains = Biom == "mountains";
+            InSparseReef = Biom == "sparse";
+            InJellyshroom = Biom == "jellyshroom";
+            InCrashZone = Biom == "crash";
+            InCragField = Biom == "crag";
 
             //SurfaceDepth = GetInt("surface_depth");
             DepthLevel = GetInt("depth_level");
+            Depth = DepthLevel >= 0 ? 0 : Math.Abs(DepthLevel);
 
             Health = GetInt("health");
             Food = GetInt("food");
             Water = GetInt("water");
+
+            GameMode = GetInt("game_mode");
+            InSurvivalMode = GameMode == 0;
+            InFreedomMode = GameMode == 1;
+            InHardcoreMode = GameMode == 2;
+            InCreativeMode = GameMode == 3;
 
             CanBreathe = GetBool("can_breathe");
 
