@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.Linq;
 using System.Windows.Controls;
@@ -16,9 +17,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         internal void SetApplication(Application application) {
-            ValidPathsCombo.ItemsSource = application?.ParameterLookup?
-                .Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean)
-                .Select(kvp => kvp.Key);
+            ValidPathsCombo.ItemsSource = application?.ParameterLookup?.GetBooleanParameters();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.Linq;
 using System.Windows.Controls;
@@ -40,12 +41,10 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Update the assigned control with the new application.</summary>
         public void SetApplication(Application application) {
             if (control != null)
-                control.ItemsSource = application?.ParameterLookup?
-                    .Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1))
-                    .Select(kvp => kvp.Key);
+                control.ItemsSource = application?.ParameterLookup?.GetNumericParameters();
 
             // Check to ensure the variable path is valid
-            if (application != null && !double.TryParse(VariablePath, out _) && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.ContainsKey(VariablePath))
+            if (application != null && !double.TryParse(VariablePath, out _) && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.IsValidParameter(VariablePath))
                 VariablePath = string.Empty;
         }
 

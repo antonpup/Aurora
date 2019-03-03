@@ -684,10 +684,11 @@ namespace Aurora.Profiles
                 ILightEvent profile;// = this.GetProfileFromProcess(process_name);
                 
 
-                JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
-                string appid = provider.GetValue("appid").ToString();
+                JObject provider = JObject.Parse(gs.GetNode("provider"));
+                string appid = provider.GetValue("appid")?.ToString() ?? "-1";
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
+                // Check to see if the provider appid/name from the JSON is registered as a profile in Aurora
                 if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcessName(name)) != null)
                 {
                     IGameState gameState = gs;
@@ -695,9 +696,14 @@ namespace Aurora.Profiles
                         gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json);
                     profile.SetGameState(gameState);
                 }
+
+                // Check to see if the provider name from JSON is registered as a GameState Plugin (and attempt to update it)
+                else if (Global.GameStatePluginManager.TryUpdateState(name, gs.json)) { }
+
+                // Handling for wrapper profiles
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
-                    string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
+                    string gs_process_name = JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
                     lock (Events)
                     {
                         profile = profile ?? GetProfileFromProcessName(gs_process_name);

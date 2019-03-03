@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,26 +10,22 @@ using System.Threading.Tasks;
 
 namespace Aurora.Utils
 {
-    public static class GameStateUtils
-    {
+    public static class GameStateUtils {
         static Dictionary<Type, bool> AdditionalAllowedTypes = new Dictionary<Type, bool>
         {
             { typeof(string), true },
         };
 
-        public static Dictionary<string, Tuple<Type, Type>> ReflectGameStateParameters(Type typ)
-        {
+        public static Dictionary<string, Tuple<Type, Type>> ReflectGameStateParameters(Type typ) {
             Dictionary<string, Tuple<Type, Type>> parameters = new Dictionary<string, Tuple<Type, Type>>();
 
-            foreach (MemberInfo prop in typ.GetFields().Cast<MemberInfo>().Concat(typ.GetProperties().Cast<MemberInfo>()).Concat(typ.GetMethods().Where(m => !m.IsSpecialName).Cast<MemberInfo>()))
-            {
+            foreach (MemberInfo prop in typ.GetFields().Cast<MemberInfo>().Concat(typ.GetProperties().Cast<MemberInfo>()).Concat(typ.GetMethods().Where(m => !m.IsSpecialName).Cast<MemberInfo>())) {
                 if (prop.GetCustomAttribute(typeof(GameStateIgnoreAttribute)) != null)
                     continue;
 
                 Type prop_type;
                 Type prop_param_type = null;
-                switch (prop.MemberType)
-                {
+                switch (prop.MemberType) {
                     case MemberTypes.Field:
                         prop_type = ((FieldInfo)prop).FieldType;
                         break;
@@ -37,7 +34,7 @@ namespace Aurora.Utils
                         break;
                     case MemberTypes.Method:
                         //if (((MethodInfo)prop).IsSpecialName)
-                            //continue;
+                        //continue;
 
                         prop_type = ((MethodInfo)prop).ReturnType;
 
@@ -48,8 +45,7 @@ namespace Aurora.Utils
                             prop_param_type = null;
                         else if (((MethodInfo)prop).GetParameters().Count() == 1)
                             prop_param_type = ((MethodInfo)prop).GetParameters()[0].ParameterType;
-                        else
-                        {
+                        else {
                             //Warning: More than 1 parameter!
                             Console.WriteLine();
                         }
@@ -59,45 +55,32 @@ namespace Aurora.Utils
                         continue;
                 }
 
-                if(prop.Name.Equals("Abilities"))
+                if (prop.Name.Equals("Abilities"))
                     Console.WriteLine();
 
                 Type temp = null;
 
-                if (prop_type.IsPrimitive || AdditionalAllowedTypes.ContainsKey(prop_type))
-                {
+                if (prop_type.IsPrimitive || AdditionalAllowedTypes.ContainsKey(prop_type)) {
                     parameters.Add(prop.Name, new Tuple<Type, Type>(prop_type, prop_param_type));
-                }
-                else if (prop_type.IsArray || prop_type.GetInterfaces().Any(t =>
-                {
+                } else if (prop_type.IsArray || prop_type.GetInterfaces().Any(t => {
                     return t == typeof(IEnumerable) || t == typeof(IList) || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null);
-                }))
-                {
+                })) {
                     RangeAttribute attribute;
-                    if ((attribute = prop.GetCustomAttribute(typeof(RangeAttribute)) as RangeAttribute) != null)
-                    {
+                    if ((attribute = prop.GetCustomAttribute(typeof(RangeAttribute)) as RangeAttribute) != null) {
                         var sub_params = ReflectGameStateParameters(temp ?? prop_type.GetElementType());
 
-                        for (int i = attribute.Start; i <= attribute.End; i++)
-                        {
+                        for (int i = attribute.Start; i <= attribute.End; i++) {
                             foreach (var sub_param in sub_params)
                                 parameters.Add(prop.Name + "/" + i + "/" + sub_param.Key, sub_param.Value);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         //warning
                         Console.WriteLine();
                     }
-                }
-                else if (prop_type.IsClass)
-                {
-                    if (prop.MemberType == MemberTypes.Method)
-                    {
+                } else if (prop_type.IsClass) {
+                    if (prop.MemberType == MemberTypes.Method) {
                         parameters.Add(prop.Name, new Tuple<Type, Type>(prop_type, prop_param_type));
-                    }
-                    else
-                    {
+                    } else {
                         Dictionary<string, Tuple<Type, Type>> sub_params;
 
                         if (prop_type == typ)
@@ -114,16 +97,15 @@ namespace Aurora.Utils
             return parameters;
         }
 
-        private static object _RetrieveGameStateParameter(IGameState state, string parameter_path, params object[] input_values)
-        {
+        private static object _RetrieveGameStateParameter(IGameState state, string parameter_path, params object[] input_values) {
             string[] parameters = parameter_path.Split('/');
+            bool isPlugin = parameters[0] == "Plugins";
 
             object val = null;
-            IStringProperty property_object = state as IStringProperty;
+            IStringProperty property_object = isPlugin ? Global.GameStatePluginManager : state as IStringProperty;
             int index_pos = 0;
 
-            for (int x = 0; x < parameters.Count(); x++)
-            {
+            for (int x = isPlugin ? 1 : 0; x < parameters.Count(); x++) {
                 if (property_object == null)
                     return val;
 
@@ -136,16 +118,25 @@ namespace Aurora.Utils
                 if (val == null)
                     throw new ArgumentNullException($"Failed to get value {parameter_path}, failed at '{param}'");
 
-                Type property_type = property_object.GetType();
-                Type temp = null;
-                if (x < parameters.Length - 1 && (property_type.IsArray || property_type.GetInterfaces().Any(t =>
-                {
-                    return t == typeof(IEnumerable) || t == typeof(IList) || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null);
-                })) && int.TryParse(parameters[x + 1], out index_pos))
-                {
+                Type val_type = val.GetType();
+                Type temp = null, temp2 = null;
+
+                // Special handling for dictionaries (needs to be before handling of IEnumerables since Dictionary is also IEnumerable)
+                if (x < parameters.Length - 1 && val_type.GetInterfaces().Contains(typeof(IDictionary)) && val_type.GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IDictionary<,>) && (temp = t.GenericTypeArguments[0]) != null && (temp2 = t.GenericTypeArguments[1]) != null)) {
+                    // temp = type of dictionary key, temp2 = type of dictionary value
                     x++;
-                    Type child_type = temp ?? property_type.GetElementType();
-                    IEnumerable<object> array = (IEnumerable<object>)property_object;
+                    var inst = (IDictionary)val;
+                    var key = TypeDescriptor.GetConverter(temp).ConvertFromString(parameters[x]);
+                    val = inst[key] ?? Activator.CreateInstance(temp2);
+                }
+
+                // Special handling for other IEnumerables (such as lists)
+                else if (x < parameters.Length - 1 && (val_type.IsArray || val_type.GetInterfaces().Any(t => {
+                    return t == typeof(IEnumerable) || t == typeof(IList) || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && (temp = t.GenericTypeArguments[0]) != null);
+                })) && int.TryParse(parameters[x + 1], out index_pos)) {
+                    x++;
+                    Type child_type = temp ?? val_type.GetElementType();
+                    IEnumerable<object> array = (IEnumerable<object>)val;
 
                     if (array.Count() > index_pos)
                         val = array.ElementAt(index_pos);
@@ -159,18 +150,13 @@ namespace Aurora.Utils
             return val;
         }
 
-        public static object RetrieveGameStateParameter(IGameState state, string parameter_path, params object[] input_values)
-        {
+        public static object RetrieveGameStateParameter(IGameState state, string parameter_path, params object[] input_values) {
             if (Global.isDebug)
                 return _RetrieveGameStateParameter(state, parameter_path, input_values);
-            else
-            {
-                try
-                {
+            else {
+                try {
                     return _RetrieveGameStateParameter(state, parameter_path, input_values);
-                }
-                catch (Exception exc)
-                {
+                } catch (Exception exc) {
                     Global.logger.Error($"Exception: {exc}");
                     return null;
                 }
@@ -209,11 +195,36 @@ namespace Aurora.Utils
         }
 
 
-        /*public static object RetrieveGameStateParameter(GameState state, string parameter_path, Type type = null)
-        {
+        #region ParameterLookup extensions
+        /// <summary>
+        /// Merges the given ParameterLookup dictionary with the plugin parameters if includePlugins is true, else simply returns the given ParameterLookup dictionary.
+        /// </summary>
+        private static Dictionary<string, Tuple<Type, Type>> MergeWithPluginParameters(this Dictionary<string, Tuple<Type, Type>> @base, bool includePlugins = true)
+            => includePlugins ? @base.Concat(Global.GameStatePluginManager.PluginParameterLookup).ToDictionary(kvp => kvp.Key, kvp => kvp.Value) : @base;
 
+        /// <summary>
+        /// Checks if the given parameter is valid for the current parameter lookup, optionally including plugin parameters.
+        /// </summary>
+        public static bool IsValidParameter(this Dictionary<string, Tuple<Type, Type>> parameterLookup, string parameter, bool includePlugins = true)
+            => parameterLookup.MergeWithPluginParameters(includePlugins).ContainsKey(parameter);
 
-            return null;
-        }*/
+        /// <summary>
+        /// Fetchs all numeric values from the given parameter lookup dictionary, optionally including plugin parameters.
+        /// </summary>
+        public static IEnumerable<string> GetNumericParameters(this Dictionary<string, Tuple<Type, Type>> parameterLookup, bool includePlugins = true)
+            => parameterLookup.MergeWithPluginParameters(includePlugins).Where(kvp => TypeUtils.IsNumericType(kvp.Value.Item1)).Select(kvp => kvp.Key);
+
+        /// <summary>
+        /// Fetchs all boolean values from the given parameter lookup dictionary, optionally including plugin parameters.
+        /// </summary>
+        public static IEnumerable<string> GetBooleanParameters(this Dictionary<string, Tuple<Type, Type>> parameterLookup, bool includePlugins = true)
+            => parameterLookup.MergeWithPluginParameters(includePlugins).Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean).Select(kvp => kvp.Key);
+
+        /// <summary>
+        /// Fetchs all string values from the given parameter lookup dictionary, optionally including plugin parameters.
+        /// </summary>
+        public static IEnumerable<string> GetStringParameters(this Dictionary<string, Tuple<Type, Type>> parameterLookup, bool includePlugins = true)
+            => parameterLookup.MergeWithPluginParameters(includePlugins).Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.String).Select(kvp => kvp.Key);
+        #endregion
     }
 }

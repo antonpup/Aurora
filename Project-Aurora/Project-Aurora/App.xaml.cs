@@ -86,6 +86,7 @@ namespace Aurora
 
         //public static GameEventHandler geh;
         public static PluginManager PluginManager;
+        public static GameStatePluginManager GameStatePluginManager;
         public static LightingStateManager LightingStateManager;
         public static NetworkListener net_listener;
         public static Configuration Configuration;
@@ -281,6 +282,9 @@ namespace Aurora
 
                 Global.logger.Info("Loading Plugins");
                 (Global.PluginManager = new PluginManager()).Initialize();
+
+                Global.logger.Info("Loading GameState Plugins");
+                Global.GameStatePluginManager = new GameStatePluginManager();
 
                 Global.logger.Info("Loading KB Layouts");
                 Global.kbLayout = new KeyboardLayoutManager();

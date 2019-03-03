@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -25,9 +26,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         internal void SetApplication(Application application) {
-            Operand1Cb.ItemsSource = Operand2Cb.ItemsSource = application?.ParameterLookup?
-                .Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1))
-                .Select(kvp => kvp.Key);
+            Operand1Cb.ItemsSource = Operand2Cb.ItemsSource = application?.ParameterLookup?.GetNumericParameters();
         }
     }
 }

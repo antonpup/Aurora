@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -45,7 +46,7 @@ namespace Aurora.Settings.Overrides.Logic {
             control?.SetApplication(application);
 
             // Check to ensure the variable path is valid
-            if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.ContainsKey(VariablePath))
+            if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.IsValidParameter(VariablePath))
                 VariablePath = string.Empty;
         }
 
@@ -110,9 +111,9 @@ namespace Aurora.Settings.Overrides.Logic {
             control?.SetApplication(application);
 
             // Check to ensure the variable paths are valid
-            if (application != null && !double.TryParse(Operand1Path, out _) && !string.IsNullOrWhiteSpace(Operand1Path) && !application.ParameterLookup.ContainsKey(Operand1Path))
+            if (application != null && !double.TryParse(Operand1Path, out _) && !string.IsNullOrWhiteSpace(Operand1Path) && !application.ParameterLookup.IsValidParameter(Operand1Path))
                 Operand1Path = string.Empty;
-            if (application != null && !double.TryParse(Operand2Path, out _) && !string.IsNullOrWhiteSpace(Operand2Path) && !application.ParameterLookup.ContainsKey(Operand2Path))
+            if (application != null && !double.TryParse(Operand2Path, out _) && !string.IsNullOrWhiteSpace(Operand2Path) && !application.ParameterLookup.IsValidParameter(Operand2Path))
                 Operand2Path = string.Empty;
         }
 

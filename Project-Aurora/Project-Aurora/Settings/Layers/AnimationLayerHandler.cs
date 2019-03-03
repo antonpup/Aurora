@@ -290,7 +290,7 @@ namespace Aurora.Settings.Layers
 
         public override void SetApplication(Application profile) {
             // Check to ensure the property specified actually exists
-            if (profile != null && !string.IsNullOrWhiteSpace(Properties._TriggerPath) && !profile.ParameterLookup.ContainsKey(Properties._TriggerPath))
+            if (profile != null && !string.IsNullOrWhiteSpace(Properties._TriggerPath) && !profile.ParameterLookup.IsValidParameter(Properties._TriggerPath))
                 Properties._TriggerPath = string.Empty;
 
             // Tell the control to update (will update the combobox with the possible variable paths)

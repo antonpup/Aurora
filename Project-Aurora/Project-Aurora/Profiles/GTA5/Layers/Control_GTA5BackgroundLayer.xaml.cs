@@ -59,11 +59,7 @@ namespace Aurora.Profiles.GTA5.Layers
         internal void SetProfile(Application profile)
         {
             if (profile != null && !profileset)
-            {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-
                 profileset = true;
-            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

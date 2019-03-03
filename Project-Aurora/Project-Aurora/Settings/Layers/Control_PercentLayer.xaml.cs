@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,16 +54,7 @@ namespace Aurora.Settings.Layers
         {
             if (profile != null && !profileset && profile.ParameterLookup != null)
             {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-
-                this.ComboBox_variable.Items.Clear();
-                foreach (var item in var_types_numerical)
-                    this.ComboBox_variable.Items.Add(item.Key);
-
-                this.ComboBox_max_variable.Items.Clear();
-                foreach (var item in var_types_numerical)
-                    this.ComboBox_max_variable.Items.Add(item.Key);
-
+                ComboBox_variable.ItemsSource = ComboBox_max_variable.ItemsSource = profile.ParameterLookup?.GetNumericParameters();
                 profileset = true;
             }
             settingsset = false;

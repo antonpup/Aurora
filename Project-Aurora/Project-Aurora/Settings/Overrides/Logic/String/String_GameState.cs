@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.Linq;
 using System.Windows.Controls;
@@ -37,12 +38,10 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Update the assigned combobox with the new application context.</summary>
         public void SetApplication(Application application) {
             if (control != null)
-                control.ItemsSource = application?.ParameterLookup?
-                    .Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.String)
-                    .Select(kvp => kvp.Key);
+                control.ItemsSource = application?.ParameterLookup?.GetStringParameters();
 
             // Check to ensure var path is valid
-            if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.ContainsKey(VariablePath))
+            if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.IsValidParameter(VariablePath))
                 VariablePath = string.Empty;
         }
 

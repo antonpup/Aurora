@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers {
@@ -48,7 +49,7 @@ namespace Aurora.Settings.Layers {
 
         public override void SetApplication(Application profile) {
             if (profile != null) {
-                if (!string.IsNullOrWhiteSpace(Properties._ConditionPath) && !profile.ParameterLookup.ContainsKey(Properties._ConditionPath))
+                if (!string.IsNullOrWhiteSpace(Properties._ConditionPath) && !profile.ParameterLookup.IsValidParameter(Properties._ConditionPath))
                     Properties._ConditionPath = string.Empty;
             }
             (Control as Control_ConditionalLayer).SetProfile(profile);

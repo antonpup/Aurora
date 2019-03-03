@@ -55,8 +55,6 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             if (profile != null && !profileset)
             {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-
                 profileset = true;
             }
         }

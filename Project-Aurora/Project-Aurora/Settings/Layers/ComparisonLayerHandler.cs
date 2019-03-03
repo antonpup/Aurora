@@ -1,6 +1,7 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
+using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -71,9 +72,9 @@ namespace Aurora.Settings.Layers {
 
         public override void SetApplication(Application profile) {
             if (profile != null) {
-                if (!double.TryParse(Properties._Operand1Path, out double value) && !string.IsNullOrWhiteSpace(Properties._Operand1Path) && !profile.ParameterLookup.ContainsKey(Properties._Operand1Path))
+                if (!double.TryParse(Properties._Operand1Path, out double value) && !string.IsNullOrWhiteSpace(Properties._Operand1Path) && !profile.ParameterLookup.IsValidParameter(Properties._Operand1Path))
                     Properties._Operand1Path = string.Empty;
-                if (!double.TryParse(Properties._Operand2Path, out value) && !string.IsNullOrWhiteSpace(Properties._Operand2Path) && !profile.ParameterLookup.ContainsKey(Properties._Operand2Path))
+                if (!double.TryParse(Properties._Operand2Path, out value) && !string.IsNullOrWhiteSpace(Properties._Operand2Path) && !profile.ParameterLookup.IsValidParameter(Properties._Operand2Path))
                     Properties._Operand2Path = string.Empty;
             }
             (Control as Control_ComparisonLayer).SetProfile(profile);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,10 +47,7 @@ namespace Aurora.Settings.Layers {
 
         internal void SetProfile(Profiles.Application profile) {
             if (profile != null && !profileset) {
-                var var_types_boolean = profile.ParameterLookup?.Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean);
-                conditionPath.Items.Clear();
-                foreach (var item in var_types_boolean)
-                    conditionPath.Items.Add(item.Key);
+                conditionPath.ItemsSource = profile.ParameterLookup?.GetBooleanParameters();
 
                 profileset = true;
             }
