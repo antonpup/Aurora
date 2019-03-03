@@ -1,5 +1,7 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides.Logic;
+using Aurora.Settings.Overrides.Logic.Builder;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -197,23 +199,18 @@ namespace Aurora.Settings.Layers
             }
         }*/
 
-        protected ObservableCollection<LogicItem> _Logics;
+        protected Dictionary<string, IOverrideLogic> _OverrideLogic;
 
-        public ObservableCollection<LogicItem> Logics
+        public Dictionary<string, IOverrideLogic> OverrideLogic
         {
-            get { return _Logics; }
+            get { return _OverrideLogic; }
             set
             {
-                _Logics = value;
+                _OverrideLogic = value;
                 AnythingChanged?.Invoke(this, null);
-                if (value != null)
-                    _Logics.CollectionChanged += (sender, e) => AnythingChanged?.Invoke(this, null);
+                //if (value != null)
+                //    _OverrideLogic.CollectionChanged += (sender, e) => AnythingChanged?.Invoke(this, null);
             }
-        }
-
-        public bool LogicPass
-        {
-            get { return true; } //Check every logic and return whether or not the layer is visible/enabled
         }
 
         /// <summary>
@@ -221,48 +218,6 @@ namespace Aurora.Settings.Layers
         /// </summary>
         public Layer()
         {
-            Logics = new ObservableCollection<LogicItem>();
-            // Basic colour changing logic
-            /* {
-                new LogicItem {
-                    Action = new Tuple<LogicItem.ActionType, object>(
-                        LogicItem.ActionType.SetProperty,
-                        new Tuple<string, object>(
-                            "_PrimaryColor",
-                            new RealColor(Color.FromArgb(Color.Blue.A, Color.Blue.R, Color.Blue.G, Color.Blue.B))
-                       )
-                    ),
-                    ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>
-                    {
-                        {
-                            "LocalPCInfo/CurrentSecond",
-                            new Tuple<LogicItem.LogicOperator, object>(
-                                LogicItem.LogicOperator.GreaterThan,
-                                45
-                            )
-                        }
-                    }
-                },
-                new LogicItem {
-                    Action = new Tuple<LogicItem.ActionType, object>(
-                        LogicItem.ActionType.SetProperty,
-                        new Tuple<string, object>(
-                            "_PrimaryColor",
-                            new RealColor(Color.FromArgb(Color.Red.A, Color.Red.R, Color.Red.G, Color.Red.B))
-                        )
-                    ),
-                    ReferenceComparisons = new Dictionary<string, Tuple<LogicItem.LogicOperator, object>>
-                    {
-                        {
-                            "LocalPCInfo/CurrentSecond",
-                            new Tuple<LogicItem.LogicOperator, object>(
-                                LogicItem.LogicOperator.LessThanOrEqual,
-                                45
-                            )
-                        }
-                    }
-                }
-            };*/
         }
 
         public Layer(string name, ILayerHandler handler = null) : this()
@@ -272,13 +227,21 @@ namespace Aurora.Settings.Layers
                 _Handler = handler;
         }
 
+        public Layer(string name, ILayerHandler handler, Dictionary<string, IOverrideLogic> overrideLogic) : this(name, handler) {
+            _OverrideLogic = overrideLogic;
+        }
+
+        public Layer(string name, ILayerHandler handler, OverrideLogicBuilder builder) : this(name, handler, builder.Create()) { }
+
         public EffectLayer Render(IGameState gs)
         {
-            foreach(LogicItem logic in _Logics)
-            {
-                logic.Check(gs, this._Handler);   
-            }
-            return this._Handler.PostRenderFX(this._Handler.Render(gs));
+            if (_OverrideLogic != null)
+            // For every property which has an override logic assigned
+                foreach (var kvp in _OverrideLogic)
+                    // Set the value of the logic evaluation as the override for this property
+                    ((IValueOverridable)_Handler.Properties).Overrides.SetValueFromString(kvp.Key, kvp.Value.Evaluate(gs));
+            
+            return ((dynamic)_Handler.Properties).Enabled ? _Handler.PostRenderFX(_Handler.Render(gs)) : new EffectLayer();
         }
 
         public void SetProfile(Application profile)

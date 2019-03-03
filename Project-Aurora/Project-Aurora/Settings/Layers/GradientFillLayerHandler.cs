@@ -14,6 +14,7 @@ namespace Aurora.Settings.Layers
 {
     public class GradientFillLayerHandlerProperties : LayerHandlerProperties2Color<GradientFillLayerHandlerProperties>
     {
+        [Overrides.LogicOverridable("Gradient")]
         public LayerEffectConfig _GradientConfig { get; set; }
 
         [JsonIgnore]

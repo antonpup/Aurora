@@ -1,6 +1,7 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
@@ -23,14 +24,17 @@ namespace Aurora.Settings.Layers {
         [JsonIgnore]
         public Keybind[] TriggerKeys { get { return Logic._TriggerKeys ?? _TriggerKeys ?? new Keybind[] { }; } }
 
+        [LogicOverridable("Duration")]
         public int? _Duration { get; set; }
         [JsonIgnore]
         public int Duration { get { return Logic._Duration ?? _Duration ?? 0; } }
 
+        [LogicOverridable("Animation Type")]
         public TimerLayerAnimationType? _AnimationType { get; set; }
         [JsonIgnore]
         public TimerLayerAnimationType AnimationType { get { return Logic._AnimationType ?? _AnimationType ?? TimerLayerAnimationType.OnOff; } }
 
+        [LogicOverridable("Repeat Action")]
         public TimerLayerRepeatPressAction? _RepeatAction { get; set; }
         [JsonIgnore]
         public TimerLayerRepeatPressAction RepeatAction { get { return Logic._RepeatAction ?? _RepeatAction ?? TimerLayerRepeatPressAction.Reset; } }

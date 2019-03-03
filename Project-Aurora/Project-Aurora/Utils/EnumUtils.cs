@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
 
@@ -17,19 +18,11 @@ namespace Aurora.Utils
     {
         public static string GetDescription(this Enum enumObj)
         {
-            FieldInfo fieldInfo = enumObj.GetType().GetField(enumObj.ToString());
+            return enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(DescriptionAttribute), false) is DescriptionAttribute attr ? attr.Description : enumObj.ToString();
+        }
 
-            object[] attribArray = fieldInfo.GetCustomAttributes(false);
-
-            if (attribArray.Length == 0)
-            {
-                return enumObj.ToString();
-            }
-            else
-            {
-                DescriptionAttribute attrib = attribArray[0] as DescriptionAttribute;
-                return attrib.Description;
-            }
+        public static string GetCategory(this Enum enumObj) {
+            return enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(CategoryAttribute), false) is CategoryAttribute attr ? attr.Category : "";
         }
     }
 
@@ -204,16 +197,6 @@ namespace Aurora.Utils
     {
         public LayerTypeToStringVC() : base(LayerType.Solid) { }
     }*/
-
-    public class LogicOperatorToStringVC : EnumToStringVC
-    {
-        public LogicOperatorToStringVC() : base(LogicOperator.GreaterThan) { }
-    }
-    
-    public class ActionTypeToStringVC : EnumToStringVC
-    {
-        public ActionTypeToStringVC() : base(ActionType.SetProperty) { }
-    }
 
     public class AppDetectionModeToStringVC : EnumToStringVC
     {

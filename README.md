@@ -77,6 +77,8 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Factorio
 * Quake Champions
 * Diablo III
+* Resident Evil 2 (2019)
+* Osu!
 
 ## Natively Supported Devices
 
@@ -159,6 +161,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ### Wooting
 * One
+* Two
 
 ### Alienware
 * All laptop models until AW15 R3/AW17 R4 (AW broke support for per-key RGB)
@@ -187,6 +190,9 @@ Grand Theft Auto V Demo
 Robot Roller-Derby Disco Dodgeball Demo
 
 [![Robot Roller-Derby Disco Dodgeball Demo](http://img.youtube.com/vi/pxx3hqoPFD8/0.jpg)](https://www.youtube.com/watch?v=pxx3hqoPFD8)
+
+osu! Demo
+[![Ant's osu! Demo](https://img.youtube.com/vi/8Y2hvVDQTxI/0.jpg)](https://www.youtube.com/watch?v=8Y2hvVDQTxI)
 
 
 ## Screenshots
@@ -355,6 +361,12 @@ Factorio features
 Diablo III features
 
 * Diablo III effects are controlled by the game itself
+
+Osu! features
+
+* Health and accuracy meters
+* Animations for missing beats and losing combos
+* Animations when you hit a beat
 
 
 ## F.A.Q.

@@ -66,6 +66,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool RandomSecondaryColor { get { return Logic._RandomSecondaryColor ?? _RandomSecondaryColor ?? false; } }
 
+        [Overrides.LogicOverridable("Effect Speed")]
         public float? _EffectSpeed { get; set; }
 
         public bool? _WaitOnKeyUp { get; set; }
@@ -76,15 +77,21 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public float EffectSpeed { get { return Logic._EffectSpeed ?? _EffectSpeed ?? 0.0f; } }
 
+        [Overrides.LogicOverridable("Interactive Effect")]
         public InteractiveEffects? _InteractiveEffect { get; set; }
 
         [JsonIgnore]
         public InteractiveEffects InteractiveEffect { get { return Logic._InteractiveEffect ?? _InteractiveEffect ?? InteractiveEffects.None; } }
 
+        [Overrides.LogicOverridable("Effect Width")]
         public int? _EffectWidth { get; set; }
 
         [JsonIgnore]
         public int EffectWidth { get { return Logic._EffectWidth ?? _EffectWidth ?? 0; } }
+        
+        public bool? _UsePressBuffer { get; set; }
+        [JsonIgnore]
+        public bool UsePressBuffer => Logic._UsePressBuffer ?? _UsePressBuffer ?? true;
 
         public InteractiveLayerHandlerProperties() : base() { }
 
@@ -168,7 +175,7 @@ namespace Aurora.Settings.Layers
             {
                 if (TimeOfLastPress.ContainsKey(device_key))
                 {
-                    if ((currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
+                    if (Properties.UsePressBuffer && (currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
                         return;
                     else
                         TimeOfLastPress.Remove(device_key);
@@ -290,7 +297,7 @@ namespace Aurora.Settings.Layers
             {
                 foreach (var lengthPresses in TimeOfLastPress.ToList())
                 {
-                    if (currenttime - lengthPresses.Value > pressBuffer)
+                    if (!Properties.UsePressBuffer || currenttime - lengthPresses.Value > pressBuffer)
                     {
                         TimeOfLastPress.Remove(lengthPresses.Key);
                     }

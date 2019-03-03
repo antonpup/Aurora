@@ -2,6 +2,7 @@
 using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides.Logic;
 using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
@@ -55,6 +56,10 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public string TriggerPath => Logic._TriggerPath ?? _TriggerPath ?? string.Empty;
         public string _TriggerPath { get; set; }
+
+        [JsonIgnore]
+        public IEvaluatable EvaluatableTrigger => Logic._EvaluatableTrigger ?? _EvaluatableTrigger;
+        public IEvaluatable _EvaluatableTrigger { get; set; }
 
         [JsonIgnore]
         public bool TriggerAnyKey => Logic._TriggerAnyKey ?? _TriggerAnyKey ?? false;
@@ -206,19 +211,26 @@ namespace Aurora.Settings.Layers
                     StartAnimation(key);
 
             // Handling for numeric value change based triggers
-            } else if (IsTriggerNumericValueBased(Properties.TriggerMode)) {
+            } else if (IsTriggerNumericValueBased(Properties.TriggerMode) || IsTriggerEvaluatableNumericValueBased(Properties.TriggerMode)) {
+                // Evaluate the evaluatable or the game state path and retrieve the double
+                double resolvedTriggerValue = IsTriggerEvaluatableNumericValueBased(Properties.TriggerMode)
+                    ? ((IEvaluatableNumber)Properties.EvaluatableTrigger)?.Evaluate(gamestate) ?? 0 // Evaluatable may be null, so we need to account for that
+                    : GameStateUtils.TryGetDoubleFromState(gamestate, Properties.TriggerPath);
+
                 // Check to see if a gamestate value change should trigger the animation
-                double resolvedTriggerValue = GameStateUtils.TryGetDoubleFromState(gamestate, Properties.TriggerPath);
                 switch (Properties.TriggerMode) {
                     case AnimationTriggerMode.OnChange:
+                    case AnimationTriggerMode.OnEvaluatableChange:
                         if (resolvedTriggerValue != _previousTriggerDoubleValue)
                             StartAnimation();
                         break;
                     case AnimationTriggerMode.OnHigh:
+                    case AnimationTriggerMode.OnEvaluatableHigh:
                         if (resolvedTriggerValue > _previousTriggerDoubleValue)
                             StartAnimation();
                         break;
                     case AnimationTriggerMode.OnLow:
+                    case AnimationTriggerMode.OnEvaluatableLow:
                         if (resolvedTriggerValue < _previousTriggerDoubleValue)
                             StartAnimation();
                         break;
@@ -227,17 +239,24 @@ namespace Aurora.Settings.Layers
             
             // Handling for boolean value based triggers
             } else {
-                bool resolvedTriggerValue = GameStateUtils.TryGetBoolFromState(gamestate, Properties.TriggerPath);
+                // Evaluatable the boolean, either as an evaluatable or a game state variable.
+                bool resolvedTriggerValue = IsTriggerEvaluatableBooleanValueBased(Properties.TriggerMode)
+                    ? ((IEvaluatableBoolean)Properties.EvaluatableTrigger)?.Evaluate(gamestate) ?? false // Evaluatable may be null, so we need to account for that
+                    : GameStateUtils.TryGetBoolFromState(gamestate, Properties.TriggerPath);
+
                 switch (Properties.TriggerMode) {
                     case AnimationTriggerMode.OnTrue:
+                    case AnimationTriggerMode.OnEvaluatableTrue:
                         if (resolvedTriggerValue && !_previousTriggerBoolValue)
                             StartAnimation();
                         break;
                     case AnimationTriggerMode.OnFalse:
+                    case AnimationTriggerMode.OnEvaluatableFalse:
                         if (!resolvedTriggerValue && _previousTriggerBoolValue)
                             StartAnimation();
                         break;
                     case AnimationTriggerMode.WhileTrue:
+                    case AnimationTriggerMode.WhileEvaluatableTrue:
                         if (resolvedTriggerValue && runningAnimations.Count == 0)
                             StartAnimation();
                         break;
@@ -322,23 +341,27 @@ namespace Aurora.Settings.Layers
         /// <summary>
         /// Returns true if the given AnimationTrigger mode is a numeric gamestate value-related trigger (OnHigh, OnLow or OnChange)
         /// </summary>
-        public static bool IsTriggerNumericValueBased(AnimationTriggerMode m) {
-            return new[] { AnimationTriggerMode.OnHigh, AnimationTriggerMode.OnLow, AnimationTriggerMode.OnChange }.Contains(m);
-        }
+        public static bool IsTriggerNumericValueBased(AnimationTriggerMode m) => new[] { AnimationTriggerMode.OnHigh, AnimationTriggerMode.OnLow, AnimationTriggerMode.OnChange }.Contains(m);
 
         /// <summary>
         /// Returns true if the given AnimationTrigger mode is a boolean gamestate value-related trigger (OnTrue, OnFalse or WhileTrue)
         /// </summary>
-        public static bool IsTriggerBooleanValueBased(AnimationTriggerMode m) {
-            return new[] { AnimationTriggerMode.OnTrue, AnimationTriggerMode.OnFalse, AnimationTriggerMode.WhileTrue }.Contains(m);
-        }
+        public static bool IsTriggerBooleanValueBased(AnimationTriggerMode m) => new[] { AnimationTriggerMode.OnTrue, AnimationTriggerMode.OnFalse, AnimationTriggerMode.WhileTrue }.Contains(m);
 
         /// <summary>
         /// Returns true if the given AnimationTrigger mode is a key-related trigger (OnKeyPress or OnKeyRelease)
         /// </summary>
-        public static bool IsTriggerKeyBased(AnimationTriggerMode m) {
-            return new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease, AnimationTriggerMode.WhileKeyHeld }.Contains(m);
-        }
+        public static bool IsTriggerKeyBased(AnimationTriggerMode m) => new[] { AnimationTriggerMode.OnKeyPress, AnimationTriggerMode.OnKeyRelease, AnimationTriggerMode.WhileKeyHeld }.Contains(m);
+
+        /// <summary>
+        /// Returns true if the given AnimationTrigger mode is an IEvaluatable numeric value-related trigger (OnEvaluatableHigh, OnEvaluatableLow or OnEvaluatableChange)
+        /// </summary>
+        public static bool IsTriggerEvaluatableNumericValueBased(AnimationTriggerMode m) => new[] { AnimationTriggerMode.OnEvaluatableHigh, AnimationTriggerMode.OnEvaluatableLow, AnimationTriggerMode.OnEvaluatableChange }.Contains(m);
+
+        /// <summary>
+        /// Returns true if the given AnimationTrigger mode is an IEvaluatable boolean value-related trigger (OnEvaluatableTrue, OnEvaluatableFalse or WhileEvaluatableTrue)
+        /// </summary>
+        public static bool IsTriggerEvaluatableBooleanValueBased(AnimationTriggerMode m) => new[] { AnimationTriggerMode.OnEvaluatableTrue, AnimationTriggerMode.OnEvaluatableFalse, AnimationTriggerMode.WhileEvaluatableTrue }.Contains(m);
 
         /// <summary>
         /// A tiny data class just to store information about
@@ -362,29 +385,29 @@ namespace Aurora.Settings.Layers
     /// An enum of the possible ways for an animation to trigger.
     /// </summary>
     public enum AnimationTriggerMode {
-        [Description("Always on (disable trigger)")]
-        AlwaysOn,
+        [Category("Standard")] [Description("Always on (disable trigger)")] AlwaysOn,
 
-        [Description("On value increase")]
-        OnHigh,
-        [Description("On value decrease")]
-        OnLow,
-        [Description("On value change")]
-        OnChange,
+        [Category("Numeric State Variable")] [Description("On increase")] OnHigh,
+        [Category("Numeric State Variable")] [Description("On decrease")] OnLow,
+        [Category("Numeric State Variable")] [Description("On change")] OnChange,
 
-        [Description("On boolean become true")]
-        OnTrue,
-        [Description("On boolean become false")]
-        OnFalse,
-        [Description("While boolean true")]
-        WhileTrue,
+        [Category("Boolean State Variable")] [Description("On become true")] OnTrue,
+        [Category("Boolean State Variable")] [Description("On become false")] OnFalse,
+        [Category("Boolean State Variable")] [Description("While true")] WhileTrue,
 
-        [Description("On key pressed")]
-        OnKeyPress,
-        [Description("On key released")]
-        OnKeyRelease,
-        [Description("While key held")]
-        WhileKeyHeld
+        [Category("Keyboard Input")] [Description("On press")] OnKeyPress,
+        [Category("Keyboard Input")] [Description("On release")] OnKeyRelease,
+        [Category("Keyboard Input")] [Description("While held")] WhileKeyHeld,
+
+        // New modes making use of the new IEvaluatables. Would like to have removed the
+        // above ones however that would break existing profiles.
+        [Category("Numeric Evaluation (Advanced)")] [Description("On increase")] OnEvaluatableHigh,
+        [Category("Numeric Evaluation (Advanced)")] [Description("On decrease")] OnEvaluatableLow,
+        [Category("Numeric Evaluation (Advanced)")] [Description("On change")] OnEvaluatableChange,
+
+        [Category("Boolean Evaluation (Advanced)")] [Description("On become true")] OnEvaluatableTrue,
+        [Category("Boolean Evaluation (Advanced)")] [Description("On become false")] OnEvaluatableFalse,
+        [Category("Boolean Evaluation (Advanced)")] [Description("While true")] WhileEvaluatableTrue,
     }
 
     /// <summary>
@@ -392,11 +415,8 @@ namespace Aurora.Settings.Layers
     /// an animation is already in progress.
     /// </summary>
     public enum AnimationStackMode {
-        [Description("Ignore")]
-        Ignore,
-        [Description("Restart")]
-        Reset,
-        [Description("Play multiple")]
-        Stack
+        [Description("Ignore")] Ignore,
+        [Description("Restart")] Reset,
+        [Description("Play multiple")] Stack
     }
 }
