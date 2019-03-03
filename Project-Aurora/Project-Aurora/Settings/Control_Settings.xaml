@@ -168,7 +168,7 @@
                     <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="180,111,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblGlobalBrightness, Path=.}"/>
                     <CheckBox x:Name="chkHigherPriority" Content="High priority" HorizontalAlignment="Left" Margin="158,10,0,0" VerticalAlignment="Top" IsChecked="{Binding HighPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkHigherPriority_IsCheckedChanged" Unchecked="chkHigherPriority_IsCheckedChanged"/>
                     <TextBlock Text="Delay:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="278,10,0,0" />
-                    <xctk:IntegerUpDown x:Name="startDelayAmount" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="315,8,0,0" Width="69" Increment="15" ValueChanged="startDelayAmount_ValueChanged" />
+                    <xctk:IntegerUpDown x:Name="startDelayAmount" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="315,8,0,0" Width="69" Minimum="0" Increment="15" ValueChanged="startDelayAmount_ValueChanged" />
                     <TextBlock Text="sec" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="389,10,0,0" />
                 </Grid>
             </TabItem>
