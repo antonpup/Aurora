@@ -16,10 +16,10 @@ namespace Aurora.Utils
             { typeof(string), true },
         };
 
-        public static Dictionary<string, Tuple<Type, Type>> ReflectGameStateParameters(Type typ) {
+        public static Dictionary<string, Tuple<Type, Type>> ReflectGameStateParameters(Type typ, string[] ignore = null) {
             Dictionary<string, Tuple<Type, Type>> parameters = new Dictionary<string, Tuple<Type, Type>>();
 
-            foreach (MemberInfo prop in typ.GetFields().Cast<MemberInfo>().Concat(typ.GetProperties().Cast<MemberInfo>()).Concat(typ.GetMethods().Where(m => !m.IsSpecialName).Cast<MemberInfo>())) {
+            foreach (MemberInfo prop in typ.GetFields().Cast<MemberInfo>().Concat(typ.GetProperties().Cast<MemberInfo>()).Concat(typ.GetMethods().Where(m => !m.IsSpecialName)).Cast<MemberInfo>().Where(m => ignore == null || !ignore.Contains(m.Name))) {
                 if (prop.GetCustomAttribute(typeof(GameStateIgnoreAttribute)) != null)
                     continue;
 

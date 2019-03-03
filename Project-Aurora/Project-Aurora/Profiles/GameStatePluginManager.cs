@@ -1,9 +1,11 @@
 ﻿using Aurora.Utils;
+using CSScriptLibrary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Aurora.Profiles {
 
@@ -25,27 +27,52 @@ namespace Aurora.Profiles {
         private Dictionary<string, Type> stateTypes = new Dictionary<string, Type>();
 
         /// <summary>ParameterLookup for all the loaded GSI plugins.</summary>
-        public Dictionary<string, Tuple<Type, Type>> PluginParameterLookup { get; private set; }
+        public Dictionary<string, Tuple<Type, Type>> PluginParameterLookup { get; private set; } = new Dictionary<string, Tuple<Type, Type>>();
 
         /// <summary>
         /// Creates a new GameStatePluginManager and loads the GSI plugins.
         /// </summary>
         public GameStatePluginManager() {
-            // Load the plugins from disk (TODO)
-            var loadedTypes = new[] { (type: typeof(TestGameState), attr: new GameStatePluginAttribute("Test Game State")), (type: typeof(Minecraft.GSI.GameState_Minecraft), attr: new GameStatePluginAttribute("Test Minecraft State")) };
+            // Create the GameStatePlugins directory if it doesn't exist.
+            if (!Directory.Exists(PluginDirectory))
+                Directory.CreateDirectory(PluginDirectory);
+
+            // Load the plugins from script files on disk
+            var loadedTypes = Directory.EnumerateFiles(PluginDirectory, "*.cs")
+                .SelectMany(file => LoadTypesFromFile(file))
+                .Where(type => type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(GameState<>) && type.GetCustomAttribute<GameStatePluginAttribute>() != null) // Where type is GameState<T> and has a GameStatePlugin attribute
+                .Select(type => (type: type, attr: type.GetCustomAttribute<GameStatePluginAttribute>()))
+                .ToList();
+
+
+            //var loadedTypes = new[] { (type: typeof(TestGameState), attr: new GameStatePluginAttribute("Test Game State")), (type: typeof(Minecraft.GSI.GameState_Minecraft), attr: new GameStatePluginAttribute("Test Minecraft State")) };
 
             // Create an initial game state for all the loaded plugins and store the type so we can constructor more when JSON data is received
             foreach (var (type, attr) in loadedTypes) {
-                states.Add(attr.ID, (IGameState)Activator.CreateInstance(type));
-                stateTypes.Add(attr.ID, type);
+                states.Add(attr.ID.ToLowerInvariant(), (IGameState)Activator.CreateInstance(type));
+                stateTypes.Add(attr.ID.ToLowerInvariant(), type);
             }
 
             // Create the parameter lookup dictionary:
             PluginParameterLookup = loadedTypes // for each loaded GameState
-                .SelectMany(gs => GameStateUtils.ReflectGameStateParameters(gs.type) // Reflect the possible values of it and add all fields to the IEnumerable, having first
+                .SelectMany(gs => GameStateUtils.ReflectGameStateParameters(gs.type, new[] { "LocalPCInfo" }) // Reflect the possible values of it (apart from the built in "LocalPCInfo") and add all fields to the IEnumerable, having first
                     .Select(kvp => new KeyValuePair<string, Tuple<Type, Type>>($"Plugins/{gs.attr.ID}/{kvp.Key}", kvp.Value)) // Appended "Plugins" and the ID of the plugin to the front of the name
                 )
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value); // Finally, cast the IEnumerable<KeyValuePair<...>> to a dictionary.
+        }
+
+        /// <summary>
+        /// Attempts to load a cs script file from the given path and returns the types that are defined in that file.
+        /// If the file is invalid, will return an empty enumerable of types and log the error.
+        /// </summary>
+        private IEnumerable<Type> LoadTypesFromFile(string path) {
+            try {
+                var assembly = CSScript.LoadFile(path); // Attempt to read the script file
+                return assembly.ExportedTypes; // If successful, return all the types from that file
+            } catch (Exception ex) {
+                Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: {1}", path, ex); // If an error occurs reading the cs file, log it to the console
+                return new Type[0]; // And return an empty IEnumerable<Type> to the caller
+            }
         }
 
         /// <summary>
@@ -61,20 +88,13 @@ namespace Aurora.Profiles {
         }
 
         /// <summary>Returns the state of the plugin whose ID is equal to the given name.</summary>
-        public object GetValueFromString(string name, object input = null) { ((Minecraft.GSI.GameState_Minecraft)states["Minecraft"]).Player.Health = (((Minecraft.GSI.GameState_Minecraft)states["Minecraft"]).Player.Health + 1) % 10; return states[name]; }
+        public object GetValueFromString(string name, object input = null) => states[name.ToLowerInvariant()];
 
         // Extra methods required to implement IStringProperty. Neither of these should ever be called.
         public void SetValueFromString(string name, object value) => new NotImplementedException();
         public IStringProperty Clone() => throw new NotImplementedException();
     }
 
-
-    public class TestGameState : GameState<TestGameState> {
-        public int TestField;
-        public string TestField2;
-        public double TestField3;
-    }
-    
 
     /// <summary>
     /// Attribute that should be applied to GameStates that have been added in by plugins.
@@ -83,7 +103,7 @@ namespace Aurora.Profiles {
 
         /// <summary>The ID of this GameStatePlugin.</summary>
         public string ID { get; private set; }
-        
+
         public GameStatePluginAttribute(string id) {
             ID = id.Replace(" ", "_").Replace("/", "").Replace("\\", "");
         }
