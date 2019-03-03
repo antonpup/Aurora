@@ -77,12 +77,15 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Factorio
 * Quake Champions
 * Diablo III
+* Resident Evil 2 (2019)
+* Osu!
 
 ## Natively Supported Devices
 
 If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface! Devices from supported brands generally should work even if they aren't listed here.
 
 ### Logitech
+* Most Logitech Lightsync devices should work
 #### Keyboards
 * G410
 * G512
@@ -100,6 +103,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * G PRO
 
 ### Corsair
+* Most Keyboards, Mice, Headsets and mousepads should work.
 #### Keyboards
 * K68
 * K65
@@ -117,11 +121,11 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * MM800 Mousepad
 
 ### Razer
+* Most Chroma enabled devices should work
 #### Keyboards
 * Huntsman
 * Huntsman Elite
 * BlackWidow Chroma
-* Any other Chroma enabled Keyboard
 #### Mice
 * Abyssus Essential
 * Naga Hex/Trinity
@@ -130,7 +134,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * DeathAdder Elite
 * Basilisk
 #### Mousepads
-* Firefly (single color)
+* Firefly
 ### Cooler Master
 * Masterkeys Pro L, M and S RGB/White
 * MK750
@@ -157,12 +161,17 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ### Wooting
 * One
+* Two
 
 ### Alienware
-* Most devices should work
+* All laptop models until AW15 R3/AW17 R4 (AW broke support for per-key RGB)
 ### Clevo
 ### AtmoOrb
 ### Dualshock 4 (PS4 Controller)
+### Drevo
+* Blademaster
+### SoundBlasterX
+* Vanguard K08
 
 
 ## Video demonstrations
@@ -181,6 +190,9 @@ Grand Theft Auto V Demo
 Robot Roller-Derby Disco Dodgeball Demo
 
 [![Robot Roller-Derby Disco Dodgeball Demo](http://img.youtube.com/vi/pxx3hqoPFD8/0.jpg)](https://www.youtube.com/watch?v=pxx3hqoPFD8)
+
+osu! Demo
+[![Ant's osu! Demo](https://img.youtube.com/vi/8Y2hvVDQTxI/0.jpg)](https://www.youtube.com/watch?v=8Y2hvVDQTxI)
 
 
 ## Screenshots
@@ -349,6 +361,12 @@ Factorio features
 Diablo III features
 
 * Diablo III effects are controlled by the game itself
+
+Osu! features
+
+* Health and accuracy meters
+* Animations for missing beats and losing combos
+* Animations when you hit a beat
 
 
 ## F.A.Q.

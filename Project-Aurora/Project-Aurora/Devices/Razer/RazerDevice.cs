@@ -29,6 +29,7 @@ namespace Aurora.Devices.Razer
         IHeadset headset = null;
         IMousepad mousepad = null;
         IKeypad keypad = null;
+        IChromaLink chromalink = null;
 
         private readonly object action_lock = new object();
 
@@ -46,7 +47,7 @@ namespace Aurora.Devices.Razer
         {
             if (isInitialized)
             {
-                return devicename + ": " + (keyboard != null ? "Keyboard Connected " : "") + (mouse != null ? "Mouse Connected " : "") + (headset != null ? "Headset Connected " : "") + (mousepad != null ? "Mousepad Connected " : "");
+                return devicename + ": " + (keyboard != null ? "Keyboard Connected " : "") + (mouse != null ? "Mouse Connected " : "") + (headset != null ? "Headset Connected " : "") + (mousepad != null ? "Mousepad Connected " : "") + (chromalink != null ? "ChromaLink Connected " : "");
             }
             else
             {
@@ -74,12 +75,14 @@ namespace Aurora.Devices.Razer
                         headset = Chroma.Instance.Headset;
                         mousepad = Chroma.Instance.Mousepad;
                         keypad = Chroma.Instance.Keypad;
+                        chromalink = Chroma.Instance.ChromaLink;
 
                         if (keyboard == null &&
                             mouse == null &&
                             headset == null &&
                             mousepad == null &&
-                            keypad == null
+                            keypad == null &&
+                            chromalink == null
                             )
                         {
                             throw new Exception("No devices connected");
@@ -92,9 +95,11 @@ namespace Aurora.Devices.Razer
 
                             if (Global.Configuration.razer_first_time)
                             {
-                                RazerInstallInstructions instructions = new RazerInstallInstructions();
-                                instructions.ShowDialog();
-
+                                App.Current.Dispatcher.Invoke(() =>
+                                {
+                                    RazerInstallInstructions instructions = new RazerInstallInstructions();
+                                    instructions.ShowDialog();
+                                });
                                 Global.Configuration.razer_first_time = false;
                                 Settings.ConfigManager.Save(Global.Configuration);
                             }
@@ -367,6 +372,9 @@ namespace Aurora.Devices.Razer
 
                     if (keypad != null && !Global.Configuration.devices_disable_keyboard)
                         keypad.SetAll(new Color(color.R, color.G, color.B));
+
+                    if (chromalink != null && !Global.Configuration.devices_disable_mouse)
+                        chromalink.SetStatic(new Color(color.R, color.G, color.B));
 
                     previous_peripheral_Color = color;
                     peripheral_updated = true;

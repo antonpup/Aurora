@@ -65,47 +65,16 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
 
         internal PlayerNode(string json) : base(json) {
             Biom = GetString("biom");
-            if (Biom == "Lifepod")
-                InLifePod = true;
-            else
-                InLifePod = false;
+
+            InLifePod = Biom == "Lifepod";
 
             //Base, Cyclops, Seamoth or Prawn
             Type = GetString("type");
-            switch (Type) 
-            { 
-                case "Base":
-                    InBase = true;
-                    InCyclops = false;
-                    InSeamoth = false;
-                    InPrawn = false;
-                    break;
-                case "Cyclops":
-                    InBase = false;
-                    InCyclops = true;
-                    InSeamoth = false;
-                    InPrawn = false;
-                    break;
-                case "Seamoth":
-                    InBase = false;
-                    InCyclops = false;
-                    InSeamoth = true;
-                    InPrawn = false;
-                    break;
-                case "Prawn":
-                    InBase = false;
-                    InCyclops = false;
-                    InSeamoth = false;
-                    InPrawn = true;
-                    break;
-                default: //In Menu
-                    InBase = false;
-                    InCyclops = false;
-                    InSeamoth = false;
-                    InPrawn = false;
-                    break;
-            }
 
+            InBase = Type == "Base";
+            InCyclops = Type == "Cyclops";
+            InSeamoth = Type == "Seamoth";
+            InPrawn = Type == "Prawn";
 
             //SurfaceDepth = GetInt("surface_depth");
             DepthLevel = GetInt("depth_level");
@@ -116,7 +85,6 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
 
             CanBreathe = GetBool("can_breathe");
 
-            Global.logger.Info(GetInt("oxygen_capacity"));
             if (GetInt("oxygen_capacity") >= 1)
             {
                 OxygenCapacity = GetInt("oxygen_capacity");
@@ -126,58 +94,21 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
 
             OxygenAvailable = GetInt("oxygen_available");
 
-            switch (GetInt("pda_state"))
-            {
-                case 0: //PDA opened
-                    PDAopened = true;
-                    PDAclosed = false;
-                    PDAopening = false;
-                    PDAclosing = false;
-                    break;
+            PDAState = GetInt("pda_state");
 
-                case 1: //PDA closed
-                    PDAopened = false;
-                    PDAclosed = true;
-                    PDAopening = false;
-                    PDAclosing = false;
-                    break;
-
-                case 2: //PDA opening
-                    PDAopened = false;
-                    PDAclosed = false;
-                    PDAopening = true;
-                    PDAclosing = false;
-                    break;
-
-                case 3: //PDA closing
-                    PDAopened = false;
-                    PDAclosed = false;
-                    PDAopening = false;
-                    PDAclosing = true;
-                    break;
-
-                default: //In Menu
-                    PDAopened = false;
-                    PDAclosed = false;
-                    PDAopening = false;
-                    PDAclosing = false;
-                    break;
-            }
+            PDAopened = PDAState == 0;
+            PDAclosed = PDAState == 1;
+            PDAopening = PDAState == 2;
+            PDAclosing = PDAState == 3;
 
             IsSwimming = GetBool("is_in_water_for_swimming");
 
             MotorMode = GetInt("motor_mode");
-            if (MotorMode == 2)
-                IsSeagliding = true;
-            else
-                IsSeagliding = false;
+
+            IsSeagliding = MotorMode == 2;
 
             Mode = GetInt("mode");
-            if (Mode == 1 || Mode == 2) // Mode 1 = Piloting/Mode 2 = locked Piloting
-                IsPiloting = true;
-            else
-                IsPiloting = false;
-
+            IsPiloting = Mode == 1 || Mode == 2; // Mode 1 = Piloting/Mode 2 = locked Piloting
         }
 
     }

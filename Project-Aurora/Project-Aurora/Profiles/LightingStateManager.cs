@@ -129,7 +129,7 @@ namespace Aurora.Profiles
                 new Blade_and_Soul.BnS(),
                 new Event_SkypeOverlay(),
                 new ROTTombRaider.ROTTombRaider(),
-				new DyingLight.DyingLight(),
+				        new DyingLight.DyingLight(),
                 new ETS2.ETS2(),
                 new ATS.ATS(),
                 new Move_or_Die.MoD(),
@@ -144,7 +144,10 @@ namespace Aurora.Profiles
                 new QuakeChampions.QuakeChampions(),
                 new Diablo3.Diablo3(),
                 new DeadCells.DeadCells(),
-                new Subnautica.Subnautica()
+                new Subnautica.Subnautica(),
+                new ResidentEvil2.ResidentEvil2(),
+                new CloneHero.CloneHero(),
+                new Osu.Osu()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -186,7 +189,7 @@ namespace Aurora.Profiles
                 List<string> additionals = new List<string>(Directory.EnumerateDirectories(AdditionalProfilesPath));
                 foreach (var dir in additionals)
                 {
-                    if (File.Exists(Path.Combine(dir, "default.json")))
+                    if (File.Exists(Path.Combine(dir, "settings.json")))
                     {
                         string proccess_name = Path.GetFileName(dir);
                         RegisterEvent(new GenericApplication(proccess_name));

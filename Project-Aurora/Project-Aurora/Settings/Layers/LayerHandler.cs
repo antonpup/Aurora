@@ -1,5 +1,7 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides.Logic;
+using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,38 +13,45 @@ using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
-    public interface ILogic
+    public interface IValueOverridable
     {
-        IStringProperty Logic { get; set; }
+        IStringProperty Overrides { get; set; }
     }
 
-    public abstract class LayerHandlerProperties<TProperty> : StringProperty<TProperty>, ILogic where TProperty : LayerHandlerProperties<TProperty>
+    public abstract class LayerHandlerProperties<TProperty> : StringProperty<TProperty>, IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
     {
         [GameStateIgnoreAttribute]
         [JsonIgnore]
         public TProperty Logic { get; set; }
-
-        IStringProperty ILogic.Logic
-        {
-            get
-            {
-                return (IStringProperty)this.Logic;
-            }
-            set
-            {
-                this.Logic = value as TProperty;
-            }
+        IStringProperty IValueOverridable.Overrides {
+            get => (IStringProperty)Logic;
+            set => Logic = value as TProperty;
         }
 
+        [LogicOverridable("Primary Color")]
         public Color? _PrimaryColor { get; set; }
-
         [JsonIgnore]
         public Color PrimaryColor { get { return Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty; } }
 
+        [LogicOverridable("Affected Keys")]
         public KeySequence _Sequence { get; set; }
-
         [JsonIgnore]
         public KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
+
+        // Special opacity design for use with the overrides system.
+        [LogicOverridable("Opacity")]
+        public float? _Opacity { get; set; }
+        [JsonIgnore]
+        public float Opacity => Logic._Opacity ?? _Opacity ?? 1f;
+        
+        // This is a special enabled that is designed only for use with the overrides system
+        // and allows the overrides to disable layers on certain conditions.
+        // Note that this is NOT the variable that is changed when the user presses the checkbox
+        // on an item in the layer list.
+        [LogicOverridable("Enabled")]
+        public bool? _Enabled { get; set; }
+        [JsonIgnore]
+        public bool Enabled => Logic._Enabled ?? _Enabled ?? true;
 
         public LayerHandlerProperties()
         {
@@ -65,8 +74,8 @@ namespace Aurora.Settings.Layers
 
     public class LayerHandlerProperties2Color<TProperty> : LayerHandlerProperties<TProperty> where TProperty : LayerHandlerProperties2Color<TProperty>
     {
+        [LogicOverridable("Secondary Color")]
         public Color? _SecondaryColor { get; set; }
-
         [JsonIgnore]
         public Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
 
@@ -100,7 +109,8 @@ namespace Aurora.Settings.Layers
 
         KeySequence ExclusionMask { get; set; }
 
-        float Opacity { get; set; }
+        float Opacity { get; }
+        float? _Opacity { get; set; }
 
         EffectLayer Render(IGameState gamestate);
 
@@ -120,13 +130,7 @@ namespace Aurora.Settings.Layers
         protected UserControl _Control;
 
         [JsonIgnore]
-        public UserControl Control
-        {
-            get
-            {
-                return _Control ?? (_Control = this.CreateControl());
-            }
-        }
+        public UserControl Control => _Control ?? (_Control = this.CreateControl());
 
         [JsonIgnore]
         protected string _ID;
@@ -136,17 +140,9 @@ namespace Aurora.Settings.Layers
 
         public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
 
-        IStringProperty ILayerHandler.Properties
-        {
-            get
-            {
-                return Properties;
-            }
-
-            set
-            {
-                Properties = value as TProperty;
-            }
+        IStringProperty ILayerHandler.Properties {
+            get => Properties;
+            set => Properties = value as TProperty;
         }
 
         public bool EnableSmoothing { get; set; }
@@ -155,7 +151,11 @@ namespace Aurora.Settings.Layers
 
         public KeySequence ExclusionMask { get; set; }
 
-        public float Opacity { get; set; }
+        public float Opacity => Properties.Opacity;
+        public float? _Opacity {
+            get => Properties._Opacity;
+            set => Properties._Opacity = value;
+        }
 
         //public Color PrimaryColor { get; set; }
 
@@ -170,7 +170,6 @@ namespace Aurora.Settings.Layers
             //Properties = new LayerHandlerProperties();
             //ScriptProperties = new LayerHandlerProperties();
             ExclusionMask = new KeySequence();
-            Opacity = 1.0f;
         }
 
         public LayerHandler(LayerHandler other) : base()
@@ -209,7 +208,7 @@ namespace Aurora.Settings.Layers
             if (EnableExclusionMask)
                 returnLayer.Exclude(ExclusionMask);
 
-            returnLayer *= Opacity;
+            returnLayer *= Properties.Opacity;
 
             return returnLayer;
         }

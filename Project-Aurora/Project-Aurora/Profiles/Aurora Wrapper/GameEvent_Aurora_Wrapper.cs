@@ -47,7 +47,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
             {
                 foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
                 {
-                    if (layer.Enabled && layer.LogicPass)
+                    if (layer.Enabled)
                         layers.Enqueue(layer.Render(_game_state));
                 }
 
@@ -199,7 +199,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
                         }
                     }
                 }
-                else if (ngw_state.Command.Equals("SetLightingForKeyWithKeyName") || ngw_state.Command.Equals("SetLightingForKeyWithScanCode"))
+                else if (ngw_state.Command.Equals("SetLightingForKeyWithKeyName") || ngw_state.Command.Equals("SetLightingForKeyWithScanCode") || ngw_state.Command.Equals("SetLightingForKeyWithHidCode"))
                 {
                     var bitmap_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap((LedCSharp.keyboardNames)(ngw_state.Command_Data.key));
 
