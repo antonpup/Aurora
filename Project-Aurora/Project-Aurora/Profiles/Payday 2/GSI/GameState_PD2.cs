@@ -10,7 +10,7 @@ namespace Aurora.Profiles.Payday_2.GSI
     /// </summary>
     public class GameState_PD2 : GameState<GameState_PD2>
     {
-        private ProviderNode _Provider;
+        private Nodes.ProviderNode _Provider;
         private LobbyNode _Lobby;
         private LevelNode _Level;
         private PlayersNode _Players;
@@ -20,12 +20,12 @@ namespace Aurora.Profiles.Payday_2.GSI
         /// <summary>
         /// Information about the provider of this GameState
         /// </summary>
-        public ProviderNode Provider
+        public Nodes.ProviderNode Provider
         {
             get
             {
                 if (_Provider == null)
-                    _Provider = new ProviderNode(_ParsedData["provider"]?.ToString() ?? "");
+                    _Provider = new Nodes.ProviderNode(_ParsedData["provider"]?.ToString() ?? "");
 
                 return _Provider;
             }

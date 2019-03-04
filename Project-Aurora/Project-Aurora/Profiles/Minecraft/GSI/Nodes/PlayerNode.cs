@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Minecraft.GSI.Nodes {
 
-    public class PlayerNode : Node<PlayerNode> {
+    public class PlayerNode : AutoNode<PlayerNode> {
 
         public bool InGame;
 
         public float Health;
-        public float HealthMax;
+        public float MaxHealth;
+        public float HealthMax => MaxHealth; // "HealthMax" was the original name, but when converting to an AutoNode, the name does not match the JSON, so the "MaxHealth" was added to match JSON but this was kept so as not to break existing profiles.
         public float Absorption;
         public float AbsorptionMax = 20;
         public bool IsDead;
@@ -33,33 +34,9 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
         public bool IsInWater;
 
         private PlayerEffectsNode _playerEffects;
-        public PlayerEffectsNode PlayerEffects {
-            get {
-                _playerEffects = _playerEffects ?? new PlayerEffectsNode(_ParsedData["playerEffects"]?.ToString() ?? "");
-                return _playerEffects;
-            }
-        }
-        
-        internal PlayerNode(string json) : base(json) {
-            InGame = GetBool("inGame");
+        public PlayerEffectsNode PlayerEffects => _playerEffects ?? (_playerEffects = new PlayerEffectsNode(GetString("playerEffects")));
 
-            Health = GetFloat("health");
-            HealthMax = GetFloat("maxHealth");
-            Absorption = GetFloat("absorption");
-            IsDead = GetBool("isDead");
-            Armor = GetInt("armor");
-
-            ExperienceLevel = GetInt("experienceLevel");
-            Experience = GetFloat("experience");
-
-            FoodLevel = GetInt("foodLevel");
-            SaturationLevel = GetFloat("saturationLevel");
-
-            IsSneaking = GetBool("isSneaking");
-            IsRidingHorse = GetBool("isRidingHorse");
-            IsBurning = GetBool("isBurning");
-            IsInWater = GetBool("isInWater");
-        }
-
+        internal PlayerNode() : base() { }
+        internal PlayerNode(string json) : base(json) { }
     }
 }

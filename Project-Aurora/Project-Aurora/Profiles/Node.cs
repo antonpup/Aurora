@@ -88,10 +88,23 @@ namespace Aurora.Profiles {
                     var prop = obj.Properties().Where(p => p.Name.ToLowerInvariant() == memberName).FirstOrDefault();
 
                     // If a JSON property was found, attempt to set the member to its value
-                    if (prop != null)
-                        member.Value.Item2.Invoke((T)this, GetAsType(prop.Name, member.Value.Item3));
+                    object val;
+                    if (prop != null && (val = GetAsType(prop.Name, member.Value.Item3)) != null)
+                        member.Value.Item2.Invoke((T)this, val);
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// A node that should be present on all JSON game state updates.
+    /// This is in the Profiles namespace as it is shared between many profiles.
+    /// </summary>
+    public class ProviderNode : AutoNode<ProviderNode> {
+        public string Name;
+        public int AppID;
+
+        internal ProviderNode() : base() { }
+        internal ProviderNode(string json) : base(json) { }
     }
 }

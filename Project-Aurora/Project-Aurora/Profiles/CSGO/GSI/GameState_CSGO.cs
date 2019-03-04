@@ -15,7 +15,7 @@ namespace Aurora.Profiles.CSGO.GSI
     /// </summary>
     public class GameState_CSGO : GameState<GameState_CSGO>
     {
-        private ProviderNode _Provider;
+        private Nodes.ProviderNode _Provider;
         private MapNode _Map;
         private RoundNode _Round;
         private PlayerNode _Player;
@@ -27,13 +27,13 @@ namespace Aurora.Profiles.CSGO.GSI
         /// <summary>
         /// Information about the provider of this GameState
         /// </summary>
-        public ProviderNode Provider
+        public Nodes.ProviderNode Provider
         {
             get
             {
                 if (_Provider == null)
                 {
-                    _Provider = new ProviderNode(_ParsedData["provider"]?.ToString() ?? "");
+                    _Provider = new Nodes.ProviderNode(_ParsedData["provider"]?.ToString() ?? "");
                 }
 
                 return _Provider;

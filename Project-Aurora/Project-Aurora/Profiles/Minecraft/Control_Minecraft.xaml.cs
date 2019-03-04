@@ -106,7 +106,7 @@ namespace Aurora.Profiles.Minecraft {
 
         private void HealthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             State.Player.Health = (float)e.NewValue;
-            State.Player.HealthMax = 20f;
+            State.Player.MaxHealth = 20f;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
