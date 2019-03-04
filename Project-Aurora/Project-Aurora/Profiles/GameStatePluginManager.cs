@@ -38,11 +38,13 @@ namespace Aurora.Profiles {
                 Directory.CreateDirectory(PluginDirectory);
 
             // Load the plugins from script files on disk
-            var loadedTypes = Directory.EnumerateFiles(PluginDirectory, "*.cs") // For each cs file in the plugin directory
-                .SelectMany(file => LoadTypesFromFile(file).Select(type => (file: file, type: type))) // Use CSScript to load the file and select each class in the CS file
+            var loadedTypes = 
+                LoadFilesBase("*.cs", path => CSScript.LoadFile(path)) // Load all *.cs files in the plugin dir with the CSScript library loader
+                .Concat(LoadFilesBase("*.dll", path => Assembly.LoadFrom(path))) // Load all *.dll files in the plugin dir with the built in Assembly LoadFrom method
                 .Where(loaded => loaded.type.BaseType.IsGenericType && loaded.type.BaseType.GetGenericTypeDefinition() == typeof(GameState<>) && loaded.type.GetCustomAttribute<GameStatePluginAttribute>() != null) // Filter these classes to only ones with type GameState<T> and a GameStatePlugin attribute
-                .Select(loaded => (type: loaded.type, attr: loaded.type.GetCustomAttribute<GameStatePluginAttribute>(), path: loaded.file)) // Take a (type, path) tuple and get the GameStatePluginAttribute and return a (type, attr, path) tuple.
+                .Select(loaded => (type: loaded.type, attr: loaded.type.GetCustomAttribute<GameStatePluginAttribute>(), path: loaded.path)) // Take a (type, path) tuple and get the GameStatePluginAttribute and return a (type, attr, path) tuple.
                 .GroupBy(loaded => loaded.attr.ID).Select(group => FilterRepeatedIDs(group)) // Group the types by their defined attribute ID, then filter the groups so that only 1 type per ID is left. This logs any conflicting IDs to console and stops loading of conflicted plugins.
+                .Where(loaded => TestForConstructors(loaded.type, loaded.path)) // Check the GameStates for the correct constructors
                 .ToList(); // Finally, cast to a list so that this is immediately executed (instead of once per time used below).
 
              // Create an initial game state for all the loaded plugins and store the type so we can constructor more when JSON data is received
@@ -60,17 +62,22 @@ namespace Aurora.Profiles {
         }
 
         /// <summary>
-        /// Attempts to load a cs script file from the given path and returns the types that are defined in that file.
-        /// If the file is invalid, will return an empty enumerable of types and log the error.
+        /// Base function for enumerating through a file of a certain type in the plugin directory and then loading it
+        /// as an assembly into the plugin system.
         /// </summary>
-        private IEnumerable<Type> LoadTypesFromFile(string path) {
-            try {
-                var assembly = CSScript.LoadFile(path); // Attempt to read the script file
-                return assembly.ExportedTypes; // If successful, return all the types from that file
-            } catch (Exception ex) {
-                Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: {1}", path, ex); // If an error occurs reading the cs file, log it to the console
-                return new Type[0]; // And return an empty IEnumerable<Type> to the caller
-            }
+        /// <param name="filter">The filter of the files to enumerate over (e.g. "*.cs").</param>
+        /// <param name="func">The function to load the assemblies from the given file path. Error handling is done by `LoadFilesBase` and does not need to be added to func.</param>
+        /// <returns></returns>
+        private IEnumerable<(Type type, string path)> LoadFilesBase(string filter, Func<string, Assembly> func) {
+            return Directory.EnumerateFiles(PluginDirectory, filter).SelectMany(path => {
+                try {
+                    var assembly = func(path); // Attempt to read the script file
+                    return assembly.ExportedTypes.Select(type => (type: type, path: path)); // If successful, return all the types from that file
+                } catch (Exception ex) {
+                    Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: {1}", path, ex); // If an error occurs reading the cs file, log it to the console
+                    return new (Type, string)[0]; // And return an empty IEnumerable<Type> to the caller
+                }
+            });
         }
 
         /// <summary>
@@ -86,13 +93,32 @@ namespace Aurora.Profiles {
         }
 
         /// <summary>
+        /// Tries to instantiate the given type with a parameter-less call and a string parameter to ensure that the provided
+        /// type has valid constructors to be used with the program.
+        /// </summary>
+        /// <param name="path">If provided, an error will be logged citing this as the path of the plugin.</param>
+        private static bool TestForConstructors(Type type, string path="") {
+            try {
+                Activator.CreateInstance(type);
+                Activator.CreateInstance(type, "{}");
+                return true;
+            } catch {
+                if (!string.IsNullOrWhiteSpace(path))
+                    Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: The plugin does not contain the required constructors. Must have a parameter-less constructor and a constructor that takes a string.", path);
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Attempts to update a plugin with the given ID with a new JSON game state.
         /// If a plugin with this ID exists, true is returned, else false is returned.
         /// </summary>
         public bool TryUpdateState(string id, string json) {
             if (states.ContainsKey(id)) {
-                states[id] = (IGameState)Activator.CreateInstance(stateTypes[id], json);
-                return true;
+                try {
+                    states[id] = (IGameState)Activator.CreateInstance(stateTypes[id], json);
+                    return true;
+                } catch { }
             }
             return false;
         }
