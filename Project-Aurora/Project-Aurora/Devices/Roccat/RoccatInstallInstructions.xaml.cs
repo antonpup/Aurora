@@ -19,6 +19,11 @@ namespace Aurora.Devices.Roccat
 
         private void GoToTalkFXPage_Click(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Process.Start(@"https://roccat.org/Support/Product/ROCCAT-Talk-FX");
+        }
+
+        private void GoToTalkFXMirrorPage_Click(object sender, RoutedEventArgs e)
+        {
             System.Diagnostics.Process.Start(@"https://www.computerbase.de/downloads/systemtools/roccat-talk-fx/");
         }
     }
