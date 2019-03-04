@@ -11,7 +11,7 @@ using Octokit;
 namespace Aurora.Utils
 {
     /// <summary>
-    /// Class to update pointers for games with memory reading functionality.
+    /// Class to update pointers for applications with memory reading functionality.
     /// </summary>
     public static class PointerUpdateUtils
     {
