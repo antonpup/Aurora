@@ -38,10 +38,10 @@ namespace Aurora.Profiles
         /// </summary>
         //LocalPCInformation LocalPCInfo { get; }
 
-        Newtonsoft.Json.Linq.JObject _ParsedData { get; set; }
+        JObject _ParsedData { get; set; }
         string json { get; set; }
 
-        String GetNode(string name);
+        string GetNode(string name);
     }
 
     public class GameState<T> : StringProperty<T>, IGameState where T : GameState<T>
@@ -71,7 +71,7 @@ namespace Aurora.Profiles
         public GameState() : base()
         {
             json = "{}";
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
+            _ParsedData = JObject.Parse(json);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Aurora.Profiles
                 json_data = "{}";
 
             json = json_data;
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);
+            _ParsedData = JObject.Parse(json_data);
         }
 
         /// <summary>
@@ -97,11 +97,9 @@ namespace Aurora.Profiles
             json = other_state.json;
         }
 
-        public String GetNode(string name)
+        public string GetNode(string name)
         {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(name, out value))
+            if (_ParsedData.TryGetValue(name, out JToken value))
                 return value.ToString();
             else
                 return "";

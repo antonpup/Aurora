@@ -35,10 +35,12 @@ namespace Aurora.Profiles
                 {
                     ParameterExpression paramExpression = Expression.Parameter(typ);
                     Func<T, object> getp;
+                    Type memberType = null;
                     switch (prop.MemberType)
                     {
                         case MemberTypes.Property:
                         case MemberTypes.Field:
+                            memberType = prop.MemberType == MemberTypes.Property ? ((PropertyInfo)prop).PropertyType : ((FieldInfo)prop).FieldType;
                             Type t = Expression.GetFuncType(typ, typeof(object));
 
                             LambdaExpression exp = Expression.Lambda(
@@ -84,7 +86,7 @@ namespace Aurora.Profiles
                     }
                     if (!PropertyLookup.ContainsKey(prop.Name))
                     {
-                        PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>, Type>(getp, setp, typ));
+                        PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>, Type>(getp, setp, memberType));
                     }
 
                 }
