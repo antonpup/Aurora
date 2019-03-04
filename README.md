@@ -79,6 +79,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Diablo III
 * Resident Evil 2 (2019)
 * Osu!
+* Subnautica
 
 ## Natively Supported Devices
 
@@ -146,7 +147,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 #### Keyboards
 * Ryos MK FX
 #### Mice
-* Kone Pure & SE
+* Kone Pure
 
 ### SteelSeries
 #### Keyboards
