@@ -101,6 +101,10 @@ namespace Aurora.Profiles {
     /// This is in the Profiles namespace as it is shared between many profiles.
     /// </summary>
     public class ProviderNode : AutoNode<ProviderNode> {
+        // The reason for the additional class instead of just adding an extra option to the base node is
+        // that several classes instantiate nodes using Activator.Create with one argument (json) which
+        // means that adding a second argument (even if option) would cause this to stop working.
+
         public string Name;
         public int AppID;
 

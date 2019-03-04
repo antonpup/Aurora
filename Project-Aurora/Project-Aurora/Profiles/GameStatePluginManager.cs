@@ -38,17 +38,15 @@ namespace Aurora.Profiles {
                 Directory.CreateDirectory(PluginDirectory);
 
             // Load the plugins from script files on disk
-            var loadedTypes = Directory.EnumerateFiles(PluginDirectory, "*.cs")
-                .SelectMany(file => LoadTypesFromFile(file))
-                .Where(type => type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(GameState<>) && type.GetCustomAttribute<GameStatePluginAttribute>() != null) // Where type is GameState<T> and has a GameStatePlugin attribute
-                .Select(type => (type: type, attr: type.GetCustomAttribute<GameStatePluginAttribute>()))
-                .ToList();
+            var loadedTypes = Directory.EnumerateFiles(PluginDirectory, "*.cs") // For each cs file in the plugin directory
+                .SelectMany(file => LoadTypesFromFile(file).Select(type => (file: file, type: type))) // Use CSScript to load the file and select each class in the CS file
+                .Where(loaded => loaded.type.BaseType.IsGenericType && loaded.type.BaseType.GetGenericTypeDefinition() == typeof(GameState<>) && loaded.type.GetCustomAttribute<GameStatePluginAttribute>() != null) // Filter these classes to only ones with type GameState<T> and a GameStatePlugin attribute
+                .Select(loaded => (type: loaded.type, attr: loaded.type.GetCustomAttribute<GameStatePluginAttribute>(), path: loaded.file)) // Take a (type, path) tuple and get the GameStatePluginAttribute and return a (type, attr, path) tuple.
+                .GroupBy(loaded => loaded.attr.ID).Select(group => FilterRepeatedIDs(group)) // Group the types by their defined attribute ID, then filter the groups so that only 1 type per ID is left. This logs any conflicting IDs to console and stops loading of conflicted plugins.
+                .ToList(); // Finally, cast to a list so that this is immediately executed (instead of once per time used below).
 
-
-            //var loadedTypes = new[] { (type: typeof(TestGameState), attr: new GameStatePluginAttribute("Test Game State")), (type: typeof(Minecraft.GSI.GameState_Minecraft), attr: new GameStatePluginAttribute("Test Minecraft State")) };
-
-            // Create an initial game state for all the loaded plugins and store the type so we can constructor more when JSON data is received
-            foreach (var (type, attr) in loadedTypes) {
+             // Create an initial game state for all the loaded plugins and store the type so we can constructor more when JSON data is received
+            foreach (var (type, attr, path) in loadedTypes) {
                 states.Add(attr.ID.ToLowerInvariant(), (IGameState)Activator.CreateInstance(type));
                 stateTypes.Add(attr.ID.ToLowerInvariant(), type);
             }
@@ -73,6 +71,18 @@ namespace Aurora.Profiles {
                 Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: {1}", path, ex); // If an error occurs reading the cs file, log it to the console
                 return new Type[0]; // And return an empty IEnumerable<Type> to the caller
             }
+        }
+
+        /// <summary>
+        /// Takes a group of loaded types (with their path and attributes) that are grouped by ID and returns the first one in the group.
+        /// If there are multiple items in the group, that means there are multiple types with the same ID. In this case, an error is logged
+        /// for each type other than the first with a conflicting ID.
+        /// </summary>
+        private (Type type, GameStatePluginAttribute attr, string path) FilterRepeatedIDs(IGrouping<string, (Type type, GameStatePluginAttribute attr, string path)> group) {
+            if (group.Count() > 1)
+                foreach (var (type, attr, path) in group.Skip(1))
+                    Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: A plugin with this ID ('{1}') has already been registered. This plugin will be ignored.", path, attr.ID); // If multiple plugins exist with the same ID, log an error to the console for each extra one (otther than the first)
+            return group.First();
         }
 
         /// <summary>
