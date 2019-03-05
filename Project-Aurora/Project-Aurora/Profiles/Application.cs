@@ -408,6 +408,11 @@ namespace Aurora.Profiles
             this.Config.Event.UpdateLights(frame);
         }
 
+        public virtual void UpdateOverlayLights(EffectFrame frame) {
+            if (Disposed) return;
+            Config.Event.UpdateOverlayLights(frame);
+        }
+
         public virtual void SetGameState(IGameState state)
         {
             if (Disposed)

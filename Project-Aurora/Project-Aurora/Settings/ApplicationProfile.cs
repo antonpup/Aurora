@@ -81,19 +81,23 @@ namespace Aurora.Settings
         private Dictionary<string, ScriptSettings> _ScriptSettings;
 
         private ObservableCollection<Layer> _Layers;
+
+        private ObservableCollection<Layer> _OverlayLayers;
         #endregion
 
         #region Public Properties
-        public string ProfileName { get { return _ProfileName; } set { _ProfileName = value; InvokePropertyChanged(); } }
+        public string ProfileName { get => _ProfileName; set { _ProfileName = value; InvokePropertyChanged(); } }
 
-        public Keybind TriggerKeybind { get { return _triggerKeybind; } set { _triggerKeybind = value; InvokePropertyChanged(); } }
+        public Keybind TriggerKeybind { get => _triggerKeybind; set { _triggerKeybind = value; InvokePropertyChanged(); } }
 
         [JsonIgnore]
         public string ProfileFilepath { get; set; }
 
-        public Dictionary<string, ScriptSettings> ScriptSettings { get { return _ScriptSettings; } set { _ScriptSettings = value; InvokePropertyChanged(); } }
+        public Dictionary<string, ScriptSettings> ScriptSettings { get => _ScriptSettings; set { _ScriptSettings = value; InvokePropertyChanged(); } }
 
-        public ObservableCollection<Layer> Layers { get { return _Layers; } set { _Layers = value; InvokePropertyChanged(); } }
+        public ObservableCollection<Layer> Layers { get => _Layers; set { _Layers = value; InvokePropertyChanged(); } }
+
+        public ObservableCollection<Layer> OverlayLayers { get => _OverlayLayers; set { _OverlayLayers = value; InvokePropertyChanged(); } }
         #endregion
 
         public ApplicationProfile()
@@ -104,6 +108,7 @@ namespace Aurora.Settings
         public virtual void Reset()
         {
             _Layers = new ObservableCollection<Layer>();
+            _OverlayLayers = new ObservableCollection<Layer>();
             _ScriptSettings = new Dictionary<string, Aurora.Settings.ScriptSettings>();
             _triggerKeybind = new Keybind();
         }

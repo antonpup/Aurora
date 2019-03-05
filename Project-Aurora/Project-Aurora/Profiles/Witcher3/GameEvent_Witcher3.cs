@@ -71,10 +71,8 @@ namespace Aurora.Profiles.Witcher3
             get { return this.Application.Settings.IsEnabled && isInitialized; }
         }
 
-        public override void UpdateLights(EffectFrame frame)
+        public override void UpdateTick()
         {
-            Queue<EffectLayer> layers = new Queue<EffectLayer>();
-
             if (File.Exists(dataPath))
             {
                 if(configContent != null)
@@ -142,18 +140,6 @@ namespace Aurora.Profiles.Witcher3
                 }
             }
             //Artemis code
-
-
-            foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
-            {
-                if (layer.Enabled)
-                    layers.Enqueue(layer.Render(_game_state));
-            }
-
-            //Scripts
-            this.Application.UpdateEffectScripts(layers);
-
-            frame.AddLayers(layers.ToArray());
         }
     }
 }

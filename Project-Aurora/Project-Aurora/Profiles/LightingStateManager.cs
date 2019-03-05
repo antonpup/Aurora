@@ -566,6 +566,7 @@ namespace Aurora.Profiles
 
             timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
+            // If the current foreground process is excluded from Aurora, disable the lighting manager
             if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
                 Global.dev_manager.Shutdown();
@@ -574,7 +575,6 @@ namespace Aurora.Profiles
             }
             else
                 Global.dev_manager.InitializeOnce();
-
 
             if (Global.Configuration.OverlaysInPreview || !preview)
             {
@@ -592,6 +592,7 @@ namespace Aurora.Profiles
 
             if (Global.Configuration.OverlaysInPreview || !preview)
             {
+                // Update any overlays registered in the Overlays array. This includes applications with type set to Overlay and things such as skype overlay
                 foreach (var overlay in Overlays)
                 {
                     ILightEvent @event = Events[overlay];
@@ -599,7 +600,7 @@ namespace Aurora.Profiles
                         @event.UpdateLights(newFrame);
                 }
 
-                //Add overlays
+                // Update any overlays that are timer-based (e.g. the volume overlay that appears for a few seconds at a time)
                 TimedListObject[] overlay_events = overlays.ToArray();
                 foreach (TimedListObject evnt in overlay_events)
                 {
@@ -607,6 +608,10 @@ namespace Aurora.Profiles
                         (evnt.item as LightEvent).UpdateLights(newFrame);
                 }
 
+                // Update any applications that have overlay layers if that application is open
+                foreach (var @event in Events.Values.Where(e => e.IsEnabled && (e.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(e.Config.ProcessNames))))
+                    @event.UpdateOverlayLights(newFrame);
+                
                 UpdateIdleEffects(newFrame);
             }
 
