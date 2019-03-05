@@ -6,7 +6,20 @@
              xmlns:local="clr-namespace:Aurora.Devices.Roccat"
              mc:Ignorable="d" Height="120" Width="250" WindowStyle="ToolWindow" ResizeMode="NoResize" Title="First-time Roccat Setup Instructions" Background="Transparent">
     <Grid Margin="0,0,0,0">
-        <TextBlock x:Name="Roccat_text" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="202" Foreground="White"><Run Text="If you want to use Aurora with your Roccat peripherials Roccat Talk Fx must be installed and running."/></TextBlock>
-        <Button Click="GoToTalkFXPage_Click" Padding="6,0" Margin="0,36,0,0" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="130">Go to download page</Button>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="Roccat_text" Margin="5,5,5,0" TextWrapping="Wrap" Foreground="White" HorizontalAlignment="Right" Grid.Column="0"><Run Text="If you want to use Aurora with your Roccat peripherials Roccat Talk Fx must be installed and running."/></TextBlock>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Click="GoToTalkFXPage_Click" Padding="6,0" Margin="10,5,5,5">Download TalkFx</Button>
+            <Button Click="GoToTalkFXMirrorPage_Click" Padding="6,0" Margin="5,5,10,5" Grid.Column="1">Download mirror</Button>
+        </Grid>
+
     </Grid>
 </Window>
