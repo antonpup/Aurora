@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Layout
@@ -59,8 +61,11 @@ namespace Aurora.Devices.Layout
 
         public int CanvasWidth => LayoutUtils.PixelToByte(this.Width);
         public int CanvasHeight => LayoutUtils.PixelToByte(this.Height);
-        public float Width { get; protected set; }
-        public float Height { get; protected set; }
+
+        private float width = 0f;
+        public float Width { get => width; protected set => UpdateVar(ref width, value); }
+        private float height = 0f;
+        public float Height { get => height; protected set => UpdateVar(ref height, value); }
 
         public int CanvasBiggest => CanvasWidth > CanvasHeight ? CanvasWidth : CanvasHeight;
 
@@ -96,7 +101,7 @@ namespace Aurora.Devices.Layout
             return (isIntialized = true);
         }
 
-        private void Settings_PropertyChanged(object sender, PropertyChangedExEventArgs e)
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(GlobalDeviceLayoutSettings.BitmapAccuracy) || e.PropertyName == nameof(GlobalDeviceLayoutSettings.VirtualKeyboardKeycapType))
             {
@@ -143,8 +148,15 @@ namespace Aurora.Devices.Layout
             deviceLayout.LayoutUpdated += this.DeviceLayout_LayoutUpdated;
         }
 
-        private void DeviceLayout_PropertyChanged(object sender, PropertyChangedExEventArgs e)
+        private void DeviceLayout_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == nameof(DeviceLayout.Location))
+            {
+                deviceLocationChanged();
+                return;
+            }
+
+
             if (sender is DeviceLayout deviceLayout)
                 deviceLayout.GenerateLayout();
         }
@@ -157,10 +169,8 @@ namespace Aurora.Devices.Layout
             this.deviceLayoutsChanged();
         }
 
-        private void deviceLayoutsChanged()
+        private void deviceLocationChanged()
         {
-            //DeviceLookup = new Dictionary<(byte type, byte id), DeviceLayout>();
-            AllLeds = new List<DeviceLED>();
             float maxWidth = 0;
             float maxHeight = 0;
 
@@ -178,14 +188,29 @@ namespace Aurora.Devices.Layout
                     float h = deviceLayout.Location.Y + deviceLayout.VirtualGroup.Region.Height;
                     if (w > maxWidth) maxWidth = w;
                     if (h > maxHeight) maxHeight = h;
-
-                    //Update AllLeds
-                    AllLeds.AddRange(deviceLayout.GetAllDeviceLEDs());
                 }
             }
 
             this.Width = maxWidth;
             this.Height = maxHeight;
+        }
+
+        private void deviceLayoutsChanged()
+        {
+            //DeviceLookup = new Dictionary<(byte type, byte id), DeviceLayout>();
+
+            deviceLocationChanged();
+            AllLeds = new List<DeviceLED>();
+            foreach (KeyValuePair<byte, ObservableCollection<DeviceLayout>> deviceType in this.Settings.Devices)
+            {
+                for (byte i = 0; i < deviceType.Value.Count; i++)
+                {
+                    DeviceLayout deviceLayout = deviceType.Value[i];
+                    //Update AllLeds
+                    AllLeds.AddRange(deviceLayout.GetAllDeviceLEDs());
+                }
+            }
+            control = null;
             LayoutChanged?.Invoke(this);
         }
 
@@ -349,23 +374,46 @@ namespace Aurora.Devices.Layout
             return new Canvas(this);
         }
 
+        private Grid control = null;
+        
         public Grid GetControl(bool abstractView = false)
         {
             if (abstractView)
                 throw new NotImplementedException();
 
+            if (control != null)
+                return control;
+
             Grid grid = new Grid();
-            
+            System.Windows.Controls.Canvas c = new System.Windows.Controls.Canvas() { ClipToBounds = true};
+            grid.Children.Add(c);
             foreach (DeviceLayout deviceLayout in AllLayouts)
             {
                 Grid deviceGrid = deviceLayout.VirtualGroup.VirtualLayout;
-                deviceGrid.Margin = deviceLayout.Location.GetMargin();
+                c.Children.Add(deviceGrid);
 
-                grid.Children.Add(deviceGrid);
+                System.Windows.Controls.Canvas.SetTop(deviceGrid, deviceLayout.Location.Y);
+                System.Windows.Controls.Canvas.SetLeft(deviceGrid, deviceLayout.Location.X);
+                //grid.Children.Add(deviceGrid);
             }
-            grid.Width = Width;
-            grid.Height = Height;
-            return grid;
+            c.UpdateLayout();
+            grid.DataContext = this;
+            Binding bind = new Binding("Width");
+            bind.Source = this;
+            bind.Mode = BindingMode.OneWay;
+            bind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            BindingOperations.SetBinding(grid, Grid.WidthProperty, bind); 
+
+
+            bind = new Binding("Height");
+            bind.Source = this;
+            bind.Mode = BindingMode.OneWay;
+            bind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            BindingOperations.SetBinding(grid, Grid.HeightProperty, bind);
+
+            //grid.IsHitTestVisible = false;
+
+            return (control = grid);
         }
 
         #region IDisposable Support

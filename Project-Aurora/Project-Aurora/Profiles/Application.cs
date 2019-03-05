@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
 using Aurora.Settings;
+using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
@@ -373,7 +374,7 @@ namespace Aurora.Profiles
             }
         }
 
-        private void Profile_PropertyChanged(object sender, PropertyChangedExEventArgs e)
+        private void Profile_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is ApplicationProfile)
                 SaveProfile(sender as ApplicationProfile);

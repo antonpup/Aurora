@@ -31,12 +31,31 @@
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
-        <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="160,10,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectedItem="{Binding Settings.VirtualKeyboardKeycapType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,37,0,0" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
-        <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="160,37,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding Settings.BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    <Grid IsVisibleChanged="Grid_IsVisibleChanged">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        <CheckBox x:Name="chkAntiAliasing" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Content="Use Anti-Aliasing" IsChecked="{Binding Settings.AntiAliasing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectedItem="{Binding Settings.VirtualKeyboardKeycapType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Center" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
+        <ComboBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding Settings.BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <CheckBox Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Content="Use Anti-Aliasing" IsChecked="{Binding Settings.AntiAliasing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <!--<Button x:Name="btnEditLayout" Grid.Column="0" Grid.Row="4" Height="20" Content="Edit Layout" Click="BtnEditLayout_Click" IsVisibleChanged="BtnEditLayout_IsVisibleChanged"/>-->
+
+        <TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="5" Text="To change the positions of each Device simply drag them around while in this tab!"/>
     </Grid>
 </UserControl>

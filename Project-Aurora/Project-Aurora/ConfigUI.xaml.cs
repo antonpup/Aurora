@@ -69,8 +69,6 @@ namespace Aurora
             }
         }
 
-        LayerEditor layer_editor = new LayerEditor();
-
         private bool _ShowHidden = false;
 
         public bool ShowHidden
@@ -148,16 +146,16 @@ namespace Aurora
             keyboard_grid.Children.Add(virtial_kb);
             keyboard_grid.Children.Add(new LayerEditor());
 
-            keyboard_grid.Width = virtial_kb.Width;
+            keyboard_grid.Width = double.NaN;
             this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
-            keyboard_grid.Height = virtial_kb.Height;
+            keyboard_grid.Height = double.NaN;
             this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
 
-            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
-            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
+            keyboard_viewbox.MaxWidth = (this.Width) + 100;
+            keyboard_viewbox.MaxHeight = this.Height * 0.5;
             keyboard_viewbox.UpdateLayout();
 
             this.UpdateLayout();
@@ -798,6 +796,9 @@ namespace Aurora
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
             UpdateManagerStackFocus(_selectedManager, true);
+            keyboard_viewbox.MaxWidth = (this.Width) + 100;
+            keyboard_viewbox.MaxHeight = this.Height * 0.5;
+            keyboard_viewbox.UpdateLayout();
         }
 
 

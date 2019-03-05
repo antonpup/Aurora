@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Settings
 {
-    public class ObjectSettings<T> where T : Settings.SettingsBase
+    public class ObjectSettings<T> : NotifyPropertyChangedEx where T : Settings.SettingsBase
     {
         protected string SettingsSavePath { get; set; }
         public T Settings { get; protected set; }

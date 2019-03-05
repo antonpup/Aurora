@@ -15,7 +15,8 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using LEDINT = System.Int16;
-
+using Aurora.Controls.EditorResources;
+using System.Windows.Controls.Primitives;
 
 namespace Aurora.Devices.Layout
 {
@@ -490,6 +491,20 @@ namespace Aurora.Devices.Layout
             _region_bitmap.Height = LayoutUtils.PixelToByte(this.Region.Height) + 1;
         }
 
+        private void T_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            Thumb thumb = e.Source as Thumb;
+            Grid g = thumb.Parent as Grid;
+
+            int x = (int)Math.Max(0, System.Windows.Controls.Canvas.GetLeft(g) + e.HorizontalChange);
+            int y = (int)Math.Max(0, System.Windows.Controls.Canvas.GetTop(g) + e.VerticalChange);
+
+            System.Windows.Controls.Canvas.SetLeft(g, x);
+            System.Windows.Controls.Canvas.SetTop(g, y);
+
+            this.parent.Location = new System.Drawing.Point(x, y);
+        }
+
         private string layoutsPath = "kb_layouts";
         private Grid CreateUserControl(bool abstractKeycaps = false)
         {
@@ -498,7 +513,7 @@ namespace Aurora.Devices.Layout
                 virtualKeyboardMap.Clear();
 
             Grid new_virtual_keyboard = new Grid();
-
+            
             new_virtual_keyboard.HorizontalAlignment = HorizontalAlignment.Left;
             new_virtual_keyboard.VerticalAlignment = VerticalAlignment.Top;
             /*new_virtual_keyboard.DataContext = this.parent;
@@ -651,8 +666,12 @@ namespace Aurora.Devices.Layout
             }
             else
             {*/
-                //Update size
-                new_virtual_keyboard.Width = this.Region.Width;
+            Thumb t = new Thumb() { Cursor = System.Windows.Input.Cursors.SizeAll, Opacity = 0, IsHitTestVisible = false };
+
+            t.DragDelta += this.T_DragDelta;
+            new_virtual_keyboard.Children.Add(t);
+            //Update size
+            new_virtual_keyboard.Width = this.Region.Width;
                 new_virtual_keyboard.Height = this.Region.Height;
             //}
 
@@ -664,6 +683,8 @@ namespace Aurora.Devices.Layout
 
             return new_virtual_keyboard;
         }
+
+        
     }
 
     public class VirtualGroupConfiguration
