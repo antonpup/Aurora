@@ -40,5 +40,6 @@
         <TextBlock x:Name="interactive_effects_width_label" HorizontalAlignment="Left" Margin="225,146,0,0" TextWrapping="Wrap" Text="1 px" VerticalAlignment="Top"/>
         <CheckBox x:Name="interactive_effects_start_on_key_up_enabled" Content="Start progress when key released" HorizontalAlignment="Left" Margin="0,167,0,0" VerticalAlignment="Top" Checked="interactive_effects_start_on_key_up_enabled_Checked" Unchecked="interactive_effects_start_on_key_up_enabled_Checked"/>
         <Controls:KeySequence x:Name="KeySequence_keys" Margin="354,0,0,0" RecordingTag="Interactive Layer (Excluded Keys)" Title="Excluded Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
+        <CheckBox x:Name="usePressBuffer" Content="Mitigate rapid key presses" HorizontalAlignment="Left" Margin="0,188,0,0" VerticalAlignment="Top" Checked="usePressBuffer_Checked" Unchecked="usePressBuffer_Checked"/>
     </Grid>
 </UserControl>

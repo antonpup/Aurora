@@ -63,13 +63,18 @@ namespace Aurora.Settings
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
             chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
             keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
-            sldr_Opacity.Value = (int)(Layer.Handler.Opacity * 100.0f);
+            sldr_Opacity.Value = (int)(Layer.Handler._Opacity ?? 1f * 100.0f);
             lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
 
             grdLayerConfigs.Visibility = Visibility.Hidden;
+            overridesEditor.Visibility = Visibility.Hidden;
+            btnConfig.Visibility = Visibility.Visible;
+            btnOverrides.Visibility = Visibility.Visible;
             grd_LayerControl.IsHitTestVisible = true;
             grd_LayerControl.Effect = null;
             isSettingNewLayer = false;
+
+            overridesEditor.Layer = layer;
         }
 
         private void cmbLayerType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -82,125 +87,11 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnLogic_Click(object sender, RoutedEventArgs e)
-        {
-            Window_LayerLogicEditor logic_edit = new Window_LayerLogicEditor(this._Layer);
-            logic_edit.ShowDialog();
-        }
-
         private void ResetLayer(LayerHandlerEntry type)
         {
             if (IsLoaded && !isSettingNewLayer)
             {
                 _Layer.Handler = Global.LightingStateManager.GetLayerHandlerInstance(type);
-                /*switch (type)
-                {
-                    case LayerType.Solid:
-                        _Layer.Handler = new SolidColorLayerHandler();
-                        break;
-                    case LayerType.SolidFilled:
-                        _Layer.Handler = new SolidFillLayerHandler();
-                        break;
-                    case LayerType.Gradient:
-                        _Layer.Handler = new GradientLayerHandler();
-                        break;
-                    case LayerType.GradientFill:
-                        _Layer.Handler = new GradientFillLayerHandler();
-                        break;
-                    case LayerType.Percent:
-                        _Layer.Handler = new PercentLayerHandler();
-                        break;
-                    case LayerType.PercentGradient:
-                        _Layer.Handler = new PercentGradientLayerHandler();
-                        break;
-                    case LayerType.Interactive:
-                        _Layer.Handler = new InteractiveLayerHandler();
-                        break;
-                    case LayerType.ShortcutAssistant:
-                        _Layer.Handler = new ShortcutAssistantLayerHandler();
-                        break;
-                    case LayerType.Equalizer:
-                        _Layer.Handler = new EqualizerLayerHandler();
-                        break;
-                    case LayerType.Ambilight:
-                        _Layer.Handler = new AmbilightLayerHandler();
-                        break;
-                    case LayerType.Breathing:
-                        _Layer.Handler = new BreathingLayerHandler();
-                        break;
-                    case LayerType.Blinking:
-                        _Layer.Handler = new BlinkingLayerHandler();
-                        break;
-                    case LayerType.Image:
-                        _Layer.Handler = new ImageLayerHandler();
-                        break;
-                    case LayerType.Script:
-                        _Layer.Handler = new ScriptLayerHandler();
-                        break;
-                    case LayerType.LockColor:
-                        _Layer.Handler = new LockColourLayerHandler();
-                        break;
-                    case LayerType.Animation:
-                        _Layer.Handler = new AnimationLayerHandler();
-                        break;
-                    case LayerType.Dota2Background:
-                        _Layer.Handler = new Dota2BackgroundLayerHandler();
-                        break;
-                    case LayerType.Dota2Respawn:
-                        _Layer.Handler = new Dota2RespawnLayerHandler();
-                        break;
-                    case LayerType.Dota2Abilities:
-                        _Layer.Handler = new Dota2AbilityLayerHandler();
-                        break;
-                    case LayerType.Dota2Items:
-                        _Layer.Handler = new Dota2ItemLayerHandler();
-                        break;
-                    case LayerType.Dota2HeroAbilityEffects:
-                        _Layer.Handler = new Dota2HeroAbilityEffectsLayerHandler();
-                        break;
-                    case LayerType.Dota2Killstreak:
-                        _Layer.Handler = new Dota2KillstreakLayerHandler();
-                        break;
-                    case LayerType.CSGOBackground:
-                        _Layer.Handler = new CSGOBackgroundLayerHandler();
-                        break;
-                    case LayerType.CSGOBomb:
-                        _Layer.Handler = new CSGOBombLayerHandler();
-                        break;
-                    case LayerType.CSGOKillsIndicator:
-                        _Layer.Handler = new CSGOKillIndicatorLayerHandler();
-                        break;
-                    case LayerType.CSGOBurning:
-                        _Layer.Handler = new CSGOBurningLayerHandler();
-                        break;
-                    case LayerType.CSGOFlashbang:
-                        _Layer.Handler = new CSGOFlashbangLayerHandler();
-                        break;
-                    case LayerType.CSGOTyping:
-                        _Layer.Handler = new CSGOTypingIndicatorLayerHandler();
-                        break;
-                    case LayerType.GTA5Background:
-                        _Layer.Handler = new GTA5BackgroundLayerHandler();
-                        break;
-                    case LayerType.GTA5PoliceSiren:
-                        _Layer.Handler = new GTA5PoliceSirenLayerHandler();
-                        break;
-                    case LayerType.RocketLeagueBackground:
-                        _Layer.Handler = new RocketLeagueBackgroundLayerHandler();
-                        break;
-                    case LayerType.PD2Background:
-                        _Layer.Handler = new PD2BackgroundLayerHandler();
-                        break;
-                    case LayerType.PD2Flashbang:
-                        _Layer.Handler = new PD2FlashbangLayerHandler();
-                        break;
-                    case LayerType.PD2States:
-                        _Layer.Handler = new PD2StatesLayerHandler();
-                        break;
-                    default:
-                        _Layer.Handler = new DefaultLayerHandler();
-                        break;
-                }*/
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
                 chkLayerSmoothing.IsChecked = _Layer.Handler.EnableSmoothing;
@@ -209,6 +100,8 @@ namespace Aurora.Settings
                 sldr_Opacity.Value = (int)(Layer.Handler.Opacity * 100.0f);
                 lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
                 this._Layer.AssociatedApplication.SaveProfiles();
+
+                overridesEditor.ForcePropertyListUpdate();
             }
         }
 
@@ -226,18 +119,11 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
-                if(this.grdLayerConfigs.IsVisible)
-                {
-                    this.grdLayerConfigs.Visibility = Visibility.Hidden;
-                    grd_LayerControl.IsHitTestVisible = true;
-                    grd_LayerControl.Effect = null;
-                }
-                else
-                {
-                    this.grdLayerConfigs.Visibility = Visibility.Visible;
-                    grd_LayerControl.IsHitTestVisible = false;
-                    grd_LayerControl.Effect = new System.Windows.Media.Effects.BlurEffect();
-                }
+                bool v = grdLayerConfigs.IsVisible;
+                grdLayerConfigs.Visibility = v ? Visibility.Hidden : Visibility.Visible;
+                grd_LayerControl.IsHitTestVisible = v;
+                grd_LayerControl.Effect = v ? null : new System.Windows.Media.Effects.BlurEffect();
+                btnOverrides.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -265,8 +151,17 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Slider)
             {
-                Layer.Handler.Opacity = (float)((sender as Slider).Value) / 100.0f;
+                Layer.Handler._Opacity = (float)((sender as Slider).Value) / 100.0f;
                 this.lbl_Opacity_Text.Text = $"{(int)((sender as Slider).Value)} %";
+            }
+        }
+
+        private void btnOverrides_Click(object sender, RoutedEventArgs e) {
+            if (IsLoaded && !isSettingNewLayer) {
+                bool v = overridesEditor.IsVisible;
+                overridesEditor.Visibility = v ? Visibility.Hidden : Visibility.Visible;
+                grd_LayerControl.IsHitTestVisible = v;
+                btnConfig.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
             }
         }
     }

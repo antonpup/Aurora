@@ -225,6 +225,8 @@ namespace Aurora.Settings
 
         [Description("Wooting One")]
         Wooting_One = 800,
+        [Description("Wooting Two")]
+        Wooting_Two = 801,
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,

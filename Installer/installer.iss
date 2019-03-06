@@ -25,6 +25,8 @@ SolidCompression=yes
 UninstallDisplayIcon={app}\Aurora.exe
 SetupIconFile=Aurora_updater.ico
 WizardImageFile=Aurora-wizard.bmp
+CloseApplications=no 
+// ^ This line is important because when it is set to yes it would ask user to exit Aurora. But uninstaller/installer already kills Aurora processes.
 
 //#include <idp.iss>
 
@@ -57,15 +59,124 @@ Name: "{commondesktop}\Aurora"; Filename: "{app}\Aurora.exe"; Tasks: desktopicon
 //  unzip(ExpandConstant(src), ExpandConstant(target));
 //end;
 
+function ExecuteHidden(const command: string; const parameters: string): Integer;
+var
+  ResultCode: Integer;
+begin
+  Exec(command, parameters, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  Result := ResultCode;
+end;
+
+function CmdLineParamExists(const Value: string): Boolean; // stackoverflow.com/a/48349992
+var
+  I: Integer;  
+begin
+  Result := False;
+  for I := 1 to ParamCount do
+    if CompareText(ParamStr(I), Value) = 0 then
+    begin
+      Result := True;
+      Exit;
+    end;
+end;
+
+function GetUninstallString(): String; // stackoverflow.com/a/2099805 but slightly modified to work with 64bit machines
+var
+  sUnInstPath: String;
+  sUnInstallString: String;
+begin
+  sUnInstPath := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
+  sUnInstallString := '';
+  if not RegQueryStringValue(HKLM, sUnInstPath, 'UninstallString', sUnInstallString) then
+    begin
+      if not RegQueryStringValue(HKCU, sUnInstPath, 'UninstallString', sUnInstallString) then
+        begin
+          sUnInstPath := ExpandConstant('SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
+          if not RegQueryStringValue(HKLM, sUnInstPath, 'UninstallString', sUnInstallString) then
+            RegQueryStringValue(HKCU, sUnInstPath, 'UninstallString', sUnInstallString);
+        end;
+    end;
+
+  Result := sUnInstallString;
+end;
+
+function KeepSettings: Boolean;
+begin
+  Result := CmdLineParamExists('/keepsettings');
+end;
+
+function KeepStartupTask: Boolean;
+begin
+  Result := CmdLineParamExists('/keepstartuptask');
+end;
+
+procedure TaskKill(FileName: String);
+begin
+  ExecuteHidden('taskkill.exe','/f /im ' + '"' + FileName + '"')
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+   sUnInstallString: String;
+begin
+  case CurStep of
+    ssInstall:
+      begin
+        if (not WizardSilent()) then
+          begin
+            MsgBox(ExpandConstant('The installer will now try to close running instances of {#SetupSetting("AppName")} and uninstall them. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+          end;
+        TaskKill('Aurora.exe');
+        TaskKill('Aurora-SkypeIntegration.exe');
+        TaskKill('Aurora-Updater.exe');
+        
+        sUnInstallString := GetUninstallString();
+        if sUnInstallString <> '' then 
+          begin
+            sUnInstallString := RemoveQuotes(sUnInstallString);
+            ExecuteHidden(sUnInstallString,'/verysilent /keepsettings /keepstartuptask');
+          end;
+
+      end;
+  end;
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   case CurUninstallStep of
     usUninstall:
       begin
-        if MsgBox(ExpandConstant('Do you want to remove all the settings?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
+        if (not UninstallSilent()) then
           begin
-             DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
+            MsgBox(ExpandConstant('The uninstaller will now try to close running instances of {#SetupSetting("AppName")} if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
+            TaskKill('Aurora.exe');
+            TaskKill('Aurora-SkypeIntegration.exe');
+            TaskKill('Aurora-Updater.exe');
+
+            if ((not KeepSettings()) and (MsgBox(ExpandConstant('Do you want to remove all the settings and user data?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)) then
+              begin
+                if (MsgBox(ExpandConstant('Do you really confirm removing all settings and user data?'), mbError, MB_YESNO or MB_DEFBUTTON2) = IDYES) then
+                  begin
+                    DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
+                  end;
+
+              end;
           end
+        else
+          begin
+            TaskKill('Aurora.exe');
+            TaskKill('Aurora-SkypeIntegration.exe');
+            TaskKill('Aurora-Updater.exe');
+
+            if (not KeepSettings()) then
+              begin
+                DelTree(ExpandConstant('{userappdata}\Aurora'), True, True, True);
+              end;
+          end;
+        if (not KeepStartupTask()) then
+          begin
+            ExecuteHidden('schtasks.exe', '/delete /tn "AuroraStartup" /f');
+          end;
       end;
   end;
 end; 
@@ -76,14 +187,15 @@ end;
 #ELSE
   #DEFINE AW "A"
 #ENDIF
+
 function VCRedistX64NeedsInstall: Boolean;
 begin
-  Result := not RegKeyExists(HKEY_CLASSES_ROOT,'Installer\Dependencies\,,amd64,14.0,bundle\Dependents\{5b295ba9-ef89-4aeb-8acc-b61adb0b9b5f}');
+  Result := not RegKeyExists(HKEY_LOCAL_MACHINE,'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64');
 end;
-
+                                             
 function VCRedistX86NeedsInstall: Boolean;
 begin
-  Result := not RegKeyExists(HKEY_CLASSES_ROOT,'Installer\Dependencies\,,x86,14.0,bundle\Dependents\{ec9c2282-a836-48a6-9e41-c2f0bf8d678b}');
+  Result := not RegKeyExists(HKEY_LOCAL_MACHINE,'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x86');
 end;
 
 [Run]

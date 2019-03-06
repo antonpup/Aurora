@@ -324,6 +324,7 @@ namespace Aurora
             trayicon.Visibility = Visibility.Hidden;
             virtual_keyboard_timer?.Stop();
             System.Windows.Application.Current.Shutdown();
+            Environment.Exit(0);
         }
 
         private void minimizeApp()

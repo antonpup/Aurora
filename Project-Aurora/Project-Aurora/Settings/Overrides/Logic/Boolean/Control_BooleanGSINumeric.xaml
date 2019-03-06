@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Aurora.Settings.Overrides.Logic.Control_ConditionGSINumeric"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
+             mc:Ignorable="d" d:DesignWidth="400">
+    <Grid Margin="0,0,0,6">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="62px" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <ComboBox x:Name="Operand1Cb" Text="{Binding Operand1Path}" IsEditable="True" Grid.Column="0" />
+        <ComboBox x:Name="OperatorCb" SelectedValue="{Binding Operator}" SelectedValuePath="Value" DisplayMemberPath="Label" Grid.Column="1" Margin="6,0" />
+        <ComboBox x:Name="Operand2Cb" Text="{Binding Operand2Path}" IsEditable="True" Grid.Column="2" />
+    </Grid>
+</UserControl>

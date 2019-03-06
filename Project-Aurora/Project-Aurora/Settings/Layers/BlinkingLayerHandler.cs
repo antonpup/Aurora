@@ -17,12 +17,13 @@ namespace Aurora.Settings.Layers
 
         [JsonIgnore]
         public bool RandomPrimaryColor { get { return Logic._RandomPrimaryColor ?? _RandomPrimaryColor ?? false; } }
-
+        
         public bool? _RandomSecondaryColor { get; set; }
 
         [JsonIgnore]
         public bool RandomSecondaryColor { get { return Logic._RandomSecondaryColor ?? _RandomSecondaryColor ?? false; } }
 
+        [Overrides.LogicOverridable("Effect Speed")]
         public float? _EffectSpeed { get; set; }
 
         [JsonIgnore]

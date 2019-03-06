@@ -1055,6 +1055,7 @@ namespace Aurora.Devices
         [Description("Profile Key 6")]
         Profile_Key6 = 168,
 
+        /// <summary>
         /// Numpad 00
         /// </summary>
         [Description("Numpad 00")]

@@ -1,0 +1,50 @@
+﻿{
+    "NoteStreak": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "848" ]
+    },
+    "IsStarPowerActive": {
+        "baseAddress": "4854560",
+        "pointers": [ "664", "776", "272" ]
+    },
+    "StarPowerPercent": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "828" ]
+    },
+    "IsAtMenu": {
+        "baseAddress": "4813696",
+        "pointers": [ "760" ]
+    },
+    "Score": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "856" ]
+    },
+    "NotesTotal": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "624", "40", "40", "120" ]
+    },
+    "SoloPercent": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "688", "112" ]
+    },
+    "IsGreenPressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "640", "24", "32", "24" ]
+    },
+    "IsRedPressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "640", "24", "40", "24" ]
+    },
+    "IsYellowPressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "640", "24", "48", "24" ]
+    },
+    "IsBluePressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "640", "24", "56", "24" ]
+    },
+    "IsOrangePressed": {
+        "baseAddress": "4791784",
+        "pointers": [ "152", "640", "24", "64", "24" ]
+    }
+}
