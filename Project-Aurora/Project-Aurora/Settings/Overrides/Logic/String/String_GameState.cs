@@ -1,4 +1,5 @@
-﻿using Aurora.Profiles;
+﻿using Aurora.Controls;
+using Aurora.Profiles;
 using Aurora.Utils;
 using System;
 using System.Linq;
@@ -16,11 +17,11 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Control assigned to this logic node.</summary>
         [Newtonsoft.Json.JsonIgnore]
-        private ComboBox control;
+        private Control_GameStateParameterPicker control;
         public Visual GetControl(Application application) {
             if (control == null) {
-                control = new ComboBox { Margin = new System.Windows.Thickness(0, 0, 0, 6) };
-                control.SetBinding(ComboBox.SelectedItemProperty, new Binding("VariablePath") { Source = this });
+                control = new Control_GameStateParameterPicker { PropertyType = PropertyType.String, Margin = new System.Windows.Thickness(0, 0, 0, 6) };
+                control.SetBinding(Control_GameStateParameterPicker.SelectedPathProperty, new Binding("VariablePath") { Source = this, Mode = BindingMode.TwoWay });
                 SetApplication(application);
             }
             return control;
@@ -38,7 +39,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Update the assigned combobox with the new application context.</summary>
         public void SetApplication(Application application) {
             if (control != null)
-                control.ItemsSource = application?.ParameterLookup?.GetStringParameters();
+                control.Application = application;
 
             // Check to ensure var path is valid
             if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.IsValidParameter(VariablePath))

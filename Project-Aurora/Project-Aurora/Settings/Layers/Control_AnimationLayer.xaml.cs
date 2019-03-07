@@ -67,7 +67,6 @@ namespace Aurora.Settings.Layers
                 updownAnimationRepeat.Value = Context.Properties._AnimationRepeat;
                 triggerModeCb.SelectedValue = Context.Properties.TriggerMode;
                 triggerAnyKey.IsChecked = Context.Properties._TriggerAnyKey;
-                triggerPath.Text = Context.Properties._TriggerPath;
                 triggerKeys.Sequence = Context.Properties._TriggerKeySequence;
                 translateToKey.IsChecked = Context.Properties._KeyTriggerTranslate;
                 stackModeCb.SelectedValue = Context.Properties.StackMode;
@@ -80,6 +79,7 @@ namespace Aurora.Settings.Layers
             if (profile != null && !profileset) {
                 this.profile = profile;
                 triggerEvaluatable.Application = profile;
+                triggerPath.Application = profile;
                 UpdatePathCombobox();
                 profileset = true;
             }
@@ -96,9 +96,7 @@ namespace Aurora.Settings.Layers
             triggerPathItemsAreBoolean = isTriggerBoolean;
 
             // Get a list of the parameters. If trigger is boolean mode, filters to only boolean values, else does numeric values
-            triggerPath.ItemsSource = isTriggerBoolean
-                ? profile?.ParameterLookup?.GetBooleanParameters()
-                : profile?.ParameterLookup?.GetNumericParameters();
+            triggerPath.PropertyType = isTriggerBoolean ? PropertyType.Boolean : PropertyType.Number;
         }
 
         private void btnEditAnimation_Click(object sender, RoutedEventArgs e) {
@@ -201,11 +199,6 @@ namespace Aurora.Settings.Layers
 
             // Update the combobox
             UpdatePathCombobox();
-        }
-
-        private void triggerPath_TextChanged(object sender, TextChangedEventArgs e) {
-            if (CanSet)
-                Context.Properties._TriggerPath = (sender as ComboBox).Text;
         }
 
         private void triggerAnyKey_Checked(object sender, RoutedEventArgs e) {

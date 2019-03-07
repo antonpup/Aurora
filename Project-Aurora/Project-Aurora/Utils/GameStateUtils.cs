@@ -165,7 +165,7 @@ namespace Aurora.Utils
 
         /// <summary>
         /// Attempts to get a double value from the game state with the given path.
-        /// Returns 0 if an error occurs
+        /// Returns 0 if an error occurs.
         /// </summary>
         public static double TryGetDoubleFromState(IGameState state, string path) {
             if (!double.TryParse(path, out double value) && !string.IsNullOrWhiteSpace(path)) {
@@ -211,20 +211,22 @@ namespace Aurora.Utils
         /// <summary>
         /// Fetchs all numeric values from the given parameter lookup dictionary, optionally including plugin parameters.
         /// </summary>
-        public static IEnumerable<string> GetNumericParameters(this Dictionary<string, Tuple<Type, Type>> parameterLookup, bool includePlugins = true)
-            => parameterLookup.MergeWithPluginParameters(includePlugins).Where(kvp => TypeUtils.IsNumericType(kvp.Value.Item1)).Select(kvp => kvp.Key);
+        public static IEnumerable<string> GetParameters(this Dictionary<string, Tuple<Type, Type>> parameterLookup, PropertyType type, bool includePlugins = true)
+            => parameterLookup.MergeWithPluginParameters(includePlugins).Where(PropertyTypePredicate[type]).Select(kvp => kvp.Key);
 
         /// <summary>
-        /// Fetchs all boolean values from the given parameter lookup dictionary, optionally including plugin parameters.
+        /// Dictionary that specifies the filtering function that will be used on each parameter lookup entry to determine if it is of a particular PropertyType
         /// </summary>
-        public static IEnumerable<string> GetBooleanParameters(this Dictionary<string, Tuple<Type, Type>> parameterLookup, bool includePlugins = true)
-            => parameterLookup.MergeWithPluginParameters(includePlugins).Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean).Select(kvp => kvp.Key);
-
-        /// <summary>
-        /// Fetchs all string values from the given parameter lookup dictionary, optionally including plugin parameters.
-        /// </summary>
-        public static IEnumerable<string> GetStringParameters(this Dictionary<string, Tuple<Type, Type>> parameterLookup, bool includePlugins = true)
-            => parameterLookup.MergeWithPluginParameters(includePlugins).Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.String).Select(kvp => kvp.Key);
+        public static Dictionary<PropertyType, Func<KeyValuePair<string, Tuple<Type, Type>>, bool>> PropertyTypePredicate = new Dictionary<PropertyType, Func<KeyValuePair<string, Tuple<Type, Type>>, bool>> {
+            { PropertyType.Number, kvp => TypeUtils.IsNumericType(kvp.Value.Item1) },
+            { PropertyType.Boolean, kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean },
+            { PropertyType.String, kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.String }
+        };
         #endregion
     }
+
+    /// <summary>
+    /// This enum is a list of all types recognised by the property parameter lookup.
+    /// </summary>
+    public enum PropertyType { Number, Boolean, String }
 }

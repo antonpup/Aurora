@@ -56,7 +56,7 @@ namespace Aurora.Settings.Layers {
 
         internal void SetProfile(Profiles.Application profile) {
             if (profile != null && !profileset) {
-                operand1Path.ItemsSource = operand2Path.ItemsSource = profile.ParameterLookup?.GetNumericParameters();
+                operand1Path.ItemsSource = operand2Path.ItemsSource = profile.ParameterLookup?.GetParameters(PropertyType.Number);
                 profileset = true;
             }
             settingsset = false;

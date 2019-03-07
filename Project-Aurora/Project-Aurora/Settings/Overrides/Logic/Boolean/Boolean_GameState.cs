@@ -1,6 +1,8 @@
-﻿using Aurora.Profiles;
+﻿using Aurora.Controls;
+using Aurora.Profiles;
 using Aurora.Utils;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace Aurora.Settings.Overrides.Logic {
@@ -22,10 +24,13 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>The control assigned to this condition. Stored as a reference
         /// so that the application be updated if required.</summary>
         [Newtonsoft.Json.JsonIgnore]
-        private Control_ConditionGSIBoolean control;
+        private Control_GameStateParameterPicker control;
         public Visual GetControl(Application application) {
-            if (control == null)
-                control = new Control_ConditionGSIBoolean(this, application);
+            if (control == null) {
+                control = new Control_GameStateParameterPicker { PropertyType = PropertyType.Boolean, Margin = new System.Windows.Thickness(0, 0, 0, 6) };
+                control.SetBinding(Control_GameStateParameterPicker.SelectedPathProperty, new Binding("VariablePath") { Source = this, Mode = BindingMode.TwoWay });
+                SetApplication(application);
+            }
             return control;
         }
 
@@ -43,7 +48,8 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Update the assigned control with the new application.</summary>
         public void SetApplication(Application application) {
-            control?.SetApplication(application);
+            if (control != null)
+                control.Application = application;
 
             // Check to ensure the variable path is valid
             if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.IsValidParameter(VariablePath))

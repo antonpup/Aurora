@@ -40,8 +40,6 @@ namespace Aurora.Settings.Layers
         {
             if (this.DataContext is PercentGradientLayerHandler && !settingsset)
             {
-                this.ComboBox_variable.Text = (this.DataContext as PercentGradientLayerHandler).Properties._VariablePath;
-                this.ComboBox_max_variable.Text = (this.DataContext as PercentGradientLayerHandler).Properties._MaxVariablePath;
                 this.ComboBox_effect_type.SelectedIndex = (int)(this.DataContext as PercentGradientLayerHandler).Properties._PercentType;
                 this.updown_blink_value.Value = (int)((this.DataContext as PercentGradientLayerHandler).Properties._BlinkThreshold * 100);
                 this.CheckBox_threshold_reverse.IsChecked = (this.DataContext as PercentGradientLayerHandler).Properties._BlinkDirection;
@@ -65,7 +63,7 @@ namespace Aurora.Settings.Layers
         {
             if (profile != null && !profileset)
             {
-                ComboBox_variable.ItemsSource = ComboBox_max_variable.ItemsSource = profile.ParameterLookup?.GetNumericParameters();
+                gsiPicker_variable.Application = gsiPicker_maxVariable.Application = profile;
                 profileset = true;
             }
 
@@ -90,18 +88,6 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is ColorBox.ColorBox)
                 (this.DataContext as PercentGradientLayerHandler).Properties._Gradient = new EffectsEngine.EffectBrush((sender as ColorBox.ColorBox).Brush);
-        }
-
-        private void ComboBox_variable_TextChanged(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is ComboBox)
-                (this.DataContext as PercentGradientLayerHandler).Properties._VariablePath = (sender as ComboBox).Text;
-        }
-
-        private void ComboBox_max_variable_TextChanged(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is ComboBox)
-                (this.DataContext as PercentGradientLayerHandler).Properties._MaxVariablePath = (sender as ComboBox).Text;
         }
 
         private void ColorPicker_progressColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

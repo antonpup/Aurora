@@ -64,7 +64,7 @@
                         </ComboBox>
 
                         <Label Content="Trigger path:" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                        <ComboBox x:Name="triggerPath" Grid.Row="1" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Stretch" IsEditable="True" TextBoxBase.TextChanged="triggerPath_TextChanged" />
+                        <Controls:Control_GameStateParameterPicker x:Name="triggerPath" Grid.Row="1" Grid.Column="1" SelectedPath="{Binding Properties._TriggerPath, Mode=TwoWay}" Margin="2,4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Stretch" />
                         <Label Content="Trigger expr:" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
                         <logic:Control_EvaluatablePresenter x:Name="triggerEvaluatable" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ExpressionChanged="triggerEvaluatable_ExpressionChanged" />
                         <Label Content="Trigger keys:" Grid.Row="3" VerticalAlignment="Top" HorizontalAlignment="Right" />
