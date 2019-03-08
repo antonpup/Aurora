@@ -299,8 +299,11 @@ namespace Aurora
                 Global.logger.Info("Loading Applications");
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
-                Global.logger.Info("Fetching latest pointers");
-                Task.Run(() => Utils.PointerUpdateUtils.FetchDevPointers("master"));
+                if (Global.Configuration.pointer_updates_check_on_start_up)
+                {
+                    Global.logger.Info("Fetching latest pointers");
+                    Task.Run(() => Utils.PointerUpdateUtils.FetchDevPointers("master"));
+                }
 
                 Global.logger.Info("Loading Device Manager");
                 Global.dev_manager.RegisterVariables();

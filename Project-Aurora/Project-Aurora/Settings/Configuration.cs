@@ -395,6 +395,7 @@ namespace Aurora.Settings
         public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
 
         public bool updates_check_on_start_up;
+        public bool pointer_updates_check_on_start_up;
         public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
@@ -461,6 +462,7 @@ namespace Aurora.Settings
             KeyboardBrightness = 1.0f;
             peripheralBrightness = 1.0f;
             updates_check_on_start_up = true;
+            pointer_updates_check_on_start_up = true;
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;

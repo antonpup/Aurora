@@ -277,8 +277,9 @@
                 <Grid>
                     <Button x:Name="updates_check" Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>
                     <CheckBox x:Name="updates_autocheck_on_start" Content="Automatically check for updates on program start" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Checked="updates_autocheck_on_start_Checked" Unchecked="updates_autocheck_on_start_Checked"/>
+                    <CheckBox x:Name="pointer_updates_autocheck_on_start" Content="Automatically check for pointer updates on program start" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Checked="pointer_updates_autocheck_on_start_Checked" Unchecked="pointer_updates_autocheck_on_start_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Github "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/releases" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
-                    <CheckBox x:Name="chkGetPrereleases" Content="Get Pre-release updates" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" IsChecked="{Binding GetDevReleases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="chkGetPrereleases" Content="Get Pre-release updates" HorizontalAlignment="Left" Margin="10,96,0,0" VerticalAlignment="Top" IsChecked="{Binding GetDevReleases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="About">
