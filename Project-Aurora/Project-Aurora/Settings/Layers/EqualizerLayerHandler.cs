@@ -1,4 +1,4 @@
-﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Utils;
 using NAudio.CoreAudioApi;
@@ -247,6 +247,7 @@ namespace Aurora.Settings.Layers
 
                 using (Graphics g = equalizer_layer.GetGraphics())
                 {
+                    g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                     int wave_step_amount = _local_fft.Length / Effects.canvas_width;
 
                     switch (Properties.EQType)
