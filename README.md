@@ -43,6 +43,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Blacklight: Retribution
 * Blade and Soul
 * Borderlands 2
+* Clone Hero
 * CS:GO
 * DOOM (2016)
 * Diablo III
@@ -288,6 +289,7 @@ Clone Hero features
 * Star Power Activation Indicator & Color Overrides
 * FC Indicator
 * Menu Effects
+* Flashes red when a player misses a note or overstrums
 
 CS:GO features
 
