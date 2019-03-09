@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Aurora.Settings.Layers.Control_EqualizerLayer"
+<UserControl x:Class="Aurora.Settings.Layers.Control_EqualizerLayer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -31,6 +31,15 @@
                 <TextBlock Text="{Binding Converter={StaticResource EqualizerPresentationTypeToStringVC}}" />
             </DataTemplate>
 
+            <ObjectDataProvider x:Key="EqualizerBackgroundMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:EqualizerBackgroundMode" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:EqualizerBackgroundModeToStringVC x:Key="EqualizerBackgroundModeToStringVC"/>
+            <DataTemplate x:Key="EqualizerBackgroundModeTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource EqualizerBackgroundModeToStringVC}}" />
+            </DataTemplate>
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -54,12 +63,17 @@
 
         <TextBlock HorizontalAlignment="Left" Margin="302,4,0,0" TextWrapping="Wrap" Text="Max amplitude:" VerticalAlignment="Top"/>
         <xctk:IntegerUpDown x:Name="updown_max_amplitude_value" HorizontalAlignment="Left" Height="24" Margin="389,0,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="120" Minimum="1" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged"/>
-        <CheckBox x:Name="chkbox_dimbgonsound" Content="Dim background on sound" HorizontalAlignment="Left" Margin="302,46,0,0" VerticalAlignment="Top" Checked="chkbox_dimbgonsound_Checked" Unchecked="chkbox_dimbgonsound_Checked"/>
+
+        <TextBlock HorizontalAlignment="Left" Margin="302,57,0,0" TextWrapping="Wrap" Text="Background Mode:" VerticalAlignment="Top"/>
+        <ComboBox x:Name="eq_background_mode" HorizontalAlignment="Left" Margin="407,54,0,0" VerticalAlignment="Top" Width="119" ItemsSource="{Binding Source={StaticResource EqualizerBackgroundMode}}" ItemTemplate="{Binding Source={StaticResource EqualizerBackgroundModeTemplate}}" SelectionChanged="eq_background_mode_SelectionChanged"/>
+
+        <CheckBox x:Name="chkbox_dimbgonsound" Content="Enable background on sound" HorizontalAlignment="Left" Margin="0,220,0,0" VerticalAlignment="Top" Checked="chkbox_dimbgonsound_Checked" Unchecked="chkbox_dimbgonsound_Checked"/>
+
         <CheckBox x:Name="chkbox_scale_with_system_volume" Content="Scale with system volume" HorizontalAlignment="Left" Margin="302,27,0,0" VerticalAlignment="Top" Checked="chkbox_scale_with_system_sound_Checked" Unchecked="chkbox_scale_with_system_sound_Checked"/>
-        <TextBlock HorizontalAlignment="Left" Margin="303,69,0,0" TextWrapping="Wrap" Text="Dim Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="Clr_dim_color" Margin="364,67,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="174" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" Margin="302,89,0,0" TextWrapping="Wrap" Text="Frequencies" VerticalAlignment="Top"/>
-        <ListView x:Name="lstbx_frequencies" HorizontalAlignment="Left" Margin="302,110,0,0" Width="100">
+        <TextBlock HorizontalAlignment="Left" Margin="302,86,0,0" TextWrapping="Wrap" Text="Background Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="Clr_dim_color" Margin="407,81,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />
+        <TextBlock HorizontalAlignment="Left" Margin="302,107,0,0" TextWrapping="Wrap" Text="Frequencies" VerticalAlignment="Top"/>
+        <ListView x:Name="lstbx_frequencies" HorizontalAlignment="Left" Margin="302,128,0,0" Width="100">
             <ListBox.ItemTemplate>
                 <HierarchicalDataTemplate>
                     <DockPanel HorizontalAlignment="Stretch" >
@@ -69,11 +83,11 @@
                 </HierarchicalDataTemplate>
             </ListBox.ItemTemplate>
         </ListView>
-        <TextBox x:Name="txtBox_newFreqValue" HorizontalAlignment="Left" Height="23" Margin="407,110,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>
-        <TextBlock HorizontalAlignment="Left" Margin="472,114,0,0" TextWrapping="Wrap" Text="Hz" VerticalAlignment="Top"/>
-        <Button x:Name="btn_AddFreq" Content="Add Frequency" HorizontalAlignment="Left" Margin="407,138,0,0" VerticalAlignment="Top" Width="100" Click="btn_AddFreq_Click"/>
-        <Button x:Name="btn_DeleteFreq" Content="Delete Frequency" HorizontalAlignment="Left" Margin="407,165,0,0" VerticalAlignment="Top" Width="100" Click="btn_DeleteFreq_Click"/>
-        <TextBlock HorizontalAlignment="Left" Margin="411,192,0,0" TextWrapping="Wrap" Text="Note: There must be at least 2 frequencies to sample between" VerticalAlignment="Top" Height="46" Width="116"/>
+        <TextBox x:Name="txtBox_newFreqValue" HorizontalAlignment="Left" Height="23" Margin="407,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>
+        <TextBlock HorizontalAlignment="Left" Margin="472,135,0,0" TextWrapping="Wrap" Text="Hz" VerticalAlignment="Top"/>
+        <Button x:Name="btn_AddFreq" Content="Add Frequency" HorizontalAlignment="Left" Margin="407,155,0,0" VerticalAlignment="Top" Width="100" Click="btn_AddFreq_Click"/>
+        <Button x:Name="btn_DeleteFreq" Content="Delete Frequency" HorizontalAlignment="Left" Margin="407,180,0,0" VerticalAlignment="Top" Width="100" Click="btn_DeleteFreq_Click"/>
+        <TextBlock HorizontalAlignment="Left" Margin="407,205,0,-13" TextWrapping="Wrap" Text="Note: There must be at least 2 frequencies to sample between" VerticalAlignment="Top" Height="46" Width="116"/>
         <Button x:Name="btn_ShowPreviewWindow" Content="Show Preview Window" HorizontalAlignment="Left" Margin="462,0,0,0" VerticalAlignment="Top" Click="btn_ShowPreviewWindow_Click"/>
     </Grid>
 </UserControl>

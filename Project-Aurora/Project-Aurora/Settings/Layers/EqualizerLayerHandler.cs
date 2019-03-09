@@ -54,6 +54,18 @@ namespace Aurora.Settings.Layers
         GradientVertical
     }
 
+    public enum EqualizerBackgroundMode
+    {
+        [Description("Disabled")]
+        Disabled,
+
+        [Description("Always enabled")]
+        AlwaysOn,
+
+        [Description("Enabled on sound")]
+        EnabledOnSound
+    }
+
     public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerLayerHandlerProperties>
     {
         public Color? _SecondaryColor { get; set; }
@@ -75,6 +87,11 @@ namespace Aurora.Settings.Layers
 
         [JsonIgnore]
         public EqualizerPresentationType ViewType { get { return Logic._ViewType ?? _ViewType ?? EqualizerPresentationType.SolidColor; } }
+
+        public EqualizerBackgroundMode? _BackgroundMode { get; set; }
+
+        [JsonIgnore]
+        public EqualizerBackgroundMode BackgroundMode { get { return Logic._BackgroundMode ?? _BackgroundMode ?? EqualizerBackgroundMode.Disabled; } }
 
         public float? _MaxAmplitude { get; set; }
 
@@ -121,6 +138,7 @@ namespace Aurora.Settings.Layers
             _ViewType = EqualizerPresentationType.SolidColor;
             _MaxAmplitude = 20.0f;
             _DimBackgroundOnSound = false;
+            _BackgroundMode = EqualizerBackgroundMode.Disabled;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
             _Frequencies = new SortedSet<float>() { 60, 170, 310, 600, 1000, 2000, 3000, 4000, 5000 };
         }
