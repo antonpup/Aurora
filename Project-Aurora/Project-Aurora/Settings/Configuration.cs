@@ -440,6 +440,9 @@ namespace Aurora.Settings
         public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
 
+        //Debug Settings
+        public bool BitmapTopMost;
+
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
         public Configuration()
@@ -505,6 +508,9 @@ namespace Aurora.Settings
             //Overlay Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
+
+            //Debug Settings
+            BitmapTopMost = false;
 
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
