@@ -1,0 +1,63 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.CloneHero"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.Profiles.CloneHero.Control_CloneHero"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Clone Hero">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="43*"/>
+                        <ColumnDefinition Width="168*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770" Grid.ColumnSpan="2"><Run Text="CloneHero support works via memory reading. As a result, you do not have to apply any patches for the game to work with Aurora. However, this does mean that whenever a game update is released, Aurora's Clone Hero support"/><Run Text=" would stop working. Aurora's memory reading pointers have to be updated manually, and thus Aurora will regularly check for new memory reading pointers via automatic updates. So, I apologize for any delays in Clone Hero support, please inform me on Aurora's github page about a Clone Hero update, and I will look into releasing a patch."/><LineBreak/><Run/><LineBreak/><Run Text="(Github link can be found under Settings -&gt; About)"/><LineBreak/><LineBreak/><Run Text="The memory reading will break if you restart a song. This can be fixed either by restarting the song again, picking &quot;New Song&quot; instead, or by restarting the game. Most of the time just restarting the song again will work. This may be fixed in the future but don't count on it."/><LineBreak/></TextBlock>
+                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Clone Hero" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Preview">
+                <Grid>
+                    <Label Content="Streak:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="preview_streak" HorizontalAlignment="Left" Margin="110,15,0,0" VerticalAlignment="Top" ValueChanged="preview_streak_amount_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100" />
+
+                    <Label Content="SP Active:" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="preview_sp_enabled" HorizontalAlignment="Left" Margin="110,45,0,0" VerticalAlignment="Top" Checked="preview_sp_active" Unchecked="preview_sp_deactive" />
+                    <TextBlock x:Name="preview_sp_enabled_label" HorizontalAlignment="Left" Margin="135,45,0,0" TextWrapping="Wrap" Text="false" VerticalAlignment="Top"/>
+
+                    <Label Content="SP Percent:" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_sp_percent" HorizontalAlignment="Left" Margin="110,75,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_sp_percent_ValueChanged"/>
+                    <TextBlock x:Name="preview_sp_percent_label" HorizontalAlignment="Left" Margin="235,75,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
+
+                    <Label Content="At Menu:" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="preview_menu_enabled" HorizontalAlignment="Left" Margin="110,105,0,0" VerticalAlignment="Top" Checked="preview_menu_active" Unchecked="preview_menu_deactive" />
+                    <TextBlock x:Name="preview_menu_enabled_label" HorizontalAlignment="Left" Margin="135,105,0,0" TextWrapping="Wrap" Text="false" VerticalAlignment="Top"/>
+
+                    <Label Content="FC Indicator:" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="preview_fc_enabled" HorizontalAlignment="Left" Margin="110,135,0,0" VerticalAlignment="Top" Checked="preview_fc_active" Unchecked="preview_fc_deactive" />
+                    <TextBlock x:Name="preview_fc_enabled_label" HorizontalAlignment="Left" Margin="135,135,0,0" TextWrapping="Wrap" Text="true" VerticalAlignment="Top"/>
+
+                    <Label Content="Notes Total:" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="preview_total" HorizontalAlignment="Left" Margin="110,165,0,0" VerticalAlignment="Top" ValueChanged="preview_notes_total_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100" />
+
+                    <Label Content="Solo Percent:" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="preview_solo_percent" HorizontalAlignment="Left" Margin="110,195,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_solo_percent_ValueChanged"/>
+                    <TextBlock x:Name="preview_solo_percent_label" HorizontalAlignment="Left" Margin="235,195,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
+
+                    <Label Content="Pressed Frets:" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="preview_green_enabled" HorizontalAlignment="Left" Margin="110,225,0,0" VerticalAlignment="Top" Checked="preview_green_active" Unchecked="preview_green_deactive" />
+                    <CheckBox x:Name="preview_red_enabled" HorizontalAlignment="Left" Margin="130,225,0,0" VerticalAlignment="Top" Checked="preview_red_active" Unchecked="preview_red_deactive" />
+                    <CheckBox x:Name="preview_yellow_enabled" HorizontalAlignment="Left" Margin="150,225,0,0" VerticalAlignment="Top" Checked="preview_yellow_active" Unchecked="preview_yellow_deactive" />
+                    <CheckBox x:Name="preview_blue_enabled" HorizontalAlignment="Left" Margin="170,225,0,0" VerticalAlignment="Top" Checked="preview_blue_active" Unchecked="preview_blue_deactive" />
+                    <CheckBox x:Name="preview_orange_enabled" HorizontalAlignment="Left" Margin="190,225,0,0" VerticalAlignment="Top" Checked="preview_orange_active" Unchecked="preview_orange_deactive" />
+
+                    <Label Content="Score:" HorizontalAlignment="Left" Margin="10,250,0,0" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="preview_score" HorizontalAlignment="Left" Margin="110,255,0,0" VerticalAlignment="Top" ValueChanged="preview_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="999999999" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

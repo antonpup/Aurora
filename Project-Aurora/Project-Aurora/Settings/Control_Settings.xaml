@@ -128,7 +128,7 @@
                 <Grid>
                     <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness (only when Aurora is out of focus)" HorizontalAlignment="Left" Margin="11,91,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
                     <CheckBox x:Name="timed_dimming_checkbox" Content="Enable timed blackout of the keyboard" HorizontalAlignment="Left" Margin="10,184,0,0" VerticalAlignment="Top" Checked="timed_dimming_checkbox_Checked" Unchecked="timed_dimming_checkbox_Checked"/>
-                    <CheckBox x:Name="chkOverlayPreview" Content="Show Overlays and Underlays in Application Preview" HorizontalAlignment="Left" Margin="12,57,0,0" VerticalAlignment="Top" Checked="chkOverlayPreview_Checked" Unchecked="chkOverlayPreview_Checked"/>
+                    <CheckBox x:Name="chkOverlayPreview" Content="Show Overlays and Underlays in Application Preview" HorizontalAlignment="Left" Margin="12,62,0,0" VerticalAlignment="Top" Checked="chkOverlayPreview_Checked" Unchecked="chkOverlayPreview_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="11,230,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
                     <TextBlock HorizontalAlignment="Left" Margin="12,254,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
                     <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,205,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
@@ -158,15 +158,18 @@
                     <xctk:IntegerUpDown x:Name="nighttime_end_minute_updown" HorizontalAlignment="Left" Height="24" Margin="389,249,0,0" VerticalAlignment="Top" Width="49" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_minute_updown_ValueChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="381,252,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top" Width="3"/>
                     <CheckBox x:Name="nighttime_enabled_checkbox" Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" HorizontalAlignment="Left" Margin="242,184,0,0" VerticalAlignment="Top" Unchecked="nighttime_enabled_checkbox_Checked" Checked="nighttime_enabled_checkbox_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="178,33,0,0" TextWrapping="Wrap" Text="Closing mode:" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="app_exit_mode" HorizontalAlignment="Left" Margin="261,30,0,0" VerticalAlignment="Top" Width="130" ItemsSource="{Binding Source={StaticResource appexitmode}}" ItemTemplate="{Binding Source={StaticResource appexitmodeTemplate}}" SelectionChanged="app_exit_mode_SelectionChanged"/>
-                    <CheckBox x:Name="start_silently_enabled" Content="Start Aurora minimized" HorizontalAlignment="Left" Margin="12,34,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="178,38,0,0" TextWrapping="Wrap" Text="Closing mode:" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="app_exit_mode" HorizontalAlignment="Left" Margin="261,35,0,0" VerticalAlignment="Top" Width="147" ItemsSource="{Binding Source={StaticResource appexitmode}}" ItemTemplate="{Binding Source={StaticResource appexitmodeTemplate}}" SelectionChanged="app_exit_mode_SelectionChanged"/>
+                    <CheckBox x:Name="start_silently_enabled" Content="Start Aurora minimized" HorizontalAlignment="Left" Margin="12,39,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="512,12,0,0" TextWrapping="Wrap" Text="Application Detection Method:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="app_detection_mode" HorizontalAlignment="Left" Margin="677,10,0,0" VerticalAlignment="Top" Width="157" ItemsSource="{Binding Source={StaticResource AppDetectionMode}}" ItemTemplate="{Binding Source={StaticResource AppDetectionModeTemplate}}" SelectionChanged="app_detection_mode_SelectionChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="12,111,0,0" TextWrapping="Wrap" Text="Global brightness modifier: " VerticalAlignment="Top"/>
                     <TextBlock x:Name="lblGlobalBrightness" HorizontalAlignment="Left" Margin="335,111,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
                     <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="180,111,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblGlobalBrightness, Path=.}"/>
-                    <CheckBox x:Name="chkHigherPriority" Content="Run Aurora at High priority" HorizontalAlignment="Left" Margin="178,10,0,0" VerticalAlignment="Top" IsChecked="{Binding HighPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkHigherPriority_IsCheckedChanged" Unchecked="chkHigherPriority_IsCheckedChanged"/>
+                    <CheckBox x:Name="chkHigherPriority" Content="High priority" HorizontalAlignment="Left" Margin="158,10,0,0" VerticalAlignment="Top" IsChecked="{Binding HighPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkHigherPriority_IsCheckedChanged" Unchecked="chkHigherPriority_IsCheckedChanged"/>
+                    <TextBlock Text="Delay:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="278,10,0,0" />
+                    <xctk:IntegerUpDown x:Name="startDelayAmount" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="315,8,0,0" Width="69" Minimum="0" Increment="15" ValueChanged="startDelayAmount_ValueChanged" />
+                    <TextBlock Text="sec" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="389,10,0,0" />
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">
@@ -282,7 +285,16 @@
                 <Grid>
                     <Label Content="Aurora" HorizontalAlignment="Left" Margin="143,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
                     <!--<Label Content="by Antonpup &amp; simon-wh" HorizontalAlignment="Left" Margin="294,12,0,0" VerticalAlignment="Top"/>-->
-                    <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/><LineBreak/><LineBreak/><Run Text="You can report problems and give suggestions to me via "/><Hyperlink NavigateUri="http://steamcommunity.com/id/SimonWhyte/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Steam"/></Hyperlink><LineBreak/><Run Text="or you can create an issue on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><Run Text="."/><LineBreak/><LineBreak/><Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><LineBreak/><Run Text="Game logos and other images are owned by their respective owners."/><LineBreak/><LineBreak/><Run Text="I can be contacted at me@simonwwhyte.com"/><LineBreak/><LineBreak/><Hyperlink NavigateUri="https://discord.gg/YAuBmg9" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Aurora's Discord Server"/></Hyperlink></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+                        <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/><LineBreak/><LineBreak/>
+                        <Run Text="You can report problems and give suggestions to me via "/><Hyperlink NavigateUri="http://steamcommunity.com/id/SimonWhyte/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Steam"/></Hyperlink><LineBreak/>
+                        <Run Text="or you can create an issue on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><Run Text="."/><LineBreak/><LineBreak/>
+                        <Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><LineBreak/>
+                        <Run Text="Game logos and other images are owned by their respective owners."/><LineBreak/><LineBreak/>
+                        <Run Text="Some icons are used with the free license from"/><Hyperlink NavigateUri="https://icons8.com" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Icons8"/></Hyperlink><LineBreak/><LineBreak/>
+                        <Run Text="I can be contacted at me@simonwwhyte.com"/><LineBreak/><LineBreak/>
+                        <Hyperlink NavigateUri="https://discord.gg/YAuBmg9" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Aurora's Discord Server"/></Hyperlink>
+                    </TextBlock>
                     <Label x:Name="lblVersion" Content="beta v0.6.0-dev2" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
                     <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
                 </Grid>

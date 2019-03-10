@@ -7,7 +7,8 @@
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
              xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:local="clr-namespace:Aurora.Settings"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Control_LayerControlPresenter"
+             xmlns:Controls="clr-namespace:Aurora.Controls"
+    xmlns:overrides="clr-namespace:Aurora.Settings.Overrides" x:Class="Aurora.Settings.Control_LayerControlPresenter"
              mc:Ignorable="d" d:DesignWidth="602" d:DesignHeight="201.525">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -30,20 +31,25 @@
             <TextBlock HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" Text="Layer type:" VerticalAlignment="Top"/>
             <ComboBox x:Name="cmbLayerType" HorizontalAlignment="Left" Margin="72,37,0,0" VerticalAlignment="Top" Width="206" SelectionChanged="cmbLayerType_SelectionChanged"/><!-- ItemTemplate="{Binding Source={StaticResource LayerTypeTemplate}}"/>-->
             <UserControl x:Name="ctrlLayerTypeConfig" Margin="10,64,10,10"/>
-            <Button x:Name="btnLogic" Content="View Layer Logic" HorizontalAlignment="Left" Margin="283,10,0,0" VerticalAlignment="Top" Click="btnLogic_Click" Visibility="Hidden"/>
             <Button x:Name="btnReset" Content="Reset Layer" HorizontalAlignment="Left" Margin="283,39,0,0" VerticalAlignment="Top" Width="75" Click="btnReset_Click"/>
         </Grid>
-        <Grid x:Name="grdLayerConfigs" Margin="0,4,4,0" HorizontalAlignment="Right" Width="484" Height="188" VerticalAlignment="Top" Background="#FF323232" Visibility="Collapsed">
+
+        <Grid x:Name="grdLayerConfigs" Margin="4" HorizontalAlignment="Right" Width="484" Height="188" VerticalAlignment="Top" Background="#FF323232" Visibility="Collapsed">
             <CheckBox x:Name="chkLayerSmoothing" Content="Enable smoothing for this layer" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="chkLayerSmoothing_Checked" Unchecked="chkLayerSmoothing_Checked"/>
             <CheckBox x:Name="chk_ExcludeMask" Content="Enable Key/Region exclusion" HorizontalAlignment="Left" Margin="213,10,0,0" VerticalAlignment="Top" Checked="chk_ExcludeMask_Checked" Unchecked="chk_ExcludeMask_Checked"/>
             <Controls:KeySequence x:Name="keyseq_ExcludeMask" HorizontalAlignment="Left" Margin="213,30,0,10" RecordingTag="ExclusionMask" Title="Excluded Keys/Region" SequenceUpdated="keyseq_ExcludeMask_SequenceUpdated"/>
             <TextBlock HorizontalAlignment="Left" Margin="10,30,0,0" TextWrapping="Wrap" Text="Opacity: " VerticalAlignment="Top"/>
             <Slider x:Name="sldr_Opacity" HorizontalAlignment="Left" Margin="61,30,0,0" VerticalAlignment="Top" Width="100" Minimum="0" SmallChange="1" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="1" Maximum="100" Value="100" ValueChanged="sldr_Opacity_ValueChanged" />
             <TextBlock x:Name="lbl_Opacity_Text" HorizontalAlignment="Left" Margin="166,30,0,0" TextWrapping="Wrap" Text="100 %" VerticalAlignment="Top"/>
-
         </Grid>
+
+        <overrides:Control_OverridesEditor x:Name="overridesEditor" Background="#FF323232" Visibility="Collapsed" />
+
         <Button x:Name="btnConfig" HorizontalAlignment="Right" Margin="0,9,10,0" VerticalAlignment="Top" Click="btnConfig_Click" ToolTip="Toggles the visibility of additional layer configurations">
             <Image Source="/Aurora;component/Resources/LayerConfig_icon.png" Width="23" Height="23" Margin="2"/>
+        </Button>
+        <Button x:Name="btnOverrides" HorizontalAlignment="Right" Margin="0,9,47,0" VerticalAlignment="Top" Click="btnOverrides_Click" ToolTip="Show layer conditional override settings">
+            <Image Source="/Aurora;component/Resources/LayerConditions_icon.png" Width="23" Height="23" Margin="2"/>
         </Button>
     </Grid>
 </UserControl>
