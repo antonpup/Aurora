@@ -64,7 +64,6 @@ namespace Aurora.Settings.Layers
                 }
 
                 this.updown_max_amplitude_value.Value = (int)(this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude;
-                //this.chkbox_dimbgonsound.IsChecked = (this.DataContext as EqualizerLayerHandler).Properties._DimBackgroundOnSound;
                 this.Clr_dim_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._DimColor ?? System.Drawing.Color.Empty);
                 this.lstbx_frequencies.ItemsSource = (this.DataContext as EqualizerLayerHandler).Properties._Frequencies;
                 this.chkbox_scale_with_system_volume.IsChecked = (this.DataContext as EqualizerLayerHandler).Properties._ScaleWithSystemVolume;
@@ -143,12 +142,6 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown && (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.HasValue)
                 (this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.Value;
-        }
-
-        private void chkbox_dimbgonsound_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
-                (this.DataContext as EqualizerLayerHandler).Properties._DimBackgroundOnSound = (sender as CheckBox).IsChecked.Value;
         }
 
         private void chkbox_scale_with_system_sound_Checked(object sender, RoutedEventArgs e)
