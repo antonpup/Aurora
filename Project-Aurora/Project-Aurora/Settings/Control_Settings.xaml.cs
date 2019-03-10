@@ -148,6 +148,7 @@ namespace Aurora.Settings
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
 
             this.BitmapTopMost.IsChecked = Global.Configuration.BitmapTopMost;
+            this.GSIHttpDebugTopMost.IsChecked = Global.Configuration.GSIHttpDebugTopMost;
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -1072,6 +1073,15 @@ namespace Aurora.Settings
         }
 
         private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => new Window_GSIHttpDebug().Show();
+
+        private void GSIHttpDebug_TopMost_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.GSIHttpDebugTopMost = (this.GSIHttpDebugTopMost.IsChecked.HasValue) ? this.GSIHttpDebugTopMost.IsChecked.Value : false;
+                ConfigManager.Save(Global.Configuration);
+            }
+        }
 
         private void startDelayAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
             using (TaskService service = new TaskService()) {

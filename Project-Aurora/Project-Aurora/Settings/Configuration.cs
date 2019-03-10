@@ -442,6 +442,7 @@ namespace Aurora.Settings
 
         //Debug Settings
         public bool BitmapTopMost;
+        public bool GSIHttpDebugTopMost;
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
@@ -511,6 +512,7 @@ namespace Aurora.Settings
 
             //Debug Settings
             BitmapTopMost = false;
+            GSIHttpDebugTopMost = false;
 
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
