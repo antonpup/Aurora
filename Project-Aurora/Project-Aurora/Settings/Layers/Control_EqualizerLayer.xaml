@@ -67,8 +67,6 @@
         <TextBlock HorizontalAlignment="Left" Margin="302,57,0,0" TextWrapping="Wrap" Text="Background Mode:" VerticalAlignment="Top"/>
         <ComboBox x:Name="eq_background_mode" HorizontalAlignment="Left" Margin="407,54,0,0" VerticalAlignment="Top" Width="119" ItemsSource="{Binding Source={StaticResource EqualizerBackgroundMode}}" ItemTemplate="{Binding Source={StaticResource EqualizerBackgroundModeTemplate}}" SelectionChanged="eq_background_mode_SelectionChanged"/>
 
-        <CheckBox x:Name="chkbox_dimbgonsound" Content="Enable background on sound" HorizontalAlignment="Left" Margin="0,220,0,0" VerticalAlignment="Top" Checked="chkbox_dimbgonsound_Checked" Unchecked="chkbox_dimbgonsound_Checked"/>
-
         <CheckBox x:Name="chkbox_scale_with_system_volume" Content="Scale with system volume" HorizontalAlignment="Left" Margin="302,27,0,0" VerticalAlignment="Top" Checked="chkbox_scale_with_system_sound_Checked" Unchecked="chkbox_scale_with_system_sound_Checked"/>
         <TextBlock HorizontalAlignment="Left" Margin="302,86,0,0" TextWrapping="Wrap" Text="Background Color:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="Clr_dim_color" Margin="407,81,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />

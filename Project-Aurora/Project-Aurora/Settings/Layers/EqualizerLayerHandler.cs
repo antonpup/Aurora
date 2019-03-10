@@ -247,25 +247,31 @@ namespace Aurora.Settings.Layers
 
                 EffectLayer equalizer_layer = new EffectLayer();
 
-                if (Properties.DimBackgroundOnSound)
+                bool BgEnabled = false;
+                switch (Properties.BackgroundMode)
                 {
-                    bool hasSound = false;
-                    foreach (var bin in _local_fft)
-                    {
-                        if (bin.X > 0.0005 || bin.X < -0.0005)
+                    case EqualizerBackgroundMode.EnabledOnSound:
+                        foreach (var bin in _local_fft)
                         {
-                            hasSound = true;
-                            break;
+                            if (bin.X > 0.0005 || bin.X < -0.0005)
+                            {
+                                BgEnabled = true;
+                                break;
+                            }
                         }
-                    }
-
-                    if (hasSound)
-                        equalizer_layer.Fill(Properties.DimColor);
+                        break;
+                    case EqualizerBackgroundMode.AlwaysOn:
+                        BgEnabled = true;
+                        break;
                 }
+
+                if (BgEnabled)
+                    equalizer_layer.Fill(Properties.DimColor);
 
                 using (Graphics g = equalizer_layer.GetGraphics())
                 {
                     g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+
                     int wave_step_amount = _local_fft.Length / Effects.canvas_width;
 
                     switch (Properties.EQType)
