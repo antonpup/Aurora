@@ -59,10 +59,10 @@ namespace Aurora.Settings.Layers
         [Description("Disabled")]
         Disabled,
 
-        [Description("Always enabled")]
+        [Description("Enabled")]
         AlwaysOn,
 
-        [Description("Enabled on sound")]
+        [Description("On sound")]
         EnabledOnSound
     }
 
