@@ -109,13 +109,15 @@ namespace SteelSeries.GameSenseSDK
 
         public void setMousepadColor(List<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
         {
-            if(colors.Count == 2)
+            List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
+            if (colors[2] == null)
             {
                 payload.data += "\"mousepadtwozone\":{";
-                payload.data += "\"colorone\":[" + colors[0].Item1 + ", " + colors[0].Item2 + ", " + colors[0].Item3 + "],";
-                payload.data += "\"colortwo\":[" + colors[1].Item1 + ", " + colors[1].Item2 + ", " + colors[1].Item3 + "],";
-                payload.data = payload.data.TrimEnd(',');
-                payload.data += "]},";
+
+                for (int i = 0; i < 2; i++)
+                {
+                    payload.data += "\"" + zones[i] + "\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "],";
+                }
             }
             else if (colors.Count == 12)
             {
@@ -206,10 +208,10 @@ namespace SteelSeries.GameSenseSDK
                 (on-device ""rgb-12-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve:))))
         (when (mousepadtwozone:? data)
             (let* ((mousepadtwozone (mousepadtwozone: data))
-                    (colorone (colorone: mousepadtwozone))
-                    (colortwo (colortwo: mousepadtwozone)))
-                (on-device ""indicator"" show-on-zone: colorone one:)
-                (on-device ""indicator"" show-on-zone: colortwo two:)))
+                    (mpone (mpone: mousepadtwozone))
+                    (mptwo (mptwo: mousepadtwozone)))
+                (on-device ""indicator"" show-on-zone: mpone one:)
+                (on-device ""indicator"" show-on-zone: mptwo two:)))
         (when (mouse:? data)
             (let* ((mouse (mouse: data))
                    (color (color: mouse)))
