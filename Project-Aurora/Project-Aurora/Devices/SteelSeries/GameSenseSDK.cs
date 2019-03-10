@@ -112,11 +112,8 @@ namespace SteelSeries.GameSenseSDK
             if(colors.Count == 2)
             {
                 payload.data += "\"mousepadtwozone\":{";
-                payload.data += "\"colors\":[";
-                foreach (Tuple<byte, byte, byte> color in colors)
-                {
-                    payload.data += "[" + color.Item1 + ", " + color.Item2 + ", " + color.Item3 + "],";
-                }
+                payload.data += "\"colorone\":[" + colors[0].Item1 + ", " + colors[0].Item2 + ", " + colors[0].Item3 + "],";
+                payload.data += "\"colortwo\":[" + colors[1].Item1 + ", " + colors[1].Item2 + ", " + colors[1].Item3 + "],";
                 payload.data = payload.data.TrimEnd(',');
                 payload.data += "]},";
             }
@@ -209,8 +206,10 @@ namespace SteelSeries.GameSenseSDK
                 (on-device ""rgb-12-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve:))))
         (when (mousepadtwozone:? data)
             (let* ((mousepadtwozone (mousepadtwozone: data))
-                    (colors (colors: mousepadtwozone)))
-                (on-device ""indicator"" show-on-zones: mpone '(one: two:))))
+                    (colorone (colorone: mousepadtwozone))
+                    (colortwo (colortwo: mousepadtwozone)))
+                (on-device ""indicator"" show-on-zone: colorone one:)
+                (on-device ""indicator"" show-on-zone: colortwo two:)))
         (when (mouse:? data)
             (let* ((mouse (mouse: data))
                    (color (color: mouse)))
