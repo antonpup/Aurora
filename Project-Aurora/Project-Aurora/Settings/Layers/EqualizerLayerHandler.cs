@@ -59,7 +59,7 @@ namespace Aurora.Settings.Layers
         [Description("Disabled")]
         Disabled,
 
-        [Description("Enabled")]
+        [Description("Always on")]
         AlwaysOn,
 
         [Description("On sound")]
@@ -103,11 +103,6 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool ScaleWithSystemVolume { get { return Logic._ScaleWithSystemVolume ?? _ScaleWithSystemVolume ?? false; } }
 
-        public bool? _DimBackgroundOnSound { get; set; }
-
-        [JsonIgnore]
-        public bool DimBackgroundOnSound { get { return Logic._DimBackgroundOnSound ?? _DimBackgroundOnSound ?? false; } }
-
         public Color? _DimColor { get; set; }
 
         [JsonIgnore]
@@ -137,6 +132,7 @@ namespace Aurora.Settings.Layers
             _EQType = EqualizerType.PowerBars;
             _ViewType = EqualizerPresentationType.SolidColor;
             _MaxAmplitude = 20.0f;
+            _ScaleWithSystemVolume = false;
             _BackgroundMode = EqualizerBackgroundMode.Disabled;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
             _Frequencies = new SortedSet<float>() { 60, 170, 310, 600, 1000, 2000, 3000, 4000, 5000 };
