@@ -110,7 +110,7 @@ namespace SteelSeries.GameSenseSDK
         public void setMousepadColor(List<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
         {
             List<string> zones = new List<string>(new string[] { "mpone", "mptwo", "mpthree", "mpfour", "mpfive", "mpsix", "mpseven", "mpeight", "mpnine", "mpten", "mpeleven", "mptwelve" });
-            if (colors[2] == null)
+            if (colors.Count == 2)
             {
                 payload.data += "\"mousepadtwozone\":{";
 
@@ -118,6 +118,8 @@ namespace SteelSeries.GameSenseSDK
                 {
                     payload.data += "\"" + zones[i] + "\": [" + colors[i].Item1 + ", " + colors[i].Item2 + ", " + colors[i].Item3 + "],";
                 }
+                payload.data = payload.data.TrimEnd(',');
+                payload.data += "},";
             }
             else if (colors.Count == 12)
             {
@@ -210,8 +212,8 @@ namespace SteelSeries.GameSenseSDK
             (let* ((mousepadtwozone (mousepadtwozone: data))
                     (mpone (mpone: mousepadtwozone))
                     (mptwo (mptwo: mousepadtwozone)))
-                (on-device ""rgb-2-zone"" show-on-zone: mpone one:)
-                (on-device ""rgb-2-zone"" show-on-zone: mptwo two:)))
+                (on-device ""indicator"" show-on-zone: mpone one:)
+                (on-device ""indicator"" show-on-zone: mptwo two:)))
         (when (mouse:? data)
             (let* ((mouse (mouse: data))
                    (color (color: mouse)))
