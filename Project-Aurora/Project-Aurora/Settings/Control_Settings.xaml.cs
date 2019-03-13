@@ -146,7 +146,6 @@ namespace Aurora.Settings
             this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
-            this.pointer_updates_autocheck_on_start.IsChecked = Global.Configuration.pointer_updates_check_on_start_up;
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -623,15 +622,6 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.updates_check_on_start_up = (this.updates_autocheck_on_start.IsChecked.HasValue) ? this.updates_autocheck_on_start.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void pointer_updates_autocheck_on_start_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.pointer_updates_check_on_start_up = (this.pointer_updates_autocheck_on_start.IsChecked.HasValue) ? this.pointer_updates_autocheck_on_start.IsChecked.Value : false;
                 ConfigManager.Save(Global.Configuration);
             }
         }

@@ -388,6 +388,9 @@ namespace Aurora.Settings
         private bool getDevReleases = false;
         public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
 
+        private bool getPointerUpdates = true;
+        public bool GetPointerUpdates { get { return getPointerUpdates; } set { getPointerUpdates = value; InvokePropertyChanged(); } }
+
         private bool highPriority = false;
         public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
 
@@ -395,7 +398,6 @@ namespace Aurora.Settings
         public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
 
         public bool updates_check_on_start_up;
-        public bool pointer_updates_check_on_start_up;
         public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
@@ -462,7 +464,6 @@ namespace Aurora.Settings
             KeyboardBrightness = 1.0f;
             peripheralBrightness = 1.0f;
             updates_check_on_start_up = true;
-            pointer_updates_check_on_start_up = true;
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;

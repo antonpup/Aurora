@@ -299,7 +299,7 @@ namespace Aurora
                 Global.logger.Info("Loading Applications");
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
-                if (Global.Configuration.pointer_updates_check_on_start_up)
+                if (Global.Configuration.GetPointerUpdates)
                 {
                     Global.logger.Info("Fetching latest pointers");
                     Task.Run(() => Utils.PointerUpdateUtils.FetchDevPointers("master"));
