@@ -1,12 +1,12 @@
 # Aurora Raspberry Pi LED Script
 
-This fork includes a script for Raspberry PI and Aurora to transmit lighting information to LED lights connected to the Raspberry PI.
+This fork includes a script for Raspberry PI and ESP8366 microcontroller as well as Aurora to transmit lighting information to LED lights connected to the Raspberry PI.
 
 # Requirements
 * [Aurora](https://github.com/antonpup/Aurora)
-* A Raspberry Pi
-* LED strips connected to the Raspberry Pi
-* Pi connected to your home network
+* A Raspberry Pi or a Nodemcu ESP8366 microcontroller
+* LED strips connected to the Raspberry Pi/ESP8366
+* Pi/ESP8266 connected to your home network
 * Fast local network connection
 
 ## Video demonstration
@@ -14,6 +14,7 @@ This fork includes a script for Raspberry PI and Aurora to transmit lighting inf
 [![](http://img.youtube.com/vi/p0WiaQwmSYQ/0.jpg)](https://www.youtube.com/watch?v=p0WiaQwmSYQ)
 
 # How to Install & Run on a NeoPixel LED Strip
+## Running the software on a Raspberry Pi
 1. Make sure your Raspberry Pi is configured to work with Python. Run the following commands:
     ```
 	
@@ -58,9 +59,29 @@ This fork includes a script for Raspberry PI and Aurora to transmit lighting inf
 	
     ```
 7. Run "sudo python aurora_neopixel_pi.py". Raspberry Pi portion is now complete.
+## Running the software on the ESP8266
 
-8. On your PC, copy file "Scripts/Devices/rpi_script.cs" to "*Aurora install location*/Scripts/Devices/rpi_script.cs"
-9. Open the "rpi_script.cs" file to configure the script. Adjust following lines:
+1. If you haven't worked with microcontrollers before, you should download and install the Arduino IDE first [here](https://www.arduino.cc/en/main/software)
+2. In order to communicate with the ESP8266 microcontroller an additional USB driver is necessary. You can find this driver [here](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers)
+3. Open Arduino IDE -> File -> Preferences and add the following URL as an additional boards manager URL:
+``
+http://arduino.esp8266.com/stable/package_esp8266com_index.json
+``
+4. Go to Tools -> Boards -> Boards Manager search for "esp8266" and install the first result
+5. Go to Tools -> Boards and select "NodeMCU 0.9"
+6. Make sure that the right COM-Port is selected at Tools -> Port and the ESP8266 is connected to your PC
+7. Open the projects *.ino* file in the Arduino IDE
+8. Go to Sketch -> Include Library -> Manage Libraries and install
+	* ArduinoJson (Version 5.13.4)
+	* FastLED (Version 3.2.6)
+9. Replace the Wifi parameters  "SSID" and "Password"
+10. Notice that the data line of the LED-Strip is expected to be connected to the D2 pin
+11. Change the IP address, gateway, netmask and dns according to your own network
+12. Click upload
+
+# Configuration of the Aurora software on yor PC
+1. On your PC, copy file "Scripts/Devices/rpi_script.cs" to "*Aurora install location*/Scripts/Devices/rpi_script.cs"
+2. Open the "rpi_script.cs" file to configure the script. Adjust following lines:
     ``` C#
     
     //!!!!!!!!!! SCRIPT SETTINGS !!!!!!!!!!//
@@ -90,7 +111,7 @@ This fork includes a script for Raspberry PI and Aurora to transmit lighting inf
         };
         
     ```
-10. Run Aurora and lighting should now work.
+3. Run Aurora and lighting should now work.
 
 
 # How to Install & Run on a LPD8806 LED Strip
@@ -150,3 +171,6 @@ This fork includes a script for Raspberry PI and Aurora to transmit lighting inf
 * [rpi_ws281x](https://github.com/jgarff/rpi_ws281x) - Used for NeoPixel LED lighting
 * [LedStrip](https://github.com/glnds/LedStrip) - Used for LED lighting
 * [Gson](https://github.com/google/gson) - Used for Json parsing
+* [FastLED](https://github.com/FastLED/FastLED) - Used for LED lighting on ESP8266
+* [ArduinoJson](https://github.com/bblanchon/ArduinoJson) - Used for Json parsing on ESP8266
+* [Arduino](https://github.com/esp8266/Arduino) - Arduino core for ESP8266 WiFi chip
