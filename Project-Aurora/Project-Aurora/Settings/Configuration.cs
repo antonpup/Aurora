@@ -388,6 +388,9 @@ namespace Aurora.Settings
         private bool getDevReleases = false;
         public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
 
+        private bool getPointerUpdates = true;
+        public bool GetPointerUpdates { get { return getPointerUpdates; } set { getPointerUpdates = value; InvokePropertyChanged(); } }
+
         private bool highPriority = false;
         public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
 
