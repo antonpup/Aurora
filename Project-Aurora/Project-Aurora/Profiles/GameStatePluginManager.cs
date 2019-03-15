@@ -24,7 +24,7 @@ namespace Aurora.Profiles {
         private Dictionary<string, IGameState> states { get; } = new Dictionary<string, IGameState>();
 
         /// <summary>Dictionary that contains the plugin ID mapped to the type of game state for that plugin.</summary>
-        private Dictionary<string, Type> stateTypes = new Dictionary<string, Type>();
+        private Dictionary<string, ExternalScriptUtils.LoadedTypeWithAttribute<GameStatePluginAttribute>> stateTypes = new Dictionary<string, ExternalScriptUtils.LoadedTypeWithAttribute<GameStatePluginAttribute>>();
 
         /// <summary>ParameterLookup for all the loaded GSI plugins.</summary>
         public Dictionary<string, Tuple<Type, Type>> PluginParameterLookup { get; private set; } = new Dictionary<string, Tuple<Type, Type>>();
@@ -37,47 +37,23 @@ namespace Aurora.Profiles {
             if (!Directory.Exists(PluginDirectory))
                 Directory.CreateDirectory(PluginDirectory);
 
-            // Load the plugins from script files on disk
-            var loadedTypes = 
-                LoadFilesBase("*.cs", path => CSScript.LoadFile(path)) // Load all *.cs files in the plugin dir with the CSScript library loader
-                .Concat(LoadFilesBase("*.dll", path => Assembly.LoadFrom(path))) // Load all *.dll files in the plugin dir with the built in Assembly LoadFrom method
-                .Where(loaded => loaded.type.BaseType.IsGenericType && loaded.type.BaseType.GetGenericTypeDefinition() == typeof(GameState<>) && loaded.type.GetCustomAttribute<GameStatePluginAttribute>() != null) // Filter these classes to only ones with type GameState<T> and a GameStatePlugin attribute
-                .Select(loaded => (type: loaded.type, attr: loaded.type.GetCustomAttribute<GameStatePluginAttribute>(), path: loaded.path)) // Take a (type, path) tuple and get the GameStatePluginAttribute and return a (type, attr, path) tuple.
-                .GroupBy(loaded => loaded.attr.ID).Select(group => FilterRepeatedIDs(group)) // Group the types by their defined attribute ID, then filter the groups so that only 1 type per ID is left. This logs any conflicting IDs to console and stops loading of conflicted plugins.
-                .Where(loaded => TestForConstructors(loaded.type, loaded.path)) // Check the GameStates for the correct constructors
+            var loadedTypes = ExternalScriptUtils.LoadTypesWithAttribute<GameStatePluginAttribute>(PluginDirectory, typeof(GameState<>)) // Load all plugin files from the plugin directory and get all exported types that are GameState<T>s and have GameStatePluginAttributes
+                .GroupBy(loaded => loaded.Attribute.ID).Select(group => FilterRepeatedIDs(group)) // Group the types by their defined attribute ID, then filter the groups so that only 1 type per ID is left. This logs any conflicting IDs to console and stops loading of conflicted plugins.
+                .Where(TestForConstructors) // Check the GameStates for the correct constructors
                 .ToList(); // Finally, cast to a list so that this is immediately executed (instead of once per time used below).
 
-             // Create an initial game state for all the loaded plugins and store the type so we can constructor more when JSON data is received
-            foreach (var (type, attr, path) in loadedTypes) {
-                states.Add(attr.ID.ToLowerInvariant(), (IGameState)Activator.CreateInstance(type));
-                stateTypes.Add(attr.ID.ToLowerInvariant(), type);
+            // Create an initial game state for all the loaded plugins and store the type so we can constructor more when JSON data is received
+            foreach (var ltype in loadedTypes) {
+                states.Add(ltype.Attribute.ID.ToLowerInvariant(), (IGameState)ltype.Create(null));
+                stateTypes.Add(ltype.Attribute.ID.ToLowerInvariant(), ltype);
             }
 
             // Create the parameter lookup dictionary:
             PluginParameterLookup = loadedTypes // for each loaded GameState
-                .SelectMany(gs => GameStateUtils.ReflectGameStateParameters(gs.type, new[] { "LocalPCInfo" }) // Reflect the possible values of it (apart from the built in "LocalPCInfo") and add all fields to the IEnumerable, having first
-                    .Select(kvp => new KeyValuePair<string, Tuple<Type, Type>>($"Plugins/{gs.attr.ID}/{kvp.Key}", kvp.Value)) // Appended "Plugins" and the ID of the plugin to the front of the name
+                .SelectMany(gs => GameStateUtils.ReflectGameStateParameters(gs.Type, new[] { "LocalPCInfo" }) // Reflect the possible values of it (apart from the built in "LocalPCInfo") and add all fields to the IEnumerable, having first
+                    .Select(kvp => new KeyValuePair<string, Tuple<Type, Type>>($"Plugins/{gs.Attribute.ID}/{kvp.Key}", kvp.Value)) // Appended "Plugins" and the ID of the plugin to the front of the name
                 )
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value); // Finally, cast the IEnumerable<KeyValuePair<...>> to a dictionary.
-        }
-
-        /// <summary>
-        /// Base function for enumerating through a file of a certain type in the plugin directory and then loading it
-        /// as an assembly into the plugin system.
-        /// </summary>
-        /// <param name="filter">The filter of the files to enumerate over (e.g. "*.cs").</param>
-        /// <param name="func">The function to load the assemblies from the given file path. Error handling is done by `LoadFilesBase` and does not need to be added to func.</param>
-        /// <returns></returns>
-        private IEnumerable<(Type type, string path)> LoadFilesBase(string filter, Func<string, Assembly> func) {
-            return Directory.EnumerateFiles(PluginDirectory, filter).SelectMany(path => {
-                try {
-                    var assembly = func(path); // Attempt to read the script file
-                    return assembly.ExportedTypes.Select(type => (type: type, path: path)); // If successful, return all the types from that file
-                } catch (Exception ex) {
-                    Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: {1}", path, ex); // If an error occurs reading the cs file, log it to the console
-                    return new (Type, string)[0]; // And return an empty IEnumerable<Type> to the caller
-                }
-            });
         }
 
         /// <summary>
@@ -85,10 +61,10 @@ namespace Aurora.Profiles {
         /// If there are multiple items in the group, that means there are multiple types with the same ID. In this case, an error is logged
         /// for each type other than the first with a conflicting ID.
         /// </summary>
-        private (Type type, GameStatePluginAttribute attr, string path) FilterRepeatedIDs(IGrouping<string, (Type type, GameStatePluginAttribute attr, string path)> group) {
+        private ExternalScriptUtils.LoadedTypeWithAttribute<GameStatePluginAttribute> FilterRepeatedIDs(IGrouping<string, ExternalScriptUtils.LoadedTypeWithAttribute<GameStatePluginAttribute>> group) {
             if (group.Count() > 1)
-                foreach (var (type, attr, path) in group.Skip(1))
-                    Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: A plugin with this ID ('{1}') has already been registered. This plugin will be ignored.", path, attr.ID); // If multiple plugins exist with the same ID, log an error to the console for each extra one (otther than the first)
+                foreach (var ltype in group.Skip(1))
+                    Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: A plugin with this ID ('{1}') has already been registered. This plugin will be ignored.", ltype.Path, ltype.Attribute.ID); // If multiple plugins exist with the same ID, log an error to the console for each extra one (otther than the first)
             return group.First();
         }
 
@@ -96,15 +72,13 @@ namespace Aurora.Profiles {
         /// Tries to instantiate the given type with a parameter-less call and a string parameter to ensure that the provided
         /// type has valid constructors to be used with the program.
         /// </summary>
-        /// <param name="path">If provided, an error will be logged citing this as the path of the plugin.</param>
-        private static bool TestForConstructors(Type type, string path="") {
+        private static bool TestForConstructors(ExternalScriptUtils.LoadedTypeWithAttribute<GameStatePluginAttribute> ltype) {
             try {
-                Activator.CreateInstance(type);
-                Activator.CreateInstance(type, "{}");
+                ltype.Create(null);
+                ltype.Create(new[] { "{}" });
                 return true;
             } catch {
-                if (!string.IsNullOrWhiteSpace(path))
-                    Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: The plugin does not contain the required constructors. Must have a parameter-less constructor and a constructor that takes a string.", path);
+                Global.logger.Error("An error occured while trying to load game state plugin {0}. Exception: The plugin does not contain the required constructors. Must have a parameter-less constructor and a constructor that takes a string.", ltype.Path);
                 return false;
             }
         }
@@ -116,7 +90,7 @@ namespace Aurora.Profiles {
         public bool TryUpdateState(string id, string json) {
             if (states.ContainsKey(id)) {
                 try {
-                    states[id] = (IGameState)Activator.CreateInstance(stateTypes[id], json);
+                    states[id] = (IGameState)stateTypes[id].Create(new[] { json });
                     return true;
                 } catch { }
             }

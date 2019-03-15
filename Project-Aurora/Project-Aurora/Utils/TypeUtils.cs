@@ -55,5 +55,19 @@ namespace Aurora.Utils
         /// Checks if the given type implements the given interface type.
         /// </summary>
         public static bool IsInterface(Type type, Type @interface) => @interface.IsAssignableFrom(type);
+
+        /// <summary>
+        /// Checks if a type extends from the given generic type.
+        /// </summary>
+        public static bool ExtendsGenericType(Type type, Type generic) {
+            // https://stackoverflow.com/a/457708/1305670
+            while (type != null && type != typeof(object)) {
+                var cur = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
+                if (generic == cur)
+                    return true;
+                type = type.BaseType;
+            }
+            return false;
+        }
     }
 }
