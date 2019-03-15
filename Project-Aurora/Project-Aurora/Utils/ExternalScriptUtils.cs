@@ -24,7 +24,7 @@ namespace Aurora.Utils {
 
             { ".py", path => Global.PythonEngine.ExecuteFile(path).GetItems()
                 .Where(kvp => kvp.Value is PythonType)
-                .Select(kvp => new LoadedType(((PythonType)kvp.Value).__clrtype__(), @params => Global.PythonEngine.Operations.CreateInstance(kvp.Value, @params), path))
+                .Select(kvp => new LoadedType(((PythonType)kvp.Value).__clrtype__(), @params => @params == null ? Global.PythonEngine.Operations.CreateInstance(kvp.Value) : Global.PythonEngine.Operations.CreateInstance(kvp.Value, @params), path))
             }
         };
 
@@ -51,8 +51,8 @@ namespace Aurora.Utils {
         /// </summary>
         /// <param name="dir">The directory to load files from.</param>
         /// <param name="type">The type filter that will be applied to loaded types. Loaded types must extend this type to be returned.</param>
-        public static IEnumerable<LoadedType> LoadTypesFromExternal(string dir, Type type) {
-            return LoadTypes(dir).Where(ltype => type.IsGenericType ? TypeUtils.ExtendsGenericType(ltype.Type, type) : type.IsAssignableFrom(ltype.Type));
+        public static IEnumerable<LoadedType> LoadTypes(string dir, Type type) {
+            return LoadTypes(dir).Where(ltype => !ltype.Type.IsInterface && (type.IsGenericType ? TypeUtils.ExtendsGenericType(ltype.Type, type) : type.IsAssignableFrom(ltype.Type)));
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Aurora.Utils {
         /// <param name="dir">The directory to load files from.</param>
         /// <param name="type">The type filter that will be applied to loaded types. Loaded types must extend this type to be returned.</param>
         public static IEnumerable<LoadedTypeWithAttribute<TAttr>> LoadTypesWithAttribute<TAttr>(string dir, Type type) where TAttr : Attribute {
-            return LoadTypesFromExternal(dir, type).Where(ltype => ltype.Type.GetCustomAttribute<TAttr>() != null).Select(ltype => LoadedTypeWithAttribute<TAttr>.From(ltype));
+            return LoadTypes(dir, type).Where(ltype => ltype.Type.GetCustomAttribute<TAttr>() != null).Select(ltype => LoadedTypeWithAttribute<TAttr>.From(ltype));
         }
         #endregion
 

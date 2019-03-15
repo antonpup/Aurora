@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
 using Aurora.Settings;
+using Aurora.Utils;
 
 namespace Aurora.Profiles
 {
@@ -456,8 +457,7 @@ namespace Aurora.Profiles
             }*/
         }
 
-        protected void LoadScripts(string profiles_path, bool force = false)
-        {
+        protected void LoadScripts(string profiles_path, bool force = false) {
             if (!force && ScriptsLoaded)
                 return;
 
@@ -467,67 +467,14 @@ namespace Aurora.Profiles
             if (!Directory.Exists(scripts_path))
                 Directory.CreateDirectory(scripts_path);
 
-            foreach (string script in Directory.EnumerateFiles(scripts_path, "*.*"))
-            {
-                try
-                {
-                    string ext = Path.GetExtension(script);
-                    bool anyLoaded = false;
-                    switch (ext)
-                    {
-                        case ".py":
-                            var scope = Global.PythonEngine.ExecuteFile(script);
-                            foreach (var v in scope.GetItems())
-                            {
-                                if (v.Value is IronPython.Runtime.Types.PythonType)
-                                {
-                                    Type typ = ((IronPython.Runtime.Types.PythonType)v.Value).__clrtype__();
-                                    if (!typ.IsInterface && typeof(IEffectScript).IsAssignableFrom(typ))
-                                    {
-                                        IEffectScript obj = Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
-                                        if (obj != null)
-                                        {
-                                            if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                                Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
-                                            else
-                                                anyLoaded = true;
-                                        }
-                                        else
-                                            Global.logger.Error($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
-                                    }
-                                }
-                            }
+            foreach (var ltype in ExternalScriptUtils.LoadTypes(scripts_path, typeof(IEffectScript))) {
+                try {
+                    var inst = (IEffectScript)ltype.Create(null);
+                    if (inst.ID == null || !RegisterEffect(inst.ID, inst))
+                        Global.logger.Warn(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", ltype.Path, ltype.Type.FullName));
 
-
-                            break;
-                        case ".cs":
-                            Assembly script_assembly = CSScript.LoadFile(script);
-                            Type effectType = typeof(IEffectScript);
-                            foreach (Type typ in script_assembly.ExportedTypes)
-                            {
-                                if (effectType.IsAssignableFrom(typ))
-                                {
-                                    IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
-                                    if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                        Global.logger.Warn(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName));
-                                    else
-                                        anyLoaded = true;
-                                }
-                            }
-
-                            break;
-                        default:
-                            Global.logger.Warn(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext));
-                            continue;
-                    }
-
-                    if (!anyLoaded)
-                        Global.logger.Warn($"Script \"{script}\": No compatible effects found. Does this script need to be updated?");
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc));
-                    //Maybe MessageBox info dialog could be included.
+                } catch (Exception ex) {
+                    Global.logger.Error(string.Format("An error occured while trying to load script {0}. Exception: {1}", ltype.Path, ex));
                 }
             }
         }
