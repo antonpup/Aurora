@@ -1,0 +1,233 @@
+{
+    "group_tag": "mouse",
+    "origin_region": 4,
+    "grouped_keys": [
+        {
+            "tag": -1,
+            "margin_left": 15.0,
+            "margin_top": -200.0,
+            "width": 200.0,
+            "height": 168.0,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "Mouse Logo",
+            "tag": 160,
+            "margin_left": 90.0,
+            "margin_top": -111.0,
+            "width": 50.0,
+            "height": 50.0,
+            "width_bits": 2,
+            "height_bits": 2,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "Scroll Wheel",
+            "tag": 161,
+            "margin_left": 90.0,
+            "margin_top": -171.0,
+            "width": 50.0,
+            "height": 50.0,
+            "width_bits": 2,
+            "height_bits": 2,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 201,
+            "margin_left": 15.0,
+            "margin_top": -144.0,
+            "width": 16.0,
+            "height": 56.0,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 202,
+            "margin_left": 15.0,
+            "margin_top": -88.0,
+            "width": 16.0,
+            "height": 56.0,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 203,
+            "margin_left": 31.5,
+            "margin_top": -48.0,
+            "width": 56.0,
+            "height": 16.0,
+            "width_bits": 6,
+            "height_bits": 6,
+
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 204,
+            "margin_left": 87.5,
+            "margin_top": -48.0,
+            "width": 56.0,
+            "height": 16.0,
+            "width_bits": 6,
+            "height_bits": 6,
+
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "tag": 205,
+            "visualName": "",
+            "margin_left": 143.5,
+            "margin_top": -48.0,
+            "width": 56.0,
+            "height": 16.0,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 206,
+            "visualName": "",
+            "margin_left": 200.0,
+            "margin_top": -88.0,
+            "width": 16.0,
+            "height": 56.0,
+
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 207,
+            "visualName": "",
+            "margin_left": 200.0,
+            "margin_top": -144.0,
+
+            "width": 16.0,
+            "height": 56.0,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 208,
+            "visualName": "",
+            "margin_left": 200.0,
+            "margin_top": -200.0,
+            "width": 16.0,
+            "height": 56.0,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 209,
+            "visualName": "",
+            "margin_left": 143.5,
+            "margin_top": -200.0,
+            "width": 56.0,
+            "height": 16.0,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 210,
+            "visualName": "",
+            "margin_left": 87.5,
+            "margin_top": -200.0,
+            "width": 56.0,
+            "height": 16.0,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 211,
+            "visualName": "",
+            "margin_left": 31.5,
+            "margin_top": -200.0,
+            "width": 56.0,
+
+            "height": 16.0,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 212,
+            "margin_left": 15.0,
+            "margin_top": -200.0,
+            "width": 16.0,
+            "height": 56.0,
+            "width_bits": 2,
+            "height_bits": 2,
+
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        }
+    ]
+}
