@@ -43,38 +43,10 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer percent_layer = new EffectLayer();
+            double value = Properties.Logic._Value ?? Utils.GameStateUtils.TryGetDoubleFromState(state, Properties.VariablePath);
+            double maxvalue = Properties.Logic._MaxValue ?? Utils.GameStateUtils.TryGetDoubleFromState(state, Properties.MaxVariablePath);
 
-            double value = 0;
-            if (!double.TryParse(Properties._VariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._VariablePath))
-            {
-                try
-                {
-                    value = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, Properties._VariablePath));
-                }
-                catch (Exception exc)
-                {
-                    value = 0;
-                }
-            }
-
-
-            double maxvalue = 0;
-            if (!double.TryParse(Properties._MaxVariablePath, out maxvalue) && !string.IsNullOrWhiteSpace(Properties._MaxVariablePath))
-            {
-                try
-                {
-                    maxvalue = Convert.ToDouble(Utils.GameStateUtils.RetrieveGameStateParameter(state, Properties._MaxVariablePath));
-                }
-                catch (Exception exc)
-                {
-                    maxvalue = 0;
-                }
-            }
-
-            percent_layer.PercentEffect(Properties.Gradient.GetColorSpectrum(), Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
-
-            return percent_layer;
+            return new EffectLayer().PercentEffect(Properties.Gradient.GetColorSpectrum(), Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
         }
 
         public override void SetApplication(Application profile)
