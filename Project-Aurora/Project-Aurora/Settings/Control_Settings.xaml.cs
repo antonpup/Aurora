@@ -147,7 +147,6 @@ namespace Aurora.Settings
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
 
-            this.BitmapTopMost.IsChecked = Global.Configuration.BitmapTopMost;
             this.GSIHttpDebugTopMost.IsChecked = Global.Configuration.GSIHttpDebugTopMost;
         }
 
@@ -1003,15 +1002,6 @@ namespace Aurora.Settings
             else
             {
                 winBitmapView.BringIntoView();
-            }
-        }
-
-        private void bitmap_TopMost_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.BitmapTopMost = (this.BitmapTopMost.IsChecked.HasValue) ? this.BitmapTopMost.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
             }
         }
 

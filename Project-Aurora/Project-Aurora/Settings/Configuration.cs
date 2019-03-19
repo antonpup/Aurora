@@ -441,7 +441,8 @@ namespace Aurora.Settings
         public SkypeOverlaySettings skype_overlay_settings;
 
         //Debug Settings
-        public bool BitmapTopMost;
+        public bool bitmapTopMost;
+        public bool BitmapTopMost { get { return bitmapTopMost; } set { bitmapTopMost = value; InvokePropertyChanged(); } }
         public bool GSIHttpDebugTopMost;
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
@@ -511,7 +512,6 @@ namespace Aurora.Settings
             skype_overlay_settings = new SkypeOverlaySettings();
 
             //Debug Settings
-            BitmapTopMost = false;
             GSIHttpDebugTopMost = false;
 
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
