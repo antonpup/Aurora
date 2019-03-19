@@ -74,6 +74,9 @@ namespace Aurora.Profiles {
     /// Similar to the regular Node but will attempt to automatically populate fields/properties.
     /// </summary>
     public abstract class AutoNode<T> : Node<T> where T : AutoNode<T> {
+        // The reason for the additional class instead of just adding an extra option to node's constructor is
+        // that several classes instantiate nodes using Activator.Create with one argument (json) which means
+        // that adding a second argument (even if optional) would cause this to stop working in some cases.
 
         public AutoNode() : base() { }
 
@@ -101,10 +104,6 @@ namespace Aurora.Profiles {
     /// This is in the Profiles namespace as it is shared between many profiles.
     /// </summary>
     public class ProviderNode : AutoNode<ProviderNode> {
-        // The reason for the additional class instead of just adding an extra option to the base node is
-        // that several classes instantiate nodes using Activator.Create with one argument (json) which
-        // means that adding a second argument (even if option) would cause this to stop working.
-
         public string Name;
         public int AppID;
 
