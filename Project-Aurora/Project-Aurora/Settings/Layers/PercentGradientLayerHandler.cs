@@ -14,11 +14,10 @@ namespace Aurora.Settings.Layers
     public class PercentGradientLayerHandlerProperties : PercentLayerHandlerProperties<PercentGradientLayerHandlerProperties>
     {
         public PercentGradientLayerHandlerProperties() : base() { }
-
         public PercentGradientLayerHandlerProperties(bool empty = false) : base(empty) { }
 
+        [Overrides.LogicOverridable("Gradient")]
         public EffectBrush _Gradient { get; set; }
-
         [JsonIgnore]
         public EffectBrush Gradient { get { return Logic._Gradient ?? _Gradient ?? new EffectBrush().SetBrushType(EffectBrush.BrushType.Linear); } }
         
