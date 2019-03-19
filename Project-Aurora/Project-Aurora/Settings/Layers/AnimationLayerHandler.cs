@@ -2,6 +2,7 @@
 using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Utils;
 using Newtonsoft.Json;
@@ -97,6 +98,7 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LogicOverrideIgnoreProperty("_PrimaryColor")]
     public class AnimationLayerHandler : LayerHandler<AnimationLayerHandlerProperties> {
 
         private List<RunningAnimation> runningAnimations = new List<RunningAnimation>();

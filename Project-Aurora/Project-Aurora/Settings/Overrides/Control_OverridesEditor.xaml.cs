@@ -18,7 +18,7 @@ namespace Aurora.Settings.Overrides {
     /// Interaction logic for Control_OverridesEditor.xaml
     /// </summary>
     public partial class Control_OverridesEditor : UserControl, INotifyPropertyChanged {
-        
+
         public Control_OverridesEditor() {
             // Setup UI and databinding stuff
             InitializeComponent();
@@ -40,15 +40,25 @@ namespace Aurora.Settings.Overrides {
         /// For the given layer, returns a list of all properties on the handler of that layer that have the OverridableAttribute 
         /// applied (i.e. have been marked overridable for the overrides system).
         /// </summary>
-        public List<Tuple<string, string, Type>> AvailableLayerProperties => Layer?.Handler.Properties.GetType().GetProperties() // Get all properties on the layer handler's property list
-            .Where(prop => prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true).Length > 0) // Filter to only return the PropertyInfos that have Overridable
-            .Select(prop => new Tuple<string, string, Type>( // Return the name and type of these properties.
-                prop.Name, // The actual C# property name
-                ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name, // Get the name specified in the attribute (so it is prettier for the user)
-                Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType // If the property is a nullable type (e.g. bool?), will instead return the non-nullable type (bool)
-            ))
-            .OrderBy(tup => tup.Item2)
-            .ToList();
+        public List<Tuple<string, string, Type>> AvailableLayerProperties {
+            get {
+                // Get a list of any members that should be ignored as per the LogicOverrideIgnorePropertyAttribute on the properties class
+                var ignoredProperties = Layer?.Handler.GetType().GetCustomAttributes(typeof(LogicOverrideIgnorePropertyAttribute), false)
+                    .Cast<LogicOverrideIgnorePropertyAttribute>()
+                    .Select(attr => attr.PropertyName);
+
+                return Layer?.Handler.Properties.GetType().GetProperties() // Get all properties on the layer handler's property list
+                    .Where(prop => prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true).Length > 0) // Filter to only return the PropertyInfos that have Overridable
+                    .Where(prop => !ignoredProperties.Contains(prop.Name)) // Only select things that are NOT on the ignored properties list
+                    .Select(prop => new Tuple<string, string, Type>( // Return the name and type of these properties.
+                        prop.Name, // The actual C# property name
+                        ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name, // Get the name specified in the attribute (so it is prettier for the user)
+                        Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType // If the property is a nullable type (e.g. bool?), will instead return the non-nullable type (bool)
+                    ))
+                    .OrderBy(tup => tup.Item2)
+                    .ToList();
+            }
+        }
 
         // List of all IOverrideLogic types that the user can select
         public Dictionary<string, Type> OverrideTypes { get; } = new Dictionary<string, Type> {
