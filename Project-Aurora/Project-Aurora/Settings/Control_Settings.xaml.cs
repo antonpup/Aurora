@@ -977,7 +977,7 @@ namespace Aurora.Settings
                 winBitmapView = new Window();
                 winBitmapView.Closed += WinBitmapView_Closed;
                 winBitmapView.ResizeMode = ResizeMode.CanResize;
-                winBitmapView.Topmost = Global.Configuration.BitmapTopMost;
+                winBitmapView.Topmost = Global.Configuration.BitmapDebugTopMost;
                 //winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
 
                 winBitmapView.Title = "Keyboard Bitmap View";

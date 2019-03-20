@@ -441,12 +441,10 @@ namespace Aurora.Settings
         public SkypeOverlaySettings skype_overlay_settings;
 
         //Debug Settings
-        private bool bitmapTopMost;
-        [JsonProperty(PropertyName = "bitmap_debug_topmost")]
-        public bool BitmapTopMost { get { return bitmapTopMost; } set { bitmapTopMost = value; InvokePropertyChanged(); } }
+        private bool bitmapDebugTopMost;
+        public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
 
         private bool httpDebugTopMost;
-        [JsonProperty(PropertyName = "http_debug_topmost")]
         public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
 
 
@@ -517,7 +515,7 @@ namespace Aurora.Settings
             skype_overlay_settings = new SkypeOverlaySettings();
 
             //Debug
-            bitmapTopMost = false;
+            bitmapDebugTopMost = false;
             httpDebugTopMost = false;
 
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);

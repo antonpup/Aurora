@@ -304,7 +304,7 @@
                     <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Current Keyboard bitmap:" VerticalAlignment="Top"/>
                     <Image x:Name="debug_bitmap_preview" HorizontalAlignment="Left" Margin="152,10,0,0" VerticalAlignment="Top" MaxWidth="400" MaxHeight="400"/>
                     <Button x:Name="btnShowBitmapWindow" Content="Show Bitmap Window" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="btnShowBitmapWindow_Click"/>
-                    <CheckBox x:Name="chkBitmapTopMost" Content="Always on top" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" IsChecked="{Binding BitmapTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox x:Name="chkBitmapTopMost" Content="Always on top" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" IsChecked="{Binding BitmapDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button x:Name="btnShowLogsFolder" Content="Show Logs Folder" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" Click="btnShowLogsFolder_Click"/>
                     <Button x:Name="btnShowGSILog" Content="Show GSI HTTP requests" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Click="btnShowGSILog_Click" />
                     <CheckBox x:Name="chkHttpDebugTopMost" Content="Always on top" HorizontalAlignment="Left" Margin="10,101,0,0" VerticalAlignment="Top" IsChecked="{Binding HttpDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
