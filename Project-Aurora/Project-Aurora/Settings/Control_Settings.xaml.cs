@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Win32.TaskScheduler;
+using System.Windows.Data;
 
 namespace Aurora.Settings
 {
@@ -977,7 +978,9 @@ namespace Aurora.Settings
                 winBitmapView = new Window();
                 winBitmapView.Closed += WinBitmapView_Closed;
                 winBitmapView.ResizeMode = ResizeMode.CanResize;
-                winBitmapView.Topmost = Global.Configuration.BitmapDebugTopMost;
+
+                winBitmapView.SetBinding(Window.TopmostProperty, new Binding("BitmapDebugTopMost") { Source = Global.Configuration });
+
                 //winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
 
                 winBitmapView.Title = "Keyboard Bitmap View";
