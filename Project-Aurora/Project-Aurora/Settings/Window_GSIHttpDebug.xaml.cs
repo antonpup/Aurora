@@ -19,7 +19,7 @@ namespace Aurora.Settings {
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             //Set Windows Topmost after finishing loading
-            this.Topmost = Global.Configuration.GSIHttpDebugTopMost;
+            this.Topmost = Global.Configuration.HttpDebugTopMost;
             // When the window has opened and loaded, start listening to the NetworkListener for when it
             // recieves new GameStates.
             Global.net_listener.NewGameState += Net_listener_NewGameState;
