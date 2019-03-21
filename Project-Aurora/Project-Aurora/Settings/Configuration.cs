@@ -315,7 +315,10 @@ namespace Aurora.Settings
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
         SteelSeries_Rival_300_HP_OMEN_Edition = 701,
-
+        [Description("SteelSeries - QcK Prism Mousepad + Mouse")]
+        SteelSeries_QcK_Prism = 702,
+        [Description("SteelSeries - Two-zone QcK Mousepad + Mouse")]
+        SteelSeries_QcK_2_Zone = 703,
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900
@@ -387,6 +390,9 @@ namespace Aurora.Settings
 
         private bool getDevReleases = false;
         public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
+
+        private bool getPointerUpdates = true;
+        public bool GetPointerUpdates { get { return getPointerUpdates; } set { getPointerUpdates = value; InvokePropertyChanged(); } }
 
         private bool highPriority = false;
         public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
