@@ -46,32 +46,32 @@
 
     <Grid>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Equalizer Effect Type: " VerticalAlignment="Top"/>
-        <ComboBox x:Name="eq_type" HorizontalAlignment="Left" Margin="120,-2,0,0" VerticalAlignment="Top" Width="177" ItemsSource="{Binding Source={StaticResource EqualizerType}}" ItemTemplate="{Binding Source={StaticResource EqualizerTypeTemplate}}" SelectionChanged="eq_type_SelectionChanged"/>
+        <ComboBox x:Name="eq_type" HorizontalAlignment="Left" Margin="120,-2,0,0" VerticalAlignment="Top" Width="147" ItemsSource="{Binding Source={StaticResource EqualizerType}}" ItemTemplate="{Binding Source={StaticResource EqualizerTypeTemplate}}" SelectionChanged="eq_type_SelectionChanged"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="View Type: " VerticalAlignment="Top" Margin="0,27,0,0"/>
-        <ComboBox x:Name="eq_view_type" HorizontalAlignment="Left" Margin="65,25,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource EqualizerPresentationType}}" ItemTemplate="{Binding Source={StaticResource EqualizerPresentationTypeTemplate}}" SelectionChanged="eq_view_type_SelectionChanged"/>
+        <ComboBox x:Name="eq_view_type" HorizontalAlignment="Left" Margin="65,25,0,0" VerticalAlignment="Top" Width="202" ItemsSource="{Binding Source={StaticResource EqualizerPresentationType}}" ItemTemplate="{Binding Source={StaticResource EqualizerPresentationTypeTemplate}}" SelectionChanged="eq_view_type_SelectionChanged"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="0,54,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="Clr_primary_color" Margin="80,52,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="Clr_primary_color_SelectedColorChanged" UsingAlphaChannel="True" />
+        <xctk:ColorPicker x:Name="Clr_primary_color" Margin="80,52,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="187" ColorMode="ColorCanvas" SelectedColorChanged="Clr_primary_color_SelectedColorChanged" UsingAlphaChannel="True" />
 
         <TextBlock HorizontalAlignment="Left" Margin="0,83,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="Clr_secondary_color" Margin="95,81,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" ColorMode="ColorCanvas" SelectedColorChanged="Clr_secondary_color_SelectedColorChanged" UsingAlphaChannel="True" />
+        <xctk:ColorPicker x:Name="Clr_secondary_color" Margin="95,81,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="172" ColorMode="ColorCanvas" SelectedColorChanged="Clr_secondary_color_SelectedColorChanged" UsingAlphaChannel="True" />
 
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Gradient (Linear Only): " VerticalAlignment="Top" Margin="0,110,0,0"/>
         <ncore:ColorBox x:Name="gradient_editor" HorizontalAlignment="Left" Height="60" Margin="0,130,0,0" VerticalAlignment="Top" Width="260" BrushChanged="Gradient_editor_BrushChanged"/>
         <Button x:Name="Button_SetGradientRainbow" Content="Set to Rainbow" HorizontalAlignment="Left" Margin="0,195,0,0" VerticalAlignment="Top" Click="Button_SetGradientRainbow_Click"/>
         <Button x:Name="Button_SetGradientRainbowLoop" Content="Set to Rainbow (Seamless)" Margin="91,195,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Click="Button_SetGradientRainbowLoop_Click"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="302,4,0,0" TextWrapping="Wrap" Text="Max amplitude:" VerticalAlignment="Top"/>
-        <xctk:IntegerUpDown x:Name="updown_max_amplitude_value" HorizontalAlignment="Left" Height="24" Margin="389,0,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="120" Minimum="1" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged"/>
+        <TextBlock HorizontalAlignment="Left" Margin="272,3,0,0" TextWrapping="Wrap" Text="Max amplitude:" VerticalAlignment="Top"/>
+        <xctk:IntegerUpDown x:Name="updown_max_amplitude_value" HorizontalAlignment="Left" Height="24" Margin="359,-2,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="120" Minimum="1" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="302,57,0,0" TextWrapping="Wrap" Text="Background Mode:" VerticalAlignment="Top"/>
-        <ComboBox x:Name="eq_background_mode" HorizontalAlignment="Left" Margin="407,54,0,0" VerticalAlignment="Top" Width="119" ItemsSource="{Binding Source={StaticResource EqualizerBackgroundMode}}" ItemTemplate="{Binding Source={StaticResource EqualizerBackgroundModeTemplate}}" SelectionChanged="eq_background_mode_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Left" Margin="272,57,0,0" TextWrapping="Wrap" Text="Background Mode:" VerticalAlignment="Top"/>
+        <ComboBox x:Name="eq_background_mode" HorizontalAlignment="Left" Margin="377,54,0,0" VerticalAlignment="Top" Width="119" ItemsSource="{Binding Source={StaticResource EqualizerBackgroundMode}}" ItemTemplate="{Binding Source={StaticResource EqualizerBackgroundModeTemplate}}" SelectionChanged="eq_background_mode_SelectionChanged"/>
 
-        <CheckBox x:Name="chkbox_scale_with_system_volume" Content="Scale with system volume" HorizontalAlignment="Left" Margin="302,27,0,0" VerticalAlignment="Top" Checked="chkbox_scale_with_system_sound_Checked" Unchecked="chkbox_scale_with_system_sound_Checked"/>
-        <TextBlock HorizontalAlignment="Left" Margin="302,86,0,0" TextWrapping="Wrap" Text="Background Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="Clr_dim_color" Margin="407,81,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" Margin="302,107,0,0" TextWrapping="Wrap" Text="Frequencies" VerticalAlignment="Top"/>
-        <ListView x:Name="lstbx_frequencies" HorizontalAlignment="Left" Margin="302,128,0,0" Width="100">
+        <CheckBox x:Name="chkbox_scale_with_system_volume" Content="Scale with system volume" HorizontalAlignment="Left" Margin="272,28,0,0" VerticalAlignment="Top" Checked="chkbox_scale_with_system_sound_Checked" Unchecked="chkbox_scale_with_system_sound_Checked"/>
+        <TextBlock HorizontalAlignment="Left" Margin="272,86,0,0" TextWrapping="Wrap" Text="Background Color:" VerticalAlignment="Top"/>
+        <xctk:ColorPicker x:Name="Clr_dim_color" Margin="375,83,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />
+        <TextBlock HorizontalAlignment="Left" Margin="272,107,0,0" TextWrapping="Wrap" Text="Frequencies" VerticalAlignment="Top"/>
+        <ListView x:Name="lstbx_frequencies" HorizontalAlignment="Left" Margin="272,128,0,0" Width="100">
             <ListBox.ItemTemplate>
                 <HierarchicalDataTemplate>
                     <DockPanel HorizontalAlignment="Stretch" >
@@ -81,11 +81,11 @@
                 </HierarchicalDataTemplate>
             </ListBox.ItemTemplate>
         </ListView>
-        <TextBox x:Name="txtBox_newFreqValue" HorizontalAlignment="Left" Height="23" Margin="407,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>
-        <TextBlock HorizontalAlignment="Left" Margin="472,135,0,0" TextWrapping="Wrap" Text="Hz" VerticalAlignment="Top"/>
-        <Button x:Name="btn_AddFreq" Content="Add Frequency" HorizontalAlignment="Left" Margin="407,155,0,0" VerticalAlignment="Top" Width="100" Click="btn_AddFreq_Click"/>
-        <Button x:Name="btn_DeleteFreq" Content="Delete Frequency" HorizontalAlignment="Left" Margin="407,180,0,0" VerticalAlignment="Top" Width="100" Click="btn_DeleteFreq_Click"/>
-        <TextBlock HorizontalAlignment="Left" Margin="407,205,0,-13" TextWrapping="Wrap" Text="Note: There must be at least 2 frequencies to sample between" VerticalAlignment="Top" Height="46" Width="116"/>
-        <Button x:Name="btn_ShowPreviewWindow" Content="Show Preview Window" HorizontalAlignment="Left" Margin="462,0,0,0" VerticalAlignment="Top" Click="btn_ShowPreviewWindow_Click"/>
+        <TextBox x:Name="txtBox_newFreqValue" HorizontalAlignment="Left" Height="23" Margin="377,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60"/>
+        <TextBlock HorizontalAlignment="Left" Margin="442,135,0,0" TextWrapping="Wrap" Text="Hz" VerticalAlignment="Top"/>
+        <Button x:Name="btn_AddFreq" Content="Add Frequency" HorizontalAlignment="Left" Margin="377,155,0,0" VerticalAlignment="Top" Width="100" Click="btn_AddFreq_Click"/>
+        <Button x:Name="btn_DeleteFreq" Content="Delete Frequency" HorizontalAlignment="Left" Margin="377,180,0,0" VerticalAlignment="Top" Width="100" Click="btn_DeleteFreq_Click"/>
+        <TextBlock HorizontalAlignment="Left" Margin="377,205,0,-13" TextWrapping="Wrap" Text="Note: There must be at least 2 frequencies to sample between" VerticalAlignment="Top" Height="46" Width="116"/>
+        <Button x:Name="btn_ShowPreviewWindow" Content="Show Preview Window" HorizontalAlignment="Left" Margin="0,220,0,-2" VerticalAlignment="Top" Click="btn_ShowPreviewWindow_Click"/>
     </Grid>
 </UserControl>
