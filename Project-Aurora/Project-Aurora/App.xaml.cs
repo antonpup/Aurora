@@ -1,4 +1,4 @@
-﻿using Aurora.Devices;
+using Aurora.Devices;
 using Aurora.Profiles;
 using Aurora.Settings;
 using IronPython.Hosting;
@@ -256,6 +256,10 @@ namespace Aurora
 
                     Global.Configuration = new Configuration();
                 }
+
+                Global.Configuration.PropertyChanged += (sender, eventArgs) => {
+                    ConfigManager.Save(Global.Configuration);
+                };
 
                 Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
 
