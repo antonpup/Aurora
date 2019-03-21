@@ -21,9 +21,20 @@ namespace Aurora.Controls {
         /// <summary>A reference to the item currently being dragged by the user. Will be null if no item is being dragged</summary>
         private ListBoxItem draggedItem;
 
+        /// <summary>The relative point where the users mouse originally was pressed. Used to assert a minimum distance before the drag operation begins</summary>
+        private Point startDragPoint;
+
         /// <summary>The height of the items in this list box. Will be set by the list box when the user starts dragging an item.
         /// Used for drop index detection. Will not work properly if items are different heights.</summary>
         private double itemHeight = 0;
+
+        /// <summary>Get the ListBox style and create a new ReorderableListBox style based on it.</summary>
+        /// <remarks>For whatever reason the style isn't inherited from the ListBox, even though we are extending it.</remarks>
+        private static Style listBoxStyle = new Style(typeof(ReorderableListBox), Application.Current.TryFindResource(typeof(ListBox)) as Style);
+
+        /// <summary>Get the style that is used on ListBoxItems so that when we create a new style for this ReorderableListBox, we can use
+        /// this as a base for the items here.</summary>
+        private static Style listboxItemStyle = Application.Current.TryFindResource(typeof(ListBoxItem)) as Style;
 
 
         public ReorderableListBox() : base() {
@@ -34,35 +45,75 @@ namespace Aurora.Controls {
             ItemsPanel.VisualTree.AddHandler(LoadedEvent, new RoutedEventHandler((sender, e) => panel = (ReorderableListBoxPanel)sender));
 
             AllowDrop = true; // Enable dropping on this listbox
+            MouseLeftButtonUp += (sender, e) => draggedItem = null; // When the user releases the mount, ensure dragged item is reset
+            MouseMove += ReorderableListBox_MouseMove;
             DragOver += ReorderableListBox_DragOver; // Preview event to update the list box items's arrangement (e.g. the gap and "floating" element)
             Drop += ReorderableListBox_Drop; // Drop event for when the user releases the mouse
 
+            Style = listBoxStyle;
+
             // Create a style that assigns the preview mouse event to the children of the listbox
-            var itemContainerStyle = new Style(typeof(ListBoxItem));
+            var itemContainerStyle = new Style(typeof(ListBoxItem), listboxItemStyle);
             itemContainerStyle.Setters.Add(new EventSetter(PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(ReorderableListBoxItem_PreviewMouseLeftButtonDown)));
             ItemContainerStyle = itemContainerStyle;
         }
         
+        #region DragElementTag
+        /// <summary>
+        /// This property is used to specify which element inside the ItemTemplate can trigger the drag-drop reordering functionality of this list box.
+        /// If null, any element will trigger it. If provided a value, the `OriginalSource` of the mouse click event will be checked for a matching tag.
+        /// <para>For example, if a icon with a drag image was in the template, you could apply "Dragger" as the tag and set this DragElementTag to also
+        /// be "Dragger" and then only that icon would be able to trigger the drag.</para>
+        /// </summary>
+        public object DragElementTag {
+            get => GetValue(DragElementTagProperty);
+            set => SetValue(DragElementTagProperty, value);
+        }
+        
+        public static readonly DependencyProperty DragElementTagProperty =
+            DependencyProperty.Register("DragElementTag", typeof(object), typeof(ReorderableListBox), new PropertyMetadata(null));
+        #endregion
 
         /// <summary>
-        /// Event that is fired when the user clicks on a item in the ListBox, therefore beginning a drag operation.
+        /// Event that is fired when the user clicks on a item in the ListBox. Stores the clicked item and the relative mouse location.
         /// </summary>
         private void ReorderableListBoxItem_PreviewMouseLeftButtonDown(object sender, MouseEventArgs e) {
-            // If the sender of the event is a ListBox item (no reason it shouldn't be though)
-            if (sender is ListBoxItem item) {
-                item.IsSelected = true; // Do the usual thing of selecting the item in the list
-                panel.DraggedIndex = Items.IndexOf(item.DataContext); // Tell the panel which item should start "floating" at the cursor
-                itemHeight = item.DesiredSize.Height; // Store the item's height for use in the drop index calculations
-                draggedItem = item; // Store a reference to the item being dragged
-
-                // Actually start a drag-drop operation. Although this could be done without a drag-drop, this makes it easier since
-                // this will handle mouse releases outside the Aurora window (manual detection of this is messy).
-                DragDrop.DoDragDrop(item, item.DataContext, DragDropEffects.Move);
-
-                // The `DoDragDrop` is blocking, so this executes after the user has dropped the item
-                draggedItem = null; // No longer dragging/dropping an item
-                panel.DropIndex = panel.DraggedIndex = -1; // Also clear the panel's indexes so it draws as if everything is normal
+            // Guard to check if the sender of the event is a ListBox item (no reason it shouldn't be though)
+            // Also check that if the developer has specified a "DragElementTag", the original source of the event (the actual clicked element, even if it is
+            // inside the element with the attached listener, so in this case a particular object in the item template) has a tag that matches the provided one.
+            if (sender is ListBoxItem item && (DragElementTag == null || DragElementTag.Equals((e.OriginalSource as FrameworkElement)?.Tag))) {
+                startDragPoint = e.GetPosition(this);
+                draggedItem = item;
             }
+        }
+
+        /// <summary>
+        /// Event that is fired when the mouse moves over the listbox. Checks if the user selected an item (and still has the mouse down since
+        /// draggedItem becomes null when mouse released) and if the user has moved the mouse a certain distance from the original start mouse
+        /// down point then start the drag-drop operation.
+        /// </summary>
+        private void ReorderableListBox_MouseMove(object sender, MouseEventArgs e) {
+            if (draggedItem != null) {
+                var delta = e.GetPosition(this) - startDragPoint; // Calculate distacne between current mouse point and original mouse down point
+                if (Math.Abs(delta.X) >= SystemParameters.MinimumHorizontalDragDistance || Math.Abs(delta.Y) >= SystemParameters.MinimumVerticalDragDistance) // Check it's moved a certain distance
+                    BeginDragDrop();
+            }
+        }
+
+        /// <summary>
+        /// Start the drag-drop operation on the current `draggedItem`.
+        /// </summary>
+        private void BeginDragDrop() {
+            panel.DraggedIndex = Items.IndexOf(draggedItem.DataContext); // Tell the panel which item should start "floating" at the cursor
+            itemHeight = draggedItem.DesiredSize.Height; // Store the item's height for use in the drop index calculations
+
+            // Actually start a drag-drop operation. Although this could be done without a drag-drop, this makes it easier since
+            // this will handle mouse releases outside the Aurora window (manual detection of this is messy).
+            DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+
+            // The `DoDragDrop` is blocking, so this executes after the user has dropped the item
+            draggedItem = null; // No longer dragging/dropping an item
+            panel.DropIndex = panel.DraggedIndex = -1; // Also clear the panel's indexes so it draws as if everything is normal
         }
 
         /// <summary>
@@ -95,6 +146,9 @@ namespace Aurora.Controls {
             // Do the actual move in the collection
             ((IList)ItemsSource).RemoveAt(oldIndex);
             ((IList)ItemsSource).Insert(newIndex, itemData);
+
+            // Re-select this item (removing it and re-adding it will deselect it)
+            SelectedItem = itemData;
         }
 
         /// <summary>
