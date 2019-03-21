@@ -62,7 +62,7 @@ namespace Aurora_Updater
 
     public class UpdateManager
     {
-        private string infoUrl = @"http://project-aurora.com/vcheck.php";
+        //private string infoUrl = @"http://project-aurora.com/vcheck.php";
         private string[] ignoreFiles = { };
         //public UpdateResponse response = new UpdateResponse();
         private Queue<LogEntry> log = new Queue<LogEntry>();
@@ -88,7 +88,7 @@ namespace Aurora_Updater
             {
                 Config = Aurora.Settings.ConfigManager.Load();
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
                 Config = new Aurora.Settings.Configuration();
             }
@@ -112,7 +112,7 @@ namespace Aurora_Updater
         private bool FetchData()
         {
 
-            
+
 
 
             try
@@ -140,7 +140,7 @@ namespace Aurora_Updater
             try
             {
                 string url = LatestRelease.Assets.First(s => s.Name.StartsWith("release") || s.Name.StartsWith("Aurora-v")).BrowserDownloadUrl;
-                
+
                 if (!String.IsNullOrWhiteSpace(url))
                 {
                     this.log.Enqueue(new LogEntry("Starting download... "));
@@ -560,14 +560,25 @@ namespace Aurora_Updater
 
         public static bool operator ==(UpdateVersion lhs, UpdateVersion rhs)
         {
-            if (lhs.FinalVersion == rhs.FinalVersion ||
-                lhs.MajorVersion == rhs.MajorVersion ||
-                lhs.MinorVersion == rhs.MinorVersion ||
-                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) == 0
-                )
-                return true;
+            return lhs.FinalVersion == rhs.FinalVersion &&
+                lhs.MajorVersion == rhs.MajorVersion &&
+                lhs.MinorVersion == rhs.MinorVersion &&
+                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) == 0;
+        }
 
-            return false;
+        public override bool Equals(object obj)
+        {
+            var item = obj as UpdateVersion;
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            return FinalVersion == item.FinalVersion &&
+                MajorVersion == item.MajorVersion &&
+                MinorVersion == item.MinorVersion &&
+                String.Compare(AdditionalVersionModifier, item.AdditionalVersionModifier) == 0;
         }
 
         public static bool operator !=(UpdateVersion lhs, UpdateVersion rhs)
@@ -621,6 +632,11 @@ namespace Aurora_Updater
                 return true;
 
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.GetHashCode();
         }
 
         public override string ToString()

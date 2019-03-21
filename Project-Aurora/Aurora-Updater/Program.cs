@@ -26,9 +26,9 @@ namespace Aurora_Updater
     {
         private static string passedArgs = "";
         private static bool isSilent = false;
-        private static bool isSilentMinor = false;
+        //private static bool isSilentMinor = false;
         private static UpdateVersion versionMajor;
-        private static UpdateVersion versionMinor;
+        //private static UpdateVersion versionMinor;
         public static string exePath = "";
         private static UpdateType installType = UpdateType.Undefined;
         public static bool isElevated = false;

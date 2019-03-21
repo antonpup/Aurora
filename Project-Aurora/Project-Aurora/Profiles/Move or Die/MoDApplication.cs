@@ -16,7 +16,7 @@ namespace Aurora.Profiles.Move_or_Die
             : base(new LightEventConfig { Name = "Move or Die", ID = "MoD", ProcessNames = new[] { "love.exe" }, ProfileType = typeof(MoDProfile), OverviewControlType = typeof(Control_MoD), GameStateType = typeof(GameState_Wrapper), Event = new GameEvent_Generic(), IconURI = "Resources/MoD.png" })
         {
             Config.ExtraAvailableLayers.Add("WrapperLights");
-            binder = new MoDSerializationBinder();
+            SerializationBinder = new MoDSerializationBinder();
         }
     }
 

@@ -62,7 +62,7 @@ namespace Aurora.Devices.Clevo{
                     return true;
                 }
 
-            }catch (Exception e){
+            }catch (Exception exc){
                 Console.WriteLine("ERROR: Could not connect to Clevo WMI Service. Clevo HotKey software may not be installed.");
             }
 
