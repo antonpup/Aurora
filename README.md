@@ -214,6 +214,10 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ## Video demonstrations
 
+Clone Hero Demo
+
+[![Clone Hero Demo](http://i3.ytimg.com/vi/YMk0NwrLMF4/0.jpg)](https://www.youtube.com/watch?v=YMk0NwrLMF4)
+
 Dota 2 Demo
 
 [![Dota 2 Demo](http://img.youtube.com/vi/iqwYU-blkhk/0.jpg)](https://www.youtube.com/watch?v=iqwYU-blkhk)
