@@ -95,9 +95,6 @@ namespace Aurora
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
-            ctrlLayerManager.NewLayer += Layer_manager_NewLayer;
-            ctrlLayerManager.ProfileOverviewRequest += CtrlLayerManager_ProfileOverviewRequest;
-
             ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
             GenerateProfileStack();
@@ -800,6 +797,12 @@ namespace Aurora
         {
             if (!sender.Equals(_selectedManager))
                 this.content_grid.Content = this.FocusedApplication.Profile.Layers.Count > 0 ? layercontrol_presenter : this.FocusedApplication.Control;
+            UpdateManagerStackFocus(sender);
+        }
+
+        private void ctrlOverlayLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+            if (!sender.Equals(_selectedManager))
+                this.content_grid.Content = this.FocusedApplication.Profile.OverlayLayers.Count > 0 ? layercontrol_presenter : this.FocusedApplication.Control;
             UpdateManagerStackFocus(sender);
         }
 

@@ -63,6 +63,7 @@
                 </Border>
                 <Settings:Control_ProfileManager x:Name="ctrlProfileManager" FocusedApplication="{Binding FocusedApplication}" Height="25" Margin="0,3,0,0" Background="#00000000" PreviewMouseDown="ctrlProfileManager_PreviewMouseDown" />
                 <Settings:Control_LayerManager x:Name="ctrlLayerManager" FocusedApplication="{Binding FocusedApplication}" Margin="0,3,0,0" Background="#00000000" PreviewMouseDown="ctrlLayerManager_PreviewMouseDown" />
+                <Settings:Control_LayerList x:Name="ctrlOverlayLayerManager" Margin="0,3,0,0" LayerCollection="{Binding Path=FocusedApplication.Profile.Layers}" Background="#00000000" PreviewMouseDown="ctrlOverlayLayerManager_PreviewMouseDown" />
             </StackPanel>
         </Grid>
         

@@ -74,8 +74,8 @@ namespace Aurora.Profiles
 
         /// <summary>
         /// This method is called during the default implementation of UpdateLights. Appliation-specific updates that do not need
-        /// to edit layers or the frame should go in here and use the default UpdateLights. If more control over layers/frame is
-        /// needed, this method should be ignored and UpdateLights should be overriden instead.
+        /// to edit layers or the frame (which will be the vast majority of them) should go in here and use the default UpdateLights.
+        /// If more control over layers/frame is needed, this method should be ignored and UpdateLights should be overriden instead.
         /// </summary>
         public virtual void UpdateTick() { }
 

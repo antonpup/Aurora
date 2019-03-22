@@ -185,7 +185,7 @@ namespace Aurora.Controls
                     dynamic items_lst = this.ParentList.ItemsSource;
                     int old_index = items_lst.IndexOf(((FrameworkElement)_dragging).DataContext as Layer);
                     int new_index = GetOrder(_dragging);
-                    if (old_index != new_index)
+                    if (old_index != new_index && old_index >= 0 && new_index >= 0)
                         items_lst.Move(old_index, new_index);
                 }
 
