@@ -360,7 +360,12 @@ Hotline Miami features
 
 Killing Floor 2 features
 
-* TODO
+* Static red on main menu
+* Low Health and death indicators
+* Blue flash when healing
+* White during zed time
+* Red flash on incoming wave
+* Fire and Puke indicator flashes
 
 League of Legends features
 
@@ -379,7 +384,14 @@ Minecraft features
 
 Move or Die features
 
-* TODO
+* WASD, TFGH, IJKL and Arrows lighting up with their respective player colors.
+* Flash red followed by the player color if a player dies.
+* Round winning player colored flashes. 
+* Match winning player colored pulses.
+* Rapid white flashes when leveling up.
+* Rapid red flashes while sudden death.
+* Synchronized yellow warning flashes idle warning in lobby.
+* Colored waves based on the item rarity of the unlocked item.
 
 Osu! features
 
