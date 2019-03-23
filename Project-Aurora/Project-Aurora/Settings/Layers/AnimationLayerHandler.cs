@@ -99,6 +99,7 @@ namespace Aurora.Settings.Layers
     }
 
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
+    [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class AnimationLayerHandler : LayerHandler<AnimationLayerHandlerProperties> {
 
         private List<RunningAnimation> runningAnimations = new List<RunningAnimation>();
