@@ -313,7 +313,6 @@
     <Compile Include="ConfigUI.xaml.cs">
       <DependentUpon>ConfigUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ArrangeListBox.cs" />
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </Compile>
@@ -1348,9 +1347,6 @@
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\ScriptBase.cs" />
     <Compile Include="Settings\VariableRegistry.cs" />
-    <Compile Include="Settings\Control_LayerManager.xaml.cs">
-      <DependentUpon>Control_LayerManager.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Control_ProfileManager.xaml.cs">
       <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
     </Compile>
@@ -2127,10 +2123,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Window_GSIHttpDebug.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Control_LayerManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
