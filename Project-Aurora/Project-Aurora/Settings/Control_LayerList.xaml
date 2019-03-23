@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:Aurora.Controls"
              xmlns:Utils="clr-namespace:Aurora.Utils"
+             xmlns:Win="System.Windows"
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="200">
     <UserControl.Resources>
         <ResourceDictionary>
             <Utils:TextCharacterLimitConv x:Key="TextCharacterLimitConv" MaxLength="24"/>
+            <Utils:IsNullToBooleanConverter x:Key="NullToBoolConv" ReturnValWhenNull="False" />
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -20,40 +22,40 @@
         </Border>
         
         <StackPanel Orientation="Horizontal" Margin="0,30" VerticalAlignment="Top" HorizontalAlignment="Right" Height="24">
-            <Button ToolTip="Add a new layer" Margin="2,0" Click="Button_Click">
+            <Button ToolTip="Add a new layer" Margin="2,0" Click="AddButton_Click">
                 <DockPanel Margin="2,0">
                     <Image Source="/Aurora;component/Resources/Layers_Add.png" Width="18" Height="18"/>
                     <TextBlock>Add</TextBlock>
                 </DockPanel>
             </Button>
-            <Button ToolTip="Copy the selected layer (Ctrl + C)" Margin="2,0">
+            <Button ToolTip="Copy the selected layer (Ctrl + C)" Margin="2,0" Click="CopyButton_Click">
                 <Image Source="/Aurora;component/Resources/Layers_Copy.png" Margin="2,0" Width="18" Height="18"/>
             </Button>
-            <Button ToolTip="Paste layer from clipboard (Ctrl + V)" Margin="2,0">
+            <Button ToolTip="Paste layer from clipboard (Ctrl + V)" Margin="2,0" Click="PasteButton_Click">
                 <Image Source="/Aurora;component/Resources/Layers_Paste.png" Margin="2,0" Width="18" Height="18"/>
             </Button>
-            <Button ToolTip="Remove selected layer (Del)" Margin="2,0" IsEnabled="False">
+            <Button ToolTip="Remove selected layer (Del)" Margin="2,0" IsEnabled="{Binding Path=SelectedLayer, Converter={StaticResource NullToBoolConv}}" Click="DeleteButton_Click">
                 <Image Source="/Aurora;component/Resources/Layers_Remove.png" Margin="2,0" Width="18" Height="18" />
             </Button>
         </StackPanel>
         
         <DockPanel Margin="0,59,0,0">
-            <Grid Height="23" VerticalAlignment="Top" DockPanel.Dock="Top" Visibility="Collapsed">
-                <RadioButton HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Daytime">
+            <Grid Height="23" VerticalAlignment="Top" DockPanel.Dock="Top" Visibility="{Binding DayNightCheckboxesVisiblity}">
+                <RadioButton GroupName="TimeSelection" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Daytime" IsChecked="True" Checked="CollectionSelection_Checked">
                     <Grid>
                         <Image Source="/Aurora;component/Resources/Daytime_Icon.png" HorizontalAlignment="Left" Margin="0,0,0,0" />
                         <TextBlock Margin="23,0,-3,0">Daytime</TextBlock>
                     </Grid>
                 </RadioButton>
-                <RadioButton HorizontalAlignment="Left" Margin="91,0,0,0" VerticalAlignment="Top" ToolTip="Nighttime">
+                <RadioButton x:Name="showSecondaryCollection" GroupName="TimeSelection" HorizontalAlignment="Left" Margin="91,0,0,0" VerticalAlignment="Top" ToolTip="Nighttime" Checked="CollectionSelection_Checked">
                     <Grid>
                         <Image Source="/Aurora;component/Resources/Nighttime_Icon.png" HorizontalAlignment="Left" Margin="0,0,0,0" />
                         <TextBlock Margin="20,0,0,0">Nighttime</TextBlock>
                     </Grid>
-                </RadioButton>                
+                </RadioButton>
             </Grid>
 
-            <Controls:ReorderableListBox ItemsSource="{Binding ActiveLayerCollection}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" Margin="0,0,0,0" SelectionMode="Single" DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DragElementTag="Dragger">
+            <Controls:ReorderableListBox ItemsSource="{Binding ActiveLayerCollection}" SelectedItem="{Binding Path=SelectedLayer, Mode=TwoWay}" DragElementTag="Dragger" SelectionMode="Single" DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Disabled" KeyDown="ReorderableListBox_KeyDown">
                 <ListBox.ItemTemplate>
                     <HierarchicalDataTemplate>
                         <DockPanel  HorizontalAlignment="Stretch" Width="192" >

@@ -104,6 +104,7 @@ namespace Aurora.Controls {
         /// Start the drag-drop operation on the current `draggedItem`.
         /// </summary>
         private void BeginDragDrop() {
+            draggedItem.IsSelected = true;
             panel.DraggedIndex = Items.IndexOf(draggedItem.DataContext); // Tell the panel which item should start "floating" at the cursor
             itemHeight = draggedItem.DesiredSize.Height; // Store the item's height for use in the drop index calculations
 
