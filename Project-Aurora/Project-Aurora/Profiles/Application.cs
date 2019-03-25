@@ -311,35 +311,33 @@ namespace Aurora.Profiles
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
                             prof.ProfileName = Path.GetFileNameWithoutExtension(path);
 
-                        foreach (Layer lyr in prof.Layers.ToList())
-                        {
-                            //Remove any Layers that have non-functional handlers
-                            if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID))
-                            {
-                                prof.Layers.Remove(lyr);
-                                continue;
+                        // Initalises a collection, setting the layers' profile/application property and adding events to them and the collections to save to disk.
+                        void InitialiseLayerCollection(ObservableCollection<Layer> collection) { 
+                            foreach (Layer lyr in collection.ToList()) {
+                                //Remove any Layers that have non-functional handlers
+                                if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID)) {
+                                    prof.Layers.Remove(lyr);
+                                    continue;
+                                }
+
+                                lyr.AnythingChanged += SaveProfilesEvent;
+                                lyr.SetProfile(this);
                             }
 
-                            lyr.AnythingChanged += this.SaveProfilesEvent;
-                            lyr.SetProfile(this);
+                            collection.CollectionChanged += (_, e) => {
+                                if (e.NewItems != null)
+                                    foreach (Layer lyr in e.NewItems)
+                                        if (lyr != null)
+                                            lyr.AnythingChanged += SaveProfilesEvent;
+                                SaveProfiles();
+                            };
                         }
 
-                        prof.Layers.CollectionChanged += (s, e) =>
-                        {
-                            if (e.NewItems != null)
-                            {
-                                foreach (Layer lyr in e.NewItems)
-                                {
-                                    if (lyr == null)
-                                        continue;
-                                    lyr.AnythingChanged += this.SaveProfilesEvent;
-                                }
-                            }
-                            this.SaveProfiles();
-                        };
+                        // Call the above setup method on the regular layers and the overlay layers.
+                        InitialiseLayerCollection(prof.Layers);
+                        InitialiseLayerCollection(prof.OverlayLayers);
 
                         prof.PropertyChanged += Profile_PropertyChanged;
-
                         return prof;
                     }
                 }

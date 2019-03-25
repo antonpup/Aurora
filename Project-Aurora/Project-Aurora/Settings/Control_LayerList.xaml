@@ -18,7 +18,7 @@
     <Grid>
         <Border Background="#A5000000" CornerRadius="8" />
         <Border Background="#54A8A8A8" CornerRadius="8" VerticalAlignment="Top" Height="25">
-            <TextBlock TextWrapping="Wrap" Text="Layers" VerticalAlignment="Top" Margin="10,3,10,0"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding ListTitle}" VerticalAlignment="Top" Margin="10,3,10,0"/>
         </Border>
         
         <StackPanel Orientation="Horizontal" Margin="0,30" VerticalAlignment="Top" HorizontalAlignment="Right" Height="24">

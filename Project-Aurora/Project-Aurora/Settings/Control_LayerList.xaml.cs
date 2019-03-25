@@ -108,12 +108,24 @@ namespace Aurora.Settings {
             get => (Layer)GetValue(SelectedLayerProperty);
             set => SetValue(SelectedLayerProperty, value);
         }
-
-        // Using a DependencyProperty as the backing store for SelectedLayer.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty SelectedLayerProperty =
             DependencyProperty.Register("SelectedLayer", typeof(Layer), typeof(Control_LayerList), new PropertyMetadata(null));
         #endregion
 
+        #region ListTitle Property
+        /// <summary>
+        /// The label to display at the top of this layers list.
+        /// </summary>
+        public string ListTitle {
+            get => (string)GetValue(ListTitleProperty);
+            set => SetValue(ListTitleProperty, value);
+        }
+        
+        public static readonly DependencyProperty ListTitleProperty =
+            DependencyProperty.Register("ListTitle", typeof(string), typeof(Control_LayerList), new PropertyMetadata("Layers"));
+        #endregion
+        
         /// <summary>
         /// Property that returns a <see cref="Visibility"/> indicating whether or not the day/night (collection/secondary collection) checkboxes should be shown
         /// based on whether night time feature is enabled and whether a secondary collection has been provided or not.
