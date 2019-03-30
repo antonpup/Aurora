@@ -1311,37 +1311,37 @@ namespace Aurora.Devices
         /// Extra Mouse Light 3
         /// </summary>
         [Description("Extra Mouse Light 3")]
-        MOUSELIGHT3 = 233,
+        MOUSELIGHT3 = 232,
 
         /// <summary>
         /// Extra Mouse Light 4
         /// </summary>
         [Description("Extra Mouse Light 4")]
-        MOUSELIGHT4 = 234,
+        MOUSELIGHT4 = 233,
 
         /// <summary>
         /// Extra Mouse Light 5
         /// </summary>
         [Description("Extra Mouse Light 5")]
-        MOUSELIGHT5 = 235,
+        MOUSELIGHT5 = 234,
 
         /// <summary>
         /// Extra Mouse Light 6
         /// </summary>
         [Description("Extra Mouse Light 6")]
-        MOUSELIGHT6 = 236,
+        MOUSELIGHT6 = 235,
 
         /// <summary>
         /// Extra Mouse Light 7
         /// </summary>
         [Description("Extra Mouse Light 7")]
-        MOUSELIGHT7 = 237,
+        MOUSELIGHT7 = 236,
 
         /// <summary>
         /// Extra Mouse Light 8
         /// </summary>
         [Description("Extra Mouse Light 8")]
-        MOUSELIGHT8 = 238,
+        MOUSELIGHT8 = 237,
 
         /// <summary>
         /// None
