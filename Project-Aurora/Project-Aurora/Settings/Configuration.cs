@@ -319,6 +319,14 @@ namespace Aurora.Settings
         SteelSeries_QcK_Prism = 702,
         [Description("SteelSeries - Two-zone QcK Mousepad + Mouse")]
         SteelSeries_QcK_2_Zone = 703,
+
+        [Description("SteelSeries - rgb-3-zone - EXP")]
+        SteelSeries_rgb_3_zone_exp = 704,
+        [Description("SteelSeries - rgb-5-zone - EXP")]
+        SteelSeries_rgb_5_zone_exp = 705,
+        [Description("SteelSeries - rgb-8-zone - EXP")]
+        SteelSeries_rgb_8_zone_exp = 706,
+
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900
