@@ -1295,6 +1295,53 @@ namespace Aurora.Devices
         [Description("Mousepad Light 15")]
         MOUSEPADLIGHT15 = 215,
 
+        /// <summary>
+        /// Extra Mouse Light 1
+        /// </summary>
+        [Description("Extra Mouse Light 1")]
+        MOUSELIGHT1 = 230,
+
+        /// <summary>
+        /// Extra Mouse Light 2
+        /// </summary>
+        [Description("Extra Mouse Light 2")]
+        MOUSELIGHT2 = 231,
+
+        /// <summary>
+        /// Extra Mouse Light 3
+        /// </summary>
+        [Description("Extra Mouse Light 3")]
+        MOUSELIGHT3 = 233,
+
+        /// <summary>
+        /// Extra Mouse Light 4
+        /// </summary>
+        [Description("Extra Mouse Light 4")]
+        MOUSELIGHT4 = 234,
+
+        /// <summary>
+        /// Extra Mouse Light 5
+        /// </summary>
+        [Description("Extra Mouse Light 5")]
+        MOUSELIGHT5 = 235,
+
+        /// <summary>
+        /// Extra Mouse Light 6
+        /// </summary>
+        [Description("Extra Mouse Light 6")]
+        MOUSELIGHT6 = 236,
+
+        /// <summary>
+        /// Extra Mouse Light 7
+        /// </summary>
+        [Description("Extra Mouse Light 7")]
+        MOUSELIGHT7 = 237,
+
+        /// <summary>
+        /// Extra Mouse Light 8
+        /// </summary>
+        [Description("Extra Mouse Light 8")]
+        MOUSELIGHT8 = 238,
 
         /// <summary>
         /// None
