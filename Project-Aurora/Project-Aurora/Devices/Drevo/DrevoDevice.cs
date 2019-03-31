@@ -182,7 +182,6 @@ namespace Aurora.Devices.Drevo
                     DrevoRadiSDK.DrevoRadiSetRGB(bitmap, 392);
                 }
                 if (e.Cancel) return false;
-                return true;
             }
             catch (Exception exc)
             {

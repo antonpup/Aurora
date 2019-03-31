@@ -104,7 +104,9 @@ namespace Aurora.Controls
             txtblk_DevicePerformance.Text = Device.Device.GetDeviceUpdatePerformance();
 
             if(Device is Devices.ScriptedDevice.ScriptedDevice)
+            {
                 btnToggleEnableDisable.IsEnabled = false;
+            }
             else
             {
                 if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
@@ -120,7 +122,9 @@ namespace Aurora.Controls
             }
 
             if(Device.Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
+            {
                 btnViewOptions.IsEnabled = false;
+            }
         }
 
         private void btnViewOptions_Click(object sender, RoutedEventArgs e)

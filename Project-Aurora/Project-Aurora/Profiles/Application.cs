@@ -291,7 +291,7 @@ namespace Aurora.Profiles
         }
 
         //hacky fix to sort out MoD profile type change
-        protected ISerializationBinder binder = Utils.JSONUtils.SerializationBinder;
+        protected ISerializationBinder SerializationBinder = Utils.JSONUtils.SerializationBinder;
         internal ApplicationProfile LoadProfile(string path)
         {
             if (Disposed)
@@ -305,7 +305,7 @@ namespace Aurora.Profiles
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(profile_content, Config.ProfileType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = binder, Error = new EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs>(LoadProfilesError) });
+                        ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(profile_content, Config.ProfileType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = SerializationBinder, Error = new EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs>(LoadProfilesError) });
                         prof.ProfileFilepath = path;
 
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
@@ -608,7 +608,7 @@ namespace Aurora.Profiles
             try
             {
                 path = path ?? Path.Combine(GetProfileFolderPath(), profile.ProfileFilepath);
-                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder };
+                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder };
                 string content = JsonConvert.SerializeObject(profile, Formatting.Indented, settings);
 
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
