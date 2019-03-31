@@ -51,6 +51,19 @@ namespace SteelSeries.GameSenseSDK
 
         private static String sseAddress = "";
 
+        public enum rgb_zoned_devices
+        {
+            rgb_1_zone = 1,
+            rgb_2_zone = 2,
+            rgb_3_zone = 3,
+            rgb_5_zone = 5,
+            rgb_8_zone = 8,
+            rgb_12_zone = 12,
+            rgb_17_zone = 17,
+            rgb_24_zone = 24,
+            rgb_103_zone = 103
+        };
+
         public void init(String sseGameName, String sseGameDisplayname, byte iconColorID)
         {
 
@@ -123,7 +136,7 @@ namespace SteelSeries.GameSenseSDK
             }
             else if (colors.Count == 12)
             {
-                payload.data += "\"mousepad\":{";
+                payload.data += "\"rgb12zone\":{";
                 payload.data += "\"colors\":[";
                 foreach (Tuple<byte, byte, byte> color in colors)
                 {
@@ -132,6 +145,58 @@ namespace SteelSeries.GameSenseSDK
                 payload.data = payload.data.TrimEnd(',');
                 payload.data += "]},";
             }
+        }
+
+        public void set_rgbXzone_Color(rgb_zoned_devices rgb_Zoned_Device, List<System.Drawing.Color> colors, GameSensePayloadPeripheryColorEventJSON payload)
+        {
+            if (colors.Count != (int)rgb_Zoned_Device) // Check if colors count equals to zone count
+            {
+                // TODO: Show error in logger here
+                return;
+            }
+
+            switch (rgb_Zoned_Device)
+            {
+                case rgb_zoned_devices.rgb_1_zone:
+                    payload.data += "\"rgb1zone\":{";
+                    break;
+                case rgb_zoned_devices.rgb_2_zone:
+                    payload.data += "\"rgb2zone\":{";
+                    break;
+                case rgb_zoned_devices.rgb_3_zone:
+                    payload.data += "\"rgb3zone\":{";
+                    break;
+                case rgb_zoned_devices.rgb_5_zone:
+                    payload.data += "\"rgb5zone\":{";
+                    break;
+                case rgb_zoned_devices.rgb_8_zone:
+                    payload.data += "\"rgb8zone\":{";
+                    break;
+                case rgb_zoned_devices.rgb_12_zone:
+                    payload.data += "\"rgb12zone\":{";
+                    break;
+                case rgb_zoned_devices.rgb_17_zone:
+                    payload.data += "\"rgb17zone\":{";
+                    break;
+                case rgb_zoned_devices.rgb_24_zone:
+                    payload.data += "\"rgb24zone\":{";
+                    break;
+                case rgb_zoned_devices.rgb_103_zone:
+                    payload.data += "\"rgb103zone\":{";
+                    break;
+                default:
+                    // TODO: Show error in logger here
+                    return;
+                    break;
+            }
+
+            payload.data += "\"colors\":[";
+            foreach (System.Drawing.Color color in colors)
+            {
+                payload.data += "[" + color.R + ", " + color.G + ", " + color.B + "],";
+            }
+            payload.data = payload.data.TrimEnd(',');
+            payload.data += "]},";
         }
 
         public void setKeyboardColors(List<byte> hids, List<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
@@ -201,13 +266,48 @@ namespace SteelSeries.GameSenseSDK
                 (on-device ""rgb-1-zone"" show: color)
                 (on-device ""rgb-2-zone"" show: color)
                 (on-device ""rgb-3-zone"" show: color)
-                (on-device ""rgb-4-zone"" show: color)
                 (on-device ""rgb-5-zone"" show: color)
-                (on-device ""rgb-12-zone"" show: color)))
-        (when (mousepad:? data)
-            (let* ((mousepad (mousepad: data))
-                    (colors (colors: mousepad)))
+                (on-device ""rgb-8-zone"" show: color)
+                (on-device ""rgb-12-zone"" show: color)
+                (on-device ""rgb-17-zone"" show: color)
+                (on-device ""rgb-24-zone"" show: color)
+                (on-device ""rgb-103-zone"" show: color)))
+        (when (rgb1zone:? data)
+            (let* ((rgb1zone (rgb1zone: data))
+                    (colors (colors: rgb1zone)))
+                (on-device ""rgb-1-zone"" show-on-zones: colors '(one:))))
+		(when (rgb2zone:? data)
+            (let* ((rgb2zone (rgb2zone: data))
+                    (colors (colors: rgb2zone)))
+                (on-device ""rgb-2-zone"" show-on-zones: colors '(one: two:))))
+		(when (rgb3zone:? data)
+            (let* ((rgb3zone (rgb3zone: data))
+                    (colors (colors: rgb3zone)))
+                (on-device ""rgb-3-zone"" show-on-zones: colors '(one: two: three:))))
+		(when (rgb5zone:? data)
+            (let* ((rgb5zone (rgb5zone: data))
+                    (colors (colors: rgb5zone)))
+                (on-device ""rgb-5-zone"" show-on-zones: colors '(one: two: three: four: five:))))
+		(when (rgb8zone:? data)
+            (let* ((rgb8zone (rgb8zone: data))
+                    (colors (colors: rgb8zone)))
+                (on-device ""rgb-8-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight:))))
+        (when (rgb12zone:? data)
+            (let* ((rgb12zone (rgb12zone: data))
+                    (colors (colors: rgb12zone)))
                 (on-device ""rgb-12-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve:))))
+		(when (rgb17zone:? data)
+            (let* ((rgb17zone (rgb17zone: data))
+                    (colors (colors: rgb17zone)))
+                (on-device ""rgb-17-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve: thirteen: fourteen: fifteen: sixteen: seventeen:))))
+		(when (rgb24zone:? data)
+            (let* ((rgb24zone (rgb24zone: data))
+                    (colors (colors: rgb24zone)))
+                (on-device ""rgb-24-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve: thirteen: fourteen: fifteen: sixteen: seventeen: eighteen: nineteen: twenty: twenty-one: twenty-two: twenty-three: twenty-four:))))
+		(when (rgb103zone:? data)
+            (let* ((rgb103zone (rgb103zone: data))
+                    (colors (colors: rgb103zone)))
+                (on-device ""rgb-103-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve: thirteen: fourteen: fifteen: sixteen: seventeen: eighteen: nineteen: twenty: twenty-one: twenty-two: twenty-three: twenty-four: twenty-five: twenty-six: twenty-seven: twenty-eight: twenty-nine: thirty: thirty-one: thirty-two: thirty-three: thirty-four: thirty-five: thirty-six: thirty-seven: thirty-eight: thirty-nine: forty: forty-one: forty-two: forty-three: forty-four: forty-five: forty-six: forty-seven: forty-eight: forty-nine: fifty: fifty-one: fifty-two: fifty-three: fifty-four: fifty-five: fifty-six: fifty-seven: fifty-eight: fifty-nine: sixty: sixty-one: sixty-two: sixty-three: sixty-four: sixty-five: sixty-six: sixty-seven: sixty-eight: sixty-nine: seventy: seventy-one: seventy-two: seventy-three: seventy-four: seventy-five: seventy-six: seventy-seven: seventy-eight: seventy-nine: eighty: eighty-one: eighty-two: eighty-three: eighty-four: eighty-five: eighty-six: eighty-seven: eighty-eight: eighty-nine: ninety: ninety-one: ninety-two: ninety-three: ninety-four: ninety-five: ninety-six: ninety-seven: ninety-eight: ninety-nine: one-hundred: one-hundred-one: one-hundred-two: one-hundred-three:))))
         (when (mousepadtwozone:? data)
             (let* ((mousepadtwozone (mousepadtwozone: data))
                     (mpone (mpone: mousepadtwozone))
@@ -237,6 +337,7 @@ namespace SteelSeries.GameSenseSDK
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-3-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-4-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-5-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-8-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-12-zone"")
 (add-event-per-key-zone-use ""COLOR"" ""all"")
 ";

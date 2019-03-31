@@ -157,6 +157,7 @@ namespace Aurora.Devices.SteelSeries
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
                 List<Tuple<byte, byte, byte>> colorsMousepad = new List<Tuple<byte, byte, byte>>();
+                List<System.Drawing.Color> colorsZonedMouse = new List<System.Drawing.Color>();
                 //Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
 
                 // Create a new color event, we'll pass this on to whatever should add to it
@@ -203,6 +204,16 @@ namespace Aurora.Devices.SteelSeries
                             // colors_mousepad[Convert.ToInt32(key.Key) - 201] = Tuple.Create(color.R, color.G, color.B);
                             colorsMousepad.Add(Tuple.Create(color.R, color.G, color.B));
                             break;
+                        case DeviceKeys.MOUSELIGHT1:
+                        case DeviceKeys.MOUSELIGHT2:
+                        case DeviceKeys.MOUSELIGHT3:
+                        case DeviceKeys.MOUSELIGHT4:
+                        case DeviceKeys.MOUSELIGHT5:
+                        case DeviceKeys.MOUSELIGHT6:
+                        case DeviceKeys.MOUSELIGHT7:
+                        case DeviceKeys.MOUSELIGHT8:
+                            colorsZonedMouse.Add(color);
+                            break;
                         default:
                             byte hid = GetHIDCode(key.Key);
 
@@ -219,6 +230,9 @@ namespace Aurora.Devices.SteelSeries
 
                 SendColorsToKeyboard(hids, colors, payload);
                 SendColorsToMousepad(colorsMousepad, payload);
+
+                SendColorsToZonedMouse(colorsZonedMouse, payload);
+
 
                 gameSenseSDK.sendFullColorRequest(payload);
 
@@ -348,6 +362,15 @@ namespace Aurora.Devices.SteelSeries
             if (colors_mousepad.Count != 0)
             {
                 gameSenseSDK.setMousepadColor(colors_mousepad, payload);
+            }
+        }
+
+        private void SendColorsToZonedMouse(List<System.Drawing.Color> colors_Zoned_Device, GameSensePayloadPeripheryColorEventJSON payload)
+        {
+            if (Enum.IsDefined(typeof(GameSenseSDK.rgb_zoned_devices), colors_Zoned_Device.Count))
+            {
+                GameSenseSDK.rgb_zoned_devices rgb_Zoned_Device = (GameSenseSDK.rgb_zoned_devices)colors_Zoned_Device.Count;
+                gameSenseSDK.set_rgbXzone_Color(rgb_Zoned_Device, colors_Zoned_Device, payload);
             }
         }
 
