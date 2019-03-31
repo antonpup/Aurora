@@ -16,14 +16,13 @@
       "absolute_location": true
     },
     {
-      "visualName": "",
       "tag": 201,
+      "visualName": "",
       "margin_left": 15.0,
       "margin_top": -200.0,
-      "width": 16.0,
+      "width": 15.0,
       "height": 168.0,
       "width_bits": 6,
-
       "height_bits": 6,
       "margin_left_bits": 2,
       "margin_top_bits": -6,
@@ -31,14 +30,13 @@
       "absolute_location": true
     },
     {
-      "visualName": "",
       "tag": 202,
+      "visualName": "",
       "margin_left": 200.0,
       "margin_top": -200.0,
-      "width": 16.0,
+      "width": 15.0,
       "height": 168.0,
       "width_bits": 6,
-
       "height_bits": 6,
       "margin_left_bits": 2,
       "margin_top_bits": -6,
