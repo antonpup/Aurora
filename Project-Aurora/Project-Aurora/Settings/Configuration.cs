@@ -499,6 +499,7 @@ namespace Aurora.Settings
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
             mouse_preference = PreferredMouse.None;
+            mousepad_preference = PreferredMousepad.None;
             virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
