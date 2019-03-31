@@ -170,7 +170,7 @@ namespace Aurora.Settings
         Logitech_G810 = 102,
         [Description("Logitech - GPRO")]
         Logitech_GPRO = 103,
-		[Description("Logitech - G213")]
+        [Description("Logitech - G213")]
         Logitech_G213 = 104,
 
         //Corsair range is 200-299
@@ -235,7 +235,7 @@ namespace Aurora.Settings
         [Description("Drevo BladeMaster")]
         Drevo_BladeMaster = 1000,
 
-	//Creative range is 1100-1199
+        //Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
     }
@@ -283,8 +283,6 @@ namespace Aurora.Settings
 
         [Description("Generic Peripheral")]
         Generic_Peripheral = 1,
-        [Description("Razer/Corsair Mousepad + Mouse")]
-        Generic_Mousepad = 2,
 
         //Logitech range is 100-199
         [Description("Logitech - G900")]
@@ -315,13 +313,32 @@ namespace Aurora.Settings
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
         SteelSeries_Rival_300_HP_OMEN_Edition = 701,
-        [Description("SteelSeries - QcK Prism Mousepad + Mouse")]
-        SteelSeries_QcK_Prism = 702,
-        [Description("SteelSeries - Two-zone QcK Mousepad + Mouse")]
-        SteelSeries_QcK_2_Zone = 703,
+
+        [Description("SteelSeries - rgb-3-zone - EXP")]
+        SteelSeries_rgb_3_zone_exp = 702,
+        [Description("SteelSeries - rgb-5-zone - EXP")]
+        SteelSeries_rgb_5_zone_exp = 703,
+        [Description("SteelSeries - rgb-8-zone - EXP")]
+        SteelSeries_rgb_8_zone_exp = 704,
+
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900
+    }
+
+    public enum PreferredMousepad
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Razer/Corsair Mousepad")]
+        Generic_Mousepad = 1,
+
+        //Steelseries range is 100-299
+        [Description("SteelSeries - QcK Prism Mousepad")]
+        SteelSeries_QcK_Prism = 100,
+        [Description("SteelSeries - Two-zone QcK Mousepad")]
+        SteelSeries_QcK_2_Zone = 101,
     }
 
     public enum KeycapType
@@ -407,6 +424,7 @@ namespace Aurora.Settings
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
         public PreferredMouse mouse_preference;
+        public PreferredMousepad mousepad_preference;
         public KeycapType virtualkeyboard_keycap_type;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
@@ -481,6 +499,7 @@ namespace Aurora.Settings
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
             mouse_preference = PreferredMouse.None;
+            mousepad_preference = PreferredMousepad.None;
             virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
@@ -580,7 +599,7 @@ namespace Aurora.Settings
                 _last_save_time = current_time;
 
             var configPath = ConfigPath + ConfigExtension;
-            string content = JsonConvert.SerializeObject(configuration, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+            string content = JsonConvert.SerializeObject(configuration, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder });
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
@@ -589,7 +608,7 @@ namespace Aurora.Settings
         private static Configuration CreateDefaultConfigurationFile()
         {
             Configuration config = new Configuration();
-            var configData = JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+            var configData = JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder });
             var configPath = ConfigPath + ConfigExtension;
 
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));

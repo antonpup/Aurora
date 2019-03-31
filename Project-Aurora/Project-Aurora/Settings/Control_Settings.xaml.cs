@@ -705,6 +705,17 @@ namespace Aurora.Settings
             }
         }
 
+        private void devices_mousepad_brand_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.mousepad_preference = (PreferredMousepad)Enum.Parse(typeof(PreferredMousepad), this.devices_mousepad_brand.SelectedItem.ToString());
+                ConfigManager.Save(Global.Configuration);
+
+                Global.kbLayout.LoadBrandDefault();
+            }
+        }
+
         private void devices_mouse_orientation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)

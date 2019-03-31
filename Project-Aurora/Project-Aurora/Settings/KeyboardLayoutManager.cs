@@ -480,11 +480,11 @@ namespace Aurora.Settings
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mousepad_preference, Global.Configuration.mouse_orientation);
             });
         }
 
-        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
+        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, PreferredMousepad mousepad_preference = PreferredMousepad.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
         {
 #if !DEBUG
             try
@@ -548,7 +548,7 @@ namespace Aurora.Settings
                     case PreferredKeyboardLocalization.it:
                         culture = "it-IT";
                         break;
-                    }
+                }
 
                 switch (culture)
                 {
@@ -623,9 +623,9 @@ namespace Aurora.Settings
                         LoadCulture("it");
                         break;
                     default:
-                    _loaded_localization = PreferredKeyboardLocalization.intl;
-                    LoadCulture("intl");
-                    break;
+                        _loaded_localization = PreferredKeyboardLocalization.intl;
+                        LoadCulture("intl");
+                        break;
 
                 }
             }
@@ -640,8 +640,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
-			else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
-                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
@@ -756,15 +756,27 @@ namespace Aurora.Settings
                     }
                 }
 
+                string mousepad_feature_path = "";
+
+                switch (mousepad_preference)
+                {
+                    case PreferredMousepad.Generic_Mousepad:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
+                        break;
+                    case PreferredMousepad.SteelSeries_QcK_Prism:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_prism_features.json");
+                        break;
+                    case PreferredMousepad.SteelSeries_QcK_2_Zone:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_2zone_features.json");
+                        break;
+                }
+
                 string mouse_feature_path = "";
 
                 switch (mouse_preference)
                 {
                     case PreferredMouse.Generic_Peripheral:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
-                        break;
-                    case PreferredMouse.Generic_Mousepad:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
                         break;
                     case PreferredMouse.Logitech_G900:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
@@ -790,15 +802,54 @@ namespace Aurora.Settings
                     case PreferredMouse.SteelSeries_Rival_300_HP_OMEN_Edition:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_hp_omen_edition_features.json");
                         break;
-                    case PreferredMouse.SteelSeries_QcK_Prism:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_prism_features.json");
+                    case PreferredMouse.SteelSeries_rgb_3_zone_exp:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rgb_3_zone_exp_features.json");
                         break;
-                    case PreferredMouse.SteelSeries_QcK_2_Zone:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_2zone_features.json");
+                    case PreferredMouse.SteelSeries_rgb_5_zone_exp:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rgb_5_zone_exp_features.json");
                         break;
+                    case PreferredMouse.SteelSeries_rgb_8_zone_exp:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rgb_8_zone_exp_features.json");
+                        break;
+
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
                         break;
+                }
+
+                if (!string.IsNullOrWhiteSpace(mousepad_feature_path))
+                {
+                    string feature_content = File.ReadAllText(mousepad_feature_path, Encoding.UTF8);
+                    VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                    if (mouse_orientation == MouseOrientationType.LeftHanded)
+                    {
+                        if (featureConfig.origin_region == KeyboardRegion.TopRight)
+                            featureConfig.origin_region = KeyboardRegion.TopLeft;
+                        else if (featureConfig.origin_region == KeyboardRegion.BottomRight)
+                            featureConfig.origin_region = KeyboardRegion.BottomLeft;
+
+                        double outlineWidth = 0.0;
+                        int outlineWidthBits = 0;
+
+                        foreach (var key in featureConfig.grouped_keys)
+                        {
+                            if (outlineWidth == 0.0 && outlineWidthBits == 0) //We found outline (NOTE: Outline has to be first in the grouped keys)
+                            {
+                                if (key.tag == DeviceKeys.NONE)
+                                {
+                                    outlineWidth = key.width.Value + 2 * key.margin_left.Value;
+                                    //outlineWidthBits = key.width_bits.Value + 2 * key.margin_left_bits.Value;
+                                }
+                            }
+
+                            key.margin_left -= outlineWidth;
+                            //key.margin_left_bits -= outlineWidthBits;
+                        }
+
+                    }
+
+                    virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
                 }
 
                 if (!string.IsNullOrWhiteSpace(mouse_feature_path))
@@ -835,7 +886,6 @@ namespace Aurora.Settings
 
                     virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
                 }
-
             }
 #if !DEBUG
             }
