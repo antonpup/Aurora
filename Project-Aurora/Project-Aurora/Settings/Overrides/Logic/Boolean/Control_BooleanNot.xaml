@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="Aurora.Settings.Overrides.Logic.Control_ConditionNot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
+             mc:Ignorable="d">
+    <Grid>
+        <TextBlock Text="!" FontSize="18" VerticalAlignment="Center" />
+        <local:Control_EvaluatablePresenter Expression="{Binding ParentCondition.SubCondition, Mode=TwoWay}" Application="{Binding Application}" EvalType="Boolean" Margin="15,0,0,0" />
+    </Grid>
+</UserControl>

@@ -25,6 +25,7 @@ namespace Aurora.Settings.Layers
 
     public class ShortcutAssistantLayerHandlerProperties : LayerHandlerProperties<ShortcutAssistantLayerHandlerProperties>
     {
+        [Overrides.LogicOverridable("Dim Background")]
         public bool? _DimBackground { get; set; }
 
         [JsonIgnore]
@@ -38,6 +39,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool MergeModifierKey { get { return (Logic._MergeModifierKey ?? _MergeModifierKey) ?? default(bool); } }
 
+        [Overrides.LogicOverridable("Dim Color")]
         public Color? _DimColor { get; set; }
 
         [JsonIgnore]

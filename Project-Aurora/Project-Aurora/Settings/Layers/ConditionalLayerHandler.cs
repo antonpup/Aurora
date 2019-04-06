@@ -21,6 +21,7 @@ namespace Aurora.Settings.Layers {
         public ConditionalLayerProperties(bool assign_default = false) : base(assign_default) { }
     }
 
+    [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class ConditionalLayerHandler : LayerHandler<ConditionalLayerProperties> {
 
         public ConditionalLayerHandler() {

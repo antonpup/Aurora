@@ -1,0 +1,66 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 2,
+  "grouped_keys": [
+    {
+      "visualName": "A1",
+      "tag": 163,
+      "margin_left": -141.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -12,
+      "margin_top_bits": 4,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "A2",
+      "tag": 164,
+      "margin_left": -104.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -9,
+      "margin_top_bits": 4,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "A3",
+      "tag": 165,
+      "margin_left": -67.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -6,
+      "margin_top_bits": 4,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "MODE",
+      "tag": 166,
+      "margin_left": -30.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -3,
+      "margin_top_bits": 4,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "HealthMaximum": {
+    "baseAddress": "118163520",
+    "pointers": [ "80", "32", "84" ]
+  },
+
+  "HealthCurrent": {
+    "baseAddress": "118163520",
+    "pointers": [ "80", "32", "88" ]
+  },
+
+  "PlayerPoisoned": {
+    "baseAddress": "118163520",
+    "pointers": [ "80", "32", "248", "600" ]
+  },
+
+  "RankCurrent": {
+    "baseAddress": "118008280",
+    "pointers": [ "88" ]
+  }
+}
