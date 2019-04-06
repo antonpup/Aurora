@@ -869,7 +869,7 @@ namespace Aurora.Devices.Corsair
             {
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_shared_mode", false, "Use Shared Mode with iCue (needs SDK restart)");
-                default_registry.Register($"{devicename}_corsair_ram", true, "Enable RAM");
+                default_registry.Register($"{devicename}_corsair_memory", true, "Enable RAM");
                 default_registry.Register($"{devicename}_corsair_cooler", true, "Enable Cooler");
                 default_registry.Register($"{devicename}_corsair_lighting", true, "Enable Lighting Node");
                 default_registry.Register($"{devicename}_corsair_commander", true, "Enable Commander Pro");
