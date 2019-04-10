@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -446,6 +446,14 @@ namespace Aurora.Settings
         public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
 
+        //Debug Settings
+        private bool bitmapDebugTopMost;
+        public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
+
+        private bool httpDebugTopMost;
+        public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
+
+
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
         public Configuration()
@@ -512,6 +520,10 @@ namespace Aurora.Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
 
+            //Debug
+            bitmapDebugTopMost = false;
+            httpDebugTopMost = false;
+
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
             VarRegistry = new VariableRegistry();
@@ -524,7 +536,7 @@ namespace Aurora.Settings
         private const string ConfigExtension = ".json";
 
         private static long _last_save_time = 0L;
-        private readonly static long _save_interval = 1000L;
+        private readonly static long _save_interval = 300L;
 
         public static Configuration Load()
         {
