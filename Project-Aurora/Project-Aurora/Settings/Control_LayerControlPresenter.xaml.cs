@@ -61,8 +61,8 @@ namespace Aurora.Settings
             cmbLayerType.SelectedItem = Global.LightingStateManager.LayerHandlers[Layer.Handler.ID];
             ctrlLayerTypeConfig.Content = layer.Control;
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
-            chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
-            keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
+            chk_ExcludeMask.IsChecked = Layer.Handler._EnableExclusionMask ?? false;
+            keyseq_ExcludeMask.Sequence = Layer.Handler._ExclusionMask;
             sldr_Opacity.Value = (int)(Layer.Handler._Opacity ?? 1f * 100.0f);
             lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
 
@@ -95,8 +95,8 @@ namespace Aurora.Settings
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
                 chkLayerSmoothing.IsChecked = _Layer.Handler.EnableSmoothing;
-                chk_ExcludeMask.IsChecked = Layer.Handler.EnableExclusionMask;
-                keyseq_ExcludeMask.Sequence = Layer.Handler.ExclusionMask;
+                chk_ExcludeMask.IsChecked = Layer.Handler._EnableExclusionMask ?? false;
+                keyseq_ExcludeMask.Sequence = Layer.Handler._ExclusionMask;
                 sldr_Opacity.Value = (int)(Layer.Handler.Opacity * 100.0f);
                 lbl_Opacity_Text.Text = $"{(int)sldr_Opacity.Value} %";
                 this._Layer.AssociatedApplication.SaveProfiles();
@@ -136,7 +136,7 @@ namespace Aurora.Settings
         private void chk_ExcludeMask_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is CheckBox)
-                Layer.Handler.EnableExclusionMask = (sender as CheckBox).IsChecked.Value;
+                Layer.Handler._EnableExclusionMask = (sender as CheckBox).IsChecked.Value;
 
             keyseq_ExcludeMask.IsEnabled = Layer.Handler.EnableExclusionMask;
         }
@@ -144,7 +144,7 @@ namespace Aurora.Settings
         private void keyseq_ExcludeMask_SequenceUpdated(object sender, EventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is Aurora.Controls.KeySequence)
-                Layer.Handler.ExclusionMask = (sender as Aurora.Controls.KeySequence).Sequence;
+                Layer.Handler._ExclusionMask = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
         private void sldr_Opacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

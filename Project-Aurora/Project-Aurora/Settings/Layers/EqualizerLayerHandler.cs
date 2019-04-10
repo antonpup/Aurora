@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using NAudio.Dsp;
@@ -56,48 +57,47 @@ namespace Aurora.Settings.Layers
 
     public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerLayerHandlerProperties>
     {
+        [LogicOverridable("Secondary Color")]
         public Color? _SecondaryColor { get; set; }
-
         [JsonIgnore]
         public Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
 
+        [LogicOverridable("Gradient")]
         public EffectBrush _Gradient { get; set; }
-
         [JsonIgnore]
         public EffectBrush Gradient { get { return Logic._Gradient ?? _Gradient ?? new EffectBrush().SetBrushType(EffectBrush.BrushType.Linear); } }
 
+        [LogicOverridable("Equalizer Type")]
         public EqualizerType? _EQType { get; set; }
-
         [JsonIgnore]
         public EqualizerType EQType { get { return Logic._EQType ?? _EQType ?? EqualizerType.PowerBars; } }
 
+        [LogicOverridable("View Type")]
         public EqualizerPresentationType? _ViewType { get; set; }
-
         [JsonIgnore]
         public EqualizerPresentationType ViewType { get { return Logic._ViewType ?? _ViewType ?? EqualizerPresentationType.SolidColor; } }
 
+        [LogicOverridable("Max Amplitude")]
         public float? _MaxAmplitude { get; set; }
-
         [JsonIgnore]
         public float MaxAmplitude { get { return Logic._MaxAmplitude ?? _MaxAmplitude ?? 20.0f; } }
 
+        [LogicOverridable("Scale with System Volume")]
         public bool? _ScaleWithSystemVolume { get; set; }
-
         [JsonIgnore]
         public bool ScaleWithSystemVolume { get { return Logic._ScaleWithSystemVolume ?? _ScaleWithSystemVolume ?? false; } }
 
+        [LogicOverridable("Dim Background on Sound")]
         public bool? _DimBackgroundOnSound { get; set; }
-
         [JsonIgnore]
         public bool DimBackgroundOnSound { get { return Logic._DimBackgroundOnSound ?? _DimBackgroundOnSound ?? false; } }
 
+        [LogicOverridable("Dim Color")]
         public Color? _DimColor { get; set; }
-
         [JsonIgnore]
         public Color DimColor { get { return Logic._DimColor ?? _DimColor ?? Color.Empty; } }
 
         public SortedSet<float> _Frequencies { get; set; }
-
         [JsonIgnore]
         public SortedSet<float> Frequencies { get { return Logic._Frequencies ?? _Frequencies ?? new SortedSet<float>(); } }
 
