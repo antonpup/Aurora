@@ -443,7 +443,6 @@ namespace Aurora.Settings
         public VariableRegistry VarRegistry;
 
         //Overlay Settings
-        public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
 
         //Debug Settings
@@ -517,7 +516,6 @@ namespace Aurora.Settings
             idle_frequency = 2.5f;
 
             //Overlay Settings
-            volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
 
             //Debug

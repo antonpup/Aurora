@@ -173,9 +173,9 @@ namespace Aurora.Settings.Layers
             UpdateUI();
 
             // If the evaluatable is not the correct type or it is null, then create the default Evaluatable for it
-            if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !TypeUtils.IsInterface(Context.Properties._EvaluatableTrigger?.GetType(), typeof(IEvaluatableNumber)))
+            if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !TypeUtils.IsInterface(Context.Properties._EvaluatableTrigger?.GetType(), typeof(IEvaluatable<double>)))
                 Context.Properties._EvaluatableTrigger = EvaluatableTypeResolver.GetDefault(EvaluatableType.Number);
-            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !TypeUtils.IsInterface(Context.Properties._EvaluatableTrigger?.GetType(), typeof(IEvaluatableBoolean)))
+            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !TypeUtils.IsInterface(Context.Properties._EvaluatableTrigger?.GetType(), typeof(IEvaluatable<bool>)))
                 Context.Properties._EvaluatableTrigger = EvaluatableTypeResolver.GetDefault(EvaluatableType.Boolean);
 
             // Update the evaluatable control
@@ -189,7 +189,7 @@ namespace Aurora.Settings.Layers
 
             // Only show trigger path when one of the path-like modes is set
             triggerGridLayout.RowDefinitions[1].Height = new GridLength(AnimationLayerHandler.IsTriggerNumericValueBased(trigMode) || AnimationLayerHandler.IsTriggerBooleanValueBased(trigMode) ? 28 : 0);
-            // Only show IEvaluatable when one of the evaluatable modes is set
+            // Only show IEvaluatable<object>when one of the evaluatable modes is set
             triggerGridLayout.RowDefinitions[2].Height = new GridLength(0, AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(trigMode) || AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(trigMode) ? GridUnitType.Auto : GridUnitType.Pixel);
             // Only show tigger keys when one of the key-like modes is set
             triggerGridLayout.RowDefinitions[3].Height = new GridLength(AnimationLayerHandler.IsTriggerKeyBased(trigMode) ? 160 : 0);

@@ -111,7 +111,7 @@ namespace Aurora.Settings
 
         private void btnNewProfile_Click(object sender, RoutedEventArgs e)
         {
-            this.FocusedApplication?.SaveDefaultProfile();
+            this.FocusedApplication?.NewDefaultProfile();
 
             this.lstProfiles.SelectedIndex = this.lstProfiles.Items.Count - 1;
         }

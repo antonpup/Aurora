@@ -174,20 +174,7 @@
             </TabItem>
             <TabItem Header="Volume Overlay">
                 <Grid>
-                    <CheckBox x:Name="volume_overlay_enabled" Content="Enable Volume Overlay" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="volume_overlay_enabled_Checked" Unchecked="volume_overlay_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,33,0,0" TextWrapping="Wrap" Text="Low Level Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="volume_low_colorpicker" HorizontalAlignment="Left" Height="24" Margin="101,30,0,0" VerticalAlignment="Top" Width="139" ColorMode="ColorCanvas" SelectedColorChanged="volume_low_colorpicker_SelectedColorChanged" UsingAlphaChannel="True"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="Medium Level Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="volume_med_colorpicker" HorizontalAlignment="Left" Height="24" Margin="124,59,0,0" VerticalAlignment="Top" Width="116" ColorMode="ColorCanvas" SelectedColorChanged="volume_med_colorpicker_SelectedColorChanged" UsingAlphaChannel="True"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,91,0,0" TextWrapping="Wrap" Text="High Level Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="volume_high_colorpicker" HorizontalAlignment="Left" Height="24" Margin="105,88,0,0" VerticalAlignment="Top" Width="135" ColorMode="ColorCanvas" SelectedColorChanged="volume_high_colorpicker_SelectedColorChanged" UsingAlphaChannel="True"/>
-                    <Controls:KeySequence x:Name="volume_ks" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Height="145" Title="Volume Overlay Keys" RecordingTag="Volume Overlay Keys" SequenceUpdated="volume_ks_SequenceUpdated"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="245,33,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Delay:"/></TextBlock>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="seconds" VerticalAlignment="Top" Margin="337,34,0,0"/>
-                    <xctk:IntegerUpDown x:Name="volume_effects_delay" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="50" Value="0" Minimum="1" Maximum="10" ValueChanged="volume_effects_delay_ValueChanged" Margin="282,31,0,0"/>
-                    <CheckBox x:Name="volume_overlay_dim_background" Content="Dim background" HorizontalAlignment="Left" Margin="245,62,0,0" VerticalAlignment="Top" Checked="volume_overlay_dim_background_Checked" Unchecked="volume_overlay_dim_background_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="245,86,0,0" TextWrapping="Wrap" Text="Dimming Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="volume_overlay_dim_color" Margin="333,83,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" SelectedColorChanged="volume_overlay_dim_color_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="The Volume Overlay has moved to the Overlays section of Desktop! If you cannot find it try creating a new profile and copying the Volume Overlay layer over to your profile! To control the delay go into the Overrides section of the layer, go to Enabled, find the 'For x seconds' and change those" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Skype Overlay">

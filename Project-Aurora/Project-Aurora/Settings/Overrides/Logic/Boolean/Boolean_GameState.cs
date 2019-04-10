@@ -8,7 +8,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that accesses a specific game state variable (of boolean type) and returns the state.
     /// </summary>
     [OverrideLogic("Boolean State Variable", category: OverrideLogicCategory.State)]
-    public class BooleanGSIBoolean : IEvaluatableBoolean {
+    public class BooleanGSIBoolean : IEvaluatable<bool> {
 
         /// <summary>Creates an empty boolean state variable lookup.</summary>
         public BooleanGSIBoolean() { }
@@ -49,7 +49,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 VariablePath = string.Empty;
         }
 
-        public IEvaluatableBoolean Clone() => new BooleanGSIBoolean { VariablePath = VariablePath };
+        public IEvaluatable<bool> Clone() => new BooleanGSIBoolean { VariablePath = VariablePath };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
@@ -59,7 +59,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that accesses some specified game state variables (of numeric type) and returns a comparison between them.
     /// </summary>
     [OverrideLogic("Numeric State Variable", category: OverrideLogicCategory.State)]
-    public class BooleanGSINumeric : IEvaluatableBoolean {
+    public class BooleanGSINumeric : IEvaluatable<bool> {
 
         /// <summary>Creates a blank numeric game state lookup evaluatable.</summary>
         public BooleanGSINumeric() { }
@@ -116,7 +116,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 Operand2Path = string.Empty;
         }
 
-        public IEvaluatableBoolean Clone() => new BooleanGSINumeric { Operand1Path = Operand1Path, Operand2Path = Operand2Path, Operator = Operator };
+        public IEvaluatable<bool> Clone() => new BooleanGSINumeric { Operand1Path = Operand1Path, Operand2Path = Operand2Path, Operator = Operator };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

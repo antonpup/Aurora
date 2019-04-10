@@ -8,7 +8,7 @@ using System.Windows.Media;
 namespace Aurora.Settings.Overrides.Logic {
 
     [OverrideLogic("String State Variable", category: OverrideLogicCategory.State)]
-    public class StringGSIString : IEvaluatableString {
+    public class StringGSIString : IEvaluatable<string> {
 
         /// <summary>Path to the GSI variable</summary>
         public string VariablePath { get; set; } = "";
@@ -47,7 +47,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Clones this StringGSIString.</summary>
-        public IEvaluatableString Clone() => new StringGSIString { VariablePath = VariablePath };
+        public IEvaluatable<string> Clone() => new StringGSIString { VariablePath = VariablePath };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

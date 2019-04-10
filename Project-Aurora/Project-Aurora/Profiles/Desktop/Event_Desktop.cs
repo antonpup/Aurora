@@ -1,4 +1,4 @@
-﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Microsoft.VisualBasic.Devices;
 using System;

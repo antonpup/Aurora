@@ -41,9 +41,9 @@ namespace Aurora.Settings.Overrides.Logic {
         public string StaticOperator { get; set; } = null;
 
         /// <summary>The dependency property that can be used to access the single operand for this operation.</summary>
-        public static readonly DependencyProperty OperandProperty = DependencyProperty.Register("Operand", typeof(IEvaluatableNumber), typeof(Control_NumericUnaryOpHolder), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
-        public IEvaluatableNumber Operand {
-            get => (IEvaluatableNumber)GetValue(OperandProperty);
+        public static readonly DependencyProperty OperandProperty = DependencyProperty.Register("Operand", typeof(IEvaluatable<double>), typeof(Control_NumericUnaryOpHolder), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+        public IEvaluatable<double> Operand {
+            get => (IEvaluatable<double>)GetValue(OperandProperty);
             set => SetValue(OperandProperty, value);
         }
 

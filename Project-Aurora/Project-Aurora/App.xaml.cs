@@ -292,7 +292,6 @@ namespace Aurora
 
                 Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();
-                Global.InputEvents.KeyDown += InputEventsOnKeyDown;
                 Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
                 SetupVolumeAsBrightness(Global.Configuration,
                     new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
@@ -372,15 +371,6 @@ namespace Aurora
                     //Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
                     System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
                 }
-            }
-        }
-
-        private static void InputEventsOnKeyDown(object sender, KeyboardInputEventArgs e)
-        {
-            if (e.Key == Keys.VolumeUp || e.Key == Keys.VolumeDown)
-            {
-                Global.LightingStateManager.AddOverlayForDuration(
-                    new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
             }
         }
 

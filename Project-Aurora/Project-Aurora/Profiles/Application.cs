@@ -114,6 +114,14 @@ namespace Aurora.Profiles
             config.Event.Application = this;
             config.Event.ResetGameState();
             Profiles = new ObservableCollection<ApplicationProfile>();
+            Profiles.CollectionChanged += (sender, e) => {
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
+                    foreach (ApplicationProfile prof in e.NewItems)
+                    {
+                        prof.SetApplication(this);
+                    }
+                }
+            };
             EffectScripts = new Dictionary<string, IEffectScript>();
             if (config.GameStateType != null)
                 ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
@@ -173,36 +181,21 @@ namespace Aurora.Profiles
             this.Profiles.Add(profile);
         }
 
-        protected void CreateDefaultProfile()
+        protected ApplicationProfile CreateDefaultProfile()
         {
-            if (Disposed)
-                return;
-
-            ApplicationProfile _newProfile = CreateNewProfile("default");
-
-            Profiles.Add(_newProfile);
-
-            SaveProfiles();
-
-            SwitchToProfile(_newProfile);
+            return AddNewProfile($"default");
         }
 
-        public void SaveDefaultProfile()
+        public ApplicationProfile NewDefaultProfile()
         {
-            if (Disposed)
-                return;
-
-            ApplicationProfile _newProfile = CreateNewProfile($"Profile {Profiles.Count + 1}");
-
-            Profiles.Add(_newProfile);
-
-            SaveProfiles();
-
-            SwitchToProfile(_newProfile);
+            return AddNewProfile($"Profile {Profiles.Count + 1}");
         }
 
         public ApplicationProfile AddNewProfile(String profileName)
         {
+            if (Disposed)
+                return null;
+
             ApplicationProfile _newProfile = CreateNewProfile(profileName);
 
             Profiles.Add(_newProfile);
@@ -321,7 +314,6 @@ namespace Aurora.Profiles
                                 }
 
                                 lyr.AnythingChanged += SaveProfilesEvent;
-                                lyr.SetProfile(this);
                             }
 
                             collection.CollectionChanged += (_, e) => {

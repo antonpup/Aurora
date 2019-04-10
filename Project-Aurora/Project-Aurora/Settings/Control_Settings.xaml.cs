@@ -107,16 +107,6 @@ namespace Aurora.Settings
             this.nighttime_end_hour_updown.Value = Global.Configuration.nighttime_end_hour;
             this.nighttime_end_minute_updown.Value = Global.Configuration.nighttime_end_minute;
 
-
-            this.volume_overlay_enabled.IsChecked = Global.Configuration.volume_overlay_settings.enabled;
-            this.volume_low_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.low_color);
-            this.volume_med_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.med_color);
-            this.volume_high_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.high_color);
-            this.volume_ks.Sequence = Global.Configuration.volume_overlay_settings.sequence;
-            this.volume_effects_delay.Value = Global.Configuration.volume_overlay_settings.delay;
-            this.volume_overlay_dim_background.IsChecked = Global.Configuration.volume_overlay_settings.dim_background;
-            this.volume_overlay_dim_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.volume_overlay_settings.dim_color);
-
             this.skype_overlay_enabled.IsChecked = Global.Configuration.skype_overlay_settings.enabled;
             this.skype_unread_messages_enabled.IsChecked = Global.Configuration.skype_overlay_settings.mm_enabled;
             this.skype_unread_primary_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.skype_overlay_settings.mm_color_primary);
@@ -428,51 +418,6 @@ namespace Aurora.Settings
             load_excluded_listbox();
         }
 
-        private void volume_overlay_enabled_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.volume_overlay_settings.enabled = (this.volume_overlay_enabled.IsChecked.HasValue) ? this.volume_overlay_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void volume_low_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.volume_low_colorpicker.SelectedColor.HasValue)
-            {
-                Global.Configuration.volume_overlay_settings.low_color = Utils.ColorUtils.MediaColorToDrawingColor(this.volume_low_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void volume_med_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.volume_med_colorpicker.SelectedColor.HasValue)
-            {
-                Global.Configuration.volume_overlay_settings.med_color = Utils.ColorUtils.MediaColorToDrawingColor(this.volume_med_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void volume_high_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.volume_high_colorpicker.SelectedColor.HasValue)
-            {
-                Global.Configuration.volume_overlay_settings.high_color = Utils.ColorUtils.MediaColorToDrawingColor(this.volume_high_colorpicker.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void volume_ks_SequenceUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.volume_overlay_settings.sequence = (sender as Controls.KeySequence).Sequence;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Global.effengine.ToggleRecord();
@@ -530,15 +475,6 @@ namespace Aurora.Settings
                 }
             }
 
-        }
-
-        private void volume_effects_delay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if (IsLoaded && volume_effects_delay.Value.HasValue)
-            {
-                Global.Configuration.volume_overlay_settings.delay = volume_effects_delay.Value.Value;
-                ConfigManager.Save(Global.Configuration);
-            }
         }
 
         private void devices_retry_Click(object sender, RoutedEventArgs e)
@@ -944,24 +880,6 @@ namespace Aurora.Settings
             {
                 Global.logger.Error("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
-            }
-        }
-
-        private void volume_overlay_dim_background_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.volume_overlay_settings.dim_background = (this.volume_overlay_dim_background.IsChecked.HasValue) ? this.volume_overlay_dim_background.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void volume_overlay_dim_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && this.volume_overlay_dim_color.SelectedColor.HasValue)
-            {
-                Global.Configuration.volume_overlay_settings.dim_color = Utils.ColorUtils.MediaColorToDrawingColor(this.volume_overlay_dim_color.SelectedColor.Value);
-                ConfigManager.Save(Global.Configuration);
             }
         }
 

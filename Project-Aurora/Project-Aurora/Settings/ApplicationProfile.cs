@@ -113,6 +113,15 @@ namespace Aurora.Settings
             _triggerKeybind = new Keybind();
         }
 
+        public virtual void SetApplication(Aurora.Profiles.Application app)
+        {
+            foreach (Layer l in _Layers)
+                l.SetProfile(app);
+
+            foreach (Layer l in _OverlayLayers)
+                l.SetProfile(app);
+        }
+
         public virtual void Dispose()
         {
             foreach (Layer l in _Layers)
