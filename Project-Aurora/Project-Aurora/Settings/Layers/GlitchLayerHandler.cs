@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
+    
     public class GlitchLayerHandlerProperties<TProperty> : LayerHandlerProperties2Color<TProperty> where TProperty : GlitchLayerHandlerProperties<TProperty>
     {
         public double? _UpdateInterval { get; set; }
@@ -91,6 +93,9 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LogicOverrideIgnoreProperty("_PrimaryColor")]
+    [LogicOverrideIgnoreProperty("_SecondaryColor")]
+    [LogicOverrideIgnoreProperty("_Sequence")]
     public class GlitchLayerHandler : GlitchLayerHandler<GlitchLayerHandlerProperties>
     {
         public GlitchLayerHandler() : base()

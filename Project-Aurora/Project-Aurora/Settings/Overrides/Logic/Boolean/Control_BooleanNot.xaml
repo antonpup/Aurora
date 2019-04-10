@@ -7,6 +7,6 @@
              mc:Ignorable="d">
     <Grid>
         <TextBlock Text="!" FontSize="18" VerticalAlignment="Center" />
-        <local:Control_EvaluatablePresenter Expression="{Binding ParentCondition.SubCondition, Mode=TwoWay}" Application="{Binding Application}" EvalType="Boolean" Margin="15,0,0,0" />
+        <local:Control_EvaluatablePresenter Expression="{Binding ParentExpr.SubCondition, Mode=TwoWay}" Application="{Binding Application}" EvalType="Boolean" Margin="15,0,0,0" />
     </Grid>
 </UserControl>

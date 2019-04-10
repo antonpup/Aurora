@@ -350,6 +350,15 @@ namespace Aurora.Utils
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new RealColor((System.Windows.Media.Color)value);
     }
 
+    /// <summary>
+    /// Class to convert between a <see cref="EffectsEngine.EffectBrush"></see> and a <see cref="System.Windows.Media.Brush"></see> so that it can be
+    /// used with the ColorBox gradient editor control.
+    /// </summary>
+    public class EffectBrushToBrushConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((EffectsEngine.EffectBrush)value).GetMediaBrush();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new EffectsEngine.EffectBrush((System.Windows.Media.Brush)value);
+    }
+
     public class BoolToColorConverter : IValueConverter
     {
         public static Tuple<Color, Color> TextWhiteRed = new Tuple<Color, Color>(Color.FromArgb(255, 186, 186, 186), Color.Red);
