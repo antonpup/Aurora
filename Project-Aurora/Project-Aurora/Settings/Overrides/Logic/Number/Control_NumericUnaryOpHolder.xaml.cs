@@ -23,12 +23,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Creates a new unary operation control using the given Enum type as a source for the possible operators to choose from.</summary>
         public Control_NumericUnaryOpHolder(Profiles.Application application, Type enumType) : this(application) {
-            OperatorList = Enum.GetValues(enumType)
-                .Cast<object>()
-                .ToDictionary(
-                    op => enumType.GetMember(op.ToString()).FirstOrDefault()?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? op.ToString(),
-                    op => op
-                );
+            OperatorList = Utils.EnumUtils.GetEnumItemsSource(enumType).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         /// <summary>Creates a new unary opeartion control using the given string as the name of the operator, disallowing the user to choose an option.</summary>

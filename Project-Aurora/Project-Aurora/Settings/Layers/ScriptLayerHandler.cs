@@ -9,6 +9,7 @@ using Aurora.Profiles;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Aurora.Settings.Overrides;
 
 namespace Aurora.Settings.Layers
 {
@@ -40,6 +41,8 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LogicOverrideIgnoreProperty("_PrimaryColor")]
+    [LogicOverrideIgnoreProperty("_Sequence")]
     public class ScriptLayerHandler : LayerHandler<ScriptLayerHandlerProperties>, INotifyPropertyChanged
     {
         internal Application profileManager;

@@ -7,6 +7,7 @@ using Aurora.Profiles;
 using System.Windows.Controls;
 using Newtonsoft.Json;
 using Aurora.Devices;
+using Aurora.Settings.Overrides;
 
 namespace Aurora.Settings.Layers
 {
@@ -55,7 +56,9 @@ namespace Aurora.Settings.Layers
             _CloningMap = new Dictionary<DeviceKeys, KeySequence>();
         }
     }
-
+    
+    [LogicOverrideIgnoreProperty("_PrimaryColor")]
+    [LogicOverrideIgnoreProperty("_Sequence")]
     public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerProperties>
     {
         internal int[] bitmap = new int[126];

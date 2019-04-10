@@ -45,7 +45,7 @@ namespace Aurora.Settings.Layers
             );
             triggerModeLCV.GroupDescriptions.Add(new PropertyGroupDescription("Description"));
             triggerModeCb.ItemsSource = triggerModeLCV;
-            stackModeCb.ItemsSource = Enum.GetValues(typeof(AnimationStackMode)).Cast<AnimationStackMode>().ToDictionary(mode => mode.GetDescription(), mode => mode);
+            stackModeCb.ItemsSource = EnumUtils.GetEnumItemsSource<AnimationStackMode>();
 
             UpdateUI();
         }

@@ -7,9 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200">
     <Grid>
-        <Label Content="{Binding Title}" />
+        <Label Content="{Binding Description}" />
 
-        <ItemsControl Margin="12,28,0,26" ItemsSource="{Binding Parent.SubConditions}">
+        <ItemsControl Margin="12,28,0,26" ItemsSource="{Binding ParentExpr.SubConditions}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="6,0,0,6">

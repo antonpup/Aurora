@@ -25,11 +25,16 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public ObservableCollection<IEvaluatable<bool>> SubConditions { get; set; } = new ObservableCollection<IEvaluatable<bool>>();
 
-        public Visual GetControl(Application app) => new Control_SubconditionHolder(this, app, "Require atleast one of the following is true...");
+        [JsonIgnore]
+        private Control_SubconditionHolder control;
+        public Visual GetControl(Application app) => control ?? (control = new Control_SubconditionHolder(this, app, "Require atleast one of the following is true..."));
+
         public bool Evaluate(IGameState gameState) => SubConditions.Any(subcondition => subcondition?.Evaluate(gameState) ?? false);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         public void SetApplication(Application application) {
+            if (control != null)
+                control.Application = application;
             foreach (var subcondition in SubConditions)
                 subcondition.SetApplication(application);
         }
@@ -55,11 +60,16 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public ObservableCollection<IEvaluatable<bool>> SubConditions { get; set; } = new ObservableCollection<IEvaluatable<bool>>();
 
-        public Visual GetControl(Application app) => new Control_SubconditionHolder(this, app, "Require all of the following are true...");
+        [JsonIgnore]
+        private Control_SubconditionHolder control;
+        public Visual GetControl(Application app) => control ?? (control = new Control_SubconditionHolder(this, app, "Require all of the following are true..."));
+
         public bool Evaluate(IGameState gameState) => SubConditions.All(subcondition => subcondition?.Evaluate(gameState) ?? false);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         public void SetApplication(Application application) {
+            if (control != null)
+                control.Application = application;
             foreach (var subcondition in SubConditions)
                 subcondition.SetApplication(application);
         }
@@ -86,11 +96,14 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public IEvaluatable<bool> SubCondition { get; set; } = new BooleanConstant();
 
-        public Visual GetControl(Application app) => new Control_ConditionNot(this, app);
+        private Control_ConditionNot control;
+        public Visual GetControl(Application app) => control ?? (control = new Control_ConditionNot(this, app));
+
         public bool Evaluate(IGameState gameState) => !SubCondition.Evaluate(gameState);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         public void SetApplication(Application application) {
+           // control.app
             SubCondition?.SetApplication(application);
         }
 
