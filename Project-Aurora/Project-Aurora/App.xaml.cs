@@ -1,4 +1,4 @@
-﻿using Aurora.Devices;
+using Aurora.Devices;
 using Aurora.Profiles;
 using Aurora.Settings;
 using IronPython.Hosting;
@@ -257,6 +257,10 @@ namespace Aurora
                     Global.Configuration = new Configuration();
                 }
 
+                Global.Configuration.PropertyChanged += (sender, eventArgs) => {
+                    ConfigManager.Save(Global.Configuration);
+                };
+
                 Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
 
                 if (Global.Configuration.updates_check_on_start_up && !ignore_update)
@@ -298,6 +302,12 @@ namespace Aurora
 
                 Global.logger.Info("Loading Applications");
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
+
+                if (Global.Configuration.GetPointerUpdates)
+                {
+                    Global.logger.Info("Fetching latest pointers");
+                    Task.Run(() => Utils.PointerUpdateUtils.FetchDevPointers("master"));
+                }
 
                 Global.logger.Info("Loading Device Manager");
                 Global.dev_manager.RegisterVariables();
