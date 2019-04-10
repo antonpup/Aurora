@@ -62,8 +62,8 @@
                     </Border>
                 </Border>
                 <Settings:Control_ProfileManager x:Name="ctrlProfileManager" FocusedApplication="{Binding FocusedApplication}" Height="25" Margin="0,3,0,0" Background="#00000000" PreviewMouseDown="ctrlProfileManager_PreviewMouseDown" />
-                <Settings:Control_LayerList x:Name="ctrlLayerManager" Margin="0,3,0,0" SelectedLayer="{Binding SelectedLayer, Mode=TwoWay}" FocusedApplication="{Binding FocusedApplication}" LayerCollection="{Binding Path=FocusedApplication.Profile.Layers}" SecondaryLayerCollection="{Binding FocusedApplication.Profile.Layers_NightTime}" Background="#00000000" PreviewMouseDown="ctrlLayerManager_PreviewMouseDown" />
                 <Settings:Control_LayerList x:Name="ctrlOverlayLayerManager" Margin="0,3,0,0" SelectedLayer="{Binding SelectedLayer, Mode=TwoWay}" FocusedApplication="{Binding FocusedApplication}" LayerCollection="{Binding Path=FocusedApplication.Profile.OverlayLayers}" ListTitle="Overlay Layers" Background="#00000000" PreviewMouseDown="ctrlOverlayLayerManager_PreviewMouseDown" />
+                <Settings:Control_LayerList x:Name="ctrlLayerManager" Margin="0,3,0,0" SelectedLayer="{Binding SelectedLayer, Mode=TwoWay}" FocusedApplication="{Binding FocusedApplication}" LayerCollection="{Binding Path=FocusedApplication.Profile.Layers}" SecondaryLayerCollection="{Binding FocusedApplication.Profile.Layers_NightTime}" Background="#00000000" PreviewMouseDown="ctrlLayerManager_PreviewMouseDown" />
             </StackPanel>
         </Grid>
         

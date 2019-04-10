@@ -1,4 +1,4 @@
-﻿using Aurora.Settings;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Newtonsoft.Json;
 using System;
@@ -116,6 +116,9 @@ namespace Aurora.Settings
         public virtual void Dispose()
         {
             foreach (Layer l in _Layers)
+                l.Dispose();
+
+            foreach (Layer l in _OverlayLayers)
                 l.Dispose();
         }
     }
