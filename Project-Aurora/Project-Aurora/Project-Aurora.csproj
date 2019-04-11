@@ -335,6 +335,9 @@
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_GradientEditor.xaml.cs">
+      <DependentUpon>Control_GradientEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_PluginManager.xaml.cs">
       <DependentUpon>Control_PluginManager.xaml</DependentUpon>
     </Compile>
@@ -1570,6 +1573,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_FieldPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_GradientEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

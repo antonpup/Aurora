@@ -179,6 +179,7 @@ namespace Aurora.Utils
 
         /// <summary>
         /// Attempts to get a double value from the game state with the given path.
+        /// Will handle converting string literal numbers (e.g. "10") into a double.
         /// Returns 0 if an error occurs
         /// </summary>
         public static double TryGetDoubleFromState(IGameState state, string path) {
