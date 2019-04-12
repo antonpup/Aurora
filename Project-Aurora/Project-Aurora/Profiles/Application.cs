@@ -127,7 +127,7 @@ namespace Aurora.Profiles
                 ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
         }
 
-        public bool Initialize()
+        public virtual bool Initialize()
         {
             if (Initialized)
                 return Initialized;

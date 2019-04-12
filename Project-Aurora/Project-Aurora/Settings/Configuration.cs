@@ -6,8 +6,6 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using Aurora.Profiles.Generic_Application;
-using Aurora.Profiles.Overlays;
-using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
 
@@ -442,9 +440,6 @@ namespace Aurora.Settings
 
         public VariableRegistry VarRegistry;
 
-        //Overlay Settings
-        public SkypeOverlaySettings skype_overlay_settings;
-
         //Debug Settings
         private bool bitmapDebugTopMost;
         public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
@@ -514,9 +509,6 @@ namespace Aurora.Settings
             idle_effect_secondary_color = Color.FromArgb(0, 0, 0);
             idle_amount = 5;
             idle_frequency = 2.5f;
-
-            //Overlay Settings
-            skype_overlay_settings = new SkypeOverlaySettings();
 
             //Debug
             bitmapDebugTopMost = false;

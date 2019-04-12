@@ -1,7 +1,6 @@
 ﻿using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Profiles.Desktop;
 using Aurora.Profiles.Generic_Application;
-using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
@@ -129,7 +128,7 @@ namespace Aurora.Profiles
                 new Guild_Wars_2.GW2(),
                 new WormsWMD.WormsWMD(),
                 new Blade_and_Soul.BnS(),
-                new Event_SkypeOverlay(),
+                new Skype.Skype(),
                 new ROTTombRaider.ROTTombRaider(),
                 new DyingLight.DyingLight(),
                 new ETS2.ETS2(),
@@ -611,7 +610,13 @@ namespace Aurora.Profiles
                 }
 
                 // Update any applications that have overlay layers if that application is open
-                foreach (var @event in GetOverlayActiveProfiles())
+                var events = GetOverlayActiveProfiles().ToList();
+
+                //Add the Light event that we're previewing to be rendered as an overlay
+                if (preview && Global.Configuration.OverlaysInPreview && !events.Contains(profile))
+                    events.Add(profile);
+
+                foreach (var @event in events)
                     @event.UpdateOverlayLights(newFrame);
                 
                 UpdateIdleEffects(newFrame);

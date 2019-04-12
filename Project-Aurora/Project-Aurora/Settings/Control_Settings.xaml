@@ -179,20 +179,7 @@
             </TabItem>
             <TabItem Header="Skype Overlay">
                 <Grid>
-                    <CheckBox x:Name="skype_overlay_enabled" Content="Enable Skype Overlay" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Unchecked="skype_overlay_enabled_Checked" Checked="skype_overlay_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,64,0,0" TextWrapping="Wrap" Text="Unread Messages Primary Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="skype_unread_primary_colorpicker" HorizontalAlignment="Left" Height="24" Margin="187,60,0,0" VerticalAlignment="Top" Width="150" ColorMode="ColorCanvas" SelectedColorChanged="skype_unread_primary_colorpicker_SelectedColorChanged" UsingAlphaChannel="True"/>
-                    <Controls:KeySequence x:Name="skype_unread_messages_ks" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Height="145" Title="Skype Overlay - Unread Messages Keys" RecordingTag="Skype Overlay Unread Meesages Keys" SequenceUpdated="skype_unread_messages_ks_SequenceUpdated"/>
-                    <Button x:Name="skype_run_integration" Content="Start Skype Integration Listener" HorizontalAlignment="Left" Margin="194,7,0,0" VerticalAlignment="Top" Click="skype_run_integration_Click"/>
-                    <CheckBox x:Name="skype_unread_messages_enabled" Content="Enable unread messages indicator" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Checked="skype_unread_messages_enabled_Checked" Unchecked="skype_unread_messages_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,93,0,0" TextWrapping="Wrap" Text="Unread Messages Secondary Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="skype_unread_secondary_colorpicker" HorizontalAlignment="Left" Height="24" Margin="202,89,0,0" VerticalAlignment="Top" Width="135" ColorMode="ColorCanvas" SelectedColorChanged="skype_unread_secondary_colorpicker_SelectedColorChanged" UsingAlphaChannel="True"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="342,64,0,0" TextWrapping="Wrap" Text="Incoming calls Primary Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="skype_incoming_calls_primary_colorpicker" HorizontalAlignment="Left" Height="24" Margin="500,60,0,0" VerticalAlignment="Top" Width="150" ColorMode="ColorCanvas" SelectedColorChanged="skype_incoming_calls_primary_colorpicker_SelectedColorChanged" UsingAlphaChannel="True"/>
-                    <Controls:KeySequence x:Name="skype_incoming_calls_ks" HorizontalAlignment="Left" Margin="342,117,0,0" VerticalAlignment="Top" Height="145" Title="Skype Overlay - Incoming Calls Keys" RecordingTag="Skype Overlay Incoming Calls Keys" SequenceUpdated="skype_incoming_calls_messages_ks_SequenceUpdated"/>
-                    <CheckBox x:Name="skype_incoming_calls_enabled" Content="Enable incoming calls indicator" HorizontalAlignment="Left" Margin="342,40,0,0" VerticalAlignment="Top" Checked="skype_incoming_calls_enabled_Checked" Unchecked="skype_incoming_calls_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="342,93,0,0" TextWrapping="Wrap" Text="Incoming calls Secondary Color:" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="skype_incoming_calls_secondary_colorpicker" HorizontalAlignment="Left" Height="24" Margin="515,89,0,0" VerticalAlignment="Top" Width="135" ColorMode="ColorCanvas" SelectedColorChanged="skype_incoming_calls_secondary_colorpicker_SelectedColorChanged" UsingAlphaChannel="True"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="This Overlay has moved to the Overlay layers section of the Skype Application" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Away Effects">
