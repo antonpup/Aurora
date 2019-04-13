@@ -89,6 +89,11 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public EqualizerPresentationType ViewType { get { return Logic._ViewType ?? _ViewType ?? EqualizerPresentationType.SolidColor; } }
 
+        [LogicOverridable("Background Mode")]
+        public EqualizerBackgroundMode? _BackgroundMode { get; set; }
+        [JsonIgnore]
+        public EqualizerBackgroundMode BackgroundMode { get { return Logic._BackgroundMode ?? _BackgroundMode ?? EqualizerBackgroundMode.Disabled; } }
+
         [LogicOverridable("Max Amplitude")]
         public float? _MaxAmplitude { get; set; }
         [JsonIgnore]
@@ -99,7 +104,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool ScaleWithSystemVolume { get { return Logic._ScaleWithSystemVolume ?? _ScaleWithSystemVolume ?? false; } }
 
-        [LogicOverridable("Dim Color")]
+        [LogicOverridable("Background Color")]
         public Color? _DimColor { get; set; }
         [JsonIgnore]
         public Color DimColor { get { return Logic._DimColor ?? _DimColor ?? Color.Empty; } }
@@ -130,7 +135,7 @@ namespace Aurora.Settings.Layers
             _ScaleWithSystemVolume = false;
             _BackgroundMode = EqualizerBackgroundMode.Disabled;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
-            _Frequencies = new SortedSet<float>() { 60, 170, 310, 600, 1000, 2000, 3000, 4000, 5000 };
+            _Frequencies = new SortedSet<float>() { 50, 95, 130, 180, 250, 350, 500, 620, 700, 850, 1200, 1600, 2200, 3000, 4100, 5600, 7700, 10000, 10001, 10002 };
         }
     }
 
