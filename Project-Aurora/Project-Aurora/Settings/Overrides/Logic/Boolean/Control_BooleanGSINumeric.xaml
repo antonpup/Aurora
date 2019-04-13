@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
 
         <ComboBox x:Name="Operand1Cb" Text="{Binding Operand1Path}" IsEditable="True" Grid.Column="0" />
-        <ComboBox x:Name="OperatorCb" SelectedValue="{Binding Operator}" SelectedValuePath="Value" DisplayMemberPath="Label" Grid.Column="1" Margin="6,0" />
+        <ComboBox x:Name="OperatorCb" SelectedValue="{Binding Operator}" SelectedValuePath="Value" DisplayMemberPath="Key" Grid.Column="1" Margin="6,0" />
         <ComboBox x:Name="Operand2Cb" Text="{Binding Operand2Path}" IsEditable="True" Grid.Column="2" />
     </Grid>
 </UserControl>

@@ -85,15 +85,8 @@ namespace Aurora.Controls {
             { typeof(RealColor), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new RealColorConverter()) },
 
             // Gradient colour
-            { typeof(Settings.LayerEffectConfig), bind => {
-                // Still needs some work to become properly useful since the animation effect and speed and stuff are stored
-                // in the layer effect config in addition to the brush, so this causes those values to also get overridden.
-                var canvas = new ColorBox.ColorBox();
-                var src = (Control_FieldPresenter)bind.Source;
-                canvas.Brush = ((Settings.LayerEffectConfig)src.Value).brush.GetMediaBrush();
-                canvas.BrushChanged += (sender, e) => { ((Settings.LayerEffectConfig)src.Value).brush = new EffectsEngine.EffectBrush(e.Brush); };
-                return canvas;
-            } },
+            { typeof(Settings.LayerEffectConfig), bind => new Control_GradientEditor((Settings.LayerEffectConfig)((Control_FieldPresenter)bind.Source).Value) },
+            { typeof(EffectsEngine.EffectBrush), bind => new ColorBox.ColorBox().SetBindingChain(ColorBox.ColorBox.BrushProperty, bind, new EffectBrushToBrushConverter(), BindingMode.TwoWay) },
 
             // KeySequences
             { typeof(Settings.KeySequence), bind => new Controls.KeySequence {
