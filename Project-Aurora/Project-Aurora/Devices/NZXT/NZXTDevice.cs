@@ -129,7 +129,7 @@ namespace Aurora.Devices.NZXT
                     if (e.Cancel) return false;
                     if (key.Key == DeviceKeys.Peripheral_Logo)
                     {
-                        DeviceLoader.KrakenX.ApplyEffect(DeviceLoader.KrakenX.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(key.Value.R, key.Value.G, key.Value.B)));
+                        DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(key.Value.R, key.Value.G, key.Value.B)));
                     }
                     else if (key.Key >= DeviceKeys.ONE && key.Key <= DeviceKeys.EIGHT)
                     {
@@ -151,8 +151,8 @@ namespace Aurora.Devices.NZXT
                     }
                 }
 
-                DeviceLoader.HuePlus.ApplyEffect(DeviceLoader.HuePlus.Both, new NZXTSharp.Fixed(huepluscolors.ToArray()));
-                DeviceLoader.KrakenX.ApplyEffect(DeviceLoader.KrakenX.Ring, new NZXTSharp.Fixed(krakenringcolors.ToArray()));
+                DeviceLoader.HuePlus?.ApplyEffect(DeviceLoader.HuePlus.Both, new NZXTSharp.Fixed(huepluscolors.ToArray()));
+                DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Ring, new NZXTSharp.Fixed(krakenringcolors.ToArray()));
 
                 return true;
             }
