@@ -17,8 +17,7 @@ namespace Aurora.Devices.NZXT
         private String devicename = "NZXT";
         private bool isInitialized = false;
 
-        NZXTSharp.HuePlus.HuePlus hueplus;
-        NZXTSharp.KrakenX.KrakenX krakenx;
+        DeviceLoader DeviceLoader;
 
         private readonly object action_lock = new object();
 
@@ -34,7 +33,7 @@ namespace Aurora.Devices.NZXT
         {
             if (isInitialized)
             {
-                return devicename + ": " + (hueplus != null ? "HuePlus " : "") + (krakenx != null ? "KrakenX " : "");
+                return devicename + ": " + (DeviceLoader.HuePlus != null ? "HuePlus " : "") + (DeviceLoader.KrakenX != null ? "KrakenX " : "");
             }
             else
             {
@@ -44,31 +43,14 @@ namespace Aurora.Devices.NZXT
 
         public bool Initialize()
         {
-            lock (action_lock)
+            if (!isInitialized)
             {
-                if (!isInitialized)
+                try
                 {
-                    try
-                    {
-                        hueplus = new NZXTSharp.HuePlus.HuePlus();
-                        Global.logger.Info("NZXT device HuePlus: Initialized");
-                    }
-                    catch (Exception ex)
-                    {
-                        Global.logger.Error("NZXT device HuePlus, Exception! Message: " + ex);
-                    }
+                    DeviceLoader = new DeviceLoader();
+                    DeviceLoader.Initialize();
 
-                    try
-                    {
-                        krakenx = new NZXTSharp.KrakenX.KrakenX();
-                        Global.logger.Info("NZXT device KrakenX: Initialized");
-                    }
-                    catch (Exception ex)
-                    {
-                        Global.logger.Error("NZXT device KrakenX, Exception! Message: " + ex);
-                    }
-
-                    if (hueplus == null && krakenx == null)
+                    if (DeviceLoader.NumDevices == 0)
                     {
                         Global.logger.Error("NZXT device error: No devices found");
                     }
@@ -77,13 +59,16 @@ namespace Aurora.Devices.NZXT
                         isInitialized = true;
                         return true;
                     }
-
-                    isInitialized = false;
-                    return false;
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.Error("NZXT device, Exception during Initialize. Message: " + exc);
                 }
 
-                return isInitialized;
+                isInitialized = false;
+                return false;
             }
+            return isInitialized;
         }
 
         public void Shutdown()
@@ -94,8 +79,7 @@ namespace Aurora.Devices.NZXT
                 {
                     if (isInitialized)
                     {
-                        hueplus?.Dispose();
-                        krakenx?.Dispose();
+                        DeviceLoader.Dispose();
                         isInitialized = false;
                     }
                 }
@@ -143,9 +127,9 @@ namespace Aurora.Devices.NZXT
                 foreach (KeyValuePair<DeviceKeys, Color> key in keycolors)
                 {
                     if (e.Cancel) return false;
-                    if(key.Key == DeviceKeys.Peripheral_Logo)
+                    if (key.Key == DeviceKeys.Peripheral_Logo)
                     {
-                        krakenx?.ApplyEffect(krakenx.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(key.Value.R, key.Value.G, key.Value.B)));
+                        DeviceLoader.KrakenX.ApplyEffect(DeviceLoader.KrakenX.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(key.Value.R, key.Value.G, key.Value.B)));
                     }
                     else if (key.Key >= DeviceKeys.ONE && key.Key <= DeviceKeys.EIGHT)
                     {
@@ -156,10 +140,10 @@ namespace Aurora.Devices.NZXT
                         krakenringcolors.Add(key.Value.R);
                         krakenringcolors.Add(key.Value.B);
                     }
-                    else if (key.Key >= DeviceKeys.NINE && key.Key < DeviceKeys.ZERO       || 
-                             key.Key >= DeviceKeys.Q    && key.Key <= DeviceKeys.P         || 
-                             key.Key >= DeviceKeys.A    && key.Key <= DeviceKeys.SEMICOLON || 
-                             key.Key >= DeviceKeys.Z    && key.Key <= DeviceKeys.PERIOD     )//40 keys
+                    else if (key.Key >= DeviceKeys.NINE && key.Key < DeviceKeys.ZERO ||
+                             key.Key >= DeviceKeys.Q && key.Key <= DeviceKeys.P ||
+                             key.Key >= DeviceKeys.A && key.Key <= DeviceKeys.SEMICOLON ||
+                             key.Key >= DeviceKeys.Z && key.Key <= DeviceKeys.PERIOD)//40 keys
                     {
                         huepluscolors.Add(key.Value.G);
                         huepluscolors.Add(key.Value.R);
@@ -167,8 +151,8 @@ namespace Aurora.Devices.NZXT
                     }
                 }
 
-                hueplus?.ApplyEffect(hueplus.Both, new NZXTSharp.Fixed(huepluscolors.ToArray()));
-                krakenx?.ApplyEffect(krakenx.Ring, new NZXTSharp.Fixed(krakenringcolors.ToArray()));
+                DeviceLoader.HuePlus.ApplyEffect(DeviceLoader.HuePlus.Both, new NZXTSharp.Fixed(huepluscolors.ToArray()));
+                DeviceLoader.KrakenX.ApplyEffect(DeviceLoader.KrakenX.Ring, new NZXTSharp.Fixed(krakenringcolors.ToArray()));
 
                 return true;
             }

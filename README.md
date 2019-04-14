@@ -212,6 +212,17 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 * Vanguard K08
 
+### NZXT
+
+#### KrakenX
+
+* x42
+* x52
+* x62
+* x72
+
+#### Hue+
+
 ## Video demonstrations
 
 Clone Hero Demo
