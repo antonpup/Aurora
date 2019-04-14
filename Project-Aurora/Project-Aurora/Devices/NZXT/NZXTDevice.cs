@@ -134,7 +134,7 @@ namespace Aurora.Devices.NZXT
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keycolors, DoWorkEventArgs e, bool forced = false)
         {
             var huepluscolors = new List<byte>(120);
-            var krakenringcolors = new List<byte>(8);
+            var krakenringcolors = new List<byte>(24);
 
             if (e.Cancel) return false;
 
