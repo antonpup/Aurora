@@ -94,9 +94,8 @@ namespace Aurora.Devices.NZXT
                 {
                     if (isInitialized)
                     {
-                        this.Reset();
-                        hueplus.Dispose();
-                        krakenx.Dispose();
+                        hueplus?.Dispose();
+                        krakenx?.Dispose();
                         isInitialized = false;
                     }
                 }
@@ -132,23 +131,23 @@ namespace Aurora.Devices.NZXT
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyhuepluscolors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keycolors, DoWorkEventArgs e, bool forced = false)
         {
-            var huepluscolors = new List<byte>();
-            var krakenringcolors = new List<byte>();
+            var huepluscolors = new List<byte>(120);
+            var krakenringcolors = new List<byte>(8);
 
             if (e.Cancel) return false;
 
             try
             {
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyhuepluscolors)
+                foreach (KeyValuePair<DeviceKeys, Color> key in keycolors)
                 {
                     if (e.Cancel) return false;
                     if(key.Key == DeviceKeys.Peripheral_Logo)
                     {
-                        SendColorToKraken(key.Value);
+                        krakenx?.ApplyEffect(krakenx.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(key.Value.R, key.Value.G, key.Value.B)));
                     }
-                    else if(key.Key == DeviceKeys.ONE)
+                    else if (key.Key >= DeviceKeys.ONE && key.Key <= DeviceKeys.EIGHT)
                     {
                         huepluscolors.Add(key.Value.G);
                         huepluscolors.Add(key.Value.R);
@@ -157,256 +156,10 @@ namespace Aurora.Devices.NZXT
                         krakenringcolors.Add(key.Value.R);
                         krakenringcolors.Add(key.Value.B);
                     }
-                    else if (key.Key == DeviceKeys.TWO)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                        krakenringcolors.Add(key.Value.G);
-                        krakenringcolors.Add(key.Value.R);
-                        krakenringcolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.THREE)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                        krakenringcolors.Add(key.Value.G);
-                        krakenringcolors.Add(key.Value.R);
-                        krakenringcolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.FOUR)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                        krakenringcolors.Add(key.Value.G);
-                        krakenringcolors.Add(key.Value.R);
-                        krakenringcolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.FIVE)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                        krakenringcolors.Add(key.Value.G);
-                        krakenringcolors.Add(key.Value.R);
-                        krakenringcolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.SIX)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                        krakenringcolors.Add(key.Value.G);
-                        krakenringcolors.Add(key.Value.R);
-                        krakenringcolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.SEVEN)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                        krakenringcolors.Add(key.Value.G);
-                        krakenringcolors.Add(key.Value.R);
-                        krakenringcolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.EIGHT)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                        krakenringcolors.Add(key.Value.G);
-                        krakenringcolors.Add(key.Value.R);
-                        krakenringcolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.NINE)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.ZERO)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.MINUS)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.W)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.E)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.R)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.T)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.Y)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.U)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.I)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.O)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.P)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.A)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.S)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.D)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.F)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.G)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.H)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.J)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.K)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.L)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.SEMICOLON)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.BACKSLASH)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.Z)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.X)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.C)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.V)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.B)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.N)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.M)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.COMMA)
-                    {
-                        huepluscolors.Add(key.Value.G);
-                        huepluscolors.Add(key.Value.R);
-                        huepluscolors.Add(key.Value.B);
-                    }
-                    else if (key.Key == DeviceKeys.PERIOD)
+                    else if (key.Key >= DeviceKeys.NINE && key.Key < DeviceKeys.ZERO       || 
+                             key.Key >= DeviceKeys.Q    && key.Key <= DeviceKeys.P         || 
+                             key.Key >= DeviceKeys.A    && key.Key <= DeviceKeys.SEMICOLON || 
+                             key.Key >= DeviceKeys.Z    && key.Key <= DeviceKeys.PERIOD     )//40 keys
                     {
                         huepluscolors.Add(key.Value.G);
                         huepluscolors.Add(key.Value.R);
@@ -414,10 +167,8 @@ namespace Aurora.Devices.NZXT
                     }
                 }
 
-                var huecolorarray = huepluscolors.ToArray();
-                SendColorToHuePlus(huecolorarray, huecolorarray);
-                SendColorToKraken(krakenringcolors.ToArray());
-
+                hueplus?.ApplyEffect(hueplus.Both, new NZXTSharp.Fixed(huepluscolors.ToArray()));
+                krakenx?.ApplyEffect(krakenx.Ring, new NZXTSharp.Fixed(krakenringcolors.ToArray()));
 
                 return true;
             }
@@ -425,31 +176,6 @@ namespace Aurora.Devices.NZXT
             {
                 Global.logger.Error("NZXT, error when updating device: " + ex);
                 return false;
-            }
-        }
-
-        private void SendColorToHuePlus(byte[] ch1, byte[] ch2)
-        {
-            if (hueplus != null)
-            {
-                hueplus.ApplyEffect(hueplus.Channel1, new NZXTSharp.Fixed(ch1));
-                hueplus.ApplyEffect(hueplus.Channel2, new NZXTSharp.Fixed(ch2));
-            }
-        }
-
-        private void SendColorToKraken(byte[] ring)
-        {
-            if (krakenx != null)
-            {
-                krakenx.ApplyEffect(krakenx.Ring, new NZXTSharp.Fixed(ring));
-            }
-        }
-
-        private void SendColorToKraken(Color logo)
-        {
-            if (krakenx != null)
-            {
-                krakenx.ApplyEffect(krakenx.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(logo.R, logo.G, logo.B)));
             }
         }
 
