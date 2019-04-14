@@ -47,7 +47,7 @@ namespace Aurora.Devices.NZXT
             {
                 try
                 {
-                    DeviceLoader = new DeviceLoader();
+                    DeviceLoader = new DeviceLoader(DeviceLoadFilter.LightingControllers);
                     DeviceLoader.Initialize();
 
                     if (DeviceLoader.NumDevices == 0)
