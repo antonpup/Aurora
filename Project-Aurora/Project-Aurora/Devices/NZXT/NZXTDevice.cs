@@ -43,32 +43,34 @@ namespace Aurora.Devices.NZXT
 
         public bool Initialize()
         {
-            if (!isInitialized)
+            lock (action_lock)
             {
-                try
+                if (!isInitialized)
                 {
-                    DeviceLoader = new DeviceLoader(DeviceLoadFilter.LightingControllers);
-                    DeviceLoader.Initialize();
-
-                    if (DeviceLoader.NumDevices == 0)
+                    try
                     {
-                        Global.logger.Error("NZXT device error: No devices found");
-                    }
-                    else
-                    {
-                        isInitialized = true;
-                        return true;
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("NZXT device, Exception during Initialize. Message: " + exc);
-                }
+                        DeviceLoader = new DeviceLoader(DeviceLoadFilter.LightingControllers);
 
-                isInitialized = false;
-                return false;
+                        if (DeviceLoader.NumDevices == 0)
+                        {
+                            Global.logger.Error("NZXT device error: No devices found");
+                        }
+                        else
+                        {
+                            isInitialized = true;
+                            return true;
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.Error("NZXT device, Exception during Initialize. Message: " + exc);
+                    }
+
+                    isInitialized = false;
+                    return false;
+                }
+                return isInitialized;
             }
-            return isInitialized;
         }
 
         public void Shutdown()
