@@ -619,10 +619,10 @@
     <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
       <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Overrides\Logic\Generic\Control_Ternary.xaml.cs">
-      <DependentUpon>Control_Ternary.xaml</DependentUpon>
+    <Compile Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml.cs">
+      <DependentUpon>Control_IfElse.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Overrides\Logic\Generic\Ternary.cs" />
+    <Compile Include="Settings\Overrides\Logic\Generic\IfElseIf.cs" />
     <Compile Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml.cs">
       <DependentUpon>Control_NumericMap.xaml</DependentUpon>
     </Compile>
@@ -1993,7 +1993,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Overrides\Logic\Generic\Control_Ternary.xaml">
+    <Page Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
