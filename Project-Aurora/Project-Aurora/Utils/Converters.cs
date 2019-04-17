@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Aurora.Utils {
@@ -15,6 +16,16 @@ namespace Aurora.Utils {
         public bool ReturnValWhenNull { get; set; } = false;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => !(value == null ^ ReturnValWhenNull);
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+
+    /// <summary>Simple converter that returns true if the given value is non-null.</summary>
+    public class IsNullToVisibilityConverter : IValueConverter {
+
+        public Visibility ReturnValWhenNull { get; set; } = Visibility.Collapsed;
+        public Visibility ReturnValWhenNonNull { get; set; } = Visibility.Visible;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value == null ? ReturnValWhenNull : ReturnValWhenNonNull;
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 

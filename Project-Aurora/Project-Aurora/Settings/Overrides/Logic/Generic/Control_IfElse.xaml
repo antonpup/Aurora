@@ -4,12 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
+             xmlns:util="clr-namespace:Aurora.Utils"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <local:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
+            <util:IsNullToVisibilityConverter x:Key="IsNullToVisibilityConverter" />
             <local:IfElseTextConverter x:Key="IfElseTextConverter" />
-            <local:HasElseBooleanConverter x:Key="HasElseBooleanConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -57,8 +57,8 @@
 
                         <!-- Condition -->
                         <Border Margin="0" BorderThickness="1" BorderBrush="#6000" Background="#3000">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,6,0,6">
+                            <DockPanel LastChildFill="True">
+                                <TextBlock DockPanel.Dock="Left" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,6,0,6">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource IfElseTextConverter}">
                                             <Binding Path="Condition" /> <!-- Current condition -->
@@ -66,16 +66,21 @@
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <local:Control_EvaluatablePresenter Expression="{Binding Condition, Mode=TwoWay}" Application="{Binding Path=DataContext.Application, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" EvalType="Boolean" Margin="5,0,0,0" Visibility="{Binding Path=Condition, Converter={StaticResource NullableToVisibilityConverter}}" />
-                            </StackPanel>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Visibility="{Binding Condition, Converter={StaticResource IsNullToVisibilityConverter}}">
+                                    <Button Content="↑" VerticalAlignment="Center" Padding="4,2" Click="CaseUp_Click" />
+                                    <Button Content="↓" VerticalAlignment="Center" Padding="4,2" Click="CaseDown_Click" />
+                                    <Button Content="X" VerticalAlignment="Center" Padding="4,2" Click="DeleteCase_Click" />
+                                </StackPanel>
+                                <local:Control_EvaluatablePresenter Expression="{Binding Condition, Mode=TwoWay}" Application="{Binding Path=DataContext.Application, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" EvalType="Boolean" Margin="5,0,0,0" Visibility="{Binding Path=Condition, Converter={StaticResource IsNullToVisibilityConverter}}" />
+                            </DockPanel>
                         </Border>
 
                         <!-- Value -->
                         <Border Margin="28,8,0,8" BorderThickness="1" BorderBrush="#6000" Background="#3000" Grid.Row="1">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Then" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" />
+                            <DockPanel LastChildFill="True">
+                                <TextBlock DockPanel.Dock="Left" Text="Then" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" />
                                 <local:Control_EvaluatablePresenter Expression="{Binding Value, Mode=TwoWay}" Application="{Binding Path=DataContext.Application, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" EvalType="{Binding Path=DataContext.EvaluatableType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Margin="5,0,0,0" />
-                            </StackPanel>
+                            </DockPanel>
                         </Border>
                     </Grid>
                 </DataTemplate>
@@ -84,7 +89,6 @@
 
         <StackPanel Orientation="Horizontal">
             <Button Content="Add Else-If" Click="AddElseIfCase_Click" />
-            <Button Content="Add Else" IsEnabled="{Binding Path=ParentCondition.Cases, Converter={StaticResource HasElseBooleanConverter}}" Click="AddElseCase_Click" />
         </StackPanel>
     </StackPanel>
 </UserControl>

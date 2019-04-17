@@ -53,11 +53,4 @@ namespace Aurora.Settings.Overrides.Logic {
             Application = application;
         }
     }
-
-    /// <summary>Simple converter that returns true if the given value is non-null.</summary>
-    public class NullableToVisibilityConverter : System.Windows.Data.IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value == null ? Visibility.Collapsed : Visibility.Visible;
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
-    }
-
 }
