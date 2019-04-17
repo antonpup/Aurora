@@ -17,7 +17,10 @@ namespace Aurora.Devices.NZXT
         private String devicename = "NZXT";
         private bool isInitialized = false;
 
-        DeviceLoader DeviceLoader;
+        private DeviceLoader DeviceLoader;
+        private List<byte> hue_device = new List<byte>(120);
+        private List<byte> krakenring_device = new List<byte>(24);
+        private Color krakenlogo_device;
 
         private readonly object action_lock = new object();
 
@@ -121,6 +124,7 @@ namespace Aurora.Devices.NZXT
         {
             var huepluscolors = new List<byte>(120);
             var krakenringcolors = new List<byte>(24);
+            var krakenlogocolor = Color.Black;
 
             if (e.Cancel) return false;
 
@@ -131,7 +135,7 @@ namespace Aurora.Devices.NZXT
                     if (e.Cancel) return false;
                     if (key.Key == DeviceKeys.Peripheral_Logo)
                     {
-                        DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(key.Value.R, key.Value.G, key.Value.B)));
+                        krakenlogocolor = key.Value;
                     }
                     else if (key.Key >= DeviceKeys.ONE && key.Key <= DeviceKeys.EIGHT)
                     {
@@ -142,7 +146,7 @@ namespace Aurora.Devices.NZXT
                         krakenringcolors.Add(key.Value.R);
                         krakenringcolors.Add(key.Value.B);
                     }
-                    else if (key.Key >= DeviceKeys.NINE && key.Key < DeviceKeys.ZERO ||
+                    else if (key.Key >= DeviceKeys.NINE && key.Key <= DeviceKeys.ZERO ||
                              key.Key >= DeviceKeys.Q && key.Key <= DeviceKeys.P ||
                              key.Key >= DeviceKeys.A && key.Key <= DeviceKeys.SEMICOLON ||
                              key.Key >= DeviceKeys.Z && key.Key <= DeviceKeys.PERIOD)//40 keys
@@ -153,8 +157,21 @@ namespace Aurora.Devices.NZXT
                     }
                 }
 
-                DeviceLoader.HuePlus?.ApplyEffect(DeviceLoader.HuePlus.Both, new NZXTSharp.Fixed(huepluscolors.ToArray()));
-                DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Ring, new NZXTSharp.Fixed(krakenringcolors.ToArray()));
+                if (!huepluscolors.Equals(hue_device) || forced)
+                {
+                    DeviceLoader.HuePlus?.ApplyEffect(DeviceLoader.HuePlus.Both, new NZXTSharp.Fixed(huepluscolors.ToArray()));
+                    hue_device = huepluscolors;
+                }
+                if (!krakenringcolors.Equals(krakenring_device) || forced)
+                {
+                    DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Ring, new NZXTSharp.Fixed(krakenringcolors.ToArray()));
+                    krakenring_device = krakenringcolors;
+                }
+                if (!krakenlogocolor.Equals(krakenlogo_device) || forced)
+                {
+                    DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(krakenlogocolor.R, krakenlogocolor.G, krakenlogocolor.B)));
+                    krakenlogo_device = krakenlogocolor;
+                }
 
                 return true;
             }
