@@ -110,7 +110,12 @@ namespace Aurora.Settings {
         }
         
         public static readonly DependencyProperty SelectedLayerProperty =
-            DependencyProperty.Register("SelectedLayer", typeof(Layer), typeof(Control_LayerList), new PropertyMetadata(null));
+            DependencyProperty.Register("SelectedLayer", typeof(Layer), typeof(Control_LayerList), new PropertyMetadata(null, OnSelectedLayerPropertyChanged));
+
+        private static void OnSelectedLayerPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+            if (e.NewValue is Layer layer)
+                layer.SetProfile(((Control_LayerList)sender).FocusedApplication);
+        }
         #endregion
 
         #region ListTitle Property
