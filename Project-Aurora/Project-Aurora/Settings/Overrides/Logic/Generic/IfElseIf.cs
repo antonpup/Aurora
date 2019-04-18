@@ -35,7 +35,7 @@ namespace Aurora.Settings.Overrides.Logic
             foreach (var branch in Cases)
                 if (branch.Condition == null || branch.Condition.Evaluate(gameState)) // Find the first with a true condition, or where the condition is null (which indicates 'else')
                     return branch.Value.Evaluate(gameState);
-            return default;
+            return default(T);
         }
 
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
