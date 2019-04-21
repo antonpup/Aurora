@@ -157,17 +157,17 @@ namespace Aurora.Devices.NZXT
                     }
                 }
 
-                if (!huepluscolors.Equals(hue_device) || forced)
+                if (!Enumerable.SequenceEqual(huepluscolors, hue_device) || forced)
                 {
                     DeviceLoader.HuePlus?.ApplyEffect(DeviceLoader.HuePlus.Both, new NZXTSharp.Fixed(huepluscolors.ToArray()));
                     hue_device = huepluscolors;
                 }
-                if (!krakenringcolors.Equals(krakenring_device) || forced)
+                if (!Enumerable.SequenceEqual(krakenringcolors, krakenring_device) || forced)
                 {
                     DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Ring, new NZXTSharp.Fixed(krakenringcolors.ToArray()));
                     krakenring_device = krakenringcolors;
                 }
-                if (!krakenlogocolor.Equals(krakenlogo_device) || forced)
+                if (!Equals(krakenlogocolor, krakenlogo_device) || forced)
                 {
                     DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Logo, new NZXTSharp.Fixed(new NZXTSharp.Color(krakenlogocolor.R, krakenlogocolor.G, krakenlogocolor.B)));
                     krakenlogo_device = krakenlogocolor;
