@@ -204,17 +204,6 @@ namespace Aurora.Profiles.CloneHero
                 (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsSoloActive = false;
             }
         }*/
-        private void preview_solo_percent_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (sender is Slider)
-            {
-                this.preview_solo_percent_label.Text = (int)((sender as Slider).Value) + "%";
-                if (IsLoaded)
-                {
-                    (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.SoloPercent = (int)((sender as Slider).Value);
-                }
-            }
-        }
 
         private void preview_notes_total_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
