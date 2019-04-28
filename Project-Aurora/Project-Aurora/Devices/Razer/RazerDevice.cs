@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
+using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
+using System.ComponentModel;
 
 namespace Aurora.Devices.Razer
 {
@@ -19,6 +21,7 @@ namespace Aurora.Devices.Razer
         private bool keyboard_updated = false;
         private bool peripheral_updated = false;
         private KeyboardCustom grid = KeyboardCustom.Create();
+        private MousepadCustom MousepadGrid = MousepadCustom.Create();
         //private bool bladeLayout = true;
 
         IKeyboard keyboard = null;
@@ -26,6 +29,7 @@ namespace Aurora.Devices.Razer
         IHeadset headset = null;
         IMousepad mousepad = null;
         IKeypad keypad = null;
+        IChromaLink chromalink = null;
 
         private readonly object action_lock = new object();
 
@@ -43,7 +47,7 @@ namespace Aurora.Devices.Razer
         {
             if (isInitialized)
             {
-                return devicename + ": " + (keyboard != null ? "Keyboard Connected " : "") + (mouse != null ? "Mouse Connected " : "") + (headset != null ? "Headset Connected " : "") + (mousepad != null ? "Mousepad Connected " : "");
+                return devicename + ": " + (keyboard != null ? "Keyboard Connected " : "") + (mouse != null ? "Mouse Connected " : "") + (headset != null ? "Headset Connected " : "") + (mousepad != null ? "Mousepad Connected " : "") + (chromalink != null ? "ChromaLink Connected " : "");
             }
             else
             {
@@ -71,12 +75,14 @@ namespace Aurora.Devices.Razer
                         headset = Chroma.Instance.Headset;
                         mousepad = Chroma.Instance.Mousepad;
                         keypad = Chroma.Instance.Keypad;
+                        chromalink = Chroma.Instance.ChromaLink;
 
                         if (keyboard == null &&
                             mouse == null &&
                             headset == null &&
                             mousepad == null &&
-                            keypad == null
+                            keypad == null &&
+                            chromalink == null
                             )
                         {
                             throw new Exception("No devices connected");
@@ -89,9 +95,11 @@ namespace Aurora.Devices.Razer
 
                             if (Global.Configuration.razer_first_time)
                             {
-                                RazerInstallInstructions instructions = new RazerInstallInstructions();
-                                instructions.ShowDialog();
-
+                                App.Current.Dispatcher.Invoke(() =>
+                                {
+                                    RazerInstallInstructions instructions = new RazerInstallInstructions();
+                                    instructions.ShowDialog();
+                                });
                                 Global.Configuration.razer_first_time = false;
                                 Settings.ConfigManager.Save(Global.Configuration);
                             }
@@ -170,20 +178,95 @@ namespace Aurora.Devices.Razer
             return null;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
             try
             {
                 foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
                 {
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     //Key localKey = ToRazer(key.Key);
 
                     int[] coord = null;
                     if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral)
                     {
                         SendColorToPeripheral(key.Value, forced);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT1)
+                    {
+                      
+                        SendColorToMousepad(14,key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT2)
+                    {
+
+                        SendColorToMousepad(13, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT3)
+                    {
+
+                        SendColorToMousepad(12, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT4)
+                    {
+
+                        SendColorToMousepad(11, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT5)
+                    {
+
+                        SendColorToMousepad(10, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT6)
+                    {
+
+                        SendColorToMousepad(9, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT7)
+                    {
+
+                        SendColorToMousepad(8, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT8)
+                    {
+
+                        SendColorToMousepad(7, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT9)
+                    {
+
+                        SendColorToMousepad(6, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT10)
+                    {
+
+                        SendColorToMousepad(5, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT11)
+                    {
+
+                        SendColorToMousepad(4, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT12)
+                    {
+
+                        SendColorToMousepad(3, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT13)
+                    {
+
+                        SendColorToMousepad(2, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT14)
+                    {
+
+                        SendColorToMousepad(1, key.Value);
+                    }
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT15)
+                    {
+
+                        SendColorToMousepad(0, key.Value);
                     }
                     else if ((coord = GetKeyCoord(key.Key)) != null)
                     {
@@ -196,23 +279,23 @@ namespace Aurora.Devices.Razer
                     }
                 }
 
-                if (token.IsCancellationRequested) return false;
+                if (e.Cancel) return false;
                 SendColorsToKeyboard(forced);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                Global.logger.Error("Razer device, error when updating device. Error: " + e);
-                Console.WriteLine(e);
+                Global.logger.Error("Razer device, error when updating device. Error: " + exc);
+                Console.WriteLine(exc);
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
@@ -251,6 +334,27 @@ namespace Aurora.Devices.Razer
             }
         }
 
+        private void SendColorToMousepad(int index, System.Drawing.Color color)
+        {
+            if (Global.Configuration.allow_peripheral_devices)
+            {
+                if (mousepad != null && !Global.Configuration.devices_disable_mouse)
+                {
+                    MousepadGrid[index] = new Color(color.R, color.G, color.B);
+                    mousepad.SetCustom(MousepadGrid);
+                }
+                previous_peripheral_Color = color;
+                peripheral_updated = true;
+            }
+            else
+            {
+                if (peripheral_updated)
+                {
+                    peripheral_updated = false;
+                }
+            }
+        }
+
         private void SendColorToPeripheral(System.Drawing.Color color, bool forced = false)
         {
             if ((!previous_peripheral_Color.Equals(color) || forced))
@@ -260,14 +364,17 @@ namespace Aurora.Devices.Razer
                     if (mouse != null && !Global.Configuration.devices_disable_mouse)
                         mouse.SetAll(new Color(color.R, color.G, color.B));
 
-                    if (mousepad != null && !Global.Configuration.devices_disable_mouse)
-                        mousepad.SetAll(new Color(color.R, color.G, color.B));
+                    //if (mousepad != null && !Global.Configuration.devices_disable_mouse)
+                     //   mousepad.SetAll(new Color(color.R, color.G, color.B));
 
                     if (headset != null && !Global.Configuration.devices_disable_headset)
                         headset.SetAll(new Color(color.R, color.G, color.B));
 
                     if (keypad != null && !Global.Configuration.devices_disable_keyboard)
                         keypad.SetAll(new Color(color.R, color.G, color.B));
+
+                    if (chromalink != null && !Global.Configuration.devices_disable_mouse)
+                        chromalink.SetStatic(new Color(color.R, color.G, color.B));
 
                     previous_peripheral_Color = color;
                     peripheral_updated = true;

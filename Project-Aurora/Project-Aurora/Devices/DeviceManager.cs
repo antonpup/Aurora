@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace Aurora.Devices
 {
@@ -17,8 +18,6 @@ namespace Aurora.Devices
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
 
-        public CancellationTokenSource UpdateTaskCancellationTokenSource { get; set; } = null;
-
         private Tuple<DeviceColorComposition, bool> currentComp = null;
         private bool newFrame = false;
 
@@ -28,29 +27,45 @@ namespace Aurora.Devices
             Worker.DoWork += WorkerOnDoWork;
             Worker.RunWorkerCompleted += (sender, args) =>
             {
-                if (newFrame && !Worker.IsBusy)
-                    Worker.RunWorkerAsync();
+                lock (Worker)
+                {
+                    if (newFrame && !Worker.IsBusy)
+                        Worker.RunWorkerAsync();
+                 }
             };
-            Worker.WorkerSupportsCancellation = true;
+            //Worker.WorkerSupportsCancellation = true;
         }
 
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             newFrame = false;
-            UpdateTaskCancellationTokenSource = new CancellationTokenSource();
-            Device.UpdateDevice(currentComp.Item1, UpdateTaskCancellationTokenSource.Token,
+            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
                 currentComp.Item2);
         }
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
-            UpdateTaskCancellationTokenSource?.Cancel();
-
             newFrame = true;
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-
-            if (!Worker.IsBusy)
-                Worker.RunWorkerAsync();
+            lock (Worker)
+            {
+                if (Worker.IsBusy)
+                    return;
+                else
+                    Worker.RunWorkerAsync();
+            }
+            /*lock (Worker)
+            {
+                try
+                {
+                    if (!Worker.IsBusy)
+                        Worker.RunWorkerAsync();
+                }
+                catch(Exception e)
+                {
+                    Global.logger.LogLine(e.ToString(), Logging_Level.Error);
+                }
+            }*/
         }
     }
 
@@ -62,10 +77,11 @@ namespace Aurora.Devices
 
         private bool anyInitialized = false;
         private bool retryActivated = false;
-        private const int retryInterval = 5000;
-        private const int retryAttemps = 3;
+        private const int retryInterval = 10000;
+        private const int retryAttemps = 5;
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
+        private bool suspended = false;
 
         private bool _InitializeOnceAllowed = false;
 
@@ -88,9 +104,12 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
             devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
             devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
-            devices.Add(new DeviceContainer(new Devices.SteelSeriesHID.SteelSeriesHIDDevice()));   // SteelSeriesHID Device
+            devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
-
+            devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
+            devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
+            devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
+            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
@@ -140,6 +159,40 @@ namespace Aurora.Devices
                     }
                 }
             }
+
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        }
+        bool resumed = false;
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            Global.logger.Info($"SessionSwitch triggered with {e.Reason}");
+            if (e.Reason.Equals(SessionSwitchReason.SessionUnlock) && (suspended || resumed))
+            {
+                Global.logger.Info("Resuming Devices -- Session Switch Session Unlock");
+                suspended = false;
+                resumed = false;
+                this.Initialize(true);
+            }
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Suspend:
+                    Global.logger.Info("Suspending Devices");
+                    suspended = true;
+                    this.Shutdown();
+                    break;
+                case PowerModes.Resume:
+                    Global.logger.Info("Resuming Devices -- PowerModes.Resume");
+                    Thread.Sleep(TimeSpan.FromSeconds(2));
+                    resumed = true;
+                    suspended = false;
+                    this.Initialize();
+                    break;
+            }
         }
 
         public void RegisterVariables()
@@ -149,8 +202,11 @@ namespace Aurora.Devices
                 Global.Configuration.VarRegistry.Combine(device.Device.GetRegisteredVariables());
         }
 
-        public void Initialize()
+        public void Initialize(bool forceRetry = false)
         {
+            if (suspended)
+                return;
+
             int devicesToRetryNo = 0;
             foreach (DeviceContainer device in devices)
             {
@@ -172,9 +228,11 @@ namespace Aurora.Devices
                 NewDevicesInitialized?.Invoke(this, new EventArgs());
             }
 
-            if (devicesToRetryNo > 0 && !retryActivated)
+            if (devicesToRetryNo > 0 && (retryThread == null || forceRetry || retryThread?.ThreadState == System.Threading.ThreadState.Stopped))
             {
                 retryActivated = true;
+                if (forceRetry)
+                    retryThread?.Abort();
                 retryThread = new Thread(RetryInitialize);
                 retryThread.Start();
                 return;
@@ -183,9 +241,13 @@ namespace Aurora.Devices
 
         private void RetryInitialize()
         {
+            if (suspended)
+                return;
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
                 Global.logger.Info("Retrying Device Initialization");
+                if (suspended)
+                    continue;
                 int devicesAttempted = 0;
                 bool _anyInitialized = false;
                 foreach (DeviceContainer device in devices)

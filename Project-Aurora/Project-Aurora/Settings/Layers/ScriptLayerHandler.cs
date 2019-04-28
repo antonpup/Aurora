@@ -101,7 +101,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsScriptValid)
             {
-                return profileManager.EffectScripts[this.Properties._Script].Properties;
+                return (VariableRegistry)profileManager.EffectScripts[this.Properties._Script].Properties.Clone();
             }
 
             return null;

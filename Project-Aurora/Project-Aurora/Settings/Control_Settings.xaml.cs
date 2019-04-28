@@ -405,13 +405,9 @@ namespace Aurora.Settings
 
         private void excluded_add_Click(object sender, RoutedEventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(this.excluded_process_name.Text))
-            {
-                if (!Global.Configuration.excluded_programs.Contains(this.excluded_process_name.Text))
-                {
-                    Global.Configuration.excluded_programs.Add(this.excluded_process_name.Text);
-                }
-            }
+            Window_ProcessSelection dialog = new Window_ProcessSelection { ButtonLabel = "Exclude Process" };
+            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutableName)) // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
+                Global.Configuration.excluded_programs.Add(dialog.ChosenExecutableName);
 
             load_excluded_listbox();
         }
@@ -568,6 +564,18 @@ namespace Aurora.Settings
         private void devices_view_first_time_steelseries_Click(object sender, RoutedEventArgs e)
         {
             Devices.SteelSeries.SteelSeriesInstallInstructions instructions = new Devices.SteelSeries.SteelSeriesInstallInstructions();
+            instructions.ShowDialog();
+        }
+
+        private void devices_view_first_time_dualshock_Click(object sender, RoutedEventArgs e)
+        {
+            Devices.Dualshock.DualshockInstallInstructions instructions = new Devices.Dualshock.DualshockInstallInstructions();
+            instructions.ShowDialog();
+        }
+
+        private void devices_view_first_time_roccat_Click(object sender, RoutedEventArgs e)
+        {
+            Devices.Roccat.RoccatInstallInstructions instructions = new Devices.Roccat.RoccatInstallInstructions();
             instructions.ShowDialog();
         }
 
@@ -955,30 +963,6 @@ namespace Aurora.Settings
             }
         }
 
-        private async void excluded_process_name_DropDownOpened(object sender, EventArgs e)
-        {
-            excluded_process_name.ItemsSource = new string[] { "Working..." };
-
-            HashSet<string> processes = new HashSet<string>();
-            await System.Threading.Tasks.Task.Run(() =>
-            {
-
-                foreach (var p in Process.GetProcesses())
-                {
-                    try
-                    {
-                        processes.Add(Path.GetFileName(p.MainModule.FileName));
-                    }
-                    catch (Exception exc)
-                    {
-
-                    }
-                }
-
-            });
-            excluded_process_name.ItemsSource = processes.ToArray();
-        }
-
         private void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e)
         {
             if (winBitmapView == null)
@@ -1024,17 +1008,20 @@ namespace Aurora.Settings
                 Dispatcher.Invoke(
                     () =>
                     {
-                        using (MemoryStream memory = new MemoryStream())
+                        lock (bitmap)
                         {
-                            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
-                            memory.Position = 0;
-                            BitmapImage bitmapimage = new BitmapImage();
-                            bitmapimage.BeginInit();
-                            bitmapimage.StreamSource = memory;
-                            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmapimage.EndInit();
+                            using (MemoryStream memory = new MemoryStream())
+                            {
+                                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                                memory.Position = 0;
+                                BitmapImage bitmapimage = new BitmapImage();
+                                bitmapimage.BeginInit();
+                                bitmapimage.StreamSource = memory;
+                                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                                bitmapimage.EndInit();
 
-                            imgBitmap.Source = bitmapimage;
+                                imgBitmap.Source = bitmapimage;
+                            }
                         }
                     });
             }
@@ -1070,5 +1057,7 @@ namespace Aurora.Settings
         {
             Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
         }
+
+        private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => new Window_GSIHttpDebug().Show();
     }
 }

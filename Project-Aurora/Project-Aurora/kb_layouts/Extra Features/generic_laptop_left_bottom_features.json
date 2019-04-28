@@ -1,0 +1,21 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 3,
+  "grouped_keys": [
+    {
+      "visualName": "FN",
+      "tag": 171,
+      "margin_left": 48.0,
+      "margin_top": -37.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

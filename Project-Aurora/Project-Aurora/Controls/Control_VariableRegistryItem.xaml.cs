@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -114,17 +115,29 @@ namespace Aurora.Controls
             }
             else if (var_type == typeof(int))
             {
-                IntegerUpDown intUpDown_control = new IntegerUpDown();
-                intUpDown_control.Value = VarRegistry.GetVariable<int>(VariableName);
-                int max_val, min_val = 0;
-                if (VarRegistry.GetVariableMax<int>(VariableName, out max_val))
-                    intUpDown_control.Maximum = max_val;
-                if (VarRegistry.GetVariableMin<int>(VariableName, out min_val))
-                    intUpDown_control.Minimum = min_val;
+                if (VarRegistry.GetFlags(VariableName).HasFlag(VariableFlags.UseHEX))
+                {
+                    TextBox hexBox = new TextBox();
+                    hexBox.PreviewTextInput += HexBoxOnPreviewTextInput;
+                    hexBox.Text = string.Format("{0:X}", VarRegistry.GetVariable<int>(VariableName));
+                    hexBox.TextChanged += HexBox_TextChanged;
+                    grd_control.Children.Add(hexBox);
+                }
+                else
+                {
+                    IntegerUpDown intUpDown_control = new IntegerUpDown();
 
-                intUpDown_control.ValueChanged += IntUpDown_control_ValueChanged;
+                    intUpDown_control.Value = VarRegistry.GetVariable<int>(VariableName);
+                    int max_val, min_val = 0;
+                    if (VarRegistry.GetVariableMax<int>(VariableName, out max_val))
+                        intUpDown_control.Maximum = max_val;
+                    if (VarRegistry.GetVariableMin<int>(VariableName, out min_val))
+                        intUpDown_control.Minimum = min_val;
 
-                grd_control.Children.Add(intUpDown_control);
+                    intUpDown_control.ValueChanged += IntUpDown_control_ValueChanged;
+
+                    grd_control.Children.Add(intUpDown_control);
+                }
             }
             else if (var_type == typeof(long))
             {
@@ -139,6 +152,28 @@ namespace Aurora.Controls
                 longUpDown_control.ValueChanged += LongUpDown_control_ValueChanged;
 
                 grd_control.Children.Add(longUpDown_control);
+            }
+            else if (var_type == typeof(double))
+            {
+                DoubleUpDown doubleUpDown_control = new DoubleUpDown();
+                doubleUpDown_control.Value = VarRegistry.GetVariable<double>(VariableName);
+                if (VarRegistry.GetVariableMax<double>(VariableName, out double max_val))
+                    doubleUpDown_control.Maximum = max_val;
+                if (VarRegistry.GetVariableMax<double>(VariableName, out double min_val))
+                    doubleUpDown_control.Minimum = min_val;
+                doubleUpDown_control.ValueChanged += DoubleUpDown_control_ValueChanged;
+                grd_control.Children.Add(doubleUpDown_control);
+            }
+            else if (var_type == typeof(float))
+            {
+                DoubleUpDown doubleUpDown_control = new DoubleUpDown();
+                doubleUpDown_control.Value = VarRegistry.GetVariable<float>(VariableName);
+                if (VarRegistry.GetVariableMax<float>(VariableName, out float max_val))
+                    doubleUpDown_control.Maximum = max_val;
+                if (VarRegistry.GetVariableMax<float>(VariableName, out float min_val))
+                    doubleUpDown_control.Minimum = min_val;
+                doubleUpDown_control.ValueChanged += DoubleUpDown_control_ValueChanged;
+                grd_control.Children.Add(doubleUpDown_control);
             }
             else if (var_type == typeof(Aurora.Settings.KeySequence))
             {
@@ -160,10 +195,33 @@ namespace Aurora.Controls
                 ctrl.SelectedColorChanged += colorPickerControlValueChanged;
                 grd_control.Children.Add(ctrl);
             }
+            else if (var_type == typeof(Aurora.Devices.DeviceKeys))
+            {
+                ComboBox ctrl = new ComboBox();
+                ctrl.ItemsSource = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToList();
+                ctrl.SelectedValue = VarRegistry.GetVariable<Aurora.Devices.DeviceKeys>(VariableName);
+                ctrl.SelectionChanged += CmbbxEnum_control_SelectionChanged;
+
+                grd_control.Children.Add(ctrl);
+            }
+            else if (var_type.IsEnum)
+            {
+                ComboBox cmbbxEnum_control = new ComboBox();
+                cmbbxEnum_control.ItemsSource = Enum.GetValues(var_type);
+                cmbbxEnum_control.SelectedValue = VarRegistry.GetVariable<object>(VariableName);
+                cmbbxEnum_control.SelectionChanged += CmbbxEnum_control_SelectionChanged;
+
+                grd_control.Children.Add(cmbbxEnum_control);
+            }
             //else
             //throw new Exception($"Type {var_type} is not supported!");
 
             grd_control.UpdateLayout();
+        }
+
+        private void CmbbxEnum_control_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            VarRegistry.SetVariable(VariableName, (sender as ComboBox).SelectedItem);
         }
 
         private void colorPickerControlValueChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
@@ -190,9 +248,27 @@ namespace Aurora.Controls
             VarRegistry.SetVariable(VariableName, (sender as IntegerUpDown).Value);
         }
 
+        private void DoubleUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+            VarRegistry.SetVariable(VariableName, (sender as DoubleUpDown).Value);
+        }
+
         private void Txtbx_control_TextChanged(object sender, TextChangedEventArgs e)
         {
             VarRegistry.SetVariable(VariableName, (sender as TextBox).Text);
+        }
+
+        private void HexBoxOnPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out int number);
+        }
+
+        private void HexBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string text = (sender as TextBox).Text;
+            //Hacky fix to stop error when nothing is entered
+            if (string.IsNullOrWhiteSpace(text))
+                text = "0";
+            VarRegistry.SetVariable(VariableName, int.Parse(text, NumberStyles.HexNumber, CultureInfo.CurrentCulture));
         }
 
         private void Chkbx_control_VarChanged(object sender, RoutedEventArgs e)

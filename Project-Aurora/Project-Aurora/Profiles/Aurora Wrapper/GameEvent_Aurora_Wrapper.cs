@@ -147,7 +147,23 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
                 SetExtraKey(Devices.DeviceKeys.LOGO, ngw_state.Extra_Keys.logo);
                 SetExtraKey(Devices.DeviceKeys.LOGO2, ngw_state.Extra_Keys.badge);
+                //Reversing the mousepad lights from left to right, razer takes it from right to left
                 SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT15, ngw_state.Extra_Keys.mousepad1);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT14, ngw_state.Extra_Keys.mousepad2);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT13, ngw_state.Extra_Keys.mousepad3);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT12, ngw_state.Extra_Keys.mousepad4);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT11, ngw_state.Extra_Keys.mousepad5);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT10, ngw_state.Extra_Keys.mousepad6);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT9, ngw_state.Extra_Keys.mousepad7);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT8, ngw_state.Extra_Keys.mousepad8);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT7, ngw_state.Extra_Keys.mousepad9);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT6, ngw_state.Extra_Keys.mousepad10);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT5, ngw_state.Extra_Keys.mousepad11);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT4, ngw_state.Extra_Keys.mousepad12);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT3, ngw_state.Extra_Keys.mousepad13);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT2, ngw_state.Extra_Keys.mousepad14);
+                SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT1, ngw_state.Extra_Keys.mousepad15);
                 SetExtraKey(Devices.DeviceKeys.G1, ngw_state.Extra_Keys.G1);
                 SetExtraKey(Devices.DeviceKeys.G2, ngw_state.Extra_Keys.G2);
                 SetExtraKey(Devices.DeviceKeys.G3, ngw_state.Extra_Keys.G3);
@@ -183,7 +199,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
                         }
                     }
                 }
-                else if (ngw_state.Command.Equals("SetLightingForKeyWithKeyName") || ngw_state.Command.Equals("SetLightingForKeyWithScanCode"))
+                else if (ngw_state.Command.Equals("SetLightingForKeyWithKeyName") || ngw_state.Command.Equals("SetLightingForKeyWithScanCode") || ngw_state.Command.Equals("SetLightingForKeyWithHidCode"))
                 {
                     var bitmap_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap((LedCSharp.keyboardNames)(ngw_state.Command_Data.key));
 
@@ -248,6 +264,17 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 }
                 //LightFX
                 else if (ngw_state.Command.Equals("LFX_GetNumDevices"))
+                {
+                    //Retain previous lighting
+                    int fill_color_int = Utils.ColorUtils.GetIntFromColor(last_fill_color);
+
+                    for (int i = 0; i < bitmap.Length; i++)
+                        bitmap[i] = fill_color_int;
+
+                    foreach (var extra_key in extra_keys.Keys.ToArray())
+                        extra_keys[extra_key] = last_fill_color;
+                }
+                else if (ngw_state.Command.Equals("LFX_GetNumLights"))
                 {
                     //Retain previous lighting
                     int fill_color_int = Utils.ColorUtils.GetIntFromColor(last_fill_color);
@@ -348,6 +375,10 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 }
                 //Razer
                 else if(ngw_state.Command.Equals("CreateMouseEffect"))
+                {
+
+                }
+                else if (ngw_state.Command.Equals("CreateMousepadEffect"))
                 {
 
                 }

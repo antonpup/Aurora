@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin-Example", "Plugin-Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wooting.NET", "..\Wooting.NET\Wooting.NET\Wooting.NET.csproj", "{FEA699AE-DB83-43DC-AB85-99F2E90C328F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SBAuroraReactive", "..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj", "{053A704B-5C79-4CDE-B1FC-B952051ACAA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -79,6 +81,10 @@ Global
 		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Debug|x64.Build.0 = Debug|Any CPU
 		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Release|x64.ActiveCfg = Release|Any CPU
 		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Release|x64.Build.0 = Release|Any CPU
+		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Debug|x64.ActiveCfg = Debug|x64
+		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Debug|x64.Build.0 = Debug|x64
+		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Release|x64.ActiveCfg = Release|x64
+		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

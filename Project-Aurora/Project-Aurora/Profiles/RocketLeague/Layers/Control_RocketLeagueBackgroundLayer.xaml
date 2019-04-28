@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Aurora.Profiles.RocketLeague.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
-    <Grid>
+    <Grid Height="103">
         <xctk:ColorPicker x:Name="ColorPicker_Blue" Margin="95,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="149" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Blue_SelectedColorChanged" />
         <Label HorizontalAlignment="Left" Padding="0" Content="Blue Team Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
         <xctk:ColorPicker x:Name="ColorPicker_Orange" Margin="111,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="133" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Orange_SelectedColorChanged" UsingAlphaChannel="True" />
@@ -14,5 +14,8 @@
         <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,50,0,-2" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="True" />
         <Label HorizontalAlignment="Left" Margin="0,52,0,0" Padding="0" Content="Ambient Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="Checkbox_ShowTeamScoreSplit" Content="Show team score split" HorizontalAlignment="Left" Margin="0,73,0,0" VerticalAlignment="Top" Checked="Checkbox_ShowTeamScoreSplit_enabled_Checked" Unchecked="Checkbox_ShowTeamScoreSplit_enabled_Checked"/>
+        <CheckBox x:Name="Checkbox_ShowGoalExplosion" Content="Show friendly goal explosions" HorizontalAlignment="Left" Margin="0,88,0,-15" VerticalAlignment="Top" Checked="Checkbox_ShowGoalExplosion_enabled_Checked" Unchecked="Checkbox_ShowGoalExplosion_enabled_Checked"/>
+        <CheckBox x:Name="Checkbox_ShowEnemyExplosion" Content="Show enemy goal explosions" HorizontalAlignment="Left" Margin="0,103,0,-15" VerticalAlignment="Top" Checked="Checkbox_ShowEnemyExplosion_enabled_Checked" Unchecked="Checkbox_ShowEnemyExplosion_enabled_Checked"/>
+
     </Grid>
 </UserControl>

@@ -25,6 +25,9 @@ namespace Aurora.Profiles
         //TODO: Add NotifyPropertyChanged to properties
         public string[] ProcessNames { get; set; }
 
+        /// <summary>One or more REGULAR EXPRESSIONS that can be used to match the title of an application</summary>
+        public string[] ProcessTitles { get; set; }
+
         public string Name { get; set; }
 
         public string ID { get; set; }
@@ -157,7 +160,7 @@ namespace Aurora.Profiles
         {
             ApplicationProfile profile = (ApplicationProfile)Activator.CreateInstance(Config.ProfileType);
             profile.ProfileName = profileName;
-            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetUnusedFilename(GetProfileFolderPath(), profile.ProfileName) + ".json");
             return profile;
         }
 
@@ -166,7 +169,7 @@ namespace Aurora.Profiles
             if (Disposed)
                 return;
 
-            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetUnusedFilename(GetProfileFolderPath(), profile.ProfileName) + ".json");
             this.Profiles.Add(profile);
         }
 
@@ -196,6 +199,19 @@ namespace Aurora.Profiles
             SaveProfiles();
 
             SwitchToProfile(_newProfile);
+        }
+
+        public ApplicationProfile AddNewProfile(String profileName)
+        {
+            ApplicationProfile _newProfile = CreateNewProfile(profileName);
+
+            Profiles.Add(_newProfile);
+
+            SaveProfiles();
+
+            SwitchToProfile(_newProfile);
+
+            return _newProfile;
         }
 
         public void DeleteProfile(ApplicationProfile profile)
@@ -241,6 +257,14 @@ namespace Aurora.Profiles
             return filename;
         }
 
+        protected string GetUnusedFilename(string dir, string filename) {
+            var safeName = GetValidFilename(filename);
+            if (!File.Exists(Path.Combine(dir, safeName + ".json"))) return safeName;
+            var i = 0;
+            while (File.Exists(Path.Combine(dir, safeName + "-" + ++i + ".json")));
+            return safeName + "-" + i;
+        }
+
         public virtual string GetProfileFolderPath()
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", Config.ID);
@@ -266,6 +290,8 @@ namespace Aurora.Profiles
             }
         }
 
+        //hacky fix to sort out MoD profile type change
+        protected ISerializationBinder binder = Utils.JSONUtils.SerializationBinder;
         internal ApplicationProfile LoadProfile(string path)
         {
             if (Disposed)
@@ -279,7 +305,7 @@ namespace Aurora.Profiles
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(profile_content, Config.ProfileType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder, Error = new EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs>(LoadProfilesError) });
+                        ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(profile_content, Config.ProfileType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = binder, Error = new EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs>(LoadProfilesError) });
                         prof.ProfileFilepath = path;
 
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
@@ -340,7 +366,7 @@ namespace Aurora.Profiles
             return null;
         }
 
-        private void LoadProfilesError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+        protected virtual void LoadProfilesError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
             if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
                 e.ErrorContext.Handled = true;

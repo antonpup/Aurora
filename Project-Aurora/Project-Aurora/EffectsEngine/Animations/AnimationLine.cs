@@ -111,13 +111,13 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f)
+        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
         {
             if (_start_point.Equals(_end_point))
                 return;
 
-            PointF _scaledStartPoint = new PointF(_start_point.X * scale, _start_point.Y * scale);
-            PointF _scaledEndPoint = new PointF(_end_point.X * scale, _end_point.Y * scale);
+            PointF _scaledStartPoint = new PointF((_start_point.X * scale) + offset.X, (_start_point.Y * scale) + offset.Y);
+            PointF _scaledEndPoint = new PointF((_end_point.X * scale) + offset.X, (_end_point.Y * scale) + offset.Y);
 
             if (_pen == null || _invalidated)
             {

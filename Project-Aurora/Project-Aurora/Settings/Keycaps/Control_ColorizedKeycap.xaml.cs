@@ -21,7 +21,7 @@ namespace Aurora.Settings.Keycaps
     /// </summary>
     public partial class Control_ColorizedKeycap : UserControl, IKeycap
     {
-        private Color current_color = Color.FromArgb(0, 0, 0, 0);
+        private Color? current_color = null;
         private Devices.DeviceKeys associatedKey = DeviceKeys.NONE;
         private bool isImage = false;
 
@@ -56,7 +56,8 @@ namespace Aurora.Settings.Keycaps
             {
                 keyCap.Text = key.visualName;
                 keyCap.Tag = key.tag;
-                keyCap.FontSize = key.font_size.Value;
+                if (key.font_size != null)
+                    keyCap.FontSize = key.font_size.Value;
                 keyCap.Visibility = System.Windows.Visibility.Visible;
             }
             else
@@ -91,7 +92,7 @@ namespace Aurora.Settings.Keycaps
 
         public void SetColor(Color key_color)
         {
-            if (!current_color.Equals(key_color))
+            if (!key_color.Equals(current_color))
             {
                 if (!isImage)
                 {

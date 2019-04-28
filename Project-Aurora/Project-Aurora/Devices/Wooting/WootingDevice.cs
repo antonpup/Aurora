@@ -3,6 +3,7 @@ using Aurora.Utils;
 using CoolerMaster;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Aurora.Devices.Wooting
         private bool isInitialized = false;
 
         private bool keyboard_updated = false;
+        private VariableRegistry default_registry = null;
 
         private readonly object action_lock = new object();
 
@@ -111,7 +113,7 @@ namespace Aurora.Devices.Wooting
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
@@ -123,7 +125,7 @@ namespace Aurora.Devices.Wooting
 
                     foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                     {
-                        if (token.IsCancellationRequested) return false;
+                        if (e.Cancel) return false;
 
 
                         Color clr = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
@@ -132,26 +134,29 @@ namespace Aurora.Devices.Wooting
                             continue;
                         //(byte row, byte column) coordinates = WootingRgbControl.KeyMap[devKey];
                         //colourMap[coordinates.row, coordinates.column] = new KeyColour(clr.red, clr.green, clr.blue);
-                        RGBControl.SetKey(devKey, clr.R, clr.G, clr.B);
+                        
+                        RGBControl.SetKey(devKey, (byte)(clr.R * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_r")/100),
+                                                  (byte)(clr.G * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_g")/100),
+                                                  (byte)(clr.B * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_b")/100));
                     }
-                    if (token.IsCancellationRequested) return false;
+                    if (e.Cancel) return false;
                     //AlsoWootingRgbControl.SetFull(colourMap);
                     RGBControl.UpdateKeyboard();
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                Global.logger.Error("Failed to Update Device" + e.ToString());
+                Global.logger.Error("Failed to Update Device" + exc.ToString());
                 return false;
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
@@ -176,7 +181,14 @@ namespace Aurora.Devices.Wooting
 
         public VariableRegistry GetRegisteredVariables()
         {
-            return new VariableRegistry();
+            if (default_registry == null)
+            {
+                default_registry = new VariableRegistry();
+                default_registry.Register($"{devicename}_scalar_r", 100, "Red Scalar", 100, 0);
+                default_registry.Register($"{devicename}_scalar_g", 100, "Green Scalar", 100, 0);
+                default_registry.Register($"{devicename}_scalar_b", 100, "Blue Scalar", 100, 0,"In percent");
+            }
+            return default_registry;
         }
 
         public static Dictionary<DeviceKeys, WootingKey.Keys> KeyMap = new Dictionary<DeviceKeys, WootingKey.Keys> {

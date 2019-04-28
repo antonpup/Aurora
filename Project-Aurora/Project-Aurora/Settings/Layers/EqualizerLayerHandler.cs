@@ -363,10 +363,15 @@ namespace Aurora.Settings.Layers
                 int bytesRecorded = e.BytesRecorded;
                 int bufferIncrement = waveIn.WaveFormat.BlockAlign;
 
-                for (int index = 0; index < bytesRecorded; index += bufferIncrement)
+                // 4 bytes per channel, bufferIncrement is numChannels * 4
+                for (int index = 0; index < bytesRecorded; index += bufferIncrement) // Loop over the bytes, respecting the channel grouping
                 {
-                    float sample32 = BitConverter.ToSingle(buffer, index);
-                    sampleAggregator.Add(sample32);
+                    if (waveIn.WaveFormat.Channels == 2)
+                        // If recording has two channels, take the largest value and add that to the sampleAggregator.
+                        sampleAggregator.Add(Math.Max(BitConverter.ToSingle(buffer, index), BitConverter.ToSingle(buffer, index + 4)));
+                    else
+                        // Fallback to the original if there's only one channel
+                        sampleAggregator.Add(BitConverter.ToSingle(buffer, index));
                 }
             }
         }

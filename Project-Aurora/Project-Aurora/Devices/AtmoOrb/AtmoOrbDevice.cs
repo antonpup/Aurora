@@ -1,6 +1,7 @@
 ﻿using Aurora.Settings;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -117,7 +118,7 @@ namespace Aurora.Devices.AtmoOrbDevice
                 sw.Stop();
         }
 
-        public void Connect(CancellationToken? token = null)
+        public void Connect(DoWorkEventArgs token = null)
         {
             try
             {
@@ -128,19 +129,13 @@ namespace Aurora.Devices.AtmoOrbDevice
                 var multiCastIp = IPAddress.Parse("239.15.18.2");
                 var port = 49692;
 
-                token?.ThrowIfCancellationRequested();
-
                 socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 ipClientEndpoint = new IPEndPoint(multiCastIp, port);
                 socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership,
                     new MulticastOption(multiCastIp));
                 socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 2);
 
-                token?.ThrowIfCancellationRequested();
-
                 socket.Connect(ipClientEndpoint);
-
-                token?.ThrowIfCancellationRequested();
 
                 isConnected = true;
                 isConnecting = false;
@@ -152,23 +147,23 @@ namespace Aurora.Devices.AtmoOrbDevice
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
 
             watch.Restart();
 
             // Connect if needed
             if (!isConnected)
-                Connect(token);
+                Connect(e);
 
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
 
             // Reduce sending based on user config
             if (!sw.IsRunning)
                 sw.Start();
 
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
 
             if (sw.ElapsedMilliseconds >
                 Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_send_delay"))
@@ -188,11 +183,11 @@ namespace Aurora.Devices.AtmoOrbDevice
                     }
                 }
 
-                SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, token);
+                SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, e);
                 sw.Restart();
             }
 
-            if (token.IsCancellationRequested) return false;
+            if (e.Cancel) return false;
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
@@ -200,14 +195,14 @@ namespace Aurora.Devices.AtmoOrbDevice
             return true;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false)
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             throw new NotImplementedException();
         }
 
-        public void SendColorsToOrb(byte red, byte green, byte blue, CancellationToken? token = null)
+        public void SendColorsToOrb(byte red, byte green, byte blue, DoWorkEventArgs e = null)
         {
-            if (token?.IsCancellationRequested ?? false) return;
+            if (e?.Cancel ?? false) return;
             if (!isConnected)
             {
                 Reconnect();
@@ -225,11 +220,11 @@ namespace Aurora.Devices.AtmoOrbDevice
                 orbIDs = new List<string>() { "1" };
             }
 
-            if (token?.IsCancellationRequested ?? false) return;
+            if (e?.Cancel ?? false) return;
 
             foreach (var orbID in orbIDs)
             {
-                if (token?.IsCancellationRequested ?? false) return;
+                if (e?.Cancel ?? false) return;
                 if (String.IsNullOrWhiteSpace(orbID))
                     continue;
 
@@ -260,7 +255,7 @@ namespace Aurora.Devices.AtmoOrbDevice
                     bytes[6] = green;
                     bytes[7] = blue;
 
-                    if (token?.IsCancellationRequested ?? false) return;
+                    if (e?.Cancel ?? false) return;
                     socket.Send(bytes, bytes.Length, SocketFlags.None);
                 }
                 catch (Exception)

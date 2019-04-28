@@ -1,4 +1,5 @@
-﻿using Aurora.Profiles.Desktop;
+﻿using Aurora.Profiles.Aurora_Wrapper;
+using Aurora.Profiles.Desktop;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Settings;
@@ -15,12 +16,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
-using Aurora.Profiles.Aurora_Wrapper;
 
 namespace Aurora.Profiles
 {
@@ -70,6 +71,8 @@ namespace Aurora.Profiles
         private List<string> Overlays = new List<string>();
 
         private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
+
+        private Dictionary<string, string> EventTitles { get; set; } = new Dictionary<string, string>();
 
         private Dictionary<string, string> EventAppIDs { get; set; } = new Dictionary<string, string>();
 
@@ -133,7 +136,15 @@ namespace Aurora.Profiles
                 new QuantumConumdrum.QuantumConumdrum(),
                 new Battlefield1.Battlefield1(),
                 new Dishonored.Dishonored(),
-                new Witcher3.Witcher3()
+                new Witcher3.Witcher3(),
+                new Minecraft.Minecraft(),
+                new KillingFloor2.KillingFloor2(),
+                new DOOM.DOOM(),
+                new Factorio.Factorio(),
+                new QuakeChampions.QuakeChampions(),
+                new Diablo3.Diablo3(),
+                new DeadCells.DeadCells(),
+                new Subnautica.Subnautica()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -149,6 +160,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Percent", "Percent Effect Layer", typeof(PercentLayerHandler)),
                 new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
                 new LayerHandlerEntry("Conditional", "Conditional Layer", typeof(ConditionalLayerHandler)),
+                new LayerHandlerEntry("Comparison", "Comparison Layer", typeof(ComparisonLayerHandler)),
                 new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
                 new LayerHandlerEntry("ShortcutAssistant", "Shortcut Assistant Layer", typeof(ShortcutAssistantLayerHandler) ),
                 new LayerHandlerEntry("Equalizer", "Audio Visualizer Layer", typeof(EqualizerLayerHandler) ),
@@ -174,7 +186,7 @@ namespace Aurora.Profiles
                 List<string> additionals = new List<string>(Directory.EnumerateDirectories(AdditionalProfilesPath));
                 foreach (var dir in additionals)
                 {
-                    if (File.Exists(Path.Combine(dir, "default.json")))
+                    if (File.Exists(Path.Combine(dir, "settings.json")))
                     {
                         string proccess_name = Path.GetFileName(dir);
                         RegisterEvent(new GenericApplication(proccess_name));
@@ -311,6 +323,10 @@ namespace Aurora.Profiles
                 }
             }
 
+            if (@event.Config.ProcessTitles != null)
+                foreach (string titleRx in @event.Config.ProcessTitles)
+                    EventTitles.Add(titleRx, key);
+
             if (!String.IsNullOrWhiteSpace(@event.Config.AppID))
                 EventAppIDs.Add(@event.Config.AppID, key);
 
@@ -364,7 +380,7 @@ namespace Aurora.Profiles
             }
         }
 
-        public ILightEvent GetProfileFromProcess(string process)
+        public ILightEvent GetProfileFromProcessName(string process)
         {
             if (EventProcesses.ContainsKey(process))
             {
@@ -376,6 +392,18 @@ namespace Aurora.Profiles
             else if (Events.ContainsKey(process))
                 return Events[process];
 
+            return null;
+        }
+
+        public ILightEvent GetProfileFromProcessTitle(string title) {
+            foreach (var entry in EventTitles) {
+                if (Regex.IsMatch(title, entry.Key, RegexOptions.IgnoreCase)) {
+                    if (!Events.ContainsKey(entry.Value))
+                        Global.logger.Warn($"GetProfileFromProcess: The process with title '{title}' matchs an item in EventTitles but subsequently '{entry.Value}' does not in Events!");
+                    else
+                        return Events[entry.Value]; // added in an else so we keep searching for more valid regexes.
+                }
+            }
             return null;
         }
 
@@ -535,7 +563,7 @@ namespace Aurora.Profiles
 
             timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
-            if ((profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
+            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
                 Global.dev_manager.Shutdown();
                 Global.effengine.PushFrame(newFrame);
@@ -588,18 +616,19 @@ namespace Aurora.Profiles
         /// <param name="preview">Boolean indicating whether the application is selected because it is previewing (true) or because the process is open (false).</param>
         public ILightEvent GetCurrentProfile(out bool preview) {
             string process_name = Path.GetFileName(processMonitor.ProcessPath).ToLower();
+            string process_title = processMonitor.GetActiveWindowsProcessTitle();
             ILightEvent profile = null;
             ILightEvent tempProfile = null;
             preview = false;
 
             //TODO: GetProfile that checks based on event type
-            if (((tempProfile = GetProfileFromProcess(process_name)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+            if ((((tempProfile = GetProfileFromProcessName(process_name)) != null) || ((tempProfile = GetProfileFromProcessTitle(process_title)) != null)) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
                 profile = tempProfile;
-            else if ((tempProfile = GetProfileFromProcess(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
+            else if ((tempProfile = GetProfileFromProcessName(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
             {
                 profile = tempProfile;
                 preview = true;
-            } else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcess(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.Config.ProcessNames.Contains(process_name) && tempProfile.IsEnabled)
+            } else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
                 profile = tempProfile;
 
             profile = profile ?? DesktopProfile;
@@ -656,7 +685,7 @@ namespace Aurora.Profiles
                 string appid = provider.GetValue("appid").ToString();
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
-                if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcess(name)) != null)
+                if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcessName(name)) != null)
                 {
                     IGameState gameState = gs;
                     if (profile.Config.GameStateType != null)
@@ -668,7 +697,7 @@ namespace Aurora.Profiles
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
                     lock (Events)
                     {
-                        profile = profile ?? GetProfileFromProcess(gs_process_name);
+                        profile = profile ?? GetProfileFromProcessName(gs_process_name);
 
                         if (profile == null)
                         {
@@ -692,7 +721,7 @@ namespace Aurora.Profiles
         public void ResetGameState(string process)
         {
             ILightEvent profile;
-            if (((profile = GetProfileFromProcess(process)) != null))
+            if (((profile = GetProfileFromProcessName(process)) != null))
                 profile.ResetGameState();
         }
 

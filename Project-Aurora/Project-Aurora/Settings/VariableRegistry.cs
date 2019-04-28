@@ -18,12 +18,13 @@ namespace Aurora.Settings
         public object Min = null;
         public string Title = "";
         public string Remark = "";
+        public VariableFlags Flags = VariableFlags.None;
 
         public VariableRegistryItem()
         {
         }
 
-        public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "")
+        public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
         {
             this.Value = defaultValue;
             this.Default = defaultValue;
@@ -36,6 +37,7 @@ namespace Aurora.Settings
 
             this.Title = title;
             this.Remark = remark;
+            this.Flags = flags;
         }
 
         public void SetVariable(object newvalue)
@@ -55,14 +57,24 @@ namespace Aurora.Settings
             this.Max = variableRegistryItem.Max;
             Type typ = this.Value.GetType();
             Type defaultType = variableRegistryItem.Default.GetType();
-            if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
+
+            if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
+                this.Value = Enum.ToObject(defaultType, Value);
+            else if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
                 this.Value = Convert.ChangeType(this.Value, defaultType);
             else if (this.Value == null && !defaultType.Equals(typ))
                 this.Value = variableRegistryItem.Default;
+            this.Flags = variableRegistryItem.Flags;
         }
     }
 
-    public class VariableRegistry //Might want to implement something like IEnumerable here
+    public enum VariableFlags
+    {
+        None = 0,
+        UseHEX = 1
+    }
+
+    public class VariableRegistry : ICloneable //Might want to implement something like IEnumerable here
     {
         [JsonProperty("Variables")]
         private Dictionary<string, VariableRegistryItem> _variables;
@@ -106,10 +118,10 @@ namespace Aurora.Settings
             return _variables.Keys.ToArray();
         }
 
-        public void Register(string name, object defaultValue, string title = "", object max = null, object min = null, string remark = "")
+        public void Register(string name, object defaultValue, string title = "", object max = null, object min = null, string remark = "", VariableFlags flags = VariableFlags.None)
         {
             if (!_variables.ContainsKey(name))
-                _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark));
+                _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark, flags));
         }
 
         public void Register(string name, VariableRegistryItem varItem)
@@ -141,7 +153,7 @@ namespace Aurora.Settings
 
         public T GetVariable<T>(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && _variables[name].Value.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
                 return (T)_variables[name].Value;
 
             return default(T);
@@ -149,7 +161,7 @@ namespace Aurora.Settings
 
         public T GetVariableDefault<T>(string name)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && _variables[name].Default.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
                 return (T)_variables[name].Default;
 
             return Activator.CreateInstance<T>();
@@ -157,7 +169,7 @@ namespace Aurora.Settings
 
         public bool GetVariableMax<T>(string name, out T value)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && _variables[name].Max.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
                 value = (T)_variables[name].Max;
                 return true;
@@ -169,7 +181,7 @@ namespace Aurora.Settings
 
         public bool GetVariableMin<T>(string name, out T value)
         {
-            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && _variables[name].Min.GetType() == typeof(T))
+            if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
                 value = (T)_variables[name].Min;
                 return true;
@@ -203,10 +215,29 @@ namespace Aurora.Settings
             return "";
         }
 
+        public VariableFlags GetFlags(string name)
+        {
+            if (_variables.ContainsKey(name))
+                return _variables[name].Flags;
+
+            return VariableFlags.None;
+        }
+
         public void RemoveVariable(string name)
         {
             if (_variables.ContainsKey(name))
                 _variables.Remove(name);
+        }
+
+        public object Clone()
+        {
+            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+
+            return JsonConvert.DeserializeObject(
+                    str,
+                    this.GetType(),
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
+                    );
         }
     }
 }

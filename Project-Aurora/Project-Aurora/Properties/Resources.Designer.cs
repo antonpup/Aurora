@@ -423,6 +423,16 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap minecraft_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("minecraft_128x128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Not_Visible {
             get {
                 object obj = ResourceManager.GetObject("Not_Visible", resourceCulture);
@@ -546,6 +556,16 @@ namespace Aurora.Properties {
         internal static System.Drawing.Bitmap SteelSeriesInstall_Step2 {
             get {
                 object obj = ResourceManager.GetObject("SteelSeriesInstall_Step2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Subnautica {
+            get {
+                object obj = ResourceManager.GetObject("Subnautica", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

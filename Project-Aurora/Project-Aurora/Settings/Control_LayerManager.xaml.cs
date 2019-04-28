@@ -85,11 +85,12 @@ namespace Aurora.Settings
         public void UpdateLayers(object sender, EventArgs e)
         {
             this.lstLayers.ItemsSource = this.FocusedApplication?.Profile?.Layers;
-
-            if (this.FocusedApplication is Profiles.Generic_Application.GenericApplication)
+            
+            //Make sure that it is on the correct list of layers
+            this.radiobtn_daytime.IsChecked = true;
+            if (this.FocusedApplication is Profiles.Generic_Application.GenericApplication && Global.Configuration.nighttime_enabled)
             {
                 this.grid_timeselection.Visibility = Visibility.Visible;
-                this.radiobtn_daytime.IsChecked = true;
                 this.radiobtn_nighttime.IsChecked = false;
             }
             else
@@ -256,28 +257,12 @@ namespace Aurora.Settings
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
                 if (e.Key == Key.C)
-                    Global.Clipboard = (this.lstLayers.SelectedItem as Layers.Layer)?.Clone();
-                else if (e.Key == Key.V && Global.Clipboard is Layers.Layer)
-                {
-                    Layers.Layer lyr = (Layers.Layer)((Layers.Layer)Global.Clipboard)?.Clone();
-
-                    if (Global.LightingStateManager.DefaultLayerHandlers.Contains(lyr.Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(lyr.Handler.ID))
-                    {
-                        lyr.Name += " - Copy";
-                        lyr.SetProfile(FocusedApplication);
-
-                        if (this.FocusedApplication is Profiles.Generic_Application.GenericApplication && this.radiobtn_nighttime.IsChecked.Value)
-                            ((FocusedApplication as Profiles.Generic_Application.GenericApplication)?.Profile as Profiles.Generic_Application.GenericApplicationProfile)?.Layers_NightTime?.Insert(0, lyr);
-                        else
-                            FocusedApplication.Profile.Layers.Insert(0, lyr);
-
-                    }
-                }
+                    btnCopyLayer_Click(null, null);
+                else if (e.Key == Key.V)
+                    btnPasteLayer_Click(null, null);
             }
             else if (e.Key == Key.Delete)
-            {
-                this.btnRemoveLayer_Click(null, null);
-            }
+                btnRemoveLayer_Click(null, null);
         }
 
         private void radiobtn_daytime_Checked(object sender, RoutedEventArgs e)
@@ -317,6 +302,29 @@ namespace Aurora.Settings
             if (this.lstLayers.SelectedItem == null)
                 this.lstLayers.SelectedIndex = 0;
 
+        }
+
+        private void btnCopyLayer_Click(object sender, RoutedEventArgs e)
+        {
+            Global.Clipboard = (lstLayers.SelectedItem as Layer)?.Clone();
+        }
+
+        private void btnPasteLayer_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(Global.Clipboard is Layer)) return;
+
+            Layer lyr = (Layer)((Layer)Global.Clipboard).Clone();
+
+            if (Global.LightingStateManager.DefaultLayerHandlers.Contains(lyr.Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(lyr.Handler.ID))
+            {
+                lyr.Name += " - Copy";
+                lyr.SetProfile(FocusedApplication);
+
+                if (FocusedApplication is Profiles.Generic_Application.GenericApplication && radiobtn_nighttime.IsChecked.Value)
+                    ((FocusedApplication as Profiles.Generic_Application.GenericApplication)?.Profile as Profiles.Generic_Application.GenericApplicationProfile)?.Layers_NightTime?.Insert(0, lyr);
+                else
+                    FocusedApplication.Profile.Layers.Insert(0, lyr);
+            }
         }
     }
 }

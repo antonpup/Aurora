@@ -9,23 +9,47 @@
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <TextBlock TextWrapping="Wrap" Text="The purpose of this layer is to display lighting effects from games that have native lighting(LightFX, Razer, Logitech, etc) that Aurora has wrappers for. This will only work if you have a wrapper applied to the correct location for a game that supports the lighting engine that the wrapper is designed for." HorizontalAlignment="Left" Width="487" VerticalAlignment="Top" Margin="0,0,0,0"/>
-        <Grid Margin="0,69,0,0">
-            <CheckBox x:Name="ce_enabled" Content="Enable Color Enhancing" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" IsChecked="{Binding Properties._ColorEnhanceEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Text="Color Enhancing Mode:" Margin="10,23,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <ComboBox x:Name="ce_mode" HorizontalAlignment="Left" Margin="139,20,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="{Binding Properties._ColorEnhanceMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <ComboBoxItem Content="Linear"/>
-                <ComboBoxItem Content="HSV"/>
-            </ComboBox>
-            <TextBlock HorizontalAlignment="Left" Margin="10,47,0,0" TextWrapping="Wrap" Text="Color Factor:" VerticalAlignment="Top"/>
-            <Slider x:Name="ce_color_factor" HorizontalAlignment="Left" Margin="116,47,0,0" VerticalAlignment="Top" Width="200" Minimum="1" Maximum="255" Value="{Binding Properties._ColorEnhanceColorFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="ce_color_factor_ValueChanged"/>
-            <TextBlock x:Name="ce_color_factor_label" HorizontalAlignment="Left" Margin="321,47,0,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,70,0,0" TextWrapping="Wrap" Text="HSV Sine Factor:" VerticalAlignment="Top" ToolTip="Changes the factor on how much the sine applies to the Formula, which makes darker colors brighter and bright colors darker. Higher values have a greater impact."/>
-            <Slider x:Name="ce_color_hsv_sine" HorizontalAlignment="Left" Margin="116,70,0,0" VerticalAlignment="Top" Width="200" Minimum="0.0" Maximum="0.16" Value="{Binding Properties._ColorEnhanceColorHSVSine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="ce_color_hsv_sine_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="0.02"/>
-            <TextBlock x:Name="ce_color_hsv_sine_label" HorizontalAlignment="Left" Margin="325,70,0,0" TextWrapping="Wrap" Text="0.1" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,93,0,0" TextWrapping="Wrap" Text="HSV Gamma Value:" VerticalAlignment="Top" ToolTip="Changes the factor for overall stronger colors. It cancels out the effect of the option above in the upper half of the brightness spectrum."/>
-            <Slider x:Name="ce_color_hsv_gamma" HorizontalAlignment="Left" Margin="116,93,0,0" VerticalAlignment="Top" Width="200" Minimum="1.0" Maximum="4.0" Value="{Binding Properties._ColorEnhanceColorHSVGamma, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="ce_color_hsv_gamma_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="0.05"/>
-            <TextBlock x:Name="ce_color_hsv_gamma_label" HorizontalAlignment="Left" Margin="325,93,0,0" TextWrapping="Wrap" Text="1.5" VerticalAlignment="Top"/>
-            <TextBlock TextWrapping="Wrap" Text="HSV is an algorithm to brighten dark colors, while not affecting bright colors in an elegant way. To do this, it needs more calculations per color, therefore uses more CPU power. If you notice any delays, you should consider not using HSV." Margin="27,133,0,0" HorizontalAlignment="Left" Width="314" VerticalAlignment="Top" FontStyle="Italic"/>
-        </Grid>
+
+        <GroupBox Header="Color Enhancement" Margin="0,69,0,0" Width="358" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid>
+                <CheckBox x:Name="ce_enabled" Content="Enable" HorizontalAlignment="Left" Margin="10,7,0,0" VerticalAlignment="Top" IsChecked="{Binding Properties._ColorEnhanceEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Color Enhancing Mode:" Margin="10,29,-41,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.RowSpan="2"/>
+                <ComboBox x:Name="ce_mode" HorizontalAlignment="Left" Margin="139,26,-166,0" VerticalAlignment="Top" Width="120" SelectedIndex="{Binding Properties._ColorEnhanceMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2">
+                    <ComboBoxItem Content="Linear"/>
+                    <ComboBoxItem Content="HSV"/>
+                </ComboBox>
+                <TextBlock HorizontalAlignment="Left" Margin="10,53,0,0" TextWrapping="Wrap" Text="Color Factor:" VerticalAlignment="Top" Grid.RowSpan="2"/>
+                <Slider x:Name="ce_color_factor" HorizontalAlignment="Left" Margin="116,53,-223,0" VerticalAlignment="Top" Width="200" Minimum="1" Maximum="255" Value="{Binding Properties._ColorEnhanceColorFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="ce_color_factor_ValueChanged" Grid.RowSpan="2"/>
+                <TextBlock x:Name="ce_color_factor_label" HorizontalAlignment="Left" Margin="321,53,-235,0" TextWrapping="Wrap" Text="255" VerticalAlignment="Top" Grid.RowSpan="2"/>
+                <TextBlock HorizontalAlignment="Left" Margin="10,76,0,0" TextWrapping="Wrap" Text="HSV Sine Factor:" VerticalAlignment="Top" ToolTip="Changes the factor on how much the sine applies to the Formula, which makes darker colors brighter and bright colors darker. Higher values have a greater impact." Grid.RowSpan="2"/>
+                <Slider x:Name="ce_color_hsv_sine" HorizontalAlignment="Left" Margin="116,76,-223,0" VerticalAlignment="Top" Width="200" Minimum="0.0" Maximum="0.16" Value="{Binding Properties._ColorEnhanceColorHSVSine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="ce_color_hsv_sine_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="0.02" Grid.RowSpan="2"/>
+                <TextBlock x:Name="ce_color_hsv_sine_label" HorizontalAlignment="Left" Margin="325,76,-239,0" TextWrapping="Wrap" Text="0.1" VerticalAlignment="Top" Grid.RowSpan="2"/>
+                <TextBlock HorizontalAlignment="Left" Margin="10,99,0,0" TextWrapping="Wrap" Text="HSV Gamma Value:" VerticalAlignment="Top" ToolTip="Changes the factor for overall stronger colors. It cancels out the effect of the option above in the upper half of the brightness spectrum." Grid.RowSpan="2"/>
+                <Slider x:Name="ce_color_hsv_gamma" HorizontalAlignment="Left" Margin="116,99,-223,0" VerticalAlignment="Top" Width="200" Minimum="1.0" Maximum="4.0" Value="{Binding Properties._ColorEnhanceColorHSVGamma, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="ce_color_hsv_gamma_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="0.05" Grid.RowSpan="2"/>
+                <TextBlock x:Name="ce_color_hsv_gamma_label" HorizontalAlignment="Left" Margin="325,99,-239,0" TextWrapping="Wrap" Text="1.5" VerticalAlignment="Top" Grid.RowSpan="2"/>
+                <TextBlock TextWrapping="Wrap" Text="HSV is an algorithm to brighten dark colors, while not affecting bright colors in an elegant way. To do this, it needs more calculations per color, therefore uses more CPU power. If you notice any delays, you should consider not using HSV." Margin="27,139,-248,0" HorizontalAlignment="Left" Width="314" VerticalAlignment="Top" FontStyle="Italic" Grid.RowSpan="2"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Key Cloning" Margin="368,69,0,0" HorizontalAlignment="Left" Height="228" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="230" />
+                    <ColumnDefinition Width="12px" />
+                    <ColumnDefinition Width="230" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Key cloning allows the wrapper layer to take the value that would be applied to a key (the source key) and apply it to one or more other keys (destination keys) as well." TextWrapping="Wrap" Margin="6,0" Grid.ColumnSpan="3" />
+
+                <Label Content="Source Keys:" Grid.Column="0" Margin="0,32,0,0" />
+                <!--<ListBox Grid.Column="0" Margin="0,57,80,0" MinWidth="150" VerticalAlignment="Stretch" />
+                <Button Content="Add key" Margin="0,57,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" />
+                <Button Content="Remove" Margin="0,84,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" />-->
+                <Controls:KeySequence x:Name="CloneSourceKS" Grid.Column="0" Margin="0,57,0,0" FreestyleEnabled="False" Title="Source Keys" RecordingTag="WrapperCloneSource" SequenceKeysChange="CloneSourceKS_SequenceKeysChange" SelectionChanged="CloneSourceKS_SelectionChanged" />
+
+                <Label Content="Desination Keys:" Grid.Column="2" Margin="0,32,0,0" />
+                <Controls:KeySequence x:Name="CloneDestKS" Grid.Column="2" Margin="0,57,0,0" IsEnabled="False" Title="Destination Keys" RecordingTag="WrapperCloneDestination" SequenceKeysChange="CloneDestKS_SequenceKeysChange" />
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>
