@@ -153,7 +153,7 @@ namespace Aurora.Devices.NZXT
                     else if (key.Key >= DeviceKeys.NINE && key.Key <= DeviceKeys.ZERO      ||
                              key.Key >= DeviceKeys.Q    && key.Key <= DeviceKeys.P         ||
                              key.Key >= DeviceKeys.A    && key.Key <= DeviceKeys.SEMICOLON ||
-                             key.Key >= DeviceKeys.Z    && key.Key <= DeviceKeys.PERIOD    )//40 keys
+                             key.Key >= DeviceKeys.Z    && key.Key <= DeviceKeys.FORWARD_SLASH)//40 keys
                     {
                         hueChanged |= UpdateValueAt(hueDevice, hueIndex++, key.Value.G);
                         hueChanged |= UpdateValueAt(hueDevice, hueIndex++, key.Value.R);
