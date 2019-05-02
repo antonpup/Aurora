@@ -4,22 +4,26 @@ using Aurora.Settings.Layers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Aurora.Settings {
-    public static class ProfileImporter {
+namespace Aurora.Settings
+{
+    public static class ProfileImporter
+    {
 
         /// <summary>
         /// Imports a file from disk as a profile into the given application.
         /// </summary>
         /// <param name="filepath">The full filepath of the file to import.</param>
-        public static void ImportProfile(this Application app, string filepath) {
+        public static void ImportProfile(this Application app, string filepath)
+        {
             string fn = filepath.ToLower();
-            
+
             if (fn.EndsWith(".cueprofile") || fn.EndsWith(".cuefolder"))
                 app.ImportCueprofile(filepath);
             else if (fn.EndsWith(".json"))
@@ -33,7 +37,7 @@ namespace Aurora.Settings {
         {
             XElement rootElement = XElement.Load(filepath);
             XElement valueElement = filepath.EndsWith(".cueprofile") ? rootElement : rootElement.Element("profile_folder").Element("profiles");
-                        
+
             foreach (XElement value in valueElement.Elements())
             {
                 XElement profileElement = value.Element("profile");
@@ -81,10 +85,10 @@ namespace Aurora.Settings {
                                             if (startOnKeyPress.Equals("true"))
                                             {
                                                 RippleEffectCheck = true;
-                                                if (stopOnRelease||stopOnPress)
+                                                if (stopOnRelease || stopOnPress)
                                                 {
                                                     stopImmediately = true;
-                                                       repeatTimes = 1;
+                                                    repeatTimes = 1;
                                                     triggerMode = AnimationTriggerMode.WhileKeyHeld;
                                                 }
                                             }
@@ -94,7 +98,7 @@ namespace Aurora.Settings {
                                             {
                                                 try
                                                 {
-                                                    CUE.NET.Devices.Generic.Enums.CorsairLedId keyValue;
+                                                    CUE.NET.Devices.Generic.Enums.CorsairLedId? keyValue = null;
 
                                                     switch (key.Value)
                                                     {
@@ -131,16 +135,26 @@ namespace Aurora.Settings {
                                                         case "Led_KeyboardLogo":
                                                             keyValue = CUE.NET.Devices.Generic.Enums.CorsairLedId.Logo;
                                                             break;
+                                                        case "Led_KeyboardTopLogo2":
+                                                            keyValue = CUE.NET.Devices.Generic.Enums.CorsairLedId.Logo;
+                                                            break;
                                                         default:
                                                             if (key.Value.StartsWith("Led_Top"))
                                                                 key.Value = "G18";
-                                                            keyValue = (CUE.NET.Devices.Generic.Enums.CorsairLedId)Enum.Parse(typeof(CUE.NET.Devices.Generic.Enums.CorsairLedId), key.Value);
+                                                            if (Enum.IsDefined(typeof(CUE.NET.Devices.Generic.Enums.CorsairLedId), key.Value))
+                                                            {
+                                                                keyValue = (CUE.NET.Devices.Generic.Enums.CorsairLedId)Enum.Parse(typeof(CUE.NET.Devices.Generic.Enums.CorsairLedId), key.Value);
+                                                            }
+                                                            else
+                                                            {
+                                                                Global.logger.Warn($"CorsairLedId not mapped, skipping {key.Value}");
+                                                            }
                                                             break;
                                                     }
 
-                                                    if (Enum.IsDefined(typeof(CUE.NET.Devices.Generic.Enums.CorsairLedId), keyValue) | keyValue.ToString().Contains(","))
+                                                    if (keyValue.HasValue && Enum.IsDefined(typeof(CUE.NET.Devices.Generic.Enums.CorsairLedId), keyValue) | keyValue.ToString().Contains(","))
                                                     {
-                                                        Devices.DeviceKeys deviceKey = Utils.KeyUtils.ToDeviceKeys(keyValue);
+                                                        Devices.DeviceKeys deviceKey = Utils.KeyUtils.ToDeviceKeys(keyValue.Value);
 
                                                         if (deviceKey != Devices.DeviceKeys.NONE)
                                                         {
@@ -149,14 +163,19 @@ namespace Aurora.Settings {
                                                         }
                                                     }
                                                 }
-                                                catch (Exception)
+                                                catch (Exception exception)
                                                 {
-                                                    Global.logger.Debug("Exception in profile");
+                                                    Global.logger.Error(exception, "Exception in profile: " + exception.StackTrace);
                                                     //break;
                                                 }
                                             }
 
                                             var lightingInfo = layer.Element("ptr_wrapper").Element("data").Element("lighting");
+                                            if (lightingInfo == null)
+                                            {
+                                                break;
+                                            }
+
                                             var transitionInfo = lightingInfo.Element("ptr_wrapper").Element("data").Element("transitions");
                                             if (transitionInfo == null)
                                             {
@@ -214,7 +233,7 @@ namespace Aurora.Settings {
                                             }
                                             else if ("GradientLighting".Equals(layerPolyName))
                                             {
-                                                float duration = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("base").Element("duration").Value);
+                                                float duration = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("base").Element("duration").Value, CultureInfo.InvariantCulture);
                                                 AnimationTrack animTrack = new AnimationTrack(layerName, duration / 1000.0f);
 
                                                 Dictionary<float, System.Drawing.Color> transitions = new Dictionary<float, System.Drawing.Color>();
@@ -223,7 +242,7 @@ namespace Aurora.Settings {
                                                 {
                                                     try
                                                     {
-                                                        float time = float.Parse(transition.Element("time").Value);
+                                                        float time = float.Parse(transition.Element("time").Value, CultureInfo.InvariantCulture);
                                                         System.Drawing.Color color = System.Drawing.ColorTranslator.FromHtml(transition.Element("color").Value);
 
                                                         if (transitions.ContainsKey(time * (duration / 1000.0f)))
@@ -273,7 +292,7 @@ namespace Aurora.Settings {
                                             }
                                             else if ("SolidLighting".Equals(layerPolyName))
                                             {
-                                                float duration = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("base").Element("duration").Value);
+                                                float duration = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("base").Element("duration").Value, CultureInfo.InvariantCulture);
                                                 AnimationTrack animTrack = new AnimationTrack(layerName, duration / 1000.0f);
 
                                                 Dictionary<float, System.Drawing.Color> transitions = new Dictionary<float, System.Drawing.Color>();
@@ -282,7 +301,7 @@ namespace Aurora.Settings {
                                                 {
                                                     try
                                                     {
-                                                        float time = float.Parse(transition.Element("time").Value);
+                                                        float time = float.Parse(transition.Element("time").Value, CultureInfo.InvariantCulture);
                                                         System.Drawing.Color color = System.Drawing.ColorTranslator.FromHtml(transition.Element("color").Value);
 
                                                         if (transitions.ContainsKey(time * (duration / 1000.0f)))
@@ -322,7 +341,7 @@ namespace Aurora.Settings {
                                             }
                                             else if ("WaveLighting".Equals(layerPolyName))
                                             {
-                                                float duration = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("base").Element("duration").Value);
+                                                float duration = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("base").Element("duration").Value, CultureInfo.InvariantCulture);
 
                                                 List<AnimationTrack> animTracks = new List<AnimationTrack>();
 
@@ -335,7 +354,7 @@ namespace Aurora.Settings {
                                                 {
                                                     try
                                                     {
-                                                        float time = float.Parse(transition.Element("time").Value);
+                                                        float time = float.Parse(transition.Element("time").Value, CultureInfo.InvariantCulture);
                                                         System.Drawing.Color color = System.Drawing.ColorTranslator.FromHtml(transition.Element("color").Value);
 
                                                         transitions.SetColorAt(time, color);
@@ -345,9 +364,9 @@ namespace Aurora.Settings {
                                                         else if (time > largest)
                                                             largest = time;
                                                     }
-                                                    catch (Exception)
+                                                    catch (Exception exception)
                                                     {
-                                                        Global.logger.Debug("Wave Ex");
+                                                        Global.logger.Error(exception, "Wave Ex " + exception.StackTrace);
                                                     }
                                                 }
 
@@ -365,10 +384,10 @@ namespace Aurora.Settings {
 
                                                 //transitions.Flip();
 
-                                                float velocity = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("velocity").Value) / 10.0f;
-                                                float width = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("tailLength").Value) / 10.0f;
+                                                float velocity = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("velocity").Value, CultureInfo.InvariantCulture) / 10.0f;
+                                                float width = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("tailLength").Value, CultureInfo.InvariantCulture) / 10.0f;
                                                 bool isDoubleSided = bool.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("isDoublesided").Value);
-                                                float angle = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("angle").Value);
+                                                float angle = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("angle").Value, CultureInfo.InvariantCulture);
 
                                                 width *= 2.1f;
 
@@ -509,7 +528,7 @@ namespace Aurora.Settings {
                                                         _initialBrushBottom.start = new System.Drawing.PointF(0, Effects.canvas_height_center);
                                                         _initialBrushBottom.end = new System.Drawing.PointF(0, Effects.canvas_height_center - width);
 
-                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(-Effects.canvas_width, Effects.canvas_height_center, Effects.canvas_width * 3, 0, _initialBrushBottom).SetAngle(angle));
+                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(0, Effects.canvas_height_center, Effects.canvas_width * 3, 0, _initialBrushBottom).SetAngle(angle));
 
                                                         if (_widthFillTime < _terminalTime)
                                                         {
@@ -518,13 +537,13 @@ namespace Aurora.Settings {
                                                             _fillBrushBottom.end = new System.Drawing.PointF(0, Effects.canvas_height_center);
 
 
-                                                            animTrack.SetFrame(_widthFillTime, new AnimationFilledGradientRectangle(-Effects.canvas_width, Effects.canvas_height_center, Effects.canvas_width * 3, width, _fillBrushBottom).SetAngle(angle));
+                                                            animTrack.SetFrame(_widthFillTime, new AnimationFilledGradientRectangle(0, Effects.canvas_height_center, Effects.canvas_width * 3, width, _fillBrushBottom).SetAngle(angle));
 
                                                             EffectsEngine.EffectBrush _terminalBrushBottom = new EffectsEngine.EffectBrush(_fillBrushBottom);
                                                             _terminalBrushBottom.start = new System.Drawing.PointF(0, Effects.canvas_height_center + _terminalOffset);
                                                             _terminalBrushBottom.end = new System.Drawing.PointF(0, Effects.canvas_height_center + _terminalOffset - width);
 
-                                                            animTrack.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(-Effects.canvas_width, Effects.canvas_height_center + _terminalOffset - width, Effects.canvas_width * 3, width, _terminalBrushBottom).SetAngle(angle));
+                                                            animTrack.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(0, Effects.canvas_height_center + _terminalOffset - width, Effects.canvas_width * 3, width, _terminalBrushBottom).SetAngle(angle));
                                                         }
                                                         else
                                                         {
@@ -532,7 +551,7 @@ namespace Aurora.Settings {
                                                             _terminalBrushBottom.start = new System.Drawing.PointF(0, Effects.canvas_height_center + _terminalOffset);
                                                             _terminalBrushBottom.end = new System.Drawing.PointF(0, Effects.canvas_height_center + _terminalOffset - width);
 
-                                                            animTrack.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(-Effects.canvas_width, Effects.canvas_height_center, Effects.canvas_width * 3, _terminalOffset, _terminalBrushBottom).SetAngle(angle));
+                                                            animTrack.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(0, Effects.canvas_height_center, Effects.canvas_width * 3, _terminalOffset, _terminalBrushBottom).SetAngle(angle));
                                                         }
 
                                                         //Top Side
@@ -540,7 +559,7 @@ namespace Aurora.Settings {
                                                         _initialBrushtTop.start = new System.Drawing.PointF(0, Effects.canvas_height_center);
                                                         _initialBrushtTop.end = new System.Drawing.PointF(0, Effects.canvas_height_center + width);
 
-                                                        animTrack2.SetFrame(0.0f, new AnimationFilledGradientRectangle(-Effects.canvas_width, Effects.canvas_height_center, Effects.canvas_width * 3, 0, _initialBrushtTop).SetAngle(angle));
+                                                        animTrack2.SetFrame(0.0f, new AnimationFilledGradientRectangle(0, Effects.canvas_height_center, Effects.canvas_width * 3, 0, _initialBrushtTop).SetAngle(angle));
 
                                                         if (_widthFillTime < _terminalTime)
                                                         {
@@ -548,12 +567,12 @@ namespace Aurora.Settings {
                                                             _fillBrushTop.start = new System.Drawing.PointF(0, Effects.canvas_height_center - width);
                                                             _fillBrushTop.end = new System.Drawing.PointF(0, Effects.canvas_height_center);
 
-                                                            animTrack2.SetFrame(_widthFillTime, new AnimationFilledGradientRectangle(-Effects.canvas_width, Effects.canvas_height_center - width, Effects.canvas_width * 3, width, _fillBrushTop).SetAngle(angle));
+                                                            animTrack2.SetFrame(_widthFillTime, new AnimationFilledGradientRectangle(0, Effects.canvas_height_center - width, Effects.canvas_width * 3, width, _fillBrushTop).SetAngle(angle));
 
                                                             EffectsEngine.EffectBrush _terminalBrushTop = new EffectsEngine.EffectBrush(_initialBrushtTop);
                                                             _terminalBrushTop.start = new System.Drawing.PointF(0, Effects.canvas_height_center - _terminalOffset);
                                                             _terminalBrushTop.end = new System.Drawing.PointF(0, Effects.canvas_height_center - _terminalOffset + width);
-                                                            animTrack2.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(-Effects.canvas_width, Effects.canvas_height_center - _terminalOffset, Effects.canvas_width * 3, width, _terminalBrushTop).SetAngle(angle));
+                                                            animTrack2.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(0, Effects.canvas_height_center - _terminalOffset, Effects.canvas_width * 3, width, _terminalBrushTop).SetAngle(angle));
                                                         }
                                                         else
                                                         {
@@ -561,7 +580,7 @@ namespace Aurora.Settings {
                                                             _terminalBrushTop.start = new System.Drawing.PointF(0, Effects.canvas_height_center - _terminalOffset);
                                                             _terminalBrushTop.end = new System.Drawing.PointF(0, Effects.canvas_height_center - _terminalOffset + width);
 
-                                                            animTrack2.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(-Effects.canvas_width, Effects.canvas_height_center - _terminalOffset, Effects.canvas_width * 3, _terminalOffset, _terminalBrushTop).SetAngle(angle));
+                                                            animTrack2.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(0, Effects.canvas_height_center - _terminalOffset, Effects.canvas_width * 3, _terminalOffset, _terminalBrushTop).SetAngle(angle));
                                                         }
                                                     }
 
@@ -595,7 +614,7 @@ namespace Aurora.Settings {
                                             }
                                             else if ("RippleLighting".Equals(layerPolyName))
                                             {
-                                                float duration = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("base").Element("duration").Value);
+                                                float duration = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("base").Element("base").Element("duration").Value, CultureInfo.InvariantCulture);
 
                                                 EffectsEngine.ColorSpectrum transitions = new EffectsEngine.ColorSpectrum();
 
@@ -606,7 +625,7 @@ namespace Aurora.Settings {
                                                 {
                                                     try
                                                     {
-                                                        float time = float.Parse(transition.Element("time").Value);
+                                                        float time = float.Parse(transition.Element("time").Value, CultureInfo.InvariantCulture);
                                                         System.Drawing.Color color = System.Drawing.ColorTranslator.FromHtml(transition.Element("color").Value);
 
                                                         transitions.SetColorAt(time, color);
@@ -636,8 +655,8 @@ namespace Aurora.Settings {
 
                                                 transitions.Flip();
 
-                                                float velocity = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("velocity").Value) / 10.0f;
-                                                float width = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("tailLength").Value) / 10.0f;
+                                                float velocity = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("velocity").Value, CultureInfo.InvariantCulture) / 10.0f;
+                                                float width = float.Parse(lightingInfo.Element("ptr_wrapper").Element("data").Element("tailLength").Value, CultureInfo.InvariantCulture) / 10.0f;
 
                                                 width *= 3.0f;
 
@@ -700,8 +719,10 @@ namespace Aurora.Settings {
         /// <summary>
         /// Imports a json profile into the given application.
         /// </summary>
-        private static void ImportJson(this Application app, string filepath) {
-            try {
+        private static void ImportJson(this Application app, string filepath)
+        {
+            try
+            {
                 // Attempt to read and deserialise the profile
                 string json = File.ReadAllText(filepath, Encoding.UTF8);
                 ApplicationProfile inProf = (ApplicationProfile)JsonConvert.DeserializeObject(json, typeof(ApplicationProfile), new JsonSerializerSettings
@@ -724,7 +745,9 @@ namespace Aurora.Settings {
                 // Force a save to write the new profile to disk in the appdata dir
                 app.SaveProfiles();
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Global.logger.Error(ex);
                 System.Windows.Forms.MessageBox.Show("Error importing the profile: " + ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
