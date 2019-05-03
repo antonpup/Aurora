@@ -422,28 +422,28 @@ namespace Aurora.Settings
 
                                                         terminalTime = (Effects.canvas_width + width + 2.0f * _angleOffset) / (velocity * (3.0f * 0.7f));
 
-                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(-width - _angleOffset, -Effects.canvas_height * 2.0f, width, Effects.canvas_height * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
+                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(-width - _angleOffset, 0, width, Effects.canvas_height * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
 
-                                                        animTrack.SetFrame(terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width + _angleOffset, -Effects.canvas_height * 2.0f, width, Effects.canvas_height * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
+                                                        animTrack.SetFrame(terminalTime, new AnimationFilledGradientRectangle( _angleOffset, 0, width, Effects.canvas_height * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
                                                     }
                                                     else if (angle > 45 && angle < 135)
                                                     {
-                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(-Effects.canvas_width * 2.0f, Effects.canvas_height + width / 2, width, Effects.canvas_width * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
+                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(0,  width / 2, width, Effects.canvas_width * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
 
-                                                        animTrack.SetFrame(terminalTime, new AnimationFilledGradientRectangle(-Effects.canvas_width * 2.0f, (Effects.canvas_height + width / 2) - (Effects.canvas_width + width), width, Effects.canvas_width * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
+                                                        animTrack.SetFrame(terminalTime, new AnimationFilledGradientRectangle(0, (width / 2) - (Effects.canvas_width + width), width, Effects.canvas_width * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
 
                                                     }
                                                     else if (angle >= 135 && angle <= 225)
                                                     {
-                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(Effects.canvas_width + width, -Effects.canvas_height * 2.0f, width, Effects.canvas_height * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
+                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle( width, 0, width, Effects.canvas_height * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
 
-                                                        animTrack.SetFrame(terminalTime, new AnimationFilledGradientRectangle(-width, -Effects.canvas_height * 2.0f, width, Effects.canvas_height * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
+                                                        animTrack.SetFrame(terminalTime, new AnimationFilledGradientRectangle(-width, 0, width, Effects.canvas_height * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
                                                     }
                                                     else if (angle > 225 && angle < 315)
                                                     {
-                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(-Effects.canvas_width * 2.0f, -width / 2, width, Effects.canvas_width * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
+                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(0, -width / 2, width, Effects.canvas_width * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
 
-                                                        animTrack.SetFrame(terminalTime, new AnimationFilledGradientRectangle(-Effects.canvas_width * 2.0f, (-width / 2) + (Effects.canvas_width + width), width, Effects.canvas_width * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
+                                                        animTrack.SetFrame(terminalTime, new AnimationFilledGradientRectangle(0, (-width / 2) + (Effects.canvas_width + width), width, Effects.canvas_width * 10, new EffectsEngine.EffectBrush(transitions)).SetAngle(angle));
                                                     }
 
                                                     animTracks.Add(animTrack);
@@ -463,7 +463,7 @@ namespace Aurora.Settings
                                                         _initialBrushRight.start = new System.Drawing.PointF(Effects.canvas_width_center, 0);
                                                         _initialBrushRight.end = new System.Drawing.PointF(Effects.canvas_width_center - width, 0);
 
-                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(Effects.canvas_width_center, -Effects.canvas_height, 0, Effects.canvas_height * 3, _initialBrushRight).SetAngle(angle));
+                                                        animTrack.SetFrame(0.0f, new AnimationFilledGradientRectangle(Effects.canvas_width_center, 0, 0, Effects.canvas_height * 3, _initialBrushRight).SetAngle(angle));
 
                                                         if (_widthFillTime < _terminalTime)
                                                         {
@@ -471,13 +471,13 @@ namespace Aurora.Settings
                                                             _fillBrushRight.start = new System.Drawing.PointF(Effects.canvas_width_center + width, 0);
                                                             _fillBrushRight.end = new System.Drawing.PointF(Effects.canvas_width_center, 0);
 
-                                                            animTrack.SetFrame(_widthFillTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center, -Effects.canvas_height, width, Effects.canvas_height * 3, _fillBrushRight).SetAngle(angle));
+                                                            animTrack.SetFrame(_widthFillTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center, 0, width, Effects.canvas_height * 3, _fillBrushRight).SetAngle(angle));
 
                                                             EffectsEngine.EffectBrush _terminalBrushRight = new EffectsEngine.EffectBrush(_fillBrushRight);
                                                             _terminalBrushRight.start = new System.Drawing.PointF(Effects.canvas_width_center + _terminalOffset, 0);
                                                             _terminalBrushRight.end = new System.Drawing.PointF(Effects.canvas_width_center + _terminalOffset - width, 0);
 
-                                                            animTrack.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center + _terminalOffset - width, -Effects.canvas_height, width, Effects.canvas_height * 3, _terminalBrushRight).SetAngle(angle));
+                                                            animTrack.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center + _terminalOffset - width, 0, width, Effects.canvas_height * 3, _terminalBrushRight).SetAngle(angle));
 
                                                         }
                                                         else
@@ -486,7 +486,7 @@ namespace Aurora.Settings
                                                             _terminalBrushRight.start = new System.Drawing.PointF(Effects.canvas_width_center + _terminalOffset, 0);
                                                             _terminalBrushRight.end = new System.Drawing.PointF(Effects.canvas_width_center + _terminalOffset - width, 0);
 
-                                                            animTrack.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center, -Effects.canvas_height, _terminalOffset, Effects.canvas_height * 3, _terminalBrushRight).SetAngle(angle));
+                                                            animTrack.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center, 0, _terminalOffset, Effects.canvas_height * 3, _terminalBrushRight).SetAngle(angle));
                                                         }
 
                                                         //Left Side
@@ -494,7 +494,7 @@ namespace Aurora.Settings
                                                         _initialBrushLeft.start = new System.Drawing.PointF(Effects.canvas_width_center, 0);
                                                         _initialBrushLeft.end = new System.Drawing.PointF(Effects.canvas_width_center + width, 0);
 
-                                                        animTrack2.SetFrame(0.0f, new AnimationFilledGradientRectangle(Effects.canvas_width_center, -Effects.canvas_height, 0, Effects.canvas_height * 3, _initialBrushLeft).SetAngle(angle));
+                                                        animTrack2.SetFrame(0.0f, new AnimationFilledGradientRectangle(Effects.canvas_width_center, 0, 0, Effects.canvas_height * 3, _initialBrushLeft).SetAngle(angle));
 
                                                         if (_widthFillTime < _terminalTime)
                                                         {
@@ -502,13 +502,13 @@ namespace Aurora.Settings
                                                             _fillBrushLeft.start = new System.Drawing.PointF(Effects.canvas_width_center - width, 0);
                                                             _fillBrushLeft.end = new System.Drawing.PointF(Effects.canvas_width_center, 0);
 
-                                                            animTrack2.SetFrame(_widthFillTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center - width, -Effects.canvas_height, width, Effects.canvas_height * 3, _fillBrushLeft).SetAngle(angle));
+                                                            animTrack2.SetFrame(_widthFillTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center - width, 0, width, Effects.canvas_height * 3, _fillBrushLeft).SetAngle(angle));
 
                                                             EffectsEngine.EffectBrush _terminalBrushLeft = new EffectsEngine.EffectBrush(_initialBrushLeft);
                                                             _terminalBrushLeft.start = new System.Drawing.PointF(Effects.canvas_width_center - _terminalOffset, 0);
                                                             _terminalBrushLeft.end = new System.Drawing.PointF(Effects.canvas_width_center - _terminalOffset + width, 0);
 
-                                                            animTrack2.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center - _terminalOffset, -Effects.canvas_height, width, Effects.canvas_height * 3, _terminalBrushLeft).SetAngle(angle));
+                                                            animTrack2.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center - _terminalOffset, 0, width, Effects.canvas_height * 3, _terminalBrushLeft).SetAngle(angle));
                                                         }
                                                         else
                                                         {
@@ -516,7 +516,7 @@ namespace Aurora.Settings
                                                             _terminalBrushLeft.start = new System.Drawing.PointF(Effects.canvas_width_center - _terminalOffset, 0);
                                                             _terminalBrushLeft.end = new System.Drawing.PointF(Effects.canvas_width_center - _terminalOffset + width, 0);
 
-                                                            animTrack2.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center - _terminalOffset, -Effects.canvas_height, _terminalOffset, Effects.canvas_height * 3, _terminalBrushLeft).SetAngle(angle));
+                                                            animTrack2.SetFrame(_terminalTime, new AnimationFilledGradientRectangle(Effects.canvas_width_center - _terminalOffset, 0, _terminalOffset, Effects.canvas_height * 3, _terminalBrushLeft).SetAngle(angle));
                                                         }
                                                     }
                                                     else if ((angle > 45 && angle < 135) || (angle > 225 && angle < 315))
