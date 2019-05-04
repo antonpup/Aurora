@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides.Logic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers {
-
+    
     public class ComparisonLayerProperties : LayerHandlerProperties2Color<ComparisonLayerProperties> {
 
         public string _Operand1Path { get; set; }
@@ -35,6 +36,7 @@ namespace Aurora.Settings.Layers {
         }
     }
 
+    [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class ComparisonLayerHandler : LayerHandler<ComparisonLayerProperties> {
         
         public ComparisonLayerHandler() {
@@ -77,23 +79,5 @@ namespace Aurora.Settings.Layers {
             (Control as Control_ComparisonLayer).SetProfile(profile);
             base.SetApplication(profile);
         }
-    }
-
-    /// <summary>
-    /// Enum listing various logic operators.
-    /// </summary>
-    public enum ComparisonOperator {
-        [Description("=")]
-        EQ,
-        [Description("≠")]
-        NEQ,
-        [Description("<")]
-        LT,
-        [Description("≤")]
-        LTE,
-        [Description(">")]
-        GT,
-        [Description("≥")]
-        GTE
     }
 }

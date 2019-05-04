@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Win32.TaskScheduler;
+using System.Windows.Data;
 
 namespace Aurora.Settings
 {
@@ -51,6 +52,7 @@ namespace Aurora.Settings
                         definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
                         service.RootFolder.RegisterTaskDefinition(StartupTaskID, definition);
                         this.run_at_win_startup.IsChecked = task.Enabled;
+                        startDelayAmount.Value = task.Definition.Triggers.FirstOrDefault(t => t.TriggerType == TaskTriggerType.Logon) is LogonTrigger trigger ? (int)trigger.Delay.TotalSeconds : 0;
                     }
                     else
                     {
@@ -976,6 +978,9 @@ namespace Aurora.Settings
                 winBitmapView = new Window();
                 winBitmapView.Closed += WinBitmapView_Closed;
                 winBitmapView.ResizeMode = ResizeMode.CanResize;
+
+                winBitmapView.SetBinding(Window.TopmostProperty, new Binding("BitmapDebugTopMost") { Source = Global.Configuration });
+
                 //winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
 
                 winBitmapView.Title = "Keyboard Bitmap View";
@@ -1059,5 +1064,15 @@ namespace Aurora.Settings
         }
 
         private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => new Window_GSIHttpDebug().Show();
+
+        private void startDelayAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+            using (TaskService service = new TaskService()) {
+                var task = service.FindTask(StartupTaskID);
+                if (task != null && task.Definition.Triggers.FirstOrDefault(t => t.TriggerType == TaskTriggerType.Logon) is LogonTrigger trigger) {
+                    trigger.Delay = new TimeSpan(0, 0, ((IntegerUpDown)sender).Value ?? 0);
+                    task.RegisterChanges();
+                }
+            }
+        }
     }
 }

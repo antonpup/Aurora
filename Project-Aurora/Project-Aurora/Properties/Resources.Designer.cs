@@ -353,6 +353,56 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_checked_checkbox_30 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_checked_checkbox_30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_diamonds_30 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_diamonds_30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_keyboard_30 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_keyboard_30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_numbers_30 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_numbers_30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_paint_palette_30 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_paint_palette_30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Import_Icon {
             get {
                 object obj = ResourceManager.GetObject("Import_Icon", resourceCulture);
@@ -443,6 +493,26 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap osu_256x256 {
+            get {
+                object obj = ResourceManager.GetObject("osu_256x256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] OsuSyncAuroraPlugin {
+            get {
+                object obj = ResourceManager.GetObject("OsuSyncAuroraPlugin", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap overwatch_icon {
             get {
                 object obj = ResourceManager.GetObject("overwatch_icon", resourceCulture);
@@ -466,6 +536,16 @@ namespace Aurora.Properties {
         internal static System.Drawing.Bitmap pd2_icon {
             get {
                 object obj = ResourceManager.GetObject("pd2_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Question_Help {
+            get {
+                object obj = ResourceManager.GetObject("Question_Help", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

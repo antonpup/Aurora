@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -225,6 +225,8 @@ namespace Aurora.Settings
 
         [Description("Wooting One")]
         Wooting_One = 800,
+        [Description("Wooting Two")]
+        Wooting_Two = 801,
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
@@ -269,7 +271,9 @@ namespace Aurora.Settings
         [Description("DVORAK (INT)")]
         dvorak_int = 13,
         [Description("Hungarian")]
-        hu = 14
+        hu = 14,
+        [Description("Italian")]
+        it = 15
     }
 
     public enum PreferredMouse
@@ -311,7 +315,10 @@ namespace Aurora.Settings
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
         SteelSeries_Rival_300_HP_OMEN_Edition = 701,
-
+        [Description("SteelSeries - QcK Prism Mousepad + Mouse")]
+        SteelSeries_QcK_Prism = 702,
+        [Description("SteelSeries - Two-zone QcK Mousepad + Mouse")]
+        SteelSeries_QcK_2_Zone = 703,
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900
@@ -384,6 +391,9 @@ namespace Aurora.Settings
         private bool getDevReleases = false;
         public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
 
+        private bool getPointerUpdates = true;
+        public bool GetPointerUpdates { get { return getPointerUpdates; } set { getPointerUpdates = value; InvokePropertyChanged(); } }
+
         private bool highPriority = false;
         public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
 
@@ -435,6 +445,14 @@ namespace Aurora.Settings
         //Overlay Settings
         public VolumeOverlaySettings volume_overlay_settings;
         public SkypeOverlaySettings skype_overlay_settings;
+
+        //Debug Settings
+        private bool bitmapDebugTopMost;
+        public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
+
+        private bool httpDebugTopMost;
+        public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
+
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
@@ -502,6 +520,10 @@ namespace Aurora.Settings
             volume_overlay_settings = new VolumeOverlaySettings();
             skype_overlay_settings = new SkypeOverlaySettings();
 
+            //Debug
+            bitmapDebugTopMost = false;
+            httpDebugTopMost = false;
+
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
             VarRegistry = new VariableRegistry();
@@ -514,7 +536,7 @@ namespace Aurora.Settings
         private const string ConfigExtension = ".json";
 
         private static long _last_save_time = 0L;
-        private readonly static long _save_interval = 1000L;
+        private readonly static long _save_interval = 300L;
 
         public static Configuration Load()
         {
