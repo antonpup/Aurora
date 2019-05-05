@@ -138,7 +138,7 @@ namespace Aurora.Settings
             if (IsLoaded && !isSettingNewLayer && sender is CheckBox)
                 Layer.Handler._EnableExclusionMask = (sender as CheckBox).IsChecked.Value;
 
-            keyseq_ExcludeMask.IsEnabled = Layer.Handler.EnableExclusionMask;
+            //keyseq_ExcludeMask.IsEnabled = Layer.Handler.EnableExclusionMask;
         }
 
         private void keyseq_ExcludeMask_SequenceUpdated(object sender, EventArgs e)
