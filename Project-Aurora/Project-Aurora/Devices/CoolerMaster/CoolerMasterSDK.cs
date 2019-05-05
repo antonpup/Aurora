@@ -72,6 +72,14 @@ namespace CoolerMaster
             DEV_CK530 = 15,
             [Description("MK850")]
             DEV_MK850 = 16,
+            [Description("MK730")]
+            DEV_MK730 = 17,
+            [Description("SK621")]
+            DEV_SK621 = 18,
+            [Description("SK630")]
+            DEV_SK630 = 19,
+            [Description("SK650")]
+            DEV_SK650 = 20,
             [Description("Default")]
             DEV_DEFAULT = 0xFFFF
         }
@@ -98,7 +106,11 @@ namespace CoolerMaster
             DEVICE_INDEX.DEV_CK551,
             DEVICE_INDEX.DEV_MM830,
             DEVICE_INDEX.DEV_CK530,
-            DEVICE_INDEX.DEV_MK850
+            DEVICE_INDEX.DEV_MK850,
+            DEVICE_INDEX.DEV_MK730,
+            DEVICE_INDEX.DEV_SK621,
+            DEVICE_INDEX.DEV_SK630,
+            DEVICE_INDEX.DEV_SK650
         };
 
         public enum LAYOUT_KEYBOARD
