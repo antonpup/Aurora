@@ -14,11 +14,9 @@ namespace Aurora.Profiles.CloneHero
         // At Menu
         public PointerData IsAtMenu;
 
-        // Total Notes Gone By
+        // Total Notes
         public PointerData NotesTotal;
-
-        // Solo Pointers
-        public PointerData SoloPercent;
+        public PointerData TotalNotesHit;
 
         //Score
         public PointerData Score;

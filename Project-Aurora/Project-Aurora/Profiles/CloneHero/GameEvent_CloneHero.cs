@@ -9,7 +9,7 @@ namespace Aurora.Profiles.CloneHero
 {
     public class GameEvent_CloneHero : MemoryReadingLightEvent<CloneHeroPointers, GameState_CloneHero>
     {
-        public GameEvent_CloneHero() : base("CloneHero.json", "Clone Hero", "mono-2.0-bdwgc.dll", true) { }
+        public GameEvent_CloneHero() : base("CloneHero.json", "Clone Hero", "UnityPlayer.dll", true) { }
 
         public override void UpdateGameState(GameState_CloneHero gameState, MemoryReader reader) {
             int streak = gameState.Player.NoteStreak = reader.ReadInt(pointers.NoteStreak);
@@ -81,7 +81,7 @@ namespace Aurora.Profiles.CloneHero
 
             #endregion
 
-            gameState.Player.SoloPercent = reader.ReadInt(pointers.SoloPercent);
+            gameState.Player.TotalNotesHit = reader.ReadInt(pointers.TotalNotesHit);
 
             gameState.Player.Score = reader.ReadInt(pointers.Score);
 
