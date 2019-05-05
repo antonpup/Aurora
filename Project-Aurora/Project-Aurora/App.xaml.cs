@@ -498,8 +498,8 @@ namespace Aurora
             }
 
             //Patch 32-bit
-            string logitech_path = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", "(Default)", null);
-            if (logitech_path == null)
+            string logitech_path = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null);//null gets the default value
+            if (logitech_path == null || logitech_path == @"C:\Program Files\LGHUB\sdk_legacy_led_x86.dll")
             {
                 logitech_path = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
 
@@ -523,7 +523,7 @@ namespace Aurora
                 key.CreateSubKey("ServerBinary");
                 key = key.OpenSubKey("ServerBinary", true);
 
-                key.SetValue("(Default)", logitech_path);
+                key.SetValue(null, logitech_path);//null to set the default value
             }
 
             if (File.Exists(logitech_path) && !File.Exists(logitech_path + ".aurora_backup"))
@@ -535,8 +535,8 @@ namespace Aurora
             }
 
             //Patch 64-bit
-            string logitech_path_64 = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", "(Default)", null);
-            if (logitech_path_64 == null)
+            string logitech_path_64 = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null);
+            if (logitech_path_64 == null || logitech_path == @"C:\Program Files\LGHUB\sdk_legacy_led_x64.dll")
             {
                 logitech_path_64 = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x64\LogitechLed.dll";
 
@@ -557,7 +557,7 @@ namespace Aurora
                 key.CreateSubKey("ServerBinary");
                 key = key.OpenSubKey("ServerBinary", true);
 
-                key.SetValue("(Default)", logitech_path_64);
+                key.SetValue(null, logitech_path_64);
             }
 
             if (File.Exists(logitech_path_64) && !File.Exists(logitech_path_64 + ".aurora_backup"))
