@@ -536,7 +536,7 @@ namespace Aurora
 
             //Patch 64-bit
             string logitech_path_64 = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null);
-            if (logitech_path_64 == null || logitech_path == @"C:\Program Files\LGHUB\sdk_legacy_led_x64.dll")
+            if (logitech_path_64 == null || logitech_path_64 == @"C:\Program Files\LGHUB\sdk_legacy_led_x64.dll")
             {
                 logitech_path_64 = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x64\LogitechLed.dll";
 
