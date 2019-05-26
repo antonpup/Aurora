@@ -1193,6 +1193,9 @@
     <None Include="kb_layouts\Plain Keyboard\layout.jpn.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="kb_layouts\Plain Keyboard\layout.la.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Plain Keyboard\layout.nordic.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
