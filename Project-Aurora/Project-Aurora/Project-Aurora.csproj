@@ -163,17 +163,17 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="RGB.NET.Brushes, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Brushes.0.1.15\lib\net45\RGB.NET.Brushes.dll</HintPath>
+    <Reference Include="RGB.NET.Brushes, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Brushes.0.1.23\lib\net45\RGB.NET.Brushes.dll</HintPath>
     </Reference>
-    <Reference Include="RGB.NET.Core, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Core.0.1.15\lib\net45\RGB.NET.Core.dll</HintPath>
+    <Reference Include="RGB.NET.Core, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Core.0.1.23\lib\net45\RGB.NET.Core.dll</HintPath>
     </Reference>
-    <Reference Include="RGB.NET.Devices.Corsair, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Devices.Corsair.0.1.15\lib\net45\RGB.NET.Devices.Corsair.dll</HintPath>
+    <Reference Include="RGB.NET.Devices.Corsair, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Devices.Corsair.0.1.23\lib\net45\RGB.NET.Devices.Corsair.dll</HintPath>
     </Reference>
-    <Reference Include="RGB.NET.Groups, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Groups.0.1.15\lib\net45\RGB.NET.Groups.dll</HintPath>
+    <Reference Include="RGB.NET.Groups, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Groups.0.1.23\lib\net45\RGB.NET.Groups.dll</HintPath>
     </Reference>
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>.\Roccat-Talk.dll</HintPath>
@@ -2208,12 +2208,12 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\RGB.NET.Resources.Corsair.0.2.0\build\RGB.NET.Resources.Corsair.targets" Condition="Exists('..\packages\RGB.NET.Resources.Corsair.0.2.0\build\RGB.NET.Resources.Corsair.targets')" />
+  <Import Project="..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets" Condition="Exists('..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\RGB.NET.Resources.Corsair.0.2.0\build\RGB.NET.Resources.Corsair.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RGB.NET.Resources.Corsair.0.2.0\build\RGB.NET.Resources.Corsair.targets'))" />
+    <Error Condition="!Exists('..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 

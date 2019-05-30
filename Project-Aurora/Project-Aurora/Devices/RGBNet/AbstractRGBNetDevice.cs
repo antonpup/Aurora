@@ -95,6 +95,7 @@ namespace Aurora.Devices.RGBNet
 
             _brush.KeyColors = keyColors;
 
+            /*
             if (keyColors.ContainsKey(DeviceKeys.Peripheral_Logo))
             {
                 if (_deviceProvider != null) {
@@ -103,6 +104,7 @@ namespace Aurora.Devices.RGBNet
                 ledGroup.Brush = new SolidColorBrush(new RGB.NET.Core.Color(234, 14, 214));
                 }
             }
+            */
 
             _surface.Update();
             return true;
