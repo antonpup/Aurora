@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="Aurora.Controls.Control_GradientEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Controls"
+             xmlns:ncore="http://schemas.ncore.com/wpf/xaml/colorbox"
+             xmlns:utils="clr-namespace:Aurora.Utils"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="160" d:DesignWidth="240">
+    <UserControl.Resources>
+        <utils:EffectBrushToBrushConverter x:Key="BrushConverter" />
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+
+        <Label Content="Brush:" Grid.Row="0" HorizontalAlignment="Right" />
+        <ncore:ColorBox Grid.Row="0" Grid.Column="1" Brush="{Binding Brush, Converter={StaticResource BrushConverter}, Mode=TwoWay}" />
+
+        <Label Content="Animation Type:" Grid.Row="1" HorizontalAlignment="Right" />
+        <ComboBox x:Name="animTypeCb" Grid.Row="1" Grid.Column="1" Margin="0,0,0,2" DisplayMemberPath="Key" SelectedValuePath="Value"  SelectedValue="{Binding AnimationType}" />
+
+        <Label Content="Speed:" Grid.Row="2" HorizontalAlignment="Right" />
+        <xctk:SingleUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Speed}" Margin="0,2" />
+
+        <Label Content="Angle:" Grid.Row="3" HorizontalAlignment="Right" />
+        <xctk:SingleUpDown Grid.Row="3" Grid.Column="1" Value="{Binding Angle}" Margin="0,2" />
+        
+        <CheckBox Grid.Row="4" Grid.Column="1" Content="Reverse Direction?" IsChecked="{Binding AnimationReverse}" />
+    </Grid>
+</UserControl>
