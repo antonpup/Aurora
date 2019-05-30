@@ -40,12 +40,7 @@ namespace Aurora.Profiles.Dota_2
                         _VariablePath = "Hero/Health",
                         _MaxVariablePath = "Hero/MaxHealth"
                     },
-                })
-                {
-                    Logics = new System.Collections.ObjectModel.ObservableCollection<LogicItem>()
-                    {
-                    }
-                },
+                }),
                 new Layer("Mana Indicator", new PercentLayerHandler()
                 {
                     Properties = new PercentLayerHandlerProperties()
@@ -63,12 +58,7 @@ namespace Aurora.Profiles.Dota_2
                         _VariablePath = "Hero/Mana",
                         _MaxVariablePath = "Hero/MaxMana"
                     },
-                })
-                {
-                    Logics = new System.Collections.ObjectModel.ObservableCollection<LogicItem>()
-                    {
-                    }
-                },
+                }),
                 new Layer("Dota 2 Ability Keys", new Layers.Dota2AbilityLayerHandler()),
                 new Layer("Dota 2 Item Keys", new Layers.Dota2ItemLayerHandler()),
                 new Layer("Dota 2 Hero Ability Effects", new Layers.Dota2HeroAbilityEffectsLayerHandler()),

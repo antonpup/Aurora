@@ -1,11 +1,7 @@
-﻿namespace Aurora.Profiles.RocketLeague
-{
-    public class PointerData
-    {
-        public int baseAddress { get; set; }
-        public int[] pointers { get; set; }
-    }
+﻿using Aurora.Utils;
 
+namespace Aurora.Profiles.RocketLeague
+{
     public class RocketLeaguePointers
     {
         public PointerData Team;

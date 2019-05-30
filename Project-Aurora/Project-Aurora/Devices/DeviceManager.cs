@@ -104,7 +104,7 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
             devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
             devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
-            devices.Add(new DeviceContainer(new Devices.SteelSeriesHID.SteelSeriesHIDDevice()));   // SteelSeriesHID Device
+            devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
             devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
             devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
@@ -190,7 +190,7 @@ namespace Aurora.Devices
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     resumed = true;
                     suspended = false;
-                    this.InitializeOnce();
+                    this.Initialize();
                     break;
             }
         }
@@ -224,7 +224,7 @@ namespace Aurora.Devices
 
             if (anyInitialized)
             {
-                //_InitializeOnceAllowed = true;
+                _InitializeOnceAllowed = true;
                 NewDevicesInitialized?.Invoke(this, new EventArgs());
             }
 
@@ -281,7 +281,7 @@ namespace Aurora.Devices
 
         public void InitializeOnce()
         {
-            if (!anyInitialized)// && _InitializeOnceAllowed)
+            if (!anyInitialized && _InitializeOnceAllowed)
                 Initialize();
         }
 

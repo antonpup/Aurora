@@ -1,0 +1,110 @@
+<UserControl x:Class="Aurora.Profiles.Subnautica.Control_Subnautica"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="850" Height="Auto" Width="Auto">
+
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Subnautica">
+                <StackPanel Margin="10">
+                    <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with Subnautica. Ensure you have read the below text." Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,10" TextWrapping="Wrap" MaxWidth="824">
+                        <Run Text="Support for Subnautica requires a mod so that Aurora is able to fetch the variables from the game. This mod requires QModManager." />
+
+                        <Run Text="These mods are not authored by the main Aurora developers and any issues with these mods should not be directed at them, but posted on the relevant Nexusmods or Github site for the mod." />
+
+                    </TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="0,10" TextWrapping="Wrap" MaxWidth="824"><Run Text="IMPORTANT: After any official Subnautica update, you simply need to re-install QMods. The mod should work as normal afterwards." /></TextBlock>
+
+                    <Button Content="Subnautica QModManager download" HorizontalAlignment="Left" Margin="0,0,0,0" Padding="10,2" Click="GoToQModManagerPage_Click" />
+                    <Button Content="Aurora GSI Mod for Subnautica download" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="10,2" Click="GoToModDownloadPage_Click" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Preview">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px"/>
+                        <RowDefinition Height="28px"/>
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition Height="28px" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition Width="28px"/>
+                        <ColumnDefinition Width="115px" />
+                        <ColumnDefinition Width="200px" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Player-based variables -->
+                    <Label Content="Player" FontWeight="SemiBold" HorizontalAlignment="Center" Grid.ColumnSpan="2" />
+
+                    <Label Content="In Game:" Grid.Row="1" HorizontalAlignment="Right" Margin="8,0" />
+                    <CheckBox Content="Yes" Grid.Row="1" Grid.Column="1" Margin="0,4" Checked="InGameCh_Checked" Unchecked="InGameCh_Checked" />
+
+                    <Label Content="Health:" Grid.Row="2" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="2" Grid.Column="1" Margin="0,4" ValueChanged="HealthSlider_ValueChanged" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" />
+
+                    <Label Content="Food:" Grid.Row="3" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="3" Grid.Column="1" Margin="0,4" ValueChanged="HungerSlider_ValueChanged" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" />
+
+                    <Label Content="Water:" Grid.Row="4" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="4" Grid.Column="1" Margin="0,4" ValueChanged="WaterSlider_ValueChanged" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" />
+
+                    <Label Content="Oxygen:" Grid.Row="5" HorizontalAlignment="Right" Margin="8,0" />
+                    <Slider Grid.Row="5" Grid.Column="1" Margin="0,4" ValueChanged="Oxygen_ValueChanged" Minimum="0" Maximum="45" TickFrequency="1" IsSnapToTickEnabled="True"  />
+
+                    <Label Content="Depth Level:" Grid.Row="6" HorizontalAlignment="Right" Margin="8,0" />
+                    <xctk:IntegerUpDown Grid.Row="6" Grid.Column="1" Margin="0,4,0,0" x:Name="preview_DepthLevel" VerticalAlignment="Top" DefaultValue="0" Value="0" ValueChanged="preview_DepthLevel_ValueChanged"/>
+                    <!--<Slider Grid.Row="6" Grid.Column="1" Margin="0,4" ValueChanged="DepthLevelSlider_ValueChanged" Minimum="-30" Maximum="10" /> -->
+                    <Grid Grid.Row="7" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28px" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                    <Grid Grid.Row="8" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28px" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                    <Grid Grid.Row="11" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28px" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
