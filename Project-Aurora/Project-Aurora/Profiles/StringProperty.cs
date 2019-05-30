@@ -18,7 +18,7 @@ namespace Aurora.Profiles
 
     public class StringProperty<T> : IStringProperty
     {
-        public static Dictionary<string, Tuple<Func<T, object>, Action<T, object>>> PropertyLookup { get; set; } = null;
+        public static Dictionary<string, Tuple<Func<T, object>, Action<T, object>, Type>> PropertyLookup { get; set; } = null;
         public static object DictLock = new object();
 
         public StringProperty()
@@ -28,7 +28,7 @@ namespace Aurora.Profiles
                 if (PropertyLookup != null)
                     return;
 
-                PropertyLookup = new Dictionary<string, Tuple<Func<T, object>, Action<T, object>>>();
+                PropertyLookup = new Dictionary<string, Tuple<Func<T, object>, Action<T, object>, Type>>();
 
                 Type typ = typeof(T);
                 foreach (MemberInfo prop in typ.GetMembers())
@@ -84,7 +84,7 @@ namespace Aurora.Profiles
                     }
                     if (!PropertyLookup.ContainsKey(prop.Name))
                     {
-                        PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>>(getp, setp));
+                        PropertyLookup.Add(prop.Name, new Tuple<Func<T, object>, Action<T, object>, Type>(getp, setp, typ));
                     }
 
                 }
@@ -117,7 +117,7 @@ namespace Aurora.Profiles
         {
             if (PropertyLookup.ContainsKey(name))
             {
-                PropertyLookup[name].Item2((T)(object)this, value);
+                PropertyLookup[name]?.Item2((T)(object)this, value);
             }
         }
 

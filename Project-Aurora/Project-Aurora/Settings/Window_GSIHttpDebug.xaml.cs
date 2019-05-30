@@ -15,6 +15,7 @@ namespace Aurora.Settings {
 
         public Window_GSIHttpDebug() {
             InitializeComponent();
+            DataContext = Global.Configuration;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {

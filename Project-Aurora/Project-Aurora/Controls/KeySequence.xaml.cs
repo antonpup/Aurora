@@ -293,7 +293,8 @@ namespace Aurora.Controls
                 this.sequence_up.IsEnabled = (bool)e.NewValue;
                 this.sequence_down.IsEnabled = (bool)e.NewValue;
                 this.sequence_remove.IsEnabled = (bool)e.NewValue;
-                this.sequence_freestyle_checkbox.IsEnabled = (bool)e.NewValue && FreestyleEnabled;
+                this.sequence_freestyle_checkbox.IsEnabled = (bool)e.NewValue;
+                //this.sequence_freestyle_checkbox.IsEnabled = (bool)e.NewValue && FreestyleEnabled;
 
                 if ((bool)e.NewValue)
                     sequence_updateToLayerEditor();

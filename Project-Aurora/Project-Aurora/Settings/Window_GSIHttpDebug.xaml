@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Title="Aurora Game State Integration HTTP Request Viewer"
-             Loaded="Window_Loaded" Closing="Window_Closing" Background="#181818">
+             Loaded="Window_Loaded" Closing="Window_Closing" Background="#181818"
+             Topmost="{Binding HttpDebugTopMost, Mode=TwoWay}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
