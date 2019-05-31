@@ -174,10 +174,13 @@ namespace Aurora.Devices.RGBNet
 
             // { LedId.Cooler1, DeviceKeys.Peripheral },
             { LedId.Mouse1, DeviceKeys.Peripheral_Logo },
-            { LedId.Mouse2, DeviceKeys.Peripheral_FrontLight },
-            { LedId.Mouse3, DeviceKeys.Peripheral_ScrollWheel },
-            { LedId.Mouse4, DeviceKeys.Peripheral_ScrollWheel },
-            { LedId.Mouse5, DeviceKeys.Peripheral_ScrollWheel },
+            { LedId.Mouse2, DeviceKeys.Peripheral_Logo },
+            { LedId.Mouse3, DeviceKeys.Peripheral_Logo },
+            { LedId.Mouse4, DeviceKeys.Peripheral_Logo },
+            { LedId.Mouse5, DeviceKeys.Peripheral_Logo },
+             { LedId.Mouse6, DeviceKeys.Peripheral_Logo },
+            { LedId.Mouse7, DeviceKeys.Peripheral_Logo },
+             { LedId.Mouse8, DeviceKeys.Peripheral_Logo },
 
             //Headset
              { LedId.Headset1, DeviceKeys.Peripheral_Logo },
