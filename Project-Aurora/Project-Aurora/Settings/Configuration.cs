@@ -275,7 +275,9 @@ namespace Aurora.Settings
         [Description("Italian")]
         it = 15,
         [Description("Latin America")]
-        la = 16
+        la = 16,
+        [Description("Spanish")]
+        es = 17
     }
 
     public enum PreferredMouse

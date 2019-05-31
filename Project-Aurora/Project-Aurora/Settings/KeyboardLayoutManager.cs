@@ -551,7 +551,10 @@ namespace Aurora.Settings
                     case PreferredKeyboardLocalization.la:
                         culture = "es-AR";
                         break;
-                    }
+                    case PreferredKeyboardLocalization.es:
+                        culture = "es-ES";
+                        break;
+                }
 
                 switch (culture)
                 {
@@ -637,8 +640,13 @@ namespace Aurora.Settings
                     case ("es-PE"):
                     case ("es-UY"):
                     case ("es-VE"):
+                    case ("es-419"):
                         _loaded_localization = PreferredKeyboardLocalization.la;
                         LoadCulture("la");
+                        break;
+                    case ("es-ES"):
+                        _loaded_localization = PreferredKeyboardLocalization.es;
+                        LoadCulture("es");
                         break;
                     default:
                     _loaded_localization = PreferredKeyboardLocalization.intl;
