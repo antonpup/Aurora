@@ -15,7 +15,8 @@ namespace Aurora.Devices.Asus
     public class AsusDevice : Device
     {
         private const string DeviceName = "Asus";
-        private bool _isConnected = false;
+        private State _state = State.Off;
+        private bool _isConnected => _state == State.On || _state == State.Starting;
         private readonly VariableRegistry _defaultRegistry = new VariableRegistry();
         private AsusHandler _asusHandler;
 
@@ -29,38 +30,72 @@ namespace Aurora.Devices.Asus
         public string GetDeviceName() => DeviceName;
 
         /// <inheritdoc />
-        public string GetDeviceDetails() =>
-            $"{DeviceName}: is {(_isConnected ? " Initialised": " Not Initialised")}";
+        public string GetDeviceDetails()
+        {
+            var result = $"{DeviceName}: ";
+            switch (_state)
+            {
+                case State.Off:
+                    result += "Not initialized";
+                    break;
+                case State.Stopping:
+                    result += "Stopping";
+                    break;
+                case State.Starting:
+                    result += "Connecting";
+                    break;
+                case State.On:
+                    result += "Connected. Devices: " + _asusHandler?.GetDeviceStatus();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return result;
+        }
 
         /// <inheritdoc />
-        public string GetDeviceUpdatePerformance() => GetDeviceDetails();
+        public string GetDeviceUpdatePerformance() => "";
 
         /// <inheritdoc />
         public bool Initialize()
         {
+            if (_state == State.Starting || _state == State.On)
+                return true;
+
             if (_asusHandler == null)
-            {
                 _asusHandler = new AsusHandler();
-            }
-            
+
+            _state = State.Starting;
             _asusHandler.GetControl(success =>
                 {
-                    _isConnected = success;
+                    _state = State.On;
                 });
 
-            return _isConnected;
+            // return a fake true to make it not retry
+            return true;
         }
 
         /// <inheritdoc />
         public void Shutdown()
         {
-            _asusHandler.ReleaseControl();
+            StopAsus();
         }
 
         /// <inheritdoc />
         public void Reset()
         {
-            _asusHandler.ReleaseControl();
+            StopAsus();
+        }
+
+        private void StopAsus()
+        {
+            _state = State.Stopping;
+            _asusHandler.ReleaseControl((uninitialized) =>
+            {
+                if (uninitialized)
+                    _state = State.Off;
+            });
         }
 
         /// <inheritdoc />
@@ -93,5 +128,12 @@ namespace Aurora.Devices.Asus
             return UpdateDevice(colorComposition.keyColors, e, forced);
         }
 
+        private enum State
+        {
+            Off,
+            Starting,
+            On,
+            Stopping,
+        }
     }
 }
