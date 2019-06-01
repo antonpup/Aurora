@@ -71,7 +71,6 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Battlefield 1
 * Dishonored
 * The Witcher 3
-* Minecraft
 * Killing Floor 2
 * DOOM (2016)
 * Factorio
