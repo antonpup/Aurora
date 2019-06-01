@@ -12,7 +12,7 @@ namespace Aurora.Devices.Asus
         #endregion
 
         #region Constructors
-        
+
         public AsusDevice()
             : base(new AsusDeviceProviderLoader().GetDeviceProvider(), new AsusRGBNetBrush())
         { }
