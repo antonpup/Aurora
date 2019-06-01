@@ -67,13 +67,8 @@ namespace Aurora.Devices.Asus
                 _asusHandler = new AsusHandler();
 
             _state = State.Starting;
-            _asusHandler.GetControl(success =>
-                {
-                    _state = State.On;
-                });
 
-            // return a fake true to make it not retry
-            return true;
+            return _asusHandler.GetControl(success => _state = success ? State.On : _state = State.Off);
         }
 
         /// <inheritdoc />

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AuraServiceLib;
 using Aurora.Profiles.DeadCells;
+using Microsoft.Win32;
 using Timer = System.Timers.Timer;
 
 namespace Aurora.Devices.Asus
@@ -40,11 +41,24 @@ namespace Aurora.Devices.Asus
         /// <summary>
         /// Get control of all aura devices
         /// </summary>
-        /// <returns>True if succeeded</returns>
-        public void GetControl(Action<bool> onComplete)
+        /// <returns>True if succeeded or initializing</returns>
+        public bool GetControl(Action<bool> onComplete)
         {
             if (_initializing)
-                return;
+                return true;
+
+            Global.logger.Error("[ASUS] Initializing Asus Device");
+            var registryClassKey = Registry.ClassesRoot.OpenSubKey("CLSID");
+            if (registryClassKey != null)
+            {
+                var auraSdkRegistry = registryClassKey.OpenSubKey("{05921124-5057-483E-A037-E9497B523590}\\InprocServer32");
+                if (auraSdkRegistry == null)
+                {
+                    Global.logger.Error("[ASUS] Aura SDK not found in registry.");
+                    onComplete(false);
+                    return false;
+                }
+            }
 
             // Do this async because it may take a while to initialise
             Task.Run(() =>
@@ -93,6 +107,7 @@ namespace Aurora.Devices.Asus
                     onComplete?.Invoke(false);
                 }
             });
+            return true;
         }
 
         /// <summary>
