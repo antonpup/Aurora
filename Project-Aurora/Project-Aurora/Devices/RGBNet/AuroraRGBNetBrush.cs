@@ -328,6 +328,25 @@ namespace Aurora.Devices.RGBNet
                { LedId.Cooler35, DeviceKeys.Peripheral_Logo },
               { LedId.Cooler36, DeviceKeys.Peripheral_Logo },
 
+              //GPU
+             { LedId.GraphicsCard1, DeviceKeys.Peripheral_Logo },
+              { LedId.GraphicsCard2, DeviceKeys.Peripheral_Logo },
+              { LedId.GraphicsCard3, DeviceKeys.Peripheral_Logo },
+
+              //Motherboard
+             { LedId.Mainboard1, DeviceKeys.Peripheral_Logo },
+              { LedId.Mainboard2, DeviceKeys.Peripheral_Logo },
+              { LedId.Mainboard3, DeviceKeys.Peripheral_Logo },
+
+              //Matrix
+             { LedId.LedMatrix1, DeviceKeys.Peripheral_Logo },
+              { LedId.LedMatrix2, DeviceKeys.Peripheral_Logo },
+              { LedId.LedMatrix3, DeviceKeys.Peripheral_Logo },
+
+              //Speaker
+             { LedId.Speaker1, DeviceKeys.Peripheral_Logo },
+              { LedId.Speaker2, DeviceKeys.Peripheral_Logo },
+              { LedId.Speaker3, DeviceKeys.Peripheral_Logo },
 
         };
 
