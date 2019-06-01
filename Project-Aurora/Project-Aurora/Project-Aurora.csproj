@@ -378,9 +378,6 @@
     <Compile Include="Controls\LayerEditor.xaml.cs">
       <DependentUpon>LayerEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LogicCheckEdit.xaml.cs">
-      <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Devices\Asus\AsusDevice.cs" />
     <Compile Include="Devices\Asus\AsusHandler.cs" />
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
