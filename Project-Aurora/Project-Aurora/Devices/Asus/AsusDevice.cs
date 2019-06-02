@@ -88,12 +88,12 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public void Reset()
         {
-            StopAsus();
+            StopAsus(() => Initialize());
         }
 
-        private void StopAsus()
+        private void StopAsus(Action OnComplete = null)
         {
-            if (State == AuraState.Off || State == AuraState.Stopping)
+            if (State == AuraState.Off || State == AuraState.Stopping || State == AuraState.Starting)
                 return;
 
             State = AuraState.Stopping;
@@ -101,6 +101,8 @@ namespace Aurora.Devices.Asus
             {
                 if (uninitialized)
                     State = AuraState.Off;
+
+                OnComplete?.Invoke();
             });
         }
 
