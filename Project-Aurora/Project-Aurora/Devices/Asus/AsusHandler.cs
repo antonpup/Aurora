@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace Aurora.Devices.Asus
         private IAuraSdk2 _sdk;
 
         private readonly List<AsusSdkGenericDeviceWrapper> _devices = new List<AsusSdkGenericDeviceWrapper>();
+        private readonly List<AsusSdkGenericDeviceWrapper> _removedDevices = new List<AsusSdkGenericDeviceWrapper>();
 
         #region Windows Handlers
         [DllImport("user32.dll")]
@@ -91,9 +93,13 @@ namespace Aurora.Devices.Asus
                                 // ignore
                                 break;
                             case AsusDeviceType.Keyboard:
+                                if (Global.Configuration.devices_disable_keyboard)
+                                    continue;
                                 _devices.Add(new AuraSdkKeyboardWrapper(device));
                                 break;
                             case AsusDeviceType.Mouse:
+                                if (Global.Configuration.devices_disable_mouse)
+                                    continue;
                                 _devices.Add(new AuraSdkMouseWrapper(device));
                                 break;
                             default:
@@ -156,14 +162,30 @@ namespace Aurora.Devices.Asus
         {
             foreach (var device in _devices)
             {
-                device.SendColors(keyColors);
+                if (!device.SendColors(keyColors))
+                {
+                    _removedDevices.Add(device);
+                }
             }
+
+            if (_removedDevices.Count <= 0) return;
+            
+            foreach (var device in _removedDevices)
+            {
+                if (_devices.Contains(device))
+                {
+                    Global.logger.Info($"[ASUS] Removed {device.DeviceName} {device.HardwareName} for acting up.");
+                    _devices.Remove(device);
+                }
+            }
+            _removedDevices.Clear();
+
         }
 
         /// <summary>
+        /// Returns a string containing the elapsed time for each device
         /// </summary>
-        /// <returns>
-        /// Returns a string containing the elapsed time for each device</returns>
+        /// <returns> Returns a string containing the elapsed time for each device</returns>
         public string GetDeviceStatus()
         {
             var status = new StringBuilder();
@@ -171,7 +193,7 @@ namespace Aurora.Devices.Asus
             {
                 var device = _devices[i];
                 status.Append($"{device.HardwareName} {device.ElapsedMillis}ms");
-                if (i != i - 1)
+                if (i != _devices.Count - 1)
                     status.Append(", ");
             }
 
@@ -209,6 +231,7 @@ namespace Aurora.Devices.Asus
         private class AsusSdkGenericDeviceWrapper
         {
             private const int DefaultFrameRate = 30;
+            private const int MaxFails = 10;
 
             /// <summary>
             /// How many millis it took to run the last update
@@ -260,11 +283,15 @@ namespace Aurora.Devices.Asus
             /// Start a thread to send the colors across to the device
             /// </summary>
             /// <param name="keyColors"></param>
-            public void SendColors(Dictionary<DeviceKeys, Color> keyColors)
+            /// <returns> false if the device has been removed </returns>
+            public bool SendColors(Dictionary<DeviceKeys, Color> keyColors)
             {
+                if (Device == null || _failedUpdates > MaxFails)
+                    return false;
+
                 // if we're still applying colors then dismiss this set of colors
                 if (_applyColors || _stopwatch.ElapsedMilliseconds < _frequency)
-                    return;
+                return true;
 
                 ElapsedMillis = _stopwatch.ElapsedMilliseconds;
 
@@ -272,9 +299,10 @@ namespace Aurora.Devices.Asus
                 // clone the dictionary so we don't interfere with the original reference
                 var colorCopy = new Dictionary<DeviceKeys, Color>(keyColors);
                 ThreadPool.QueueUserWorkItem(ApplyColorsThreaded, colorCopy);
+                return true;
             }
 
-            [HandleProcessCorruptedStateExceptions]
+            [HandleProcessCorruptedStateExceptions, SecurityCritical]
             private void ApplyColorsThreaded(object keyColorsObject)
             {
                 _applyColors = true;
@@ -283,9 +311,10 @@ namespace Aurora.Devices.Asus
                     ApplyColors((Dictionary<DeviceKeys, Color>) keyColorsObject);
                     _failedUpdates = 0;
                 }
-                catch
+                catch (Exception e)
                 {
                     _failedUpdates++;
+                    Global.logger.Info(e);
                     Global.logger.Info($"[ASUS] failed to update device {DeviceName} {_failedUpdates} times :(");
                 }
                 _applyColors = false;
@@ -295,7 +324,7 @@ namespace Aurora.Devices.Asus
             /// Apply Colors to the device
             /// </summary>
             /// <param name="keyColors"></param>
-            [HandleProcessCorruptedStateExceptions]
+            [HandleProcessCorruptedStateExceptions, SecurityCritical]
             protected virtual void ApplyColors(Dictionary<DeviceKeys, Color> keyColors)
             {
                 // by default set every key to Peripheral_Logo
@@ -354,6 +383,7 @@ namespace Aurora.Devices.Asus
             public AuraSdkMouseWrapper(IAuraSyncDevice mouse) : base(mouse) { }
 
             /// <inheritdoc />
+            [HandleProcessCorruptedStateExceptions, SecurityCritical]
             protected override void ApplyColors(Dictionary<DeviceKeys, Color> keyColors)
             {
                 // access keys directly since we know what we want
@@ -404,6 +434,7 @@ namespace Aurora.Devices.Asus
             }
 
             /// <inheritdoc />
+            [HandleProcessCorruptedStateExceptions, SecurityCritical]
             protected override void ApplyColors(Dictionary<DeviceKeys, Color> keyColors)
             {
                 foreach (var keyColor in keyColors)
