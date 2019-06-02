@@ -15,8 +15,17 @@ namespace Aurora.Devices.Asus
     public class AsusDevice : Device
     {
         private const string DeviceName = "Asus";
-        private State _state = State.Off;
-        private bool _isConnected => _state == State.On || _state == State.Starting;
+        private AuraState _state = AuraState.Off;
+        private AuraState State
+        {
+            get => _state;
+            set
+            {
+                Global.logger.Info($"[ASUS] Status {_state} -> {value}");
+                _state = value;
+            }
+        }
+        
         private readonly VariableRegistry _defaultRegistry = new VariableRegistry();
         private AsusHandler _asusHandler;
 
@@ -33,18 +42,18 @@ namespace Aurora.Devices.Asus
         public string GetDeviceDetails()
         {
             var result = $"{DeviceName}: ";
-            switch (_state)
+            switch (State)
             {
-                case State.Off:
+                case AuraState.Off:
                     result += "Not initialized";
                     break;
-                case State.Stopping:
+                case AuraState.Stopping:
                     result += "Stopping";
                     break;
-                case State.Starting:
+                case AuraState.Starting:
                     result += "Connecting";
                     break;
-                case State.On:
+                case AuraState.On:
                     result += "Connected. Devices: " + _asusHandler?.GetDeviceStatus();
                     break;
                 default:
@@ -60,15 +69,14 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public bool Initialize()
         {
-            if (_state == State.Starting || _state == State.On)
+            if (State == AuraState.Starting || State == AuraState.On || State == AuraState.Stopping)
                 return true;
 
             if (_asusHandler == null)
                 _asusHandler = new AsusHandler();
 
-            _state = State.Starting;
-
-            return _asusHandler.GetControl(success => _state = success ? State.On : _state = State.Off);
+            State = AuraState.Starting;
+            return _asusHandler.GetControl(success => State = success ? AuraState.On : State = AuraState.Off);
         }
 
         /// <inheritdoc />
@@ -85,11 +93,14 @@ namespace Aurora.Devices.Asus
 
         private void StopAsus()
         {
-            _state = State.Stopping;
+            if (State == AuraState.Off || State == AuraState.Stopping)
+                return;
+
+            State = AuraState.Stopping;
             _asusHandler.ReleaseControl((uninitialized) =>
             {
                 if (uninitialized)
-                    _state = State.Off;
+                    State = AuraState.Off;
             });
         }
 
@@ -100,15 +111,15 @@ namespace Aurora.Devices.Asus
         }
 
         /// <inheritdoc />
-        public bool IsInitialized() => _isConnected;
+        public bool IsInitialized() => IsConnected();
         /// <inheritdoc />
-        public bool IsConnected() => _isConnected;
+        public bool IsConnected() => State == AuraState.On || State == AuraState.Starting;
 
         /// <inheritdoc />
-        public bool IsKeyboardConnected() => _isConnected;
+        public bool IsKeyboardConnected() => IsConnected();
 
         /// <inheritdoc />
-        public bool IsPeripheralConnected() => _isConnected;
+        public bool IsPeripheralConnected() => IsConnected();
 
         /// <inheritdoc />
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
@@ -123,7 +134,7 @@ namespace Aurora.Devices.Asus
             return UpdateDevice(colorComposition.keyColors, e, forced);
         }
 
-        private enum State
+        private enum AuraState
         {
             Off,
             Starting,
