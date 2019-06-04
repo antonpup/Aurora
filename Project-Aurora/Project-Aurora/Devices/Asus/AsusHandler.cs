@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AuraServiceLib;
 using Aurora.Profiles.DeadCells;
+using Aurora.Settings;
 using Microsoft.Win32;
 using Timer = System.Timers.Timer;
 
@@ -23,10 +24,13 @@ namespace Aurora.Devices.Asus
     {
         private const string AuraSdkRegistryEntry = @"{05921124-5057-483E-A037-E9497B523590}\InprocServer32";
         private bool _initializing = false;
+        // Use this for keyboards
         private IAuraSdk2 _sdk;
+        // Use this for everything else
+        private AuraDevelopement _developmentSdk;
 
-        private readonly List<AsusSdkGenericDeviceWrapper> _devices = new List<AsusSdkGenericDeviceWrapper>();
-        private readonly List<AsusSdkGenericDeviceWrapper> _removedDevices = new List<AsusSdkGenericDeviceWrapper>();
+        private readonly List<IAsusSdkDeviceWrapper> _devices = new List<IAsusSdkDeviceWrapper>();
+        private readonly List<IAsusSdkDeviceWrapper> _removedDevices = new List<IAsusSdkDeviceWrapper>();
 
         #region Windows Handlers
         [DllImport("user32.dll")]
@@ -48,7 +52,6 @@ namespace Aurora.Devices.Asus
         {
             if (_initializing)
                 return true;
-
             Global.logger.Error("[ASUS] Initializing Asus Device");
             var registryClassKey = Registry.ClassesRoot.OpenSubKey("CLSID");
             if (registryClassKey != null)
@@ -68,17 +71,34 @@ namespace Aurora.Devices.Asus
                 try
                 {
                     _initializing = true;
-                    _sdk = (IAuraSdk2)new AuraSdk();
-                    // run this async to close any pop up windows that this brings up
+                    // start the dev sdk
+                    _developmentSdk = new AuraDevelopementClass();
+                    _developmentSdk.AURARequireToken(0);
+
+                    // start the main sdk
+                    _sdk = (IAuraSdk2)new AuraSdkClass();
+                    //run this async to close any pop up windows that this brings up
                     Task.Run(() => ClosePopUpWindows());
-                    // get the devices (this can be slow
+                    // get the devices (this can be slow)
                     _sdk.SwitchMode();
 
                     // possible enum types that the Aura SDK supports
                     var possibleTypes = ((AsusDeviceType[])Enum.GetValues(typeof(AsusDeviceType))).Select(type => (uint)type).ToArray();
+
+                    // iterate through keyboards using the SDK
+                    if (!Global.Configuration.devices_disable_keyboard)
+                    {
+                        foreach (IAuraSyncKeyboard device in _sdk.Enumerate((uint)AsusDeviceType.Keyboard))
+                        {
+                            if (Global.Configuration.devices_disable_keyboard)
+                                continue;
+                            _devices.Add(new AuraSdkKeyboardWrapper(device));
+                            break;
+                        }
+
+                    }
                     // enumerate all devices
-                    IAuraSyncDeviceCollection devices = _sdk.Enumerate(0);
-                    foreach (IAuraSyncDevice device in devices)
+                    foreach (IAuraDevice device in _developmentSdk.GetAllDevices())
                     {
                         if (!possibleTypes.Contains(device.Type))
                         {
@@ -89,13 +109,8 @@ namespace Aurora.Devices.Asus
                         Global.logger.Info($"[ASUS] Found device {device.Name} with type {(AsusDeviceType)device.Type} has {device.Lights.Count} key{(device.Lights.Count > 1 ? "s" : "")}");
                         switch ((AsusDeviceType)device.Type)
                         {
-                            case AsusDeviceType.All:
-                                // ignore
-                                break;
                             case AsusDeviceType.Keyboard:
-                                if (Global.Configuration.devices_disable_keyboard)
-                                    continue;
-                                _devices.Add(new AuraSdkKeyboardWrapper(device));
+                                // ignore this type
                                 break;
                             case AsusDeviceType.Mouse:
                                 if (Global.Configuration.devices_disable_mouse)
@@ -129,7 +144,6 @@ namespace Aurora.Devices.Asus
             {
                 try
                 {
-                    _sdk.ReleaseControl(0);
                     _devices.Clear();
                     onComplete(true);
                 }
@@ -174,7 +188,7 @@ namespace Aurora.Devices.Asus
             {
                 if (_devices.Contains(device))
                 {
-                    Global.logger.Info($"[ASUS] Removed {device.DeviceName} {device.HardwareName} for acting up.");
+                    Global.logger.Info($"[ASUS] Removed {device.GetDeviceName()} {device.GetHardwareName()} for acting up.");
                     _devices.Remove(device);
                 }
             }
@@ -192,7 +206,7 @@ namespace Aurora.Devices.Asus
             for (var i = 0; i < _devices.Count; i++)
             {
                 var device = _devices[i];
-                status.Append($"{device.HardwareName} {device.ElapsedMillis}ms");
+                status.Append($"{device.GetHardwareName()} {device.GetElapsedMillis()}ms");
                 if (i != _devices.Count - 1)
                     status.Append(", ");
             }
@@ -223,12 +237,20 @@ namespace Aurora.Devices.Asus
             Chassis = 0x000B0000,
             Projector = 0x000C0000,
         }
+        
+        private interface IAsusSdkDeviceWrapper
+        {
+            bool SendColors(Dictionary<DeviceKeys, Color> keyColors);
+            string GetDeviceName();
+            string GetHardwareName();
+            long GetElapsedMillis();
+        }
 
         /// <summary>
         /// In this wrapper we take the peripheral color and apply it on every
         /// LED that is detected by the SDK
         /// </summary>
-        private class AsusSdkGenericDeviceWrapper
+        private class AsusSdkGenericDeviceWrapper : IAsusSdkDeviceWrapper
         {
             private const int DefaultFrameRate = 30;
             private const int MaxFails = 10;
@@ -240,7 +262,7 @@ namespace Aurora.Devices.Asus
             /// <summary>
             /// The device to update
             /// </summary>
-            protected readonly IAuraSyncDevice Device;
+            protected readonly IAuraDevice Device;
             /// <summary>
             /// The device's name
             /// </summary>
@@ -270,7 +292,7 @@ namespace Aurora.Devices.Asus
             /// </summary>
             /// <param name="device">The device to use</param>
             /// <param name="frameRate">The rate to update the device, frames per second</param>
-            public AsusSdkGenericDeviceWrapper(IAuraSyncDevice device, int frameRate = DefaultFrameRate)
+            public AsusSdkGenericDeviceWrapper(IAuraDevice device, int frameRate = DefaultFrameRate)
             {
                 Device = device;
                 DeviceName = device.Name;
@@ -293,18 +315,24 @@ namespace Aurora.Devices.Asus
                 if (_applyColors || _stopwatch.ElapsedMilliseconds < _frequency)
                 return true;
 
-                ElapsedMillis = _stopwatch.ElapsedMilliseconds;
-
-                _stopwatch.Restart();
+                _stopwatch.Reset();
                 // clone the dictionary so we don't interfere with the original reference
                 var colorCopy = new Dictionary<DeviceKeys, Color>(keyColors);
                 ThreadPool.QueueUserWorkItem(ApplyColorsThreaded, colorCopy);
                 return true;
             }
 
+            /// <inheritdoc />
+            public string GetDeviceName() => DeviceName;
+            /// <inheritdoc />
+            public string GetHardwareName() => HardwareName;
+            /// <inheritdoc />
+            public long GetElapsedMillis() => ElapsedMillis;
+
             [HandleProcessCorruptedStateExceptions, SecurityCritical]
             private void ApplyColorsThreaded(object keyColorsObject)
             {
+                _stopwatch.Start();
                 _applyColors = true;
                 try
                 {
@@ -318,6 +346,164 @@ namespace Aurora.Devices.Asus
                     Global.logger.Info($"[ASUS] failed to update device {DeviceName} {_failedUpdates} times :(");
                 }
                 _applyColors = false;
+                ElapsedMillis = _stopwatch.ElapsedMilliseconds;
+            }
+
+            /// <summary>
+            /// Apply Colors to the device
+            /// </summary>
+            /// <param name="keyColors"></param>
+            [HandleProcessCorruptedStateExceptions, SecurityCritical]
+            protected virtual void ApplyColors(Dictionary<DeviceKeys, Color> keyColors)
+            {
+                // by default set every key to Peripheral_Logo
+                if (keyColors.TryGetValue(DeviceKeys.Peripheral_Logo, out var color))
+                {
+                    foreach (IAuraRgbLight light in Device.Lights)
+                    {
+                        SetRgbLight(light, color);
+                    }
+                }
+
+                Device.Apply();
+            }
+
+            /// <summary>
+            /// Sets an Aura RGB Light 
+            /// </summary>
+            /// <param name="rgbKey">The light to set</param>
+            /// <param name="color">Color to set with</param>
+            protected void SetRgbLight(IAuraRgbKey rgbKey, Color color)
+            {
+                rgbKey.Red = color.R;
+                rgbKey.Green = color.G;
+                rgbKey.Blue = color.B;
+            }
+
+            protected void SetRgbLight(IAuraRgbLight rgbLight, Color color)
+            {
+                rgbLight.Red = color.R;
+                rgbLight.Green = color.G;
+                rgbLight.Blue = color.B;
+            }
+
+            protected void SetRgbLightIfExist(Dictionary<DeviceKeys, Color> keyColors, DeviceKeys key, IAuraRgbKey rgbLight)
+            {
+                if (keyColors.TryGetValue(key, out var color))
+                {
+                    SetRgbLight(rgbLight, color);
+                }
+            }
+
+            protected void SetRgbLightIfExist(Dictionary<DeviceKeys, Color> keyColors, DeviceKeys key, IAuraRgbLight rgbLight)
+            {
+                if (keyColors.TryGetValue(key, out var color))
+                {
+                    SetRgbLight(rgbLight, color);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Asus Sync version of the generic wrapper
+        /// </summary>
+        private class AsusSdkGenericSyncDeviceWrapper : IAsusSdkDeviceWrapper
+        {
+            private const int DefaultFrameRate = 30;
+            private const int MaxFails = 10;
+
+            /// <summary>
+            /// How many millis it took to run the last update
+            /// </summary>
+            public long ElapsedMillis { get; private set; }
+            /// <summary>
+            /// The sync device to update
+            /// </summary>
+            protected readonly IAuraSyncDevice Device;
+            /// <summary>
+            /// The device's name
+            /// </summary>
+            public readonly string DeviceName;
+            /// <summary>
+            /// The device's hardware name
+            /// </summary>
+            public readonly string HardwareName;
+            /// <summary>
+            /// How many millis to count before updating the colors again
+            /// </summary>
+            private readonly int _frequency; // in millis
+            /// <summary>
+            /// Use to restrict update rate and for diagnostics
+            /// </summary>
+            private readonly Stopwatch _stopwatch = new Stopwatch();
+            /// <summary>
+            /// Acts a mutex lock for async threads
+            /// </summary>
+            private bool _applyColors = false;
+            /// <summary>
+            /// How many updates failed in a row
+            /// </summary>
+            private int _failedUpdates = 0;
+            /// <summary>
+            /// Initialise a generic device wrapper
+            /// </summary>
+            /// <param name="device">The device to use</param>
+            /// <param name="frameRate">The rate to update the device, frames per second</param>
+            public AsusSdkGenericSyncDeviceWrapper(IAuraSyncDevice device, int frameRate = DefaultFrameRate)
+            {
+                Device = device;
+                DeviceName = device.Name;
+                HardwareName = ((AsusDeviceType)Device.Type).ToString();
+                _frequency = (int)((1f / frameRate) * 1000);
+                _stopwatch.Start();
+            }
+
+            /// <summary>
+            /// Start a thread to send the colors across to the device
+            /// </summary>
+            /// <param name="keyColors"></param>
+            /// <returns> false if the device has been removed </returns>
+            public bool SendColors(Dictionary<DeviceKeys, Color> keyColors)
+            {
+                if (Device == null || _failedUpdates > MaxFails)
+                    return false;
+
+                // if we're still applying colors then dismiss this set of colors
+                if (_applyColors || _stopwatch.ElapsedMilliseconds < _frequency)
+                    return true;
+
+                _stopwatch.Reset();
+                // clone the dictionary so we don't interfere with the original reference
+                var colorCopy = new Dictionary<DeviceKeys, Color>(keyColors);
+                ThreadPool.QueueUserWorkItem(ApplyColorsThreaded, colorCopy);
+                return true;
+            }
+
+            /// <inheritdoc />
+            public string GetDeviceName() => DeviceName;
+            /// <inheritdoc />
+            public string GetHardwareName() => HardwareName;
+            /// <inheritdoc />
+            public long GetElapsedMillis() => ElapsedMillis;
+
+            [HandleProcessCorruptedStateExceptions, SecurityCritical]
+            private void ApplyColorsThreaded(object keyColorsObject)
+            {
+                _stopwatch.Start();
+                _applyColors = true;
+                try
+                {
+                    ApplyColors((Dictionary<DeviceKeys, Color>)keyColorsObject);
+                    _failedUpdates = 0;
+                }
+                catch (Exception e)
+                {
+                    _failedUpdates++;
+                    Global.logger.Info(e);
+                    Global.logger.Info($"[ASUS] failed to update device {DeviceName} {_failedUpdates} times :(");
+                }
+                _applyColors = false;
+                ElapsedMillis = _stopwatch.ElapsedMilliseconds;
             }
 
             /// <summary>
@@ -380,7 +566,7 @@ namespace Aurora.Devices.Asus
         /// </summary>
         private class AuraSdkMouseWrapper : AsusSdkGenericDeviceWrapper
         {
-            public AuraSdkMouseWrapper(IAuraSyncDevice mouse) : base(mouse) { }
+            public AuraSdkMouseWrapper(IAuraDevice mouse) : base(mouse) { }
 
             /// <inheritdoc />
             [HandleProcessCorruptedStateExceptions, SecurityCritical]
@@ -418,16 +604,16 @@ namespace Aurora.Devices.Asus
         /// <summary>
         /// A wrapper for Asus Keyboards
         /// </summary>
-        private class AuraSdkKeyboardWrapper : AsusSdkGenericDeviceWrapper
+        private class AuraSdkKeyboardWrapper : AsusSdkGenericSyncDeviceWrapper
         {
             private readonly IAuraSyncKeyboard _keyboard;
 
             private readonly Dictionary<ushort, IAuraRgbKey> _idToKey
                 = new Dictionary<ushort, IAuraRgbKey>();
 
-            public AuraSdkKeyboardWrapper(IAuraSyncDevice keyboard) : base(keyboard)
+            public AuraSdkKeyboardWrapper(IAuraSyncKeyboard keyboard) : base(keyboard)
             {
-                _keyboard = (IAuraSyncKeyboard) keyboard;
+                _keyboard = keyboard;
 
                 foreach (IAuraRgbKey key in _keyboard.Keys)
                     _idToKey[key.Code] = key;
