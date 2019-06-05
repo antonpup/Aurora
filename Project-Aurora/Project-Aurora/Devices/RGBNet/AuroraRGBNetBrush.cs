@@ -409,7 +409,7 @@ namespace Aurora.Devices.RGBNet
               { LedId.LedStripe126, DeviceKeys.Peripheral_Logo },
               { LedId.LedStripe127, DeviceKeys.Peripheral_Logo },
               { LedId.LedStripe128, DeviceKeys.Peripheral_Logo },
-              { LedId.LedStripe128, DeviceKeys.Peripheral_Logo },
+       
 
 
                //Cooler
