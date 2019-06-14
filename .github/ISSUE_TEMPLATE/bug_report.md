@@ -12,14 +12,17 @@ If you haven't found a similar issue, please answer all the questions below to t
 
 If you have log files or screenshots that may help, please also attach them to the issue. The logs can be found in %APPDATA%\Aurora\Logs
 -->
-| | |
-|-|-|
-**Expected Behaviour** | <!-- Write what should be happening here. -->
-**Actual Behaviour** | <!-- Explain what actually happens here. -->
-**Reproduction steps** | <!-- If you can, please provide detailed instructions on how to reproduce this issue. -->
-**Frequency** | <!-- How often does this issue occur? Every time? Only sometimes? -->
-**Aurora Version** | <!-- Which version of Aurora are you using that's causing the problem? (You can see this on the about page under settings) -->
-**Previously an Issue?** | <!-- Did the previous version of Aurora have this issue? Yes/No/Don't know -->
+**Expected Behaviour:** <!-- Write what should be happening here. -->
+
+**Actual Behaviour:** <!-- Explain what actually happens here. -->
+
+**Reproduction steps:** <!-- If you can, please provide detailed step-by-step instructions on how to reproduce this issue. -->
+
+**Frequency:** <!-- How often does this issue occur? Every time? Only sometimes? -->
+
+**Aurora Version:** <!-- Which version of Aurora are you using that's causing the problem? (You can see this on the about page under settings) -->
+
+**Previously an Issue?** <!-- Did the previous version of Aurora have this issue? Yes/No/Don't know -->
 
 <!--
 Once you're done, check the preview tab. You should see a nice table with your issue text.
