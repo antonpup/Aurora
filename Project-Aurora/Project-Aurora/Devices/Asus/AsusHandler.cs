@@ -13,8 +13,11 @@ using System.Web.UI.WebControls;
 using AuraServiceLib;
 using Aurora.Profiles.DeadCells;
 using Aurora.Settings;
+using Microsoft.Scripting.Utils;
 using Microsoft.Win32;
+using Mono.CSharp.Linq;
 using Timer = System.Timers.Timer;
+using static Aurora.Devices.Asus.AsusDevice;
 
 namespace Aurora.Devices.Asus
 {
@@ -24,27 +27,20 @@ namespace Aurora.Devices.Asus
     public class AsusHandler
     {
         private const string AuraSdkRegistryEntry = @"{05921124-5057-483E-A037-E9497B523590}\InprocServer32";
+        /// <summary>
+        /// How many times a device can fail before we give up and leave it
+        /// </summary>
+        private const int MaxDeviceFails = 3;
+        private const int MaxDeviceFailsTime = 60; // in seconds
         private AuraDevelopement _developmentSdk;
 
-        private readonly List<IAsusSdkDeviceWrapper> _devices = new List<IAsusSdkDeviceWrapper>();
-        private readonly List<IAsusSdkDeviceWrapper> _removedDevices = new List<IAsusSdkDeviceWrapper>();
+        private readonly List<AsusGenericDeviceWrapper> _devices = new List<AsusGenericDeviceWrapper>();
+        private readonly Dictionary<int, FailData> _deviceFails = new Dictionary<int, FailData>();
         private bool _initializing = false;
 
         private bool _stopDevices = false;
         private Action<bool> _onFinishStopDevices;
-
-        #region Windows Handlers
-        [DllImport("user32.dll")]
-        public static extern int FindWindow(string lpClassName, string lpWindowName);
-
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(int hWnd, uint Msg, int wParam, int lParam);
-
-        public const int WM_SYSCOMMAND = 0x0112;
-        public const int SC_CLOSE = 0xF060;
-   
-        #endregion
-
+        
         /// <summary>
         /// Get control of all aura devices
         /// </summary>
@@ -72,39 +68,42 @@ namespace Aurora.Devices.Asus
                 try
                 {
                     _initializing = true;
+
+                    _deviceFails.Clear();
+                    _devices.Clear();
+
                     // start the dev sdk
                     _developmentSdk = new AuraDevelopementClass();
                     _developmentSdk.AURARequireToken(0);
                     
                     // possible enum types that the Aura SDK supports
                     var possibleTypes = ((AsusDeviceType[])Enum.GetValues(typeof(AsusDeviceType))).Select(type => (uint)type).ToArray();
-                    
+                    var allDevices = new List<IAuraDevice>(); 
+                    foreach (IAuraDevice auraDevice in _developmentSdk.GetAllDevices())
+                    {
+                        allDevices.Add(auraDevice);
+                    }
+
                     // enumerate all devices
-                    foreach (IAuraDevice device in _developmentSdk.GetAllDevices())
+                    foreach (IAuraDevice device in allDevices)
                     {
                         if (!possibleTypes.Contains(device.Type))
                         {
-                            Global.logger.Info($"[ASUS] Found unknown device {device.Type}... Ignoring for now.");
+                            Log($"Found unknown device {device.Type}... Ignoring for now.");
                             continue;
                         }
 
-                        Global.logger.Info($"[ASUS] Found device {device.Name} with type {(AsusDeviceType)device.Type} has {device.Lights.Count} key{(device.Lights.Count > 1 ? "s" : "")}");
-                        switch ((AsusDeviceType)device.Type)
-                        {
-                            case AsusDeviceType.Keyboard:
-                                if (Global.Configuration.devices_disable_keyboard)
-                                    continue;
-                                _devices.Add(new AuraSdkKeyboardWrapper(device, async));
-                                break;
-                            case AsusDeviceType.Mouse:
-                                if (Global.Configuration.devices_disable_mouse)
-                                    continue;
-                                _devices.Add(new AuraSdkMouseWrapper(device, async));
-                                break;
-                            default:
-                                _devices.Add(new AuraSdkGenericDeviceWrapper(device, async));
-                                break;
-                        }
+                        Log($"Found device {device.Name} with type {(AsusDeviceType)device.Type} has {device.Lights.Count} key{(device.Lights.Count > 1 ? "s" : "")}");
+
+                        AsusGenericDeviceWrapper asusDevice = CreateAsusDeviceWrapper(device, async);
+                        if (asusDevice == null)
+                            continue;
+
+                        var deviceId = GetDeviceId(device, allDevices);
+                        asusDevice.SetId(deviceId);
+                        _deviceFails[deviceId] = new FailData();
+                        Log($"That device has the ID of {deviceId}");
+                        _devices.Add(asusDevice);
                     }
 
                     onComplete?.Invoke(true);
@@ -118,6 +117,47 @@ namespace Aurora.Devices.Asus
             return true;
         }
 
+        private AsusGenericDeviceWrapper CreateAsusDeviceWrapper(IAuraDevice device, bool async)
+        {
+            AsusGenericDeviceWrapper asusDevice;
+            switch ((AsusDeviceType)device.Type)
+            {
+                case AsusDeviceType.Keyboard:
+                    if (Global.Configuration.devices_disable_keyboard)
+                        return null;
+                    asusDevice = new AsusKeyboardWrapper(device, async);
+                    break;
+                case AsusDeviceType.Mouse:
+                    if (Global.Configuration.devices_disable_mouse)
+                        return null;
+                    asusDevice = new AsusMouseWrapper(device, async);
+                    break;
+                default:
+                    asusDevice = new AsusGenericDeviceWrapper(device, async);
+                    break;
+            }
+
+            return asusDevice;
+        }
+
+        private IAuraDevice GetNewInstanceOfDeviceById(int id)
+        {
+            var allDevices = new List<IAuraDevice>();
+            foreach (IAuraDevice auraDevice in _developmentSdk.GetAllDevices())
+            {
+                allDevices.Add(auraDevice);
+            }
+
+            foreach (var device in allDevices)
+            {
+                var deviceId = GetDeviceId(device, allDevices);
+                if (id == deviceId)
+                    return device;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Tell the aura sdk device to set the device back to it's previous state
         /// </summary>
@@ -126,19 +166,6 @@ namespace Aurora.Devices.Asus
             // Do this async because it may take a while to uninitialize
             _onFinishStopDevices = onComplete;
             _stopDevices = true;
-        }
-
-        /// <summary>
-        /// Sometimes the Aura SDK picks up devices that do not have a RGB and spits out
-        /// an error popup. This is suppress these annoying notifications
-        /// </summary>
-        private void ClosePopUpWindows()
-        {
-            while (_initializing)
-            {
-                var window = FindWindow(null, "Message");
-                SendMessage(window, WM_SYSCOMMAND, SC_CLOSE, 0);
-            }
         }
 
         /// <summary>
@@ -159,26 +186,125 @@ namespace Aurora.Devices.Asus
                 return;
             }
 
-            // update every devices, if one fails, mark it
+            var deviceNotActive = false;
+            // update every devices
             foreach (var device in _devices)
             {
-                if (!device.SendColors(keyColors))
+                device.SendColors(keyColors);
+                // check the device's status
+                if (device.DeviceStatus != AsusDeviceStatus.Active)
+                    deviceNotActive = true;
+            }
+
+            if (deviceNotActive)
+                HandleInactiveDevices();
+        }
+
+        /// <summary>
+        /// We need to manage devices that are running slow or not found
+        /// </summary>
+        private void HandleInactiveDevices()
+        {
+            var deviceList = new List<AsusGenericDeviceWrapper>();
+            // get all of the annoying devices
+            foreach (var device in _devices)
+            {
+                if (device.DeviceStatus != AsusDeviceStatus.Active)
+                    deviceList.Add(device);
+            }
+
+            var restartDeviceList = new List<AsusGenericDeviceWrapper>();
+            // look into the fail data for each device
+            foreach (var device in deviceList)
+            {
+                var failData = _deviceFails[device.DeviceId];
+                failData.Fails++;
+                if (ShouldRemoveDevice(failData))
                 {
-                    _removedDevices.Add(device);
+                    Log($"{device.DeviceName} {device.HardwareName} {device.DeviceId} has failed too many times, removing...");
+                    _devices.Remove(device);
+                }
+                else
+                {
+                    // if the device already made MaxFails but not in the time span, reset the data
+                    if (failData.Fails > MaxDeviceFails)
+                    {
+                        failData = new FailData();
+                    }
+                    // if we're stating a new record, set the time
+                    if (failData.Fails == 0)
+                    {
+                        failData.EarliestFailTime = new DateTime();
+                    }
+
+                    _deviceFails[device.DeviceId] = failData;
+                    restartDeviceList.Add(device);
                 }
             }
 
-            if (_removedDevices.Count >= 0) return;
-            foreach (var device in _removedDevices)
+            // try to get all of the device to restart and replace the older device
+            foreach (var device in restartDeviceList)
             {
-                if (_devices.Contains(device))
+                Log($"Attempting to get device {device.DeviceName} {device.HardwareName} {device.DeviceId} again");
+                var auraDevice = GetNewInstanceOfDeviceById(device.DeviceId);
+                // if we couldn't find the device, then remove it from the main list
+                if (auraDevice == null)
                 {
-                    Global.logger.Info(
-                        $"[ASUS] Removed {device.GetDeviceName()} {device.GetHardwareName()} for acting up.");
                     _devices.Remove(device);
+                    continue;
                 }
+
+                // try to replace the device
+                _devices.Remove(device);
+                var asusDevice = CreateAsusDeviceWrapper(auraDevice, device.Async);
+                if (asusDevice == null)
+                    continue;
+                asusDevice.SetId(device.DeviceId);
+                _devices.Add(asusDevice);
             }
-           _removedDevices.Clear();
+        }
+
+        /// <summary>
+        /// Checks the fail data to see if we have failed a certain amount of times in a specified timespan
+        /// </summary>
+        private bool ShouldRemoveDevice(FailData failData)
+        {
+            return (failData.Fails >= MaxDeviceFails &&
+                    DateTime.Now.Subtract(failData.EarliestFailTime).TotalSeconds > MaxDeviceFailsTime);
+        }
+
+        /// <summary>
+        /// Generate a best attempt ID for an AuraDevice
+        /// </summary>
+        /// <param name="device">The device that you want the ID for</param>
+        /// <param name="devices">A list of devices, to ensure uniqueness</param>
+        /// <returns>Device ID</returns>
+        private int GetDeviceId(IAuraDevice device, List<IAuraDevice> devices)
+        {
+            // this is a really bad algorithm, sorry
+            var ids = devices.Where(d => d != device).Select(GetDeviceId);
+
+            // generate the ID for this device
+            var id = GetDeviceId(device);
+
+            // in the case where two devices have the same ID
+            // just append the index onto the ID
+            if (ids.Contains(id))
+            {
+                id += devices.IndexOf(device);
+            }
+
+            return id;
+        }
+
+        /// <summary>
+        /// Generate an id based on the device provided
+        /// </summary>
+        /// <param name="device">The device that you want the ID for</param>
+        /// <returns>The device's ID</returns>
+        private int GetDeviceId(IAuraDevice device)
+        {
+            return $"{(AsusDeviceType)device.Type}_{device.Manufacture}_{device.Model}_{device.Name}_{device.LightCount}".GetHashCode();
         }
 
         /// <summary>
@@ -191,14 +317,14 @@ namespace Aurora.Devices.Asus
             for (var i = 0; i < _devices.Count; i++)
             {
                 var device = _devices[i];
-                status.Append($"{device.GetHardwareName()} {device.GetElapsedMillis()}ms");
+                status.Append($"{device.HardwareName} {device.ElapsedMillis}ms");
                 if (i != _devices.Count - 1)
                     status.Append(", ");
             }
 
             return status.ToString();
         }
-
+        
         /// <summary>
         /// Devices specified in the AsusSDK documentation
         /// </summary>
@@ -222,31 +348,79 @@ namespace Aurora.Devices.Asus
             Chassis = 0x000B0000,
             Projector = 0x000C0000,
         }
-        
-        private interface IAsusSdkDeviceWrapper
+
+        /// <summary>
+        /// A simple struct to record the amount of times an asus device has failed
+        /// </summary>
+        private struct FailData
         {
-            bool SendColors(Dictionary<DeviceKeys, Color> keyColors);
-            string GetDeviceName();
-            string GetHardwareName();
-            long GetElapsedMillis();
+            public int Fails;
+            public DateTime EarliestFailTime;
         }
+
+        /// <summary>
+        /// The status of the device
+        /// </summary>
+        enum AsusDeviceStatus
+        {
+            /// <summary>
+            /// The normal status for the device
+            /// </summary>
+            Active,
+            /// <summary>
+            /// When the device is running slow, usually hardware related like the
+            /// ROG Pugio mouse
+            /// </summary>
+            Slow,
+            /// <summary>
+            /// When the AuraSDK throws an System.AccessViolationException when
+            /// the device tries to update the colours
+            /// </summary>
+            NotFound
+        }
+
+        #region Asus Device Wrappers
 
         /// <summary>
         /// In this wrapper we take the peripheral color and apply it on every
         /// LED that is detected by the SDK
         /// </summary>
-        private class AuraSdkGenericDeviceWrapper : IAsusSdkDeviceWrapper
+        private class AsusGenericDeviceWrapper
         {
             private const int DefaultFrameRate = 30;
-            private const int MaxFails = 5;
+            private const int MaxSlowFails = 3;
             /// <summary>
-            ///  if a device takes more than this to print the colors, then try to disconnect it
+            /// If a device takes more than this to print the colors, then try to disconnect it in ms
             /// </summary>
-            private const int MaxDeviceWait = 2000;
+            private const int MaxDeviceWait = 1500;
             /// <summary>
             /// How many millis it took to run the last update
             /// </summary>
             public long ElapsedMillis { get; private set; }
+            /// <summary>
+            /// The current status of the device
+            /// </summary>
+            private AsusDeviceStatus _deviceStatus;
+            /// <summary>
+            /// The current status of the device
+            /// </summary>
+            public AsusDeviceStatus DeviceStatus
+            {
+                get => _deviceStatus;
+                private set
+                {
+                    Log($"Device {DeviceName} {HardwareName} {DeviceId} switching status {_deviceStatus} -> {value}");
+                    _deviceStatus = value;
+                }
+            }
+            /// <summary>
+            /// The current status of the device
+            /// </summary>
+            public int DeviceId { get; private set; }
+            /// <summary>
+            /// Render lights asynchronously?
+            /// </summary>
+            public readonly bool Async = false;
             /// <summary>
             /// The device to update
             /// </summary>
@@ -274,54 +448,62 @@ namespace Aurora.Devices.Asus
             /// <summary>
             /// How many updates failed in a row
             /// </summary>
-            private int _failedUpdates = 0;
-            /// <summary>
-            /// How many updates failed in a row
-            /// </summary>
             private int _longUpdates = 0;
-            /// <summary>
-            /// Render lights asynchronously?
-            /// </summary>
-            private readonly bool _async = false;
             /// <summary>
             /// Initialise a generic device wrapper
             /// </summary>
             /// <param name="device">The device to use</param>
             /// <param name="frameRate">The rate to update the device, frames per second</param>
-            public AuraSdkGenericDeviceWrapper(IAuraDevice device, bool async, int frameRate = DefaultFrameRate)
+            public AsusGenericDeviceWrapper(IAuraDevice device, bool async, int frameRate = DefaultFrameRate)
             {
                 Device = device;
-                _async = async;
+                Async = async;
                 DeviceName = device.Name;
                 HardwareName = ((AsusDeviceType)Device.Type).ToString();
                 _frequency = (int)((1f / frameRate) * 1000);
                 _stopwatch.Start();
             }
 
-            /// <summary>
-            /// Start a thread to send the colors across to the device
-            /// </summary>
-            /// <param name="keyColors"></param>
-            /// <returns> false if the device has been removed </returns>
-            public bool SendColors(Dictionary<DeviceKeys, Color> keyColors)
+            public void SetId(int deviceId)
             {
-                if (Device == null || _failedUpdates > MaxFails)
-                    return false;
+                if (DeviceId != 0)
+                    return;
+
+                DeviceId = deviceId;
+            }
+
+            /// <summary>
+            /// Start the process to send the colors across to the device
+            /// </summary>
+            /// <param name="keyColors">the colors to update it with</param>
+            public void SendColors(Dictionary<DeviceKeys, Color> keyColors)
+            {
+                if (Device == null)
+                {
+                    DeviceStatus = AsusDeviceStatus.NotFound;
+                    return;
+                }
 
                 // if we're still applying colors then dismiss this set of colors
                 if (_applyColors || _stopwatch.ElapsedMilliseconds < _frequency)
-                    return true;
+                    return;
 
-                if (_stopwatch.ElapsedMilliseconds > MaxDeviceWait)
+                if (ElapsedMillis > MaxDeviceWait)
+                {
+                    Log($"Device {DeviceName} {HardwareName} {DeviceId} took {_stopwatch.ElapsedMilliseconds}");
                     _longUpdates++;
+                }
                 else
                     _longUpdates = 0;
 
-                if (_longUpdates > MaxFails)
-                    return false;
+                if (_longUpdates >= MaxSlowFails)
+                {
+                    DeviceStatus = AsusDeviceStatus.Slow;
+                    return;
+                }
 
                 _stopwatch.Reset();
-                if (_async)
+                if (Async)
                 {
                     // clone the dictionary so we don't interfere with the original reference
                     var colorCopy = new Dictionary<DeviceKeys, Color>(keyColors);
@@ -331,36 +513,30 @@ namespace Aurora.Devices.Asus
                 {
                     ApplyColorsThreaded(keyColors);
                 }
-                return true;
             }
-
-            /// <inheritdoc />
-            public string GetDeviceName() => DeviceName;
-            /// <inheritdoc />
-            public string GetHardwareName() => HardwareName;
-            /// <inheritdoc />
-            public long GetElapsedMillis() => ElapsedMillis;
 
             [HandleProcessCorruptedStateExceptions, SecurityCritical]
             private void ApplyColorsThreaded(object keyColorsObject)
             {
                 _stopwatch.Start();
                 _applyColors = true;
-
                 try
                 {
                     lock (Device)
                     {
                         Device.SetMode(0);
-                        ApplyColors((Dictionary<DeviceKeys, Color>) keyColorsObject);
-                        _failedUpdates = 0;
+                        ApplyColors((Dictionary<DeviceKeys, Color>)keyColorsObject);
                     }
+                }
+                catch (AccessViolationException e)
+                {
+                    Log($"lost access to device {DeviceName}");
+                    Global.logger.Info(e);
+                    DeviceStatus = AsusDeviceStatus.NotFound;
                 }
                 catch (Exception e)
                 {
-                    _failedUpdates++;
-                    Global.logger.Info(e);
-                    Global.logger.Info($"[ASUS] failed to update device {DeviceName} {_failedUpdates} times :(");
+                    Log($"{DeviceName} has an exception:\r\n{e}");
                 }
 
                 _applyColors = false;
@@ -382,7 +558,7 @@ namespace Aurora.Devices.Asus
                         SetRgbLight(light, color);
                     }
                 }
-                
+
                 Device.Apply();
             }
 
@@ -431,9 +607,9 @@ namespace Aurora.Devices.Asus
         /// <summary>
         /// A wrapper for Asus Mice
         /// </summary>
-        private class AuraSdkMouseWrapper : AuraSdkGenericDeviceWrapper
+        private class AsusMouseWrapper : AsusGenericDeviceWrapper
         {
-            public AuraSdkMouseWrapper(IAuraDevice mouse, bool async) : base(mouse, async) { }
+            public AsusMouseWrapper(IAuraDevice mouse, bool async) : base(mouse, async) { }
 
             /// <inheritdoc />
             [HandleProcessCorruptedStateExceptions, SecurityCritical]
@@ -443,7 +619,7 @@ namespace Aurora.Devices.Asus
                 SetRgbLightIfExist(keyColors, DeviceKeys.Peripheral_Logo, Device.Lights[DeviceKeyToAuraMouseKeyId(DeviceKeys.Peripheral_Logo)]);
                 SetRgbLightIfExist(keyColors, DeviceKeys.Peripheral_ScrollWheel, Device.Lights[DeviceKeyToAuraMouseKeyId(DeviceKeys.Peripheral_ScrollWheel)]);
                 SetRgbLightIfExist(keyColors, DeviceKeys.Peripheral_FrontLight, Device.Lights[DeviceKeyToAuraMouseKeyId(DeviceKeys.Peripheral_FrontLight)]);
-            
+
                 Device.Apply();
             }
 
@@ -471,14 +647,14 @@ namespace Aurora.Devices.Asus
         /// <summary>
         /// A wrapper for Asus Keyboards
         /// </summary>
-        private class AuraSdkKeyboardWrapper : AuraSdkGenericDeviceWrapper
+        private class AsusKeyboardWrapper : AsusGenericDeviceWrapper
         {
             private readonly IAuraKeyboard _keyboard;
 
             private readonly Dictionary<ushort, IAuraRgbKey> _idToKey
                 = new Dictionary<ushort, IAuraRgbKey>();
 
-            public AuraSdkKeyboardWrapper(IAuraDevice keyboard, bool async) : base(keyboard, async)
+            public AsusKeyboardWrapper(IAuraDevice keyboard, bool async) : base(keyboard, async)
             {
                 _keyboard = (IAuraKeyboard)keyboard;
 
@@ -507,7 +683,7 @@ namespace Aurora.Devices.Asus
 
                 _keyboard.Apply();
             }
-            
+
             /// <summary>
             /// Determines the ushort ID from a DeviceKeys
             /// </summary>
@@ -756,4 +932,6 @@ namespace Aurora.Devices.Asus
 
         }
     }
+
+    #endregion
 }

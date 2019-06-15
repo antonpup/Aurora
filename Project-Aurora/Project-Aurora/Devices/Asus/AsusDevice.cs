@@ -21,16 +21,15 @@ namespace Aurora.Devices.Asus
             get => _state;
             set
             {
-                Global.logger.Info($"[ASUS] Status {_state} -> {value}");
+                Log($"Status { _state} -> {value}");
                 _state = value;
             }
         }
-        
+
         private VariableRegistry _defaultRegistry;
         private AsusHandler _asusHandler;
         private bool _runAsync;
-
-
+        
         /// <inheritdoc />
         public string GetDeviceName() => DeviceName;
 
@@ -150,6 +149,11 @@ namespace Aurora.Devices.Asus
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             return UpdateDevice(colorComposition.keyColors, e, forced);
+        }
+        
+        public static void Log(string text)
+        {
+            Global.logger.Info($"[ASUS] {text}");
         }
 
         private enum AuraState
