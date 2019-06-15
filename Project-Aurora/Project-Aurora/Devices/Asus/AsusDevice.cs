@@ -26,14 +26,10 @@ namespace Aurora.Devices.Asus
             }
         }
         
-        private readonly VariableRegistry _defaultRegistry = new VariableRegistry();
+        private VariableRegistry _defaultRegistry;
         private AsusHandler _asusHandler;
+        private bool _runAsync;
 
-        /// <inheritdoc />
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return _defaultRegistry;
-        }
 
         /// <inheritdoc />
         public string GetDeviceName() => DeviceName;
@@ -65,6 +61,16 @@ namespace Aurora.Devices.Asus
 
         /// <inheritdoc />
         public string GetDeviceUpdatePerformance() => "";
+        
+        /// <inheritdoc />
+        public VariableRegistry GetRegisteredVariables()
+        {
+            if (_defaultRegistry != null) return _defaultRegistry;
+
+            _defaultRegistry = new VariableRegistry();
+            _defaultRegistry.Register($"{DeviceName}_async", false, "Run asynchronously");
+            return _defaultRegistry;
+        }
 
         /// <inheritdoc />
         public bool Initialize()
@@ -76,7 +82,9 @@ namespace Aurora.Devices.Asus
                 _asusHandler = new AsusHandler();
 
             State = AuraState.Starting;
-            return _asusHandler.GetControl(success => State = success ? AuraState.On : State = AuraState.Off);
+
+            _runAsync = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_async");
+            return _asusHandler.GetControl(_runAsync, success => State = success ? AuraState.On : State = AuraState.Off);
         }
 
         /// <inheritdoc />
@@ -91,7 +99,7 @@ namespace Aurora.Devices.Asus
             StopAsus(() => Initialize());
         }
 
-        private void StopAsus(Action OnComplete = null)
+        private void StopAsus(Action onComplete = null)
         {
             if (State == AuraState.Off || State == AuraState.Stopping || State == AuraState.Starting)
                 return;
@@ -102,7 +110,7 @@ namespace Aurora.Devices.Asus
                 if (uninitialized)
                     State = AuraState.Off;
 
-                OnComplete?.Invoke();
+                onComplete?.Invoke();
             });
         }
 
@@ -115,7 +123,7 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public bool IsInitialized() => IsConnected();
         /// <inheritdoc />
-        public bool IsConnected() => State == AuraState.On || State == AuraState.Starting;
+        public bool IsConnected() => State == AuraState.On || State == AuraState.Starting || State == AuraState.Stopping;
 
         /// <inheritdoc />
         public bool IsKeyboardConnected() => IsConnected();
@@ -126,6 +134,14 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
+            var runAsyncRegistry = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_async");
+            if (_runAsync != runAsyncRegistry)
+            {
+                Reset();
+                _runAsync = runAsyncRegistry;
+                return false;
+            }
+
             _asusHandler?.UpdateDevices(keyColors);
             return true;
         }
