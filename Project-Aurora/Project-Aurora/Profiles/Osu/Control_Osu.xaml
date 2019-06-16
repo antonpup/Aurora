@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Aurora.Profiles.Osu.Control_Osu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.Osu"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Osu!">
+                <StackPanel Margin="10">
+                    <CheckBox x:Name="enableOsu" Content="Enable Aurora to provide lighting effects for Osu!" IsChecked="{Binding IsEnabled}" />
+                    <TextBlock Margin="0,8" Text="To support Osu! lighting, a mod is required so that game variables can be sent to Aurora. This mode requires OsuSync." TextWrapping="Wrap" />
+                    <TextBlock Text="This mod is not developed as part of the Aurora project and as such any issues with the mod should not be directed at Aurora but at the GitLab repo for the Aurora GSI Osu mod." TextWrapping="Wrap" />
+
+                    <Separator Margin="16" />
+
+                    <TextBlock Text="1. First, you must download and setup OsuSync. It can be downloaded from the OsuSync GitHub repo." TextWrapping="Wrap" />
+                    <TextBlock Text="2. Next, in the OsuSync terminal, type the following command:" TextWrapping="Wrap" />
+                    <TextBox Text="plugins install OsuRTDataProvider" Margin="16,2" FontFamily="Consolas,Courier New" IsReadOnly="True" HorizontalAlignment="Left" />
+                    <TextBlock Text="3. It will ask 'Restart to complete install?'. Type the letter 'y' and then hit enter." TextWrapping="Wrap" />
+                    <TextBlock Text="4. Click the 'Install Plugin' button below and point the dialog to your OsuSync executable. This will copy the required Aurora DLL into the plugins directory." TextWrapping="Wrap" />
+                    <TextBlock TextWrapping="Wrap">
+                        <Run Text="4.1. Alternatively, you can fetch the DLL from the" />
+                        <Hyperlink NavigateUri="https://gitlab.com/wibble199/aurora-gsi-osu/tags" RequestNavigate="Hyperlink_RequestNavigate">Aurora GSI OsuSync plugin GitLab repo</Hyperlink>
+                        <Run Text="and manually download it into your plugins directory. Note if you do it this way you will need to right-click the saved DLL, choose 'Properties' then click the 'Unblock' button." />
+                    </TextBlock>
+                    <TextBlock Text="5. Finally, restart OsuSync. You should see that when it starts up it says 'Load AuroraGSI'." />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,8">
+                        <Button Content="OsuSync GitHub repository" Padding="6,2" Click="OpenOsuSyncRepo_Click" />
+                        <Button Content="Install Plugin" Margin="8,0" Padding="6,2" Click="InstallPlugin_Click" />
+                        <Button Content="Uninstall Plugin" Padding="6,2" Click="UninstallPlugin_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

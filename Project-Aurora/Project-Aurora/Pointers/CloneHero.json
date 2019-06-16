@@ -1,0 +1,50 @@
+﻿{
+  "NoteStreak": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "56", "40", "256" ]
+  },
+  "IsStarPowerActive": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "104", "40", "272" ]
+  },
+  "StarPowerPercent": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "56", "40", "236" ]
+  },
+  "IsAtMenu": {
+    "baseAddress": "22358920",
+    "pointers": [ "760" ]
+  },
+  "Score": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "56", "40", "264" ]
+  },
+  "NotesTotal": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "72", "40", "200" ]
+  },
+  "TotalNotesHit": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "56", "40", "272" ]
+  },
+  "IsGreenPressed": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "40", "40", "24", "32", "24" ]
+  },
+  "IsRedPressed": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "40", "40", "24", "40", "24" ]
+  },
+  "IsYellowPressed": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "40", "40", "24", "48", "24" ]
+  },
+  "IsBluePressed": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "40", "40", "24", "56", "24" ]
+  },
+  "IsOrangePressed": {
+    "baseAddress": "22023400",
+    "pointers": [ "0", "0", "16", "48", "40", "40", "24", "64", "24" ]
+  }
+}

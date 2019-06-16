@@ -18,21 +18,24 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="70px" />
             <RowDefinition Height="28px" />
             <RowDefinition Height="28px" />
             <RowDefinition Height="28px" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Label Content="True Color:" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-        <xctk:ColorPicker x:Name="trueColor" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="4,2" Height="24" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="trueColor_SelectedColorChanged" />
+        <TextBlock Text="This layer is now deprecated. You can now use the 'Layer Visibility Conditions' settings on ANY other type of layer to achieve the same effect (and allowing you to use fancy animated layers!). This layer only remains so as to not break existing profiles." Foreground="Red" Margin="8" VerticalAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="4" />
 
-        <Label Content="False Color:" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-        <xctk:ColorPicker x:Name="falseColor" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="4,2" Height="24" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="falseColor_SelectedColorChanged" />
+        <Label Content="True Color:" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        <xctk:ColorPicker x:Name="trueColor" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="4,2" Height="24" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="trueColor_SelectedColorChanged" />
 
-        <Label Content="Condition Path:" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-        <ComboBox x:Name="conditionPath" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="4,2" IsEditable="True" TextBoxBase.TextChanged="conditionPath_TextChanged" />
+        <Label Content="False Color:" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        <xctk:ColorPicker x:Name="falseColor" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="4,2" Height="24" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="falseColor_SelectedColorChanged" />
 
-        <Controls:KeySequence x:Name="keySequence" Grid.Column="3" Grid.RowSpan="4" Margin="0,4,0,0" Height="280px" VerticalAlignment="Top" RecordingTag="ConditionalLayer" Title="Affected Keys" SequenceUpdated="keySequence_SequenceUpdated" />
+        <Label Content="Condition Path:" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        <ComboBox x:Name="conditionPath" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="4,2" IsEditable="True" TextBoxBase.TextChanged="conditionPath_TextChanged" />
+
+        <Controls:KeySequence x:Name="keySequence" Grid.Column="3" Grid.Row="1" Grid.RowSpan="4" Margin="0,4,0,0" Height="280px" VerticalAlignment="Top" RecordingTag="ConditionalLayer" Title="Affected Keys" SequenceUpdated="keySequence_SequenceUpdated" />
     </Grid>
 </UserControl>

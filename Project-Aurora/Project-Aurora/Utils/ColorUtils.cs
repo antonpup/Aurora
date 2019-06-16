@@ -342,6 +342,23 @@ namespace Aurora.Utils
         }
     }
 
+    /// <summary>
+    /// Converts between a RealColor and Media color so that the RealColor class can be used with the Xceed Color Picker
+    /// </summary>
+    public class RealColorConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((RealColor)value).GetMediaColor();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new RealColor((System.Windows.Media.Color)value);
+    }
+
+    /// <summary>
+    /// Class to convert between a <see cref="EffectsEngine.EffectBrush"></see> and a <see cref="System.Windows.Media.Brush"></see> so that it can be
+    /// used with the ColorBox gradient editor control.
+    /// </summary>
+    public class EffectBrushToBrushConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((EffectsEngine.EffectBrush)value).GetMediaBrush();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new EffectsEngine.EffectBrush((System.Windows.Media.Brush)value);
+    }
+
     public class BoolToColorConverter : IValueConverter
     {
         public static Tuple<Color, Color> TextWhiteRed = new Tuple<Color, Color>(Color.FromArgb(255, 186, 186, 186), Color.Red);
@@ -407,5 +424,8 @@ namespace Aurora.Utils
         {
             return new RealColor(this.Color.Clone());
         }
+
+        public static implicit operator System.Drawing.Color(RealColor c) => c.GetDrawingColor();
+        public static implicit operator System.Windows.Media.Color(RealColor c) => c.GetMediaColor();
     }
 }

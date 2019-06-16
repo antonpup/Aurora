@@ -20,6 +20,8 @@ namespace Aurora.Profiles.RocketLeague
         public RocketLeague()
             : base(new LightEventConfig { Name = "Rocket League", ID = "rocketleague", ProcessNames = new[] { "rocketleague.exe" }, ProfileType = typeof(RocketLeagueProfile), OverviewControlType = typeof(Control_RocketLeague), GameStateType = typeof(GameState_RocketLeague), Event = new GameEvent_RocketLeague(), IconURI = "Resources/rocketleague_256x256.png" })
         {
+            Utils.PointerUpdateUtils.MarkAppForUpdate("RocketLeague");
+
             var extra = new List<LayerHandlerEntry>
             {
                 new LayerHandlerEntry("RocketLeagueBackground", "Rocket League Layer", typeof(RocketLeagueBackgroundLayerHandler)),

@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using SharpDX;
 using SharpDX.DXGI;
@@ -39,7 +40,7 @@ namespace Aurora.Settings.Layers
         [Description("Specific Process")]
         SpecificProcess = 3
     }
-
+    
     public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<AmbilightLayerHandlerProperties>
     {
         public AmbilightType? _AmbilightType { get; set; }
@@ -83,6 +84,8 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LogicOverrideIgnoreProperty("_PrimaryColor")]
+    [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>
     {
         private static float image_scale_x = 0;

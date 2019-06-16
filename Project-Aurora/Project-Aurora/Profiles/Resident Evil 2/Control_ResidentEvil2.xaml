@@ -1,0 +1,33 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.ResidentEvil2"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.Profiles.ResidentEvil2.Control_ResidentEvil2"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Resident Evil 2">
+                <Grid>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="Resident Evil 2 support works via memory reading. As a result, you do not have to apply any patches for the game to work with Aurora. However, this does mean that whenever a game update is released, Aurora's Resident Evil 2 support"/><Run Text=" would stop working. Aurora's memory reading pointers have to be updated manually, and thus Aurora will regularly check for new memory reading pointers via automatic updates. So, I apologize for any delays in Resident Evil 2 support, please inform me on Aurora's github page about a Resident Evil 2 update, and I will look into releasing a patch."/><LineBreak/><Run/><LineBreak/><Run Text="(Github link can be found under Settings -&gt; About)"/></TextBlock>
+                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Resident Evil 2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Preview">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75*"/>
+                        <ColumnDefinition Width="769*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Status:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Rank:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="preview_status" HorizontalAlignment="Left" Margin="55,13,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="preview_status_SelectionChanged" SelectedIndex="0" Grid.ColumnSpan="2"/>
+                    <CheckBox x:Name="preview_poison" Content="Poisoned" HorizontalAlignment="Left" Margin="105,16,0,0" VerticalAlignment="Top" Checked="preview_poison_Checked" Unchecked="preview_poison_Checked" Grid.Column="1"/>
+                    <xctk:IntegerUpDown x:Name="preview_rank" HorizontalAlignment="Left" Height="24" Margin="55,43,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_rank_ValueChanged" DefaultValue="0" Value="0" Minimum="1" Maximum="9" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
