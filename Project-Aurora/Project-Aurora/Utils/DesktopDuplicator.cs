@@ -44,19 +44,7 @@ namespace Aurora
                 Usage = ResourceUsage.Staging
             };
 
-            try
-            {
-                _deskDupl = output.DuplicateOutput(_device);
-            }
-            catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.NotCurrentlyAvailable)
-            {
-                throw new Exception("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.", e);
-            }
-            catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.Unsupported)
-            {
-                throw new NotSupportedException("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
-            }
-
+             _deskDupl = output.DuplicateOutput(_device);
             _desktopImageTexture = new Texture2D(_device, textureDesc);
         }
 
@@ -79,6 +67,12 @@ namespace Aurora
             {
                 // Can happen when going fullscreen / exiting fullscreen
                 Global.logger.Warn(e.Message);
+                throw e;
+            }
+            catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessDenied)
+            {
+                // Happens when locking PC
+                Global.logger.Debug(e.Message);
                 throw e;
             }
             catch (SharpDXException e) when (e.ResultCode.Failure)

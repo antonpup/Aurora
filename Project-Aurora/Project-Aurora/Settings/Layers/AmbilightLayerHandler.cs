@@ -93,6 +93,7 @@ namespace Aurora.Settings.Layers
         private static long last_use_time = 0;
         private static DesktopDuplicator desktopDuplicator;
         private static bool processing = false;  // Used to avoid updating before the previous update is processed
+        private static System.Timers.Timer retryTimer;
 
         public AmbilightLayerHandler()
         {
@@ -102,6 +103,8 @@ namespace Aurora.Settings.Layers
             {
                 this.Initialize();
             }
+            retryTimer = new System.Timers.Timer(500);
+            retryTimer.Elapsed += RetryTimer_Elapsed;
         }
 
         public void Initialize()
@@ -132,9 +135,26 @@ namespace Aurora.Settings.Layers
             var output = outputs.ElementAtOrDefault(outputId);
             var bounds = output.Output.Description.DesktopBounds;
             var rect = new Rectangle(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom);
-            desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, rect);
-
-            if(captureTimer == null)
+            try
+            {
+                desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, rect);
+            }
+            catch(SharpDXException e)
+            {
+                if(e.Descriptor == SharpDX.DXGI.ResultCode.NotCurrentlyAvailable)
+                {
+                    throw new Exception("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.", e);
+                }
+                if (e.Descriptor == SharpDX.DXGI.ResultCode.Unsupported)
+                {
+                    throw new NotSupportedException("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
+                }
+                Global.logger.Debug(e, String.Format("Caught exception when trying to setup desktop duplication. Retrying in {0} ms", AmbilightLayerHandler.retryTimer.Interval));
+                captureTimer?.Stop();
+                retryTimer.Start();
+                return;
+            }
+            if (captureTimer == null)
             {
                 captureTimer = new System.Timers.Timer(interval);
                 captureTimer.Elapsed += CaptureTimer_Elapsed;
@@ -145,6 +165,12 @@ namespace Aurora.Settings.Layers
         protected override System.Windows.Controls.UserControl CreateControl()
         {
             return new Control_AmbilightLayer(this);
+        }
+
+        private void RetryTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            retryTimer.Stop();
+            this.Initialize();
         }
 
         private void CaptureTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
