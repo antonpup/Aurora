@@ -85,12 +85,7 @@ namespace Aurora.Settings.Layers
             {
                 String strValue = (sender as ComboBox).SelectedIndex.ToString();
                 AmbilightFpsChoice fps = (AmbilightFpsChoice)Enum.Parse(typeof(AmbilightFpsChoice), strValue);
-                var context = (this.DataContext as AmbilightLayerHandler);
-                if (fps != context.Properties._AmbiLightUpdatesPerSecond)
-                {
-                    context.Properties._AmbiLightUpdatesPerSecond = fps;
-                    context.Initialize();
-                }
+                (this.DataContext as AmbilightLayerHandler).Properties._AmbiLightUpdatesPerSecond = fps;
             }
         }
 

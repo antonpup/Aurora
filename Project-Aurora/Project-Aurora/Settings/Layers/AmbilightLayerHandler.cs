@@ -116,6 +116,9 @@ namespace Aurora.Settings.Layers
         private static bool processing = false;  // Used to avoid updating before the previous update is processed
         private static System.Timers.Timer retryTimer;
 
+        // 10-30 updates / sec depending on setting
+        private int Interval => 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
+
         public AmbilightLayerHandler()
         {
             _ID = "Ambilight";
@@ -135,12 +138,10 @@ namespace Aurora.Settings.Layers
                 desktopDuplicator.Dispose();
                 desktopDuplicator = null;
             }
-            // 10-30 updates / sec depending on setting
-            int interval = 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
             if (captureTimer != null)
             {
                 captureTimer.Stop();
-                captureTimer.Interval = interval;
+                captureTimer.Interval = Interval;
             }
             var outputs = new Factory1().Adapters1
                 .SelectMany(M => M.Outputs
@@ -163,11 +164,11 @@ namespace Aurora.Settings.Layers
             }
             catch(SharpDXException e)
             {
-                if(e.Descriptor == SharpDX.DXGI.ResultCode.NotCurrentlyAvailable)
+                if(e.Descriptor == ResultCode.NotCurrentlyAvailable)
                 {
                     throw new Exception("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.", e);
                 }
-                if (e.Descriptor == SharpDX.DXGI.ResultCode.Unsupported)
+                if (e.Descriptor == ResultCode.Unsupported)
                 {
                     throw new NotSupportedException("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
                 }
@@ -178,7 +179,7 @@ namespace Aurora.Settings.Layers
             }
             if (captureTimer == null)
             {
-                captureTimer = new System.Timers.Timer(interval);
+                captureTimer = new System.Timers.Timer(Interval);
                 captureTimer.Elapsed += CaptureTimer_Elapsed;
             }
             captureTimer.Start();
@@ -197,6 +198,8 @@ namespace Aurora.Settings.Layers
 
         private void CaptureTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            // Reset the interval here, because it might have been changed in the config
+            captureTimer.Interval = Interval;
             if (processing)
             {
                 // Still busy processing the previous tick, do nothing
@@ -240,7 +243,6 @@ namespace Aurora.Settings.Layers
             newscreen?.Dispose();
 
             screen = newImage;
-
             if (Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
                 // Stop if layer wasn't active for 2 seconds
                 captureTimer.Stop();
