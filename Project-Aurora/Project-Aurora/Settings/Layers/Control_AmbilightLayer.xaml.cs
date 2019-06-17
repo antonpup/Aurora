@@ -44,7 +44,7 @@ namespace Aurora.Settings.Layers
                 this.combobox_ambilight_capture_type.SelectedItem = properties._AmbilightCaptureType;
                 this.txtBox_process_name.Text = properties._SpecificProcess;
                 this.txtbox_output_id.Text = properties.AmbilightOutputId.ToString();
-                this.txtbox_fps.Text = properties.AmbiLightUpdatesPerSecond.ToString();
+                this.combobox_ambilight_fps.SelectedItem = properties._AmbiLightUpdatesPerSecond;
 
                 ToggleProcessTxtBox();
 
@@ -79,23 +79,19 @@ namespace Aurora.Settings.Layers
 
         }
 
-        private void txtbox_capture_fps_TextChanged(object sender, TextChangedEventArgs e)
+        private void combobox_fps_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
+            if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is ComboBox)
             {
-                if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is TextBox)
+                String strValue = (sender as ComboBox).SelectedIndex.ToString();
+                AmbilightFpsChoice fps = (AmbilightFpsChoice)Enum.Parse(typeof(AmbilightFpsChoice), strValue);
+                var context = (this.DataContext as AmbilightLayerHandler);
+                if (fps != context.Properties._AmbiLightUpdatesPerSecond)
                 {
-                    var textBox = sender as TextBox;
-                    int fps = Math.Min(60, Math.Max(1, int.Parse(textBox.Text)));
-                    var context = (this.DataContext as AmbilightLayerHandler);
-                    if(fps != context.Properties._AmbiLightUpdatesPerSecond)
-                    {
-                        context.Properties._AmbiLightUpdatesPerSecond = fps;
-                        context.Initialize();
-                    }
+                    context.Properties._AmbiLightUpdatesPerSecond = fps;
+                    context.Initialize();
                 }
             }
-            catch (FormatException){}
         }
 
         private void combobox_ambilight_effect_type_SelectionChanged(object sender, SelectionChangedEventArgs e)

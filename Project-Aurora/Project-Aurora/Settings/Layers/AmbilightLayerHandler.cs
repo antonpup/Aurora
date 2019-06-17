@@ -40,7 +40,25 @@ namespace Aurora.Settings.Layers
         [Description("Specific Process")]
         SpecificProcess = 3
     }
-    
+
+    public enum AmbilightFpsChoice
+    {
+        [Description("Lowest")]
+        VeryLow = 0,
+
+        [Description("Low")]
+        Low,
+
+        [Description("Medium")]
+        Medium,
+
+        [Description("High")]
+        High,
+
+        [Description("Highest")]
+        Highest,
+    }
+
     public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<AmbilightLayerHandlerProperties>
     {
         public AmbilightType? _AmbilightType { get; set; }
@@ -59,10 +77,10 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public int AmbilightOutputId { get { return Logic._AmbilightOutputId ?? _AmbilightOutputId ?? 0; } }
 
-        public int? _AmbiLightUpdatesPerSecond { get; set; }
+        public AmbilightFpsChoice? _AmbiLightUpdatesPerSecond { get; set; }
 
         [JsonIgnore]
-        public int AmbiLightUpdatesPerSecond => Logic._AmbiLightUpdatesPerSecond ?? _AmbiLightUpdatesPerSecond ?? 15;
+        public AmbilightFpsChoice AmbiLightUpdatesPerSecond => Logic._AmbiLightUpdatesPerSecond ?? _AmbiLightUpdatesPerSecond ?? AmbilightFpsChoice.Medium;
 
         public String _SpecificProcess { get; set; }
 
@@ -77,7 +95,7 @@ namespace Aurora.Settings.Layers
         {
             base.Default();
             this._AmbilightOutputId = 0;
-            this._AmbiLightUpdatesPerSecond = 15;
+            this._AmbiLightUpdatesPerSecond = AmbilightFpsChoice.Medium;
             this._AmbilightType = AmbilightType.Default;
             this._AmbilightCaptureType = AmbilightCaptureType.Everything;
             this._SpecificProcess = "";
@@ -117,7 +135,8 @@ namespace Aurora.Settings.Layers
                 desktopDuplicator.Dispose();
                 desktopDuplicator = null;
             }
-            int interval = 1000 / Properties.AmbiLightUpdatesPerSecond;
+            // 10-30 updates / sec depending on setting
+            int interval = 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
             if (captureTimer != null)
             {
                 captureTimer.Stop();

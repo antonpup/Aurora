@@ -89,7 +89,11 @@ namespace Aurora
                 }
             }
 
-            ReleaseFrame();
+            bool disposed = ReleaseFrame();
+            if (disposed)
+            {
+                return null;
+            }
 
             var mapSource = _device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, MapFlags.None);
 
@@ -99,7 +103,10 @@ namespace Aurora
             }
             finally
             {
-                _device.ImmediateContext.UnmapSubresource(_desktopImageTexture, 0);
+                if (!_device.IsDisposed && !_device.ImmediateContext.IsDisposed && !_desktopImageTexture.IsDisposed)
+                {
+                    _device.ImmediateContext.UnmapSubresource(_desktopImageTexture, 0);
+                }
             }
         }
 
@@ -118,11 +125,12 @@ namespace Aurora
             return frame;
         }
 
-        void ReleaseFrame()
+        bool ReleaseFrame()
         {
             try
             {
-                _deskDupl.ReleaseFrame();
+                _deskDupl?.ReleaseFrame();
+                return _deskDupl.IsDisposed;
             }
             catch (SharpDXException e)
             {
@@ -130,6 +138,7 @@ namespace Aurora
                 {
                     Global.logger.Warn(e.Message);
                 }
+                return true;
             }
         }
 

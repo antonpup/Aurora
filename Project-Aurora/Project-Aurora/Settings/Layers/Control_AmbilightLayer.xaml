@@ -21,6 +21,16 @@
                 <TextBlock Text="{Binding Converter={StaticResource AmbilightEffectsToStringVC}}" />
             </DataTemplate>
 
+            <ObjectDataProvider x:Key="AmbiLightFpsChoices" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:AmbilightFpsChoice" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:AmbilightFpsToStringVC x:Key="AmbilightFpsToStringVC"/>
+            <DataTemplate x:Key="AmbilightFpsTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource AmbilightFpsToStringVC}}" />
+            </DataTemplate>
+            
             <ObjectDataProvider x:Key="AmbilightCapture" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="local:AmbilightCaptureType" />
@@ -41,7 +51,7 @@
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Capture Type" VerticalAlignment="Top" Margin="0,75,0,0"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Specific Process Name" VerticalAlignment="Top" Margin="0,100,0,0"/>
         <TextBox x:Name="txtbox_output_id" HorizontalAlignment="Left" Margin="130,0,0,0" VerticalAlignment="Top" Width="160" Height="20" TextChanged="txtbox_output_id_TextChanged" MaxLength="1"></TextBox>
-        <TextBox x:Name="txtbox_fps" HorizontalAlignment="Left" Margin="130,25,0,0" VerticalAlignment="Top" Width="160" Height="20" TextChanged="txtbox_capture_fps_TextChanged" MaxLength="2" InputScope="Number"></TextBox>
+        <ComboBox x:Name="combobox_ambilight_fps" HorizontalAlignment="Left" Margin="130,25,0,0" VerticalAlignment="Top" Width="160" Height="20"  ItemsSource="{Binding Source={StaticResource AmbiLightFpsChoices}}" ItemTemplate="{Binding Source={StaticResource AmbilightFpsTemplate}}" SelectionChanged="combobox_fps_SelectionChanged"/>
         <ComboBox x:Name="combobox_ambilight_effect_type" HorizontalAlignment="Left" Margin="130,50,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" SelectionChanged="combobox_ambilight_effect_type_SelectionChanged"/>
         <ComboBox x:Name="combobox_ambilight_capture_type" HorizontalAlignment="Left" Margin="130,75,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" SelectionChanged="combobox_ambilight_capture_type_SelectionChanged"/>
         <TextBox x:Name="txtBox_process_name" HorizontalAlignment="Left" Height="20" Margin="130,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" TextChanged="txtBox_process_name_TextChanged"/>
