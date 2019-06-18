@@ -157,8 +157,8 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.5\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NZXTSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NZXTSharp.2.1.0\lib\netstandard2.0\NZXTSharp.dll</HintPath>
+    <Reference Include="NZXTSharp, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NZXTSharp.2.1.2\lib\netstandard2.0\NZXTSharp.dll</HintPath>
     </Reference>
     <Reference Include="Octokit, Version=0.32.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Octokit.0.32.0\lib\net45\Octokit.dll</HintPath>
