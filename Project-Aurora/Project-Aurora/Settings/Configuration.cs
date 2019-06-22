@@ -34,7 +34,13 @@ namespace Aurora.Settings
         /// Progressive (Gradual)
         /// </summary>
         [Description("Progressive (Gradual)")]
-        Progressive_Gradual = 2
+        Progressive_Gradual = 2,
+
+        [Description("Only highest active key (foreground color)")]
+        Highest_Key = 3,
+
+        [Description("Only highest active key (blended color)")]
+        Highest_Key_Blend = 4
     }
 
     public enum IdleEffects
