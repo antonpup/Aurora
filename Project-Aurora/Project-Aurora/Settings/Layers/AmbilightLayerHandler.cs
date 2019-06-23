@@ -2,6 +2,8 @@
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
+using SharpDX;
+using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,7 +40,25 @@ namespace Aurora.Settings.Layers
         [Description("Specific Process")]
         SpecificProcess = 3
     }
-    
+
+    public enum AmbilightFpsChoice
+    {
+        [Description("Lowest")]
+        VeryLow = 0,
+
+        [Description("Low")]
+        Low,
+
+        [Description("Medium")]
+        Medium,
+
+        [Description("High")]
+        High,
+
+        [Description("Highest")]
+        Highest,
+    }
+
     public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<AmbilightLayerHandlerProperties>
     {
         public AmbilightType? _AmbilightType { get; set; }
@@ -50,6 +70,17 @@ namespace Aurora.Settings.Layers
 
         [JsonIgnore]
         public AmbilightCaptureType AmbilightCaptureType { get { return Logic._AmbilightCaptureType ?? _AmbilightCaptureType ?? AmbilightCaptureType.Everything; } }
+
+
+        public int? _AmbilightOutputId { get; set; }
+
+        [JsonIgnore]
+        public int AmbilightOutputId { get { return Logic._AmbilightOutputId ?? _AmbilightOutputId ?? 0; } }
+
+        public AmbilightFpsChoice? _AmbiLightUpdatesPerSecond { get; set; }
+
+        [JsonIgnore]
+        public AmbilightFpsChoice AmbiLightUpdatesPerSecond => Logic._AmbiLightUpdatesPerSecond ?? _AmbiLightUpdatesPerSecond ?? AmbilightFpsChoice.Medium;
 
         public String _SpecificProcess { get; set; }
 
@@ -63,6 +94,8 @@ namespace Aurora.Settings.Layers
         public override void Default()
         {
             base.Default();
+            this._AmbilightOutputId = 0;
+            this._AmbiLightUpdatesPerSecond = AmbilightFpsChoice.Medium;
             this._AmbilightType = AmbilightType.Default;
             this._AmbilightCaptureType = AmbilightCaptureType.Everything;
             this._SpecificProcess = "";
@@ -76,20 +109,80 @@ namespace Aurora.Settings.Layers
         private static float image_scale_x = 0;
         private static float image_scale_y = 0;
         private static Color avg_color = Color.Empty;
-        private static System.Timers.Timer screenshotTimer;
+        private static System.Timers.Timer captureTimer;
         private static Image screen;
         private static long last_use_time = 0;
+        private static DesktopDuplicator desktopDuplicator;
+        private static bool processing = false;  // Used to avoid updating before the previous update is processed
+        private static System.Timers.Timer retryTimer;
+
+        // 10-30 updates / sec depending on setting
+        private int Interval => 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
 
         public AmbilightLayerHandler()
         {
             _ID = "Ambilight";
 
-            if (screenshotTimer == null)
+            if (captureTimer == null)
             {
-                screenshotTimer = new System.Timers.Timer(100);
-                screenshotTimer.Elapsed += ScreenshotTimer_Elapsed;
-                screenshotTimer.Start();
+                this.Initialize();
             }
+            retryTimer = new System.Timers.Timer(500);
+            retryTimer.Elapsed += RetryTimer_Elapsed;
+        }
+
+        public void Initialize()
+        {
+            if (desktopDuplicator != null)
+            {
+                desktopDuplicator.Dispose();
+                desktopDuplicator = null;
+            }
+            if (captureTimer != null)
+            {
+                captureTimer.Stop();
+                captureTimer.Interval = Interval;
+            }
+            var outputs = new Factory1().Adapters1
+                .SelectMany(M => M.Outputs
+                    .Select(N => new
+                    {
+                        Adapter = M,
+                        Output = N.QueryInterface<Output1>()
+                    }));
+            var outputId = Properties.AmbilightOutputId;
+            if (Properties.AmbilightOutputId > (outputs.Count()-1))
+            {
+                outputId = 0;
+            }
+            var output = outputs.ElementAtOrDefault(outputId);
+            var bounds = output.Output.Description.DesktopBounds;
+            var rect = new Rectangle(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom);
+            try
+            {
+                desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, rect);
+            }
+            catch(SharpDXException e)
+            {
+                if(e.Descriptor == ResultCode.NotCurrentlyAvailable)
+                {
+                    throw new Exception("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.", e);
+                }
+                if (e.Descriptor == ResultCode.Unsupported)
+                {
+                    throw new NotSupportedException("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
+                }
+                Global.logger.Debug(e, String.Format("Caught exception when trying to setup desktop duplication. Retrying in {0} ms", AmbilightLayerHandler.retryTimer.Interval));
+                captureTimer?.Stop();
+                retryTimer.Start();
+                return;
+            }
+            if (captureTimer == null)
+            {
+                captureTimer = new System.Timers.Timer(Interval);
+                captureTimer.Elapsed += CaptureTimer_Elapsed;
+            }
+            captureTimer.Start();
         }
 
         protected override System.Windows.Controls.UserControl CreateControl()
@@ -97,9 +190,44 @@ namespace Aurora.Settings.Layers
             return new Control_AmbilightLayer(this);
         }
 
-        private void ScreenshotTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void RetryTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Image newscreen = Pranas.ScreenshotCapture.TakeScreenshot();
+            retryTimer.Stop();
+            this.Initialize();
+        }
+
+        private void CaptureTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // Reset the interval here, because it might have been changed in the config
+            captureTimer.Interval = Interval;
+            if (processing)
+            {
+                // Still busy processing the previous tick, do nothing
+                return;
+            }
+            processing = true;
+            if (desktopDuplicator == null)
+            {
+                processing = false;
+                return;
+            }
+            Bitmap newscreen;
+            try
+            {
+                newscreen = desktopDuplicator.Capture(5000);
+            } catch (SharpDXException err)
+            {
+                Global.logger.Error("Failed to capture screen, reinitializing. Error was: " + err.Message);
+                processing = false;
+                this.Initialize();
+                return;
+            }
+            if (newscreen == null)
+            {
+                // Timeout, ignore
+                processing = false;
+                return;
+            }
 
             image_scale_x = Effects.canvas_width / (float)newscreen.Width;
             image_scale_y = Effects.canvas_height / (float)newscreen.Height;
@@ -109,24 +237,26 @@ namespace Aurora.Settings.Layers
             using (var graphics = Graphics.FromImage(newImage))
                 graphics.DrawImage(newscreen, 0, 0, Effects.canvas_width, Effects.canvas_height);
 
-            avg_color = GetAverageColor(newscreen);
+            if (Properties.AmbilightType == AmbilightType.AverageColor)
+                avg_color = GetAverageColor(newscreen);
 
             newscreen?.Dispose();
 
             screen = newImage;
-
-            if(Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000) //If wasn't used for 2 seconds
-                screenshotTimer.Stop();
+            if (Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
+                // Stop if layer wasn't active for 2 seconds
+                captureTimer.Stop();
+            processing = false;
         }
 
         public override EffectLayer Render(IGameState gamestate)
         {
             last_use_time = Utils.Time.GetMillisecondsSinceEpoch();
 
-            if (!screenshotTimer.Enabled) // Static timer isn't running, start it!
-                screenshotTimer.Start();
+            if (!captureTimer.Enabled) // Static timer isn't running, start it!
+                captureTimer.Start();
 
-            //Handle different capture types
+            // Handle different capture types
             Image screen_image = screen;
             Color average_color = avg_color;
 
@@ -149,7 +279,8 @@ namespace Aurora.Settings.Layers
                             graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), prim_scr_region, GraphicsUnit.Pixel);
 
                         screen_image = newImage;
-                        average_color = GetAverageColor(newImage);
+                        if (Properties.AmbilightType == AmbilightType.AverageColor)
+                            average_color = GetAverageColor(newImage);
                     }
                     else
                     {
@@ -176,7 +307,8 @@ namespace Aurora.Settings.Layers
                             graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
 
                         screen_image = newImage;
-                        average_color = GetAverageColor(newImage);
+                        if (Properties.AmbilightType == AmbilightType.AverageColor)
+                            average_color = GetAverageColor(newImage);
                     }
                     else
                     {
@@ -209,7 +341,8 @@ namespace Aurora.Settings.Layers
                                         graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
 
                                     screen_image = newImage;
-                                    average_color = GetAverageColor(newImage);
+                                    if (Properties.AmbilightType == AmbilightType.AverageColor)
+                                        average_color = GetAverageColor(newImage);
                                 }
 
                                 break;
