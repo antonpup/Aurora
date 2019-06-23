@@ -415,9 +415,9 @@ If you want to help this project rapidly grow, you can donate via PayPal to help
 
 I do not have any intent in charging money for Aurora, it will always be a free and open source project. 
 
-| PayPal                                   | Steam                                    |
-| ---------------------------------------- | ---------------------------------------- |
-| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/SimonWhyte) | [![](http://steamsignature.com/status/default/76561198044898225.png)](http://steamcommunity.com/id/SimonWhyte) |
+| PayPal                                                       |
+| ------------------------------------------------------------ |
+| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/SimonWhyte) |
 
 ## Credits
 
