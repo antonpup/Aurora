@@ -15,13 +15,12 @@ namespace Aurora
     public class DesktopDuplicator : IDisposable
     {
         #region Fields
-        readonly Device _device;
-        readonly OutputDuplication _deskDupl;
+        private readonly Device _device;
+        private readonly OutputDuplication _deskDupl;
 
-        readonly Texture2D _desktopImageTexture;
-        OutputDuplicateFrameInformation _frameInfo;
+        private readonly Texture2D _desktopImageTexture;
 
-        Rectangle _rect;
+        private Rectangle _rect;
 
         #endregion
 
@@ -51,12 +50,11 @@ namespace Aurora
         public Bitmap Capture(int timeout)
         {
             SharpDX.DXGI.Resource desktopResource;
-            if (_deskDupl.IsDisposed || _device.IsDisposed) {
+            if (_deskDupl.IsDisposed || _device.IsDisposed) 
                 return null;
-            }
-            try
-            {
-                _deskDupl.AcquireNextFrame(timeout, out _frameInfo, out desktopResource);
+
+            try {
+                _deskDupl.AcquireNextFrame(timeout, out OutputDuplicateFrameInformation _frameInfo, out desktopResource);
             }
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.WaitTimeout)
             {
@@ -81,19 +79,14 @@ namespace Aurora
                 return null;
             }
 
-            using (desktopResource)
-            {
+            using (desktopResource) {
                 using (var tempTexture = desktopResource.QueryInterface<Texture2D>())
-                {
                     _device.ImmediateContext.CopyResource(tempTexture, _desktopImageTexture);
-                }
             }
 
             bool disposed = ReleaseFrame();
             if (disposed)
-            {
                 return null;
-            }
 
             var mapSource = _device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, MapFlags.None);
 
