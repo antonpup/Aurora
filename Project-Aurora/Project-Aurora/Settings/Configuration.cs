@@ -64,7 +64,7 @@ namespace Aurora.Settings
         [Description("Matrix")]
         Matrix = 8,
         [Description("Rain Fall Smooth")]
-        RainFallSmooth = 8
+        RainFallSmooth = 9
     }
 
     /// <summary>
