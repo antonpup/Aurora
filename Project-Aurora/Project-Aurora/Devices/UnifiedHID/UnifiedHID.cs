@@ -10,7 +10,6 @@ using System.ComponentModel;
 
 namespace Aurora.Devices.UnifiedHID
 {
-
     class UnifiedHIDDevice : Device
     {
         private string devicename = "UnifiedHID";
@@ -251,9 +250,9 @@ namespace Aurora.Devices.UnifiedHID
 
             if (devices.Count() > 0)
             {
-                device = devices.FirstOrDefault(dev => dev.Capabilities.UsagePage == usagePage);
                 try
                 {
+                    device = devices.First(dev => dev.Capabilities.UsagePage == usagePage);
                     device.OpenDevice();
                     return (IsConnected = true);
                 }
@@ -566,26 +565,11 @@ namespace Aurora.Devices.UnifiedHID
     class RoccatVulcan : UnifiedBase
     {
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        static internal extern bool WriteFile(IntPtr hFile, byte[] lpBuffer, uint nNumberOfBytesToWrite, out uint lpNumberOfBytesWritten, [System.Runtime.InteropServices.In] ref System.Threading.NativeOverlapped lpOverlapped);
+        static internal extern bool WriteFile(IntPtr hFile, IntPtr lpBuffer, uint nNumberOfBytesToWrite, out uint lpNumberOfBytesWritten, [System.Runtime.InteropServices.In] ref System.Threading.NativeOverlapped lpOverlapped);
 
         private static HidDevice ctrl_device_leds;
         private static HidDevice ctrl_device;
-        private static int RV_NUM_KEYS = 144;
-        private struct rv_rgb
-        {
-            public byte r;
-            public byte g;
-            public byte b;
-        }
-        private class rv_rgb_map
-        {
-            public rv_rgb_map()
-            {
-                keys = new rv_rgb[RV_NUM_KEYS];
-            }
-
-            public rv_rgb[] keys;
-        }
+        private static readonly int RV_NUM_KEYS = 144;
 
         public static Dictionary<DeviceKeys, int> KeyMap = new Dictionary<DeviceKeys, int> {
             { DeviceKeys.ESC, 0 },
@@ -705,71 +689,6 @@ namespace Aurora.Devices.UnifiedHID
             { DeviceKeys.NUM_ENTER, 131 }
         };
 
-        public static int DeviceKeyToRoccatVulcanIndex(DeviceKeys key)
-        {
-            if (KeyMap.TryGetValue(key, out int rv_key))
-                return rv_key;
-
-            return -1;
-        }
-
-        static bool rv_send_led_map(rv_rgb_map src)
-        {
-            // Send seven chunks with 64 bytes each
-            byte[] hwmap = new byte[444];
-            // Plus one byte report ID for the lib
-            byte[] workbuf = new byte[65];
-
-            // Translate linear to hardware map
-            for (int k = 0; k < RV_NUM_KEYS; k++)
-            {
-                if (src == null || src.keys == null)
-                {
-                    continue;
-                }
-
-                int offset = ((k / 12) * 36) + (k % 12);
-
-                hwmap[offset + 0] = src.keys[k].r;
-                hwmap[offset + 12] = src.keys[k].g;
-                hwmap[offset + 24] = src.keys[k].b;
-
-            }
-
-            // First chunk comes with header
-            workbuf[0] = 0x00;
-            workbuf[1] = 0xa1;
-            workbuf[2] = 0x01;
-            workbuf[3] = 0x01;
-            workbuf[4] = 0xb4;
-
-            //memcpy(&workbuf[5], hwmap, 60);
-            Array.Copy(hwmap, 0, workbuf, 5, 60);
-
-            NativeOverlapped overlapped = new NativeOverlapped();
-
-            if (WriteFile(ctrl_device_leds.Handle, workbuf, (uint)workbuf.Length, out _, ref overlapped) != true)
-            {
-                return false;
-            }
-
-            // Six more chunks
-            for (int i = 1; i < 7; i++)
-            {
-                workbuf[0] = 0x00;
-
-                //memcpy(&workbuf[1], &hwmap[(i * 64) - 4], 64);
-                Array.Copy(hwmap, (i * 64) - 4, workbuf, 1, 64);
-
-                if (WriteFile(ctrl_device_leds.Handle, workbuf, (uint)workbuf.Length, out _, ref overlapped) != true)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         // Most of these functions were ported from https://github.com/duncanthrax/roccat-vulcan
         static bool rv_wait_for_ctrl_device()
         {
@@ -777,8 +696,7 @@ namespace Aurora.Devices.UnifiedHID
             {
                 // 150ms is the magic number here, should suffice on first try.
                 Thread.Sleep(150);
-                bool success = ctrl_device.ReadFeatureData(out byte[] buffer, 0x04);
-                if (success && buffer.Length > 2)
+                if (ctrl_device.ReadFeatureData(out byte[] buffer, 0x04) && buffer.Length > 2)
                 {
                     if (buffer[1] == 0x01)
                     {
@@ -796,48 +714,24 @@ namespace Aurora.Devices.UnifiedHID
 
         private bool rv_get_ctrl_report(byte report_id)
         {
-            bool success = ctrl_device.ReadFeatureData(out byte[] buffer, report_id);
-
-            return (success && buffer.Length >= 8);
+            return (ctrl_device.ReadFeatureData(out byte[] buffer, report_id) && buffer.Length >= 8);
         }
 
-        private bool rv_set_ctrl_report(byte report_id)
-        {
-            byte[] buffer = null;
-            //int length = 0;
-
-            switch (report_id)
-            {
-                case 0x15:
-                    buffer = new byte[] { 0x15, 0x00, 0x01 };
-                    //length = 3;
-                    break;
-                case 0x05:
-                    buffer = new byte[] { 0x05, 0x04, 0x00, 0x04 };
-                    //length = 4;
-                    break;
-                case 0x07:
-                    buffer = new byte[] { 0x07 ,0x5f ,0x00 ,0x3a ,0x00 ,0x00 ,0x3b ,0x00 ,0x00 ,0x3c ,0x00 ,0x00 ,0x3d ,0x00 ,0x00 ,0x3e,
+        #region Buffers for ctrl_reports
+        static readonly byte[] ctrl_report_buffer_0x15 = new byte[] { 0x15, 0x00, 0x01 };
+        static readonly byte[] ctrl_report_buffer_0x05 = new byte[] { 0x05, 0x04, 0x00, 0x04 };
+        static readonly byte[] ctrl_report_buffer_0x07 = new byte[] { 0x07 ,0x5f ,0x00 ,0x3a ,0x00 ,0x00 ,0x3b ,0x00 ,0x00 ,0x3c ,0x00 ,0x00 ,0x3d ,0x00 ,0x00 ,0x3e,
                         0x00 ,0x00 ,0x3f ,0x00 ,0x00 ,0x40 ,0x00 ,0x00 ,0x41 ,0x00 ,0x00 ,0x42 ,0x00 ,0x00 ,0x43 ,0x00,
                         0x00 ,0x44 ,0x00 ,0x00 ,0x45 ,0x00 ,0x00 ,0x46 ,0x00 ,0x00 ,0x47 ,0x00 ,0x00 ,0x48 ,0x00 ,0x00,
                         0xb3 ,0x00 ,0x00 ,0xb4 ,0x00 ,0x00 ,0xb5 ,0x00 ,0x00 ,0xb6 ,0x00 ,0x00 ,0xc2 ,0x00 ,0x00 ,0xc3,
                         0x00 ,0x00 ,0xc0 ,0x00 ,0x00 ,0xc1 ,0x00 ,0x00 ,0xce ,0x00 ,0x00 ,0xcf ,0x00 ,0x00 ,0xcc ,0x00,
                         0x00 ,0xcd ,0x00 ,0x00 ,0x46 ,0x00 ,0x00 ,0xfc ,0x00 ,0x00 ,0x48 ,0x00 ,0x00 ,0xcd ,0x0e };
-                    //length = 95;
-                    break;
-                case 0x0a:
-                    buffer = new byte[] { 0x0a, 0x08, 0x00, 0xff, 0xf1, 0x00, 0x02, 0x02 };
-                    //length = 8;
-                    break;
-                case 0x0b:
-                    buffer = new byte[] { 0x0b ,0x41 ,0x00 ,0x1e ,0x00 ,0x00 ,0x1f ,0x00 ,0x00 ,0x20 ,0x00 ,0x00 ,0x21 ,0x00 ,0x00 ,0x22,
+        static readonly byte[] ctrl_report_buffer_0x0a = new byte[] { 0x0a, 0x08, 0x00, 0xff, 0xf1, 0x00, 0x02, 0x02 };
+        static readonly byte[] ctrl_report_buffer_0x0b = new byte[] { 0x0b ,0x41 ,0x00 ,0x1e ,0x00 ,0x00 ,0x1f ,0x00 ,0x00 ,0x20 ,0x00 ,0x00 ,0x21 ,0x00 ,0x00 ,0x22,
                         0x00 ,0x00 ,0x14 ,0x00 ,0x00 ,0x1a ,0x00 ,0x00 ,0x08 ,0x00 ,0x00 ,0x15 ,0x00 ,0x00 ,0x17 ,0x00,
                         0x00 ,0x04 ,0x00 ,0x00 ,0x16 ,0x00 ,0x00 ,0x07 ,0x00 ,0x00 ,0x09 ,0x00 ,0x00 ,0x0a ,0x00 ,0x00,
                         0x1d ,0x00 ,0x00 ,0x1b ,0x00 ,0x00 ,0x06 ,0x00 ,0x00 ,0x19 ,0x00 ,0x00 ,0x05 ,0x00 ,0x00 ,0xde ,0x01};
-                    //length = 65;
-                    break;
-                case 0x06:
-                    buffer = new byte[] { 0x06 ,0x85 ,0x00 ,0x3a ,0x29 ,0x35 ,0x1e ,0x2b ,0x39 ,0xe1 ,0xe0 ,0x3b ,0x1f ,0x14 ,0x1a ,0x04,
+        static readonly byte[] ctrl_report_buffer_0x06 = new byte[] { 0x06 ,0x85 ,0x00 ,0x3a ,0x29 ,0x35 ,0x1e ,0x2b ,0x39 ,0xe1 ,0xe0 ,0x3b ,0x1f ,0x14 ,0x1a ,0x04,
                         0x64 ,0x00 ,0x00 ,0x3d ,0x3c ,0x20 ,0x21 ,0x08 ,0x16 ,0x1d ,0xe2 ,0x3e ,0x23 ,0x22 ,0x15 ,0x07,
                         0x1b ,0x06 ,0x8b ,0x3f ,0x24 ,0x00 ,0x17 ,0x0a ,0x09 ,0x19 ,0x91 ,0x40 ,0x41 ,0x00 ,0x1c ,0x18,
                         0x0b ,0x05 ,0x2c ,0x42 ,0x26 ,0x25 ,0x0c ,0x0d ,0x0e ,0x10 ,0x11 ,0x43 ,0x2a ,0x27 ,0x2d ,0x12,
@@ -846,17 +740,10 @@ namespace Aurora.Devices.UnifiedHID
                         0x50 ,0xe5 ,0xe7 ,0xd2 ,0x53 ,0x5f ,0x5c ,0x59 ,0x51 ,0x00 ,0xf1 ,0xd1 ,0x54 ,0x60 ,0x5d ,0x5a,
                         0x4f ,0x8e ,0x65 ,0xd0 ,0x55 ,0x61 ,0x5e ,0x5b ,0x62 ,0xa4 ,0xe4 ,0xfc ,0x56 ,0x57 ,0x85 ,0x58,
                         0x63 ,0x00 ,0x00 ,0xc2 ,0x24};
-                    //length = 133;
-                    break;
-                case 0x09:
-                    buffer = new byte[] { 0x09 ,0x2b ,0x00 ,0x49 ,0x00 ,0x00 ,0x4a ,0x00 ,0x00 ,0x4b ,0x00 ,0x00 ,0x4c ,0x00 ,0x00 ,0x4d,
+        static readonly byte[] ctrl_report_buffer_0x09 = new byte[] { 0x09 ,0x2b ,0x00 ,0x49 ,0x00 ,0x00 ,0x4a ,0x00 ,0x00 ,0x4b ,0x00 ,0x00 ,0x4c ,0x00 ,0x00 ,0x4d,
                         0x00 ,0x00 ,0x4e ,0x00 ,0x00 ,0xa4 ,0x00 ,0x00 ,0x8e ,0x00 ,0x00 ,0xd0 ,0x00 ,0x00 ,0xd1 ,0x00,
                         0x00 ,0x00 ,0x00 ,0x00 ,0x01 ,0x00 ,0x00 ,0x00 ,0x00 ,0xcd ,0x04};
-                    //length = 43;
-                    break;
-                case 0x0d:
-                    //length = 443;
-                    buffer = new byte[] { 0x0d ,0xbb ,0x01 ,0x00 ,0x06 ,0x0b ,0x05 ,0x45 ,0x83 ,0xca ,0xca ,0xca ,0xca ,0xca ,0xca ,0xce,
+        static readonly byte[] ctrl_report_buffer_0x0d = new byte[] { 0x0d ,0xbb ,0x01 ,0x00 ,0x06 ,0x0b ,0x05 ,0x45 ,0x83 ,0xca ,0xca ,0xca ,0xca ,0xca ,0xca ,0xce,
                             0xce ,0xd2 ,0xce ,0xce ,0xd2 ,0x19 ,0x19 ,0x19 ,0x19 ,0x19 ,0x19 ,0x23 ,0x23 ,0x2d ,0x23 ,0x23,
                             0x2d ,0xe0 ,0xe0 ,0xe0 ,0xe0 ,0xe0 ,0xe0 ,0xe3 ,0xe3 ,0xe6 ,0xe3 ,0xe3 ,0xe6 ,0xd2 ,0xd2 ,0xd5,
                             0xd2 ,0xd2 ,0xd5 ,0xd5 ,0xd5 ,0xd9 ,0xd5 ,0x00 ,0xd9 ,0x2d ,0x2d ,0x36 ,0x2d ,0x2d ,0x36 ,0x36,
@@ -884,22 +771,45 @@ namespace Aurora.Devices.UnifiedHID
                             0x6c ,0x6c ,0x5e ,0x5e ,0x5e ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
                             0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
                             0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x24 ,0xcf};
+        static readonly byte[] ctrl_report_buffer_0x13 = new byte[] { 0x13, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        #endregion
 
+        private bool rv_set_ctrl_report(byte report_id)
+        {
+            bool success;
+            switch (report_id)
+            {
+                case 0x15:
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x15);
+                    break;
+                case 0x05:
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x05);
+                    break;
+                case 0x07:
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x07);
+                    break;
+                case 0x0a:
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x0a);
+                    break;
+                case 0x0b:
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x0b);
+                    break;
+                case 0x06:
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x06);
+                    break;
+                case 0x09:
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x09);
+                    break;
+                case 0x0d:
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x0d);
                     break;
                 case 0x13:
-                    buffer = new byte[] { 0x13, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
-                    //length = 8;
+                    success = ctrl_device.WriteFeatureData(ctrl_report_buffer_0x13);
+                    break;
+                default:
+                    success = false;
                     break;
             }
-
-
-            if (buffer == null)
-            {
-                return false;
-            }
-
-
-            bool success = ctrl_device.WriteFeatureData(buffer);
 
             return success;
         }
@@ -922,9 +832,8 @@ namespace Aurora.Devices.UnifiedHID
             {
                 if (devices.Count() > 0)
                 {
-                    HidDevice[] devicearray = devices.ToArray();
-                    ctrl_device_leds = devices.FirstOrDefault(dev => dev.Capabilities.UsagePage == 0x0001 && dev.Capabilities.Usage == 0x0000);
-                    ctrl_device = devices.FirstOrDefault(dev => dev.Capabilities.FeatureReportByteLength > 50);
+                    ctrl_device_leds = devices.First(dev => dev.Capabilities.UsagePage == 0x0001 && dev.Capabilities.Usage == 0x0000);
+                    ctrl_device = devices.First(dev => dev.Capabilities.FeatureReportByteLength > 50);
 
                     ctrl_device.OpenDevice();
                     ctrl_device_leds.OpenDevice();
@@ -950,7 +859,13 @@ namespace Aurora.Devices.UnifiedHID
                         rv_set_ctrl_report(0x13) &&
                         rv_wait_for_ctrl_device();
 
-                    return (IsConnected = true);
+                    if (!success)
+                    {
+                        ctrl_device.CloseDevice();
+                        ctrl_device_leds.CloseDevice();
+                    }
+
+                    return (IsConnected = success);
                 }
             }
             catch (Exception exc)
@@ -961,7 +876,7 @@ namespace Aurora.Devices.UnifiedHID
             return false;
         }
 
-        // We need to override Disconnect() too cause we have two hid devices open for this keyboard
+        // We need to override Disconnect() too cause we have two HID devices open for this keyboard.
         public override bool Disconnect()
         {
             try
@@ -984,29 +899,71 @@ namespace Aurora.Devices.UnifiedHID
                 if (!this.IsConnected)
                     return false;
 
-                rv_rgb_map rgbMap = new rv_rgb_map();
+                // Send seven chunks with 64 bytes each
+                byte[] hwmap = new byte[444];
 
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-
-
                     Color clr = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
 
-                    int index = DeviceKeyToRoccatVulcanIndex(key.Key);
-
-                    if (index == -1)
+                    if (!KeyMap.TryGetValue(key.Key, out int index))
                     {
                         continue;
                     }
 
-                    rgbMap.keys[index].r = clr.R;
-                    rgbMap.keys[index].g = clr.G;
-                    rgbMap.keys[index].b = clr.B;
+                    if (index > RV_NUM_KEYS)
+                    {
+                        continue;
+                    }
 
+                    int offset = ((index / 12) * 36) + (index % 12);
+                    hwmap[offset + 0] = clr.R;
+                    hwmap[offset + 12] = clr.G;
+                    hwmap[offset + 24] = clr.B;
                 }
 
-                rv_send_led_map(rgbMap);
 
+                // Plus one byte report ID for the lib
+                byte[] workbuf = new byte[65];
+
+                // First chunk comes with header
+                workbuf[0] = 0x00;
+                workbuf[1] = 0xa1;
+                workbuf[2] = 0x01;
+                workbuf[3] = 0x01;
+                workbuf[4] = 0xb4;
+
+                Array.Copy(hwmap, 0, workbuf, 5, 60);
+
+                NativeOverlapped overlapped = new NativeOverlapped();
+                unsafe
+                {
+                    fixed (byte* workbufPointer = workbuf)
+                    {
+                        if (WriteFile(ctrl_device_leds.Handle, (IntPtr)workbufPointer, (uint)workbuf.Length, out _, ref overlapped) != true)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                // Six more chunks
+                for (int i = 1; i < 7; i++)
+                {
+                    workbuf[0] = 0x00;
+                    Array.Copy(hwmap, (i * 64) - 4, workbuf, 1, 64);
+
+                    unsafe
+                    {
+                        fixed (byte* workbufPointer = workbuf)
+                        {
+                            if (WriteFile(ctrl_device_leds.Handle, (IntPtr)workbufPointer, (uint)workbuf.Length, out _, ref overlapped) != true)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
 
                 return true;
             }
@@ -1016,6 +973,5 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
     }
-
 
 }
