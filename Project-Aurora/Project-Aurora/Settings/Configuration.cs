@@ -34,7 +34,13 @@ namespace Aurora.Settings
         /// Progressive (Gradual)
         /// </summary>
         [Description("Progressive (Gradual)")]
-        Progressive_Gradual = 2
+        Progressive_Gradual = 2,
+
+        [Description("Only highest active key (foreground color)")]
+        Highest_Key = 3,
+
+        [Description("Only highest active key (blended color)")]
+        Highest_Key_Blend = 4
     }
 
     public enum IdleEffects
@@ -56,7 +62,9 @@ namespace Aurora.Settings
         [Description("Blackout")]
         Blackout = 7,
         [Description("Matrix")]
-        Matrix = 8
+        Matrix = 8,
+        [Description("Rain Fall Smooth")]
+        RainFallSmooth = 9
     }
 
     /// <summary>
@@ -273,7 +281,11 @@ namespace Aurora.Settings
         [Description("Hungarian")]
         hu = 14,
         [Description("Italian")]
-        it = 15
+        it = 15,
+        [Description("Latin America")]
+        la = 16,
+        [Description("Spanish")]
+        es = 17
     }
 
     public enum PreferredMouse
