@@ -31,7 +31,22 @@ namespace Aurora.Settings.Layers
         {
             InitializeComponent();
 
-            this.DataContext = datacontext;
+            DataContext = datacontext;
+        }
+        public void SetSettings()
+        {
+            if (DataContext is RazerLayerHandler handler && !settingsset)
+            {
+                ColorPostProcessCheckBox.IsChecked = handler.Properties.ColorPostProcessEnabled;
+                BrightnessBoostSlider.Value = handler.Properties.BrightnessBoost;
+                settingsset = true;
+            }
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetSettings();
+            this.Loaded -= UserControl_Loaded;
         }
     }
 }
