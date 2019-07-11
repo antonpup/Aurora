@@ -335,6 +335,17 @@ namespace Aurora.Profiles
                                     lyr.AnythingChanged += this.SaveProfilesEvent;
                                 }
                             }
+
+                            if (e.OldItems != null)
+                            {
+                                foreach (Layer lyr in e.OldItems)
+                                {
+                                    if (lyr == null)
+                                        continue;
+                                    lyr.Dispose();
+                                }
+                            }
+
                             this.SaveProfiles();
                         };
 
