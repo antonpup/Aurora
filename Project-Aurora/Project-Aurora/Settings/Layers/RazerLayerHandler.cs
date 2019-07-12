@@ -109,6 +109,17 @@ namespace Aurora.Settings.Layers
                     var index = position[1] + position[0] * 22;
                     layer.Set(key, PostProcessColor(_keyboardColors[index]));
                 }
+
+                if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
+                {
+                    var index = DeviceKeys.MOUSEPADLIGHT15 - key;
+                    layer.Set(key, PostProcessColor(_mousepadColors[index]));
+                }
+
+                if (key == DeviceKeys.Peripheral)
+                {
+                    layer.Set(key, PostProcessColor(_mouseColor));
+                }
             }
 
             return layer;
