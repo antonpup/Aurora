@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Devices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ namespace Aurora.Settings.Layers
     public partial class Control_RazerLayer : UserControl
     {
         private bool settingsset = false;
+        protected RazerLayerHandler Context => DataContext as RazerLayerHandler;
 
         public Control_RazerLayer()
         {
@@ -35,18 +37,49 @@ namespace Aurora.Settings.Layers
         }
         public void SetSettings()
         {
-            if (DataContext is RazerLayerHandler handler && !settingsset)
+            if (Context != null && !settingsset)
             {
-                ColorPostProcessCheckBox.IsChecked = handler.Properties.ColorPostProcessEnabled;
-                BrightnessBoostSlider.Value = handler.Properties.BrightnessBoost;
+                ColorPostProcessCheckBox.IsChecked = Context.Properties.ColorPostProcessEnabled;
+                BrightnessBoostSlider.Value = Context.Properties.BrightnessBoost;
+                CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
                 settingsset = true;
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void OnUserControlLoaded(object sender, RoutedEventArgs e)
         {
             SetSettings();
-            this.Loaded -= UserControl_Loaded;
+            this.Loaded -= OnUserControlLoaded;
+        }
+
+        private void OnAddKeyCloneButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (KeyCloneSourceButtonComboBox.SelectedItem == null || KeyCloneDestinationButtonComboBox.SelectedItem == null)
+                return;
+
+            var sourceKey = (DeviceKeys)KeyCloneSourceButtonComboBox.SelectedItem;
+            var destKey = (DeviceKeys)KeyCloneDestinationButtonComboBox.SelectedItem;
+
+            var cloneMap = Context.Properties.KeyCloneMap;
+            if (cloneMap.ContainsKey(destKey) && cloneMap[destKey] == sourceKey)
+                return;
+
+            cloneMap.Add(destKey, sourceKey);
+            CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
+        }
+
+        private void OnDeleteKeyCloneButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (KeyCloneListBox.SelectedItem == null)
+                return;
+
+            var cloneMap = Context.Properties.KeyCloneMap;
+            var item = (KeyValuePair<DeviceKeys, DeviceKeys>)KeyCloneListBox.SelectedItem;
+            if (!cloneMap.ContainsKey(item.Key) || cloneMap[item.Key] != item.Value)
+                return;
+
+            cloneMap.Remove(item.Key);
+            CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
         }
     }
 }

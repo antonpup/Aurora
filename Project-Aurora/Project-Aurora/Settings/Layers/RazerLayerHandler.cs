@@ -27,6 +27,10 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public double BrightnessBoost => Logic._BrightnessBoost ?? _BrightnessBoost ?? 0;
 
+        public Dictionary<DeviceKeys, DeviceKeys> _KeyCloneMap { get; set; }
+        [JsonIgnore]
+        public Dictionary<DeviceKeys, DeviceKeys> KeyCloneMap => Logic._KeyCloneMap ?? _KeyCloneMap ?? new Dictionary<DeviceKeys, DeviceKeys>();
+
         public RazerLayerHandlerProperties() : base() { }
 
         public RazerLayerHandlerProperties(bool arg = false) : base(arg) { }
@@ -37,6 +41,7 @@ namespace Aurora.Settings.Layers
 
             _ColorPostProcessEnabled = false;
             _BrightnessBoost = 0;
+            _KeyCloneMap = new Dictionary<DeviceKeys, DeviceKeys>();
         }
     }
 
@@ -105,21 +110,21 @@ namespace Aurora.Settings.Layers
 
             foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
             {
-                if( RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position)){
-                    var index = position[1] + position[0] * 22;
-                    layer.Set(key, PostProcessColor(_keyboardColors[index]));
-                }
+                Color color;
+                if( RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
+                    color = PostProcessColor(_keyboardColors[position[1] + position[0] * 22]);
+                else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
+                    color = PostProcessColor(_mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key]);
+                else if (key == DeviceKeys.Peripheral)
+                    color = PostProcessColor(_mouseColor);
+                else
+                    continue;
 
-                if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
-                {
-                    var index = DeviceKeys.MOUSEPADLIGHT15 - key;
-                    layer.Set(key, PostProcessColor(_mousepadColors[index]));
-                }
+                layer.Set(key, color);
 
-                if (key == DeviceKeys.Peripheral)
-                {
-                    layer.Set(key, PostProcessColor(_mouseColor));
-                }
+                if (Properties.KeyCloneMap != null)
+                    foreach(var target in Properties.KeyCloneMap.Where(x => x.Value == key).Select(x => x.Key))
+                        layer.Set(target, color);
             }
 
             return layer;
@@ -137,7 +142,7 @@ namespace Aurora.Settings.Layers
             if (Properties.BrightnessBoost > 0)
                 value = Math.Pow(value, 1 - Properties.BrightnessBoost);
 
-            return FromHsv(hue, saturation, value); 
+            return FromHsv(hue, saturation, value);
         }
 
         private void ToHsv(Color color, out double hue, out double saturation, out double value)
