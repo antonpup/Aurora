@@ -6,7 +6,6 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:devices="clr-namespace:Aurora.Devices"
              xmlns:utils="clr-namespace:Aurora.Utils"
-             xmlns:razer="clr-namespace:Aurora.Devices.Razer"
              mc:Ignorable="d" Loaded="OnUserControlLoaded">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -18,94 +17,124 @@
             </ObjectDataProvider>
         </ResourceDictionary>
     </UserControl.Resources>
-    
-    <StackPanel>
-        <GroupBox Width="370" Margin="0 5 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <GroupBox.Header>
-                <CheckBox x:Name="ColorPostProcessCheckBox" Content="Enable Color Post Process" Margin="2 0 2 0" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                          IsChecked="{Binding Properties._ColorPostProcessEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </GroupBox.Header>
 
-            <StackPanel IsEnabled="{Binding ElementName=ColorPostProcessCheckBox, Path=IsChecked}">
-                <StackPanel Orientation="Horizontal">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="380"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="5 0 5 5">
+            <GroupBox Width="270" Header="SDK" Margin="0 5 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Supported Version:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
+                    <Label Grid.Row="0" Grid.Column="1" Content="3.5.6" Padding="0" Margin="5 5 5 5" VerticalAlignment="Center"/>
+                    <Button Grid.Row="0" Grid.Column="2" Content="Download" Margin="5 5 5 5" VerticalAlignment="Center" HorizontalAlignment="Center" Click="OnDownloadSdkButtonClick"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
+                    <Label x:Name="SdkInstalledVersionValueLabel" Grid.Row="1" Grid.Column="1" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
+                    <Label x:Name="SdkEnabledValueLabel" Grid.Row="1" Grid.Column="2" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="5 0 5 5">
+            <GroupBox Width="370" Margin="0 5 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <GroupBox.Header>
+                    <CheckBox x:Name="ColorPostProcessCheckBox" Content="Enable Color Post Process" Margin="2 0 2 0" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                          IsChecked="{Binding Properties._ColorPostProcessEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </GroupBox.Header>
+
+                <StackPanel IsEnabled="{Binding ElementName=ColorPostProcessCheckBox, Path=IsChecked}">
+                    <StackPanel Orientation="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0" Grid.Row="0" Margin="5 5 10 5" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Brightness Boost:"/>
+                            <Slider Grid.Column="1" Grid.Row="0" x:Name="BrightnessBoostSlider" Margin="0 5 0 5" Padding="0" Width="217" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="0" Maximum="1" IsSnapToTickEnabled="False" TickFrequency="0.001"
+                                Value="{Binding Properties._BrightnessBoost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Grid.Column="2" Grid.Row="0" x:Name="BrighnessBoostValueLabel" Margin="0 5 5 5" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                               Content="{Binding ElementName=BrightnessBoostSlider, Path=Value}" ContentStringFormat="{}{0:0.000}"/>
+
+                            <Label Grid.Column="0" Grid.Row="1" Margin="5 5 10 5" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Saturation Boost:"/>
+                            <Slider Grid.Column="1" Grid.Row="1" x:Name="SaturationBoostSlider" Margin="0 5 0 5" Padding="0" Width="217" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="0" Maximum="1" IsSnapToTickEnabled="False" TickFrequency="0.001"
+                                Value="{Binding Properties._SaturationBoost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Grid.Column="2" Grid.Row="1" x:Name="SaturationBoostValueLabel" Margin="0 5 5 5" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                               Content="{Binding ElementName=SaturationBoostSlider, Path=Value}" ContentStringFormat="{}{0:0.000}"/>
+
+                            <Label Grid.Column="0" Grid.Row="2" Margin="5 5 10 5" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Hue Shift:"/>
+                            <Slider Grid.Column="1" Grid.Row="2" x:Name="HueShiftSlider" Margin="0 5 0 5" Padding="0" Width="217" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="0" Maximum="360" IsSnapToTickEnabled="True"
+                                Value="{Binding Properties._HueShift, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Grid.Column="2" Grid.Row="2" x:Name="HueShiftValueLabel" Margin="0 5 5 5" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                               Content="{Binding ElementName=HueShiftSlider, Path=Value}"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Width="370" Margin="0 10 0 0" Header="Key Cloning" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <StackPanel>
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="40"/>
-                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        
-                        <Label Grid.Column="0" Grid.Row="0" Margin="5 5 10 5" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Brightness Boost:"/>
-                        <Slider Grid.Column="1" Grid.Row="0" x:Name="BrightnessBoostSlider" Margin="0 5 0 5" Padding="0" Width="217" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="0" Maximum="1" IsSnapToTickEnabled="False" TickFrequency="0.001"
-                                Value="{Binding Properties._BrightnessBoost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Grid.Column="2" Grid.Row="0" x:Name="BrighnessBoostValueLabel" Margin="0 5 5 5" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Center"
-                               Content="{Binding ElementName=BrightnessBoostSlider, Path=Value}" ContentStringFormat="{}{0:0.000}"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" SharedSizeGroup="Source"/>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="*" SharedSizeGroup="Dest"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Grid.Row="1" Margin="5 5 10 5" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Saturation Boost:"/>
-                        <Slider Grid.Column="1" Grid.Row="1" x:Name="SaturationBoostSlider" Margin="0 5 0 5" Padding="0" Width="217" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="0" Maximum="1" IsSnapToTickEnabled="False" TickFrequency="0.001"
-                                Value="{Binding Properties._SaturationBoost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Grid.Column="2" Grid.Row="1" x:Name="SaturationBoostValueLabel" Margin="0 5 5 5" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Center"
-                               Content="{Binding ElementName=SaturationBoostSlider, Path=Value}" ContentStringFormat="{}{0:0.000}"/>
+                        <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" Content="Source Key"/>
+                        <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" FontWeight="ExtraBold" FontSize="15" Foreground="LightGray" Content="⇒"/>
+                        <Label Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" Content="Destination Key"/>
 
-                        <Label Grid.Column="0" Grid.Row="2" Margin="5 5 10 5" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Hue Shift:"/>
-                        <Slider Grid.Column="1" Grid.Row="2" x:Name="HueShiftSlider" Margin="0 5 0 5" Padding="0" Width="217" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="0" Maximum="360" IsSnapToTickEnabled="True"
-                                Value="{Binding Properties._HueShift, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Grid.Column="2" Grid.Row="2" x:Name="HueShiftValueLabel" Margin="0 5 5 5" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Center"
-                               Content="{Binding ElementName=HueShiftSlider, Path=Value}"/>
+                        <ComboBox x:Name="KeyCloneSourceButtonComboBox" Grid.Column="0" Grid.Row="1" Margin="5 0 5 0" 
+                              ItemsSource="{Binding Source={StaticResource DeviceKeysEnum}}"/>
+                        <ComboBox x:Name="KeyCloneDestinationButtonComboBox" Grid.Column="2" Grid.Row="1" Margin="5 0 5 0" 
+                              ItemsSource="{Binding Source={StaticResource DeviceKeysEnum}}"/>
+                        <Button x:Name="AddKeyCloneButton" Grid.Column="3" Grid.Row="1" Content="+" Foreground="LightGreen" FontSize="15" Click="OnAddKeyCloneButtonClick"/>
+
+                        <ListBox x:Name="KeyCloneListBox" Grid.Row="2" Grid.ColumnSpan="3" Margin="5 10 5 0" ItemsSource="{Binding Properties._KeyCloneMap}" MinHeight="20" MaxHeight="200" Grid.IsSharedSizeScope="True">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="30" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding Value}" Grid.Column="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" FontWeight="ExtraBold" FontSize="15" Foreground="LightGray" Content="⇒"/>
+                                        <Label Content="{Binding Key}" Padding="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button x:Name="DeleteKeyCloneButton" Grid.Column="3" Grid.Row="2" Margin="0 10 0 0" VerticalAlignment="Top" Height="20" Content="X" Foreground="PaleVioletRed" Click="OnDeleteKeyCloneButtonClick"/>
                     </Grid>
                 </StackPanel>
-            </StackPanel>
-        </GroupBox>
-
-        <GroupBox Width="370" Margin="0 10 0 0" Header="Key Cloning" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <StackPanel>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" SharedSizeGroup="Source"/>
-                        <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="*" SharedSizeGroup="Dest"/>
-                        <ColumnDefinition Width="30"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" Content="Source Key"/>
-                    <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" FontWeight="ExtraBold" FontSize="15" Foreground="LightGray" Content="⇒"/>
-                    <Label Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" Content="Destination Key"/>
-
-                    <ComboBox x:Name="KeyCloneSourceButtonComboBox" Grid.Column="0" Grid.Row="1" Margin="5 0 5 0" 
-                              ItemsSource="{Binding Source={StaticResource DeviceKeysEnum}}"/>
-                    <ComboBox x:Name="KeyCloneDestinationButtonComboBox" Grid.Column="2" Grid.Row="1" Margin="5 0 5 0" 
-                              ItemsSource="{Binding Source={StaticResource DeviceKeysEnum}}"/>
-                    <Button x:Name="AddKeyCloneButton" Grid.Column="3" Grid.Row="1" Content="+" Foreground="LightGreen" FontSize="15" Click="OnAddKeyCloneButtonClick"/>
-
-                    <ListBox x:Name="KeyCloneListBox" Grid.Row="2" Grid.ColumnSpan="3" Margin="5 10 5 0" ItemsSource="{Binding Properties._KeyCloneMap}" MinHeight="20" MaxHeight="200" Grid.IsSharedSizeScope="True">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="30" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="{Binding Value}" Grid.Column="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" FontWeight="ExtraBold" FontSize="15" Foreground="LightGray" Content="⇒"/>
-                                    <Label Content="{Binding Key}" Padding="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Button x:Name="DeleteKeyCloneButton" Grid.Column="3" Grid.Row="2" Margin="0 10 0 0" VerticalAlignment="Top" Height="20" Content="X" Foreground="PaleVioletRed" Click="OnDeleteKeyCloneButtonClick"/>
-                </Grid>
-            </StackPanel>
-        </GroupBox>
-    </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
 </UserControl>

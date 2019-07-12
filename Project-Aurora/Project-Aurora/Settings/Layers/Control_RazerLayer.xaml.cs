@@ -1,6 +1,9 @@
 ﻿using Aurora.Devices;
+using RazerSdkWrapper.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,7 +54,20 @@ namespace Aurora.Settings.Layers
         private void OnUserControlLoaded(object sender, RoutedEventArgs e)
         {
             SetSettings();
-            this.Loaded -= OnUserControlLoaded;
+
+            var version = RzHelper.GetSdkVersion();
+            var enabled = RzHelper.IsSdkEnabled();
+
+            SdkInstalledVersionValueLabel.Content = version.ToString();
+            if (version != new RzSdkVersion(3, 5, 6))
+                SdkInstalledVersionValueLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+            else
+                SdkInstalledVersionValueLabel.Foreground = new SolidColorBrush(Colors.LightGreen);
+
+            SdkEnabledValueLabel.Content = enabled ? "Enabled" : "Disabled";
+            SdkEnabledValueLabel.Foreground = enabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
+
+            Loaded -= OnUserControlLoaded;
         }
 
         private void OnAddKeyCloneButtonClick(object sender, RoutedEventArgs e)
@@ -82,6 +98,11 @@ namespace Aurora.Settings.Layers
 
             cloneMap.Remove(item.Key);
             CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
+        }
+
+        private void OnDownloadSdkButtonClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("http://cdn.razersynapse.com/156092369797u1UA8NRazerChromaBroadcasterSetup_v3.4.0630.061913.exe");
         }
     }
 }
