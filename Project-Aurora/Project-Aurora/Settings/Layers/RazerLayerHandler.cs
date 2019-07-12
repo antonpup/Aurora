@@ -129,20 +129,15 @@ namespace Aurora.Settings.Layers
         {
             if (!Properties.ColorPostProcessEnabled)
                 return color;
+            if (color.R == 0 && color.G == 0 && color.B == 0)
+                return color;
 
-            if(Properties.BrightnessBoost > 0)
-            {
-                ToHsv(color, out var hue, out var saturation, out var value);
+            ToHsv(color, out var hue, out var saturation, out var value);
 
-                if (Properties.BrightnessBoost < 1)
-                    value = Math.Pow(value, 1 - Properties.BrightnessBoost);
-                else
-                    value = 1;
+            if (Properties.BrightnessBoost > 0)
+                value = Math.Pow(value, 1 - Properties.BrightnessBoost);
 
-                color = FromHsv(hue, saturation, value);
-            }
-
-            return color;
+            return FromHsv(hue, saturation, value); 
         }
 
         private void ToHsv(Color color, out double hue, out double saturation, out double value)
