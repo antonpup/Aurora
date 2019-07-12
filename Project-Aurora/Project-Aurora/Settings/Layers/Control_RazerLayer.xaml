@@ -110,9 +110,27 @@
                         <Label Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" Content="Destination Key"/>
 
                         <ComboBox x:Name="KeyCloneSourceButtonComboBox" Grid.Column="0" Grid.Row="1" Margin="5 0 5 0" 
-                              ItemsSource="{Binding Source={StaticResource DeviceKeysEnum}}"/>
+                              ItemsSource="{Binding Source={StaticResource DeviceKeysEnum}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Converter={StaticResource DeviceKeysToStringVC}, Mode=OneWay}" FontWeight="Bold"/>
+                                        <Run Text="("/><Run Text="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Mode=OneWay}"/><Run Text=")"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <ComboBox x:Name="KeyCloneDestinationButtonComboBox" Grid.Column="2" Grid.Row="1" Margin="5 0 5 0" 
-                              ItemsSource="{Binding Source={StaticResource DeviceKeysEnum}}"/>
+                              ItemsSource="{Binding Source={StaticResource DeviceKeysEnum}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Converter={StaticResource DeviceKeysToStringVC}, Mode=OneWay}" FontWeight="Bold"/>
+                                        <Run Text="("/><Run Text="{Binding RelativeSource={RelativeSource Self}, Path=DataContext, Mode=OneWay}"/><Run Text=")"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <Button x:Name="AddKeyCloneButton" Grid.Column="3" Grid.Row="1" Content="+" Foreground="LightGreen" FontSize="15" Click="OnAddKeyCloneButtonClick"/>
 
                         <ListBox x:Name="KeyCloneListBox" Grid.Row="2" Grid.ColumnSpan="3" Margin="5 10 5 0" ItemsSource="{Binding Properties._KeyCloneMap}" MinHeight="20" MaxHeight="200" Grid.IsSharedSizeScope="True">
@@ -124,9 +142,9 @@
                                             <ColumnDefinition Width="30" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Label Content="{Binding Value}" Grid.Column="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Value, Converter={StaticResource DeviceKeysToStringVC}, Mode=OneWay}" Grid.Column="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Padding="0" VerticalAlignment="Center" FontWeight="ExtraBold" FontSize="15" Foreground="LightGray" Content="⇒"/>
-                                        <Label Content="{Binding Key}" Padding="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Key, Converter={StaticResource DeviceKeysToStringVC}, Mode=OneWay}" Grid.Column="2" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
