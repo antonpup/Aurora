@@ -41,6 +41,8 @@ namespace Aurora.Settings.Layers
             {
                 ColorPostProcessCheckBox.IsChecked = Context.Properties.ColorPostProcessEnabled;
                 BrightnessBoostSlider.Value = Context.Properties.BrightnessBoost;
+                SaturationBoostSlider.Value = Context.Properties.SaturationBoost;
+                HueShiftSlider.Value = Context.Properties.HueShift;
                 CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
                 settingsset = true;
             }

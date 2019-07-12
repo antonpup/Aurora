@@ -27,6 +27,14 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public double BrightnessBoost => Logic._BrightnessBoost ?? _BrightnessBoost ?? 0;
 
+        public double? _SaturationBoost { get; set; }
+        [JsonIgnore]
+        public double SaturationBoost => Logic._SaturationBoost ?? _SaturationBoost ?? 0;
+
+        public double? _HueShift { get; set; }
+        [JsonIgnore]
+        public double HueShift => Logic._HueShift ?? _HueShift ?? 0;
+
         public Dictionary<DeviceKeys, DeviceKeys> _KeyCloneMap { get; set; }
         [JsonIgnore]
         public Dictionary<DeviceKeys, DeviceKeys> KeyCloneMap => Logic._KeyCloneMap ?? _KeyCloneMap ?? new Dictionary<DeviceKeys, DeviceKeys>();
@@ -41,6 +49,8 @@ namespace Aurora.Settings.Layers
 
             _ColorPostProcessEnabled = false;
             _BrightnessBoost = 0;
+            _SaturationBoost = 0;
+            _HueShift = 0;
             _KeyCloneMap = new Dictionary<DeviceKeys, DeviceKeys>();
         }
     }
@@ -141,6 +151,10 @@ namespace Aurora.Settings.Layers
 
             if (Properties.BrightnessBoost > 0)
                 value = Math.Pow(value, 1 - Properties.BrightnessBoost);
+            if (Properties.SaturationBoost > 0 && saturation > 0)
+                saturation = Math.Pow(saturation, 1 - Properties.SaturationBoost);
+            if (Properties.HueShift > 0)
+                hue = (hue + Properties.HueShift) % 360;
 
             return FromHsv(hue, saturation, value);
         }
