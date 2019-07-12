@@ -6,6 +6,7 @@ using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using RazerSdkWrapper;
 using RazerSdkWrapper.Data;
+using RazerSdkWrapper.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -75,6 +76,9 @@ namespace Aurora.Settings.Layers
             _instances++;
             if (_instances > 0 && _manager == null)
             {
+                if (RzHelper.GetSdkVersion() != new RzSdkVersion(3, 5, 6))
+                    return;
+
                 _manager = new RzManager()
                 {
                     KeyboardEnabled = true,
@@ -217,10 +221,10 @@ namespace Aurora.Settings.Layers
                     _manager.Dispose();
                     _manager = null;
                 }
-
-                if (_instances < 0)
-                    _instances = 0;
             }
+
+            if (_instances < 0)
+                _instances = 0;
 
             base.Dispose();
         }
