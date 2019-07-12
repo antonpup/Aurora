@@ -78,6 +78,9 @@ namespace Aurora.Settings.Layers
             var sourceKey = (DeviceKeys)KeyCloneSourceButtonComboBox.SelectedItem;
             var destKey = (DeviceKeys)KeyCloneDestinationButtonComboBox.SelectedItem;
 
+            if (sourceKey == destKey)
+                return;
+
             var cloneMap = Context.Properties.KeyCloneMap;
             if (cloneMap.ContainsKey(destKey) && cloneMap[destKey] == sourceKey)
                 return;
