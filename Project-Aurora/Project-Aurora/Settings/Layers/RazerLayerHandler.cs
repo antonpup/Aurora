@@ -79,14 +79,27 @@ namespace Aurora.Settings.Layers
             if (_instances > 0 && _manager == null)
             {
                 if (RzHelper.GetSdkVersion() != new RzSdkVersion(3, 5, 6))
-                    return;
-
-                _manager = new RzManager()
                 {
-                    KeyboardEnabled = true,
-                    MouseEnabled = true,
-                    MousepadEnabled = true,
-                };
+                    Global.logger.Warn("Currently installed razer sdk version \"{0}\" is not supported!", RzHelper.GetSdkVersion());
+                    return;
+                }
+
+                try
+                {
+                    _manager = new RzManager()
+                    {
+                        KeyboardEnabled = true,
+                        MouseEnabled = true,
+                        MousepadEnabled = true,
+                        AppListEnabled = true,
+                    };
+
+                    Global.logger.Info("RzManager loaded successfully!");
+                }
+                catch (Exception e)
+                {
+                    Global.logger.Fatal(e, "RzManager failed to load!");
+                }
             }
 
             if (_manager != null)
