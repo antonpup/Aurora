@@ -59,7 +59,7 @@ namespace Aurora.Settings.Layers
             var enabled = RzHelper.IsSdkEnabled();
 
             SdkInstalledVersionValueLabel.Content = version.ToString();
-            if (version != new RzSdkVersion(3, 5, 6))
+            if (!RzHelper.IsSdkVersionSupported(version))
                 SdkInstalledVersionValueLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
             else
                 SdkInstalledVersionValueLabel.Foreground = new SolidColorBrush(Colors.LightGreen);

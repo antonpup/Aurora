@@ -80,7 +80,7 @@ namespace Aurora.Settings.Layers
             _instances++;
             if (_instances > 0 && _manager == null)
             {
-                if (RzHelper.GetSdkVersion() != new RzSdkVersion(3, 5, 6))
+                if (!RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
                 {
                     Global.logger.Warn("Currently installed razer sdk version \"{0}\" is not supported!", RzHelper.GetSdkVersion());
                     return;
