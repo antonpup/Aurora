@@ -10,7 +10,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
     {
         public string Name;
         public int AppID;
-        public ModVerNode ModVer;
+        //public ModVerNode ModVer;
 
         internal ProviderNode(string json) : base(json)
         {
