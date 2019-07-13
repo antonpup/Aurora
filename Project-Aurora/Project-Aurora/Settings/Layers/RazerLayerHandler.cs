@@ -1,4 +1,4 @@
-﻿using Aurora.Devices;
+using Aurora.Devices;
 using Aurora.Devices.Razer;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
@@ -66,6 +66,8 @@ namespace Aurora.Settings.Layers
         private Color[] _keyboardColors;
         private Color[] _mousepadColors;
         private Color _mouseColor;
+        private string _currentAppExecutable;
+        private int _currentAppPid;
 
         public RazerLayerHandler()
         {
@@ -87,8 +89,15 @@ namespace Aurora.Settings.Layers
                 };
             }
 
-            if(_manager != null)
+            if (_manager != null)
+            {
                 _manager.DataUpdated += OnDataUpdated;
+
+                var appList = _manager.GetDataProvider<RzAppListDataProvider>();
+                appList.Update();
+                _currentAppExecutable = appList.CurrentAppExecutable;
+                _currentAppPid = appList.CurrentAppPid;
+            }
         }
 
         protected override UserControl CreateControl()
@@ -116,11 +125,21 @@ namespace Aurora.Settings.Layers
                 for (var i = 0; i < mousePad.ZoneGrid.Height * mousePad.ZoneGrid.Width; i++)
                     _mousepadColors[i] = mousePad.GetZoneColor(i);
             }
+            else if(provider is RzAppListDataProvider appList)
+            {
+                _currentAppExecutable = appList.CurrentAppExecutable;
+                _currentAppPid = appList.CurrentAppPid;
+            }
         }
 
         public override EffectLayer Render(IGameState gamestate)
         {
             var layer = new EffectLayer();
+
+            if (string.IsNullOrEmpty(_currentAppExecutable) || string.Compare(_currentAppExecutable, "Aurora.exe", true) == 0)
+            {
+                return layer;
+            }
 
             foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
             {
