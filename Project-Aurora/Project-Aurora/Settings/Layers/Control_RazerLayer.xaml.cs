@@ -67,6 +67,9 @@ namespace Aurora.Settings.Layers
             SdkEnabledValueLabel.Content = enabled ? "Enabled" : "Disabled";
             SdkEnabledValueLabel.Foreground = enabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
 
+            SdkConnectionStatusLabel.Content = Context.Loaded ? "Success" : "Failure";
+            SdkConnectionStatusLabel.Foreground = Context.Loaded ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
+
             Loaded -= OnUserControlLoaded;
         }
 

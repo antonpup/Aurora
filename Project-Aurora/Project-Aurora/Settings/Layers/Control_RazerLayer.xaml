@@ -30,6 +30,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"/>
@@ -44,6 +45,9 @@
                     <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
                     <Label x:Name="SdkInstalledVersionValueLabel" Grid.Row="1" Grid.Column="1" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
                     <Label x:Name="SdkEnabledValueLabel" Grid.Row="1" Grid.Column="2" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Connection:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
+                    <Label x:Name="SdkConnectionStatusLabel" Grid.Row="2" Grid.Column="2" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
             </GroupBox>
         </StackPanel>

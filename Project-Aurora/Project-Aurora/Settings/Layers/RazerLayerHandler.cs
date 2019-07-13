@@ -1,4 +1,4 @@
-using Aurora.Devices;
+﻿using Aurora.Devices;
 using Aurora.Devices.Razer;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
@@ -60,6 +60,8 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_Sequence")]
     public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
     {
+        public bool Loaded { get; private set; }
+
         private static RzManager _manager;
         private static int _instances;
 
@@ -110,6 +112,8 @@ namespace Aurora.Settings.Layers
                 appList.Update();
                 _currentAppExecutable = appList.CurrentAppExecutable;
                 _currentAppPid = appList.CurrentAppPid;
+
+                Loaded = true;
             }
         }
 
