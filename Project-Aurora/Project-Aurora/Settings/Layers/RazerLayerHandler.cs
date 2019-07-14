@@ -10,6 +10,7 @@ using RazerSdkWrapper.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,6 +71,7 @@ namespace Aurora.Settings.Layers
         private Color _mouseColor;
         private string _currentAppExecutable;
         private int _currentAppPid;
+        private bool _isDumping;
 
         public RazerLayerHandler()
         {
@@ -129,6 +131,10 @@ namespace Aurora.Settings.Layers
                 return;
 
             provider.Update();
+
+            if (_isDumping)
+                DumpData(provider);
+
             if (provider is RzKeyboardDataProvider keyboard)
             {
                 for (var i = 0; i < keyboard.ZoneGrid.Height * keyboard.ZoneGrid.Width; i++)
@@ -143,10 +149,42 @@ namespace Aurora.Settings.Layers
                 for (var i = 0; i < mousePad.ZoneGrid.Height * mousePad.ZoneGrid.Width; i++)
                     _mousepadColors[i] = mousePad.GetZoneColor(i);
             }
-            else if(provider is RzAppListDataProvider appList)
+            else if (provider is RzAppListDataProvider appList)
             {
                 _currentAppExecutable = appList.CurrentAppExecutable;
                 _currentAppPid = appList.CurrentAppPid;
+            }
+        }
+
+        public bool StartDumpingData()
+        {
+            var root = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Aurora\Logs";
+            if (!Directory.Exists(root))
+                return false;
+
+            var path = $@"{root}\RazerLayer";
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            foreach (var file in Directory.EnumerateFiles(path, "*.bin", SearchOption.TopDirectoryOnly))
+                File.Delete(file);
+
+            _isDumping = true;
+            return true;
+        }
+
+        public void StopDumpingData()
+        {
+            _isDumping = false;
+        }
+
+        public void DumpData(AbstractDataProvider provider)
+        {
+            var path = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Aurora\Logs\RazerLayer";
+            var filename = $"{provider.GetType().Name}_{Environment.TickCount}.bin";
+            using (var file = File.Open($@"{path}\{filename}", FileMode.Create)) {
+                var data = provider.ReadData();
+                file.Write(data, 0, data.Length);
             }
         }
 

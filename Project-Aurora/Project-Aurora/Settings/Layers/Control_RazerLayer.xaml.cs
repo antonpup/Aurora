@@ -106,6 +106,26 @@ namespace Aurora.Settings.Layers
             CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
         }
 
+        private void OnSdkDumpToggleButtonChecked(object sender, RoutedEventArgs e)
+        {
+            if (Context.StartDumpingData())
+            {
+                SdkDumpToggleButton.Content = "Dumping...";
+                SdkDumpToggleButton.IsEnabled = false;
+
+                Task.Delay(5000).ContinueWith((t) =>
+                    Application.Current.Dispatcher.Invoke(() => SdkDumpToggleButton.IsChecked = false)
+                );
+            }
+        }
+
+        private void OnSdkDumpToggleButtonUnchecked(object sender, RoutedEventArgs e)
+        {
+            SdkDumpToggleButton.Content = "Start";
+            SdkDumpToggleButton.IsEnabled = true;
+            Context.StopDumpingData();
+        }
+
         private void OnDownloadSdkButtonClick(object sender, RoutedEventArgs e)
         {
             Process.Start("http://cdn.razersynapse.com/156092369797u1UA8NRazerChromaBroadcasterSetup_v3.4.0630.061913.exe");

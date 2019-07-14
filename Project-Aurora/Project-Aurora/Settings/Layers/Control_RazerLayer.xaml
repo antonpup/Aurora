@@ -31,6 +31,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"/>
@@ -48,6 +49,23 @@
 
                     <Label Grid.Row="2" Grid.Column="0" Content="Connection:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
                     <Label x:Name="SdkConnectionStatusLabel" Grid.Row="2" Grid.Column="2" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Debug Dump:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
+                    <ToggleButton x:Name="SdkDumpToggleButton" Grid.Row="3" Grid.Column="2" Margin="5 5 5 5" Width="58" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start" 
+                                  Checked="OnSdkDumpToggleButtonChecked" Unchecked="OnSdkDumpToggleButtonUnchecked" ToolTipService.InitialShowDelay="25">
+                        <ToggleButton.ToolTip>
+                            <ToolTip>
+                                <TextBlock>
+                                    This will capture raw data returned from razer sdk for 5 seconds.
+                                    <LineBreak />
+                                    The files will be created in Aurora logs folder.
+                                    <LineBreak /> 
+                                    <LineBreak /> 
+                                    Should be used only when requested by the developers!
+                                </TextBlock>
+                            </ToolTip>
+                        </ToggleButton.ToolTip>
+                    </ToggleButton>
                 </Grid>
             </GroupBox>
         </StackPanel>
