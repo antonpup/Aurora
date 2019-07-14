@@ -162,13 +162,16 @@ namespace Aurora.Settings.Layers
             {
                 Color color;
                 if( RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
-                    color = PostProcessColor(_keyboardColors[position[1] + position[0] * 22]);
+                    color = _keyboardColors[position[1] + position[0] * 22];
                 else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
-                    color = PostProcessColor(_mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key]);
+                    color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
                 else if (key == DeviceKeys.Peripheral)
-                    color = PostProcessColor(_mouseColor);
+                    color = _mouseColor;
                 else
                     continue;
+
+                if (Properties.ColorPostProcessEnabled)
+                    color = PostProcessColor(color);
 
                 layer.Set(key, color);
 
@@ -182,8 +185,6 @@ namespace Aurora.Settings.Layers
 
         private Color PostProcessColor(Color color)
         {
-            if (!Properties.ColorPostProcessEnabled)
-                return color;
             if (color.R == 0 && color.G == 0 && color.B == 0)
                 return color;
 
