@@ -267,7 +267,7 @@ namespace Aurora.Profiles
 
         public virtual string GetProfileFolderPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", Config.ID);
+            return Path.Combine(Global.AppDataDirectory, "Profiles", Config.ID);
         }
 
         public void ResetProfile()

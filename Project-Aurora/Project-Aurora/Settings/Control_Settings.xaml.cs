@@ -1046,7 +1046,7 @@ namespace Aurora.Settings
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
-                System.Diagnostics.Process.Start(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora/Logs/"));
+                System.Diagnostics.Process.Start(System.IO.Path.Combine(Global.LogsDirectory));
         }
 
         private void chkOverlayPreview_Checked(object sender, RoutedEventArgs e)

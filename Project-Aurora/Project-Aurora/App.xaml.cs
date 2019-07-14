@@ -36,6 +36,8 @@ namespace Aurora
         public static bool isDebug = false;
 
         private static string _ExecutingDirectory = "";
+        private static string _AppDataDirectory = "";
+        private static string _LogsDirectory = "";
 
         /// <summary>
         /// The path to the application executing directory
@@ -51,6 +53,27 @@ namespace Aurora
             }
         }
 
+        public static string AppDataDirectory
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_AppDataDirectory))
+                    _AppDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora");
+
+                return _AppDataDirectory;
+            }
+        }
+
+        public static string LogsDirectory
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_LogsDirectory))
+                    _LogsDirectory = Path.Combine(AppDataDirectory, "Logs");
+
+                return _LogsDirectory;
+            }
+        }
 
         /// <summary>
         /// Output logger for errors, warnings, and information

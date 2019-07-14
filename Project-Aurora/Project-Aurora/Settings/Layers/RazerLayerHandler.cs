@@ -3,6 +3,7 @@ using Aurora.Devices.Razer;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
+using Aurora.Utils;
 using Newtonsoft.Json;
 using RazerSdkWrapper;
 using RazerSdkWrapper.Data;
@@ -159,7 +160,7 @@ namespace Aurora.Settings.Layers
 
         public bool StartDumpingData()
         {
-            var root = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Aurora\Logs";
+            var root = Global.LogsDirectory;
             if (!Directory.Exists(root))
                 return false;
 
@@ -181,7 +182,7 @@ namespace Aurora.Settings.Layers
 
         public void DumpData(AbstractDataProvider provider)
         {
-            var path = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Aurora\Logs\RazerLayer";
+            var path = Path.Combine(Global.LogsDirectory, "RazerLayer");
             var filename = $"{provider.GetType().Name}_{Environment.TickCount}.bin";
             using (var file = File.Open($@"{path}\{filename}", FileMode.Create)) {
                 var data = provider.ReadData();
