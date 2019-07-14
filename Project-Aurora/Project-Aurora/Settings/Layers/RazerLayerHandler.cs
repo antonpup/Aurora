@@ -78,6 +78,7 @@ namespace Aurora.Settings.Layers
             _mousepadColors = new Color[16];
 
             _instances++;
+            Global.logger.Debug("RazerLayerHandler intance count: {0}", _instances);
             if (_instances > 0 && _manager == null)
             {
                 if (!RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
@@ -250,12 +251,20 @@ namespace Aurora.Settings.Layers
         public override void Dispose()
         {
             _instances--;
+            Global.logger.Debug("RazerLayerHandler intance count: {0}", _instances);
             if (_manager != null)
             {
                 _manager.DataUpdated -= OnDataUpdated;
                 if (_instances == 0)
                 {
-                    _manager.Dispose();
+                    try
+                    {
+                        _manager.Dispose();
+                    }
+                    catch (Exception e)
+                    {
+                        Global.logger.Fatal(e, "RzManager failed to dispose!");
+                    }
                     _manager = null;
                 }
             }
