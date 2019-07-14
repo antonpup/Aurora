@@ -30,7 +30,7 @@
             <DataTemplate x:Key="AmbilightFpsTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource AmbilightFpsToStringVC}}" />
             </DataTemplate>
-            
+
             <ObjectDataProvider x:Key="AmbilightCapture" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="local:AmbilightCaptureType" />
@@ -43,7 +43,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Height="228">
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Display output number" VerticalAlignment="Top" Margin="0,0,0,0"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Updates per second" VerticalAlignment="Top" Margin="0,25,0,0"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="High values will increase CPU usage." VerticalAlignment="Top" Margin="300,25,0,0"/>
@@ -55,5 +55,17 @@
         <ComboBox x:Name="combobox_ambilight_effect_type" HorizontalAlignment="Left" Margin="130,50,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" SelectionChanged="combobox_ambilight_effect_type_SelectionChanged"/>
         <ComboBox x:Name="combobox_ambilight_capture_type" HorizontalAlignment="Left" Margin="130,75,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" SelectionChanged="combobox_ambilight_capture_type_SelectionChanged"/>
         <TextBox x:Name="txtBox_process_name" HorizontalAlignment="Left" Height="20" Margin="130,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" TextChanged="txtBox_process_name_TextChanged"/>
+        <GroupBox Header="Coordinates" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="220" Margin="0,118,0,0">
+            <Grid Margin="0,0,0,0">
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="X:" VerticalAlignment="Top" />
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Y:" VerticalAlignment="Top" Margin="0,27,0,0"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Height:" VerticalAlignment="Top" Margin="108,0,0,0"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Width:" VerticalAlignment="Top" Margin="108,27,0,0" />
+                <xctk:IntegerUpDown x:Name="XCoordinate" HorizontalAlignment="Left" Margin="38,0,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
+                <xctk:IntegerUpDown x:Name="YCoordinate" HorizontalAlignment="Left" Margin="38,27,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
+                <xctk:IntegerUpDown x:Name="HeightCoordinate" HorizontalAlignment="Left" Margin="151,0,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
+                <xctk:IntegerUpDown x:Name="WidthCoordinate" HorizontalAlignment="Left" Margin="151,27,0,0" Width="50" Value="0"  Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>

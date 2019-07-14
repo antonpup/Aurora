@@ -28,17 +28,17 @@ namespace Aurora.Settings.Layers
 
     public enum AmbilightCaptureType
     {
-        [Description("Everything")]
-        Everything = 0,
-
-        [Description("Main Monitor Only")]
-        MainMonitor = 1,
+        [Description("Entire Monitor")]
+        EntireMonitor = 0,
 
         [Description("Foreground Application")]
-        ForegroundApp = 2,
+        ForegroundApp,
 
         [Description("Specific Process")]
-        SpecificProcess = 3
+        SpecificProcess,
+
+        [Description("Coordinates")]
+        Coordinates
     }
 
     public enum AmbilightFpsChoice
@@ -69,7 +69,7 @@ namespace Aurora.Settings.Layers
         public AmbilightCaptureType? _AmbilightCaptureType { get; set; }
 
         [JsonIgnore]
-        public AmbilightCaptureType AmbilightCaptureType { get { return Logic._AmbilightCaptureType ?? _AmbilightCaptureType ?? AmbilightCaptureType.Everything; } }
+        public AmbilightCaptureType AmbilightCaptureType { get { return Logic._AmbilightCaptureType ?? _AmbilightCaptureType ?? AmbilightCaptureType.EntireMonitor; } }
 
 
         public int? _AmbilightOutputId { get; set; }
@@ -87,6 +87,26 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public String SpecificProcess { get { return Logic._SpecificProcess ?? _SpecificProcess ?? String.Empty; } }
 
+        public int? _CoordinateX { get; set; }
+
+        [JsonIgnore]
+        public int CoordinateX { get { return Logic._CoordinateX ?? _CoordinateX ?? 0; } }
+
+        public int? _CoordinateY { get; set; }
+
+        [JsonIgnore]
+        public int CoordinateY { get { return Logic._CoordinateY ?? _CoordinateY ?? 0; } }
+
+        public int? _CoordinateH { get; set; }
+
+        [JsonIgnore]
+        public int CoordinateH { get { return Logic._CoordinateH ?? _CoordinateH ?? 0; } }
+
+        public int? _CoordinateW { get; set; }
+
+        [JsonIgnore]
+        public int CoordinateW { get { return Logic._CoordinateW ?? _CoordinateW ?? 0; } }
+
         public AmbilightLayerHandlerProperties() : base() { }
 
         public AmbilightLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
@@ -97,8 +117,12 @@ namespace Aurora.Settings.Layers
             this._AmbilightOutputId = 0;
             this._AmbiLightUpdatesPerSecond = AmbilightFpsChoice.Medium;
             this._AmbilightType = AmbilightType.Default;
-            this._AmbilightCaptureType = AmbilightCaptureType.Everything;
+            this._AmbilightCaptureType = AmbilightCaptureType.EntireMonitor;
             this._SpecificProcess = "";
+            this._CoordinateX = 0;
+            this._CoordinateY = 0;
+            this._CoordinateH = 0;
+            this._CoordinateW = 0;
         }
     }
 
@@ -106,16 +130,12 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>
     {
-        private static float image_scale_x = 0;
-        private static float image_scale_y = 0;
-        private static Color avg_color = Color.Empty;
         private static System.Timers.Timer captureTimer;
         private static Image screen;
         private static long last_use_time = 0;
         private static DesktopDuplicator desktopDuplicator;
         private static bool processing = false;  // Used to avoid updating before the previous update is processed
         private static System.Timers.Timer retryTimer;
-
         // 10-30 updates / sec depending on setting
         private int Interval => 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
 
@@ -151,20 +171,20 @@ namespace Aurora.Settings.Layers
                         Output = N.QueryInterface<Output1>()
                     }));
             var outputId = Properties.AmbilightOutputId;
-            if (Properties.AmbilightOutputId > (outputs.Count()-1))
+            if (Properties.AmbilightOutputId > (outputs.Count() - 1))
             {
                 outputId = 0;
             }
             var output = outputs.ElementAtOrDefault(outputId);
             var bounds = output.Output.Description.DesktopBounds;
-            var rect = new Rectangle(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom);
+            var rect = new Rectangle(bounds.Left, bounds.Top, bounds.Right - bounds.Left, bounds.Bottom - bounds.Top);
             try
             {
                 desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, rect);
             }
-            catch(SharpDXException e)
+            catch (SharpDXException e)
             {
-                if(e.Descriptor == ResultCode.NotCurrentlyAvailable)
+                if (e.Descriptor == ResultCode.NotCurrentlyAvailable)
                 {
                     throw new Exception("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.", e);
                 }
@@ -211,38 +231,34 @@ namespace Aurora.Settings.Layers
                 processing = false;
                 return;
             }
-            Bitmap newscreen;
+            Bitmap bigScreen;
             try
             {
-                newscreen = desktopDuplicator.Capture(5000);
-            } catch (SharpDXException err)
+                bigScreen = desktopDuplicator.Capture(5000);
+            }
+            catch (SharpDXException err)
             {
                 Global.logger.Error("Failed to capture screen, reinitializing. Error was: " + err.Message);
                 processing = false;
                 this.Initialize();
                 return;
             }
-            if (newscreen == null)
+            if (bigScreen == null)
             {
                 // Timeout, ignore
                 processing = false;
                 return;
             }
 
-            image_scale_x = Effects.canvas_width / (float)newscreen.Width;
-            image_scale_y = Effects.canvas_height / (float)newscreen.Height;
+            Bitmap smallScreen = new Bitmap(bigScreen.Width / 4, bigScreen.Height / 4);
 
-            var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            using (var graphics = Graphics.FromImage(smallScreen))
+                graphics.DrawImage(bigScreen, 0, 0, bigScreen.Width / 4, bigScreen.Height / 4);
 
-            using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(newscreen, 0, 0, Effects.canvas_width, Effects.canvas_height);
+            bigScreen?.Dispose();
 
-            if (Properties.AmbilightType == AmbilightType.AverageColor)
-                avg_color = GetAverageColor(newscreen);
+            screen = smallScreen;
 
-            newscreen?.Dispose();
-
-            screen = newImage;
             if (Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
                 // Stop if layer wasn't active for 2 seconds
                 captureTimer.Stop();
@@ -257,67 +273,35 @@ namespace Aurora.Settings.Layers
                 captureTimer.Start();
 
             // Handle different capture types
-            Image screen_image = screen;
-            Color average_color = avg_color;
-
-            IntPtr foregroundapp;
+            Image newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
             User32.Rect app_rect = new User32.Rect();
-
+            IntPtr foregroundapp;
             switch (Properties.AmbilightCaptureType)
             {
-                case AmbilightCaptureType.MainMonitor:
-                    if(screen_image != null)
+                case AmbilightCaptureType.EntireMonitor:
+                    if (screen != null)
                     {
-                        var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-                        RectangleF prim_scr_region = new RectangleF(
-                                (Screen.PrimaryScreen.Bounds.X - SystemInformation.VirtualScreen.X) * image_scale_x,
-                                (Screen.PrimaryScreen.Bounds.Y - SystemInformation.VirtualScreen.Y) * image_scale_y,
-                                Screen.PrimaryScreen.Bounds.Width * image_scale_x,
-                                Screen.PrimaryScreen.Bounds.Height * image_scale_y);
-
                         using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), prim_scr_region, GraphicsUnit.Pixel);
-
-                        screen_image = newImage;
-                        if (Properties.AmbilightType == AmbilightType.AverageColor)
-                            average_color = GetAverageColor(newImage);
+                            graphics.DrawImage(screen, 0, 0, Effects.canvas_width, Effects.canvas_height);
                     }
-                    else
-                    {
-                        screen_image = null;
-                        average_color = Color.Empty;
-                    }
-
                     break;
                 case AmbilightCaptureType.ForegroundApp:
                     foregroundapp = User32.GetForegroundWindow();
                     User32.GetWindowRect(foregroundapp, ref app_rect);
 
-                    if (screen_image != null)
+                    if (screen != null)
                     {
-                        var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-
                         RectangleF scr_region = new RectangleF(
-                                (app_rect.left - SystemInformation.VirtualScreen.X) * image_scale_x,
-                                (app_rect.top - SystemInformation.VirtualScreen.Y) * image_scale_y,
-                                (app_rect.right - app_rect.left) * image_scale_x,
-                                (app_rect.bottom - app_rect.top) * image_scale_y);
+                                (app_rect.left) / 4,
+                                (app_rect.top) / 4,
+                                (app_rect.right - app_rect.left) / 4,
+                                (app_rect.bottom - app_rect.top) / 4);
 
                         using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
-
-                        screen_image = newImage;
-                        if (Properties.AmbilightType == AmbilightType.AverageColor)
-                            average_color = GetAverageColor(newImage);
-                    }
-                    else
-                    {
-                        screen_image = null;
-                        average_color = Color.Empty;
+                            graphics.DrawImage(screen, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
                     }
                     break;
                 case AmbilightCaptureType.SpecificProcess:
-
                     if (!String.IsNullOrWhiteSpace(Properties.SpecificProcess))
                     {
                         var processes = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(Properties.SpecificProcess));
@@ -327,51 +311,53 @@ namespace Aurora.Settings.Layers
                             {
                                 User32.GetWindowRect(p.MainWindowHandle, ref app_rect);
 
-                                if (screen_image != null)
+                                if (screen != null)
                                 {
-                                    var newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-
                                     RectangleF scr_region = new RectangleF(
-                                            (app_rect.left - SystemInformation.VirtualScreen.X) * image_scale_x,
-                                            (app_rect.top - SystemInformation.VirtualScreen.Y) * image_scale_y,
-                                            (app_rect.right - app_rect.left) * image_scale_x,
-                                            (app_rect.bottom - app_rect.top) * image_scale_y);
+                                            (app_rect.left) / 4,
+                                            (app_rect.top) / 4,
+                                            (app_rect.right - app_rect.left) / 4,
+                                            (app_rect.bottom - app_rect.top) / 4);
 
                                     using (var graphics = Graphics.FromImage(newImage))
-                                        graphics.DrawImage(screen_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
-
-                                    screen_image = newImage;
-                                    if (Properties.AmbilightType == AmbilightType.AverageColor)
-                                        average_color = GetAverageColor(newImage);
+                                        graphics.DrawImage(screen, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
                                 }
 
                                 break;
                             }
                         }
                     }
-                    else
+                    break;
+                case AmbilightCaptureType.Coordinates:
+                    if (screen != null)
                     {
-                        screen_image = null;
-                        average_color = Color.Empty;
+                        try
+                        {
+                            using (var graphics = Graphics.FromImage(newImage))
+                                graphics.DrawImage(screen, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height),
+                                    new Rectangle(Properties.CoordinateX, Properties.CoordinateY, Properties.CoordinateW, Properties.CoordinateH), GraphicsUnit.Pixel);
+                        }
+                        catch
+                        {
+                        }
                     }
                     break;
             }
-
             EffectLayer ambilight_layer = new EffectLayer();
 
             if (Properties.AmbilightType == AmbilightType.Default)
             {
                 using (Graphics g = ambilight_layer.GetGraphics())
                 {
-                    if (screen_image != null)
-                        g.DrawImageUnscaled(screen_image, 0, 0);
+                    if (newImage != null)
+                        g.DrawImageUnscaled(newImage, 0, 0);
                 }
             }
             else if (Properties.AmbilightType == AmbilightType.AverageColor)
             {
-                ambilight_layer.Fill(average_color);
+                ambilight_layer.Fill(GetAverageColor(newImage));
             }
-
+            newImage.Dispose();
             return ambilight_layer;
         }
 

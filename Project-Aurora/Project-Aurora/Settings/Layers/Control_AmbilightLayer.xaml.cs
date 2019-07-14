@@ -45,8 +45,13 @@ namespace Aurora.Settings.Layers
                 this.txtBox_process_name.Text = properties._SpecificProcess;
                 this.txtbox_output_id.Text = properties.AmbilightOutputId.ToString();
                 this.combobox_ambilight_fps.SelectedItem = properties._AmbiLightUpdatesPerSecond;
+                this.XCoordinate.Value = properties._CoordinateX;
+                this.YCoordinate.Value = properties._CoordinateY;
+                this.HeightCoordinate.Value = properties._CoordinateH;
+                this.WidthCoordinate.Value = properties._CoordinateW;
 
                 ToggleProcessTxtBox();
+                ToggleCoordinatesBox();
 
                 settingsset = true;
             }
@@ -102,6 +107,7 @@ namespace Aurora.Settings.Layers
                 (this.DataContext as AmbilightLayerHandler).Properties._AmbilightCaptureType = (AmbilightCaptureType)Enum.Parse(typeof(AmbilightCaptureType), (sender as ComboBox).SelectedIndex.ToString());
 
                 ToggleProcessTxtBox();
+                ToggleCoordinatesBox();
             }
         }
 
@@ -117,6 +123,46 @@ namespace Aurora.Settings.Layers
                 txtBox_process_name.IsEnabled = true;
             else
                 txtBox_process_name.IsEnabled = false;
+        }
+
+        private void ToggleCoordinatesBox()
+        {
+            if ((this.DataContext as AmbilightLayerHandler).Properties._AmbilightCaptureType == AmbilightCaptureType.Coordinates)
+            {
+                XCoordinate.IsEnabled = true;
+                YCoordinate.IsEnabled = true;
+                HeightCoordinate.IsEnabled = true;
+                WidthCoordinate.IsEnabled = true;
+            }
+            else
+            {
+                XCoordinate.IsEnabled = false;
+                YCoordinate.IsEnabled = false;
+                HeightCoordinate.IsEnabled = false;
+                WidthCoordinate.IsEnabled = false;
+            }
+        }
+
+        private void Coordinate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown)
+            {
+                switch((sender as Xceed.Wpf.Toolkit.IntegerUpDown).Name)
+                {
+                    case "XCoordinate":
+                        (this.DataContext as AmbilightLayerHandler).Properties._CoordinateX = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;
+                        break;
+                    case "YCoordinate":
+                        (this.DataContext as AmbilightLayerHandler).Properties._CoordinateY = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;
+                        break;
+                    case "HeightCoordinate":
+                        (this.DataContext as AmbilightLayerHandler).Properties._CoordinateH = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;
+                        break;
+                    case "WidthCoordinate":
+                        (this.DataContext as AmbilightLayerHandler).Properties._CoordinateW = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;
+                        break;
+                }
+            }
         }
     }
 }

@@ -233,7 +233,7 @@ namespace Aurora.Utils
 
     public class AmbilightCaptureToStringVC : EnumToStringVC
     {
-        public AmbilightCaptureToStringVC() : base(AmbilightCaptureType.Everything) { }
+        public AmbilightCaptureToStringVC() : base(AmbilightCaptureType.EntireMonitor) { }
     }
 
     public class AmbilightFpsToStringVC : EnumToStringVC
