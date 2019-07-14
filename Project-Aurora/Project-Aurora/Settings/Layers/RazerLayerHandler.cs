@@ -1,4 +1,4 @@
-﻿using Aurora.Devices;
+using Aurora.Devices;
 using Aurora.Devices.Razer;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
@@ -103,7 +103,8 @@ namespace Aurora.Settings.Layers
                 }
                 catch (Exception e)
                 {
-                    Global.logger.Fatal(e, "RzManager failed to load!");
+                    Global.logger.Fatal("RzManager failed to load!");
+                    Global.logger.Fatal(e.ToString());
                 }
             }
 
@@ -301,7 +302,8 @@ namespace Aurora.Settings.Layers
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Fatal(e, "RzManager failed to dispose!");
+                        Global.logger.Fatal("RzManager failed to dispose!");
+                        Global.logger.Fatal(e.ToString());
                     }
                     _manager = null;
                 }
