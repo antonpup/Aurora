@@ -344,6 +344,83 @@ namespace Aurora.Utils
         }
 
         /// <summary>
+        /// Changes the hue of <paramref name="color"/>
+        /// </summary>
+        /// <param name="color">Color to be modified</param>
+        /// <param name="offset">Hue offset in degrees</param>
+        /// <returns>Color with modified hue</returns>
+        public static Color ChangeHue(Color color, double offset)
+        {
+            if (offset == 0)
+                return color;
+
+            ToHsv(color, out var hue, out var saturation, out var value);
+
+            hue += offset;
+
+            while (hue > 360) hue -= 360;
+            while (hue < 0) hue += 360;
+
+            return FromHsv(hue, saturation, value);
+        }
+
+        /// <summary>
+        /// Changes the brightness of <paramref name="color"/>
+        /// </summary>
+        /// <param name="color">Color to be modified</param>
+        /// <param name="strength">
+        /// The strength of brightness change.
+        /// <para>Values between (0, 1] increase the brightness by (0%, inf%]</para>
+        /// <para>Values between [-1, 0) decrease the brightness by [inf%, 0)</para>
+        /// </param>
+        /// <returns>Color with modified brightness</returns>
+        public static Color ChangeBrightness(Color color, double strength)
+        {
+            if (strength == 0)
+                return color;
+
+            ToHsv(color, out var hue, out var saturation, out var value);
+            ChangeHsvComponent(ref value, strength);
+            return FromHsv(hue, saturation, value);
+        }
+
+        /// <summary>
+        /// Changes the saturation of <paramref name="color"/>
+        /// </summary>
+        /// <param name="color">Color to be modified</param>
+        /// <param name="strength">
+        /// The strength of saturation change.
+        /// <para>Values between (0, 1] increase the saturation by (0%, inf%]</para>
+        /// <para>Values between [-1, 0) decrease the saturation by [inf%, 0)</para>
+        /// </param>
+        /// <returns>Color with modified saturation</returns>
+        public static Color ChangeSaturation(Color color, double strength)
+        {
+            if (strength == 0)
+                return color;
+
+            ToHsv(color, out var hue, out var saturation, out var value);
+            ChangeHsvComponent(ref saturation, strength);
+            return FromHsv(hue, saturation, value);
+        }
+
+        private static void ChangeHsvComponent(ref double component, double strength)
+        {
+            if (component == 0)
+                return;
+
+            strength = strength >= 0 ? MathUtils.Clamp(strength, 0, 1) : MathUtils.Clamp(strength, -1, 0);
+            if (strength == 1 || strength == -1)
+            {
+                component = 1;
+                return;
+            }
+
+            var result = strength >= 0 ? Math.Pow(component, 1 - strength) : Math.Pow(component, 1 / (1 + strength));
+            component = MathUtils.Clamp(result, 0, 1);
+        }
+
+        /// <summary>
         /// Returns a Luma coefficient for brightness of a color
         /// </summary>
         /// <param name="color">Color to be evaluated</param>
