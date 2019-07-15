@@ -28,17 +28,17 @@ namespace Aurora.Settings.Layers
 
     public enum AmbilightCaptureType
     {
+        [Description("Coordinates")]
+        Coordinates = 0,
+
         [Description("Entire Monitor")]
-        EntireMonitor = 0,
+        EntireMonitor = 1,
 
         [Description("Foreground Application")]
-        ForegroundApp,
+        ForegroundApp = 2,
 
         [Description("Specific Process")]
-        SpecificProcess,
-
-        [Description("Coordinates")]
-        Coordinates
+        SpecificProcess = 3
     }
 
     public enum AmbilightFpsChoice
@@ -71,7 +71,6 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public AmbilightCaptureType AmbilightCaptureType { get { return Logic._AmbilightCaptureType ?? _AmbilightCaptureType ?? AmbilightCaptureType.EntireMonitor; } }
 
-
         public int? _AmbilightOutputId { get; set; }
 
         [JsonIgnore]
@@ -87,25 +86,10 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public String SpecificProcess { get { return Logic._SpecificProcess ?? _SpecificProcess ?? String.Empty; } }
 
-        public int? _CoordinateX { get; set; }
+        public Rectangle? _Coordinates { get; set; }
 
         [JsonIgnore]
-        public int CoordinateX { get { return Logic._CoordinateX ?? _CoordinateX ?? 0; } }
-
-        public int? _CoordinateY { get; set; }
-
-        [JsonIgnore]
-        public int CoordinateY { get { return Logic._CoordinateY ?? _CoordinateY ?? 0; } }
-
-        public int? _CoordinateH { get; set; }
-
-        [JsonIgnore]
-        public int CoordinateH { get { return Logic._CoordinateH ?? _CoordinateH ?? 0; } }
-
-        public int? _CoordinateW { get; set; }
-
-        [JsonIgnore]
-        public int CoordinateW { get { return Logic._CoordinateW ?? _CoordinateW ?? 0; } }
+        public Rectangle Coordinates { get { return Logic._Coordinates ?? _Coordinates ?? Rectangle.Empty; } }
 
         public AmbilightLayerHandlerProperties() : base() { }
 
@@ -119,10 +103,7 @@ namespace Aurora.Settings.Layers
             this._AmbilightType = AmbilightType.Default;
             this._AmbilightCaptureType = AmbilightCaptureType.EntireMonitor;
             this._SpecificProcess = "";
-            this._CoordinateX = 0;
-            this._CoordinateY = 0;
-            this._CoordinateH = 0;
-            this._CoordinateW = 0;
+            this._Coordinates = new Rectangle(0, 0, 0, 0);
         }
     }
 
@@ -333,9 +314,13 @@ namespace Aurora.Settings.Layers
                     {
                         try
                         {
+                            RectangleF scr_region = new RectangleF(
+                                    (Properties.Coordinates.X) / 4,
+                                    (Properties.Coordinates.Y) / 4,
+                                    (Properties.Coordinates.Width) / 4,
+                                    (Properties.Coordinates.Height) / 4);
                             using (var graphics = Graphics.FromImage(newImage))
-                                graphics.DrawImage(screen, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height),
-                                    new Rectangle(Properties.CoordinateX, Properties.CoordinateY, Properties.CoordinateW, Properties.CoordinateH), GraphicsUnit.Pixel);
+                                graphics.DrawImage(screen, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
                         }
                         catch
                         {

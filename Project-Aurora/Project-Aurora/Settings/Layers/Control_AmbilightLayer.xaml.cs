@@ -45,10 +45,10 @@ namespace Aurora.Settings.Layers
                 this.txtBox_process_name.Text = properties._SpecificProcess;
                 this.txtbox_output_id.Text = properties.AmbilightOutputId.ToString();
                 this.combobox_ambilight_fps.SelectedItem = properties._AmbiLightUpdatesPerSecond;
-                this.XCoordinate.Value = properties._CoordinateX;
-                this.YCoordinate.Value = properties._CoordinateY;
-                this.HeightCoordinate.Value = properties._CoordinateH;
-                this.WidthCoordinate.Value = properties._CoordinateW;
+                this.XCoordinate.Value = properties._Coordinates.Value.Left;
+                this.YCoordinate.Value = properties._Coordinates.Value.Top;
+                this.HeightCoordinate.Value = properties._Coordinates.Value.Height;
+                this.WidthCoordinate.Value = properties._Coordinates.Value.Width;
 
                 ToggleProcessTxtBox();
                 ToggleCoordinatesBox();
@@ -147,21 +147,8 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown)
             {
-                switch((sender as Xceed.Wpf.Toolkit.IntegerUpDown).Name)
-                {
-                    case "XCoordinate":
-                        (this.DataContext as AmbilightLayerHandler).Properties._CoordinateX = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;
-                        break;
-                    case "YCoordinate":
-                        (this.DataContext as AmbilightLayerHandler).Properties._CoordinateY = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;
-                        break;
-                    case "HeightCoordinate":
-                        (this.DataContext as AmbilightLayerHandler).Properties._CoordinateH = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;
-                        break;
-                    case "WidthCoordinate":
-                        (this.DataContext as AmbilightLayerHandler).Properties._CoordinateW = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;
-                        break;
-                }
+                (this.DataContext as AmbilightLayerHandler).Properties._Coordinates = new System.Drawing.Rectangle(XCoordinate.Value ?? 0, 
+                    YCoordinate.Value ?? 0, WidthCoordinate.Value ?? 0, HeightCoordinate.Value ?? 0);
             }
         }
     }
