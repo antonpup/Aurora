@@ -40,6 +40,16 @@
             <DataTemplate x:Key="AmbilightCaptureTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource AmbilightCaptureToStringVC}}" />
             </DataTemplate>
+
+            <ObjectDataProvider x:Key="AmbilightQuality" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:AmbilightQuality" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:AmbilightQualityToStringVC x:Key="AmbilightQualityToStringVC"/>
+            <DataTemplate x:Key="AmbilightQualityTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource AmbilightQualityToStringVC}}" />
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -49,18 +59,21 @@
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="High values will increase CPU usage." VerticalAlignment="Top" Margin="300,25,0,0"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Effect Type" VerticalAlignment="Top" Margin="0,50,0,0"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Capture Type" VerticalAlignment="Top" Margin="0,75,0,0"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Specific Process Name" VerticalAlignment="Top" Margin="0,100,0,0"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Specific Process Name" VerticalAlignment="Top" Margin="242,160,0,0" x:Name="txtblockProcess"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Image Quality" VerticalAlignment="Top" Margin="0,99,0,0"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Higher qualities should only be needed&#x0a;when using the coordinates effect type&#x0a;and will increase RAM usage." VerticalAlignment="Top" Margin="300,99,-5,0"/>
         <TextBox x:Name="txtbox_output_id" HorizontalAlignment="Left" Margin="130,0,0,0" VerticalAlignment="Top" Width="160" Height="20" TextChanged="txtbox_output_id_TextChanged" MaxLength="1"></TextBox>
         <ComboBox x:Name="combobox_ambilight_fps" HorizontalAlignment="Left" Margin="130,25,0,0" VerticalAlignment="Top" Width="160" Height="20"  ItemsSource="{Binding Source={StaticResource AmbiLightFpsChoices}}" ItemTemplate="{Binding Source={StaticResource AmbilightFpsTemplate}}" SelectionChanged="combobox_fps_SelectionChanged"/>
         <ComboBox x:Name="combobox_ambilight_effect_type" HorizontalAlignment="Left" Margin="130,50,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" SelectionChanged="combobox_ambilight_effect_type_SelectionChanged"/>
         <ComboBox x:Name="combobox_ambilight_capture_type" HorizontalAlignment="Left" Margin="130,75,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" SelectionChanged="combobox_ambilight_capture_type_SelectionChanged"/>
-        <TextBox x:Name="txtBox_process_name" HorizontalAlignment="Left" Height="20" Margin="130,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" TextChanged="txtBox_process_name_TextChanged"/>
-        <GroupBox Header="Coordinates" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="220" Margin="0,118,0,0">
-            <Grid Margin="0,0,0,0">
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="X:" VerticalAlignment="Top" />
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Y:" VerticalAlignment="Top" Margin="0,27,0,0"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Height:" VerticalAlignment="Top" Margin="108,0,0,0"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Width:" VerticalAlignment="Top" Margin="108,27,0,0" />
+        <TextBox x:Name="txtBox_process_name" HorizontalAlignment="Left" Height="20" Margin="366,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="127" TextChanged="txtBox_process_name_TextChanged"/>
+        <ComboBox x:Name="combobox_ambilight_quality" HorizontalAlignment="Left" Margin="130,99,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightQuality}}" ItemTemplate="{Binding Source={StaticResource AmbilightQualityTemplate}}" SelectionChanged="Combobox_ambilight_quality_SelectionChanged"/>
+        <GroupBox Header="Coordinates" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="220" Margin="10,151,0,0">
+            <Grid x:Name="CoordGrid" Margin="0,0,0,0">
+                <TextBlock x:Name="TxtX" HorizontalAlignment="Left" TextWrapping="Wrap" Text="X:" VerticalAlignment="Top" />
+                <TextBlock x:Name="TxtY" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Y:" VerticalAlignment="Top" Margin="0,27,0,0"/>
+                <TextBlock x:Name="TxtW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Height:" VerticalAlignment="Top" Margin="108,0,0,0"/>
+                <TextBlock x:Name="TxtH" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Width:" VerticalAlignment="Top" Margin="108,27,0,0" />
                 <xctk:IntegerUpDown x:Name="XCoordinate" HorizontalAlignment="Left" Margin="38,0,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
                 <xctk:IntegerUpDown x:Name="YCoordinate" HorizontalAlignment="Left" Margin="38,27,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
                 <xctk:IntegerUpDown x:Name="HeightCoordinate" HorizontalAlignment="Left" Margin="151,0,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>

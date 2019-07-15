@@ -49,6 +49,7 @@ namespace Aurora.Settings.Layers
                 this.YCoordinate.Value = properties._Coordinates.Value.Top;
                 this.HeightCoordinate.Value = properties._Coordinates.Value.Height;
                 this.WidthCoordinate.Value = properties._Coordinates.Value.Width;
+                this.combobox_ambilight_quality.SelectedItem = properties._AmbilightQuality;
 
                 ToggleProcessTxtBox();
                 ToggleCoordinatesBox();
@@ -120,9 +121,15 @@ namespace Aurora.Settings.Layers
         private void ToggleProcessTxtBox()
         {
             if ((this.DataContext as AmbilightLayerHandler).Properties._AmbilightCaptureType == AmbilightCaptureType.SpecificProcess)
+            {
                 txtBox_process_name.IsEnabled = true;
+                txtblockProcess.Foreground = new SolidColorBrush(Colors.DarkGray);
+            }
             else
+            {
                 txtBox_process_name.IsEnabled = false;
+                txtblockProcess.Foreground = new SolidColorBrush(Colors.DimGray);
+            }
         }
 
         private void ToggleCoordinatesBox()
@@ -133,6 +140,11 @@ namespace Aurora.Settings.Layers
                 YCoordinate.IsEnabled = true;
                 HeightCoordinate.IsEnabled = true;
                 WidthCoordinate.IsEnabled = true;
+                CoordGrid.IsEnabled = true;
+                TxtX.Foreground = new SolidColorBrush(Colors.DarkGray);
+                TxtY.Foreground = new SolidColorBrush(Colors.DarkGray);
+                TxtW.Foreground = new SolidColorBrush(Colors.DarkGray);
+                TxtH.Foreground = new SolidColorBrush(Colors.DarkGray);       
             }
             else
             {
@@ -140,6 +152,11 @@ namespace Aurora.Settings.Layers
                 YCoordinate.IsEnabled = false;
                 HeightCoordinate.IsEnabled = false;
                 WidthCoordinate.IsEnabled = false;
+                CoordGrid.IsEnabled = false;
+                TxtX.Foreground = new SolidColorBrush(Colors.DimGray);
+                TxtY.Foreground = new SolidColorBrush(Colors.DimGray);
+                TxtW.Foreground = new SolidColorBrush(Colors.DimGray);
+                TxtH.Foreground = new SolidColorBrush(Colors.DimGray);
             }
         }
 
@@ -150,6 +167,12 @@ namespace Aurora.Settings.Layers
                 (this.DataContext as AmbilightLayerHandler).Properties._Coordinates = new System.Drawing.Rectangle(XCoordinate.Value ?? 0, 
                     YCoordinate.Value ?? 0, WidthCoordinate.Value ?? 0, HeightCoordinate.Value ?? 0);
             }
+        }
+
+        private void Combobox_ambilight_quality_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is ComboBox)
+                (this.DataContext as AmbilightLayerHandler).Properties._AmbilightQuality = (AmbilightQuality)Enum.Parse(typeof(AmbilightQuality), (sender as ComboBox).SelectedIndex.ToString());
         }
     }
 }
