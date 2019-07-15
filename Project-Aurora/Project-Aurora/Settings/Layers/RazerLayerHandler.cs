@@ -26,13 +26,13 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool ColorPostProcessEnabled => Logic._ColorPostProcessEnabled ?? _ColorPostProcessEnabled ?? false;
 
-        public double? _BrightnessBoost { get; set; }
+        public double? _BrightnessChange { get; set; }
         [JsonIgnore]
-        public double BrightnessBoost => Logic._BrightnessBoost ?? _BrightnessBoost ?? 0;
+        public double BrightnessChange => Logic._BrightnessChange ?? _BrightnessChange ?? 0;
 
-        public double? _SaturationBoost { get; set; }
+        public double? _SaturationChange { get; set; }
         [JsonIgnore]
-        public double SaturationBoost => Logic._SaturationBoost ?? _SaturationBoost ?? 0;
+        public double SaturationChange => Logic._SaturationChange ?? _SaturationChange ?? 0;
 
         public double? _HueShift { get; set; }
         [JsonIgnore]
@@ -51,8 +51,8 @@ namespace Aurora.Settings.Layers
             base.Default();
 
             _ColorPostProcessEnabled = false;
-            _BrightnessBoost = 0;
-            _SaturationBoost = 0;
+            _BrightnessChange = 0;
+            _SaturationChange = 0;
             _HueShift = 0;
             _KeyCloneMap = new Dictionary<DeviceKeys, DeviceKeys>();
         }
@@ -229,16 +229,14 @@ namespace Aurora.Settings.Layers
             if (color.R == 0 && color.G == 0 && color.B == 0)
                 return color;
 
-            ColorUtils.ToHsv(color, out var hue, out var saturation, out var value);
-
-            if (Properties.BrightnessBoost > 0)
-                value = Math.Pow(value, 1 - Properties.BrightnessBoost);
-            if (Properties.SaturationBoost > 0 && saturation > 0)
-                saturation = Math.Pow(saturation, 1 - Properties.SaturationBoost);
+            if (Properties.BrightnessChange > 0)
+                color = ColorUtils.ChangeBrightness(color, Properties.BrightnessChange);
+            if (Properties.SaturationChange > 0)
+                color = ColorUtils.ChangeSaturation(color, Properties.SaturationChange);
             if (Properties.HueShift > 0)
-                hue = (hue + Properties.HueShift) % 360;
+                color = ColorUtils.ChangeHue(color, Properties.HueShift);
 
-            return ColorUtils.FromHsv(hue, saturation, value);
+            return color;
         }
 
         public override void Dispose()

@@ -1,4 +1,4 @@
-﻿using Aurora.Devices;
+using Aurora.Devices;
 using RazerSdkWrapper.Utils;
 using System;
 using System.Collections.Generic;
@@ -43,8 +43,8 @@ namespace Aurora.Settings.Layers
             if (Context != null && !settingsset)
             {
                 ColorPostProcessCheckBox.IsChecked = Context.Properties.ColorPostProcessEnabled;
-                BrightnessBoostSlider.Value = Context.Properties.BrightnessBoost;
-                SaturationBoostSlider.Value = Context.Properties.SaturationBoost;
+                BrightnessSlider.Value = Context.Properties.BrightnessChange;
+                SaturationSlider.Value = Context.Properties.SaturationChange;
                 HueShiftSlider.Value = Context.Properties.HueShift;
                 CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
                 settingsset = true;
