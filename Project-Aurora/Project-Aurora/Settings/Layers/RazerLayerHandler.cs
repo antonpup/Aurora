@@ -233,7 +233,7 @@ namespace Aurora.Settings.Layers
                 color = ColorUtils.ChangeBrightness(color, Properties.BrightnessChange);
             if (Properties.SaturationChange != 0)
                 color = ColorUtils.ChangeSaturation(color, Properties.SaturationChange);
-            if (Properties.HueShift > 0)
+            if (Properties.HueShift != 0)
                 color = ColorUtils.ChangeHue(color, Properties.HueShift);
 
             return color;
