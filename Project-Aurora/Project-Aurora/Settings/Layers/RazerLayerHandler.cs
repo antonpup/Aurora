@@ -229,9 +229,9 @@ namespace Aurora.Settings.Layers
             if (color.R == 0 && color.G == 0 && color.B == 0)
                 return color;
 
-            if (Properties.BrightnessChange > 0)
+            if (Properties.BrightnessChange != 0)
                 color = ColorUtils.ChangeBrightness(color, Properties.BrightnessChange);
-            if (Properties.SaturationChange > 0)
+            if (Properties.SaturationChange != 0)
                 color = ColorUtils.ChangeSaturation(color, Properties.SaturationChange);
             if (Properties.HueShift > 0)
                 color = ColorUtils.ChangeHue(color, Properties.HueShift);

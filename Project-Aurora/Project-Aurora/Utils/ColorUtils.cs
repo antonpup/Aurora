@@ -410,13 +410,19 @@ namespace Aurora.Utils
                 return;
 
             strength = strength >= 0 ? MathUtils.Clamp(strength, 0, 1) : MathUtils.Clamp(strength, -1, 0);
-            if (strength == 1 || strength == -1)
+            if (strength == -1)
+            {
+                component = 0;
+                return;
+            }
+            else if (strength == 1)
             {
                 component = 1;
                 return;
             }
 
-            var result = strength >= 0 ? Math.Pow(component, 1 - strength) : Math.Pow(component, 1 / (1 + strength));
+            var result = strength >= 0 ? component / (1 - Math.Sin(Math.PI * strength / 2))
+                                       : component * (1 - Math.Sin(-Math.PI * strength / 2));
             component = MathUtils.Clamp(result, 0, 1);
         }
 
