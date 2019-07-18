@@ -1,4 +1,4 @@
-<UserControl x:Class="Aurora.Settings.Layers.Control_RazerLayer"
+﻿<UserControl x:Class="Aurora.Settings.Layers.Control_RazerLayer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -41,7 +41,7 @@
 
                     <Label Grid.Row="0" Grid.Column="0" Content="Supported Version:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
                     <Label Grid.Row="0" Grid.Column="1" Content="3.5.6" Padding="0" Margin="5 5 5 5" VerticalAlignment="Center"/>
-                    <Button Grid.Row="0" Grid.Column="2" Content="Download" Margin="5 5 5 5" VerticalAlignment="Center" HorizontalAlignment="Center" Click="OnDownloadSdkButtonClick"/>
+                    <Button x:Name="SdkInstallButton" Grid.Row="0" Grid.Column="2" Content="Install" Margin="5 5 5 5" VerticalAlignment="Center" HorizontalAlignment="Stretch" Click="OnSdkInstallButtonClick"/>
 
                     <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
                     <Label x:Name="SdkInstalledVersionValueLabel" Grid.Row="1" Grid.Column="1" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
@@ -51,7 +51,7 @@
                     <Label x:Name="SdkConnectionStatusLabel" Grid.Row="2" Grid.Column="2" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                     <Label Grid.Row="3" Grid.Column="0" Content="Debug Dump:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
-                    <ToggleButton x:Name="SdkDumpToggleButton" Grid.Row="3" Grid.Column="2" Margin="5 5 5 5" Width="58" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start" 
+                    <ToggleButton x:Name="SdkDumpToggleButton" Grid.Row="3" Grid.Column="2" Margin="5 5 5 5" VerticalAlignment="Center" HorizontalAlignment="Stretch" Content="Start" 
                                   Checked="OnSdkDumpToggleButtonChecked" Unchecked="OnSdkDumpToggleButtonUnchecked" ToolTipService.InitialShowDelay="25">
                         <ToggleButton.ToolTip>
                             <ToolTip>
