@@ -632,9 +632,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\AuroraConfigManager.cs" />
     <Compile Include="Settings\Bindables\Bindable.cs" />
+    <Compile Include="Settings\Bindables\BindableNumber.cs" />
+    <Compile Include="Settings\Bindables\ExtraBindables.cs" />
     <Compile Include="Settings\Bindables\IBindable.cs" />
     <Compile Include="Settings\Bindables\LockedWeakList.cs" />
+    <Compile Include="Settings\ConfigManager.cs" />
+    <Compile Include="Settings\JsonConfigManager.cs" />
     <Compile Include="Settings\Layers\BinaryCounterLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
       <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>

@@ -1,10 +1,14 @@
 using Aurora.Devices;
 using Aurora.Profiles;
 using Aurora.Settings;
+
 using IronPython.Hosting;
+
 using Microsoft.Scripting.Hosting;
 using Microsoft.Win32;
+
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -15,8 +19,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+
 using SharpDX.RawInput;
+
 using NLog;
+
 using System.Reflection;
 using System.Text;
 
@@ -51,6 +58,7 @@ namespace Aurora
             }
         }
 
+        public static string ConfigDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Config");
 
         /// <summary>
         /// Output logger for errors, warnings, and information
@@ -127,9 +135,9 @@ namespace Aurora
             base.OnStartup(e);
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
-#if DEBUG
+                #if DEBUG
                 Global.isDebug = true;
-#endif
+                #endif
                 Global.Initialize();
                 string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 Directory.SetCurrentDirectory(path);
@@ -142,7 +150,7 @@ namespace Aurora
                 try
                 {
                     var win_reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-                    string productName = (string)win_reg.GetValue("ProductName");
+                    string productName = (string) win_reg.GetValue("ProductName");
 
                     systeminfo_sb.AppendFormat("Operation System: {0}\r\n", productName);
                 }
@@ -228,7 +236,7 @@ namespace Aurora
                     currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
                 if (isDelayed)
-                    System.Threading.Thread.Sleep((int)delayTime);
+                    System.Threading.Thread.Sleep((int) delayTime);
 
                 this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
@@ -248,6 +256,7 @@ namespace Aurora
                 try
                 {
                     Global.Configuration = ConfigManager.Load();
+                    new AuroraConfigManager(Global.ConfigDirectory, new Dictionary<string, object>());
                 }
                 catch (Exception exc)
                 {
@@ -257,9 +266,7 @@ namespace Aurora
                     Global.Configuration = new Configuration();
                 }
 
-                Global.Configuration.PropertyChanged += (sender, eventArgs) => {
-                    ConfigManager.Save(Global.Configuration);
-                };
+                Global.Configuration.PropertyChanged += (sender, eventArgs) => { ConfigManager.Save(Global.Configuration); };
 
                 Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
 
@@ -345,15 +352,14 @@ namespace Aurora
                 Global.logger.Info("Listening for game integration calls...");
 
                 Global.logger.Info("Loading ResourceDictionaries...");
-                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
-                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
+                this.Resources.MergedDictionaries.Add(new ResourceDictionary {Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative)});
+                this.Resources.MergedDictionaries.Add(new ResourceDictionary {Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative)});
                 Global.logger.Info("Loaded ResourceDictionaries");
-
 
                 Global.logger.Info("Loading ConfigUI...");
 
                 MainWindow = new ConfigUI();
-                ((ConfigUI)MainWindow).Display();
+                ((ConfigUI) MainWindow).Display();
             }
             else
             {
@@ -403,25 +409,25 @@ namespace Aurora
 
         private static void InterceptVolumeAsBrightness(object sender, InputInterceptor.InputEventData e)
         {
-            var keys = (Keys)e.Data.VirtualKeyCode;
-            if ((keys.Equals(Keys.VolumeDown) || keys.Equals(Keys.VolumeUp))
-                && Global.InputEvents.Alt)
+            var keys = (Keys) e.Data.VirtualKeyCode;
+            if ((keys.Equals(Keys.VolumeDown) || keys.Equals(Keys.VolumeUp)) && Global.InputEvents.Alt)
             {
                 e.Intercepted = true;
                 Task.Factory.StartNew(() =>
-                {
-                    if (e.KeyDown)
                     {
-                        float brightness = Global.Configuration.GlobalBrightness;
-                        brightness += keys == Keys.VolumeUp ? 0.05f : -0.05f;
-                        Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
+                        if (e.KeyDown)
+                        {
+                            float brightness = Global.Configuration.GlobalBrightness;
+                            brightness += keys == Keys.VolumeUp ? 0.05f : -0.05f;
+                            Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
 
-                        ConfigManager.Save(Global.Configuration);
+                            ConfigManager.Save(Global.Configuration);
+                        }
                     }
-                }
                 );
             }
         }
+
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
@@ -457,12 +463,11 @@ namespace Aurora
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception exc = (Exception)e.ExceptionObject;
+            Exception exc = (Exception) e.ExceptionObject;
             Global.logger.Fatal("Fatal Exception caught : " + exc);
             Global.logger.Fatal(String.Format("Runtime terminating: {0}", e.IsTerminating));
             LogManager.Flush();
 
-            
             System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
             //Perform exit operations
             System.Windows.Application.Current.Shutdown();
@@ -470,7 +475,7 @@ namespace Aurora
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            Exception exc = (Exception)e.Exception;
+            Exception exc = (Exception) e.Exception;
             Global.logger.Fatal("Fatal Exception caught : " + exc);
             LogManager.Flush();
             if (!Global.isDebug)
@@ -498,7 +503,7 @@ namespace Aurora
             }
 
             //Patch 32-bit
-            string logitech_path = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", "(Default)", null);
+            string logitech_path = (string) Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", "(Default)", null);
             if (logitech_path == null)
             {
                 logitech_path = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
@@ -535,7 +540,7 @@ namespace Aurora
             }
 
             //Patch 64-bit
-            string logitech_path_64 = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", "(Default)", null);
+            string logitech_path_64 = (string) Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", "(Default)", null);
             if (logitech_path_64 == null)
             {
                 logitech_path_64 = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x64\LogitechLed.dll";

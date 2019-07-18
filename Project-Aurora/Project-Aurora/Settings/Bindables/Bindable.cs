@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using Corale.Colore.Annotations;
 
+using Newtonsoft.Json;
+
 namespace Aurora.Settings.Bindables
 {
-    public class Bindable<T> : IBindable<T>
+    public class Bindable<T> : IBindable<T>, ISerializableBindable
     {
         [UsedImplicitly]
         private Bindable() : this(default)
@@ -19,6 +22,7 @@ namespace Aurora.Settings.Bindables
         public Bindable(T value = default)
         {
             this.value = value;
+            SetDefault();
         }
 
         void IBindable.BindTo(IBindable them)
@@ -73,6 +77,10 @@ namespace Aurora.Settings.Bindables
         }
         public T Default { get; set; }
 
+        public virtual bool IsDefault => Equals(value, Default);
+
+        public void SetDefault() => Value = Default;
+
         public virtual void BindTo(Bindable<T> them)
         {
             Value = them.Value;
@@ -98,11 +106,51 @@ namespace Aurora.Settings.Bindables
         }
 
         private void removeWeakReference(WeakReference<Bindable<T>> weakReference) => Bindings?.Remove(weakReference);
-        
+
+        public virtual void Parse(object input)
+        {
+            switch (input)
+            {
+                case T t:
+                    Value = t;
+                    break;
+
+                case string s:
+                    var underlyingType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+
+                    if (underlyingType.IsEnum)
+                        Value = (T)Enum.Parse(underlyingType, s);
+                    else
+                        Value = (T)Convert.ChangeType(s, underlyingType, CultureInfo.InvariantCulture);
+                    break;
+
+                default:
+                    throw new ArgumentException($@"Could not parse provided {input.GetType()} ({input}) to {typeof(T)}.");
+            }
+        }
+
         internal void SetValue(T previousValue, T value, Bindable<T> source = null)
         {
             this.value = value;
             TriggerValueChanged(previousValue, source ?? this);
+        }
+
+        public virtual void TriggerChange()
+        {
+            TriggerValueChanged(value, this, false);
+        }
+
+        public Bindable<T> GetUnboundCopy()
+        {
+            var clone = GetBoundCopy();
+            clone.UnbindAll();
+            return clone;
+        }
+
+        public virtual void UnbindAll()
+        {
+            UnbindEvents();
+            UnbindBindings();
         }
 
         protected void TriggerValueChanged(T previousValue, Bindable<T> source, bool propagateToBindings = true)
@@ -138,6 +186,42 @@ namespace Aurora.Settings.Bindables
 
         protected void Unbind(Bindable<T> bindings) => Bindings.Remove(bindings.weakReference);
 
+        void ISerializableBindable.SerializeTo(JsonWriter writer, JsonSerializer serializer)
+        {
+            serializer.Serialize(writer, Value);
+        }
 
+        void ISerializableBindable.DeserializeFrom(JsonReader reader, JsonSerializer serializer)
+        {
+            Value = serializer.Deserialize<T>(reader);
+        }
+    }
+
+    [JsonConverter(typeof(BindableJsonConverter))]
+    internal interface ISerializableBindable
+    {
+        void SerializeTo(JsonWriter writer, JsonSerializer serializer);
+        void DeserializeFrom(JsonReader reader, JsonSerializer serializer);
+    }
+
+    internal class BindableJsonConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType) => typeof(ISerializableBindable).IsAssignableFrom(objectType);
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            var bindable = (ISerializableBindable)value;
+            bindable.SerializeTo(writer, serializer);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (!(existingValue is ISerializableBindable bindable))
+                bindable = (ISerializableBindable)Activator.CreateInstance(objectType, true);
+
+            bindable.DeserializeFrom(reader, serializer);
+
+            return bindable;
+        }
     }
 }
