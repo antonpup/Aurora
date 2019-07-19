@@ -53,6 +53,7 @@ namespace Aurora.Settings.Layers
 
                 ToggleProcessTxtBox();
                 ToggleCoordinatesBox();
+                ToggleDisplayOutputBox();
 
                 settingsset = true;
             }
@@ -109,6 +110,7 @@ namespace Aurora.Settings.Layers
 
                 ToggleProcessTxtBox();
                 ToggleCoordinatesBox();
+                ToggleDisplayOutputBox();
             }
         }
 
@@ -140,6 +142,10 @@ namespace Aurora.Settings.Layers
                 YCoordinate.IsEnabled = true;
                 HeightCoordinate.IsEnabled = true;
                 WidthCoordinate.IsEnabled = true;
+                XCoordinate.Foreground = new SolidColorBrush(Colors.DarkGray);
+                YCoordinate.Foreground = new SolidColorBrush(Colors.DarkGray);
+                HeightCoordinate.Foreground = new SolidColorBrush(Colors.DarkGray);
+                WidthCoordinate.Foreground = new SolidColorBrush(Colors.DarkGray);
                 CoordGrid.IsEnabled = true;
                 TxtX.Foreground = new SolidColorBrush(Colors.DarkGray);
                 TxtY.Foreground = new SolidColorBrush(Colors.DarkGray);
@@ -149,14 +155,33 @@ namespace Aurora.Settings.Layers
             else
             {
                 XCoordinate.IsEnabled = false;
+                XCoordinate.Foreground = new SolidColorBrush(Colors.DimGray);
                 YCoordinate.IsEnabled = false;
                 HeightCoordinate.IsEnabled = false;
                 WidthCoordinate.IsEnabled = false;
+                XCoordinate.Foreground = new SolidColorBrush(Colors.DimGray);
+                YCoordinate.Foreground = new SolidColorBrush(Colors.DimGray);
+                HeightCoordinate.Foreground = new SolidColorBrush(Colors.DimGray);
+                WidthCoordinate.Foreground = new SolidColorBrush(Colors.DimGray);
                 CoordGrid.IsEnabled = false;
                 TxtX.Foreground = new SolidColorBrush(Colors.DimGray);
                 TxtY.Foreground = new SolidColorBrush(Colors.DimGray);
                 TxtW.Foreground = new SolidColorBrush(Colors.DimGray);
                 TxtH.Foreground = new SolidColorBrush(Colors.DimGray);
+            }
+        }
+
+        private void ToggleDisplayOutputBox()
+        {
+            if ((this.DataContext as AmbilightLayerHandler).Properties._AmbilightCaptureType == AmbilightCaptureType.EntireMonitor)
+            {
+                txtbox_output_id.IsEnabled = true;
+                txtblockOutput.Foreground = new SolidColorBrush(Colors.DarkGray);
+            }
+            else
+            {
+                txtbox_output_id.IsEnabled = false;
+                txtblockOutput.Foreground = new SolidColorBrush(Colors.DimGray);
             }
         }
 
