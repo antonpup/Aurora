@@ -253,10 +253,10 @@ namespace Aurora
 
                 //Load config
                 Global.logger.Info("Loading Configuration");
+                new AuroraConfigManager(Global.ConfigDirectory, new Dictionary<string, object>());
                 try
                 {
                     Global.Configuration = ConfigManager.Load();
-                    new AuroraConfigManager(Global.ConfigDirectory, new Dictionary<string, object>());
                 }
                 catch (Exception exc)
                 {

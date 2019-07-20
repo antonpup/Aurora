@@ -382,7 +382,7 @@ namespace Aurora.Utils
 
     public class RealColor : ICloneable
     {
-        [JsonProperty]
+        [JsonProperty, JsonConverter(typeof(RealColorJsonConverter))]
         private System.Drawing.Color Color { get; set; }
 
         public RealColor()
@@ -427,5 +427,26 @@ namespace Aurora.Utils
 
         public static implicit operator System.Drawing.Color(RealColor c) => c.GetDrawingColor();
         public static implicit operator System.Windows.Media.Color(RealColor c) => c.GetMediaColor();
+
+        public override string ToString()
+        {
+            return Color.ToString();
+        }
+    }
+
+    internal class RealColorJsonConverter : JsonConverter {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue(value.ToString());
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool CanRead => false;
+
+        public override bool CanConvert(Type objectType) => objectType == typeof(RealColor);
     }
 }

@@ -1,70 +1,135 @@
-﻿using Aurora.Utils;
-using Newtonsoft.Json;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Aurora.Settings.Bindables;
+using Aurora.Utils;
+
+using Newtonsoft.Json;
 
 namespace Aurora.Settings
 {
     public class VariableRegistryItem
     {
-        public object Value = null;
-        private object @default = null;
-        public object Default { get { return @default?.TryClone(); } set { @default = value?.TryClone(); } }
-        public object Max = null;
-        public object Min = null;
+        public object Value;
+        private object @default;
+        public object Default { get => @default?.TryClone(); set => @default = value?.TryClone(); }
+        public object Max;
+        public object Min;
         public string Title = "";
         public string Remark = "";
         public VariableFlags Flags = VariableFlags.None;
+        [JsonIgnore]
+        public IBindable Bindable { get; set; }
 
-        public VariableRegistryItem()
+        public VariableRegistryItem() { }
+
+        public VariableRegistryItem(IBindable bindable, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
         {
+            Bindable = bindable;
+            switch (Bindable)
+            {
+                case BindableBool b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    break;
+                case BindableDouble b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableFloat b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableInt b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableLong b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableColor b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    break;
+            }
+            Title = title;
+            Remark = remark;
+            Flags = flags;
         }
 
         public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
         {
-            this.Value = defaultValue;
-            this.Default = defaultValue;
+            Value = defaultValue;
+            Default = defaultValue;
 
-            if (this.Value != null && max != null && this.Value.GetType() == max.GetType())
-                this.Max = max;
+            if (Value != null && max != null && Value.GetType() == max.GetType())
+                Max = max;
 
-            if (this.Value != null && min != null && this.Value.GetType() == min.GetType())
-                this.Min = min;
+            if (Value != null && min != null && Value.GetType() == min.GetType())
+                Min = min;
 
-            this.Title = title;
-            this.Remark = remark;
-            this.Flags = flags;
+            Title = title;
+            Remark = remark;
+            Flags = flags;
         }
 
         public void SetVariable(object newvalue)
         {
-            if (this.Value != null && newvalue != null && this.Value.GetType() == newvalue.GetType())
+            if (Value != null && newvalue != null && Value.GetType() == newvalue.GetType())
             {
-                this.Value = newvalue;
+                if (Bindable != null)
+                    switch (Bindable)
+                    {
+                        case BindableBool b:
+                            b.Value = (bool) newvalue;
+                            break;
+                        case BindableDouble b:
+                            b.Value = (double) newvalue;
+                            break;
+                        case BindableFloat b:
+                            b.Value = (float) newvalue;
+                            break;
+                        case BindableInt b:
+                            b.Value = (int) newvalue;
+                            break;
+                        case BindableLong b:
+                            b.Value = (long) newvalue;
+                            break;
+                        case BindableColor b:
+                            b.Value = (RealColor) newvalue;
+                            break;
+                    }
+                Value = newvalue;
             }
         }
 
         internal void Merge(VariableRegistryItem variableRegistryItem)
         {
-            this.Default = variableRegistryItem.Default;
-            this.Title = variableRegistryItem.Title;
-            this.Remark = variableRegistryItem.Remark;
-            this.Min = variableRegistryItem.Min;
-            this.Max = variableRegistryItem.Max;
-            Type typ = this.Value.GetType();
-            Type defaultType = variableRegistryItem.Default.GetType();
+            Default = variableRegistryItem.Default;
+            Title = variableRegistryItem.Title;
+            Remark = variableRegistryItem.Remark;
+            Min = variableRegistryItem.Min;
+            Max = variableRegistryItem.Max;
+            var typ = Value.GetType();
+            var defaultType = variableRegistryItem.Default.GetType();
 
             if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
-                this.Value = Enum.ToObject(defaultType, Value);
-            else if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
-                this.Value = Convert.ChangeType(this.Value, defaultType);
-            else if (this.Value == null && !defaultType.Equals(typ))
-                this.Value = variableRegistryItem.Default;
-            this.Flags = variableRegistryItem.Flags;
+                Value = Enum.ToObject(defaultType, Value);
+            else if (!defaultType.Equals(typ) && Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
+                Value = Convert.ChangeType(Value, defaultType);
+            else if (Value == null && !defaultType.Equals(typ))
+                Value = variableRegistryItem.Default;
+            Flags = variableRegistryItem.Flags;
         }
     }
 
@@ -76,11 +141,10 @@ namespace Aurora.Settings
 
     public class VariableRegistry : ICloneable //Might want to implement something like IEnumerable here
     {
-        [JsonProperty("Variables")]
-        private Dictionary<string, VariableRegistryItem> _variables;
+        [JsonProperty("Variables")] private Dictionary<string, VariableRegistryItem> _variables;
 
         [JsonIgnore]
-        public int Count { get { return _variables.Count; } }
+        public int Count => _variables.Count;
 
         public VariableRegistry()
         {
@@ -90,13 +154,12 @@ namespace Aurora.Settings
         public void Combine(VariableRegistry otherRegistry, bool removeMissing = false)
         {
             //Below doesn't work for added variables
-            Dictionary<string, VariableRegistryItem> vars = new Dictionary<string, VariableRegistryItem>();
+            var vars = new Dictionary<string, VariableRegistryItem>();
 
             foreach (var variable in otherRegistry._variables)
-            {
                 if (removeMissing)
                 {
-                    VariableRegistryItem local = _variables.ContainsKey(variable.Key) ? _variables[variable.Key] : null;
+                    var local = _variables.ContainsKey(variable.Key) ? _variables[variable.Key] : null;
                     if (local != null)
                         local.Merge(variable.Value);
                     else
@@ -106,11 +169,9 @@ namespace Aurora.Settings
                 }
                 else
                     Register(variable.Key, variable.Value);
-            }
 
             if (removeMissing)
                 _variables = vars;
-            
         }
 
         public string[] GetRegisteredVariableKeys()
@@ -122,6 +183,12 @@ namespace Aurora.Settings
         {
             if (!_variables.ContainsKey(name))
                 _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark, flags));
+        }
+
+        public void Register(string name, IBindable bindable, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
+        {
+            if (!_variables.ContainsKey(name))
+                _variables.Add(name, new VariableRegistryItem(bindable, title, remark, flags));
         }
 
         public void Register(string name, VariableRegistryItem varItem)
@@ -145,24 +212,21 @@ namespace Aurora.Settings
 
         public void ResetVariable(string name)
         {
-            if (_variables.ContainsKey(name))
-            {
-                _variables[name].Value = _variables[name].Default;
-            }
+            if (_variables.ContainsKey(name)) _variables[name].Value = _variables[name].Default;
         }
 
         public T GetVariable<T>(string name)
         {
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
-                return (T)_variables[name].Value;
+                return (T) _variables[name].Value;
 
-            return default(T);
+            return default;
         }
 
         public T GetVariableDefault<T>(string name)
         {
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
-                return (T)_variables[name].Default;
+                return (T) _variables[name].Default;
 
             return Activator.CreateInstance<T>();
         }
@@ -171,7 +235,7 @@ namespace Aurora.Settings
         {
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
-                value = (T)_variables[name].Max;
+                value = (T) _variables[name].Max;
                 return true;
             }
 
@@ -183,7 +247,7 @@ namespace Aurora.Settings
         {
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
-                value = (T)_variables[name].Min;
+                value = (T) _variables[name].Min;
                 return true;
             }
 
@@ -231,13 +295,13 @@ namespace Aurora.Settings
 
         public object Clone()
         {
-            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+            var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All, Binder = JSONUtils.SerializationBinder});
 
             return JsonConvert.DeserializeObject(
-                    str,
-                    this.GetType(),
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
-                    );
+                str,
+                GetType(),
+                new JsonSerializerSettings {ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = JSONUtils.SerializationBinder}
+            );
         }
     }
 }

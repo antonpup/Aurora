@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Aurora.Utils;
 
 namespace Aurora.Settings.Bindables
 {
@@ -87,5 +90,45 @@ namespace Aurora.Settings.Bindables
         }
 
         public void Toggle() => Value = !Value;
+    }
+    
+    public class BindableColor : Bindable<string>
+    {
+        public BindableColor(RealColor color)
+        {
+            Value = color;
+        }
+
+        public override bool IsDefault => Value.GetDrawingColor() == Color.Transparent;
+
+        public new RealColor Value
+        {
+            get
+            {
+                var t = base.Value.Replace(" ", "").Split('[')[1];
+                var h = t.Substring(0, t.Length - 1).Split(',').Select(f =>
+                {
+                    var k = f.Split('=');
+                    return new KeyValuePair<string, string>(k[0], k[1]);
+                }).ToDictionary(f => f.Key, f => f.Value);
+                return new RealColor(Color.FromArgb(Convert.ToInt32(h["A"]),Convert.ToInt32(h["R"]),Convert.ToInt32(h["G"]),Convert.ToInt32(h["B"])));
+            }
+            set => base.Value = value.ToString();
+        }
+
+        public new RealColor Default
+        {
+            get
+            {
+                var t = base.Default.Replace(" ", "").Split('[')[1];
+                var h = t.Substring(0, t.Length - 1).Split(',').Select(f =>
+                {
+                    var k = f.Split('=');
+                    return new KeyValuePair<string, string>(k[0], k[1]);
+                }).ToDictionary(f => f.Key, f => f.Value);
+                return new RealColor(Color.FromArgb(Convert.ToInt32(h["A"]),Convert.ToInt32(h["R"]),Convert.ToInt32(h["G"]),Convert.ToInt32(h["B"])));
+            }
+            set => base.Default = value.ToString();
+        }
     }
 }

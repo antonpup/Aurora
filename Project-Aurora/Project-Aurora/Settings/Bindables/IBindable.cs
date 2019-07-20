@@ -12,6 +12,8 @@ namespace Aurora.Settings.Bindables
         void BindTo(IBindable them);
 
         IBindable GetBoundCopy();
+
+        void Parse(object input);
     }
 
     public interface IBindable<T> : IBindable

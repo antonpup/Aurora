@@ -6,17 +6,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 
+using Aurora.Settings.Bindables;
+using Aurora.Utils;
+
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Aurora.Settings
 {
-    public class JsonConfigManager<T> : ConfigManager<T>
+    public class JsonConfigManager : ConfigManager<string>
     {
         private string path;
         protected virtual string Filename => @"main.json";
 
-        public JsonConfigManager(string path, IDictionary<T, object> defaultOverrides) : base(defaultOverrides)
+        public JsonConfigManager(string path, IDictionary<string, object> defaultOverrides) : base(defaultOverrides)
         {
+            //Filename = "";
             this.path = path;
             InitialiseDefaults();
             Load();
@@ -24,7 +29,21 @@ namespace Aurora.Settings
 
         protected override void PerformLoad()
         {
+            if (string.IsNullOrEmpty(Filename) || !File.Exists(Path.Combine(path, Filename))) return;
 
+            using (var reader = new StreamReader(Path.Combine(path, Filename)))
+            {
+                var jObject = JsonConvert.DeserializeObject<JObject>(reader.ReadToEnd());
+                foreach (var jToken in jObject)
+                {
+                    if (ConfigStore.TryGetValue(jToken.Key, out IBindable b))
+                    {
+                        b.Parse(jToken.Value.ToString());
+                    }
+                    else if (AddMissingEntries)
+                        Set(jToken.Key, jToken.Value.ToString());
+                }
+            }
         }
 
         protected override bool PerformSave()

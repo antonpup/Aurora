@@ -5,9 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Aurora.Utils;
+
 using Corale.Colore.Annotations;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Aurora.Settings.Bindables
 {
@@ -22,7 +25,6 @@ namespace Aurora.Settings.Bindables
         public Bindable(T value = default)
         {
             this.value = value;
-            SetDefault();
         }
 
         void IBindable.BindTo(IBindable them)

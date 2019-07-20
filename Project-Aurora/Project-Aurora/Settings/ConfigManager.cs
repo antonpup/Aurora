@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Aurora.Settings.Bindables;
+using Aurora.Utils;
 
 namespace Aurora.Settings
 {
@@ -98,6 +99,25 @@ namespace Aurora.Settings
             if (!(GetOriginalBindable<bool>(lookup) is BindableBool bindable))
             {
                 bindable = new BindableBool(value);
+                AddBindable(lookup, bindable);
+            }
+            else
+            {
+                bindable.Value = value;
+            }
+
+            bindable.Default = value;
+
+            return bindable;
+        }
+
+        public BindableColor Set(T lookup, RealColor value)
+        {
+            value = getDefault(lookup, value);
+
+            if (!(GetOriginalBindable<string>(lookup) is BindableColor bindable))
+            {
+                bindable = new BindableColor(value);
                 AddBindable(lookup, bindable);
             }
             else

@@ -9,7 +9,7 @@ using Aurora.Utils;
 
 namespace Aurora.Settings
 {
-    public class AuroraConfigManager : JsonConfigManager<string>
+    public class AuroraConfigManager : JsonConfigManager
     {
         public AuroraConfigManager(string path, IDictionary<string, object> defaultOverrides) : base(path, defaultOverrides) { }
 
@@ -20,6 +20,7 @@ namespace Aurora.Settings
             Set("philips_hue_override_bitmap", false);
             Set("philips_hue_brightness", 255, 0, 255);
             Set("philips_hue_use_default", true);
+            Set("philips_hue_default_color", new RealColor(Color.FromArgb(255,255,255,255)));
         }
     }
 }
