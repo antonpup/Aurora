@@ -53,7 +53,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Height="228">
+    <Grid Height="228" Width="618">
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Capture Type" VerticalAlignment="Top" Margin="0,4,0,0"/>
         <ComboBox x:Name="combobox_ambilight_capture_type" HorizontalAlignment="Left" Margin="130,4,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" SelectionChanged="combobox_ambilight_capture_type_SelectionChanged"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Effect Type" VerticalAlignment="Top" Margin="0,31,0,0"/>
@@ -61,24 +61,24 @@
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Image Quality" VerticalAlignment="Top" Margin="0,58,0,0"/>
         <ComboBox x:Name="combobox_ambilight_quality" HorizontalAlignment="Left" Margin="130,58,0,0" VerticalAlignment="Top" Width="160" ItemsSource="{Binding Source={StaticResource AmbilightQuality}}" ItemTemplate="{Binding Source={StaticResource AmbilightQualityTemplate}}" SelectionChanged="Combobox_ambilight_quality_SelectionChanged"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Updates per second" VerticalAlignment="Top" Margin="0,85,0,0"/>
-        <ComboBox x:Name="combobox_ambilight_fps" HorizontalAlignment="Left" Margin="130,85,0,0" VerticalAlignment="Top" Width="160" Height="20"  ItemsSource="{Binding Source={StaticResource AmbiLightFpsChoices}}" ItemTemplate="{Binding Source={StaticResource AmbilightFpsTemplate}}" SelectionChanged="combobox_fps_SelectionChanged"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="High values will increase CPU usage." VerticalAlignment="Top" Margin="300,25,0,0"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Higher qualities should only be needed&#x0a;when using the coordinates effect type&#x0a;and will increase RAM usage." VerticalAlignment="Top" Margin="300,58,-5,0"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Specific Process Name" VerticalAlignment="Top" Margin="235,160,0,0" x:Name="txtblockProcess"/>
-        <TextBox x:Name="txtBox_process_name" HorizontalAlignment="Left" Height="20" Margin="366,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="137" TextChanged="txtBox_process_name_TextChanged"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Display Output Number" VerticalAlignment="Top" Margin="235,185,0,0" x:Name="txtblockOutput"/>
-        <TextBox x:Name="txtbox_output_id" HorizontalAlignment="Left" Margin="366,185,0,0" VerticalAlignment="Top" Width="137" Height="20" TextChanged="txtbox_output_id_TextChanged" MaxLength="1"></TextBox>
-        <GroupBox Header="Coordinates" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="220" Margin="10,151,0,0">
+        <ComboBox x:Name="combobox_ambilight_fps" HorizontalAlignment="Left" Margin="130,85,0,0" VerticalAlignment="Top" Width="160" Height="22"  ItemsSource="{Binding Source={StaticResource AmbiLightFpsChoices}}" ItemTemplate="{Binding Source={StaticResource AmbilightFpsTemplate}}" SelectionChanged="combobox_fps_SelectionChanged"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Specific Process Name" VerticalAlignment="Top" Margin="0,114,0,0" x:Name="txtblockProcess"/>
+        <TextBox x:Name="txtBox_process_name" HorizontalAlignment="Left" Height="20" Margin="130,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" TextChanged="txtBox_process_name_TextChanged"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Display Output Number" VerticalAlignment="Top" Margin="0,139,0,0" x:Name="txtblockOutput"/>
+        <TextBox x:Name="txtbox_output_id" HorizontalAlignment="Left" Margin="130,139,0,0" VerticalAlignment="Top" Width="160" Height="20" Text="{Binding Path=OutputId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <GroupBox Header="Coordinates" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="290" Margin="0,160,0,-9">
             <Grid x:Name="CoordGrid" Margin="0,0,0,0">
-                <TextBlock x:Name="TxtX" HorizontalAlignment="Left" TextWrapping="Wrap" Text="X:" VerticalAlignment="Top" />
-                <TextBlock x:Name="TxtY" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Y:" VerticalAlignment="Top" Margin="0,27,0,0"/>
-                <TextBlock x:Name="TxtW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Height:" VerticalAlignment="Top" Margin="108,0,0,0"/>
-                <TextBlock x:Name="TxtH" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Width:" VerticalAlignment="Top" Margin="108,27,0,0" />
-                <xctk:IntegerUpDown x:Name="XCoordinate" HorizontalAlignment="Left" Margin="38,0,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
-                <xctk:IntegerUpDown x:Name="YCoordinate" HorizontalAlignment="Left" Margin="38,27,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
-                <xctk:IntegerUpDown x:Name="HeightCoordinate" HorizontalAlignment="Left" Margin="151,0,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
-                <xctk:IntegerUpDown x:Name="WidthCoordinate" HorizontalAlignment="Left" Margin="151,27,0,0" Width="50" Value="0"  Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
+                <TextBlock x:Name="TxtX" HorizontalAlignment="Left" TextWrapping="Wrap" Text="X:" VerticalAlignment="Top" Margin="26,0,0,0" />
+                <TextBlock x:Name="TxtY" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Y:" VerticalAlignment="Top" Margin="26,27,0,0"/>
+                <TextBlock x:Name="TxtW" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Height:" VerticalAlignment="Top" Margin="142,0,0,0" Height="16" Width="42"/>
+                <TextBlock x:Name="TxtH" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Width:" VerticalAlignment="Top" Margin="142,27,0,0" Height="16" Width="42" />
+                <xctk:IntegerUpDown x:Name="XCoordinate" HorizontalAlignment="Left" Margin="55,0,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
+                <xctk:IntegerUpDown x:Name="YCoordinate" HorizontalAlignment="Left" Margin="55,27,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged" RenderTransformOrigin="0.347,0.53"/>
+                <xctk:IntegerUpDown x:Name="HeightCoordinate" HorizontalAlignment="Left" Margin="189,0,0,0" Width="50" Value="0" Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
+                <xctk:IntegerUpDown x:Name="WidthCoordinate" HorizontalAlignment="Left" Margin="189,27,0,0" Width="50" Value="0"  Height="22" VerticalAlignment="Top" ValueChanged="Coordinate_ValueChanged"/>
             </Grid>
         </GroupBox>
+        <Image HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="22" Margin="295,58,0,0" ToolTip="Higher qualities should only be needed when using the&#x0a;coordinates effect type and will increase RAM usage." Source="/Aurora;component/Resources/info.png" RenderTransformOrigin="0.562,0.917"/>
+        <Image HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="22" Margin="295,85,0,0" ToolTip="Higher update speeds will result in a&#x0a;smoother effect and increase CPU usage." Source="/Aurora;component/Resources/info.png"/>
     </Grid>
 </UserControl>

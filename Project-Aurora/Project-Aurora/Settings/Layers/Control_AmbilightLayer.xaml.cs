@@ -66,26 +66,6 @@ namespace Aurora.Settings.Layers
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void txtbox_output_id_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var textBox = sender as TextBox;
-            try
-            {
-                int outputId = int.Parse(textBox.Text);
-                if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler)
-                {
-                    var context = this.DataContext as AmbilightLayerHandler;
-                    if (outputId != context.Properties._AmbilightOutputId)
-                    {
-                        context.Properties._AmbilightOutputId = outputId;
-                        context.Initialize();
-                    }
-                }
-            }
-            catch (FormatException){}
-
-        }
-
         private void combobox_fps_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is ComboBox)
@@ -155,7 +135,6 @@ namespace Aurora.Settings.Layers
             else
             {
                 XCoordinate.IsEnabled = false;
-                XCoordinate.Foreground = new SolidColorBrush(Colors.DimGray);
                 YCoordinate.IsEnabled = false;
                 HeightCoordinate.IsEnabled = false;
                 WidthCoordinate.IsEnabled = false;

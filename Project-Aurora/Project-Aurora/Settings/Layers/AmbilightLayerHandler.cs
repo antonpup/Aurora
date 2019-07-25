@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -135,7 +136,7 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     [LogicOverrideIgnoreProperty("_Sequence")]
-    public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>
+    public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>, INotifyPropertyChanged
     {
         private static System.Timers.Timer captureTimer;
         private static Image screen;
@@ -144,6 +145,20 @@ namespace Aurora.Settings.Layers
         private static bool processing = false;  // Used to avoid updating before the previous update is processed
         private static System.Timers.Timer retryTimer;
         private static RawRectangle bounds;
+        public event PropertyChangedEventHandler PropertyChanged;
+        public int OutputId
+        {
+            get { return Properties.AmbilightOutputId; }
+            set
+            {
+                if (Properties._AmbilightOutputId != value)
+                {
+                    Properties._AmbilightOutputId = value;
+                    InvokePropertyChanged("OutputId");
+                    this.Initialize();
+                }
+            }
+        }
 
         // 10-30 updates / sec depending on setting
         private int Interval => 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
@@ -390,8 +405,7 @@ namespace Aurora.Settings.Layers
         {
             if (!RectangleEquals(rectangle, bounds))
             {
-                Properties._AmbilightOutputId = Array.FindIndex(Screen.AllScreens, d => RectangleEquals(d.Bounds, bounds));
-                this.Initialize();
+                OutputId = Array.FindIndex(Screen.AllScreens, d => RectangleEquals(d.Bounds, bounds));
                 return true;
             }
             return false;
@@ -430,6 +444,11 @@ namespace Aurora.Settings.Layers
         private Rectangle Resize(Rectangle r)
         {
             return new Rectangle(r.X / Scale, r.Y / Scale, r.Width / Scale, r.Height / Scale);
+        }
+
+        protected void InvokePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private class User32
