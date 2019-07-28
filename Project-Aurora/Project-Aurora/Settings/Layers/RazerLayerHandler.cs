@@ -62,13 +62,6 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_Sequence")]
     public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
     {
-        public bool Loaded { get; private set; }
-
-        private static RzManager _manager;
-        private static int _instances;
-
-        private int _instance;
-
         private Color[] _keyboardColors;
         private Color[] _mousepadColors;
         private Color _mouseColor;
@@ -82,48 +75,14 @@ namespace Aurora.Settings.Layers
             _keyboardColors = new Color[22 * 6];
             _mousepadColors = new Color[16];
 
-            _instance = ++_instances;
-            Global.logger.Debug("RazerLayerHandler instance count: {0}", _instances);
-            if (_instances > 0 && _manager == null)
+            if (Global.razerManager != null)
             {
-                if (!RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
-                {
-                    Global.logger.Warn("Currently installed razer sdk version \"{0}\" is not supported!", RzHelper.GetSdkVersion());
-                    return;
-                }
+                Global.razerManager.DataUpdated += OnDataUpdated;
 
-                try
-                {
-                    _manager = new RzManager()
-                    {
-                        KeyboardEnabled = true,
-                        MouseEnabled = true,
-                        MousepadEnabled = true,
-                        AppListEnabled = true,
-                    };
-
-                    Global.logger.Info("RzManager loaded successfully!");
-                }
-                catch (Exception e)
-                {
-                    Global.logger.Fatal("RzManager failed to load!");
-                    Global.logger.Fatal(e.ToString());
-                }
-            }
-
-            if (_manager != null)
-            {
-                _manager.DataUpdated += OnDataUpdated;
-
-                var appList = _manager.GetDataProvider<RzAppListDataProvider>();
+                var appList = Global.razerManager.GetDataProvider<RzAppListDataProvider>();
                 appList.Update();
                 _currentAppExecutable = appList.CurrentAppExecutable;
                 _currentAppPid = appList.CurrentAppPid;
-
-                if (_instance == 1)
-                    Global.logger.Debug("RazerLayerHandler current app: {0} [{1}]", _currentAppExecutable, _currentAppPid);
-
-                Loaded = true;
             }
         }
 
@@ -160,9 +119,6 @@ namespace Aurora.Settings.Layers
             {
                 _currentAppExecutable = appList.CurrentAppExecutable;
                 _currentAppPid = appList.CurrentAppPid;
-
-                if (_instance == 1)
-                    Global.logger.Debug("RazerLayerHandler current app: {0} [{1}]", _currentAppExecutable, _currentAppPid);
             }
         }
 
@@ -233,7 +189,7 @@ namespace Aurora.Settings.Layers
         }
 
         private bool IsCurrentAppValid() 
-            => !string.IsNullOrEmpty(_currentAppExecutable) 
+            => !string.IsNullOrEmpty(_currentAppExecutable)
             && string.Compare(_currentAppExecutable, "Aurora.exe", true) != 0;
 
         private Color PostProcessColor(Color color)
@@ -253,29 +209,7 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            _instances--;
-            Global.logger.Debug("RazerLayerHandler instance count: {0}", _instances);
-            if (_manager != null)
-            {
-                _manager.DataUpdated -= OnDataUpdated;
-                if (_instances == 0)
-                {
-                    try
-                    {
-                        _manager.Dispose();
-                    }
-                    catch (Exception e)
-                    {
-                        Global.logger.Fatal("RzManager failed to dispose!");
-                        Global.logger.Fatal(e.ToString());
-                    }
-                    _manager = null;
-                }
-            }
-
-            if (_instances < 0)
-                _instances = 0;
-
+            Global.razerManager.DataUpdated -= OnDataUpdated;
             base.Dispose();
         }
     }

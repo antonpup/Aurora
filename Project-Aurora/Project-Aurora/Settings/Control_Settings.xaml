@@ -263,6 +263,37 @@
 
                 </Grid>
             </TabItem>
+            <TabItem Header="Razer Wrapper">
+                <Grid>
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Supported Version:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                        <Label Grid.Row="0" Grid.Column="1" Content="3.5.6" Padding="0" Margin="5 0 5 0" VerticalAlignment="Center"/>
+                        <Button x:Name="razer_wrapper_install_button" Grid.Row="0" Grid.Column="2" Content="Install" Width="120" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="razer_wrapper_install_button_Click"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                        <Label x:Name="razer_wrapper_installed_version_label" Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                        <Label x:Name="razer_wrapper_enabled_label" Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Connection:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                        <Label x:Name="razer_wrapper_connection_status_label" Grid.Row="2" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Current Application:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                        <Label x:Name="razer_wrapper_current_application_label" Grid.Row="3" Grid.Column="2" Width="300" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
             <TabItem Header="Device Manager">
                 <Grid>
                     <Controls:Control_DeviceManager Margin="10"/>

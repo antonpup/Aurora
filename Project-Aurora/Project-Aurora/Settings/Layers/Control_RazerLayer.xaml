@@ -20,56 +20,11 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="280"/>
             <ColumnDefinition Width="380"/>
+            <ColumnDefinition Width="280"/>
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0" Margin="5 0 5 5">
-            <GroupBox Width="270" Header="SDK" Margin="0 5 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="40"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Label Grid.Row="0" Grid.Column="0" Content="Supported Version:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
-                    <Label Grid.Row="0" Grid.Column="1" Content="3.5.6" Padding="0" Margin="5 5 5 5" VerticalAlignment="Center"/>
-                    <Button x:Name="SdkInstallButton" Grid.Row="0" Grid.Column="2" Content="Install" Margin="5 5 5 5" VerticalAlignment="Center" HorizontalAlignment="Stretch" Click="OnSdkInstallButtonClick"/>
-
-                    <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
-                    <Label x:Name="SdkInstalledVersionValueLabel" Grid.Row="1" Grid.Column="1" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
-                    <Label x:Name="SdkEnabledValueLabel" Grid.Row="1" Grid.Column="2" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
-                    <Label Grid.Row="2" Grid.Column="0" Content="Connection:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
-                    <Label x:Name="SdkConnectionStatusLabel" Grid.Row="2" Grid.Column="2" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
-                    <Label Grid.Row="3" Grid.Column="0" Content="Debug Dump:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
-                    <ToggleButton x:Name="SdkDumpToggleButton" Grid.Row="3" Grid.Column="2" Margin="5 5 5 5" VerticalAlignment="Center" HorizontalAlignment="Stretch" Content="Start" 
-                                  Checked="OnSdkDumpToggleButtonChecked" Unchecked="OnSdkDumpToggleButtonUnchecked" ToolTipService.InitialShowDelay="25">
-                        <ToggleButton.ToolTip>
-                            <ToolTip>
-                                <TextBlock>
-                                    This will capture raw data returned from razer sdk for 5 seconds.
-                                    <LineBreak />
-                                    The files will be created in Aurora logs folder.
-                                    <LineBreak /> 
-                                    <LineBreak /> 
-                                    Should be used only when requested by the developers!
-                                </TextBlock>
-                            </ToolTip>
-                        </ToggleButton.ToolTip>
-                    </ToggleButton>
-                </Grid>
-            </GroupBox>
-        </StackPanel>
-        <StackPanel Grid.Column="1" Margin="5 0 5 5">
             <GroupBox Width="370" Margin="0 5 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <GroupBox.Header>
                     <CheckBox x:Name="ColorPostProcessCheckBox" Content="Enable Color Post Process" Margin="2 0 2 0" HorizontalAlignment="Left" VerticalAlignment="Top" 
@@ -174,6 +129,37 @@
                         <Button x:Name="DeleteKeyCloneButton" Grid.Column="3" Grid.Row="2" Margin="0 10 0 0" VerticalAlignment="Top" Height="20" Content="X" Foreground="PaleVioletRed" Click="OnDeleteKeyCloneButtonClick"/>
                     </Grid>
                 </StackPanel>
+            </GroupBox>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="5 0 5 5">
+            <GroupBox Width="270" Header="SDK" Margin="0 5 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Debug Dump:" Margin="5 5 5 5" Padding="0" VerticalAlignment="Center"/>
+                    <ToggleButton x:Name="SdkDumpToggleButton" Grid.Row="3" Grid.Column="2" Margin="5 5 5 5" VerticalAlignment="Center" HorizontalAlignment="Stretch" Content="Start" 
+                                  Checked="OnSdkDumpToggleButtonChecked" Unchecked="OnSdkDumpToggleButtonUnchecked" ToolTipService.InitialShowDelay="25">
+                        <ToggleButton.ToolTip>
+                            <ToolTip>
+                                <TextBlock>
+                                    This will capture raw data returned from razer sdk for 5 seconds.
+                                    <LineBreak />
+                                    The files will be created in Aurora logs folder.
+                                    <LineBreak /> 
+                                    <LineBreak /> 
+                                    Should be used only when requested by the developers!
+                                </TextBlock>
+                            </ToolTip>
+                        </ToggleButton.ToolTip>
+                    </ToggleButton>
+                </Grid>
             </GroupBox>
         </StackPanel>
     </Grid>
