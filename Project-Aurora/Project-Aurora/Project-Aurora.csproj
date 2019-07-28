@@ -70,6 +70,7 @@
     <DocumentationFile>
     </DocumentationFile>
     <WarningLevel>3</WarningLevel>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
