@@ -67,6 +67,8 @@ namespace Aurora.Settings.Layers
         private static RzManager _manager;
         private static int _instances;
 
+        private int _instance;
+
         private Color[] _keyboardColors;
         private Color[] _mousepadColors;
         private Color _mouseColor;
@@ -80,7 +82,7 @@ namespace Aurora.Settings.Layers
             _keyboardColors = new Color[22 * 6];
             _mousepadColors = new Color[16];
 
-            _instances++;
+            _instance = ++_instances;
             Global.logger.Debug("RazerLayerHandler instance count: {0}", _instances);
             if (_instances > 0 && _manager == null)
             {
@@ -117,6 +119,9 @@ namespace Aurora.Settings.Layers
                 appList.Update();
                 _currentAppExecutable = appList.CurrentAppExecutable;
                 _currentAppPid = appList.CurrentAppPid;
+
+                if (_instance == 1)
+                    Global.logger.Debug("RazerLayerHandler current app: {0} [{1}]", _currentAppExecutable, _currentAppPid);
 
                 Loaded = true;
             }
@@ -155,6 +160,9 @@ namespace Aurora.Settings.Layers
             {
                 _currentAppExecutable = appList.CurrentAppExecutable;
                 _currentAppPid = appList.CurrentAppPid;
+
+                if (_instance == 1)
+                    Global.logger.Debug("RazerLayerHandler current app: {0} [{1}]", _currentAppExecutable, _currentAppPid);
             }
         }
 
@@ -171,12 +179,14 @@ namespace Aurora.Settings.Layers
             foreach (var file in Directory.EnumerateFiles(path, "*.bin", SearchOption.TopDirectoryOnly))
                 File.Delete(file);
 
+            Global.logger.Info("RazerLayerHandler started dumping data");
             _isDumping = true;
             return true;
         }
 
         public void StopDumpingData()
         {
+            Global.logger.Info("RazerLayerHandler stopped dumping data");
             _isDumping = false;
         }
 
@@ -194,15 +204,13 @@ namespace Aurora.Settings.Layers
         {
             var layer = new EffectLayer();
 
-            if (string.IsNullOrEmpty(_currentAppExecutable) || string.Compare(_currentAppExecutable, "Aurora.exe", true) == 0)
-            {
+            if (!IsCurrentAppValid())
                 return layer;
-            }
 
             foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
             {
                 Color color;
-                if( RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
+                if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
                     color = _keyboardColors[position[1] + position[0] * 22];
                 else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
                     color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
@@ -217,12 +225,16 @@ namespace Aurora.Settings.Layers
                 layer.Set(key, color);
 
                 if (Properties.KeyCloneMap != null)
-                    foreach(var target in Properties.KeyCloneMap.Where(x => x.Value == key).Select(x => x.Key))
+                    foreach (var target in Properties.KeyCloneMap.Where(x => x.Value == key).Select(x => x.Key))
                         layer.Set(target, color);
             }
 
             return layer;
         }
+
+        private bool IsCurrentAppValid() 
+            => !string.IsNullOrEmpty(_currentAppExecutable) 
+            && string.Compare(_currentAppExecutable, "Aurora.exe", true) != 0;
 
         private Color PostProcessColor(Color color)
         {
