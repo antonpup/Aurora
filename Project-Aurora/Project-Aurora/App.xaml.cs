@@ -58,7 +58,7 @@ namespace Aurora
             }
         }
 
-        public static string ConfigDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Config");
+        public static string AppDataDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora");
 
         /// <summary>
         /// Output logger for errors, warnings, and information
@@ -253,7 +253,6 @@ namespace Aurora
 
                 //Load config
                 Global.logger.Info("Loading Configuration");
-                new AuroraConfigManager(Global.ConfigDirectory, new Dictionary<string, object>());
                 try
                 {
                     Global.Configuration = ConfigManager.Load();

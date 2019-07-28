@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 
 namespace Aurora.Utils
@@ -442,11 +444,16 @@ namespace Aurora.Utils
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            
+            var t = reader.Value.ToString().Replace(" ", "").Split('[')[1];
+            var h = t.Substring(0, t.Length - 1).Split(',').Select(f =>
+            {
+                var k = f.Split('=');
+                return new KeyValuePair<string, string>(k[0], k[1]);
+            }).ToDictionary(f => f.Key, f => f.Value);
+            return Color.FromArgb(Convert.ToInt32(h["A"]), Convert.ToInt32(h["R"]), Convert.ToInt32(h["G"]), Convert.ToInt32(h["B"]));
         }
-
-        public override bool CanRead => false;
-
+        
         public override bool CanConvert(Type objectType) => objectType == typeof(RealColor);
     }
 }

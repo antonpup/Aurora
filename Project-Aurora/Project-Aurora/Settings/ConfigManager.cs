@@ -49,6 +49,21 @@ namespace Aurora.Settings
             return bindable;
         }
 
+        public BindableBindableDictionary Set(T lookup, BindableBindableDictionary dictionary)
+        {
+            dictionary = getDefault(lookup, dictionary);
+            if (GetOriginalBindableBindableDictionary(lookup) == null)
+            {
+                AddBindableBindableDictionary(lookup, dictionary);
+            }
+            else
+            {
+                ConfigStore.Remove(lookup);
+                AddBindableBindableDictionary(lookup, dictionary);
+            }
+            return dictionary;
+        }
+
         public BindableFloat Set(T lookup, float value, float? min = null, float? max = null, float? precision = null)
         {
             value = getDefault(lookup, value);
@@ -147,6 +162,14 @@ namespace Aurora.Settings
             return bindable;
         }
 
+        protected virtual void AddBindableBindableDictionary(T lookup, BindableBindableDictionary dictionary)
+        {
+            if(lookup == null) throw new ArgumentNullException($"Lookup of type {lookup.GetType()} can not be of null");
+            ConfigStore[lookup] = dictionary;
+            dictionary.ItemsAdded += _ => backgroundSave();
+            dictionary.ItemsRemoved += _ => backgroundSave();
+        }
+
         protected virtual void AddBindable<TBindable>(T lookup, Bindable<TBindable> bindable)
         {
             if(lookup == null) throw new ArgumentNullException($"Lookup of type {lookup.GetType()} can not be of null");
@@ -171,6 +194,8 @@ namespace Aurora.Settings
 
         public U Get<U>(T lookup) => GetOriginalBindable<U>(lookup).Value;
 
+        public RealColor GetColor(T lookup) => ((BindableColor) GetOriginalBindable<string>(lookup)).Value;
+
         protected Bindable<U> GetOriginalBindable<U>(T lookup)
         {
             if (ConfigStore.TryGetValue(lookup, out IBindable obj))
@@ -184,7 +209,22 @@ namespace Aurora.Settings
             return null;
         }
 
+        protected BindableBindableDictionary GetOriginalBindableBindableDictionary(T lookup)
+        {
+            if (ConfigStore.TryGetValue(lookup, out IBindable obj))
+            {
+                if (!(obj is BindableBindableDictionary))
+                    throw new InvalidCastException($"Cannot convert bindable of type {obj.GetType()} retrieved from {nameof(ConfigManager<T>)} to {typeof(BindableBindableDictionary)}.");
+
+                return (BindableBindableDictionary)obj;
+            }
+
+            return null;
+        }
+
         public Bindable<U> GetBindable<U>(T lookup) => GetOriginalBindable<U>(lookup)?.GetBoundCopy();
+
+        public BindableBindableDictionary GetBindableBindableDictionary(T lookup) => GetOriginalBindableBindableDictionary(lookup)?.GetBoundCopy();
 
         public void BindWith<U>(T lookup, Bindable<U> bindable) => bindable.BindTo(GetOriginalBindable<U>(lookup));
 

@@ -1,12 +1,28 @@
-﻿using Aurora.Profiles;
-using CSScriptLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Threading;
+
+using Aurora.Devices.Asus;
+using Aurora.Devices.Clevo;
+using Aurora.Devices.CoolerMaster;
+using Aurora.Devices.Corsair;
+using Aurora.Devices.Creative;
+using Aurora.Devices.Drevo;
+using Aurora.Devices.Dualshock;
+using Aurora.Devices.Hue;
+using Aurora.Devices.LightFX;
+using Aurora.Devices.Logitech;
+using Aurora.Devices.Razer;
+using Aurora.Devices.Roccat;
+using Aurora.Devices.SteelSeries;
+using Aurora.Devices.UnifiedHID;
+using Aurora.Devices.Wooting;
+
+using CSScriptLibrary;
+
 using Microsoft.Win32;
 
 namespace Aurora.Devices
@@ -18,12 +34,12 @@ namespace Aurora.Devices
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
 
-        private Tuple<DeviceColorComposition, bool> currentComp = null;
-        private bool newFrame = false;
+        private Tuple<DeviceColorComposition, bool> currentComp;
+        private bool newFrame;
 
         public DeviceContainer(Device device)
         {
-            this.Device = device;
+            Device = device;
             Worker.DoWork += WorkerOnDoWork;
             Worker.RunWorkerCompleted += (sender, args) =>
             {
@@ -51,8 +67,7 @@ namespace Aurora.Devices
             {
                 if (Worker.IsBusy)
                     return;
-                else
-                    Worker.RunWorkerAsync();
+                Worker.RunWorkerAsync();
             }
             /*lock (Worker)
             {
@@ -75,15 +90,15 @@ namespace Aurora.Devices
 
         public DeviceContainer[] Devices { get { return devices.ToArray(); } }
 
-        private bool anyInitialized = false;
-        private bool retryActivated = false;
+        private bool anyInitialized;
+        private bool retryActivated;
         private const int retryInterval = 10000;
         private const int retryAttemps = 5;
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
-        private bool suspended = false;
+        private bool suspended;
 
-        private bool _InitializeOnceAllowed = false;
+        private bool _InitializeOnceAllowed;
 
         public int RetryAttempts
         {
@@ -96,22 +111,23 @@ namespace Aurora.Devices
 
         public DeviceManager()
         {
-            devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
-            devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
-            devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
-            devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
-            devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
-            devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
-            devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
-            devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
-            devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
-            devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
-            devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
-            devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
-            devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
-            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
-            devices.Add(new DeviceContainer(new Devices.Asus.AsusDevice()));               // Asus Device
-            string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
+            devices.Add(new DeviceContainer(new LogitechDevice()));                  // Logitech Device
+            devices.Add(new DeviceContainer(new CorsairDevice()));                   // Corsair Device
+            devices.Add(new DeviceContainer(new RazerDevice()));                     // Razer Device
+            devices.Add(new DeviceContainer(new RoccatDevice()));                    // Roccat Device
+            devices.Add(new DeviceContainer(new ClevoDevice()));                     // Clevo Device
+            devices.Add(new DeviceContainer(new CoolerMasterDevice()));              // CoolerMaster Device
+            devices.Add(new DeviceContainer(new AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
+            devices.Add(new DeviceContainer(new SteelSeriesDevice()));               // SteelSeries Device
+            devices.Add(new DeviceContainer(new UnifiedHIDDevice()));                // UnifiedHID Device
+            devices.Add(new DeviceContainer(new WootingDevice()));                   // Wooting Device
+            devices.Add(new DeviceContainer(new SoundBlasterXDevice()));             // SoundBlasterX Device
+            devices.Add(new DeviceContainer(new LightFxDevice()));                   // Alienware
+            devices.Add(new DeviceContainer(new DualshockDevice()));                 // DualShock 4 Device
+            devices.Add(new DeviceContainer(new DrevoDevice()));                     // Drevo Device
+            devices.Add(new DeviceContainer(new AsusDevice()));                      // Asus Device
+            devices.Add(new DeviceContainer(new HueDevice()));                       // Philips Hue
+            string devices_scripts_path = Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
             {
@@ -129,7 +145,7 @@ namespace Aurora.Devices
                                 {
                                     dynamic script = Global.PythonEngine.Operations.CreateInstance(main_type);
 
-                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+                                    Device scripted_device = new ScriptedDevice.ScriptedDevice(script);
 
                                     devices.Add(new DeviceContainer(scripted_device));
                                 }
@@ -138,12 +154,12 @@ namespace Aurora.Devices
 
                                 break;
                             case ".cs":
-                                System.Reflection.Assembly script_assembly = CSScript.LoadFile(device_script);
+                                Assembly script_assembly = CSScript.LoadFile(device_script);
                                 foreach (Type typ in script_assembly.ExportedTypes)
                                 {
                                     dynamic script = Activator.CreateInstance(typ);
 
-                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+                                    Device scripted_device = new ScriptedDevice.ScriptedDevice(script);
 
                                     devices.Add(new DeviceContainer(scripted_device));
                                 }
@@ -164,7 +180,7 @@ namespace Aurora.Devices
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         }
-        bool resumed = false;
+        bool resumed;
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             Global.logger.Info($"SessionSwitch triggered with {e.Reason}");
@@ -173,7 +189,7 @@ namespace Aurora.Devices
                 Global.logger.Info("Resuming Devices -- Session Switch Session Unlock");
                 suspended = false;
                 resumed = false;
-                this.Initialize(true);
+                Initialize(true);
             }
         }
 
@@ -184,14 +200,14 @@ namespace Aurora.Devices
                 case PowerModes.Suspend:
                     Global.logger.Info("Suspending Devices");
                     suspended = true;
-                    this.Shutdown();
+                    Shutdown();
                     break;
                 case PowerModes.Resume:
                     Global.logger.Info("Resuming Devices -- PowerModes.Resume");
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     resumed = true;
                     suspended = false;
-                    this.Initialize();
+                    Initialize();
                     break;
             }
         }
@@ -229,14 +245,13 @@ namespace Aurora.Devices
                 NewDevicesInitialized?.Invoke(this, new EventArgs());
             }
 
-            if (devicesToRetryNo > 0 && (retryThread == null || forceRetry || retryThread?.ThreadState == System.Threading.ThreadState.Stopped))
+            if (devicesToRetryNo > 0 && (retryThread == null || forceRetry || retryThread?.ThreadState == ThreadState.Stopped))
             {
                 retryActivated = true;
                 if (forceRetry)
                     retryThread?.Abort();
                 retryThread = new Thread(RetryInitialize);
                 retryThread.Start();
-                return;
             }
         }
 
@@ -363,7 +378,7 @@ namespace Aurora.Devices
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool disposedValue; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {

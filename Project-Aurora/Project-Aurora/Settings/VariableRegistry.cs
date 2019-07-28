@@ -120,6 +120,7 @@ namespace Aurora.Settings
             Remark = variableRegistryItem.Remark;
             Min = variableRegistryItem.Min;
             Max = variableRegistryItem.Max;
+            Bindable = variableRegistryItem.Bindable;
             var typ = Value.GetType();
             var defaultType = variableRegistryItem.Default.GetType();
 
@@ -130,6 +131,59 @@ namespace Aurora.Settings
             else if (Value == null && !defaultType.Equals(typ))
                 Value = variableRegistryItem.Default;
             Flags = variableRegistryItem.Flags;
+            if (Bindable != null)
+                switch (Bindable)
+                {
+                    case BindableBool b:
+                        Value = b.Value;
+                        b.ValueChanged += _ => ValueChanged();
+                        break;
+                    case BindableDouble b:
+                        Value = b.Value;
+                        b.ValueChanged += _ => ValueChanged();
+                        break;
+                    case BindableFloat b:
+                        Value = b.Value;
+                        b.ValueChanged += _ => ValueChanged();
+                        break;
+                    case BindableInt b:
+                        Value = b.Value;
+                        b.ValueChanged += _ => ValueChanged();
+                        break;
+                    case BindableLong b:
+                        Value = b.Value;
+                        b.ValueChanged += _ => ValueChanged();
+                        break;
+                    case BindableColor b:
+                        Value = b.Value;
+                        b.ValueChanged += _ => ValueChanged();
+                        break;
+                }
+        }
+
+        internal void ValueChanged()
+        {
+            switch (Bindable)
+            {
+                case BindableBool b:
+                    Value = b.Value;
+                    break;
+                case BindableDouble b:
+                    Value = b.Value;
+                    break;
+                case BindableFloat b:
+                    Value = b.Value;
+                    break;
+                case BindableInt b:
+                    Value = b.Value;
+                    break;
+                case BindableLong b:
+                    Value = b.Value;
+                    break;
+                case BindableColor b:
+                    Value = b.Value;
+                    break;
+            }
         }
     }
 
@@ -189,6 +243,8 @@ namespace Aurora.Settings
         {
             if (!_variables.ContainsKey(name))
                 _variables.Add(name, new VariableRegistryItem(bindable, title, remark, flags));
+            else
+                _variables[name].Bindable = bindable;
         }
 
         public void Register(string name, VariableRegistryItem varItem)
@@ -212,7 +268,11 @@ namespace Aurora.Settings
 
         public void ResetVariable(string name)
         {
-            if (_variables.ContainsKey(name)) _variables[name].Value = _variables[name].Default;
+            if (_variables.ContainsKey(name))
+            {
+                _variables[name].Value = _variables[name].Default;
+                _variables[name].Bindable.SetDefault();
+            }
         }
 
         public T GetVariable<T>(string name)

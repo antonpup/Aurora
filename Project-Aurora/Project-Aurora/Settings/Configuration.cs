@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.Overlays;
 using Aurora.Profiles.Overlays.SkypeOverlay;

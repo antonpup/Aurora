@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,8 @@ namespace Aurora.Settings.Bindables
         IBindable GetBoundCopy();
 
         void Parse(object input);
+
+        void SetDefault();
     }
 
     public interface IBindable<T> : IBindable
@@ -29,6 +32,17 @@ namespace Aurora.Settings.Bindables
         void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool runOnceImmediatly = false);
 
         new IBindable<T> GetBoundCopy();
+    }
+
+    public interface IBindableDictionary<TKey, TValue> : IBindable, IDictionary<TKey, TValue>
+    {
+        event Action<IEnumerable<KeyValuePair<TKey, TValue>>> ItemsAdded;
+
+        event Action<IEnumerable<KeyValuePair<TKey, TValue>>> ItemsRemoved;
+
+        void BindTo(IBindableDictionary<TKey, TValue> them);
+
+        new IBindableDictionary<TKey, TValue> GetBoundCopy();
     }
 
     public struct ValueChangedEvent<T>

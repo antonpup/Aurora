@@ -17,12 +17,18 @@ namespace Aurora.Settings
     public class JsonConfigManager : ConfigManager<string>
     {
         private string path;
-        protected virtual string Filename => @"main.json";
+
+        private string filename = "main.json";
+        protected virtual string Filename => filename;
 
         public JsonConfigManager(string path, IDictionary<string, object> defaultOverrides) : base(defaultOverrides)
         {
-            //Filename = "";
-            this.path = path;
+            if (path.Contains(".json"))
+            {
+                filename = new FileInfo(path).Name;
+                this.path = path.Replace(filename, "");
+            }
+            else this.path = path;
             InitialiseDefaults();
             Load();
         }
@@ -38,7 +44,26 @@ namespace Aurora.Settings
                 {
                     if (ConfigStore.TryGetValue(jToken.Key, out IBindable b))
                     {
-                        b.Parse(jToken.Value.ToString());
+                        switch (b)
+                        {
+                            case BindableBindableDictionary d:
+                                if (jToken.Value.HasValues)
+                                {
+                                    foreach (var jTokenInner in jToken.Value.ToObject<JObject>())
+                                    {
+                                        if (d.TryGetValue(jTokenInner.Key, out IBindable bd))
+                                        {
+                                            bd.Parse(jTokenInner.Value.ToString());
+                                        }
+                                        else if (AddMissingEntries)
+                                            Set(jToken.Key, jToken.Value.ToString());
+                                    }
+                                }
+                                break;
+                            default:
+                                b.Parse(jToken.Value.ToString());
+                                break;
+                        }
                     }
                     else if (AddMissingEntries)
                         Set(jToken.Key, jToken.Value.ToString());
@@ -54,7 +79,7 @@ namespace Aurora.Settings
             {
                 using (var w = new StreamWriter(Path.Combine(path, Filename)))
                 {
-                    w.Write(JsonConvert.SerializeObject(ConfigStore));
+                    w.Write(JsonConvert.SerializeObject(ConfigStore, Formatting.Indented));
                 }
             }
             catch

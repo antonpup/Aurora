@@ -151,8 +151,8 @@
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.5\lib\net45\NLog.dll</HintPath>
@@ -162,6 +162,12 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Q42.HueApi, Version=3.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Q42.HueApi.3.10.1\lib\net45\Q42.HueApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Q42.HueApi.ColorConverters, Version=3.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Q42.HueApi.ColorConverters.3.10.1\lib\net45\Q42.HueApi.ColorConverters.dll</HintPath>
+    </Reference>
     <Reference Include="RGB.NET.Brushes, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Brushes.0.1.23\lib\net45\RGB.NET.Brushes.dll</HintPath>
     </Reference>
@@ -240,7 +246,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Management" />
-    <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Reflection.Metadata, Version=1.4.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reflection.Metadata.1.5.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
@@ -414,6 +424,7 @@
     <Compile Include="Devices\Dualshock4\DS4InstallInstructions.xaml.cs">
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Hue\HueDevice.cs" />
     <Compile Include="Devices\LightFX\LightFX.cs" />
     <Compile Include="Devices\LightFX\LightFXSDK.cs" />
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
@@ -634,9 +645,11 @@
     </Compile>
     <Compile Include="Settings\AuroraConfigManager.cs" />
     <Compile Include="Settings\Bindables\Bindable.cs" />
+    <Compile Include="Settings\Bindables\BindableBindableDictionary.cs" />
+    <Compile Include="Settings\Bindables\BindableDictionary.cs" />
     <Compile Include="Settings\Bindables\BindableNumber.cs" />
     <Compile Include="Settings\Bindables\ExtraBindables.cs" />
-    <Compile Include="Settings\Bindables\IBindable.cs" />
+    <Compile Include="Settings\Bindables\InterfacesBindable.cs" />
     <Compile Include="Settings\Bindables\LockedWeakList.cs" />
     <Compile Include="Settings\ConfigManager.cs" />
     <Compile Include="Settings\JsonConfigManager.cs" />

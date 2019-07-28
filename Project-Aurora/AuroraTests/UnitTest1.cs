@@ -9,36 +9,34 @@ namespace AuroraTests
     [TestClass]
     public class BindableTest
     {
-        Bindable<string> bindable1;
-        Bindable<string> bindable2;
+        BindableBindableDictionary bindable1;
 
         [TestInitialize]
         public void TestInit()
         {
-            bindable1 = new Bindable<string>();
-            bindable2 = bindable1.GetBoundCopy();
+            bindable1 = new BindableBindableDictionary();
         }
 
         [TestMethod]
-        public void BindableSame()
+        public void TestUpdateEvent()
         {
-            Assert.AreEqual(bindable1.Value, bindable2.Value);
-
-            bindable1.Value = "test";
-
-            Assert.AreEqual(bindable1.Value, bindable2.Value);
-
-            bindable2.Value = "test2";
-
-            Assert.AreEqual(bindable1.Value, bindable2.Value);
-        }
-
-        [TestMethod]
-        public void BindableNotSame()
-        {
-            bindable1.UnbindBindings();
-            bindable1.Value = "test3";
-            Assert.AreNotEqual(bindable1.Value, bindable2.Value);
+            bindable1.ItemsAdded += pairs =>
+            {
+                foreach (var pair in pairs)
+                {
+                    Assert.IsTrue(pair.Value == bindable1[pair.Key]);
+                }
+            };
+            bindable1.ItemsRemoved += pairs =>
+            {
+                foreach (var pair in pairs)
+                {
+                    Assert.IsFalse(bindable1.ContainsKey(pair.Key));
+                }
+            };
+            bindable1.Add("test", new BindableBool());
+            ((BindableBool) bindable1["test"]).Value = true;
+            bindable1.Remove("test");
         }
     }
 }
