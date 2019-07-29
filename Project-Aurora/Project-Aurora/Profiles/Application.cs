@@ -16,6 +16,8 @@ using System.Windows.Media.Imaging;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+
 using Aurora.Settings;
 
 namespace Aurora.Profiles
@@ -321,7 +323,9 @@ namespace Aurora.Profiles
                             }
 
                             lyr.AnythingChanged += this.SaveProfilesEvent;
-                            lyr.SetProfile(this);
+                            Task.Run(() => { 
+                                lyr.SetProfile(this);
+                            });
                         }
 
                         prof.Layers.CollectionChanged += (s, e) =>
@@ -593,7 +597,6 @@ namespace Aurora.Profiles
 
             if (Profile == null)
                 CreateDefaultProfile();
-
         }
 
         public virtual void SaveProfile()
