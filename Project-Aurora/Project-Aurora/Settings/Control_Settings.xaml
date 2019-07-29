@@ -327,7 +327,7 @@
                                     <Button x:Name="devices_view_first_time_steelseries" Content="View First-time instructions for SteelSeries" Margin="0,1,0,1" VerticalAlignment="Top" Click="devices_view_first_time_steelseries_Click" HorizontalAlignment="Left"/>
                                 </StackPanel>
                             </TabItem>
-                            <TabItem Header="Roccat">
+                            <TabItem Header="DualShock">
                                 <StackPanel Orientation="Vertical" Margin="5">
                                     <Button x:Name="devices_view_first_time_dualshock" Content="View First-time instructions for DS4" Margin="0,1,0,1" VerticalAlignment="Top" Click="devices_view_first_time_dualshock_Click" HorizontalAlignment="Left"/>
                                 </StackPanel>
