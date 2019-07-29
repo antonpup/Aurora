@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -230,7 +230,10 @@ namespace Aurora.Settings
                 KeyText.Add(key.tag, key.visualName);
 
                 if (key.width + key.margin_left > _region.Width)
-                    _region.Width += (float)(key.width + key.margin_left - location_x);
+                {
+                    _region.Width -= (float) (key.margin_left - location_x);
+                    _region.Width += (float) (key.width + key.margin_left - location_x);
+                }
                 else if (key.margin_left + added_width < 0)
                 {
                     added_width = -(float)(key.margin_left);
@@ -238,7 +241,10 @@ namespace Aurora.Settings
                 }
 
                 if (key.height + key.margin_top > _region.Height)
-                    _region.Height += (float)(key.height + key.margin_top - location_y);
+                {
+                    _region.Height -= (float) (key.margin_top - location_y);
+                    _region.Height += (float) (key.height + key.margin_top - location_y);
+                }
                 else if (key.margin_top + added_height < 0)
                 {
                     added_height = -(float)(key.margin_top);
