@@ -35,6 +35,8 @@ namespace Aurora.Devices.Hue
 
         private BridgeConfig conf;
 
+        private List<Light> lights;
+
         public VariableRegistry GetRegisteredVariables()
         {
             VariableRegistry registry = new VariableRegistry();
@@ -52,7 +54,7 @@ namespace Aurora.Devices.Hue
 
         public string GetDeviceDetails()
         {
-            return $"{GetDeviceName()} {(initialized ? "Connected to:" + conf.Name : "Connecting to:" + (bridge != null ? bridge.BridgeId : ""))} {(initialized ? ", controlling: " + client.GetLightsAsync().Result.Count() + " lights" : "")}";
+            return $"{GetDeviceName()} {(initialized ? "Connected to:" + conf.Name : "Connecting to:" + (bridge != null ? bridge.BridgeId : ""))} {(initialized ? ", controlling: " + lights.Count + " lights" : "")}";
         }
 
         public string GetDeviceUpdatePerformance()
@@ -128,9 +130,9 @@ namespace Aurora.Devices.Hue
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (!initialized) return false;
+            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(100)) return false;
             var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
-            var lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
+            lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             var lightIds = lights.Select(t => t.Id);
             var brightness = config.Get<int>("brightness");
             var command = new LightCommand();
@@ -139,14 +141,12 @@ namespace Aurora.Devices.Hue
                 command.On = true;
             }
             command.SetColor(keyColors.Single(t => t.Key == DeviceKeys.Peripheral_Logo).Value.GetHueDeviceColor());
-            var isColorBlack = command.IsColorBlack();
             if (brightness == 0) command.TurnOff();
             else
             {
-                if (isColorBlack && DateTime.Now - lastCall >= TimeSpan.FromSeconds(config.Get<int>("default_delay")) || config.Get<bool>("force_default"))
+                if (command.IsColorBlack() && DateTime.Now - lastCall >= TimeSpan.FromSeconds(config.Get<int>("default_delay")) || config.Get<bool>("force_default"))
                 {
                     command.SetColor(defaultColor);
-                    isColorBlack = false;
                     lastFrameDefault = true;
                 }
                 command.Brightness = (byte) (command.Brightness / (double) byte.MaxValue * (brightness / (double) byte.MaxValue) * byte.MaxValue);
@@ -159,7 +159,6 @@ namespace Aurora.Devices.Hue
                     }
                 }
             }
-            if (DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(100) || isColorBlack) return true;
             client.SendCommandAsync(command, lightIds).GetAwaiter().GetResult();
             lastCall = DateTime.Now;
             lastFrame = command;
