@@ -162,7 +162,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Script", "Script Layer", typeof(ScriptLayerHandler)),
                 new LayerHandlerEntry("Percent", "Percent Effect Layer", typeof(PercentLayerHandler)),
                 new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
-                new LayerHandlerEntry("Razer", "Razer SDK Wrapper Layer", typeof(RazerLayerHandler)),
+                new LayerHandlerEntry("Razer", "Razer Chroma Layer", typeof(RazerLayerHandler)),
                 new LayerHandlerEntry("Conditional", "Conditional Layer", typeof(ConditionalLayerHandler)),
                 new LayerHandlerEntry("Comparison", "Comparison Layer", typeof(ComparisonLayerHandler)),
                 new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
