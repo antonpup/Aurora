@@ -704,12 +704,7 @@ namespace Aurora.Settings {
             try {
                 // Attempt to read and deserialise the profile
                 string json = File.ReadAllText(filepath, Encoding.UTF8);
-                ApplicationProfile inProf = (ApplicationProfile)JsonConvert.DeserializeObject(json, typeof(ApplicationProfile), new JsonSerializerSettings
-                {
-                    ObjectCreationHandling = ObjectCreationHandling.Replace,
-                    TypeNameHandling = TypeNameHandling.All,
-                    Binder = Utils.JSONUtils.SerializationBinder
-                });
+                ApplicationProfile inProf = (ApplicationProfile)JsonConvert.DeserializeObject(json, typeof(ApplicationProfile), Global.SerializerSettings);
 
                 // Create a new profile on the current application (so that profiles can be imported from different applications)
                 ApplicationProfile newProf = app.AddNewProfile(inProf.ProfileName);

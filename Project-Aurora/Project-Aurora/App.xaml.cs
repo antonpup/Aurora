@@ -27,6 +27,9 @@ using NLog;
 using System.Reflection;
 using System.Text;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace Aurora
 {
     /// <summary>
@@ -36,6 +39,17 @@ namespace Aurora
     {
         public static string ScriptDirectory = "Scripts";
         public static ScriptEngine PythonEngine = Python.CreateEngine();
+
+        public static JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        {
+            ObjectCreationHandling = ObjectCreationHandling.Replace,
+            SerializationBinder = Utils.JSONUtils.SerializationBinder,
+            TypeNameHandling = TypeNameHandling.All,
+            Converters = new List<JsonConverter>
+            {
+                new StringEnumConverter()
+            }
+        };
 
         /// <summary>
         /// A boolean indicating if Aurora was started with Debug parameter

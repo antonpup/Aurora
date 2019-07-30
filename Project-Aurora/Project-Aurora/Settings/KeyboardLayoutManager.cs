@@ -735,7 +735,7 @@ namespace Aurora.Settings
             if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
             {
                 string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
-                VirtualGroupConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualGroupConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                VirtualGroupConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualGroupConfiguration>(content, Global.SerializerSettings);
 
                 virtualKeyboardGroup.AdjustKeys(layoutConfig.key_modifications);
                 virtualKeyboardGroup.RemoveKeys(layoutConfig.keys_to_remove);
@@ -756,7 +756,7 @@ namespace Aurora.Settings
                     if (File.Exists(feature_path))
                     {
                         string feature_content = File.ReadAllText(feature_path, Encoding.UTF8);
-                        VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                        VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, Global.SerializerSettings);
 
                         virtualKeyboardGroup.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
                         if (feature_config.KeyConversion != null)
@@ -836,7 +836,7 @@ namespace Aurora.Settings
                 if (!string.IsNullOrWhiteSpace(mouse_feature_path))
                 {
                     string feature_content = File.ReadAllText(mouse_feature_path, Encoding.UTF8);
-                    VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                    VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, Global.SerializerSettings);
 
                     if (mouse_orientation == MouseOrientationType.LeftHanded)
                     {
@@ -1291,7 +1291,7 @@ namespace Aurora.Settings
                 LoadDefault();
 
             string content = File.ReadAllText(layoutPath, Encoding.UTF8);
-            KeyboardLayout keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+            KeyboardLayout keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(content, Global.SerializerSettings);
 
             virtualKeyboardGroup = new VirtualGroup(keyboard.Keys);
 

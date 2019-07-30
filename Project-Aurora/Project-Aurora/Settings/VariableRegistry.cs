@@ -355,13 +355,9 @@ namespace Aurora.Settings
 
         public object Clone()
         {
-            var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.All, Binder = JSONUtils.SerializationBinder});
+            var str = JsonConvert.SerializeObject(this, Formatting.None, Global.SerializerSettings);
 
-            return JsonConvert.DeserializeObject(
-                str,
-                GetType(),
-                new JsonSerializerSettings {ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = JSONUtils.SerializationBinder}
-            );
+            return JsonConvert.DeserializeObject(str,GetType(),Global.SerializerSettings);
         }
     }
 }

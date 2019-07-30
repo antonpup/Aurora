@@ -27,7 +27,7 @@ namespace Aurora.Settings
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented }));
+            File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, Global.SerializerSettings));
         }
 
         protected void LoadSettings()
@@ -41,7 +41,7 @@ namespace Aurora.Settings
             {
                 try
                 {
-                    Settings = (T)JsonConvert.DeserializeObject(File.ReadAllText(SettingsSavePath), settingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+                    Settings = (T)JsonConvert.DeserializeObject(File.ReadAllText(SettingsSavePath), settingsType, Global.SerializerSettings);
                 }
                 catch (Exception exc)
                 {
