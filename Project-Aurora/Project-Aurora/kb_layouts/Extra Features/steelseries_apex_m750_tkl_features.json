@@ -1,22 +1,38 @@
 {
   "group_tag": "keyboard",
-  "origin_region": 2,
+  "origin_region": "TopRight",
   "grouped_keys": [
     {
       "visualName": "LOGO",
-      "tag": 128,
+      "tag": "LOGO",
+      "line_break": null,
       "margin_left": -105.0,
       "margin_top": 115.0,
       "width": 105.0,
       "height": 15.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -12,
-      "margin_top_bits": 0,
-      "image": "SteelSeries_Apex_logo.png",
       "enabled": false,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": "SteelSeries_Apex_logo.png"
     }
-  ]
+  ],
+  "KeyText": {},
+  "key_conversion": null,
+  "Region": {
+    "Location": {
+      "IsEmpty": true,
+      "X": 0.0,
+      "Y": 0.0
+    },
+    "Size": "0, 0",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0,
+    "Left": 0.0,
+    "Top": 0.0,
+    "Right": 0.0,
+    "Bottom": 0.0,
+    "IsEmpty": true
+  }
 }

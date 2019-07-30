@@ -1,110 +1,129 @@
 {
   "group_tag": "keyboard",
-  "origin_region": 2,
+  "origin_region": "TopRight",
   "grouped_keys": [
     {
       "visualName": "Mute",
-      "tag": 139,
+      "tag": "VOLUME_MUTE",
+      "line_break": null,
       "margin_left": -141.0,
       "margin_top": 0.0,
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -12,
-      "margin_top_bits": 0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "PLAY",
-      "tag": 133,
+      "tag": "MEDIA_PLAY_PAUSE",
+      "line_break": null,
       "margin_left": -104.0,
       "margin_top": 0.0,
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -9,
-      "margin_top_bits": 0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "PREV",
-      "tag": 137,
+      "tag": "MEDIA_PREVIOUS",
+      "line_break": null,
       "margin_left": -67.0,
       "margin_top": 0.0,
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -6,
-      "margin_top_bits": 0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "NEXT",
-      "tag": 138,
+      "tag": "MEDIA_NEXT",
+      "line_break": null,
       "margin_left": -30.0,
       "margin_top": 0.0,
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -3,
-      "margin_top_bits": 0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "",
-      "tag": 184,
+      "tag": "ADDITIONALLIGHT23",
+      "line_break": null,
       "margin_left": 5.0,
       "margin_top": 30.0,
       "width": 10.0,
       "height": 47.5,
       "font_size": 12.0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "",
-      "tag": 185,
+      "tag": "ADDITIONALLIGHT24",
+      "line_break": null,
       "margin_left": 5.0,
       "margin_top": 77.5,
       "width": 10.0,
       "height": 47.5,
       "font_size": 12.0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "",
-      "tag": 186,
+      "tag": "ADDITIONALLIGHT25",
+      "line_break": null,
       "margin_left": 5.0,
-      "margin_top": 125,
+      "margin_top": 125.0,
       "width": 10.0,
       "height": 47.5,
       "font_size": 12.0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "",
-      "tag": 187,
+      "tag": "ADDITIONALLIGHT26",
+      "line_break": null,
       "margin_left": 5.0,
       "margin_top": 172.5,
       "width": 10.0,
       "height": 47.5,
       "font_size": 12.0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     }
-  ]
+  ],
+  "KeyText": {},
+  "key_conversion": null,
+  "Region": {
+    "Location": {
+      "IsEmpty": true,
+      "X": 0.0,
+      "Y": 0.0
+    },
+    "Size": "0, 0",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0,
+    "Left": 0.0,
+    "Top": 0.0,
+    "Right": 0.0,
+    "Bottom": 0.0,
+    "IsEmpty": true
+  }
 }

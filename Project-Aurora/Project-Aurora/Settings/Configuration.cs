@@ -197,8 +197,8 @@ namespace Aurora.Settings
         [Description("Corsair - K68")]
         Corsair_K68 = 205,
         [Description("Corsair - K70 MK2")]
-        Corsair_K70MK2 = 206
-            ,
+        Corsair_K70MK2 = 206,
+
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
         Razer_Blackwidow = 300,
@@ -297,8 +297,6 @@ namespace Aurora.Settings
 
         [Description("Generic Peripheral")]
         Generic_Peripheral = 1,
-        [Description("Razer/Corsair Mousepad + Mouse")]
-        Generic_Mousepad = 2,
 
         //Logitech range is 100-199
         [Description("Logitech - G900")]
@@ -313,8 +311,12 @@ namespace Aurora.Settings
         Corsair_M65 = 201,
         [Description("Corsair - Katar")]
         Corsair_Katar = 202,
+        [Description("Corsair - MM800 + Mouse")]
+        Corsair_MM800 = 203,
 
         //Razer range is 300-399
+        [Description("Razer - Mousepad + Mouse")]
+        Razer_Mousepad = 300,
 
         //Clevo range is 400-499
         [Description("Clevo - Touchpad")]
@@ -333,6 +335,8 @@ namespace Aurora.Settings
         SteelSeries_QcK_Prism = 702,
         [Description("SteelSeries - Two-zone QcK Mousepad + Mouse")]
         SteelSeries_QcK_2_Zone = 703,
+        [Description("SteelSeries - Rival 600")]
+        SteelSeries_Rival_600 = 704,
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900

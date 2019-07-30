@@ -1034,9 +1034,6 @@
     <None Include="kb_layouts\Extra Features\corsair_k70_mk2_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\Extra Features\drevo_blademaster_left_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="kb_layouts\Extra Features\generic_laptop_numpad_left_bottom_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1046,7 +1043,13 @@
     <None Include="kb_layouts\Extra Features\generic_laptop_numpad_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="kb_layouts\Extra Features\generic_mousepad.json">
+    <None Include="kb_layouts\Extra Features\corsair_mousepad.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\razer_mousepad.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\steelseries_rival_600_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\wooting_two_features.json">

@@ -1,174 +1,152 @@
 {
   "keys_to_remove": [
-    14,
-    15,
-    16,
-    31,
-    32,
-    33,
-    52,
-    53,
-    54,
-    89,
-    102,
-    103,
-    104
+    "PRINT_SCREEN",
+    "SCROLL_LOCK",
+    "PAUSE_BREAK",
+    "INSERT",
+    "HOME",
+    "PAGE_UP",
+    "DELETE",
+    "END",
+    "PAGE_DOWN",
+    "ARROW_UP",
+    "ARROW_LEFT",
+    "ARROW_DOWN",
+    "ARROW_RIGHT"
   ],
-  "key_conversion": {
-    14: 35,
-    15: 36,
-    16: 37,
-
-
-    31: 55,
-    32: 56,
-    33: 57,
-
-    52: 73,
-    53: 74,
-    54: 75,
-
-    89: 91,
-    102: 105,
-    103: 169,
-    104: 106
-  },
   "key_modifications": {
-    "13": {
+    "F12": {
       "visualName": null,
-      "tag": 13,
+      "tag": "F12",
       "line_break": true,
       "margin_left": null,
       "margin_top": null,
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     },
-    "37": {
+    "NUM_MINUS": {
       "visualName": null,
-      "tag": 37,
+      "tag": "NUM_MINUS",
       "line_break": true,
       "margin_left": null,
       "margin_top": null,
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     },
-    "58": {
+    "NUM_PLUS": {
       "visualName": null,
-      "tag": 58,
+      "tag": "NUM_PLUS",
       "line_break": true,
       "margin_left": null,
       "margin_top": null,
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     },
-    "73": {
+    "NUM_FOUR": {
       "visualName": null,
-      "tag": 73,
+      "tag": "NUM_FOUR",
       "line_break": null,
-      "margin_left": 15,
+      "margin_left": 15.0,
       "margin_top": null,
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 1,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     },
-    "75": {
+    "NUM_SIX": {
       "visualName": null,
-      "tag": 75,
+      "tag": "NUM_SIX",
       "line_break": true,
       "margin_left": null,
       "margin_top": null,
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     },
-    "90": {
+    "NUM_ONE": {
       "visualName": null,
-      "tag": 90,
+      "tag": "NUM_ONE",
       "line_break": null,
-      "margin_left": 15,
+      "margin_left": 15.0,
       "margin_top": null,
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 1,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     },
-    "93": {
+    "NUM_ENTER": {
       "visualName": null,
-      "tag": 93,
+      "tag": "NUM_ENTER",
       "line_break": true,
       "margin_left": null,
       "margin_top": null,
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     },
-    "105": {
+    "NUM_ZERO": {
       "visualName": null,
-      "tag": 105,
+      "tag": "NUM_ZERO",
       "line_break": null,
       "margin_left": null,
       "margin_top": null,
       "width": 30.0,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     },
-    "106": {
+    "NUM_PERIOD": {
       "visualName": null,
-      "tag": 106,
+      "tag": "NUM_PERIOD",
       "line_break": null,
       "margin_left": 44.0,
       "margin_top": null,
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "enabled": null,
+      "absolute_location": false,
+      "image": ""
     }
+  },
+  "key_conversion": {
+    "PRINT_SCREEN": "NUM_SLASH",
+    "SCROLL_LOCK": "NUM_ASTERISK",
+    "PAUSE_BREAK": "NUM_MINUS",
+    "INSERT": "NUM_SEVEN",
+    "HOME": "NUM_EIGHT",
+    "PAGE_UP": "NUM_NINE",
+    "DELETE": "NUM_FOUR",
+    "END": "NUM_FIVE",
+    "PAGE_DOWN": "NUM_SIX",
+    "ARROW_UP": "NUM_TWO",
+    "ARROW_LEFT": "NUM_ZERO",
+    "ARROW_DOWN": "OEM6",
+    "ARROW_RIGHT": "NUM_PERIOD"
   },
   "included_features": [
     "masterkeys_pro_m_features.json"

@@ -1,34 +1,51 @@
 {
   "group_tag": "mouse",
-  "origin_region": 4,
+  "origin_region": "BottomRight",
   "grouped_keys": [
     {
-        "tag": -1,
-        "margin_left": 20.0,
-        "margin_top": -90.0,
-        "width": 90.0,
-        "height": 90.0,
-        "width_bits": 6,
-        "height_bits": 6,
-        "margin_left_bits": 2,
-        "margin_top_bits": -6,
-        "enabled": true,
-        "absolute_location": true
+      "visualName": null,
+      "tag": "NONE",
+      "line_break": null,
+      "margin_left": 20.0,
+      "margin_top": -90.0,
+      "width": 90.0,
+      "height": 90.0,
+      "font_size": null,
+      "enabled": true,
+      "absolute_location": true,
+      "image": ""
     },
     {
-        "visualName": "Mouse/\r\nHeadset",
-        "tag": 0,
-        "font_size": 12,
-        "margin_left": 20.0,
-        "margin_top": -90.0,
-        "width": 90.0,
-        "height": 90.0,
-        "width_bits": 6,
-        "height_bits": 6,
-        "margin_left_bits": 2,
-        "margin_top_bits": -6,
-        "enabled": true,
-        "absolute_location": true
+      "visualName": "Mouse/\r\nHeadset",
+      "tag": "Peripheral",
+      "line_break": null,
+      "margin_left": 20.0,
+      "margin_top": -90.0,
+      "width": 90.0,
+      "height": 90.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true,
+      "image": ""
     }
-  ]
+  ],
+  "KeyText": {},
+  "key_conversion": null,
+  "Region": {
+    "Location": {
+      "IsEmpty": true,
+      "X": 0.0,
+      "Y": 0.0
+    },
+    "Size": "0, 0",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0,
+    "Left": 0.0,
+    "Top": 0.0,
+    "Right": 0.0,
+    "Bottom": 0.0,
+    "IsEmpty": true
+  }
 }

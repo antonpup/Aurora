@@ -193,77 +193,77 @@ namespace Aurora.Devices.Razer
                     {
                         SendColorToPeripheral(key.Value, forced);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT1)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT28)
                     {
                       
                         SendColorToMousepad(14,key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT2)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT29)
                     {
 
                         SendColorToMousepad(13, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT3)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT30)
                     {
 
                         SendColorToMousepad(12, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT4)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT31)
                     {
 
                         SendColorToMousepad(11, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT5)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT32)
                     {
 
                         SendColorToMousepad(10, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT6)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT33)
                     {
 
                         SendColorToMousepad(9, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT7)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT34)
                     {
 
                         SendColorToMousepad(8, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT8)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT35)
                     {
 
                         SendColorToMousepad(7, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT9)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT36)
                     {
 
                         SendColorToMousepad(6, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT10)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT37)
                     {
 
                         SendColorToMousepad(5, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT11)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT38)
                     {
 
                         SendColorToMousepad(4, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT12)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT39)
                     {
 
                         SendColorToMousepad(3, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT13)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT40)
                     {
 
                         SendColorToMousepad(2, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT14)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT41)
                     {
 
                         SendColorToMousepad(1, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT15)
+                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT42)
                     {
 
                         SendColorToMousepad(0, key.Value);

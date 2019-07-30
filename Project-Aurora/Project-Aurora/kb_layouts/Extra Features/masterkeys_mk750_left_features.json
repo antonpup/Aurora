@@ -1,50 +1,77 @@
 {
   "group_tag": "keyboard",
-  "origin_region": 1,
+  "origin_region": "TopLeft",
   "grouped_keys": [
     {
       "visualName": "",
-      "tag": 142,
+      "tag": "ADDITIONALLIGHT1",
+      "line_break": null,
       "margin_left": -15.0,
       "margin_top": 30.0,
       "width": 10.0,
       "height": 47.5,
       "font_size": 12.0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "",
-      "tag": 143,
+      "tag": "ADDITIONALLIGHT2",
+      "line_break": null,
       "margin_left": -15.0,
       "margin_top": 77.5,
       "width": 10.0,
       "height": 47.5,
       "font_size": 12.0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "",
-      "tag": 144,
+      "tag": "ADDITIONALLIGHT3",
+      "line_break": null,
       "margin_left": -15.0,
-      "margin_top": 125,
+      "margin_top": 125.0,
       "width": 10.0,
       "height": 47.5,
       "font_size": 12.0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "",
-      "tag": 145,
+      "tag": "ADDITIONALLIGHT4",
+      "line_break": null,
       "margin_left": -15.0,
       "margin_top": 172.5,
       "width": 10.0,
       "height": 47.5,
       "font_size": 12.0,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     }
-  ]
+  ],
+  "KeyText": {},
+  "key_conversion": null,
+  "Region": {
+    "Location": {
+      "IsEmpty": true,
+      "X": 0.0,
+      "Y": 0.0
+    },
+    "Size": "0, 0",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0,
+    "Left": 0.0,
+    "Top": 0.0,
+    "Right": 0.0,
+    "Bottom": 0.0,
+    "IsEmpty": true
+  }
 }

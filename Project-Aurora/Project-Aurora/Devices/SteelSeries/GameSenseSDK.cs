@@ -134,6 +134,42 @@ namespace SteelSeries.GameSenseSDK
             }
         }
 
+        public void setMouseEightZone(IEnumerable<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
+        {
+            payload.data += "\"mouse8\":{";
+            payload.data += "\"colors\":[";
+            foreach (Tuple<byte, byte, byte> color in colors)
+            {
+                payload.data += "[" + color.Item1 + ", " + color.Item2 + ", " + color.Item3 + "],";
+            }
+            payload.data = payload.data.TrimEnd(',');
+            payload.data += "]},";
+        }
+
+        public void setTwentyFourZone(IEnumerable<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
+        {
+            payload.data += "\"rgb24zone\":{";
+            payload.data += "\"colors\":[";
+            foreach (var (item1, item2, item3) in colors)
+            {
+                payload.data += "[" + item1 + ", " + item2 + ", " + item3 + "],";
+            }
+            payload.data = payload.data.TrimEnd(',');
+            payload.data += "]},";
+        }
+
+        public void setHundredThreeZone(IEnumerable<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
+        {
+            payload.data += "\"rgb103zone\":{";
+            payload.data += "\"colors\":[";
+            foreach (var (item1, item2, item3) in colors)
+            {
+                payload.data += "[" + item1 + ", " + item2 + ", " + item3 + "],";
+            }
+            payload.data = payload.data.TrimEnd(',');
+            payload.data += "]},";
+        }
+
         public void setKeyboardColors(List<byte> hids, List<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
         {
             payload.data += "\"keyboard\":{";
@@ -208,6 +244,17 @@ namespace SteelSeries.GameSenseSDK
             (let* ((mousepad (mousepad: data))
                     (colors (colors: mousepad)))
                 (on-device ""rgb-12-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve:))))
+            (let* ((mouse8 (mouse8: data))
+                    (colors (colors: mouse8)))
+                (on-device ""rgb-8-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight:))))
+        (when (rgb24zone:? data)
+            (let* ((rgb24zone (rgb24zone: data))
+                    (colors (colors: rgb24zone)))
+                (on-device ""rgb-24-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve: thirteen: fourteen: fifteen: sixteen: seventeen: eighteen: nineteen: twenty: twenty-one: twenty-two: twenty-three: twenty-four:))))
+        (when (rgb103zone:? data)
+            (let* ((rgb103zone (rgb103zone: data))
+                    (colors (colors: rgb103zone)))
+                (on-device ""rgb-103-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve: thirteen: fourteen: fifteen: sixteen: seventeen: eighteen: nineteen: twenty: twenty-one: twenty-two: twenty-three: twenty-four: twenty-five: twenty-six: twenty-seven: twenty-eight: twenty-nine: thirty: thirty-one: thirty-two: thirty-three: thirty-four: thirty-five: thirty-six: thirty-seven: thirty-eight: thirty-nine: forty: forty-one: forty-two: forty-three: forty-four: forty-five: forty-six: forty-seven: forty-eight: forty-nine: fifty: fifty-one: fifty-two: fifty-three: fifty-four: fifty-five: fifty-six: fifty-seven: fifty-eight: fifty-nine: sixty: sixty-one: sixty-two: sixty-three: sixty-four: sixty-five: sixty-six: sixty-seven: sixty-eight: sixty-nine: seventy: seventy-one: seventy-two: seventy-three: seventy-four: seventy-five: seventy-six: seventy-seven: seventy-eight: seventy-nine: eighty: eighty-one: eighty-two: eighty-three: eighty-four: eighty-five: eighty-six: eighty-seven: eighty-eight: eighty-nine: ninety: ninety-one: ninety-two: ninety-three: ninety-four: ninety-five: ninety-six: ninety-seven: ninety-eight: ninety-nine: one-hundred: one-hundred-one: one-hundred-two: one-hundred-three:))))
         (when (mousepadtwozone:? data)
             (let* ((mousepadtwozone (mousepadtwozone: data))
                     (mpone (mpone: mousepadtwozone))
@@ -237,7 +284,10 @@ namespace SteelSeries.GameSenseSDK
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-3-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-4-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-5-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-8-zone"")
 (add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-12-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-24-zone"")
+(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-103-zone"")
 (add-event-per-key-zone-use ""COLOR"" ""all"")
 ";
             json = JsonConvert.SerializeObject(payload);

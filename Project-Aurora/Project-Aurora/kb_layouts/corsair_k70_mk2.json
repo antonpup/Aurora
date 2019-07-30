@@ -1,7 +1,8 @@
 {
   "keys_to_remove": [],
   "key_modifications": {},
-    "included_features": [
-        "corsair_k70_mk2_features.json"
-    ]
+  "key_conversion": null,
+  "included_features": [
+    "corsair_k70_mk2_features.json"
+  ]
 }

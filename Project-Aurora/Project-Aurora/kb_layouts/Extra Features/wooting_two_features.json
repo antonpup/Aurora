@@ -1,66 +1,77 @@
 {
   "group_tag": "keyboard",
-  "origin_region": 2,
+  "origin_region": "TopRight",
   "grouped_keys": [
     {
       "visualName": "A1",
-      "tag": 163,
+      "tag": "Profile_Key1",
+      "line_break": null,
       "margin_left": -141.0,
       "margin_top": 0.0,
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -12,
-      "margin_top_bits": 4,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "A2",
-      "tag": 164,
+      "tag": "Profile_Key2",
+      "line_break": null,
       "margin_left": -104.0,
       "margin_top": 0.0,
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -9,
-      "margin_top_bits": 4,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "A3",
-      "tag": 165,
+      "tag": "Profile_Key3",
+      "line_break": null,
       "margin_left": -67.0,
       "margin_top": 0.0,
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -6,
-      "margin_top_bits": 4,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     },
     {
       "visualName": "MODE",
-      "tag": 166,
+      "tag": "Profile_Key4",
+      "line_break": null,
       "margin_left": -30.0,
       "margin_top": 0.0,
       "width": 30.0,
       "height": 30.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -3,
-      "margin_top_bits": 4,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": ""
     }
-  ]
+  ],
+  "KeyText": {},
+  "key_conversion": null,
+  "Region": {
+    "Location": {
+      "IsEmpty": true,
+      "X": 0.0,
+      "Y": 0.0
+    },
+    "Size": "0, 0",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0,
+    "Left": 0.0,
+    "Top": 0.0,
+    "Right": 0.0,
+    "Bottom": 0.0,
+    "IsEmpty": true
+  }
 }

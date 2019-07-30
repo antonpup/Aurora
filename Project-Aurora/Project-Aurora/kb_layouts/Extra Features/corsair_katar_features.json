@@ -1,35 +1,51 @@
 {
   "group_tag": "mouse",
-  "origin_region": 4,
+  "origin_region": "BottomRight",
   "grouped_keys": [
-  {
-      "tag": -1,
+    {
+      "visualName": null,
+      "tag": "NONE",
+      "line_break": null,
       "margin_left": 10.0,
       "margin_top": -232.0,
       "width": 153.0,
       "height": 232.0,
-      "margin_left_bits": 1,
-      "margin_top_bits": -19,
-      "width_bits": 13,
-      "height_bits": 19,
-      "image": "Corsair_Katar_outline.png",
+      "font_size": null,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": "Corsair_Katar_outline.png"
     },
     {
       "visualName": "Logo",
-      "tag": 160,
+      "tag": "Peripheral_Logo",
+      "line_break": null,
       "margin_left": 68.0,
       "margin_top": -45.0,
       "width": 35.0,
       "height": 22.0,
-      "width_bits": 3,
-      "height_bits": 2,
-      "margin_left_bits": 6,
-      "margin_top_bits": -4,
-      "image": "Corsair_Katar_logo.png",
+      "font_size": null,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "image": "Corsair_Katar_logo.png"
     }
-  ]
+  ],
+  "KeyText": {},
+  "key_conversion": null,
+  "Region": {
+    "Location": {
+      "IsEmpty": true,
+      "X": 0.0,
+      "Y": 0.0
+    },
+    "Size": "0, 0",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0,
+    "Left": 0.0,
+    "Top": 0.0,
+    "Right": 0.0,
+    "Bottom": 0.0,
+    "IsEmpty": true
+  }
 }

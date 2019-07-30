@@ -48,7 +48,8 @@ namespace Aurora
             Converters = new List<JsonConverter>
             {
                 new StringEnumConverter()
-            }
+            },
+            Formatting = Formatting.Indented
         };
 
         /// <summary>

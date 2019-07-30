@@ -1,0 +1,129 @@
+{
+    "group_tag": "mouse",
+    "origin_region": "BottomRight",
+    "grouped_keys": [
+        {
+            "visualName": "S\r\nW",
+            "tag": "Peripheral_ScrollWheel",
+            "line_break": null,
+            "margin_left": 73.0,
+            "margin_top": -189.0,
+            "width": 16.0,
+            "height": 31.0,
+            "font_size": null,
+            "enabled": true,
+            "absolute_location": true,
+            "image": ""
+        },
+        {
+            "visualName": "Logo",
+            "tag": "Peripheral_Logo",
+            "line_break": null,
+            "margin_left": 61.0,
+            "margin_top": -55.0,
+            "width": 40.0,
+            "height": 40.0,
+            "font_size": null,
+            "enabled": true,
+            "absolute_location": true,
+            "image": ""
+        },
+        {
+            "visualName": "",
+            "tag": "ADDITIONALLIGHT27",
+            "line_break": null,
+            "margin_left": 55.0,
+            "margin_top": -160.0,
+            "width": 16.0,
+            "height": 30.0,
+            "font_size": null,
+            "enabled": true,
+            "absolute_location": true,
+            "image": ""
+        },
+        {
+            "visualName": "",
+            "tag": "ADDITIONALLIGHT28",
+            "line_break": null,
+            "margin_left": 89.0,
+            "margin_top": -160.0,
+            "width": 16.0,
+            "height": 30.0,
+            "font_size": null,
+            "enabled": true,
+            "absolute_location": true,
+            "image": ""
+        },
+        {
+            "visualName": "",
+            "tag": "ADDITIONALLIGHT29",
+            "line_break": null,
+            "margin_left": 55.0,
+            "margin_top": -130.0,
+            "width": 16.0,
+            "height": 30.0,
+            "font_size": null,
+            "enabled": true,
+            "absolute_location": true,
+            "image": ""
+        },
+        {
+            "visualName": "",
+            "tag": "ADDITIONALLIGHT30",
+            "line_break": null,
+            "margin_left": 89.0,
+            "margin_top": -130.0,
+            "width": 16.0,
+            "height": 30.0,
+            "font_size": null,
+            "enabled": true,
+            "absolute_location": true,
+            "image": ""
+        },
+        {
+            "visualName": "",
+            "tag": "ADDITIONALLIGHT31",
+            "line_break": null,
+            "margin_left": 40.0,
+            "margin_top": -100.0,
+            "width": 16.0,
+            "height": 30.0,
+            "font_size": null,
+            "enabled": true,
+            "absolute_location": true,
+            "image": ""
+        },
+        {
+            "visualName": "",
+            "tag": "ADDITIONALLIGHT32",
+            "line_break": null,
+            "margin_left": 105.0,
+            "margin_top": -100.0,
+            "width": 16.0,
+            "height": 30.0,
+            "font_size": null,
+            "enabled": true,
+            "absolute_location": true,
+            "image": ""
+        }
+    ],
+    "KeyText": {},
+    "key_conversion": null,
+    "Region": {
+        "Location": {
+            "IsEmpty": true,
+            "X": 0.0,
+            "Y": 0.0
+        },
+        "Size": "0, 0",
+        "X": 0.0,
+        "Y": 0.0,
+        "Width": 0.0,
+        "Height": 0.0,
+        "Left": 0.0,
+        "Top": 0.0,
+        "Right": 0.0,
+        "Bottom": 0.0,
+        "IsEmpty": true
+    }
+}

@@ -795,8 +795,11 @@ namespace Aurora.Settings
                     case PreferredMouse.Generic_Peripheral:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
                         break;
-                    case PreferredMouse.Generic_Mousepad:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
+                    case PreferredMouse.Razer_Mousepad:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "razer_mousepad.json");
+                        break;
+                    case PreferredMouse.Corsair_MM800:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_mousepad.json");
                         break;
                     case PreferredMouse.Logitech_G900:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
@@ -827,6 +830,9 @@ namespace Aurora.Settings
                         break;
                     case PreferredMouse.SteelSeries_QcK_2_Zone:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_2zone_features.json");
+                        break;
+                    case PreferredMouse.SteelSeries_Rival_600:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_600_features.json");
                         break;
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
@@ -1273,7 +1279,7 @@ namespace Aurora.Settings
             return new_virtual_keyboard;
         }
 
-        private class KeyboardLayout
+        public class KeyboardLayout
         {
             [JsonProperty("key_conversion")]
             public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;

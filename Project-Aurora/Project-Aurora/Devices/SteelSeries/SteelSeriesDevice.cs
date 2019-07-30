@@ -157,6 +157,7 @@ namespace Aurora.Devices.SteelSeries
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
                 List<Tuple<byte, byte, byte>> colorsMousepad = new List<Tuple<byte, byte, byte>>();
+                Tuple<byte, byte, byte>[] eightZone = new Tuple<byte, byte, byte>[8];
                 //Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
 
                 // Create a new color event, we'll pass this on to whatever should add to it
@@ -187,6 +188,7 @@ namespace Aurora.Devices.SteelSeries
                         case DeviceKeys.Peripheral_FrontLight:
                         case DeviceKeys.Peripheral_ScrollWheel:
                             SendColorToPeripheralZone(key.Key, color, payload);
+                            eightZone[key.Key == DeviceKeys.Peripheral_ScrollWheel ? 0 : 1] = Tuple.Create<byte, byte, byte>(color.R, color.G, color.B);
                             break;
                         case DeviceKeys.MOUSEPADLIGHT1:
                         case DeviceKeys.MOUSEPADLIGHT2:
@@ -200,8 +202,15 @@ namespace Aurora.Devices.SteelSeries
                         case DeviceKeys.MOUSEPADLIGHT10:
                         case DeviceKeys.MOUSEPADLIGHT11:
                         case DeviceKeys.MOUSEPADLIGHT12:
-                            // colors_mousepad[Convert.ToInt32(key.Key) - 201] = Tuple.Create(color.R, color.G, color.B);
                             colorsMousepad.Add(Tuple.Create(color.R, color.G, color.B));
+                            break;
+                        case DeviceKeys.ADDITIONALLIGHT27:
+                        case DeviceKeys.ADDITIONALLIGHT28:
+                        case DeviceKeys.ADDITIONALLIGHT29:
+                        case DeviceKeys.ADDITIONALLIGHT30:
+                        case DeviceKeys.ADDITIONALLIGHT31:
+                        case DeviceKeys.ADDITIONALLIGHT32:
+                            eightZone[(int)key.Key - 186] = Tuple.Create<byte, byte, byte>(color.R, color.G, color.B);
                             break;
                         default:
                             byte hid = GetHIDCode(key.Key);
@@ -220,6 +229,7 @@ namespace Aurora.Devices.SteelSeries
                 SendColorsToKeyboard(hids, colors, payload);
                 SendColorsToMousepad(colorsMousepad, payload);
 
+                gameSenseSDK.setMouseEightZone(eightZone, payload);
                 gameSenseSDK.sendFullColorRequest(payload);
 
                 return true;

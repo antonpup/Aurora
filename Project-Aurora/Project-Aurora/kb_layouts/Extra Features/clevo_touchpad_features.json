@@ -1,22 +1,38 @@
 {
   "group_tag": "mouse",
-  "origin_region": 3,
+  "origin_region": "BottomLeft",
   "grouped_keys": [
-      {
-        "visualName": "TOUCHPAD",
-        "tag": 0,
-        "line_break": false,
-        "margin_left": 149.0,
-        "margin_top": 0.0,
-        "width": 208.0,
-        "height": 30.0,
-        "font_size": 12.0,
-        "width_bits": 17,
-        "height_bits": 3,
-        "margin_left_bits": 12,
-        "margin_top_bits": 0,
-        "enabled": true,
-        "absolute_location": true
-      }
-  ]
+    {
+      "visualName": "TOUCHPAD",
+      "tag": "Peripheral",
+      "line_break": false,
+      "margin_left": 149.0,
+      "margin_top": 0.0,
+      "width": 208.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true,
+      "image": ""
+    }
+  ],
+  "KeyText": {},
+  "key_conversion": null,
+  "Region": {
+    "Location": {
+      "IsEmpty": true,
+      "X": 0.0,
+      "Y": 0.0
+    },
+    "Size": "0, 0",
+    "X": 0.0,
+    "Y": 0.0,
+    "Width": 0.0,
+    "Height": 0.0,
+    "Left": 0.0,
+    "Top": 0.0,
+    "Right": 0.0,
+    "Bottom": 0.0,
+    "IsEmpty": true
+  }
 }
