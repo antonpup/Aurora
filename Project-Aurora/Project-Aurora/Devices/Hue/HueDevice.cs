@@ -130,16 +130,12 @@ namespace Aurora.Devices.Hue
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(100)) return false;
+            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(105)) return false;
             var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             var lightIds = lights.Select(t => t.Id);
             var brightness = config.Get<int>("brightness");
             var command = new LightCommand();
-            if (lights.Any(t => !t.State.On))
-            {
-                command.On = true;
-            }
             command.SetColor(keyColors.Single(t => t.Key == DeviceKeys.Peripheral_Logo).Value.GetHueDeviceColor());
             if (brightness == 0) command.TurnOff();
             else
@@ -150,12 +146,17 @@ namespace Aurora.Devices.Hue
                     lastFrameDefault = true;
                 }
                 command.Brightness = (byte) (command.Brightness / (double) byte.MaxValue * (brightness / (double) byte.MaxValue) * byte.MaxValue);
-                if (command.Brightness == 0)
+                if (command.Brightness == 0 && !lastFrameDefault)
                 {
-                    if (lastFrame.Brightness == 1) command.TurnOff();
-                    else if (!lastFrameDefault)
+                    command.Hue = lastFrame.Hue;
+                    command.Saturation = lastFrame.Saturation;
+                    command.TurnOff();
+                }
+                else
+                {
+                    if (lights.Any(t => !t.State.On))
                     {
-                        command.Brightness = 1;
+                        command.On = true;
                     }
                 }
             }
