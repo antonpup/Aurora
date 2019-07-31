@@ -157,6 +157,7 @@ namespace Aurora.Devices.SteelSeries
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
                 List<Tuple<byte, byte, byte>> colorsMousepad = new List<Tuple<byte, byte, byte>>();
+                List<Tuple<byte, byte, byte>> colorsMsi = new List<Tuple<byte, byte, byte>>();
                 Tuple<byte, byte, byte>[] eightZone = new Tuple<byte, byte, byte>[8];
                 //Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
 
@@ -212,6 +213,111 @@ namespace Aurora.Devices.SteelSeries
                         case DeviceKeys.ADDITIONALLIGHT32:
                             eightZone[(int)key.Key - 186] = Tuple.Create<byte, byte, byte>(color.R, color.G, color.B);
                             break;
+                        case DeviceKeys.MONITORLIGHT1:
+                        case DeviceKeys.MONITORLIGHT2:
+                        case DeviceKeys.MONITORLIGHT3:
+                        case DeviceKeys.MONITORLIGHT4:
+                        case DeviceKeys.MONITORLIGHT5:
+                        case DeviceKeys.MONITORLIGHT6:
+                        case DeviceKeys.MONITORLIGHT7:
+                        case DeviceKeys.MONITORLIGHT8:
+                        case DeviceKeys.MONITORLIGHT9:
+                        case DeviceKeys.MONITORLIGHT10:
+                        case DeviceKeys.MONITORLIGHT11:
+                        case DeviceKeys.MONITORLIGHT12:
+                        case DeviceKeys.MONITORLIGHT13:
+                        case DeviceKeys.MONITORLIGHT14:
+                        case DeviceKeys.MONITORLIGHT15:
+                        case DeviceKeys.MONITORLIGHT16:
+                        case DeviceKeys.MONITORLIGHT17:
+                        case DeviceKeys.MONITORLIGHT18:
+                        case DeviceKeys.MONITORLIGHT19:
+                        case DeviceKeys.MONITORLIGHT20:
+                        case DeviceKeys.MONITORLIGHT21:
+                        case DeviceKeys.MONITORLIGHT22:
+                        case DeviceKeys.MONITORLIGHT23:
+                        case DeviceKeys.MONITORLIGHT24:
+                        case DeviceKeys.MONITORLIGHT25:
+                        case DeviceKeys.MONITORLIGHT26:
+                        case DeviceKeys.MONITORLIGHT27:
+                        case DeviceKeys.MONITORLIGHT28:
+                        case DeviceKeys.MONITORLIGHT29:
+                        case DeviceKeys.MONITORLIGHT30:
+                        case DeviceKeys.MONITORLIGHT31:
+                        case DeviceKeys.MONITORLIGHT32:
+                        case DeviceKeys.MONITORLIGHT33:
+                        case DeviceKeys.MONITORLIGHT34:
+                        case DeviceKeys.MONITORLIGHT35:
+                        case DeviceKeys.MONITORLIGHT36:
+                        case DeviceKeys.MONITORLIGHT37:
+                        case DeviceKeys.MONITORLIGHT38:
+                        case DeviceKeys.MONITORLIGHT39:
+                        case DeviceKeys.MONITORLIGHT40:
+                        case DeviceKeys.MONITORLIGHT41:
+                        case DeviceKeys.MONITORLIGHT42:
+                        case DeviceKeys.MONITORLIGHT43:
+                        case DeviceKeys.MONITORLIGHT44:
+                        case DeviceKeys.MONITORLIGHT45:
+                        case DeviceKeys.MONITORLIGHT46:
+                        case DeviceKeys.MONITORLIGHT47:
+                        case DeviceKeys.MONITORLIGHT48:
+                        case DeviceKeys.MONITORLIGHT49:
+                        case DeviceKeys.MONITORLIGHT50:
+                        case DeviceKeys.MONITORLIGHT51:
+                        case DeviceKeys.MONITORLIGHT52:
+                        case DeviceKeys.MONITORLIGHT53:
+                        case DeviceKeys.MONITORLIGHT54:
+                        case DeviceKeys.MONITORLIGHT55:
+                        case DeviceKeys.MONITORLIGHT56:
+                        case DeviceKeys.MONITORLIGHT57:
+                        case DeviceKeys.MONITORLIGHT58:
+                        case DeviceKeys.MONITORLIGHT59:
+                        case DeviceKeys.MONITORLIGHT60:
+                        case DeviceKeys.MONITORLIGHT61:
+                        case DeviceKeys.MONITORLIGHT62:
+                        case DeviceKeys.MONITORLIGHT63:
+                        case DeviceKeys.MONITORLIGHT64:
+                        case DeviceKeys.MONITORLIGHT65:
+                        case DeviceKeys.MONITORLIGHT66:
+                        case DeviceKeys.MONITORLIGHT67:
+                        case DeviceKeys.MONITORLIGHT68:
+                        case DeviceKeys.MONITORLIGHT69:
+                        case DeviceKeys.MONITORLIGHT70:
+                        case DeviceKeys.MONITORLIGHT71:
+                        case DeviceKeys.MONITORLIGHT72:
+                        case DeviceKeys.MONITORLIGHT73:
+                        case DeviceKeys.MONITORLIGHT74:
+                        case DeviceKeys.MONITORLIGHT75:
+                        case DeviceKeys.MONITORLIGHT76:
+                        case DeviceKeys.MONITORLIGHT77:
+                        case DeviceKeys.MONITORLIGHT78:
+                        case DeviceKeys.MONITORLIGHT79:
+                        case DeviceKeys.MONITORLIGHT80:
+                        case DeviceKeys.MONITORLIGHT81:
+                        case DeviceKeys.MONITORLIGHT82:
+                        case DeviceKeys.MONITORLIGHT83:
+                        case DeviceKeys.MONITORLIGHT84:
+                        case DeviceKeys.MONITORLIGHT85:
+                        case DeviceKeys.MONITORLIGHT86:
+                        case DeviceKeys.MONITORLIGHT87:
+                        case DeviceKeys.MONITORLIGHT88:
+                        case DeviceKeys.MONITORLIGHT89:
+                        case DeviceKeys.MONITORLIGHT90:
+                        case DeviceKeys.MONITORLIGHT91:
+                        case DeviceKeys.MONITORLIGHT92:
+                        case DeviceKeys.MONITORLIGHT93:
+                        case DeviceKeys.MONITORLIGHT94:
+                        case DeviceKeys.MONITORLIGHT95:
+                        case DeviceKeys.MONITORLIGHT96:
+                        case DeviceKeys.MONITORLIGHT97:
+                        case DeviceKeys.MONITORLIGHT98:
+                        case DeviceKeys.MONITORLIGHT99:
+                        case DeviceKeys.MONITORLIGHT100:
+                        case DeviceKeys.MONITORLIGHT101:
+                        case DeviceKeys.MONITORLIGHT102:
+                        case DeviceKeys.MONITORLIGHT103:
+                            colorsMsi.Add(Tuple.Create(color.R, color.G, color.B));
+                            break;
                         default:
                             byte hid = GetHIDCode(key.Key);
 
@@ -229,7 +335,8 @@ namespace Aurora.Devices.SteelSeries
                 SendColorsToKeyboard(hids, colors, payload);
                 SendColorsToMousepad(colorsMousepad, payload);
 
-                gameSenseSDK.setMouseEightZone(eightZone, payload);
+                if(eightZone.All(t => t != null))
+                    gameSenseSDK.setMouseEightZone(eightZone, payload);
                 gameSenseSDK.sendFullColorRequest(payload);
 
                 return true;
@@ -333,6 +440,14 @@ namespace Aurora.Devices.SteelSeries
             else
             {
                 peripheral_updated = false;
+            }
+        }
+
+        private void SendColorsToScreen(List<Tuple<byte, byte, byte>> colorsScreen, GameSensePayloadPeripheryColorEventJSON payload)
+        {
+            if (colorsScreen.Count != 0)
+            {
+                gameSenseSDK.setHundredThreeZone(colorsScreen, payload);
             }
         }
 
