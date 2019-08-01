@@ -946,7 +946,6 @@ namespace Aurora.Settings
                 }
                 catch (OperationCanceledException ex)
                 {
-                    SetState("Failure");
                     Xceed.Wpf.Toolkit.MessageBox.Show($"{ex.Message}:\n{ex.InnerException.ToString()}",
                         "Exception!", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
