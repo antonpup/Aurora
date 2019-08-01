@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -943,8 +943,6 @@ namespace Aurora.Settings
                     errorlevel = await InstallAsync(path);
                     if (!HandleErrorLevel(errorlevel))
                         return false;
-
-                    SetState("Done!");
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -959,13 +957,13 @@ namespace Aurora.Settings
             {
                 if (t.Result)
                 {
-                    SetState("Success");
+                    SetState("Success!");
                     Xceed.Wpf.Toolkit.MessageBox.Show("Installation successful!\nPlease restart Aurora for changes to take effect.",
                         "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
-                    SetState("Failure");
+                    SetState("Failure!");
                 }
             });
         }
