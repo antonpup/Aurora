@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -162,12 +162,12 @@ namespace Aurora.Settings
             }
             else
             {
-                razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(Colors.LightGreen);
+                this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(Colors.LightGreen);
                 this.razer_wrapper_install_button.Visibility = Visibility.Hidden;
             }
 
             this.razer_wrapper_enabled_label.Content = rzSdkEnabled ? "Enabled" : "Disabled";
-            this.razer_wrapper_install_button.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
+            this.razer_wrapper_enabled_label.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
 
             if (Global.razerManager != null)
             {
