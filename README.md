@@ -14,7 +14,7 @@ Project Aurora is a utility that unifies RGB lighting devices across different b
 
 [Most recent release (potentially unstable)](https://github.com/antonpup/Aurora/releases)
 
-[Bleeding-edge builds (decent chance they're going to have issues)](https://ci.appveyor.com/project/antonpup/aurora/build/artifacts)
+[Bleeding-edge builds (decent chance they're going to have issues)(https://ci.appveyor.com/project/antonpup/aurora/branch/dev/artifacts)
 
 ## Discord Server
 
