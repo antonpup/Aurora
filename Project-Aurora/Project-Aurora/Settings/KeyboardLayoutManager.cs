@@ -486,11 +486,11 @@ namespace Aurora.Settings
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation, Global.Configuration.extra_features);
             });
         }
 
-        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
+        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded, ExtraFeatures extra_features = ExtraFeatures.None)
         {
 #if !DEBUG
             try
@@ -871,6 +871,29 @@ namespace Aurora.Settings
 
                     }
 
+                    virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
+                }
+
+                string extra_feature = "";
+
+                switch (extra_features)
+                {
+                    case ExtraFeatures.Mousemats:
+                        extra_feature = Path.Combine(layoutsPath, "Extra Features", "mm800_firefly_features.json");
+                        break;
+                    case ExtraFeatures.Monitor:
+                        extra_feature = Path.Combine(layoutsPath, "Extra Features", "mpg27cq_features.json");
+                        break;
+                    case ExtraFeatures.MonitorMousemats:
+                        extra_feature = Path.Combine(layoutsPath, "Extra Features", "mm800_firefly_mpg27cq_features.json");
+                        break;
+                }
+
+                if (!string.IsNullOrWhiteSpace(extra_feature))
+                {
+                    string feature_content = File.ReadAllText(extra_feature, Encoding.UTF8);
+                    VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, Global.SerializerSettings);
+                    
                     virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
                 }
 

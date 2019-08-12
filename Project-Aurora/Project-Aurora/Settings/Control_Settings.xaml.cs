@@ -145,6 +145,7 @@ namespace Aurora.Settings
             this.devices_disable_keyboard_lighting.IsChecked = Global.Configuration.devices_disable_keyboard;
             this.devices_disable_mouse_lighting.IsChecked = Global.Configuration.devices_disable_mouse;
             this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
+            this.cmbExtraFeatures.SelectedItem = Global.Configuration.extra_features;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
         }
@@ -1072,6 +1073,17 @@ namespace Aurora.Settings
                     trigger.Delay = new TimeSpan(0, 0, ((IntegerUpDown)sender).Value ?? 0);
                     task.RegisterChanges();
                 }
+            }
+        }
+
+        private void CmbExtraFeatures_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                Global.Configuration.extra_features = (ExtraFeatures)Enum.Parse(typeof(ExtraFeatures), this.cmbExtraFeatures.SelectedItem.ToString());
+                ConfigManager.Save(Global.Configuration);
+
+                Global.kbLayout.LoadBrandDefault();
             }
         }
     }

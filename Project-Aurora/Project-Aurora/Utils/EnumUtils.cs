@@ -165,6 +165,10 @@ namespace Aurora.Utils
     {
         public BitmapAccuracyToStringVC() : base(BitmapAccuracy.Okay) { }
     }
+    public class ExtraFeaturesToStringVC : EnumToStringVC
+    {
+        public ExtraFeaturesToStringVC() : base(ExtraFeatures.None) { }
+    }
 
     public class MouseOrientationToStringVC : EnumToStringVC
     {

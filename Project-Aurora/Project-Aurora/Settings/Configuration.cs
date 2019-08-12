@@ -147,6 +147,21 @@ namespace Aurora.Settings
         LeftHanded = 2
     }
 
+    public enum ExtraFeatures
+    {
+        [Description("None")]
+        None = 0,
+        
+        [Description("Razer Firefly + Corsair MM800")]
+        Mousemats = 1,
+
+        [Description("MSI MPG27CQ")]
+        Monitor = 2,
+
+        [Description("Razer Firefly + Corsair MM800 + MSI MPG27CQ")]
+        MonitorMousemats = 3,
+    }
+
     public enum PreferredKeyboard
     {
         [Description("None")]
@@ -426,6 +441,7 @@ namespace Aurora.Settings
         public PreferredKeyboardLocalization keyboard_localization;
         public PreferredMouse mouse_preference;
         public KeycapType virtualkeyboard_keycap_type;
+        public ExtraFeatures extra_features;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
         public bool devices_disable_keyboard;

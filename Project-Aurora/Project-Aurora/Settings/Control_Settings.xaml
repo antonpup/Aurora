@@ -100,6 +100,16 @@
                 <TextBlock Text="{Binding Converter={StaticResource BitmapAccuracyToStringVC}}" />
             </DataTemplate>
 
+            <ObjectDataProvider x:Key="ExtraFeatures" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:ExtraFeatures" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:ExtraFeaturesToStringVC x:Key="ExtraFeaturesToStringVC"/>
+            <DataTemplate x:Key="ExtraFeaturesTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource ExtraFeaturesToStringVC}}" />
+            </DataTemplate>
+
             <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="local:AppExitMode" />
@@ -244,7 +254,7 @@
                     <ComboBox x:Name="devices_kb_layout" HorizontalAlignment="Left" Margin="160,33,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbLayout}}" ItemTemplate="{Binding Source={StaticResource KbLayoutTemplate}}" SelectionChanged="devices_kb_layout_SelectionChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,11,0,0" TextWrapping="Wrap" Text="Preferred Keyboard:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="160,8,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
-                    <CheckBox x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="10,168,0,0" VerticalAlignment="Top" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
+                    <CheckBox x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="10,188,0,0" VerticalAlignment="Top" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
                     <Button x:Name="wrapper_install_logitech" Content="Install Aurora Wrapper Patch for Logitech" HorizontalAlignment="Left" Margin="546,220,0,0" VerticalAlignment="Top" Click="wrapper_install_logitech_Click"/>
                     <Button x:Name="wrapper_install_razer" Content="Install Aurora Wrapper Patch for Razer" HorizontalAlignment="Left" Margin="546,245,0,0" VerticalAlignment="Top" Click="wrapper_install_razer_Click"/>
                     <Button x:Name="wrapper_install_lightfx_32" Content="Install Aurora Wrapper Patch for LightFX (32 bit)" HorizontalAlignment="Left" Margin="546,171,0,0" VerticalAlignment="Top" Click="wrapper_install_lightfx_32_Click"/>
@@ -255,11 +265,13 @@
                     <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="160,108,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectionChanged="ComboBox_virtualkeyboard_keycap_type_SelectionChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,87,0,0" TextWrapping="Wrap" Text="Mouse Orientation:" VerticalAlignment="Top"/>
                     <ComboBox x:Name="devices_mouse_orientation" HorizontalAlignment="Left" Margin="160,83,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MouseOrientation}}" ItemTemplate="{Binding Source={StaticResource MouseOrientationTemplate}}" SelectionChanged="devices_mouse_orientation_SelectionChanged"/>
-                    <CheckBox x:Name="devices_disable_keyboard_lighting" Content="Disable Keyboard Lighting" Margin="10,192,670,60" Checked="devices_disable_keyboard_lighting_Checked" Unchecked="devices_disable_keyboard_lighting_Checked" />
-                    <CheckBox x:Name="devices_disable_mouse_lighting" Content="Disable Mouse Lighting" Margin="10,217,670,35" Checked="devices_disable_mouse_lighting_Checked" Unchecked="devices_disable_mouse_lighting_Checked" />
-                    <CheckBox x:Name="devices_disable_headset_lighting" Content="Disable Headset Lighting" Margin="10,241,670,11" Checked="devices_disable_headset_lighting_Checked" Unchecked="devices_disable_headset_lighting_Checked" />
+                    <CheckBox x:Name="devices_disable_keyboard_lighting" Content="Disable Keyboard Lighting" Margin="10,208,670,52" Checked="devices_disable_keyboard_lighting_Checked" Unchecked="devices_disable_keyboard_lighting_Checked" />
+                    <CheckBox x:Name="devices_disable_mouse_lighting" Content="Disable Mouse Lighting" Margin="10,229,670,31" Checked="devices_disable_mouse_lighting_Checked" Unchecked="devices_disable_mouse_lighting_Checked" />
+                    <CheckBox x:Name="devices_disable_headset_lighting" Content="Disable Headset Lighting" Margin="10,250,670,10" Checked="devices_disable_headset_lighting_Checked" Unchecked="devices_disable_headset_lighting_Checked" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,137,0,0" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
                     <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="160,133,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,161,0,0" TextWrapping="Wrap" Text="Extra Features: " VerticalAlignment="Top" ToolTip="Adds more features such as multiple mousemats and monitor rgb lights such as the MPG27CQ from MSI" Height="15.96"/>
+                    <ComboBox x:Name="cmbExtraFeatures" HorizontalAlignment="Left" Margin="160,157,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource ExtraFeatures}}" ItemTemplate="{Binding Source={StaticResource ExtraFeaturesTemplate}}" SelectedItem="{Binding ExtraFeatures, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="CmbExtraFeatures_SelectionChanged"/>
 
                 </Grid>
             </TabItem>

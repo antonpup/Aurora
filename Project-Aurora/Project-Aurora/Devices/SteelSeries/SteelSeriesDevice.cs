@@ -334,6 +334,7 @@ namespace Aurora.Devices.SteelSeries
 
                 SendColorsToKeyboard(hids, colors, payload);
                 SendColorsToMousepad(colorsMousepad, payload);
+                SendColorsToScreen(colorsMsi, payload);
 
                 if(eightZone.All(t => t != null))
                     gameSenseSDK.setMouseEightZone(eightZone, payload);
