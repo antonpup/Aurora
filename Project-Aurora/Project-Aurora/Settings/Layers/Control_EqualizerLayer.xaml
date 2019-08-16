@@ -8,6 +8,7 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             xmlns:c="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -87,5 +88,7 @@
         <Button x:Name="btn_DeleteFreq" Content="Delete Frequency" HorizontalAlignment="Left" Margin="377,180,0,0" VerticalAlignment="Top" Width="100" Click="btn_DeleteFreq_Click"/>
         <TextBlock HorizontalAlignment="Left" Margin="377,205,0,-13" TextWrapping="Wrap" Text="Note: There must be at least 2 frequencies to sample between" VerticalAlignment="Top" Height="46" Width="116"/>
         <Button x:Name="btn_ShowPreviewWindow" Content="Show Preview Window" HorizontalAlignment="Left" Margin="0,220,0,-2" VerticalAlignment="Top" Click="btn_ShowPreviewWindow_Click"/>
+
+        <c:KeySequence x:Name="affectedKeys" Title="Affected Rectangle" RecordingTag="EqAffectedRect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="511,7,0,0" SequenceUpdated="KeySequence_keys_SequenceUpdated" />
     </Grid>
 </UserControl>

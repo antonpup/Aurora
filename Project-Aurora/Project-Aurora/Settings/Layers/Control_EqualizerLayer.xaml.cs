@@ -45,7 +45,7 @@ namespace Aurora.Settings.Layers
             if (this.DataContext is EqualizerLayerHandler && !settingsset)
             {
                 //this.ColorPicker_primaryColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).PrimaryColor);
-                //this.KeySequence_keys.Sequence = (this.DataContext as EqualizerLayerHandler).AffectedSequence;
+                this.affectedKeys.Sequence = (this.DataContext as EqualizerLayerHandler).Properties._Sequence;
 
                 this.eq_type.SelectedItem = (this.DataContext as EqualizerLayerHandler).Properties._EQType;
                 this.eq_view_type.SelectedItem = (this.DataContext as EqualizerLayerHandler).Properties._ViewType;
