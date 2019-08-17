@@ -149,15 +149,23 @@ namespace Aurora.Profiles.Witcher3
             var cfgfile = Path.Combine(root, "bin", "config", "r4game", "user_config_matrix", "pc", "artemis.xml");
             try
             {
+                var previouslyInstalled = false;
                 if (Directory.Exists(modfolder))
                 {
+                    previouslyInstalled = true;
                     Directory.Delete(modfolder, true);
                 }
                 if (File.Exists(cfgfile))
                 {
+                    previouslyInstalled = true;
                     File.Delete(cfgfile);
                 }
-                MessageBox.Show("Witcher 3 mod uninstalled successfully!");
+
+                if(previouslyInstalled)
+                    MessageBox.Show("Witcher 3 mod uninstalled successfully!");
+                else
+                    MessageBox.Show("Witcher 3 mod already uninstalled!");
+
                 return;
             }
             catch (Exception e)
