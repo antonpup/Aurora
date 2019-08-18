@@ -622,6 +622,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\BinaryCounterLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
+      <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
       <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
@@ -1210,7 +1214,7 @@
     <None Include="kb_layouts\Plain Keyboard\layout.intl.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="kb_layouts\Plain Keyboard\layout.it.json">
+    <None Include="kb_layouts\Plain Keyboard\layout.it.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.jpn.json">
@@ -1984,6 +1988,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\XCOM\Control_XCOM.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_BinaryCounterLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
