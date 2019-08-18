@@ -909,6 +909,93 @@ namespace Aurora.Settings
         {
             razer_wrapper_install_button.IsEnabled = false;
 
+            #region Razer SDK Installer/Uninstaller helpers
+            Task<int> UninstallAsync()
+            {
+                return System.Threading.Tasks.Task.Run(() =>
+                {
+                    if (RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
+                        return 0;
+
+                    using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+                    {
+                        var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
+                        var path = (string)key?.GetValue("UninstallPath", null);
+                        var filename = (string)key?.GetValue("UninstallFilename", null);
+
+                        if (path == null || filename == null)
+                            return 0;
+
+                        try
+                        {
+                            var processInfo = new ProcessStartInfo
+                            {
+                                FileName = filename,
+                                WorkingDirectory = path,
+                                Arguments = $"/S _?={path}",
+                                ErrorDialog = true
+                            };
+
+                            var process = Process.Start(processInfo);
+                            process.WaitForExit(120000);
+                            return process.ExitCode;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new OperationCanceledException("Razer SDK Uninstallation failed!", ex);
+                        }
+                    }
+                });
+            }
+
+            Task<string> DownloadAsync()
+            {
+                return System.Threading.Tasks.Task.Run(() =>
+                {
+                    var url = "http://cdn.razersynapse.com/156092369797u1UA8NRazerChromaBroadcasterSetup_v3.4.0630.061913.exe";
+
+                    try
+                    {
+                        using (var client = new WebClient())
+                        {
+                            var path = Path.ChangeExtension(Path.GetTempFileName(), ".exe");
+                            client.DownloadFile(url, path);
+                            return path;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new OperationCanceledException("Razer SDK Downloading failed!", ex);
+                    }
+                });
+            }
+
+            Task<int> InstallAsync(string installerPath)
+            {
+                return System.Threading.Tasks.Task.Run(() =>
+                {
+                    try
+                    {
+                        var processInfo = new ProcessStartInfo
+                        {
+                            FileName = Path.GetFileName(installerPath),
+                            WorkingDirectory = Path.GetDirectoryName(installerPath),
+                            Arguments = "/S",
+                            ErrorDialog = true
+                        };
+
+                        var process = Process.Start(processInfo);
+                        process.WaitForExit(120000);
+                        return process.ExitCode;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new OperationCanceledException("Razer SDK Installation failed!", ex);
+                    }
+                });
+            }
+            #endregion
+
             bool HandleErrorLevel(int errorlevel)
             {
                 switch (errorlevel)
@@ -966,93 +1053,6 @@ namespace Aurora.Settings
                 }
             });
         }
-
-        #region Razer SDK Installer/Uninstaller helpers
-        private Task<int> UninstallAsync()
-        {
-            return System.Threading.Tasks.Task.Run(() =>
-            {
-                if (RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
-                    return 0;
-
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
-                {
-                    var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-                    var path = (string)key?.GetValue("UninstallPath", null);
-                    var filename = (string)key?.GetValue("UninstallFilename", null);
-
-                    if (path == null || filename == null)
-                        return 0;
-
-                    try
-                    {
-                        var processInfo = new ProcessStartInfo
-                        {
-                            FileName = filename,
-                            WorkingDirectory = path,
-                            Arguments = $"/S _?={path}",
-                            ErrorDialog = true
-                        };
-
-                        var process = Process.Start(processInfo);
-                        process.WaitForExit(120000);
-                        return process.ExitCode;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new OperationCanceledException("Razer SDK Uninstallation failed!", ex);
-                    }
-                }
-            });
-        }
-
-        private Task<string> DownloadAsync()
-        {
-            return System.Threading.Tasks.Task.Run(() =>
-            {
-                var url = "http://cdn.razersynapse.com/156092369797u1UA8NRazerChromaBroadcasterSetup_v3.4.0630.061913.exe";
-
-                try
-                {
-                    using (var client = new WebClient())
-                    {
-                        var path = Path.ChangeExtension(Path.GetTempFileName(), ".exe");
-                        client.DownloadFile(url, path);
-                        return path;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new OperationCanceledException("Razer SDK Downloading failed!", ex);
-                }
-            });
-        }
-
-        private Task<int> InstallAsync(string installerPath)
-        {
-            return System.Threading.Tasks.Task.Run(() =>
-            {
-                try
-                {
-                    var processInfo = new ProcessStartInfo
-                    {
-                        FileName = Path.GetFileName(installerPath),
-                        WorkingDirectory = Path.GetDirectoryName(installerPath),
-                        Arguments = "/S",
-                        ErrorDialog = true
-                    };
-
-                    var process = Process.Start(processInfo);
-                    process.WaitForExit(120000);
-                    return process.ExitCode;
-                }
-                catch (Exception ex)
-                {
-                    throw new OperationCanceledException("Razer SDK Installation failed!", ex);
-                }
-            });
-        }
-        #endregion
 
         private void wrapper_install_logitech_Click(object sender, RoutedEventArgs e)
         {
