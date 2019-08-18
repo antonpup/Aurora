@@ -410,6 +410,9 @@
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Include="Devices\UnifiedHID\AsusPugio.cs" />
+    <Compile Include="Devices\UnifiedHID\RivalMouses.cs" />
+    <Compile Include="Devices\UnifiedHID\RoccatVulcan.cs" />
     <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
