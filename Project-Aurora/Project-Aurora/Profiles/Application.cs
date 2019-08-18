@@ -379,13 +379,16 @@ namespace Aurora.Profiles
 
         protected virtual void LoadProfilesError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
-            if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
-                e.ErrorContext.Handled = true;
-
-            if (e.CurrentObject.GetType() == typeof(Layer) && e.ErrorContext.Member.Equals("Handler"))
+            if (e.CurrentObject != null)
             {
-                ((Layer)e.ErrorContext.OriginalObject).Handler = null;
-                e.ErrorContext.Handled = true;
+                if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
+                    e.ErrorContext.Handled = true;
+
+                if (e.CurrentObject.GetType() == typeof(Layer) && e.ErrorContext.Member.Equals("Handler"))
+                {
+                    ((Layer)e.ErrorContext.OriginalObject).Handler = null;
+                    e.ErrorContext.Handled = true;
+                }
             }
         }
 
