@@ -371,7 +371,7 @@ namespace Aurora.Utils
         /// <param name="strength">
         /// The strength of brightness change.
         /// <para>Values between (0, 1] increase the brightness by (0%, inf%]</para>
-        /// <para>Values between [-1, 0) decrease the brightness by [inf%, 0)</para>
+        /// <para>Values between [-1, 0) decrease the brightness by [inf%, 0%)</para>
         /// </param>
         /// <returns>Color with modified brightness</returns>
         public static Color ChangeBrightness(Color color, double strength)
@@ -391,7 +391,7 @@ namespace Aurora.Utils
         /// <param name="strength">
         /// The strength of saturation change.
         /// <para>Values between (0, 1] increase the saturation by (0%, inf%]</para>
-        /// <para>Values between [-1, 0) decrease the saturation by [inf%, 0)</para>
+        /// <para>Values between [-1, 0) decrease the saturation by [inf%, 0%)</para>
         /// </param>
         /// <returns>Color with modified saturation</returns>
         public static Color ChangeSaturation(Color color, double strength)
