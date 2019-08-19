@@ -18,10 +18,9 @@
         public float StarPowerPercent = 0;
         public bool IsAtMenu = false;
         public int NotesTotal = 0;
+        public int TotalNotesHit = 0;
 
         public bool IsFC = true;
-
-        public int SoloPercent;
 
         public int Score;
 
