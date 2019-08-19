@@ -209,7 +209,9 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            Global.razerManager.DataUpdated -= OnDataUpdated;
+            if(Global.razerManager != null)
+                Global.razerManager.DataUpdated -= OnDataUpdated;
+
             base.Dispose();
         }
     }
