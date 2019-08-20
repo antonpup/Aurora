@@ -233,27 +233,23 @@ namespace Aurora.Utils
             // see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
             bool isE0 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E0);
             bool isE1 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E1);
-            //Console.WriteLine($"old_key: {e.Key} {(uint)e.Key}");
-            if ( Global.kbLayout.Loaded_Localization.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
+            if (Global.kbLayout.Loaded_Localization.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
             {
                 uint thread = GetWindowThreadProcessId(ActiveProcessMonitor.GetForegroundWindow(), IntPtr.Zero);
                 var layout = GetKeyboardLayout(thread);
                 var scan_code_locale = MapVirtualKeyEx((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc, layout);
-                Keys k = (Keys)MapVirtualKeyEx(scan_code_locale, MapVirtualKeyMapTypes.MapvkVscToVk, (IntPtr)0x8090809);
-                //Console.WriteLine($"scan_l: {scan_code_locale}, new_key: {k} {(uint)k}");
-                e.Key = k;
-            }
-            //Console.WriteLine($"[{scan_code_locale}, DeviceKeys.{getDeviceKey(e.Key)}],");
-            /*if (!hasOutput)
-            {
-                hasOutput = true;
-                foreach (DeviceKeys key in Enum.GetValues(typeof(DeviceKeys)))
+                if (scan_code_locale == 0)
+                    Global.logger.Warn($"Unable to convert key: {e.Key} to scan_code_locale. layout: {layout}");
+                else
                 {
-                    var sc = MapVirtualKeyEx((uint)GetFormsKey(key), MapVirtualKeyMapTypes.MapvkVkToVsc, layout);
-                    Console.WriteLine($"[{sc}, DeviceKeys.{key}],");
 
+                    Keys k = (Keys)MapVirtualKey(scan_code_locale, MapVirtualKeyMapTypes.MapvkVscToVk);
+                    if (k != Keys.None)
+                        e.Key = k;
+                    else
+                        Global.logger.Warn($"Unable to convert scan_code_locale: {scan_code_locale} to Keys. Key: {e.Key}, layout: {layout}");
                 }
-            }*/
+            }
             if (isE1)
             {
                 // for escaped sequences, turn the virtual key into the correct scan code using MapVirtualKey.
