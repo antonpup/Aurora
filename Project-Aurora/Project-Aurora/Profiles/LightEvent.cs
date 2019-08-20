@@ -20,6 +20,10 @@ namespace Aurora.Profiles
 
         void ResetGameState();
 
+        void OnActivate();
+
+        void OnDeactivate();
+
         bool IsEnabled { get; }
 
         LightEventConfig Config { get; }
@@ -79,6 +83,16 @@ namespace Aurora.Profiles
         public virtual void ResetGameState()
         {
             _game_state = new GameState();
+        }
+        
+        public virtual void OnActivate()
+        {
+
+        }
+
+        public virtual void OnDeactivate()
+        {
+
         }
 
         public bool Initialize()

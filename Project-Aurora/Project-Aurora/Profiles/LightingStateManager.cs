@@ -70,6 +70,8 @@ namespace Aurora.Profiles
         private List<string> Normal = new List<string>();
         private List<string> Overlays = new List<string>();
 
+        private ILightEvent ActiveApplication = null;
+
         private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
 
         private Dictionary<string, string> EventTitles { get; set; } = new Dictionary<string, string>();
@@ -539,10 +541,33 @@ namespace Aurora.Profiles
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
                     {
+                        ActivateApplication(idle_e);
                         idle_e.UpdateLights(newFrame);
                     }
                 }
             }
+        }
+
+        private bool ActivateApplication(ILightEvent @event)
+        {
+            if (@event.Equals(ActiveApplication)) return false;
+
+            ActiveApplication?.OnDeactivate();
+
+            ActiveApplication = @event;
+            ActiveApplication.OnActivate();
+
+            return true;
+        }
+
+        private bool DeactivateApplication()
+        {
+            if (ActiveApplication == null) return false;
+
+            ActiveApplication.OnDeactivate();
+            ActiveApplication = null;
+
+            return true;
         }
 
         private void Update()
@@ -551,8 +576,14 @@ namespace Aurora.Profiles
 
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
             if ((Global.Configuration.time_based_dimming_enabled &&
-               Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
+                 Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour,
+                     Global.Configuration.time_based_dimming_start_minute,
+                     Global.Configuration.time_based_dimming_end_hour,
+                     Global.Configuration.time_based_dimming_end_minute)))
+            {
+                DeactivateApplication();
                 return;
+            }
 
             string raw_process_name = Path.GetFileName(processMonitor.ProcessPath);
 
@@ -570,6 +601,7 @@ namespace Aurora.Profiles
 
             if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
+                DeactivateApplication();
                 Global.dev_manager.Shutdown();
                 Global.effengine.PushFrame(newFrame);
                 return;
@@ -583,22 +615,37 @@ namespace Aurora.Profiles
                 foreach (var underlay in Underlays)
                 {
                     ILightEvent @event = Events[underlay];
-                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                    if (@event.IsEnabled && (@event.Config.ProcessNames == null ||
+                                             ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                    {
+                        ActivateApplication(@event);
                         @event.UpdateLights(newFrame);
+                    }
                 }
             }
 
             //Need to do another check in case Desktop is disabled or the selected preview is disabled
             if (profile.IsEnabled)
+            {
+                ActivateApplication(profile);
                 profile.UpdateLights(newFrame);
+            }
+            else
+            {
+                DeactivateApplication();
+            }
 
             if (Global.Configuration.OverlaysInPreview || !preview)
             {
                 foreach (var overlay in Overlays)
                 {
                     ILightEvent @event = Events[overlay];
-                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                    if (@event.IsEnabled && (@event.Config.ProcessNames == null ||
+                                             ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                    {
+                        ActivateApplication(profile);
                         @event.UpdateLights(newFrame);
+                    }
                 }
 
                 //Add overlays
@@ -606,7 +653,10 @@ namespace Aurora.Profiles
                 foreach (TimedListObject evnt in overlay_events)
                 {
                     if ((evnt.item as LightEvent).IsEnabled)
+                    {
+                        ActivateApplication(evnt.item as LightEvent);
                         (evnt.item as LightEvent).UpdateLights(newFrame);
+                    }
                 }
 
                 UpdateIdleEffects(newFrame);
