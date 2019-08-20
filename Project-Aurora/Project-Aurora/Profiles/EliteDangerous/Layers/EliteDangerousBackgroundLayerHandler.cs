@@ -25,7 +25,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         public override void Default()
         {
             base.Default();
-            this._DefaultColor = Color.FromArgb(255, 60, 0, 0);
+            this._DefaultColor = Color.FromArgb(60, 0, 0);
         }
     }
     public class EliteDangerousBackgroundLayerHandler : LayerHandler<EliteDangerousBackgroundHandlerProperties>
