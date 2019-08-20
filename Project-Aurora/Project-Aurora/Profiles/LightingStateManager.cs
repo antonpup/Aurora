@@ -148,7 +148,8 @@ namespace Aurora.Profiles
                 new ResidentEvil2.ResidentEvil2(),
                 new CloneHero.CloneHero(),
                 new Osu.Osu(),
-                new Slime_Rancher.Slime_Rancher()
+                new Slime_Rancher.Slime_Rancher(),
+                new EliteDangerous.EliteDangerous()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

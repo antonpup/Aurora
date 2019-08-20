@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -451,6 +451,16 @@
     <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\EliteDangerous\Control_EliteDangerous.xaml.cs">
+      <DependentUpon>Control_EliteDangerous.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\EliteDangerous\EliteDangerousApplication.cs" />
+    <Compile Include="Profiles\EliteDangerous\EliteDangerousProfile.cs" />
+    <Compile Include="Profiles\EliteDangerous\GSI\GameState_EliteDangerous.cs" />
+    <Compile Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousBackgroundLayer.xaml.cs">
+      <DependentUpon>Control_EliteDangerousBackgroundLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\EliteDangerous\Layers\EliteDangerousBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\MemoryReadingLightEvent.cs" />
     <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
       <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
@@ -1518,6 +1528,7 @@
     <Resource Include="Resources\osu_256x256.png" />
     <Resource Include="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
     <Resource Include="Resources\Slime_Rancher.png" />
+    <Resource Include="Resources\elite_dangerous_256x256.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1717,6 +1728,14 @@
     <Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\EliteDangerous\Control_EliteDangerous.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousBackgroundLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml">
       <Generator>MSBuild:Compile</Generator>
