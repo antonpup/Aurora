@@ -136,7 +136,7 @@ namespace Aurora.Settings.Layers
             _ScaleWithSystemVolume = false;
             _BackgroundMode = EqualizerBackgroundMode.Disabled;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
-            _Frequencies = new SortedSet<float>() { 50, 95, 130, 180, 250, 350, 500, 620, 700, 850, 1200, 1600, 2200, 3000, 4100, 5600, 7700, 10000, 10001, 10002 };
+            _Frequencies = new SortedSet<float>() { 50, 95, 130, 180, 250, 350, 500, 620, 700, 850, 1200, 1600, 2200, 3000, 4100, 5600, 7700, 10000 };
         }
     }
 
