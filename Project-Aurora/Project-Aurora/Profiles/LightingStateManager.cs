@@ -70,7 +70,8 @@ namespace Aurora.Profiles
         private List<string> Normal = new List<string>();
         private List<string> Overlays = new List<string>();
 
-        private ILightEvent ActiveApplication = null;
+        private List<ILightEvent> ActiveEvents = new List<ILightEvent>();
+        private List<ILightEvent> UpdatedEvents = new List<ILightEvent>();
 
         private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
 
@@ -541,38 +542,43 @@ namespace Aurora.Profiles
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
                     {
-                        ActivateApplication(idle_e);
+                        ActivateEvent(idle_e);
                         idle_e.UpdateLights(newFrame);
                     }
                 }
             }
         }
 
-        private bool ActivateApplication(ILightEvent @event)
+        private bool ActivateEvent(ILightEvent @event)
         {
-            if (@event.Equals(ActiveApplication)) return false;
+            UpdatedEvents.Add(@event);
+            if (ActiveEvents.Contains(@event)) return false;
 
-            ActiveApplication?.OnDeactivate();
-
-            ActiveApplication = @event;
-            ActiveApplication.OnActivate();
+            ActiveEvents.Add(@event);
+            @event.OnActivate();
 
             return true;
         }
 
-        private bool DeactivateApplication()
+        private bool DeactivateUnUpdatedEvents()
         {
-            if (ActiveApplication == null) return false;
-
-            ActiveApplication.OnDeactivate();
-            ActiveApplication = null;
-
+            if (!ActiveEvents.Any() || ActiveEvents.SequenceEqual(UpdatedEvents)) return false;
+            
+            List<ILightEvent> eventsToDeactivate = ActiveEvents.Except(UpdatedEvents).ToList();
+            foreach (var eventToDeactivate in eventsToDeactivate)
+            {
+                eventToDeactivate.OnDeactivate();
+                ActiveEvents.Remove(eventToDeactivate);
+            }
+            
             return true;
         }
 
         private void Update()
         {
             PreUpdate?.Invoke(this, null);
+            
+            UpdatedEvents.Clear();
 
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
             if ((Global.Configuration.time_based_dimming_enabled &&
@@ -581,7 +587,7 @@ namespace Aurora.Profiles
                      Global.Configuration.time_based_dimming_end_hour,
                      Global.Configuration.time_based_dimming_end_minute)))
             {
-                DeactivateApplication();
+                DeactivateUnUpdatedEvents();
                 return;
             }
 
@@ -601,7 +607,7 @@ namespace Aurora.Profiles
 
             if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
-                DeactivateApplication();
+                DeactivateUnUpdatedEvents();
                 Global.dev_manager.Shutdown();
                 Global.effengine.PushFrame(newFrame);
                 return;
@@ -618,7 +624,7 @@ namespace Aurora.Profiles
                     if (@event.IsEnabled && (@event.Config.ProcessNames == null ||
                                              ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
                     {
-                        ActivateApplication(@event);
+                        ActivateEvent(@event);
                         @event.UpdateLights(newFrame);
                     }
                 }
@@ -627,12 +633,8 @@ namespace Aurora.Profiles
             //Need to do another check in case Desktop is disabled or the selected preview is disabled
             if (profile.IsEnabled)
             {
-                ActivateApplication(profile);
+                ActivateEvent(profile);
                 profile.UpdateLights(newFrame);
-            }
-            else
-            {
-                DeactivateApplication();
             }
 
             if (Global.Configuration.OverlaysInPreview || !preview)
@@ -643,7 +645,7 @@ namespace Aurora.Profiles
                     if (@event.IsEnabled && (@event.Config.ProcessNames == null ||
                                              ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
                     {
-                        ActivateApplication(profile);
+                        ActivateEvent(@event);
                         @event.UpdateLights(newFrame);
                     }
                 }
@@ -654,7 +656,7 @@ namespace Aurora.Profiles
                 {
                     if ((evnt.item as LightEvent).IsEnabled)
                     {
-                        ActivateApplication(evnt.item as LightEvent);
+                        ActivateEvent(evnt.item as LightEvent);
                         (evnt.item as LightEvent).UpdateLights(newFrame);
                     }
                 }
@@ -664,6 +666,7 @@ namespace Aurora.Profiles
 
             Global.effengine.PushFrame(newFrame);
 
+            DeactivateUnUpdatedEvents();
             PostUpdate?.Invoke(this, null);
         }
 
