@@ -2,6 +2,7 @@
 using Aurora.Settings.Layers;
 using System.Drawing;
 using System.Windows.Controls;
+using Aurora.Devices;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {
@@ -106,12 +107,13 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer bg_layer = new EffectLayer("Elite: Dangerous - Key Binds");
+            EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
 
-//            Color bg_color = this.Properties.DefaultColor;
-//            bg_layer.Fill(bg_color);
+            keyBindsLayer.Set(DeviceKeys.C, this.Properties.ShipStuffColor);
+            keyBindsLayer.Set(DeviceKeys.V, this.Properties.DefenceColor);
+            keyBindsLayer.Set(DeviceKeys.B, this.Properties.DefenceDimmedColor);
 
-            return bg_layer;
+            return keyBindsLayer;
         }
 
         public override void SetApplication(Application profile)
