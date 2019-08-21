@@ -568,8 +568,10 @@ namespace Aurora.Profiles
             foreach (var eventToDeactivate in eventsToDeactivate)
             {
                 eventToDeactivate.OnDeactivate();
-                ActiveEvents.Remove(eventToDeactivate);
             }
+            
+            ActiveEvents.Clear();
+            ActiveEvents.AddRange(UpdatedEvents);
             
             return true;
         }
