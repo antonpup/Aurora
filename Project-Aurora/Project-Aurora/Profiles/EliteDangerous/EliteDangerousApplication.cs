@@ -1,13 +1,5 @@
 using Aurora.Settings;
 using Aurora.Profiles.EliteDangerous.Layers;
-using System;
-using System.Text;
-using System.Windows.Media.Imaging;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.IO;
-using Newtonsoft.Json;
-using Aurora.Settings.Layers;
 using System.Collections.Generic;
 
 namespace Aurora.Profiles.EliteDangerous
@@ -32,6 +24,7 @@ namespace Aurora.Profiles.EliteDangerous
             var extra = new List<LayerHandlerEntry>
             {
                 new LayerHandlerEntry("EliteDangerousBackground", "Elite: Dangerous Background Layer", typeof(EliteDangerousBackgroundLayerHandler)),
+                new LayerHandlerEntry("EliteDangerousKeyBinds", "Elite: Dangerous Key Binds Layer", typeof(EliteDangerousKeyBindsLayerHandler)),
             };
 
             Global.LightingStateManager.RegisterLayerHandlers(extra, false);
@@ -40,6 +33,18 @@ namespace Aurora.Profiles.EliteDangerous
             {
                 Config.ExtraAvailableLayers.Add(entry.Key);
             }
+        }
+
+        public override void OnActivate()
+        {
+            Global.logger.Info("OnActivate ED");
+            base.OnActivate();
+        }
+
+        public override void OnDeactivate()
+        {
+            Global.logger.Info("OnDeactivate ED");
+            base.OnDeactivate();
         }
     }
 }

@@ -460,7 +460,11 @@
     <Compile Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousBackgroundLayer.xaml.cs">
       <DependentUpon>Control_EliteDangerousBackgroundLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousKeyBindsLayer.xaml.cs">
+      <DependentUpon>Control_EliteDangerousKeyBindsLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\EliteDangerous\Layers\EliteDangerousBackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\EliteDangerous\Layers\EliteDangerousKeyBindsLayerHandler.cs" />
     <Compile Include="Profiles\MemoryReadingLightEvent.cs" />
     <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
       <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
@@ -1736,6 +1740,10 @@
     <Page Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousBackgroundLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousKeyBindsLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml">
       <Generator>MSBuild:Compile</Generator>
