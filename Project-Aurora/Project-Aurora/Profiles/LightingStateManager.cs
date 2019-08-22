@@ -70,7 +70,7 @@ namespace Aurora.Profiles
         private List<string> Normal = new List<string>();
         private List<string> Overlays = new List<string>();
 
-        private List<ILightEvent> ActiveEvents = new List<ILightEvent>();
+        private List<ILightEvent> ResumedEvents = new List<ILightEvent>();
         private List<ILightEvent> UpdatedEvents = new List<ILightEvent>();
 
         private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
@@ -551,34 +551,34 @@ namespace Aurora.Profiles
         
         private void UpdateEvent(ILightEvent @event, EffectsEngine.EffectFrame frame)
         {
-            ActivateEvent(@event);
+            ResumeEvent(@event);
             @event.UpdateLights(frame);
         }
 
-        private bool ActivateEvent(ILightEvent @event)
+        private bool ResumeEvent(ILightEvent @event)
         {
             UpdatedEvents.Add(@event);
             
-            // Skip if event was already activated
-            if (ActiveEvents.Contains(@event)) return false;
+            // Skip if event was already resumed
+            if (ResumedEvents.Contains(@event)) return false;
 
-            ActiveEvents.Add(@event);
-            @event.OnActivate();
+            ResumedEvents.Add(@event);
+            @event.OnResume();
 
             return true;
         }
 
-        private bool DeactivateUnUpdatedEvents()
+        private bool PauseUnUpdatedEvents()
         {
-            // Skip if there are no activated events or activated events are the same since last update
-            if (!ActiveEvents.Any() || ActiveEvents.SequenceEqual(UpdatedEvents)) return false;
+            // Skip if there are no resumed events or resumed events are the same since last update
+            if (!ResumedEvents.Any() || ResumedEvents.SequenceEqual(UpdatedEvents)) return false;
             
-            List<ILightEvent> eventsToDeactivate = ActiveEvents.Except(UpdatedEvents).ToList();
-            foreach (var eventToDeactivate in eventsToDeactivate)
-                eventToDeactivate.OnDeactivate();
+            List<ILightEvent> eventsToPause = ResumedEvents.Except(UpdatedEvents).ToList();
+            foreach (var eventToPause in eventsToPause)
+                eventToPause.OnPause();
             
-            ActiveEvents.Clear();
-            ActiveEvents.AddRange(UpdatedEvents);
+            ResumedEvents.Clear();
+            ResumedEvents.AddRange(UpdatedEvents);
             
             return true;
         }
@@ -592,7 +592,7 @@ namespace Aurora.Profiles
             if ((Global.Configuration.time_based_dimming_enabled &&
                Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
             {
-                DeactivateUnUpdatedEvents();
+                PauseUnUpdatedEvents();
                 return;
             }
 
@@ -612,7 +612,7 @@ namespace Aurora.Profiles
 
             if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
-                DeactivateUnUpdatedEvents();
+                PauseUnUpdatedEvents();
                 Global.dev_manager.Shutdown();
                 Global.effengine.PushFrame(newFrame);
                 return;
@@ -657,7 +657,7 @@ namespace Aurora.Profiles
 
             Global.effengine.PushFrame(newFrame);
 
-            DeactivateUnUpdatedEvents();
+            PauseUnUpdatedEvents();
             PostUpdate?.Invoke(this, null);
         }
 

@@ -20,9 +20,9 @@ namespace Aurora.Profiles
 
         void ResetGameState();
 
-        void OnActivate();
+        void OnResume();
 
-        void OnDeactivate();
+        void OnPause();
 
         bool IsEnabled { get; }
 
@@ -85,12 +85,12 @@ namespace Aurora.Profiles
             _game_state = new GameState();
         }
         
-        public virtual void OnActivate()
+        public virtual void OnResume()
         {
 
         }
 
-        public virtual void OnDeactivate()
+        public virtual void OnPause()
         {
 
         }
