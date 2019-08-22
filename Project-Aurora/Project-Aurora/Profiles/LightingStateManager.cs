@@ -573,8 +573,8 @@ namespace Aurora.Profiles
             if (!ResumedEvents.Any() || ResumedEvents.SequenceEqual(UpdatedEvents)) return false;
             
             List<ILightEvent> eventsToPause = ResumedEvents.Except(UpdatedEvents).ToList();
-            foreach (var eventToDeactivate in eventsToPause)
-                eventToDeactivate.OnPause();
+            foreach (var eventToPause in eventsToPause)
+                eventToPause.OnPause();
             
             ResumedEvents.Clear();
             ResumedEvents.AddRange(UpdatedEvents);
