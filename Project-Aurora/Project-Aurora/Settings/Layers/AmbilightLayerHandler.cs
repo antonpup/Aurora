@@ -403,9 +403,9 @@ namespace Aurora.Settings.Layers
             EffectLayer ambilight_layer = new EffectLayer();
 
             if (Properties.SaturateImage)
-                newImage = AdjustImageSaturation(newImage, Properties.SaturationChange);
+                newImage = Utils.BitmapUtils.AdjustImageSaturation(newImage, Properties.SaturationChange);
             if (Properties.BrightenImage)
-                newImage = AdjustImageBrightness(newImage, Properties.BrightnessChange);
+                newImage = Utils.BitmapUtils.AdjustImageBrightness(newImage, Properties.BrightnessChange);
 
             if (Properties.AmbilightType == AmbilightType.Default)
             {
@@ -417,7 +417,7 @@ namespace Aurora.Settings.Layers
             }
             else if (Properties.AmbilightType == AmbilightType.AverageColor)
             {
-                ambilight_layer.Fill(GetAverageColor(newImage));
+                ambilight_layer.Fill(Utils.BitmapUtils.GetAverageColor(newImage));
             }
 
             newImage.Dispose();
@@ -439,20 +439,6 @@ namespace Aurora.Settings.Layers
             return false;
         }
 
-        private static Color GetAverageColor(Image screenshot)
-        {
-            var scaled_down_image = new Bitmap(16, 16);
-
-            using (var graphics = Graphics.FromImage(scaled_down_image))
-                graphics.DrawImage(screenshot, 0, 0, 16, 16);
-
-            Color avg = Utils.ColorUtils.GetAverageColor(scaled_down_image);
-
-            scaled_down_image?.Dispose();
-
-            return avg;
-        }
-
         /// <summary>
         /// Returns true if a given Rectangle and RawRectangle have the same position and size
         /// </summary>
@@ -472,90 +458,6 @@ namespace Aurora.Settings.Layers
         private Rectangle Resize(Rectangle r)
         {
             return new Rectangle(r.X / Scale, r.Y / Scale, r.Width / Scale, r.Height / Scale);
-        }
-
-
-        /// <summary>
-        /// Adjusts the brightness of an image using a color matrix. brightness is a value between -1 and 1
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static Image AdjustImageBrightness(Image bmp, float b)
-        {
-            //https://docs.rainmeter.net/tips/colormatrix-guide/
-            Bitmap newBitmap = new Bitmap(bmp.Width, bmp.Height);
-
-            float[][] colorMatrix ={
-                new float[] {1, 0, 0, 0, 0},//red
-                new float[] {0, 1, 0, 0, 0},//green
-                new float[] {0, 0, 1, 0, 0},//blue
-                new float[] {0, 0, 0, 1, 0},//alpha
-                new float[] {b, b, b, 0, 1}
-            };
-
-            using (var att = new ImageAttributes())
-            {
-                att.SetColorMatrix(new ColorMatrix(colorMatrix));
-                using (var g = Graphics.FromImage(newBitmap))
-                {
-                    g.DrawImage(bmp,
-                                new Rectangle(0, 0, bmp.Width, bmp.Height),
-                                0,
-                                0,
-                                bmp.Width,
-                                bmp.Height,
-                                GraphicsUnit.Pixel,
-                                att);
-                }
-            }
-
-            return newBitmap;
-        }
-
-        /// <summary>
-        /// Adjusts the saturation of an image using a color matrix.
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static Image AdjustImageSaturation(Image bmp, float s)
-        {
-            //https://docs.rainmeter.net/tips/colormatrix-guide/
-            Bitmap newBitmap = new Bitmap(bmp.Width, bmp.Height);
-
-            const float lumR = 0.3086f;
-            const float lumG = 0.6094f;
-            const float lumB = 0.0820f;
-            float sr = (1 - s) * lumR;
-            float sg = (1 - s) * lumG;
-            float sb = (1 - s) * lumB;
-
-            float[][] colorMatrix ={
-                new float[] {sr + s, sr,     sr,     0, 0},
-                new float[] {sg,     sg + s, sg,     0, 0},
-                new float[] {sb,     sb,     sb + s, 0, 0},
-                new float[] {0,      0,      0,      1, 0},
-                new float[] {0,      0,      0,      0, 1}
-            };
-
-            using (var att = new ImageAttributes())
-            {
-                att.SetColorMatrix(new ColorMatrix(colorMatrix));
-                using (var g = Graphics.FromImage(newBitmap))
-                {
-                    g.DrawImage(bmp,
-                                new Rectangle(0, 0, bmp.Width, bmp.Height),
-                                0,
-                                0,
-                                bmp.Width,
-                                bmp.Height,
-                                GraphicsUnit.Pixel,
-                                att);
-                }
-            }
-
-            return newBitmap;
         }
 
         protected void InvokePropertyChanged([CallerMemberName] string propertyName = null)
