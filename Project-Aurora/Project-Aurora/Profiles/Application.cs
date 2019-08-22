@@ -424,20 +424,20 @@ namespace Aurora.Profiles
             Config.Event.ResetGameState();
         }
         
-        public virtual void OnResume()
+        public virtual void OnStart()
         {
             if (Disposed)
                 return;
 
-            Config.Event.OnResume();
+            Config.Event.OnStart();
         }
 
-        public virtual void OnPause()
+        public virtual void OnStop()
         {
             if (Disposed)
                 return;
 
-            Config.Event.OnPause();
+            Config.Event.OnStop();
         }
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
