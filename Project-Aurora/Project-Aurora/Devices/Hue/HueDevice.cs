@@ -36,7 +36,7 @@ namespace Aurora.Devices.Hue
         private BridgeConfig conf;
 
         private List<Light> lights;
-
+        
         public VariableRegistry GetRegisteredVariables()
         {
             VariableRegistry registry = new VariableRegistry();
@@ -64,33 +64,41 @@ namespace Aurora.Devices.Hue
 
         public bool Initialize()
         {
-            IBridgeLocator bridgeLocator = new HttpBridgeLocator();
-            var bridges = bridgeLocator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).Result;
-            bridge = bridges.First();
-            client = new LocalHueClient(bridge.IpAddress);
-            if (File.Exists(Path.Combine(Global.AppDataDirectory, bridge.BridgeId)))
+            try
             {
-                client.Initialize(File.ReadAllText(Path.Combine(Global.AppDataDirectory, bridge.BridgeId)));
-            }
-            else
-            {
-                Task.Run(() =>
+                IBridgeLocator bridgeLocator = new HttpBridgeLocator();
+                var bridges = bridgeLocator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).Result;
+                bridge = bridges.First();
+                client = new LocalHueClient(bridge.IpAddress);
+                if (File.Exists(Path.Combine(Global.AppDataDirectory, bridge.BridgeId)))
                 {
-                    while (!initialized)
+                    client.Initialize(File.ReadAllText(Path.Combine(Global.AppDataDirectory, bridge.BridgeId)));
+                }
+                else
+                {
+                    Task.Run(() =>
                     {
-                        try
+                        while (!initialized)
                         {
-                            var key = client.RegisterAsync("Aurora", Environment.MachineName).Result;
-                            client.Initialize(key);
-                            File.WriteAllText(Path.Combine(Global.AppDataDirectory, bridge.BridgeId), key);
+                            try
+                            {
+                                var key = client.RegisterAsync("Aurora", Environment.MachineName).Result;
+                                client.Initialize(key);
+                                File.WriteAllText(Path.Combine(Global.AppDataDirectory, bridge.BridgeId), key);
+                            }
+                            catch { }
+                            Task.Delay(TimeSpan.FromSeconds(1)).GetAwaiter().GetResult(); //recheck the bridge for pairing every second
                         }
-                        catch { }
-                        Task.Delay(TimeSpan.FromSeconds(1)).GetAwaiter().GetResult(); //recheck the bridge for pairing every second
-                    }
-                });
+                    });
+                }
+                conf = client.GetConfigAsync().Result;
+                return true;
             }
-            conf = client.GetConfigAsync().Result;
-            return true;
+            catch (Exception e)
+            {
+                Global.logger.Error(e, "No bridge found");
+                return false;
+            }
         }
 
         public void Shutdown()
@@ -130,12 +138,13 @@ namespace Aurora.Devices.Hue
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(105)) return false;
+            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(100)) return false;
             var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             var lightIds = lights.Select(t => t.Id);
             var brightness = config.Get<int>("brightness");
             var command = new LightCommand();
+            var sendLightId = config.Get<int>("send_light");
             command.SetColor(keyColors.Single(t => t.Key == DeviceKeys.Peripheral_Logo).Value.GetHueDeviceColor());
             if (brightness == 0) command.TurnOff();
             else
@@ -160,7 +169,10 @@ namespace Aurora.Devices.Hue
                     }
                 }
             }
-            client.SendCommandAsync(command, lightIds).GetAwaiter().GetResult();
+            if (sendLightId > 0)
+                client.SendCommandAsync(command,new []{sendLightId.ToString()}).GetAwaiter().GetResult();
+            else
+                client.SendCommandAsync(command,lightIds).GetAwaiter().GetResult();
             lastCall = DateTime.Now;
             lastFrame = command;
             if (!command.IsColorSame(defaultColor)) lastFrameDefault = false;
@@ -190,6 +202,7 @@ namespace Aurora.Devices.Hue
             Set("force_default", false);
             Set("brightness", 255, 0, 255);
             Set("use_default", true);
+            Set("send_light", 0, 0, int.MaxValue);
         }
 
         public IDictionary<string, IBindable> Store => ConfigStore;
