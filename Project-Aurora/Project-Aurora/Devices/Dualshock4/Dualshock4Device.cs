@@ -13,6 +13,10 @@ namespace Aurora.Devices.Dualshock
 
     class DualshockDevice : Device
     {
+        public int Battery { get; private set; }
+        public double Latency { get; private set; }
+        public bool Charging { get; private set; }
+
         private string devicename = "Sony DualShock 4(PS4)";
         private bool isInitialized = false;
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
@@ -45,6 +49,7 @@ namespace Aurora.Devices.Dualshock
                 try
                 {
                     device.Report += SendColor;
+                    device.Report += UpdateProperties;
                     device.StartUpdate();
                     Global.logger.Info("Initialized Dualshock");
                 }
@@ -123,7 +128,7 @@ namespace Aurora.Devices.Dualshock
                 else
                     charging = " ";
 
-                return devicename + ": Connected" + DS4ConnectionType + charging + "🔋" + device.getBattery() + "%" + " Delay: " + device.Latency.ToString("0.00") + " ms";
+                return devicename + ": Connected" + DS4ConnectionType + charging + "🔋" + Battery + "%" + " Delay: " + Latency.ToString("0.00") + " ms";
 
             }
             else
@@ -300,6 +305,14 @@ namespace Aurora.Devices.Dualshock
             device.pushHapticState(state);
         }
 
+        private void UpdateProperties(object sender, EventArgs e)
+        {
+            Battery = device.getBattery();
+            Latency = device.Latency;
+            Charging = device.isCharging();
+        }
+
+
         private Color CalculateAlpha(Color input)
             {
             //Apply and strip Alpha
@@ -316,7 +329,7 @@ namespace Aurora.Devices.Dualshock
             System.Drawing.Color LowBattery_color = Global.Configuration.VarRegistry.GetVariable<Aurora.Utils.RealColor>($"{devicename}_LowBattery_color").GetDrawingColor();
 
             Color LowBatteryColor = Color.Transparent;
-            if (!effectwatch.IsRunning && (device.getBattery() <= LowBattery_threshold) && !device.isCharging())
+            if (!effectwatch.IsRunning && (Battery <= LowBattery_threshold) && !Charging)
             {
                 effectwatch.Start();
                 //Global.logger.Info("Start Ewatch");

@@ -147,7 +147,8 @@ namespace Aurora.Profiles
                 new Subnautica.Subnautica(),
                 new ResidentEvil2.ResidentEvil2(),
                 new CloneHero.CloneHero(),
-                new Osu.Osu()
+                new Osu.Osu(),
+                new Slime_Rancher.Slime_Rancher()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -173,7 +174,8 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
                 new LayerHandlerEntry("ToggleKey", "Toggle Key Layer", typeof(ToggleKeyLayerHandler)),
                 new LayerHandlerEntry("Timer", "Timer Layer", typeof(TimerLayerHandler)),
-                new LayerHandlerEntry("Toolbar", "Toolbar Layer", typeof(ToolbarLayerHandler))
+                new LayerHandlerEntry("Toolbar", "Toolbar Layer", typeof(ToolbarLayerHandler)),
+                new LayerHandlerEntry("BinaryCounter", "Binary Counter Layer", typeof(BinaryCounterLayerHandler))
             }, true);
 
             RegisterLayerHandler(new LayerHandlerEntry("WrapperLights", "Wrapper Lighting Layer", typeof(WrapperLightsLayerHandler)), false);
