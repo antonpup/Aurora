@@ -39,9 +39,12 @@ namespace Aurora.Settings.Layers
         {
             if (this.DataContext is AmbilightLayerHandler && !settingsset)
             {
-                this.combobox_ambilight_effect_type.SelectedItem = (this.DataContext as AmbilightLayerHandler).Properties._AmbilightType;
-                this.combobox_ambilight_capture_type.SelectedItem = (this.DataContext as AmbilightLayerHandler).Properties._AmbilightCaptureType;
-                this.txtBox_process_name.Text = (this.DataContext as AmbilightLayerHandler).Properties._SpecificProcess;
+                var properties = (this.DataContext as AmbilightLayerHandler).Properties;
+                this.combobox_ambilight_effect_type.SelectedItem = properties._AmbilightType;
+                this.combobox_ambilight_capture_type.SelectedItem = properties._AmbilightCaptureType;
+                this.txtBox_process_name.Text = properties._SpecificProcess;
+                this.txtbox_output_id.Text = properties.AmbilightOutputId.ToString();
+                this.combobox_ambilight_fps.SelectedItem = properties._AmbiLightUpdatesPerSecond;
 
                 ToggleProcessTxtBox();
 
@@ -56,6 +59,35 @@ namespace Aurora.Settings.Layers
             this.Loaded -= UserControl_Loaded;
         }
 
+        private void txtbox_output_id_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            try
+            {
+                int outputId = int.Parse(textBox.Text);
+                if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler)
+                {
+                    var context = this.DataContext as AmbilightLayerHandler;
+                    if (outputId != context.Properties._AmbilightOutputId)
+                    {
+                        context.Properties._AmbilightOutputId = outputId;
+                        context.Initialize();
+                    }
+                }
+            }
+            catch (FormatException){}
+
+        }
+
+        private void combobox_fps_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is ComboBox)
+            {
+                String strValue = (sender as ComboBox).SelectedIndex.ToString();
+                AmbilightFpsChoice fps = (AmbilightFpsChoice)Enum.Parse(typeof(AmbilightFpsChoice), strValue);
+                (this.DataContext as AmbilightLayerHandler).Properties._AmbiLightUpdatesPerSecond = fps;
+            }
+        }
 
         private void combobox_ambilight_effect_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
