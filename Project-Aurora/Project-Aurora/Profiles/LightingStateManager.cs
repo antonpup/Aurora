@@ -541,7 +541,9 @@ namespace Aurora.Profiles
                     if (!(Global.Configuration.time_based_dimming_enabled &&
                     Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
                     )
+                    {
                         UpdateEvent(idle_e, newFrame);
+                    }
                 }
             }
         }
@@ -583,15 +585,11 @@ namespace Aurora.Profiles
         private void Update()
         {
             PreUpdate?.Invoke(this, null);
-            
             UpdatedEvents.Clear();
 
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
             if ((Global.Configuration.time_based_dimming_enabled &&
-                 Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour,
-                     Global.Configuration.time_based_dimming_start_minute,
-                     Global.Configuration.time_based_dimming_end_hour,
-                     Global.Configuration.time_based_dimming_end_minute)))
+                 Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
             {
                 DeactivateUnUpdatedEvents();
                 return;
@@ -627,8 +625,7 @@ namespace Aurora.Profiles
                 foreach (var underlay in Underlays)
                 {
                     ILightEvent @event = Events[underlay];
-                    if (@event.IsEnabled && (@event.Config.ProcessNames == null ||
-                                             ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
                         UpdateEvent(@event, newFrame);
                 }
             }
@@ -642,8 +639,7 @@ namespace Aurora.Profiles
                 foreach (var overlay in Overlays)
                 {
                     ILightEvent @event = Events[overlay];
-                    if (@event.IsEnabled && (@event.Config.ProcessNames == null ||
-                                             ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
+                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
                         UpdateEvent(@event, newFrame);
                 }
 
