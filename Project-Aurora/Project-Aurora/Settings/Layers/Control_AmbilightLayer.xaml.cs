@@ -50,6 +50,10 @@ namespace Aurora.Settings.Layers
                 this.HeightCoordinate.Value = properties._Coordinates.Value.Height;
                 this.WidthCoordinate.Value = properties._Coordinates.Value.Width;
                 this.combobox_ambilight_quality.SelectedItem = properties._AmbilightQuality;
+                this.BrightnessSlider.Value = properties._BrightnessChange.Value;
+                this.SaturationSlider.Value = properties._SaturationChange.Value;
+                this.BrightnessCheckbox.IsChecked = properties.BrightenImage;
+                this.SaturationCheckbox.IsChecked = properties.SaturateImage;
 
                 ToggleProcessTxtBox();
                 ToggleCoordinatesBox();

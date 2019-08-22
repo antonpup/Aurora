@@ -116,6 +116,24 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public AmbilightQuality AmbilightQuality { get { return Logic._AmbilightQuality ?? _AmbilightQuality ?? AmbilightQuality.Medium; } }
 
+        public bool? _BrightenImage { get; set; }
+
+        [JsonIgnore]
+        public bool BrightenImage { get { return Logic._BrightenImage ?? _BrightenImage ?? false; } }
+
+        public float? _BrightnessChange { get; set; }
+        [JsonIgnore]
+        public float BrightnessChange => Logic._BrightnessChange ?? _BrightnessChange ?? 0.0f;
+
+        public bool? _SaturateImage { get; set; }
+
+        [JsonIgnore]
+        public bool SaturateImage { get { return Logic._SaturateImage ?? _SaturateImage ?? false; } }
+
+        public float? _SaturationChange { get; set; }
+        [JsonIgnore]
+        public float SaturationChange => Logic._SaturationChange ?? _SaturationChange ?? 0.0f;
+
         public AmbilightLayerHandlerProperties() : base() { }
 
         public AmbilightLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
@@ -130,6 +148,10 @@ namespace Aurora.Settings.Layers
             this._SpecificProcess = "";
             this._Coordinates = new Rectangle(0, 0, 0, 0);
             this._AmbilightQuality = AmbilightQuality.Medium;
+            this._BrightenImage = false;
+            this._BrightnessChange = 0.0f;
+            this._SaturateImage = false;
+            this._SaturationChange = 1.0f;
         }
     }
 
@@ -369,7 +391,7 @@ namespace Aurora.Settings.Layers
                         Rectangle scr_region = Resize(new Rectangle(
                                 Properties.Coordinates.X - bounds.Left,
                                 Properties.Coordinates.Y - bounds.Top,
-                                Properties.Coordinates.Width, 
+                                Properties.Coordinates.Width,
                                 Properties.Coordinates.Height));
 
                         using (var graphics = Graphics.FromImage(newImage))
@@ -378,6 +400,11 @@ namespace Aurora.Settings.Layers
                     break;
             }
             EffectLayer ambilight_layer = new EffectLayer();
+
+            if (Properties.SaturateImage)
+                newImage = AdjustImageSaturation(newImage, Properties.SaturationChange);
+            if (Properties.BrightenImage)
+                newImage = AdjustImageBrightness(newImage, Properties.BrightnessChange);
 
             if (Properties.AmbilightType == AmbilightType.Default)
             {
@@ -411,7 +438,7 @@ namespace Aurora.Settings.Layers
             return false;
         }
 
-        private Color GetAverageColor(Image screenshot)
+        private static Color GetAverageColor(Image screenshot)
         {
             var scaled_down_image = new Bitmap(16, 16);
 
@@ -431,7 +458,7 @@ namespace Aurora.Settings.Layers
         /// <param name="rec"></param>
         /// <param name="raw"></param>
         /// <returns></returns>
-        private bool RectangleEquals(Rectangle rec, RawRectangle raw)
+        private static bool RectangleEquals(Rectangle rec, RawRectangle raw)
         {
             return ((rec.Left == raw.Left) && (rec.Top == raw.Top) && (rec.Right == raw.Right) && (rec.Bottom == raw.Bottom));
         }
@@ -444,6 +471,90 @@ namespace Aurora.Settings.Layers
         private Rectangle Resize(Rectangle r)
         {
             return new Rectangle(r.X / Scale, r.Y / Scale, r.Width / Scale, r.Height / Scale);
+        }
+
+
+        /// <summary>
+        /// Adjusts the brightness of an image using a color matrix. brightness is a value between -1 and 1
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Image AdjustImageBrightness(Image bmp, float b)
+        {
+            //https://docs.rainmeter.net/tips/colormatrix-guide/
+            Bitmap newBitmap = new Bitmap(bmp.Width, bmp.Height);
+
+            float[][] colorMatrix ={
+                new float[] {1, 0, 0, 0, 0},//red
+                new float[] {0, 1, 0, 0, 0},//green
+                new float[] {0, 0, 1, 0, 0},//blue
+                new float[] {0, 0, 0, 1, 0},//alpha
+                new float[] {b, b, b, 0, 1}
+            };
+
+            using (var att = new ImageAttributes())
+            {
+                att.SetColorMatrix(new ColorMatrix(colorMatrix));
+                using (var g = Graphics.FromImage(newBitmap))
+                {
+                    g.DrawImage(bmp,
+                                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                                0,
+                                0,
+                                bmp.Width,
+                                bmp.Height,
+                                GraphicsUnit.Pixel,
+                                att);
+                }
+            }
+
+            return newBitmap;
+        }
+
+        /// <summary>
+        /// Adjusts the saturation of an image using a color matrix.
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Image AdjustImageSaturation(Image bmp, float s)
+        {
+            //https://docs.rainmeter.net/tips/colormatrix-guide/
+            Bitmap newBitmap = new Bitmap(bmp.Width, bmp.Height);
+
+            const float lumR = 0.3086f;
+            const float lumG = 0.6094f;
+            const float lumB = 0.0820f;
+            float sr = (1 - s) * lumR;
+            float sg = (1 - s) * lumG;
+            float sb = (1 - s) * lumB;
+
+            float[][] colorMatrix ={
+                new float[] {sr + s, sr,     sr,     0, 0},
+                new float[] {sg,     sg + s, sg,     0, 0},
+                new float[] {sb,     sb,     sb + s, 0, 0},
+                new float[] {0,      0,      0,      1, 0},
+                new float[] {0,      0,      0,      0, 1}
+            };
+
+            using (var att = new ImageAttributes())
+            {
+                att.SetColorMatrix(new ColorMatrix(colorMatrix));
+                using (var g = Graphics.FromImage(newBitmap))
+                {
+                    g.DrawImage(bmp,
+                                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                                0,
+                                0,
+                                bmp.Width,
+                                bmp.Height,
+                                GraphicsUnit.Pixel,
+                                att);
+                }
+            }
+
+            return newBitmap;
         }
 
         protected void InvokePropertyChanged([CallerMemberName] string propertyName = null)

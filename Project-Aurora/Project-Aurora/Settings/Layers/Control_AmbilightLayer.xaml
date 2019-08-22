@@ -80,5 +80,15 @@
         </GroupBox>
         <Image HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="22" Margin="295,58,0,0" ToolTip="Higher qualities should only be needed when using the&#x0a;coordinates effect type and will increase RAM usage." Source="/Aurora;component/Resources/info.png" RenderTransformOrigin="0.562,0.917"/>
         <Image HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="22" Margin="295,85,0,0" ToolTip="Higher update speeds will result in a&#x0a;smoother effect and increase CPU usage." Source="/Aurora;component/Resources/info.png"/>
+        <GroupBox Header="Color Adjustment" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="262" Margin="306,160,0,-9">
+            <Grid Margin="0,0,0,0">
+                <CheckBox x:Name="BrightnessCheckbox" Content="Brightness:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Height="17" IsChecked="{Binding Properties._BrightenImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="99"/>
+                <CheckBox x:Name="SaturationCheckbox" Content="Saturation:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,34,0,0" Height="17" IsChecked="{Binding Properties._SaturateImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="99"/>
+                <Slider x:Name="BrightnessSlider" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="109,5,0,0" Height="20" Value="{Binding Properties._BrightnessChange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-0.5" Maximum="0.5"/>
+                <Slider x:Name="SaturationSlider" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="109,34,0,0" Width="100" Height="20" Value="{Binding Properties._SaturationChange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="2"/>
+                <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,30,0,-4" Content="{Binding ElementName=SaturationSlider, Path=Value}" Width="41" Height="29"/>
+                <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,1,0,0" Content="{Binding ElementName=BrightnessSlider, Path=Value}" Width="41" Height="29"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>
