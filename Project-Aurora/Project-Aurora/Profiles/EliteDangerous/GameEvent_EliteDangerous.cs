@@ -14,12 +14,12 @@ namespace Aurora.Profiles.EliteDangerous
             //TODO: Read initial game configuration
         }
 
-        public override void OnActivate()
+        public override void OnResume()
         {
             //TODO: Enable Journal API reading
         }
 
-        public override void OnDeactivate()
+        public override void OnPause()
         {
             //TODO: Disable Journal API reading
         }
