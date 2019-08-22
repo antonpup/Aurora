@@ -16,7 +16,7 @@ namespace Aurora.Profiles.EliteDangerous
                 ProfileType = typeof(EliteDangerousProfile),
                 OverviewControlType = typeof(Control_EliteDangerous),
                 GameStateType = typeof(GSI.GameState_EliteDangerous),
-                Event = new GameEvent_Generic(),
+                Event = new GameEvent_EliteDangerous(),
                 IconURI = "Resources/elite_dangerous_256x256.png"
             })
         {
@@ -33,18 +33,6 @@ namespace Aurora.Profiles.EliteDangerous
             {
                 Config.ExtraAvailableLayers.Add(entry.Key);
             }
-        }
-
-        public override void OnActivate()
-        {
-            Global.logger.Info("OnActivate ED");
-            base.OnActivate();
-        }
-
-        public override void OnDeactivate()
-        {
-            Global.logger.Info("OnDeactivate ED");
-            base.OnDeactivate();
         }
     }
 }
