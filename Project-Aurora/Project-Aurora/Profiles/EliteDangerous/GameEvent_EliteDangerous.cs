@@ -83,14 +83,14 @@ namespace Aurora.Profiles.EliteDangerous
             Global.logger.Error("Current bind file: " + currentBindFile);
         }
 
-        public override void OnResume()
+        public override void OnStart()
         {
             ReadBindFiles();
             WatchBindFiles();
             //TODO: Enable Journal API reading
         }
 
-        public override void OnPause()
+        public override void OnStop()
         {
             StopWatchingBindFiles();
             //TODO: Disable Journal API reading
