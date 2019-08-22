@@ -45,7 +45,7 @@ namespace Aurora.Devices.NZXT
 
     class NZXTDevice : Device
     {
-        private String devicename = "NZXT";
+        private String devicename = "NZXT (beta)";
         private bool isInitialized = false;
 
         private DeviceLoader DeviceLoader;
@@ -94,6 +94,16 @@ namespace Aurora.Devices.NZXT
                         else
                         {
                             isInitialized = true;
+                            Global.logger.Info("Starting NZXT debug information: Windows Build version: " + System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+
+                            foreach (var device in DeviceLoader.Devices)
+                            {
+                                if (device is NZXTSharp.KrakenX.KrakenX)
+                                    Global.logger.Info("Found KrakenX, firmware version: " + (device as NZXTSharp.KrakenX.KrakenX).FirmwareVersion ?? "");
+                                if (device is NZXTSharp.HuePlus.HuePlus)
+                                    Global.logger.Info("Found HuePlus, firmware version: " + (device as NZXTSharp.HuePlus.HuePlus).FirmwareVersion ?? "");
+                            }
+
                             return true;
                         }
                     }
@@ -188,6 +198,8 @@ namespace Aurora.Devices.NZXT
 
                 if (logo.Changed || forced)
                     DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Logo, new NZXTSharp.Fixed(logo.Colors));
+
+                Thread.Sleep(16);//limiting the update speed this way for now, might fry the devices otherwise
 
                 return true;
             }
