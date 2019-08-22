@@ -433,6 +433,9 @@ namespace Aurora.Settings
         private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
         public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
 
+        private bool enableAudioCapture;
+        public bool EnableAudioCapture { get => enableAudioCapture; set { enableAudioCapture = value; InvokePropertyChanged(); } }
+
         public bool updates_check_on_start_up;
         public bool start_silently;
         public AppExitMode close_mode;

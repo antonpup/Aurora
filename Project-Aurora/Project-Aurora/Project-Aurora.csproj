@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -444,6 +444,9 @@
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Include="Devices\UnifiedHID\AsusPugio.cs" />
+    <Compile Include="Devices\UnifiedHID\RivalMouses.cs" />
+    <Compile Include="Devices\UnifiedHID\RoccatVulcan.cs" />
     <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
@@ -619,6 +622,17 @@
     <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
+    <Compile Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\GameState_Slime_Rancher.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\GameStateNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\LocationNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\MailNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\VacPackNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\SlimeRancherApplication.cs" />
+    <Compile Include="Profiles\Slime Rancher\SlimeRancherProfile.cs" />
     <Compile Include="Profiles\Subnautica\Control_Subnautica.xaml.cs" />
     <Compile Include="Profiles\Subnautica\GSI\GameState_Subnautica.cs" />
     <Compile Include="Profiles\Subnautica\GSI\Nodes\GameStateNode.cs" />
@@ -1561,6 +1575,7 @@
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Slime_Rancher.png" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1989,6 +2004,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Subnautica\Control_Subnautica.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -2312,6 +2331,7 @@
     <Resource Include="Resources\AddProfile_Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Profiles\Slime Rancher\Layers\" />
     <Folder Include="Profiles\Subnautica\Layers\" />
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
