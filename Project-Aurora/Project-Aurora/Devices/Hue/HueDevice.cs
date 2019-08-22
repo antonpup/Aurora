@@ -66,7 +66,6 @@ namespace Aurora.Devices.Hue
         {
             try
             {
-                //
                 IBridgeLocator bridgeLocator = new HttpBridgeLocator();
                 var bridges = bridgeLocator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).Result;
                 bridge = bridges.First();
