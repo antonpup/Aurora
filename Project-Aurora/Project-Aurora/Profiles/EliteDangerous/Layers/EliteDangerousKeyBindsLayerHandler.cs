@@ -1,8 +1,10 @@
-﻿using Aurora.EffectsEngine;
+﻿using System;
+using Aurora.EffectsEngine;
 using Aurora.Settings.Layers;
 using System.Drawing;
 using System.Windows.Controls;
 using Aurora.Devices;
+using CSScriptLibrary;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {
@@ -95,6 +97,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
     }
     public class EliteDangerousKeyBindsLayerHandler : LayerHandler<EliteDangerousKeyBindsHandlerProperties>
     {
+        private int blinkSpeed = 20;
         public EliteDangerousKeyBindsLayerHandler() : base()
         {
             _ID = "EliteDangerousKeyBinds";
@@ -105,6 +108,27 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             return new Control_EliteDangerousKeyBindsLayer(this);
         }
 
+        private float GetBlinkStep()
+        {
+            float animationPosition = Utils.Time.GetMillisecondsSinceEpoch() % (10000L / blinkSpeed) / (10000.0f / blinkSpeed);
+            float animationStep = animationPosition * 2;
+            return animationStep > 1 ? 1F + (1F - animationStep) : animationStep;
+        }
+
+        private Color GetBlinkingColor(Color baseColor)
+        {
+            return Utils.ColorUtils.BlendColors(
+                this.Properties.ShipStuffColor,
+                Color.FromArgb(
+                    0,
+                    this.Properties.ShipStuffColor.R,
+                    this.Properties.ShipStuffColor.G,
+                    this.Properties.ShipStuffColor.B
+                ),
+                GetBlinkStep()
+            );
+        }
+
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
@@ -112,6 +136,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             keyBindsLayer.Set(DeviceKeys.C, this.Properties.ShipStuffColor);
             keyBindsLayer.Set(DeviceKeys.V, this.Properties.DefenceColor);
             keyBindsLayer.Set(DeviceKeys.B, this.Properties.DefenceDimmedColor);
+            keyBindsLayer.Set(DeviceKeys.A, GetBlinkingColor(Properties.ShipStuffColor));
 
             return keyBindsLayer;
         }
