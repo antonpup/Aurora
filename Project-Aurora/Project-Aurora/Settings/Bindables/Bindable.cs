@@ -126,6 +126,9 @@ namespace Aurora.Settings.Bindables
                         Value = (T)Convert.ChangeType(s, underlyingType, CultureInfo.InvariantCulture);
                     break;
 
+                case JValue v:
+                    Value = (T)v.ToObject(typeof(T));
+                    break;
                 default:
                     throw new ArgumentException($@"Could not parse provided {input.GetType()} ({input}) to {typeof(T)}.");
             }

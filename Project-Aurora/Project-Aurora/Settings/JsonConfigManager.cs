@@ -19,7 +19,7 @@ namespace Aurora.Settings
         private string path;
 
         private string filename = "main.json";
-        protected virtual string Filename => filename;
+        protected virtual string Filename => Path.Combine(path, filename);
 
         public JsonConfigManager(string path, IDictionary<string, object> defaultOverrides) : base(defaultOverrides)
         {
@@ -35,9 +35,9 @@ namespace Aurora.Settings
 
         protected override void PerformLoad()
         {
-            if (string.IsNullOrEmpty(Filename) || !File.Exists(Path.Combine(path, Filename))) return;
+            if (string.IsNullOrEmpty(Filename) || !File.Exists(Filename)) return;
 
-            using (var reader = new StreamReader(Path.Combine(path, Filename)))
+            using (var reader = new StreamReader(Filename))
             {
                 var jObject = JsonConvert.DeserializeObject<JObject>(reader.ReadToEnd());
                 foreach (var jToken in jObject)
@@ -53,20 +53,20 @@ namespace Aurora.Settings
                                     {
                                         if (d.TryGetValue(jTokenInner.Key, out IBindable bd))
                                         {
-                                            bd.Parse(jTokenInner.Value.ToString());
+                                            bd.Parse(jTokenInner.Value);
                                         }
                                         else if (AddMissingEntries)
-                                            Set(jToken.Key, jToken.Value.ToString());
+                                            Set(jToken.Key, jToken.Value);
                                     }
                                 }
                                 break;
                             default:
-                                b.Parse(jToken.Value.ToString());
+                                b.Parse(jToken.Value);
                                 break;
                         }
                     }
                     else if (AddMissingEntries)
-                        Set(jToken.Key, jToken.Value.ToString());
+                        Set(jToken.Key, jToken.Value);
                 }
             }
         }
@@ -77,13 +77,14 @@ namespace Aurora.Settings
 
             try
             {
-                using (var w = new StreamWriter(Path.Combine(path, Filename)))
+                using (var w = new StreamWriter(Filename))
                 {
                     w.Write(JsonConvert.SerializeObject(ConfigStore, Formatting.Indented));
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Global.logger.Error($"Error performing save on {Filename}: {e.ToString()}");
                 return false;
             }
 

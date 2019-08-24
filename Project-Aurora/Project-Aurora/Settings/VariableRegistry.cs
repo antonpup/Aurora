@@ -29,29 +29,29 @@ namespace Aurora.Settings
             Bindable = bindable;
             switch (Bindable)
             {
-                case BindableBool b:
+                case Bindable<bool> b:
                     Value = b.Value;
                     Default = b.Default;
                     break;
-                case BindableDouble b:
-                    Value = b.Value;
-                    Default = b.Default;
-                    Max = b.MaxValue;
-                    Min = b.MinValue;
-                    break;
-                case BindableFloat b:
+                case BindableNumber<double> b:
                     Value = b.Value;
                     Default = b.Default;
                     Max = b.MaxValue;
                     Min = b.MinValue;
                     break;
-                case BindableInt b:
+                case BindableNumber<float> b:
                     Value = b.Value;
                     Default = b.Default;
                     Max = b.MaxValue;
                     Min = b.MinValue;
                     break;
-                case BindableLong b:
+                case BindableNumber<int> b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableNumber<long> b:
                     Value = b.Value;
                     Default = b.Default;
                     Max = b.MaxValue;
@@ -90,19 +90,19 @@ namespace Aurora.Settings
                 if (Bindable != null)
                     switch (Bindable)
                     {
-                        case BindableBool b:
+                        case Bindable<bool> b:
                             b.Value = (bool) newvalue;
                             break;
-                        case BindableDouble b:
+                        case BindableNumber<double> b:
                             b.Value = (double) newvalue;
                             break;
-                        case BindableFloat b:
+                        case BindableNumber<float> b:
                             b.Value = (float) newvalue;
                             break;
-                        case BindableInt b:
+                        case BindableNumber<int> b:
                             b.Value = (int) newvalue;
                             break;
-                        case BindableLong b:
+                        case BindableNumber<long> b:
                             b.Value = (long) newvalue;
                             break;
                         case BindableColor b:
@@ -115,69 +115,76 @@ namespace Aurora.Settings
 
         internal void Merge(VariableRegistryItem variableRegistryItem)
         {
-            Default = variableRegistryItem.Default;
-            Title = variableRegistryItem.Title;
-            Remark = variableRegistryItem.Remark;
-            Min = variableRegistryItem.Min;
-            Max = variableRegistryItem.Max;
-            Bindable = variableRegistryItem.Bindable;
-            var typ = Value.GetType();
-            var defaultType = variableRegistryItem.Default.GetType();
+            try
+            {
+                Default = variableRegistryItem.Default;
+                Title = variableRegistryItem.Title;
+                Remark = variableRegistryItem.Remark;
+                Min = variableRegistryItem.Min;
+                Max = variableRegistryItem.Max;
+                Bindable = variableRegistryItem.Bindable;
+                var typ = Value.GetType();
+                var defaultType = variableRegistryItem.Default.GetType();
 
-            if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
-                Value = Enum.ToObject(defaultType, Value);
-            else if (!defaultType.Equals(typ) && Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
-                Value = Convert.ChangeType(Value, defaultType);
-            else if (Value == null && !defaultType.Equals(typ))
-                Value = variableRegistryItem.Default;
-            Flags = variableRegistryItem.Flags;
-            if (Bindable != null)
-                switch (Bindable)
-                {
-                    case BindableBool b:
-                        Value = b.Value;
-                        b.ValueChanged += _ => ValueChanged();
-                        break;
-                    case BindableDouble b:
-                        Value = b.Value;
-                        b.ValueChanged += _ => ValueChanged();
-                        break;
-                    case BindableFloat b:
-                        Value = b.Value;
-                        b.ValueChanged += _ => ValueChanged();
-                        break;
-                    case BindableInt b:
-                        Value = b.Value;
-                        b.ValueChanged += _ => ValueChanged();
-                        break;
-                    case BindableLong b:
-                        Value = b.Value;
-                        b.ValueChanged += _ => ValueChanged();
-                        break;
-                    case BindableColor b:
-                        Value = b.Value;
-                        b.ValueChanged += _ => ValueChanged();
-                        break;
-                }
+                if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
+                    Value = Enum.ToObject(defaultType, Value);
+                else if (!defaultType.Equals(typ) && Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
+                    Value = Convert.ChangeType(Value, defaultType);
+                else if (Value == null && !defaultType.Equals(typ))
+                    Value = variableRegistryItem.Default;
+                Flags = variableRegistryItem.Flags;
+                if (Bindable != null)
+                    switch (Bindable)
+                    {
+                        case Bindable<bool> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableNumber<double> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableNumber<float> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableNumber<int> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableNumber<long> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableColor b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                    }
+            }
+            catch (Exception e)
+            {
+                Global.logger.Error($"Exception in merging of VariableRegisties: {e.ToString()}");
+            }
         }
 
         internal void ValueChanged()
         {
             switch (Bindable)
             {
-                case BindableBool b:
+                case Bindable<bool> b:
                     Value = b.Value;
                     break;
-                case BindableDouble b:
+                case BindableNumber<double> b:
                     Value = b.Value;
                     break;
-                case BindableFloat b:
+                case BindableNumber<float> b:
                     Value = b.Value;
                     break;
-                case BindableInt b:
+                case BindableNumber<int> b:
                     Value = b.Value;
                     break;
-                case BindableLong b:
+                case BindableNumber<long> b:
                     Value = b.Value;
                     break;
                 case BindableColor b:

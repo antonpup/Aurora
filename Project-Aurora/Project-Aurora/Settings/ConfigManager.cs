@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Aurora.Settings.Bindables;
 using Aurora.Utils;
 
+using Newtonsoft.Json.Linq;
+
 namespace Aurora.Settings
 {
     public abstract class ConfigManager<T> : IDisposable
@@ -18,14 +20,14 @@ namespace Aurora.Settings
 
         protected readonly IDictionary<T, IBindable> ConfigStore = new Dictionary<T, IBindable>();
 
+        protected readonly IDictionary<T, IBindable> TempConfigStore = new Dictionary<T, IBindable>();
+
         protected ConfigManager(IDictionary<T, object> defaultOverrides)
         {
             this.defaultOverrides = defaultOverrides;
         }
 
-        protected virtual void InitialiseDefaults()
-        {
-        }
+        protected virtual void InitialiseDefaults() { }
 
         public BindableDouble Set(T lookup, double value, double? min = null, double? max = null, double? precision = null)
         {
@@ -107,6 +109,27 @@ namespace Aurora.Settings
             return bindable;
         }
 
+        public BindableLong Set(T lookup, long value, long? min = null, long? max = null)
+        {
+            value = getDefault(lookup, value);
+
+            if (!(GetOriginalBindable<long>(lookup) is BindableLong bindable))
+            {
+                bindable = new BindableLong(value);
+                AddBindable(lookup, bindable);
+            }
+            else
+            {
+                bindable.Value = value;
+            }
+
+            bindable.Default = value;
+            if (min.HasValue) bindable.MinValue = min.Value;
+            if (max.HasValue) bindable.MaxValue = max.Value;
+
+            return bindable;
+        }
+
         public BindableBool Set(T lookup, bool value)
         {
             value = getDefault(lookup, value);
@@ -164,7 +187,7 @@ namespace Aurora.Settings
 
         protected virtual void AddBindableBindableDictionary(T lookup, BindableBindableDictionary dictionary)
         {
-            if(lookup == null) throw new ArgumentNullException($"Lookup of type {lookup.GetType()} can not be of null");
+            if (lookup == null) throw new ArgumentNullException($"Lookup of type {lookup.GetType()} can not be of null");
             ConfigStore[lookup] = dictionary;
             dictionary.ItemsAdded += _ => backgroundSave();
             dictionary.ItemsRemoved += _ => backgroundSave();
@@ -172,7 +195,7 @@ namespace Aurora.Settings
 
         protected virtual void AddBindable<TBindable>(T lookup, Bindable<TBindable> bindable)
         {
-            if(lookup == null) throw new ArgumentNullException($"Lookup of type {lookup.GetType()} can not be of null");
+            if (lookup == null) throw new ArgumentNullException($"Lookup of type {lookup.GetType()} can not be of null");
             ConfigStore[lookup] = bindable;
             bindable.ValueChanged += _ => backgroundSave();
         }
@@ -180,7 +203,7 @@ namespace Aurora.Settings
         private TType getDefault<TType>(T lookup, TType fallback)
         {
             if (defaultOverrides != null && defaultOverrides.TryGetValue(lookup, out object found))
-                return (TType)found;
+                return (TType) found;
 
             return fallback;
         }
@@ -188,7 +211,48 @@ namespace Aurora.Settings
         private Bindable<U> set<U>(T lookup, U value)
         {
             Bindable<U> bindable = new Bindable<U>(value);
-            AddBindable(lookup, bindable);
+            if (value is JValue val)
+            {
+                switch (val.Type)
+                {
+                    case JTokenType.Integer:
+                        if (val.Value is long)
+                        {
+                            BindableNumber<long> bindlong = new BindableLong(val.ToObject<long>());
+                            AddBindable(lookup, bindlong);
+                        }
+                        else
+                        {
+                            BindableNumber<int> bindint = new BindableInt(val.ToObject<int>());
+                            AddBindable(lookup, bindint);
+                        }
+                        break;
+                    case JTokenType.Float:
+                        if (val.Value is double)
+                        {
+                            BindableNumber<double> binddouble = new BindableDouble(val.ToObject<double>());
+                            AddBindable(lookup, binddouble);
+                        }
+                        else
+                        {
+                            BindableNumber<float> bindfloat = new BindableFloat(val.ToObject<float>());
+                            AddBindable(lookup, bindfloat);
+                        }
+                        break;
+                    case JTokenType.Boolean:
+                        Bindable<bool> bindbool = new BindableBool(val.ToObject<bool>());
+                        AddBindable(lookup, bindbool);
+                        break;
+                    default:
+                        Bindable<string> bindstring = new Bindable<string>(val.ToString());
+                        AddBindable(lookup, bindstring);
+                        break;
+                }
+            }
+            else
+            {
+                AddBindable(lookup, bindable);
+            }
             return bindable;
         }
 
@@ -203,7 +267,7 @@ namespace Aurora.Settings
                 if (!(obj is Bindable<U>))
                     throw new InvalidCastException($"Cannot convert bindable of type {obj.GetType()} retrieved from {nameof(ConfigManager<T>)} to {typeof(Bindable<U>)}.");
 
-                return (Bindable<U>)obj;
+                return (Bindable<U>) obj;
             }
 
             return null;
@@ -216,7 +280,7 @@ namespace Aurora.Settings
                 if (!(obj is BindableBindableDictionary))
                     throw new InvalidCastException($"Cannot convert bindable of type {obj.GetType()} retrieved from {nameof(ConfigManager<T>)} to {typeof(BindableBindableDictionary)}.");
 
-                return (BindableBindableDictionary)obj;
+                return (BindableBindableDictionary) obj;
             }
 
             return null;

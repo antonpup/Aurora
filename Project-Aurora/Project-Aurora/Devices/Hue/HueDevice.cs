@@ -10,6 +10,8 @@ using Aurora.Settings;
 using Aurora.Settings.Bindables;
 using Aurora.Utils;
 
+using Newtonsoft.Json;
+
 using Q42.HueApi;
 using Q42.HueApi.ColorConverters;
 using Q42.HueApi.ColorConverters.HSB;
@@ -36,7 +38,10 @@ namespace Aurora.Devices.Hue
         private BridgeConfig conf;
 
         private List<Light> lights;
-        
+
+        private int curKey = 0;
+        private int curItr = 0;
+
         public VariableRegistry GetRegisteredVariables()
         {
             VariableRegistry registry = new VariableRegistry();
@@ -66,6 +71,7 @@ namespace Aurora.Devices.Hue
         {
             try
             {
+                curKey = config.Get<int>("first_key");
                 IBridgeLocator bridgeLocator = new HttpBridgeLocator();
                 var bridges = bridgeLocator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).Result;
                 bridge = bridges.First();
@@ -138,14 +144,33 @@ namespace Aurora.Devices.Hue
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
+            while (!keyColors.ContainsKey((DeviceKeys) curKey)) curKey++;
             if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(100)) return false;
             var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
-            var lightIds = lights.Select(t => t.Id);
+            foreach (var light in lights)
+            {
+                if (!config.Store.ContainsKey($"send_{light.Name.ToLower().Replace(" ", "_")}"))
+                {
+                    config.Set($"send_{light.Name.ToLower().Replace(" ", "_")}", false);
+                }
+                else
+                {
+                    try
+                    {
+                        config.Get<bool>($"send_{light.Name.ToLower().Replace(" ", "_")}");
+                    }
+                    catch
+                    {
+                        config.Set($"send_{light.Name.ToLower().Replace(" ", "_")}", Convert.ToBoolean(config.Get<string>($"send_{light.Name.ToLower().Replace(" ", "_")}")));
+                    }
+                }
+            }
             var brightness = config.Get<int>("brightness");
             var command = new LightCommand();
-            var sendLightId = config.Get<int>("send_light");
-            command.SetColor(keyColors.Single(t => t.Key == DeviceKeys.Peripheral_Logo).Value.GetHueDeviceColor());
+            var defaultCommand = new LightCommand().SetColor(defaultColor).TurnOn();
+            defaultCommand.Brightness = (byte) (defaultCommand.Brightness / (double) byte.MaxValue * (brightness / (double) byte.MaxValue) * byte.MaxValue);
+            command.SetColor(keyColors.Single(t => t.Key == (DeviceKeys) curKey).Value.GetHueDeviceColor());
             if (brightness == 0) command.TurnOff();
             else
             {
@@ -169,12 +194,19 @@ namespace Aurora.Devices.Hue
                     }
                 }
             }
-            if (sendLightId > 0)
-                client.SendCommandAsync(command,new []{sendLightId.ToString()}).GetAwaiter().GetResult();
-            else
-                client.SendCommandAsync(command,lightIds).GetAwaiter().GetResult();
+            foreach (var light in lights)
+            {
+                client.SendCommandAsync(config.Get<bool>($"send_{light.Name.ToLower().Replace(" ", "_")}") ? command : defaultCommand, new[] {light.Id}).GetAwaiter().GetResult();
+            }
             lastCall = DateTime.Now;
             lastFrame = command;
+            curItr++;
+            if (curItr > config.Get<int>("key_iteration_count")-1)
+            {
+                curKey++;
+                curItr = 0;
+            }
+            if (curKey > config.Get<int>("last_key")) curKey = config.Get<int>("first_key");
             if (!command.IsColorSame(defaultColor)) lastFrameDefault = false;
             return true;
         }
@@ -202,7 +234,9 @@ namespace Aurora.Devices.Hue
             Set("force_default", false);
             Set("brightness", 255, 0, 255);
             Set("use_default", true);
-            Set("send_light", 0, 0, int.MaxValue);
+            Set("key_iteration_count", 5, 1, int.MaxValue);
+            Set("first_key", (int) DeviceKeys.Peripheral_Logo, (int) DeviceKeys.Peripheral, (int) DeviceKeys.MONITORLIGHT103);
+            Set("last_key", (int) DeviceKeys.Peripheral_Logo, (int) DeviceKeys.Peripheral, (int) DeviceKeys.MONITORLIGHT103);
         }
 
         public IDictionary<string, IBindable> Store => ConfigStore;
