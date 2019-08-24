@@ -145,7 +145,7 @@ namespace Aurora.Devices.Hue
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             while (!keyColors.ContainsKey((DeviceKeys) curKey)) curKey++;
-            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(100)) return false;
+            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(config.Get<int>("send_interval"))) return false;
             var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             foreach (var light in lights)
@@ -196,7 +196,9 @@ namespace Aurora.Devices.Hue
             }
             foreach (var light in lights)
             {
-                client.SendCommandAsync(config.Get<bool>($"send_{light.Name.ToLower().Replace(" ", "_")}") ? command : defaultCommand, new[] {light.Id}).GetAwaiter().GetResult();
+                var commandToSend = config.Get<bool>($"send_{light.Name.ToLower().Replace(" ", "_")}") ? command : defaultCommand;
+                if (commandToSend.Brightness != light.State.Brightness || commandToSend.Saturation != light.State.Saturation || commandToSend.Hue != light.State.Hue)
+                    client.SendCommandAsync(commandToSend, new[] {light.Id}).GetAwaiter().GetResult();
             }
             lastCall = DateTime.Now;
             lastFrame = command;
@@ -237,6 +239,7 @@ namespace Aurora.Devices.Hue
             Set("key_iteration_count", 5, 1, int.MaxValue);
             Set("first_key", (int) DeviceKeys.Peripheral_Logo, (int) DeviceKeys.Peripheral, (int) DeviceKeys.MONITORLIGHT103);
             Set("last_key", (int) DeviceKeys.Peripheral_Logo, (int) DeviceKeys.Peripheral, (int) DeviceKeys.MONITORLIGHT103);
+            Set("send_interval", 100, 100, int.MaxValue);
         }
 
         public IDictionary<string, IBindable> Store => ConfigStore;
