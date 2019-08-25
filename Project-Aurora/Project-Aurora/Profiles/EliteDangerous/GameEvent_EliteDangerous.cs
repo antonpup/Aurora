@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using System.Xml;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
@@ -10,6 +11,7 @@ namespace Aurora.Profiles.EliteDangerous
 {
     public class GameEvent_EliteDangerous : GameEvent_Generic
     {
+        readonly DelayedMethodCaller delayedFileRead = new DelayedMethodCaller(1);
 
         private static readonly string journalFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), 
@@ -57,12 +59,45 @@ namespace Aurora.Profiles.EliteDangerous
             }
         }
         
+        public class DelayedMethodCaller
+        {
+            int _delay;
+            Timer _timer = new Timer();
+
+            public DelayedMethodCaller(int delay)
+            {
+                _delay = delay;
+            }
+
+            public void CallMethod(Action action)
+            {
+                if (!_timer.Enabled)
+                {
+                    _timer = new Timer(_delay)
+                    {
+                        AutoReset = false
+                    };
+                    _timer.Elapsed += (object sender, ElapsedEventArgs e) =>
+                    {
+                        action();
+                    };
+                    _timer.Start();
+                }
+                else
+                {
+                    _timer.Stop();
+                    _timer.Start();
+                }
+            }
+        }
+        
         private void OnBindsFileChanged(object sender, FileSystemEventArgs e)
         {
-            // This is a fix for multiple change events being triggered
-            if (bindWatcher != null) bindWatcher.EnableRaisingEvents = false;
-            ReadBindFiles();
-            if (bindWatcher != null) bindWatcher.EnableRaisingEvents = true;
+            /*
+             * This event can fire multiple times in a row. We need to make sure to read the file only after
+             * the last event is fired to avoid running into a locked file
+             */
+            delayedFileRead.CallMethod(() => ReadBindFiles());
         }
 
         private void ReadBindFiles()
