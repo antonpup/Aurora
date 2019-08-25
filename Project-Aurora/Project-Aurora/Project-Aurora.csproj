@@ -458,6 +458,7 @@
     <Compile Include="Profiles\EliteDangerous\EliteDangerousProfile.cs" />
     <Compile Include="Profiles\EliteDangerous\GameEvent_EliteDangerous.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\GameState_EliteDangerous.cs" />
+    <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Controls.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Status.cs" />
     <Compile Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousBackgroundLayer.xaml.cs">
       <DependentUpon>Control_EliteDangerousBackgroundLayer.xaml</DependentUpon>

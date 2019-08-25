@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Xml;
 
 namespace Aurora.Profiles.EliteDangerous
 {
@@ -81,6 +82,27 @@ namespace Aurora.Profiles.EliteDangerous
         {
             //TODO: Parse configuration XML
             Global.logger.Error("Current bind file: " + currentBindFile);
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                doc.Load(currentBindFile);
+                XmlNodeList binds = doc.DocumentElement.ChildNodes;
+                foreach(XmlNode bind in binds)
+                {
+                    foreach (XmlNode mapping in bind.ChildNodes)
+                    {
+                        if(mapping.Name == "Primary" || mapping.Name == "Secondary") {
+                            // This is a bind
+                            Global.logger.Error(bind.Name + " " + mapping.Name + ": " + mapping.Attributes["Device"].Value + " " + mapping.Attributes["Key"].Value);
+                        }
+                    }
+                }
+
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                Global.logger.Error("Error loading binds file: " + currentBindFile);      
+            }
         }
 
         public override void OnStart()
