@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using Aurora.EffectsEngine;
 using Aurora.Settings.Layers;
 using System.Drawing;
 using System.Windows.Controls;
 using Aurora.Devices;
+using Aurora.Profiles.EliteDangerous.GSI;
+using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using CSScriptLibrary;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
@@ -133,10 +136,54 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         {
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
 
-            keyBindsLayer.Set(DeviceKeys.C, this.Properties.ShipStuffColor);
-            keyBindsLayer.Set(DeviceKeys.V, this.Properties.DefenceColor);
-            keyBindsLayer.Set(DeviceKeys.B, this.Properties.DefenceDimmedColor);
-            keyBindsLayer.Set(DeviceKeys.A, GetBlinkingColor(Properties.ShipStuffColor));
+            Dictionary<string, ControlGroup> groups = new Dictionary<string, ControlGroup>()
+            {
+                {"camera", new ControlGroup(new string[]
+                {
+                    Bind.EliteBindName.PhotoCameraToggle, Bind.EliteBindName.PhotoCameraToggle_Buggy, Bind.EliteBindName.VanityCameraScrollLeft,
+                    Bind.EliteBindName.VanityCameraScrollRight, Bind.EliteBindName.ToggleFreeCam, Bind.EliteBindName.FreeCamToggleHUD,
+                    Bind.EliteBindName.FixCameraRelativeToggle, Bind.EliteBindName.FixCameraWorldToggle
+                })},
+                {"movement_speed", new ControlGroup(new string[]
+                {
+                    Bind.EliteBindName.ForwardKey, Bind.EliteBindName.BackwardKey, Bind.EliteBindName.IncreaseEnginesPower, Bind.EliteBindName.SetSpeedZero,
+                    Bind.EliteBindName.SetSpeed25, Bind.EliteBindName.SetSpeed50, Bind.EliteBindName.SetSpeed75, Bind.EliteBindName.SetSpeed100
+                })},
+                {"movement_speed2", new ControlGroup(new string[]
+                {
+                    Bind.EliteBindName.SetSpeedMinus100, Bind.EliteBindName.SetSpeedMinus75, Bind.EliteBindName.SetSpeedMinus50,
+                    Bind.EliteBindName.SetSpeedMinus25, Bind.EliteBindName.AutoBreakBuggyButton
+                })},
+                {"movement_speed3", new ControlGroup(new string[]
+                {
+                    Bind.EliteBindName.OrderHoldPosition
+                })},
+            };
+            
+            groups["camera"].color = this.Properties.CameraColor;
+            groups["movement_speed"].color = this.Properties.MovementSpeedColor;
+            groups["movement_speed2"].color = this.Properties.MovementSpeedColor;
+            groups["movement_speed3"].color = this.Properties.MovementSpeedColor;
+
+            GSI.Nodes.Controls controls = (state as GameState_EliteDangerous).Controls;
+            foreach(KeyValuePair<string, Bind> entry in controls.commandToBind)
+            {
+                foreach (KeyValuePair<string, ControlGroup> group in groups)
+                {
+                    if (group.Value.commands.Contains(entry.Key))
+                    {
+                        foreach (Bind.Mapping mapping in entry.Value.mappings)
+                        {
+                            keyBindsLayer.Set(mapping.key, group.Value.color);
+                        }
+                    }
+                }
+            }
+
+//            keyBindsLayer.Set(DeviceKeys.C, this.Properties.ShipStuffColor);
+//            keyBindsLayer.Set(DeviceKeys.V, this.Properties.DefenceColor);
+//            keyBindsLayer.Set(DeviceKeys.B, this.Properties.DefenceDimmedColor);
+//            keyBindsLayer.Set(DeviceKeys.A, GetBlinkingColor(Properties.ShipStuffColor));
 
             return keyBindsLayer;
         }

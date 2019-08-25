@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
+using Aurora.Profiles.EliteDangerous.GSI;
+using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 
 namespace Aurora.Profiles.EliteDangerous
 {
@@ -82,27 +86,64 @@ namespace Aurora.Profiles.EliteDangerous
         {
             //TODO: Parse configuration XML
             Global.logger.Error("Current bind file: " + currentBindFile);
+            
+            HashSet<string> modifierKeys = new HashSet<string>();
+
+            Dictionary<string, Bind> commandToBind = new Dictionary<string, Bind>();
+            Dictionary<Bind, string> bindToCommand = new Dictionary<Bind, string>();
+            
             XmlDocument doc = new XmlDocument();
             try
             {
                 doc.Load(currentBindFile);
-                XmlNodeList binds = doc.DocumentElement.ChildNodes;
-                foreach(XmlNode bind in binds)
+                XmlNodeList commands = doc.DocumentElement.ChildNodes;
+                foreach(XmlNode command in commands)
                 {
-                    foreach (XmlNode mapping in bind.ChildNodes)
+                    Bind bind = new Bind(command.Name);
+                    foreach (XmlNode xmlMapping in command.ChildNodes)
                     {
-                        if(mapping.Name == "Primary" || mapping.Name == "Secondary") {
-                            // This is a bind
-                            Global.logger.Error(bind.Name + " " + mapping.Name + ": " + mapping.Attributes["Device"].Value + " " + mapping.Attributes["Key"].Value);
+                        if (xmlMapping.Name != "Primary" && xmlMapping.Name != "Secondary") continue;
+                        
+                        Bind.Mapping mapping = new Bind.Mapping();
+
+                        if (xmlMapping.Attributes["Device"].Value == "Keyboard")
+                        {
+                            mapping.SetKey(xmlMapping.Attributes["Key"].Value);
+                        }
+                        
+                        foreach (XmlNode property in xmlMapping.ChildNodes)
+                        {
+                            if (property.Name != "Modifier") continue;
+                            
+                            if (property.Attributes["Device"].Value == "Keyboard" && !string.IsNullOrEmpty(property.Attributes["Key"].Value))
+                            {
+                                modifierKeys.Add(property.Attributes["Key"].Value);
+                                mapping.AddModifier(property.Attributes["Key"].Value);
+                            }
+                        }
+
+                        if (mapping.HasKey())
+                        {
+                            bind.AddMapping(mapping);
                         }
                     }
-                }
 
+                    if (bind.mappings.Any())
+                    {
+                        commandToBind.Add(command.Name, bind);
+                        bindToCommand.Add(bind, command.Name);
+                    }
+                }
             }
             catch (System.IO.FileNotFoundException)
             {
                 Global.logger.Error("Error loading binds file: " + currentBindFile);      
             }
+            
+            GSI.Nodes.Controls controls = (_game_state as GameState_EliteDangerous).Controls;
+            controls.modifierKeys = modifierKeys;
+            controls.commandToBind = commandToBind;
+            controls.bindToCommand = bindToCommand;  
         }
 
         public override void OnStart()

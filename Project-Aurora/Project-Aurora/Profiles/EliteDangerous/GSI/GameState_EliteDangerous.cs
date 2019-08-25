@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Aurora.Profiles.EliteDangerous.GSI.Nodes;
+﻿using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 
 namespace Aurora.Profiles.EliteDangerous.GSI
 {
     class GameState_EliteDangerous : GameState<GameState_EliteDangerous>
     {
         private Status status;
+        private Nodes.Controls controls;
         
         public Status Status
         {
@@ -19,6 +15,17 @@ namespace Aurora.Profiles.EliteDangerous.GSI
                     status = new Status();
 
                 return status;
+            }
+        }
+        
+        public Nodes.Controls Controls
+        {
+            get
+            {
+                if (controls == null)
+                    controls = new Nodes.Controls();
+
+                return controls;
             }
         }
         /// <summary>
