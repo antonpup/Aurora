@@ -166,9 +166,9 @@ namespace Aurora.Settings.Layers
         private static long last_use_time = 0;
         private static DesktopDuplicator desktopDuplicator;
         private static bool processing = false;  // Used to avoid updating before the previous update is processed
-        private static System.Timers.Timer retryTimer;
+        private static System.Timers.Timer retryTimer = new System.Timers.Timer(500);
         private static Rectangle currentScreenBounds;
-        private static bool fallback = true;
+        private static bool fallback = false;//we should use the more performant DesktopDup way when possible
         public event PropertyChangedEventHandler PropertyChanged;
         public int OutputId
         {
@@ -196,8 +196,6 @@ namespace Aurora.Settings.Layers
             {
                 this.Initialize();
             }
-            retryTimer = new System.Timers.Timer(500);
-            retryTimer.Elapsed += RetryTimer_Elapsed;
         }
 
         public void Initialize()
@@ -252,6 +250,7 @@ namespace Aurora.Settings.Layers
                     }
                     Global.logger.Debug(e, String.Format("Caught exception when trying to setup desktop duplication. Retrying in {0} ms", AmbilightLayerHandler.retryTimer.Interval));
                     captureTimer?.Stop();
+                    retryTimer.Elapsed += RetryTimer_Elapsed;
                     retryTimer.Start();
                     return;
                 }
