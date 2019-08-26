@@ -461,6 +461,8 @@
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Controls.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Journal.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Status.cs" />
+    <Compile Include="Profiles\EliteDangerous\Helpers\FileWatcher.cs" />
+    <Compile Include="Profiles\EliteDangerous\Helpers\TimerHelpers.cs" />
     <Compile Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousBackgroundLayer.xaml.cs">
       <DependentUpon>Control_EliteDangerousBackgroundLayer.xaml</DependentUpon>
     </Compile>

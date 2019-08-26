@@ -6,6 +6,8 @@ using System.Timers;
 using System.Xml;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
+using Aurora.Profiles.EliteDangerous.Helpers;
+using Newtonsoft.Json;
 
 namespace Aurora.Profiles.EliteDangerous
 {
@@ -20,6 +22,7 @@ namespace Aurora.Profiles.EliteDangerous
             "Elite Dangerous"
         );
         private static readonly string statusFile = Path.Combine(journalFolder, "Status.json");
+        private FileWatcher statusFileWatcher;
         
         private static readonly string bindingsFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -32,8 +35,11 @@ namespace Aurora.Profiles.EliteDangerous
 
         private string currentBindFile = null;
         private FileSystemWatcher bindWatcher = null;
-        
-        public GameEvent_EliteDangerous() : base() {}
+
+        public GameEvent_EliteDangerous() : base()
+        {
+            statusFileWatcher = new FileWatcher(statusFile, FileWatcher.ReadMode.FULL, new StatusReadCallback(this));
+        }
 
         public void WatchBindFiles()
         {
@@ -56,38 +62,6 @@ namespace Aurora.Profiles.EliteDangerous
             {
                 bindWatcher.Dispose();
                 bindWatcher = null;
-            }
-        }
-        
-        public class DelayedMethodCaller
-        {
-            int _delay;
-            Timer _timer = new Timer();
-
-            public DelayedMethodCaller(int delay)
-            {
-                _delay = delay;
-            }
-
-            public void CallMethod(Action action)
-            {
-                if (!_timer.Enabled)
-                {
-                    _timer = new Timer(_delay)
-                    {
-                        AutoReset = false
-                    };
-                    _timer.Elapsed += (object sender, ElapsedEventArgs e) =>
-                    {
-                        action();
-                    };
-                    _timer.Start();
-                }
-                else
-                {
-                    _timer.Stop();
-                    _timer.Start();
-                }
             }
         }
         
@@ -181,16 +155,49 @@ namespace Aurora.Profiles.EliteDangerous
             controls.bindToCommand = bindToCommand;  
         }
 
+        public void UpdateStatus(Status newStatus)
+        {
+            Status status = (_game_state as GameState_EliteDangerous).Status;
+
+            status.timestamp = newStatus.timestamp;
+            status.@event = newStatus.@event;
+            status.Flags = newStatus.Flags;
+            status.Pips = newStatus.Pips;
+            status.FireGroup = newStatus.FireGroup;
+            status.GuiFocus = newStatus.GuiFocus;
+            status.Fuel = newStatus.Fuel;
+            status.Cargo = newStatus.Cargo;
+        }
+
+        private class StatusReadCallback : FileWatcher.FileReadCallback
+        {
+            private GameEvent_EliteDangerous @event;
+            public StatusReadCallback(GameEvent_EliteDangerous @event)
+            {
+                this.@event = @event;
+            }
+            public void OnRead(int lineNumber, string lineValue)
+            {
+                if (string.IsNullOrEmpty(lineValue)) return;
+                
+                Status newStatus = JsonConvert.DeserializeObject<Status>(lineValue);
+
+                @event.UpdateStatus(newStatus);
+            }
+        }
+
         public override void OnStart()
         {
             ReadBindFiles();
             WatchBindFiles();
+            statusFileWatcher.Start();
             //TODO: Enable Journal API reading
         }
 
         public override void OnStop()
         {
             StopWatchingBindFiles();
+            statusFileWatcher.Stop();
             //TODO: Disable Journal API reading
         }
     }
