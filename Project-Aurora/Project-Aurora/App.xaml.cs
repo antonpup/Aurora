@@ -19,6 +19,9 @@ using SharpDX.RawInput;
 using NLog;
 using System.Reflection;
 using System.Text;
+using RazerSdkWrapper;
+using RazerSdkWrapper.Utils;
+using RazerSdkWrapper.Data;
 
 namespace Aurora
 {
@@ -36,6 +39,8 @@ namespace Aurora
         public static bool isDebug = false;
 
         private static string _ExecutingDirectory = "";
+        private static string _AppDataDirectory = "";
+        private static string _LogsDirectory = "";
 
         /// <summary>
         /// The path to the application executing directory
@@ -51,6 +56,27 @@ namespace Aurora
             }
         }
 
+        public static string AppDataDirectory
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_AppDataDirectory))
+                    _AppDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora");
+
+                return _AppDataDirectory;
+            }
+        }
+
+        public static string LogsDirectory
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_LogsDirectory))
+                    _LogsDirectory = Path.Combine(AppDataDirectory, "Logs");
+
+                return _LogsDirectory;
+            }
+        }
 
         /// <summary>
         /// Output logger for errors, warnings, and information
@@ -93,6 +119,7 @@ namespace Aurora
         public static KeyboardLayoutManager kbLayout;
         public static Effects effengine;
         public static KeyRecorder key_recorder;
+        public static RzManager razerManager;
 
         /// <summary>
         /// Currently held down modifer key
@@ -300,6 +327,32 @@ namespace Aurora
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
 
+                Global.logger.Info("Loading RazerManager");
+                if (RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
+                {
+                    try
+                    {
+                        Global.razerManager = new RzManager()
+                        {
+                            KeyboardEnabled = true,
+                            MouseEnabled = true,
+                            MousepadEnabled = true,
+                            AppListEnabled = true,
+                        };
+
+                        Global.logger.Info("RazerManager loaded successfully!");
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.Fatal("RazerManager failed to load!");
+                        Global.logger.Fatal(exc.ToString());
+                    }
+                }
+                else
+                {
+                    Global.logger.Warn("Currently installed razer sdk version \"{0}\" is not supported!", RzHelper.GetSdkVersion());
+                }
+
                 Global.logger.Info("Loading Applications");
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
@@ -437,6 +490,16 @@ namespace Aurora
             Global.net_listener?.Stop();
             Global.dev_manager?.Shutdown();
             Global.dev_manager?.Dispose();
+
+            try
+            {
+                Global.razerManager?.Dispose();
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Fatal("RazerManager failed to dispose!");
+                Global.logger.Fatal(exc.ToString());
+            }
 
             InputInterceptor?.Dispose();
 

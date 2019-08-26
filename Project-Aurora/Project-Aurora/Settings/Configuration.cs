@@ -566,7 +566,7 @@ namespace Aurora.Settings
 
     public class ConfigManager
     {
-        private static string ConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Config");
+        private static string ConfigPath = Path.Combine(Global.AppDataDirectory, "Config");
         private const string ConfigExtension = ".json";
 
         private static long _last_save_time = 0L;
