@@ -286,9 +286,9 @@ namespace Aurora.Settings
         la = 16,
         [Description("Spanish")]
         es = 17,
-        [Description("ISO - Automatic")]
+        [Description("ISO - Automatic (Experimental)")]
         iso = 18,
-        [Description("ANSI - Automatic")]
+        [Description("ANSI - Automatic (Experimental)")]
         ansi = 19,
     }
 
