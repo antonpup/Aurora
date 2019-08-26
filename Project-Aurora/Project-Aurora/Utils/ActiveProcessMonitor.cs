@@ -51,7 +51,7 @@ namespace Aurora.Utils
 		}
 
 		[DllImport("user32.dll")]
-		static extern IntPtr GetForegroundWindow();
+		public static extern IntPtr GetForegroundWindow();
 
 		[DllImport("user32.dll")]
 		static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -157,21 +157,33 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.5\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NZXTSharp, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NZXTSharp.2.1.2\lib\netstandard2.0\NZXTSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Octokit, Version=0.32.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Octokit.0.32.0\lib\net45\Octokit.dll</HintPath>
     </Reference>
-    <Reference Include="Pranas.ScreenshotCapture, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Pranas.ScreenshotCapture.1.0.11\lib\net40\Pranas.ScreenshotCapture.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RazerSdkWrapper, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\RazerSdkWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>.\Roccat-Talk.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.D3DCompiler.4.0.1\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.4.0.1\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.4.0.1\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.RawInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.RawInput.4.0.1\lib\net45\SharpDX.RawInput.dll</HintPath>
@@ -218,6 +230,9 @@
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Ports, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Ports.4.5.0\lib\net461\System.IO.Ports.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -382,6 +397,7 @@
     <Compile Include="Controls\LayerEditor.xaml.cs">
       <DependentUpon>LayerEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\NZXT\NZXTDevice.cs" />
     <Compile Include="Controls\ReorderableListBox.cs" />
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
     <Compile Include="Devices\Clevo\ClevoSetKBLED.cs" />
@@ -404,6 +420,7 @@
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\NZXT\NZXTLayoutMap.cs" />
     <Compile Include="Devices\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -414,6 +431,9 @@
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Include="Devices\UnifiedHID\AsusPugio.cs" />
+    <Compile Include="Devices\UnifiedHID\RivalMouses.cs" />
+    <Compile Include="Devices\UnifiedHID\RoccatVulcan.cs" />
     <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
@@ -452,6 +472,7 @@
     <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\Generic\RazerChromaProfile.cs" />
     <Compile Include="Profiles\MemoryReadingLightEvent.cs" />
     <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
       <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
@@ -589,6 +610,17 @@
     <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
+    <Compile Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\GameState_Slime_Rancher.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\GameStateNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\LocationNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\MailNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\VacPackNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\SlimeRancherApplication.cs" />
+    <Compile Include="Profiles\Slime Rancher\SlimeRancherProfile.cs" />
     <Compile Include="Profiles\Subnautica\Control_Subnautica.xaml.cs" />
     <Compile Include="Profiles\Subnautica\GSI\GameState_Subnautica.cs" />
     <Compile Include="Profiles\Subnautica\GSI\Nodes\GameStateNode.cs" />
@@ -614,6 +646,14 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
+      <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\BinaryCounterLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
+      <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
@@ -708,6 +748,7 @@
     </Compile>
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
+    <Compile Include="Utils\DesktopDuplicator.cs" />
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MathUtils.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
@@ -1153,6 +1194,9 @@
     <None Include="kb_layouts\Plain Keyboard\layout.hu.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.es.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Plain Keyboard\layout.swiss.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1169,6 +1213,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\generic_laptop.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.iso.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.ansi.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\razer_blade.json">
@@ -1204,7 +1254,13 @@
     <None Include="kb_layouts\Plain Keyboard\layout.intl.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.it.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Plain Keyboard\layout.jpn.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.la.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.nordic.json">
@@ -1497,6 +1553,8 @@
     <Resource Include="Resources\osu_256x256.png" />
     <Resource Include="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
     <Resource Include="Resources\Skype_300x300.png" />
+    <Resource Include="Resources\Slime_Rancher.png" />
+    <Content Include="RazerSdkWrapper.dll" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1933,6 +1991,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Subnautica\Control_Subnautica.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1974,6 +2036,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\XCOM\Control_XCOM.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_RazerLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_BinaryCounterLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2252,6 +2322,7 @@
     <Resource Include="Resources\AddProfile_Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Profiles\Slime Rancher\Layers\" />
     <Folder Include="Profiles\Subnautica\Layers\" />
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
