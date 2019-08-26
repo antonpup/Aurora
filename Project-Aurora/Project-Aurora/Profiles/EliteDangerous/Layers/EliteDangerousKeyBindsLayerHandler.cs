@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Aurora.EffectsEngine;
 using Aurora.Settings.Layers;
 using System.Drawing;
@@ -213,7 +214,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         private int blinkSpeed = 20;
         public static GameState_EliteDangerous gameState = null;
 
-        private ControlGroup[] commandGroups =
+        private static ControlGroupSet CONTROLS_MAIN = new ControlGroupSet(new ControlGroup[]
         {
             new ControlGroup("CameraColor", new[]
             {
@@ -254,7 +255,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             )),
             new ControlGroup("MovementSecondaryColor", new[]
             {
-                Command.LeftThrustButton, Command.RightThrustButton, Command.UpThrustButton, Command.DownThrustButton,
+                Command.LeftThrustButton, Command.RightThrustButton, Command.UpThrustButton,
+                Command.DownThrustButton,
                 Command.ForwardThrustButton, Command.BackwardThrustButton
             }, new StatusState(Flag.NONE,
                 Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
@@ -338,9 +340,11 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 Command.DeployHeatSink
             }, new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET, () => gameState.Journal.hasHeatSink)),
             new ControlGroup("DefenceColor", new[]
-            {
-                Command.UseShieldCell
-            }, new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET, () => gameState.Journal.hasShieldCellBank)),
+                {
+                    Command.UseShieldCell
+                },
+                new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET,
+                    () => gameState.Journal.hasShieldCellBank)),
             new ControlGroup("DefenceColor", new[]
             {
                 Command.OrderDefensiveBehaviour
@@ -384,6 +388,43 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             {
                 Command.ExplorationFSSEnter
             }, new StatusState(Flag.SUPERCRUISE | Flag.HUD_DISCOVERY_MODE, Flag.DOCKED | Flag.LANDED_PLANET))
+        }, new StatusState(GuiFocus.NONE));
+
+        private static ControlGroupSet CONTROLS_SYSTEM_MAP = new ControlGroupSet(new[]
+        {
+            new ControlGroup("MovementSpeedColor", new[]
+            {
+                Command.CamTranslateForward, Command.CamTranslateBackward, Command.CamTranslateLeft,
+                Command.CamTranslateRight
+            }),
+            new ControlGroup("MovementSecondaryColor", new[]
+            {
+                Command.CamZoomIn, Command.CamZoomOut
+            }),
+            new ControlGroup("UiColor", new[]
+            {
+                Command.UI_Back, Command.UI_Select
+            }),
+            new ControlGroup("NavigationColor", new[]
+            {
+                Command.GalaxyMapOpen, Command.SystemMapOpen
+            })
+        }, new StatusState(GuiFocus.MAP_SYSTEM));
+
+        private static ControlGroupSet CONTROLS_GALAXY_MAP = new ControlGroupSet(CONTROLS_SYSTEM_MAP, new[]
+        {
+            new ControlGroup("MovementSecondaryColor", new[]
+            {
+                Command.CamPitchUp, Command.CamPitchDown, Command.CamTranslateUp, Command.CamTranslateDown,
+                Command.CamYawLeft, Command.CamYawRight
+            })
+        }, new StatusState(GuiFocus.MAP_GALAXY));
+
+        private ControlGroupSet[] controlGroupSets =
+        {
+            CONTROLS_MAIN,
+            CONTROLS_SYSTEM_MAP,
+            CONTROLS_GALAXY_MAP
         };
 
         private Dictionary<string, StatusState> blinkingKeys = new Dictionary<string, StatusState>()
@@ -469,26 +510,31 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         public override EffectLayer Render(IGameState state)
         {
             gameState = state as GameState_EliteDangerous;
+            GSI.Nodes.Controls controls = (state as GameState_EliteDangerous).Controls;
+
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
 
-            foreach (ControlGroup group in commandGroups)
+            foreach (ControlGroupSet controlGroupSet in controlGroupSets)
             {
-                group.color = Properties.GetColorByVariableName(group.colorGroupName);
-            }
+                if (!controlGroupSet.ConditionSatisfied(gameState.Status)) continue;
 
-            GSI.Nodes.Controls controls = (state as GameState_EliteDangerous).Controls;
-            foreach (KeyValuePair<string, Bind> entry in controls.commandToBind)
-            {
-                foreach (ControlGroup group in commandGroups)
+                foreach (ControlGroup controlGroup in controlGroupSet.controlGroups)
                 {
-                    if (group.ConditionSatisfied(gameState.Status) && group.commands.Contains(entry.Key))
-                    {
-                        bool blinkingKey = blinkingKeys.ContainsKey(entry.Key) &&
-                                           blinkingKeys[entry.Key].ConditionSatisfied(gameState.Status);
+                    controlGroup.color = Properties.GetColorByVariableName(controlGroup.colorGroupName);
 
-                        foreach (Bind.Mapping mapping in entry.Value.mappings)
+                    if (!controlGroup.ConditionSatisfied(gameState.Status)) continue;
+
+                    foreach (string command in controlGroup.commands)
+                    {
+                        if (!controls.commandToBind.ContainsKey(command)) continue;
+
+                        bool blinkingKey = blinkingKeys.ContainsKey(command) &&
+                                           blinkingKeys[command].ConditionSatisfied(gameState.Status);
+
+                        foreach (Bind.Mapping mapping in controls.commandToBind[command].mappings)
                         {
-                            keyBindsLayer.Set(mapping.key, blinkingKey ? GetBlinkingColor(group.color) : group.color);
+                            keyBindsLayer.Set(mapping.key,
+                                blinkingKey ? GetBlinkingColor(controlGroup.color) : controlGroup.color);
                         }
                     }
                 }

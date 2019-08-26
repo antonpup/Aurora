@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using Aurora.Devices;
 using CSScriptLibrary;
+using Microsoft.Scripting.Utils;
 
 namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {
@@ -424,37 +425,51 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         }
     }
 
-    public class ControlGroup
+    public class ControlGroupSet : NeedsStatusState
+    {
+        public ControlGroup[] controlGroups;
+
+        public ControlGroupSet(ControlGroupSet copyFromSet, ControlGroup[] controlGroups,
+            StatusState neededStatusState = null)
+        {
+            List<ControlGroup> controlGroupList = new List<ControlGroup>();
+            controlGroupList.AddRange(copyFromSet.controlGroups);
+            controlGroupList.AddRange(controlGroups);
+
+            this.controlGroups = controlGroupList.ToArray();
+
+            if (neededStatusState != null)
+            {
+                this.neededStatusState = neededStatusState;
+            }
+            else if (copyFromSet.neededStatusState != null)
+            {
+                this.neededStatusState = copyFromSet.neededStatusState;
+            }
+        }
+
+        public ControlGroupSet(ControlGroup[] controlGroups, StatusState neededStatusState = null) : base(
+            neededStatusState)
+        {
+            this.controlGroups = controlGroups;
+        }
+    }
+
+    public class ControlGroup : NeedsStatusState
     {
         public string colorGroupName;
         public Color color;
         public List<string> commands;
-        public StatusState neededStatusState;
 
         public ControlGroup(string colorGroupName, string[] commands) : this(colorGroupName, commands, null)
         {
         }
 
-        public ControlGroup(string colorGroupName, string[] commands, StatusState neededStatusState)
+        public ControlGroup(string colorGroupName, string[] commands, StatusState neededStatusState) : base(
+            neededStatusState)
         {
             this.colorGroupName = colorGroupName;
             this.commands = commands.ToList();
-            this.neededStatusState = neededStatusState;
-        }
-
-        public bool ConditionSatisfied(Status status)
-        {
-            return ConditionSatisfied(status.Flags, status.GuiFocus);
-        }
-
-        public bool ConditionSatisfied(long flags, int guiFocus)
-        {
-            if (neededStatusState != null)
-            {
-                return neededStatusState.ConditionSatisfied(flags, guiFocus);
-            }
-
-            return true;
         }
     }
 

@@ -2,6 +2,36 @@
 
 namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {
+
+    public class NeedsStatusState
+    {
+        public StatusState neededStatusState;
+
+        public NeedsStatusState()
+        {
+        }
+
+        public NeedsStatusState(StatusState neededStatusState)
+        {
+            this.neededStatusState = neededStatusState;
+        }
+        
+        public bool ConditionSatisfied(Status status)
+        {
+            return ConditionSatisfied(status.Flags, status.GuiFocus);
+        }
+
+        public bool ConditionSatisfied(long flags, int guiFocus)
+        {
+            if (neededStatusState != null)
+            {
+                return neededStatusState.ConditionSatisfied(flags, guiFocus);
+            }
+
+            return true;
+        }
+    }
+    
     public class StatusState
     {
         long flagsSet = -1;
@@ -17,8 +47,11 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
             flagsNotSet, conditionCallback)
         {
         }
+        public StatusState(int guiFocus) : this(Flag.NONE, guiFocus, Flag.NONE)
+        {
+        }
 
-        public StatusState(long flagsSet, int guiFocus, long flagsNotSet, Func<bool> conditionCallback)
+        public StatusState(long flagsSet, int guiFocus, long flagsNotSet, Func<bool> conditionCallback = null)
         {
             this.flagsSet = flagsSet;
             this.guiFocus = guiFocus;
@@ -101,6 +134,21 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         }
     }
 
+    public static class GuiFocus {
+        public static readonly int NONE                = 0;
+        public static readonly int PANEL_SYSTEMS       = 1;
+        public static readonly int PANEL_NAV           = 2;
+        public static readonly int PANEL_COMS          = 3;
+        public static readonly int PANEL_ROLE          = 4;
+        public static readonly int STATION_SERVICES    = 5;
+
+        public static readonly int MAP_GALAXY          = 6;
+        public static readonly int MAP_SYSTEM          = 7;
+        public static readonly int MAP_ORRERY          = 8;
+        public static readonly int MODE_FSS            = 9;
+        public static readonly int MODE_ADS            = 10;
+    }
+    
     /// <summary>
     /// Class representing player status
     /// </summary>
