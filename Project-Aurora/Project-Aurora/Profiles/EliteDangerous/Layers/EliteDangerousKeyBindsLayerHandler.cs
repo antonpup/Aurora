@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Aurora.EffectsEngine;
 using Aurora.Settings.Layers;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Controls;
 using Aurora.Devices;
 using Aurora.Profiles.EliteDangerous.GSI;
@@ -533,6 +534,20 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
                         foreach (Bind.Mapping mapping in controls.commandToBind[command].mappings)
                         {
+                            bool allModifiersPressed = true;
+                            foreach (DeviceKeys modifierKey in mapping.modifiers)
+                            {
+                                keyBindsLayer.Set(modifierKey, Properties.ShipStuffColor);
+                                //TODO: A correct check if a modifier key is pressed
+                                if (Array.IndexOf(Global.InputEvents.PressedKeys, modifierKey) == -1)
+                                {
+                                    allModifiersPressed = false;
+                                    break;
+                                }
+                            }
+
+                            if (!allModifiersPressed) continue;
+                            
                             keyBindsLayer.Set(mapping.key,
                                 blinkingKey ? GetBlinkingColor(controlGroup.color) : controlGroup.color);
                         }
