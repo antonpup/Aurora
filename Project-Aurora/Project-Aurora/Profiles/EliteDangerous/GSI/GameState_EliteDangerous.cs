@@ -2,10 +2,22 @@
 
 namespace Aurora.Profiles.EliteDangerous.GSI
 {
-    class GameState_EliteDangerous : GameState<GameState_EliteDangerous>
+    public class GameState_EliteDangerous : GameState<GameState_EliteDangerous>
     {
         private Status status;
+        private Journal journal;
         private Nodes.Controls controls;
+        
+        public Journal Journal
+        {
+            get
+            {
+                if (journal == null)
+                    journal = new Journal();
+
+                return journal;
+            }
+        }
         
         public Status Status
         {

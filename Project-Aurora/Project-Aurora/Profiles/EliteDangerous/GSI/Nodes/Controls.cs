@@ -418,13 +418,32 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 
     public class ControlGroup
     {
+        public string colorGroupName;
         public Color color;
         public List<string> commands;
-        public StatusState neededStatus;
+        public StatusState neededStatusState;
 
-        public ControlGroup(string[] commands)
+        public ControlGroup(string colorGroupName, string[] commands) : this(colorGroupName, commands, null) { }
+        
+        public ControlGroup(string colorGroupName, string[] commands, StatusState neededStatusState)
         {
+            this.colorGroupName = colorGroupName;
             this.commands = commands.ToList();
+            this.neededStatusState = neededStatusState;
+        }
+
+        public bool ConditionSatisfied(Status status)
+        {
+            return ConditionSatisfied(status.Flags, status.GuiFocus);
+        }
+        public bool ConditionSatisfied(long flags, int guiFocus)
+        {
+            if (neededStatusState != null)
+            {
+                return neededStatusState.ConditionSatisfied(flags, guiFocus);
+            }
+
+            return true;
         }
     }
     
@@ -436,29 +455,5 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public HashSet<string> modifierKeys;
         public Dictionary<string, Bind> commandToBind;
         public Dictionary<Bind, string> bindToCommand;
-
-//        public static Dictionary<string, ControlGroup> groups = new Dictionary<string, ControlGroup>()
-//        {
-//            {"camera", new ControlGroup(new string[]
-//            {
-//                Bind.EliteBindName.PhotoCameraToggle, Bind.EliteBindName.PhotoCameraToggle_Buggy, Bind.EliteBindName.VanityCameraScrollLeft,
-//                Bind.EliteBindName.VanityCameraScrollRight, Bind.EliteBindName.ToggleFreeCam, Bind.EliteBindName.FreeCamToggleHUD,
-//                Bind.EliteBindName.FixCameraRelativeToggle, Bind.EliteBindName.FixCameraWorldToggle
-//            })},
-//            {"movement_speed", new ControlGroup(new string[]
-//            {
-//                Bind.EliteBindName.ForwardKey, Bind.EliteBindName.BackwardKey, Bind.EliteBindName.IncreaseEnginesPower, Bind.EliteBindName.SetSpeedZero,
-//                Bind.EliteBindName.SetSpeed25, Bind.EliteBindName.SetSpeed50, Bind.EliteBindName.SetSpeed75, Bind.EliteBindName.SetSpeed100
-//            })},
-//            {"movement_speed2", new ControlGroup(new string[]
-//            {
-//                Bind.EliteBindName.SetSpeedMinus100, Bind.EliteBindName.SetSpeedMinus75, Bind.EliteBindName.SetSpeedMinus50,
-//                Bind.EliteBindName.SetSpeedMinus25, Bind.EliteBindName.AutoBreakBuggyButton
-//            })},
-//            {"movement_speed3", new ControlGroup(new string[]
-//            {
-//                    Bind.EliteBindName.OrderHoldPosition
-//            })},
-//        };
     }
 }

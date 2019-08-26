@@ -1,4 +1,6 @@
-﻿namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
+﻿using System;
+
+namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {
 
     public class StatusState
@@ -6,15 +8,29 @@
         long flagsSet = -1;
         long flagsNotSet = -1;
         int guiFocus = -1;
-
-        public StatusState(long flagsSet, int guiFocus, long flagsNotSet)
+        private Func<bool> conditionCallback = null;
+        
+        public StatusState(long flagsSet, long flagsNotSet) : this(flagsSet, -1, flagsNotSet, null) {}
+        public StatusState(long flagsSet, int guiFocus, long flagsNotSet, Func<bool> conditionCallback)
         {
             this.flagsSet = flagsSet;
             this.guiFocus = guiFocus;
             this.flagsNotSet = flagsNotSet;
+            this.conditionCallback = conditionCallback;
+        }
+        public StatusState(Func<bool> conditionCallback)
+        {
+            this.conditionCallback = conditionCallback;
         }
         
+        public bool ConditionSatisfied(Status status)
+        {
+            return ConditionSatisfied(status.Flags, status.GuiFocus);
+        }
         public bool ConditionSatisfied(long flags, int guiFocus) {
+            if(conditionCallback != null && !conditionCallback()) {
+                return false;
+            }
             if(this.guiFocus != -1 && this.guiFocus != guiFocus) {
                 return false;
             }
@@ -31,6 +47,7 @@
 
     public static class Flag
     {
+        public static readonly int NONE                            = -1;
         public static readonly int DOCKED                          = 1;
         public static readonly int LANDED_PLANET                   = 1 << 1;
         public static readonly int LANDING_GEAR                    = 1 << 2;

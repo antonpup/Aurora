@@ -69,7 +69,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         
         public Color? _ModeDisableColor { get; set; }
         public Color ModeDisableColor { get { return Logic._ModeDisableColor ?? _ModeDisableColor ?? Color.Empty; } }
-
+        
         public EliteDangerousKeyBindsHandlerProperties() : base() { }
 
         public EliteDangerousKeyBindsHandlerProperties(bool assign_default = false) : base(assign_default) { }
@@ -97,10 +97,63 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             this._ModeEnableColor = Color.FromArgb(153, 167, 255);
             this._ModeDisableColor = Color.FromArgb(61, 88, 156);
         }
+        
+        public Color GetColorByVariableName(string colorVariableName) {
+            switch (@colorVariableName)
+            {
+                    case "HudModeCombatColor": return HudModeCombatColor;
+                    case "HudModeDiscoveryColor": return HudModeDiscoveryColor;
+                    case "NoneColor": return NoneColor;
+                    case "OtherColor": return OtherColor;
+                    case "UiColor": return UiColor;
+                    case "UiAltColor": return UiAltColor;
+                    case "ShipStuffColor": return ShipStuffColor;
+                    case "CameraColor": return CameraColor;
+                    case "DefenceColor": return DefenceColor;
+                    case "DefenceDimmedColor": return DefenceDimmedColor;
+                    case "OffenceColor": return OffenceColor;
+                    case "OffenceDimmedColor": return OffenceDimmedColor;
+                    case "MovementSpeedColor": return MovementSpeedColor;
+                    case "MovementSpeedDimmedColor": return MovementSpeedDimmedColor;
+                    case "MovementSecondaryColor": return MovementSecondaryColor;
+                    case "WingColor": return WingColor;
+                    case "NavigationColor": return NavigationColor;
+                    case "ModeEnableColor": return ModeEnableColor;
+                    case "ModeDisableColor": return ModeDisableColor;
+            }
+
+            return NoneColor;
+        }
     }
+
     public class EliteDangerousKeyBindsLayerHandler : LayerHandler<EliteDangerousKeyBindsHandlerProperties>
     {
         private int blinkSpeed = 20;
+        public static GameState_EliteDangerous gameState = null;
+
+        private ControlGroup[] commandGroups = {
+            new ControlGroup("CameraColor", new [] {
+                Bind.EliteBindName.PhotoCameraToggle, Bind.EliteBindName.PhotoCameraToggle_Buggy, Bind.EliteBindName.VanityCameraScrollLeft,
+                Bind.EliteBindName.VanityCameraScrollRight, Bind.EliteBindName.ToggleFreeCam, Bind.EliteBindName.FreeCamToggleHUD,
+                Bind.EliteBindName.FixCameraRelativeToggle, Bind.EliteBindName.FixCameraWorldToggle
+            }),
+            new ControlGroup("MovementSpeedColor", new [] {
+                Bind.EliteBindName.ForwardKey, Bind.EliteBindName.BackwardKey, Bind.EliteBindName.IncreaseEnginesPower, Bind.EliteBindName.SetSpeedZero,
+                Bind.EliteBindName.SetSpeed25, Bind.EliteBindName.SetSpeed50, Bind.EliteBindName.SetSpeed75, Bind.EliteBindName.SetSpeed100
+            }, new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET)),
+            new ControlGroup("MovementSpeedColor", new [] {
+                Bind.EliteBindName.SetSpeedMinus100, Bind.EliteBindName.SetSpeedMinus75, Bind.EliteBindName.SetSpeedMinus50,
+                Bind.EliteBindName.SetSpeedMinus25, Bind.EliteBindName.AutoBreakBuggyButton
+            }, new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE)),
+            new ControlGroup("MovementSpeedColor", new [] {
+                Bind.EliteBindName.OrderHoldPosition
+            }, new StatusState(() =>
+            {
+                if(gameState != null) return gameState.Journal.fighterStatus != FighterStatus.None;
+                return false;
+            }))
+        };
+        
         public EliteDangerousKeyBindsLayerHandler() : base()
         {
             _ID = "EliteDangerousKeyBinds";
@@ -134,47 +187,24 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
         public override EffectLayer Render(IGameState state)
         {
+            gameState = state as GameState_EliteDangerous;
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
 
-            Dictionary<string, ControlGroup> groups = new Dictionary<string, ControlGroup>()
+            foreach (ControlGroup group in commandGroups)
             {
-                {"camera", new ControlGroup(new string[]
-                {
-                    Bind.EliteBindName.PhotoCameraToggle, Bind.EliteBindName.PhotoCameraToggle_Buggy, Bind.EliteBindName.VanityCameraScrollLeft,
-                    Bind.EliteBindName.VanityCameraScrollRight, Bind.EliteBindName.ToggleFreeCam, Bind.EliteBindName.FreeCamToggleHUD,
-                    Bind.EliteBindName.FixCameraRelativeToggle, Bind.EliteBindName.FixCameraWorldToggle
-                })},
-                {"movement_speed", new ControlGroup(new string[]
-                {
-                    Bind.EliteBindName.ForwardKey, Bind.EliteBindName.BackwardKey, Bind.EliteBindName.IncreaseEnginesPower, Bind.EliteBindName.SetSpeedZero,
-                    Bind.EliteBindName.SetSpeed25, Bind.EliteBindName.SetSpeed50, Bind.EliteBindName.SetSpeed75, Bind.EliteBindName.SetSpeed100
-                })},
-                {"movement_speed2", new ControlGroup(new string[]
-                {
-                    Bind.EliteBindName.SetSpeedMinus100, Bind.EliteBindName.SetSpeedMinus75, Bind.EliteBindName.SetSpeedMinus50,
-                    Bind.EliteBindName.SetSpeedMinus25, Bind.EliteBindName.AutoBreakBuggyButton
-                })},
-                {"movement_speed3", new ControlGroup(new string[]
-                {
-                    Bind.EliteBindName.OrderHoldPosition
-                })},
-            };
-            
-            groups["camera"].color = this.Properties.CameraColor;
-            groups["movement_speed"].color = this.Properties.MovementSpeedColor;
-            groups["movement_speed2"].color = this.Properties.MovementSpeedColor;
-            groups["movement_speed3"].color = this.Properties.MovementSpeedColor;
+                group.color = Properties.GetColorByVariableName(group.colorGroupName);
+            }
 
             GSI.Nodes.Controls controls = (state as GameState_EliteDangerous).Controls;
             foreach(KeyValuePair<string, Bind> entry in controls.commandToBind)
             {
-                foreach (KeyValuePair<string, ControlGroup> group in groups)
+                foreach (ControlGroup group in commandGroups)
                 {
-                    if (group.Value.commands.Contains(entry.Key))
+                    if (group.ConditionSatisfied(gameState.Status) && group.commands.Contains(entry.Key))
                     {
                         foreach (Bind.Mapping mapping in entry.Value.mappings)
                         {
-                            keyBindsLayer.Set(mapping.key, group.Value.color);
+                            keyBindsLayer.Set(mapping.key, group.color);
                         }
                     }
                 }
