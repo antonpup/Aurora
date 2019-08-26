@@ -119,7 +119,7 @@ namespace Aurora.Devices.Razer
             {DeviceKeys.APPLICATION_SELECT, new int [] {5, 13} },
             {DeviceKeys.RIGHT_CONTROL, new int [] {5, 14} },
             {DeviceKeys.ARROW_LEFT, new int [] {5, 15} },
-            //{DeviceKeys.ARROW_DOWN, new int [] {5, 16} },
+            {DeviceKeys.ARROW_DOWN, new int [] {5, 16} },
             {DeviceKeys.ARROW_RIGHT, new int [] {5, 17} },
             {DeviceKeys.NUM_ZERO, new int [] {5, 19} },
             {DeviceKeys.NUM_PERIOD, new int [] {5, 20} }

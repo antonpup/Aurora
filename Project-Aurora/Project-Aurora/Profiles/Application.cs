@@ -267,7 +267,7 @@ namespace Aurora.Profiles
 
         public virtual string GetProfileFolderPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", Config.ID);
+            return Path.Combine(Global.AppDataDirectory, "Profiles", Config.ID);
         }
 
         public void ResetProfile()
@@ -335,6 +335,17 @@ namespace Aurora.Profiles
                                     lyr.AnythingChanged += this.SaveProfilesEvent;
                                 }
                             }
+
+                            if (e.OldItems != null)
+                            {
+                                foreach (Layer lyr in e.OldItems)
+                                {
+                                    if (lyr == null)
+                                        continue;
+                                    lyr.Dispose();
+                                }
+                            }
+
                             this.SaveProfiles();
                         };
 
@@ -358,7 +369,6 @@ namespace Aurora.Profiles
                     }
 
                     File.Move(path, newPath);
-                    this.SaveProfile((ApplicationProfile)Activator.CreateInstance(Config.ProfileType), path);
                     MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc.Message}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -368,13 +378,16 @@ namespace Aurora.Profiles
 
         protected virtual void LoadProfilesError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
-            if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
-                e.ErrorContext.Handled = true;
-
-            if (e.CurrentObject.GetType() == typeof(Layer) && e.ErrorContext.Member.Equals("Handler"))
+            if (e.CurrentObject != null)
             {
-                ((Layer)e.ErrorContext.OriginalObject).Handler = null;
-                e.ErrorContext.Handled = true;
+                if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
+                    e.ErrorContext.Handled = true;
+
+                if (e.CurrentObject.GetType() == typeof(Layer) && e.ErrorContext.Member.Equals("Handler"))
+                {
+                    ((Layer)e.ErrorContext.OriginalObject).Handler = null;
+                    e.ErrorContext.Handled = true;
+                }
             }
         }
 

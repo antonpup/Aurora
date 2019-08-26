@@ -1,4 +1,4 @@
-﻿using Aurora.Profiles.Aurora_Wrapper;
+using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Profiles.Desktop;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles.Overlays.SkypeOverlay;
@@ -80,7 +80,7 @@ namespace Aurora.Profiles
 
         public List<string> DefaultLayerHandlers { get; private set; } = new List<string>();
 
-        public string AdditionalProfilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles");
+        public string AdditionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
 
         public event EventHandler PreUpdate;
         public event EventHandler PostUpdate;
@@ -89,7 +89,7 @@ namespace Aurora.Profiles
 
         public LightingStateManager()
         {
-            SettingsSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "ProfilesSettings.json");
+            SettingsSavePath = Path.Combine(Global.AppDataDirectory, "ProfilesSettings.json");
         }
 
         public bool Initialized { get; private set; }
@@ -163,6 +163,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("Script", "Script Layer", typeof(ScriptLayerHandler)),
                 new LayerHandlerEntry("Percent", "Percent Effect Layer", typeof(PercentLayerHandler)),
                 new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
+                new LayerHandlerEntry("Razer", "Razer Chroma Layer", typeof(RazerLayerHandler)),
                 new LayerHandlerEntry("Conditional", "Conditional Layer", typeof(ConditionalLayerHandler)),
                 new LayerHandlerEntry("Comparison", "Comparison Layer", typeof(ComparisonLayerHandler)),
                 new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
