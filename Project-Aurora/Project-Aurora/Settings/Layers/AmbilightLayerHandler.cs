@@ -167,7 +167,8 @@ namespace Aurora.Settings.Layers
         private static DesktopDuplicator desktopDuplicator;
         private static bool processing = false;  // Used to avoid updating before the previous update is processed
         private static System.Timers.Timer retryTimer;
-        private static RawRectangle bounds;
+        private static Rectangle currentScreenBounds;
+        private static bool fallback = true;
         public event PropertyChangedEventHandler PropertyChanged;
         public int OutputId
         {
@@ -211,40 +212,51 @@ namespace Aurora.Settings.Layers
                 captureTimer.Stop();
                 captureTimer.Interval = Interval;
             }
-            var outputs = new Factory1().Adapters1
-                .SelectMany(M => M.Outputs
-                    .Select(N => new
+            if (fallback)
+            {
+                var outputId = Properties.AmbilightOutputId;
+                var outputs = Screen.AllScreens;
+                if (Properties.AmbilightOutputId > (outputs.Count() - 1))
+                {
+                    outputId = 0;
+                }
+                currentScreenBounds = outputs.ElementAtOrDefault(outputId).Bounds;
+            }
+            else
+            {
+                var outputs = GetAdapters();
+                var outputId = Properties.AmbilightOutputId;
+                if (Properties.AmbilightOutputId > (outputs.Count() - 1))
+                {
+                    outputId = 0;
+                }
+                var output = outputs.ElementAtOrDefault(outputId);
+                var desktopbounds = output.Output.Description.DesktopBounds;
+                currentScreenBounds = new Rectangle(desktopbounds.Left, desktopbounds.Top, 
+                                        desktopbounds.Right - desktopbounds.Left, 
+                                        desktopbounds.Bottom - desktopbounds.Top);
+                try
+                {
+                    desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, currentScreenBounds);
+                }
+                catch (SharpDXException e)
+                {
+                    if (e.Descriptor == ResultCode.NotCurrentlyAvailable)
                     {
-                        Adapter = M,
-                        Output = N.QueryInterface<Output1>()
-                    }));
-            var outputId = Properties.AmbilightOutputId;
-            if (Properties.AmbilightOutputId > (outputs.Count() - 1))
-            {
-                outputId = 0;
-            }
-            var output = outputs.ElementAtOrDefault(outputId);
-            bounds = output.Output.Description.DesktopBounds;
-            var rect = new Rectangle(bounds.Left, bounds.Top, bounds.Right - bounds.Left, bounds.Bottom - bounds.Top);
-            try
-            {
-                desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, rect);
-            }
-            catch (SharpDXException e)
-            {
-                if (e.Descriptor == ResultCode.NotCurrentlyAvailable)
-                {
-                    throw new Exception("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.", e);
+                        throw new Exception("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.", e);
+                    }
+                    if (e.Descriptor == ResultCode.Unsupported)
+                    {
+                        fallback = true;
+                        Global.logger.Fatal("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
+                    }
+                    Global.logger.Debug(e, String.Format("Caught exception when trying to setup desktop duplication. Retrying in {0} ms", AmbilightLayerHandler.retryTimer.Interval));
+                    captureTimer?.Stop();
+                    retryTimer.Start();
+                    return;
                 }
-                if (e.Descriptor == ResultCode.Unsupported)
-                {
-                    throw new NotSupportedException("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
-                }
-                Global.logger.Debug(e, String.Format("Caught exception when trying to setup desktop duplication. Retrying in {0} ms", AmbilightLayerHandler.retryTimer.Interval));
-                captureTimer?.Stop();
-                retryTimer.Start();
-                return;
             }
+
             if (captureTimer == null)
             {
                 captureTimer = new System.Timers.Timer(Interval);
@@ -268,35 +280,45 @@ namespace Aurora.Settings.Layers
         {
             // Reset the interval here, because it might have been changed in the config
             captureTimer.Interval = Interval;
-            if (processing)
-            {
-                // Still busy processing the previous tick, do nothing
-                return;
-            }
-            processing = true;
-            if (desktopDuplicator == null)
-            {
-                processing = false;
-                return;
-            }
             Bitmap bigScreen;
-            try
+            if (fallback)
             {
-                bigScreen = desktopDuplicator.Capture(5000);
+                bigScreen = new Bitmap(currentScreenBounds.Width, currentScreenBounds.Height);
+                using(var g = Graphics.FromImage(bigScreen))
+                    g.CopyFromScreen(currentScreenBounds.X, currentScreenBounds.Y, 0, 0, currentScreenBounds.Size);
             }
-            catch (SharpDXException err)
+            else
             {
-                Global.logger.Error("Failed to capture screen, reinitializing. Error was: " + err.Message);
-                processing = false;
-                this.Initialize();
-                return;
+                if (processing)
+                {
+                    // Still busy processing the previous tick, do nothing
+                    return;
+                }
+                processing = true;
+                if (desktopDuplicator == null)
+                {
+                    processing = false;
+                    return;
+                }
+                try
+                {
+                    bigScreen = desktopDuplicator.Capture(5000);
+                }
+                catch (SharpDXException err)
+                {
+                    Global.logger.Error("Failed to capture screen, reinitializing. Error was: " + err.Message);
+                    processing = false;
+                    this.Initialize();
+                    return;
+                }
+                if (bigScreen == null)
+                {
+                    // Timeout, ignore
+                    processing = false;
+                    return;
+                }
             }
-            if (bigScreen == null)
-            {
-                // Timeout, ignore
-                processing = false;
-                return;
-            }
+
 
             Bitmap smallScreen = new Bitmap(bigScreen.Width / Scale, bigScreen.Height / Scale);
 
@@ -390,8 +412,8 @@ namespace Aurora.Settings.Layers
                             break;
 
                         Rectangle scr_region = Resize(new Rectangle(
-                                Properties.Coordinates.X - bounds.Left,
-                                Properties.Coordinates.Y - bounds.Top,
+                                Properties.Coordinates.X - currentScreenBounds.Left,
+                                Properties.Coordinates.Y - currentScreenBounds.Top,
                                 Properties.Coordinates.Width,
                                 Properties.Coordinates.Height));
 
@@ -424,19 +446,39 @@ namespace Aurora.Settings.Layers
             return ambilight_layer;
         }
 
+
+        private IEnumerable<(Adapter1 Adapter, Output1 Output)> GetAdapters()
+        {
+            using (var fac = new Factory1())
+                return fac.Adapters1.SelectMany(M => M.Outputs.Select(N => (M, N.QueryInterface<Output1>())));           
+        }
+
         /// <summary>
         /// Changes the active display being captured if the desired region isn't contained in the current one, returning true if this happens.
         /// </summary>
-        /// <param name="rectangle"></param>
+        /// <param name="screenWeWantToCapture"></param>
         /// <returns></returns>
-        private bool SwitchDisplay(Rectangle rectangle)
+        private bool SwitchDisplay(Rectangle screenWeWantToCapture)
         {
-            if (!RectangleEquals(rectangle, bounds))
+            if (fallback)
             {
-                OutputId = Array.FindIndex(Screen.AllScreens, d => RectangleEquals(d.Bounds, bounds));
-                return true;
+                if (!(screenWeWantToCapture == currentScreenBounds))
+                {
+                    OutputId = Array.FindIndex(Screen.AllScreens, d => d.Bounds == screenWeWantToCapture);
+                    return true;
+                }
+                return false;
             }
-            return false;
+            else
+            {
+                if (!(screenWeWantToCapture == currentScreenBounds))
+                {
+                    var screens = GetAdapters().ToArray();
+                    OutputId = Array.FindIndex(screens, d => RectangleEquals(d.Output.Description.DesktopBounds, screenWeWantToCapture));
+                    return true;
+                }
+                return false;
+            }
         }
 
         /// <summary>
@@ -445,7 +487,7 @@ namespace Aurora.Settings.Layers
         /// <param name="rec"></param>
         /// <param name="raw"></param>
         /// <returns></returns>
-        private static bool RectangleEquals(Rectangle rec, RawRectangle raw)
+        private static bool RectangleEquals(RawRectangle rec, Rectangle raw)
         {
             return ((rec.Left == raw.Left) && (rec.Top == raw.Top) && (rec.Right == raw.Right) && (rec.Bottom == raw.Bottom));
         }
