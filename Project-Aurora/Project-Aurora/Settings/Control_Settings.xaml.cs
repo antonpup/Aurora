@@ -14,6 +14,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Win32.TaskScheduler;
 using System.Windows.Data;
+using RazerSdkWrapper.Utils;
+using System.Net;
+using RazerSdkWrapper.Data;
 
 namespace Aurora.Settings
 {
@@ -147,6 +150,51 @@ namespace Aurora.Settings
             this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
+
+            var rzVersion = RzHelper.GetSdkVersion();
+            var rzSdkEnabled = RzHelper.IsSdkEnabled();
+
+            this.razer_wrapper_installed_version_label.Content = rzVersion.ToString();
+            if (!RzHelper.IsSdkVersionSupported(rzVersion))
+            {
+                this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+                this.razer_wrapper_install_button.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(Colors.LightGreen);
+                this.razer_wrapper_install_button.Visibility = Visibility.Hidden;
+            }
+
+            this.razer_wrapper_enabled_label.Content = rzSdkEnabled ? "Enabled" : "Disabled";
+            this.razer_wrapper_enabled_label.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
+
+            if (Global.razerManager != null)
+            {
+                this.razer_wrapper_connection_status_label.Content = "Success";
+                this.razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.LightGreen);
+
+                {
+                    var appList = Global.razerManager.GetDataProvider<RzAppListDataProvider>();
+                    appList.Update();
+                    this.razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]";
+                }
+
+                Global.razerManager.DataUpdated += (s, _) =>
+                {
+                    if (!(s is RzAppListDataProvider appList))
+                        return;
+
+                    appList.Update();
+                    Global.logger.Debug("RazerManager current app: {0} [{1}]", appList.CurrentAppExecutable ?? "None", appList.CurrentAppPid);
+                    Dispatcher.Invoke(() => this.razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]");
+                };
+            }
+            else
+            {
+                this.razer_wrapper_connection_status_label.Content = "Failure";
+                this.razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+            }
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -857,6 +905,155 @@ namespace Aurora.Settings
             }
         }
 
+        private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)
+        {
+            razer_wrapper_install_button.IsEnabled = false;
+
+            #region Razer SDK Installer/Uninstaller helpers
+            Task<int> UninstallAsync()
+            {
+                return System.Threading.Tasks.Task.Run(() =>
+                {
+                    if (RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
+                        return 0;
+
+                    using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+                    {
+                        var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
+                        var path = (string)key?.GetValue("UninstallPath", null);
+                        var filename = (string)key?.GetValue("UninstallFilename", null);
+
+                        if (path == null || filename == null)
+                            return 0;
+
+                        try
+                        {
+                            var processInfo = new ProcessStartInfo
+                            {
+                                FileName = filename,
+                                WorkingDirectory = path,
+                                Arguments = $"/S _?={path}",
+                                ErrorDialog = true
+                            };
+
+                            var process = Process.Start(processInfo);
+                            process.WaitForExit(120000);
+                            return process.ExitCode;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new OperationCanceledException("Razer SDK Uninstallation failed!", ex);
+                        }
+                    }
+                });
+            }
+
+            Task<string> DownloadAsync()
+            {
+                return System.Threading.Tasks.Task.Run(() =>
+                {
+                    var url = "http://cdn.razersynapse.com/156092369797u1UA8NRazerChromaBroadcasterSetup_v3.4.0630.061913.exe";
+
+                    try
+                    {
+                        using (var client = new WebClient())
+                        {
+                            var path = Path.ChangeExtension(Path.GetTempFileName(), ".exe");
+                            client.DownloadFile(url, path);
+                            return path;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new OperationCanceledException("Razer SDK Downloading failed!", ex);
+                    }
+                });
+            }
+
+            Task<int> InstallAsync(string installerPath)
+            {
+                return System.Threading.Tasks.Task.Run(() =>
+                {
+                    try
+                    {
+                        var processInfo = new ProcessStartInfo
+                        {
+                            FileName = Path.GetFileName(installerPath),
+                            WorkingDirectory = Path.GetDirectoryName(installerPath),
+                            Arguments = "/S",
+                            ErrorDialog = true
+                        };
+
+                        var process = Process.Start(processInfo);
+                        process.WaitForExit(120000);
+                        return process.ExitCode;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new OperationCanceledException("Razer SDK Installation failed!", ex);
+                    }
+                });
+            }
+            #endregion
+
+            bool HandleErrorLevel(int errorlevel)
+            {
+                switch (errorlevel)
+                {
+                    case 3010:
+                        {
+                            Xceed.Wpf.Toolkit.MessageBox.Show("Razer SDK requested system restart!\nPlease reboot your pc and re-run the installation.",
+                                "Restart required!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                            return false;
+                        }
+                }
+
+                return true;
+            }
+
+            void SetState(string name)
+                => Application.Current.Dispatcher.Invoke(() => razer_wrapper_install_button.Content = name);
+
+            System.Threading.Tasks.Task.Run(async () =>
+            {
+                try
+                {
+                    SetState("Uninstalling");
+                    var errorlevel = await UninstallAsync();
+                    if (!HandleErrorLevel(errorlevel))
+                        return false;
+
+                    SetState("Downloading");
+                    var path = await DownloadAsync();
+
+                    SetState("Installing");
+                    errorlevel = await InstallAsync(path);
+                    if (!HandleErrorLevel(errorlevel))
+                        return false;
+                }
+                catch (OperationCanceledException ex)
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show($"{ex.Message}:\n{ex.InnerException.ToString()}",
+                        "Exception!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+
+                return true;
+            }).ContinueWith(t =>
+            {
+                if (t.Result)
+                {
+                    SetState("Success!");
+                    Xceed.Wpf.Toolkit.MessageBox.Show("Installation successful!\nPlease restart Aurora for changes to take effect.",
+                        "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    SetState("Failure!");
+                }
+            });
+        }
+
         private void wrapper_install_logitech_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1046,7 +1243,7 @@ namespace Aurora.Settings
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
-                System.Diagnostics.Process.Start(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora/Logs/"));
+                System.Diagnostics.Process.Start(System.IO.Path.Combine(Global.LogsDirectory));
         }
 
         private void chkOverlayPreview_Checked(object sender, RoutedEventArgs e)
