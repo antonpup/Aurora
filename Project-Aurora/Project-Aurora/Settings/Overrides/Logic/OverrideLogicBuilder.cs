@@ -61,7 +61,7 @@ namespace Aurora.Settings.Overrides.Logic.Builder {
         /// <param name="r">The evaluatable number that will be used as the red property for this color.</param>
         /// <param name="g">The evaluatable number that will be used as the green property for this color.</param>
         /// <param name="b">The evaluatable number that will be used as the blue property for this color.</param>
-        public OverrideLogicBuilder SetDynamicColor(string layerPropertyName, IEvaluatable<double> a, IEvaluatable<object>r, IEvaluatable<object>g, IEvaluatable<object>b) {
+        public OverrideLogicBuilder SetDynamicColor(string layerPropertyName, IEvaluatable<double> a, IEvaluatable<double>r, IEvaluatable<double>g, IEvaluatable<double>b) {
             overrideProperties[layerPropertyName] = new OverrideDynamicValue(typeof(System.Drawing.Color), new Dictionary<string, IEvaluatable> {
                 { "Alpha", a }, { "Red", r }, { "Green", g }, { "Blue", b }
             });
@@ -73,7 +73,7 @@ namespace Aurora.Settings.Overrides.Logic.Builder {
         /// <param name="r">The evaluatable number that will be used as the red property for this color.</param>
         /// <param name="g">The evaluatable number that will be used as the green property for this color.</param>
         /// <param name="b">The evaluatable number that will be used as the blue property for this color.</param>
-        public OverrideLogicBuilder SetDynamicColor(string layerPropertyName, IEvaluatable<object>r, IEvaluatable<object>g, IEvaluatable<object>b) => SetDynamicColor(layerPropertyName, new NumberConstant { Value = 1 }, r, g, b);
+        public OverrideLogicBuilder SetDynamicColor(string layerPropertyName, IEvaluatable<double>r, IEvaluatable<double>g, IEvaluatable<double>b) => SetDynamicColor(layerPropertyName, new NumberConstant { Value = 1 }, r, g, b);
         #endregion
 
         #region Lookup Table Methods
