@@ -194,6 +194,11 @@ namespace Aurora
             }
         }
 
+        /// <summary>
+        /// Creates a new FreeFormObject that perfectly occupies the entire canvas.
+        /// </summary>
+        public static Aurora.Settings.FreeFormObject WholeCanvasFreeForm => new Settings.FreeFormObject(-grid_baseline_x, -grid_baseline_y, grid_width, grid_height);
+
         private static Dictionary<Devices.DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<Devices.DeviceKeys, BitmapRectangle>();
 
         private static Dictionary<Devices.DeviceKeys, Color> keyColors = new Dictionary<Devices.DeviceKeys, Color>();
