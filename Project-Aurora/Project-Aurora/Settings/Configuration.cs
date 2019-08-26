@@ -285,7 +285,11 @@ namespace Aurora.Settings
         [Description("Latin America")]
         la = 16,
         [Description("Spanish")]
-        es = 17
+        es = 17,
+        [Description("ISO - Automatic (Experimental)")]
+        iso = 18,
+        [Description("ANSI - Automatic (Experimental)")]
+        ansi = 19,
     }
 
     public enum PreferredMouse
@@ -542,6 +546,21 @@ namespace Aurora.Settings
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
             VarRegistry = new VariableRegistry();
+        }
+
+        
+    }
+
+    public static class ExtensionHelpers
+    {
+        public static bool IsAutomaticGeneration(this PreferredKeyboardLocalization self)
+        {
+            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.iso;
+        }
+
+        public static bool IsANSI(this PreferredKeyboardLocalization self)
+        {
+            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.dvorak || self == PreferredKeyboardLocalization.us;
         }
     }
 
