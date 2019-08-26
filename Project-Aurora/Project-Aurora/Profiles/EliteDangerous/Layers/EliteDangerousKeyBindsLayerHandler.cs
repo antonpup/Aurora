@@ -6,9 +6,11 @@ using Aurora.Settings.Layers;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Aurora.Devices;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
+using Aurora.Utils;
 using CSScriptLibrary;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
@@ -538,8 +540,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                             foreach (DeviceKeys modifierKey in mapping.modifiers)
                             {
                                 keyBindsLayer.Set(modifierKey, Properties.ShipStuffColor);
-                                //TODO: A correct check if a modifier key is pressed
-                                if (Array.IndexOf(Global.InputEvents.PressedKeys, modifierKey) == -1)
+                                if (Array.IndexOf(Global.InputEvents.PressedKeys, KeyUtils.GetFormsKey(modifierKey)) == -1)
                                 {
                                     allModifiersPressed = false;
                                     break;
