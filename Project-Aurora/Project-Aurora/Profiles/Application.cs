@@ -114,12 +114,20 @@ namespace Aurora.Profiles
             config.Event.Application = this;
             config.Event.ResetGameState();
             Profiles = new ObservableCollection<ApplicationProfile>();
+            Profiles.CollectionChanged += (sender, e) => {
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
+                    foreach (ApplicationProfile prof in e.NewItems)
+                    {
+                        prof.SetApplication(this);
+                    }
+                }
+            };
             EffectScripts = new Dictionary<string, IEffectScript>();
             if (config.GameStateType != null)
                 ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
         }
 
-        public bool Initialize()
+        public virtual bool Initialize()
         {
             if (Initialized)
                 return Initialized;
@@ -173,36 +181,21 @@ namespace Aurora.Profiles
             this.Profiles.Add(profile);
         }
 
-        protected void CreateDefaultProfile()
+        protected ApplicationProfile CreateDefaultProfile()
         {
-            if (Disposed)
-                return;
-
-            ApplicationProfile _newProfile = CreateNewProfile("default");
-
-            Profiles.Add(_newProfile);
-
-            SaveProfiles();
-
-            SwitchToProfile(_newProfile);
+            return AddNewProfile($"default");
         }
 
-        public void SaveDefaultProfile()
+        public ApplicationProfile NewDefaultProfile()
         {
-            if (Disposed)
-                return;
-
-            ApplicationProfile _newProfile = CreateNewProfile($"Profile {Profiles.Count + 1}");
-
-            Profiles.Add(_newProfile);
-
-            SaveProfiles();
-
-            SwitchToProfile(_newProfile);
+            return AddNewProfile($"Profile {Profiles.Count + 1}");
         }
 
         public ApplicationProfile AddNewProfile(String profileName)
         {
+            if (Disposed)
+                return null;
+
             ApplicationProfile _newProfile = CreateNewProfile(profileName);
 
             Profiles.Add(_newProfile);
@@ -311,46 +304,32 @@ namespace Aurora.Profiles
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
                             prof.ProfileName = Path.GetFileNameWithoutExtension(path);
 
-                        foreach (Layer lyr in prof.Layers.ToList())
-                        {
-                            //Remove any Layers that have non-functional handlers
-                            if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID))
-                            {
-                                prof.Layers.Remove(lyr);
-                                continue;
+                        // Initalises a collection, setting the layers' profile/application property and adding events to them and the collections to save to disk.
+                        void InitialiseLayerCollection(ObservableCollection<Layer> collection) { 
+                            foreach (Layer lyr in collection.ToList()) {
+                                //Remove any Layers that have non-functional handlers
+                                if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID)) {
+                                    prof.Layers.Remove(lyr);
+                                    continue;
+                                }
+
+                                lyr.AnythingChanged += SaveProfilesEvent;
                             }
 
-                            lyr.AnythingChanged += this.SaveProfilesEvent;
-                            lyr.SetProfile(this);
+                            collection.CollectionChanged += (_, e) => {
+                                if (e.NewItems != null)
+                                    foreach (Layer lyr in e.NewItems)
+                                        if (lyr != null)
+                                            lyr.AnythingChanged += SaveProfilesEvent;
+                                SaveProfiles();
+                            };
                         }
 
-                        prof.Layers.CollectionChanged += (s, e) =>
-                        {
-                            if (e.NewItems != null)
-                            {
-                                foreach (Layer lyr in e.NewItems)
-                                {
-                                    if (lyr == null)
-                                        continue;
-                                    lyr.AnythingChanged += this.SaveProfilesEvent;
-                                }
-                            }
-
-                            if (e.OldItems != null)
-                            {
-                                foreach (Layer lyr in e.OldItems)
-                                {
-                                    if (lyr == null)
-                                        continue;
-                                    lyr.Dispose();
-                                }
-                            }
-
-                            this.SaveProfiles();
-                        };
+                        // Call the above setup method on the regular layers and the overlay layers.
+                        InitialiseLayerCollection(prof.Layers);
+                        InitialiseLayerCollection(prof.OverlayLayers);
 
                         prof.PropertyChanged += Profile_PropertyChanged;
-
                         return prof;
                     }
                 }
@@ -419,6 +398,11 @@ namespace Aurora.Profiles
                 return;
 
             this.Config.Event.UpdateLights(frame);
+        }
+
+        public virtual void UpdateOverlayLights(EffectFrame frame) {
+            if (Disposed) return;
+            Config.Event.UpdateOverlayLights(frame);
         }
 
         public virtual void SetGameState(IGameState state)

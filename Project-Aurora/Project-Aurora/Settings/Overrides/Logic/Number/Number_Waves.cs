@@ -9,17 +9,17 @@ namespace Aurora.Settings.Overrides.Logic {
     /// A special operator that takes the given (x) input (between 0 and 1) and converts it to a waveform (y) between 0 and 1.
     /// </summary>
     [OverrideLogic("Wave Function", category: OverrideLogicCategory.Maths)]
-    public class NumberWaveFunction : IEvaluatableNumber {
+    public class NumberWaveFunction : IEvaluatable<double> {
 
         /// <summary>Creates a new wave function evaluatable with the default parameters.</summary>
         public NumberWaveFunction() { }
         /// <summary>Creates a new wave function evaluatable with the given evaluatable and default wave type.</summary>
-        public NumberWaveFunction(IEvaluatableNumber operand) { Operand = operand; }
+        public NumberWaveFunction(IEvaluatable<double> operand) { Operand = operand; }
         /// <summary>Creates a new wave function evaluatable with the given evaluatable and given wave type.</summary>
-        public NumberWaveFunction(IEvaluatableNumber operand, WaveFunctionType type) { Operand = operand; WaveFunc = type; }
+        public NumberWaveFunction(IEvaluatable<double> operand, WaveFunctionType type) { Operand = operand; WaveFunc = type; }
 
         /// <summary>The number that will be used as a basis (sometimes the x value) for the wave function.</summary>
-        public IEvaluatableNumber Operand { get; set; } = new NumberConstant();
+        public IEvaluatable<double> Operand { get; set; } = new NumberConstant();
         /// <summary>The type of wave to generate.</summary>
         public WaveFunctionType WaveFunc { get; set; } = WaveFunctionType.Sine;
 
@@ -53,7 +53,7 @@ namespace Aurora.Settings.Overrides.Logic {
             Operand?.SetApplication(application);
         }
 
-        public IEvaluatableNumber Clone() => new NumberWaveFunction { Operand = Operand.Clone() };
+        public IEvaluatable<double> Clone() => new NumberWaveFunction { Operand = Operand.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
