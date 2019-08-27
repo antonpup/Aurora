@@ -47,6 +47,11 @@ namespace Aurora.Profiles.Overlays
             //}
         }
 
+        public override void UpdateOverlayLights(EffectFrame frame)
+        {
+            //base.UpdateOverlayLights(frame);
+        }
+
         public override void SetGameState(IGameState new_game_state)
         {
             //No need to do anything... This doesn't have any gamestates.

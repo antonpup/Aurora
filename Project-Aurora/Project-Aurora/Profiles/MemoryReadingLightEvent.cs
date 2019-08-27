@@ -94,12 +94,9 @@ namespace Aurora.Profiles {
         public new bool IsEnabled => Application.Settings.IsEnabled && isInitialized;
 
         /// <summary>
-        /// Updates all the lights for this frame. Will search for the given process name and attempt to attach the memory reader.
+        /// Updates all the gamestate for this frame. Will search for the given process name and attempt to attach the memory reader.
         /// </summary>
-        /// <param name="frame"></param>
-        public override void UpdateLights(EffectFrame frame) {
-            Queue<EffectLayer> layers = new Queue<EffectLayer>();
-
+        public override void UpdateTick() {
             // Look for the target process
             Process[] process_search = Process.GetProcessesByName(processName);
 
@@ -109,16 +106,6 @@ namespace Aurora.Profiles {
                 using (MemoryReader memread = string.IsNullOrWhiteSpace(processModule) ? new MemoryReader(process_search[0], needs64bitMemReader) : new MemoryReader(process_search[0], processModule, needs64bitMemReader))
                     // Call the application-specific method to handle the memory reading
                     UpdateGameState((TGameState)_game_state, memread);
-
-            // Render all layers
-            foreach (var layer in Application.Profile.Layers.Reverse())
-                if (layer.Enabled)
-                    layers.Enqueue(layer.Render(_game_state));
-
-            //Scripts
-            Application.UpdateEffectScripts(layers);
-
-            frame.AddLayers(layers.ToArray());
         }
 
         public override void SetGameState(IGameState new_game_state) { }
