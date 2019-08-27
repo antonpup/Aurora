@@ -230,7 +230,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="170"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
@@ -240,6 +240,7 @@
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Mouse Orientation:" VerticalAlignment="Top"/>
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" TextWrapping="Wrap" Text="Extra Features: " VerticalAlignment="Top" ToolTip="Adds more features such as multiple mousemats and monitor rgb lights such as the MPG27CQ from MSI" Height="15.96"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
                                 <ComboBox x:Name="devices_kb_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbLayout}}" ItemTemplate="{Binding Source={StaticResource KbLayoutTemplate}}" SelectionChanged="devices_kb_layout_SelectionChanged"/>
@@ -248,6 +249,7 @@
                                 <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectionChanged="ComboBox_virtualkeyboard_keycap_type_SelectionChanged"/>
                                 <ComboBox x:Name="devices_mouse_orientation" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MouseOrientation}}" ItemTemplate="{Binding Source={StaticResource MouseOrientationTemplate}}" SelectionChanged="devices_mouse_orientation_SelectionChanged"/>
                                 <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <ComboBox x:Name="cmbExtraFeatures" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource ExtraFeatures}}" ItemTemplate="{Binding Source={StaticResource ExtraFeaturesTemplate}}" SelectedItem="{Binding ExtraFeatures, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="CmbExtraFeatures_SelectionChanged"/>
                             </StackPanel>
                             <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
                                 <CheckBox Grid.Row="1" x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
@@ -257,8 +259,6 @@
                             </StackPanel>
                         </Grid>
                     </Grid>
-                    <ComboBox x:Name="cmbExtraFeatures" HorizontalAlignment="Left" Margin="160,157,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource ExtraFeatures}}" ItemTemplate="{Binding Source={StaticResource ExtraFeaturesTemplate}}" SelectedItem="{Binding ExtraFeatures, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="CmbExtraFeatures_SelectionChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,161,0,0" TextWrapping="Wrap" Text="Extra Features: " VerticalAlignment="Top" ToolTip="Adds more features such as multiple mousemats and monitor rgb lights such as the MPG27CQ from MSI" Height="15.96"/>
 
                     <Grid Grid.Column="1" Margin="0,7,7,7">
                         <TabControl>

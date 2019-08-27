@@ -557,6 +557,7 @@ I do not have any intent in charging money for Aurora, it will always be a free 
 * [SharpDX](http://sharpdx.org/) - Used for Raw Input for nonblocking input reading for key binds and interactive effects
 * [HidLibrary](https://github.com/mikeobrien/HidLibrary) - Used for communication with HID devices
 * [NZXTSharp](https://github.com/akmadian/NZXTSharp) - NZXT SDK, Used for NZXT support
+* [Q42.HueApi](https://github.com/Q42/Q42.HueApi) - Used for esier communication to Philips Hue devices
 ## Special thanks to these people:
 
 ### Contributions
