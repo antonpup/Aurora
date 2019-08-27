@@ -111,23 +111,23 @@ namespace Aurora.Devices
 
         public DeviceManager()
         {
-            devices.Add(new DeviceContainer(new LogitechDevice()));                  // Logitech Device
-            devices.Add(new DeviceContainer(new CorsairDevice()));                   // Corsair Device
-            devices.Add(new DeviceContainer(new RazerDevice()));                     // Razer Device
-            devices.Add(new DeviceContainer(new RoccatDevice()));                    // Roccat Device
-            devices.Add(new DeviceContainer(new ClevoDevice()));                     // Clevo Device
-            devices.Add(new DeviceContainer(new CoolerMasterDevice()));              // CoolerMaster Device
-            devices.Add(new DeviceContainer(new AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
-            devices.Add(new DeviceContainer(new SteelSeriesDevice()));               // SteelSeries Device
-            devices.Add(new DeviceContainer(new UnifiedHIDDevice()));                // UnifiedHID Device
-            devices.Add(new DeviceContainer(new WootingDevice()));                   // Wooting Device
-            devices.Add(new DeviceContainer(new SoundBlasterXDevice()));             // SoundBlasterX Device
-            devices.Add(new DeviceContainer(new LightFxDevice()));                   // Alienware
-            devices.Add(new DeviceContainer(new DualshockDevice()));                 // DualShock 4 Device
-            devices.Add(new DeviceContainer(new DrevoDevice()));                     // Drevo Device
-            devices.Add(new DeviceContainer(new AsusDevice()));                      // Asus Device
+            devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
+            devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
+            devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
+            devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
+            devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
+            devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
+            devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
+            devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
+            devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
+            devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
+            devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
+            devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
+            devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
+            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
+            devices.Add(new DeviceContainer(new Devices.NZXT.NZXTDevice()));                 //NZXT Device
             devices.Add(new DeviceContainer(new HueDevice()));                       // Philips Hue
-            string devices_scripts_path = Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
+            string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
             {

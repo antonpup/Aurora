@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace Aurora.Utils
 {
@@ -46,6 +47,14 @@ namespace Aurora.Utils
                     return typeof(Profiles.WrapperProfile);
                 case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
                     return typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice);
+                case "Aurora.Settings.Overrides.Logic.IEvaluatableBoolean":
+                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<bool>);
+                case "Aurora.Settings.Overrides.Logic.IEvaluatableNumber":
+                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<double>);
+                case "Aurora.Settings.Overrides.Logic.IEvaluatableString":
+                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<string>);
+                case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableBoolean, Aurora]]":
+                    return typeof(ObservableCollection<Settings.Overrides.Logic.IEvaluatable<bool>>);
                 default:
                     if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
                         return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));

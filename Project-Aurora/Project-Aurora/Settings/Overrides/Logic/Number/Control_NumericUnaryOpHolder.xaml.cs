@@ -36,9 +36,9 @@ namespace Aurora.Settings.Overrides.Logic {
         public string StaticOperator { get; set; } = null;
 
         /// <summary>The dependency property that can be used to access the single operand for this operation.</summary>
-        public static readonly DependencyProperty OperandProperty = DependencyProperty.Register("Operand", typeof(IEvaluatableNumber), typeof(Control_NumericUnaryOpHolder), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
-        public IEvaluatableNumber Operand {
-            get => (IEvaluatableNumber)GetValue(OperandProperty);
+        public static readonly DependencyProperty OperandProperty = DependencyProperty.Register("Operand", typeof(IEvaluatable<double>), typeof(Control_NumericUnaryOpHolder), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+        public IEvaluatable<double> Operand {
+            get => (IEvaluatable<double>)GetValue(OperandProperty);
             set => SetValue(OperandProperty, value);
         }
 
@@ -53,11 +53,4 @@ namespace Aurora.Settings.Overrides.Logic {
             Application = application;
         }
     }
-
-    /// <summary>Simple converter that returns true if the given value is non-null.</summary>
-    public class NullableToVisibilityConverter : System.Windows.Data.IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value == null ? Visibility.Collapsed : Visibility.Visible;
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
-    }
-
 }
