@@ -147,6 +147,8 @@ namespace Aurora.Devices.Hue
             while (!keyColors.ContainsKey((DeviceKeys) curKey)) curKey++;
             if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(config.Get<int>("send_interval"))) return false;
             var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
+            var firstKey = config.Get<int>("first_key");
+            var lastKey = config.Get<int>("last_key");
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             foreach (var light in lights)
             {
@@ -170,8 +172,12 @@ namespace Aurora.Devices.Hue
             var command = new LightCommand();
             var defaultCommand = new LightCommand().SetColor(defaultColor).TurnOn();
             defaultCommand.Brightness = (byte) (defaultCommand.Brightness / (double) byte.MaxValue * (brightness / (double) byte.MaxValue) * byte.MaxValue);
-            command.SetColor(keyColors.Single(t => t.Key == (DeviceKeys) curKey).Value.GetHueDeviceColor());
-            if (brightness == 0) command.TurnOff();
+            command.SetColor(config.Get<bool>("blend_keys") ? keyColors.Where(t => t.Key <= (DeviceKeys) lastKey && t.Key >= (DeviceKeys) firstKey).Select(t => t.Value).GetHueDeviceColorMergedColor() : keyColors.Single(t => t.Key == (DeviceKeys) curKey).Value.GetHueDeviceColor());
+            if (brightness == 0)
+            {
+                command.TurnOff();
+                defaultCommand.TurnOff();
+            }
             else
             {
                 if (command.IsColorBlack() && DateTime.Now - lastCall >= TimeSpan.FromSeconds(config.Get<int>("default_delay")) || config.Get<bool>("force_default"))
@@ -197,7 +203,7 @@ namespace Aurora.Devices.Hue
             foreach (var light in lights)
             {
                 var commandToSend = config.Get<bool>($"send_{light.Name.ToLower().Replace(" ", "_")}") ? command : defaultCommand;
-                if (commandToSend.Brightness != light.State.Brightness || commandToSend.Saturation != light.State.Saturation || commandToSend.Hue != light.State.Hue)
+                if (commandToSend.Brightness != light.State.Brightness || commandToSend.Saturation != light.State.Saturation || commandToSend.Hue != light.State.Hue || commandToSend.On != light.State.On)
                     client.SendCommandAsync(commandToSend, new[] {light.Id}).GetAwaiter().GetResult();
             }
             lastCall = DateTime.Now;
@@ -208,7 +214,7 @@ namespace Aurora.Devices.Hue
                 curKey++;
                 curItr = 0;
             }
-            if (curKey > config.Get<int>("last_key")) curKey = config.Get<int>("first_key");
+            if (curKey > lastKey) curKey = firstKey;
             if (!command.IsColorSame(defaultColor)) lastFrameDefault = false;
             return true;
         }
@@ -233,6 +239,7 @@ namespace Aurora.Devices.Hue
         {
             Set("default_delay", 1, 1, int.MaxValue);
             Set("default_color", new RealColor(Color.White));
+            Set("blend_keys", false);
             Set("force_default", false);
             Set("brightness", 255, 0, 255);
             Set("use_default", true);
