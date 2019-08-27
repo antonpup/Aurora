@@ -64,7 +64,7 @@ namespace Aurora.Devices.Hue
 
         public string GetDeviceUpdatePerformance()
         {
-            return "~100ms";
+            return $"~{config.Get<int>("send_interval")}ms";
         }
 
         public bool Initialize()
