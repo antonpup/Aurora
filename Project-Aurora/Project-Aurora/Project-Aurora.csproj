@@ -472,7 +472,6 @@
     <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
-<<<<<<< HEAD
     <Compile Include="Profiles\EliteDangerous\Presets.cs" />
     <Compile Include="Profiles\EliteDangerous\Control_EliteDangerous.xaml.cs">
       <DependentUpon>Control_EliteDangerous.xaml</DependentUpon>
