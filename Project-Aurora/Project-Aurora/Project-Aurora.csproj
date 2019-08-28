@@ -169,14 +169,14 @@
     <Reference Include="RGB.NET.Brushes, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Brushes.0.1.23\lib\net45\RGB.NET.Brushes.dll</HintPath>
     </Reference>
-    <Reference Include="RGB.NET.Core, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Core.0.1.23\lib\net45\RGB.NET.Core.dll</HintPath>
+    <Reference Include="RGB.NET.Core, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Core.0.1.26\lib\net45\RGB.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="RGB.NET.Devices.Asus, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Devices.Asus.0.1.23\lib\net45\RGB.NET.Devices.Asus.dll</HintPath>
     </Reference>
-    <Reference Include="RGB.NET.Devices.Corsair, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Devices.Corsair.0.1.23\lib\net45\RGB.NET.Devices.Corsair.dll</HintPath>
+    <Reference Include="RGB.NET.Devices.Corsair, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Devices.Corsair.0.1.26\lib\net45\RGB.NET.Devices.Corsair.dll</HintPath>
     </Reference>
     <Reference Include="RGB.NET.Groups, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Groups.0.1.23\lib\net45\RGB.NET.Groups.dll</HintPath>
