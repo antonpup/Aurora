@@ -277,7 +277,7 @@
     },
     {
       "visualName": "G1",
-      "tag": "G3",
+      "tag": "G1",
       "line_break": null,
       "margin_left": -43.0,
       "margin_top": 0.0,
@@ -290,7 +290,7 @@
     },
     {
       "visualName": "G2",
-      "tag": "G6",
+      "tag": "G2",
       "line_break": null,
       "margin_left": -43.0,
       "margin_top": 37.0,
@@ -303,7 +303,7 @@
     },
     {
       "visualName": "G3",
-      "tag": "G9",
+      "tag": "G3",
       "line_break": null,
       "margin_left": -43.0,
       "margin_top": 74.0,
@@ -316,7 +316,7 @@
     },
     {
       "visualName": "G4",
-      "tag": "G12",
+      "tag": "G4",
       "line_break": null,
       "margin_left": -43.0,
       "margin_top": 111.0,
@@ -329,7 +329,7 @@
     },
     {
       "visualName": "G5",
-      "tag": "G15",
+      "tag": "G5",
       "line_break": null,
       "margin_left": -43.0,
       "margin_top": 148.0,
@@ -342,7 +342,7 @@
     },
     {
       "visualName": "G6",
-      "tag": "G18",
+      "tag": "G6",
       "line_break": null,
       "margin_left": -43.0,
       "margin_top": 185.0,
