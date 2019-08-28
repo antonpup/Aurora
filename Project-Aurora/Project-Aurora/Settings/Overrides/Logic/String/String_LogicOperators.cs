@@ -10,11 +10,11 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Logic that compares two strings using a selection of operators.
     /// </summary>
     [OverrideLogic("String Comparison", category: OverrideLogicCategory.String)]
-    public class StringComparison : IEvaluatableBoolean {
+    public class StringComparison : IEvaluatable<bool> {
 
         // Operands and operator
-        public IEvaluatableString Operand1 { get; set; } = new StringConstant();
-        public IEvaluatableString Operand2 { get; set; } = new StringConstant();
+        public IEvaluatable<string> Operand1 { get; set; } = new StringConstant();
+        public IEvaluatable<string> Operand2 { get; set; } = new StringConstant();
         public StringComparisonOperator Operator { get; set; } = StringComparisonOperator.Equal;
         public bool CaseInsensitive { get; set; } = false;
 
@@ -65,7 +65,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Clones this StringComparison.</summary>
-        public IEvaluatableBoolean Clone() => new StringComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator, CaseInsensitive = CaseInsensitive };
+        public IEvaluatable<bool> Clone() => new StringComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator, CaseInsensitive = CaseInsensitive };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

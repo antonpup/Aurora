@@ -23,14 +23,14 @@ namespace Aurora.Settings.Overrides.Logic {
         // We cannot do a TwoWay binding on the items of an ObservableCollection if that item may be replaced (it would be fine if only the instance's
         // values were being changed), so we have to capture change events and replace them in the list.
         private void ConditionPresenter_ConditionChanged(object sender, ExpressionChangeEventArgs e) {
-            ParentExpr.SubConditions[ParentExpr.SubConditions.IndexOf((IEvaluatableBoolean)e.OldExpression)] = (IEvaluatableBoolean)e.NewExpression;
+            ParentExpr.SubConditions[ParentExpr.SubConditions.IndexOf((IEvaluatable<bool>)e.OldExpression)] = (IEvaluatable<bool>)e.NewExpression;
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e) {
             // The DataContext of the clicked button (which is the sender) is the ICondition since
             // it is created for each item inside the ItemsControl items source.
             // We can then simply call remove on the conditions list to remove it.
-            var cond = (IEvaluatableBoolean)((FrameworkElement)sender).DataContext;
+            var cond = (IEvaluatable<bool>)((FrameworkElement)sender).DataContext;
             ParentExpr.SubConditions.Remove(cond);
         }
 
