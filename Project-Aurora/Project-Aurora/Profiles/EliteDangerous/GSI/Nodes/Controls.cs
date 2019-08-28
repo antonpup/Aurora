@@ -9,21 +9,34 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {
     public static class Command
     {
+        public static readonly string KeyboardLayout = "KeyboardLayout";
         public static readonly string MouseReset = "MouseReset";
+        public static readonly string YawAxisRaw = "YawAxisRaw";
         public static readonly string YawLeftButton = "YawLeftButton";
         public static readonly string YawRightButton = "YawRightButton";
         public static readonly string YawToRollButton = "YawToRollButton";
+        public static readonly string RollAxisRaw = "RollAxisRaw";
         public static readonly string RollLeftButton = "RollLeftButton";
         public static readonly string RollRightButton = "RollRightButton";
+        public static readonly string PitchAxisRaw = "PitchAxisRaw";
         public static readonly string PitchUpButton = "PitchUpButton";
         public static readonly string PitchDownButton = "PitchDownButton";
+        public static readonly string LateralThrustRaw = "LateralThrustRaw";
         public static readonly string LeftThrustButton = "LeftThrustButton";
         public static readonly string RightThrustButton = "RightThrustButton";
+        public static readonly string VerticalThrustRaw = "VerticalThrustRaw";
         public static readonly string UpThrustButton = "UpThrustButton";
         public static readonly string DownThrustButton = "DownThrustButton";
+        public static readonly string AheadThrust = "AheadThrust";
         public static readonly string ForwardThrustButton = "ForwardThrustButton";
         public static readonly string BackwardThrustButton = "BackwardThrustButton";
         public static readonly string UseAlternateFlightValuesToggle = "UseAlternateFlightValuesToggle";
+        public static readonly string YawAxisAlternate = "YawAxisAlternate";
+        public static readonly string RollAxisAlternate = "RollAxisAlternate";
+        public static readonly string PitchAxisAlternate = "PitchAxisAlternate";
+        public static readonly string LateralThrustAlternate = "LateralThrustAlternate";
+        public static readonly string VerticalThrustAlternate = "VerticalThrustAlternate";
+        public static readonly string ThrottleAxis = "ThrottleAxis";
         public static readonly string ToggleReverseThrottleInput = "ToggleReverseThrottleInput";
         public static readonly string ForwardKey = "ForwardKey";
         public static readonly string BackwardKey = "BackwardKey";
@@ -36,16 +49,22 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string SetSpeed50 = "SetSpeed50";
         public static readonly string SetSpeed75 = "SetSpeed75";
         public static readonly string SetSpeed100 = "SetSpeed100";
+        public static readonly string YawAxis_Landing = "YawAxis_Landing";
         public static readonly string YawLeftButton_Landing = "YawLeftButton_Landing";
         public static readonly string YawRightButton_Landing = "YawRightButton_Landing";
+        public static readonly string PitchAxis_Landing = "PitchAxis_Landing";
         public static readonly string PitchUpButton_Landing = "PitchUpButton_Landing";
         public static readonly string PitchDownButton_Landing = "PitchDownButton_Landing";
+        public static readonly string RollAxis_Landing = "RollAxis_Landing";
         public static readonly string RollLeftButton_Landing = "RollLeftButton_Landing";
         public static readonly string RollRightButton_Landing = "RollRightButton_Landing";
+        public static readonly string LateralThrust_Landing = "LateralThrust_Landing";
         public static readonly string LeftThrustButton_Landing = "LeftThrustButton_Landing";
         public static readonly string RightThrustButton_Landing = "RightThrustButton_Landing";
+        public static readonly string VerticalThrust_Landing = "VerticalThrust_Landing";
         public static readonly string UpThrustButton_Landing = "UpThrustButton_Landing";
         public static readonly string DownThrustButton_Landing = "DownThrustButton_Landing";
+        public static readonly string AheadThrust_Landing = "AheadThrust_Landing";
         public static readonly string ForwardThrustButton_Landing = "ForwardThrustButton_Landing";
         public static readonly string BackwardThrustButton_Landing = "BackwardThrustButton_Landing";
         public static readonly string ToggleFlightAssist = "ToggleFlightAssist";
@@ -77,6 +96,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string ToggleButtonUpInput = "ToggleButtonUpInput";
         public static readonly string DeployHeatSink = "DeployHeatSink";
         public static readonly string ShipSpotLightToggle = "ShipSpotLightToggle";
+        public static readonly string RadarRangeAxis = "RadarRangeAxis";
         public static readonly string RadarIncreaseRange = "RadarIncreaseRange";
         public static readonly string RadarDecreaseRange = "RadarDecreaseRange";
         public static readonly string IncreaseEnginesPower = "IncreaseEnginesPower";
@@ -108,6 +128,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string FriendsMenu = "FriendsMenu";
         public static readonly string OpenCodexGoToDiscovery = "OpenCodexGoToDiscovery";
         public static readonly string PlayerHUDModeToggle = "PlayerHUDModeToggle";
+        public static readonly string ExplorationFSSEnter = "ExplorationFSSEnter";
         public static readonly string UI_Up = "UI_Up";
         public static readonly string UI_Down = "UI_Down";
         public static readonly string UI_Left = "UI_Left";
@@ -122,26 +143,38 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string HeadLookReset = "HeadLookReset";
         public static readonly string HeadLookPitchUp = "HeadLookPitchUp";
         public static readonly string HeadLookPitchDown = "HeadLookPitchDown";
+        public static readonly string HeadLookPitchAxisRaw = "HeadLookPitchAxisRaw";
         public static readonly string HeadLookYawLeft = "HeadLookYawLeft";
         public static readonly string HeadLookYawRight = "HeadLookYawRight";
+        public static readonly string HeadLookYawAxis = "HeadLookYawAxis";
+        public static readonly string CamPitchAxis = "CamPitchAxis";
         public static readonly string CamPitchUp = "CamPitchUp";
         public static readonly string CamPitchDown = "CamPitchDown";
+        public static readonly string CamYawAxis = "CamYawAxis";
         public static readonly string CamYawLeft = "CamYawLeft";
         public static readonly string CamYawRight = "CamYawRight";
+        public static readonly string CamTranslateYAxis = "CamTranslateYAxis";
         public static readonly string CamTranslateForward = "CamTranslateForward";
         public static readonly string CamTranslateBackward = "CamTranslateBackward";
+        public static readonly string CamTranslateXAxis = "CamTranslateXAxis";
         public static readonly string CamTranslateLeft = "CamTranslateLeft";
         public static readonly string CamTranslateRight = "CamTranslateRight";
+        public static readonly string CamTranslateZAxis = "CamTranslateZAxis";
         public static readonly string CamTranslateUp = "CamTranslateUp";
         public static readonly string CamTranslateDown = "CamTranslateDown";
+        public static readonly string CamZoomAxis = "CamZoomAxis";
         public static readonly string CamZoomIn = "CamZoomIn";
         public static readonly string CamZoomOut = "CamZoomOut";
         public static readonly string CamTranslateZHold = "CamTranslateZHold";
+        public static readonly string GalaxyMapHome = "GalaxyMapHome";
         public static readonly string ToggleDriveAssist = "ToggleDriveAssist";
+        public static readonly string SteeringAxis = "SteeringAxis";
         public static readonly string SteerLeftButton = "SteerLeftButton";
         public static readonly string SteerRightButton = "SteerRightButton";
+        public static readonly string BuggyRollAxisRaw = "BuggyRollAxisRaw";
         public static readonly string BuggyRollLeftButton = "BuggyRollLeftButton";
         public static readonly string BuggyRollRightButton = "BuggyRollRightButton";
+        public static readonly string BuggyPitchAxis = "BuggyPitchAxis";
         public static readonly string BuggyPitchUpButton = "BuggyPitchUpButton";
         public static readonly string BuggyPitchDownButton = "BuggyPitchDownButton";
         public static readonly string VerticalThrustersButton = "VerticalThrustersButton";
@@ -150,14 +183,21 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string AutoBreakBuggyButton = "AutoBreakBuggyButton";
         public static readonly string HeadlightsBuggyButton = "HeadlightsBuggyButton";
         public static readonly string ToggleBuggyTurretButton = "ToggleBuggyTurretButton";
+        public static readonly string BuggyCycleFireGroupNext = "BuggyCycleFireGroupNext";
+        public static readonly string BuggyCycleFireGroupPrevious = "BuggyCycleFireGroupPrevious";
         public static readonly string SelectTarget_Buggy = "SelectTarget_Buggy";
+        public static readonly string BuggyTurretYawAxisRaw = "BuggyTurretYawAxisRaw";
         public static readonly string BuggyTurretYawLeftButton = "BuggyTurretYawLeftButton";
         public static readonly string BuggyTurretYawRightButton = "BuggyTurretYawRightButton";
+        public static readonly string BuggyTurretPitchAxisRaw = "BuggyTurretPitchAxisRaw";
         public static readonly string BuggyTurretPitchUpButton = "BuggyTurretPitchUpButton";
         public static readonly string BuggyTurretPitchDownButton = "BuggyTurretPitchDownButton";
+        public static readonly string DriveSpeedAxis = "DriveSpeedAxis";
         public static readonly string BuggyToggleReverseThrottleInput = "BuggyToggleReverseThrottleInput";
         public static readonly string IncreaseSpeedButtonMax = "IncreaseSpeedButtonMax";
         public static readonly string DecreaseSpeedButtonMax = "DecreaseSpeedButtonMax";
+        public static readonly string IncreaseSpeedButtonPartial = "IncreaseSpeedButtonPartial";
+        public static readonly string DecreaseSpeedButtonPartial = "DecreaseSpeedButtonPartial";
         public static readonly string IncreaseEnginesPower_Buggy = "IncreaseEnginesPower_Buggy";
         public static readonly string IncreaseWeaponsPower_Buggy = "IncreaseWeaponsPower_Buggy";
         public static readonly string IncreaseSystemsPower_Buggy = "IncreaseSystemsPower_Buggy";
@@ -173,16 +213,21 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string FocusRightPanel_Buggy = "FocusRightPanel_Buggy";
         public static readonly string GalaxyMapOpen_Buggy = "GalaxyMapOpen_Buggy";
         public static readonly string SystemMapOpen_Buggy = "SystemMapOpen_Buggy";
+        public static readonly string OpenCodexGoToDiscovery_Buggy = "OpenCodexGoToDiscovery_Buggy";
+        public static readonly string PlayerHUDModeToggle_Buggy = "PlayerHUDModeToggle_Buggy";
         public static readonly string HeadLookToggle_Buggy = "HeadLookToggle_Buggy";
         public static readonly string MultiCrewToggleMode = "MultiCrewToggleMode";
         public static readonly string MultiCrewPrimaryFire = "MultiCrewPrimaryFire";
         public static readonly string MultiCrewSecondaryFire = "MultiCrewSecondaryFire";
         public static readonly string MultiCrewPrimaryUtilityFire = "MultiCrewPrimaryUtilityFire";
         public static readonly string MultiCrewSecondaryUtilityFire = "MultiCrewSecondaryUtilityFire";
+        public static readonly string MultiCrewThirdPersonYawAxisRaw = "MultiCrewThirdPersonYawAxisRaw";
         public static readonly string MultiCrewThirdPersonYawLeftButton = "MultiCrewThirdPersonYawLeftButton";
         public static readonly string MultiCrewThirdPersonYawRightButton = "MultiCrewThirdPersonYawRightButton";
+        public static readonly string MultiCrewThirdPersonPitchAxisRaw = "MultiCrewThirdPersonPitchAxisRaw";
         public static readonly string MultiCrewThirdPersonPitchUpButton = "MultiCrewThirdPersonPitchUpButton";
         public static readonly string MultiCrewThirdPersonPitchDownButton = "MultiCrewThirdPersonPitchDownButton";
+        public static readonly string MultiCrewThirdPersonFovAxisRaw = "MultiCrewThirdPersonFovAxisRaw";
         public static readonly string MultiCrewThirdPersonFovOutButton = "MultiCrewThirdPersonFovOutButton";
         public static readonly string MultiCrewThirdPersonFovInButton = "MultiCrewThirdPersonFovInButton";
         public static readonly string MultiCrewCockpitUICycleForward = "MultiCrewCockpitUICycleForward";
@@ -212,17 +257,25 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string FreeCamToggleHUD = "FreeCamToggleHUD";
         public static readonly string FreeCamSpeedInc = "FreeCamSpeedInc";
         public static readonly string FreeCamSpeedDec = "FreeCamSpeedDec";
+        public static readonly string MoveFreeCamY = "MoveFreeCamY";
         public static readonly string ToggleReverseThrottleInputFreeCam = "ToggleReverseThrottleInputFreeCam";
         public static readonly string MoveFreeCamForward = "MoveFreeCamForward";
         public static readonly string MoveFreeCamBackwards = "MoveFreeCamBackwards";
+        public static readonly string MoveFreeCamX = "MoveFreeCamX";
         public static readonly string MoveFreeCamRight = "MoveFreeCamRight";
         public static readonly string MoveFreeCamLeft = "MoveFreeCamLeft";
+        public static readonly string MoveFreeCamZ = "MoveFreeCamZ";
+        public static readonly string MoveFreeCamUpAxis = "MoveFreeCamUpAxis";
+        public static readonly string MoveFreeCamDownAxis = "MoveFreeCamDownAxis";
         public static readonly string MoveFreeCamUp = "MoveFreeCamUp";
         public static readonly string MoveFreeCamDown = "MoveFreeCamDown";
+        public static readonly string PitchCamera = "PitchCamera";
         public static readonly string PitchCameraUp = "PitchCameraUp";
         public static readonly string PitchCameraDown = "PitchCameraDown";
+        public static readonly string YawCamera = "YawCamera";
         public static readonly string YawCameraLeft = "YawCameraLeft";
         public static readonly string YawCameraRight = "YawCameraRight";
+        public static readonly string RollCamera = "RollCamera";
         public static readonly string RollCameraLeft = "RollCameraLeft";
         public static readonly string RollCameraRight = "RollCameraRight";
         public static readonly string ToggleRotationLock = "ToggleRotationLock";
@@ -237,11 +290,12 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string CommanderCreator_Undo = "CommanderCreator_Undo";
         public static readonly string CommanderCreator_Redo = "CommanderCreator_Redo";
         public static readonly string CommanderCreator_Rotation_MouseToggle = "CommanderCreator_Rotation_MouseToggle";
+        public static readonly string CommanderCreator_Rotation = "CommanderCreator_Rotation";
         public static readonly string GalnetAudio_Play_Pause = "GalnetAudio_Play_Pause";
         public static readonly string GalnetAudio_SkipForward = "GalnetAudio_SkipForward";
         public static readonly string GalnetAudio_SkipBackward = "GalnetAudio_SkipBackward";
         public static readonly string GalnetAudio_ClearQueue = "GalnetAudio_ClearQueue";
-        public static readonly string ExplorationFSSEnter = "ExplorationFSSEnter";
+        public static readonly string ExplorationFSSCameraPitch = "ExplorationFSSCameraPitch";
 
         public static readonly string ExplorationFSSCameraPitchIncreaseButton =
             "ExplorationFSSCameraPitchIncreaseButton";
@@ -249,14 +303,17 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public static readonly string ExplorationFSSCameraPitchDecreaseButton =
             "ExplorationFSSCameraPitchDecreaseButton";
 
+        public static readonly string ExplorationFSSCameraYaw = "ExplorationFSSCameraYaw";
         public static readonly string ExplorationFSSCameraYawIncreaseButton = "ExplorationFSSCameraYawIncreaseButton";
         public static readonly string ExplorationFSSCameraYawDecreaseButton = "ExplorationFSSCameraYawDecreaseButton";
         public static readonly string ExplorationFSSZoomIn = "ExplorationFSSZoomIn";
         public static readonly string ExplorationFSSZoomOut = "ExplorationFSSZoomOut";
         public static readonly string ExplorationFSSMiniZoomIn = "ExplorationFSSMiniZoomIn";
         public static readonly string ExplorationFSSMiniZoomOut = "ExplorationFSSMiniZoomOut";
+        public static readonly string ExplorationFSSRadioTuningX_Raw = "ExplorationFSSRadioTuningX_Raw";
         public static readonly string ExplorationFSSRadioTuningX_Increase = "ExplorationFSSRadioTuningX_Increase";
         public static readonly string ExplorationFSSRadioTuningX_Decrease = "ExplorationFSSRadioTuningX_Decrease";
+        public static readonly string ExplorationFSSRadioTuningAbsoluteX = "ExplorationFSSRadioTuningAbsoluteX";
         public static readonly string ExplorationFSSDiscoveryScan = "ExplorationFSSDiscoveryScan";
         public static readonly string ExplorationFSSQuit = "ExplorationFSSQuit";
         public static readonly string ExplorationFSSTarget = "ExplorationFSSTarget";
@@ -266,10 +323,13 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
             "ExplorationSAAChangeScannedAreaViewToggle";
 
         public static readonly string ExplorationSAAExitThirdPerson = "ExplorationSAAExitThirdPerson";
+        public static readonly string SAAThirdPersonYawAxisRaw = "SAAThirdPersonYawAxisRaw";
         public static readonly string SAAThirdPersonYawLeftButton = "SAAThirdPersonYawLeftButton";
         public static readonly string SAAThirdPersonYawRightButton = "SAAThirdPersonYawRightButton";
+        public static readonly string SAAThirdPersonPitchAxisRaw = "SAAThirdPersonPitchAxisRaw";
         public static readonly string SAAThirdPersonPitchUpButton = "SAAThirdPersonPitchUpButton";
         public static readonly string SAAThirdPersonPitchDownButton = "SAAThirdPersonPitchDownButton";
+        public static readonly string SAAThirdPersonFovAxisRaw = "SAAThirdPersonFovAxisRaw";
         public static readonly string SAAThirdPersonFovOutButton = "SAAThirdPersonFovOutButton";
         public static readonly string SAAThirdPersonFovInButton = "SAAThirdPersonFovInButton";
     }
@@ -465,7 +525,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         {
         }
 
-        public ControlGroup(string colorGroupName, string[] commands, GameStateCondition neededGameStateCondition) : base(
+        public ControlGroup(string colorGroupName, string[] commands,
+            GameStateCondition neededGameStateCondition) : base(
             neededGameStateCondition)
         {
             this.colorGroupName = colorGroupName;
