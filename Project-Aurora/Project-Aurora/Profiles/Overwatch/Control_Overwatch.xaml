@@ -26,8 +26,6 @@
                 <Grid>
                     <StackPanel>
                         <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Overwatch" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
-                        <TextBlock Margin="10,10,64,0" Text="In order for Overwatch support to work, you have to apply the Aurora Wrapper Patch for Razer in order for Aurora to receive lighting information. Press the &quot;Patch Overwatch&quot; button and navigate to the Overwatch install directory. The default install directory for Overwatch should be located at &quot;C:\Program Files (x86)\Overwatch\&quot;. This should not trigger any anti-cheat, but it should be used at your own risk. P.S. You can actually apply this patch to any Razer Chroma supported game, and Aurora will work with it." VerticalAlignment="Top" TextWrapping="Wrap"/>
-                        <Button x:Name="patch_button" Content="Patch Overwatch" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="patch_button_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -105,7 +105,7 @@ namespace Aurora.Settings.Overrides.Logic {
             set => SetValue(ApplicationProperty, value);
         }
 
-        // The subtype of evaluatable to restrict the user to (e.g. IEvaluatableBoolean)
+        // The subtype of evaluatable to restrict the user to (e.g. IEvaluatable<bool>)
         private static void OnEvalTypeChange(DependencyObject evaluatablePresenter, DependencyPropertyChangedEventArgs eventArgs) {
             var control = (Control_EvaluatablePresenter)evaluatablePresenter;
             control.UpdateExpressionListItems((EvaluatableType)eventArgs.NewValue);

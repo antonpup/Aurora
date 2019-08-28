@@ -123,7 +123,7 @@ namespace Aurora.Settings
 
         public PluginManager()
         {
-            SettingsSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "PluginSettings.json");
+            SettingsSavePath = Path.Combine(Global.AppDataDirectory, "PluginSettings.json");
             this.CreateDefaults();
         }
 

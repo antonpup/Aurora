@@ -157,11 +157,18 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.5\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NZXTSharp, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NZXTSharp.2.1.2\lib\netstandard2.0\NZXTSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Octokit, Version=0.32.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Octokit.0.32.0\lib\net45\Octokit.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RazerSdkWrapper, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\RazerSdkWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>.\Roccat-Talk.dll</HintPath>
       <Private>True</Private>
@@ -223,6 +230,9 @@
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Ports, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Ports.4.5.0\lib\net461\System.IO.Ports.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -318,7 +328,6 @@
     <Compile Include="ConfigUI.xaml.cs">
       <DependentUpon>ConfigUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ArrangeListBox.cs" />
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </Compile>
@@ -339,6 +348,15 @@
     </Compile>
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
+      <DependentUpon>Control_Skype.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Skype\SkypeProfile.cs" />
+    <Compile Include="Profiles\Skype\SkypeApplication.cs" />
+    <Compile Include="Profiles\Skype\State_SkypeOverlay.cs" />
+    <Compile Include="Settings\Control_LayerList.xaml.cs">
+      <DependentUpon>Control_LayerList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Control_GradientEditor.xaml.cs">
       <DependentUpon>Control_GradientEditor.xaml</DependentUpon>
@@ -379,6 +397,8 @@
     <Compile Include="Controls\LayerEditor.xaml.cs">
       <DependentUpon>LayerEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\NZXT\NZXTDevice.cs" />
+    <Compile Include="Controls\ReorderableListBox.cs" />
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
     <Compile Include="Devices\Clevo\ClevoSetKBLED.cs" />
     <Compile Include="Devices\Clevo\ClevoDevice.cs" />
@@ -400,6 +420,7 @@
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\NZXT\NZXTLayoutMap.cs" />
     <Compile Include="Devices\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -451,6 +472,7 @@
     <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
     <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
+<<<<<<< HEAD
     <Compile Include="Profiles\EliteDangerous\Presets.cs" />
     <Compile Include="Profiles\EliteDangerous\Control_EliteDangerous.xaml.cs">
       <DependentUpon>Control_EliteDangerous.xaml</DependentUpon>
@@ -472,6 +494,7 @@
     </Compile>
     <Compile Include="Profiles\EliteDangerous\Layers\EliteDangerousBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\EliteDangerous\Layers\EliteDangerousKeyBindsLayerHandler.cs" />
+    <Compile Include="Profiles\Generic\RazerChromaProfile.cs" />
     <Compile Include="Profiles\MemoryReadingLightEvent.cs" />
     <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
       <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
@@ -646,6 +669,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
+      <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\BinaryCounterLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
       <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
@@ -654,6 +681,10 @@
     <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
       <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml.cs">
+      <DependentUpon>Control_IfElse.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Generic\IfElseIf.cs" />
     <Compile Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml.cs">
       <DependentUpon>Control_NumericMap.xaml</DependentUpon>
     </Compile>
@@ -737,6 +768,7 @@
     <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\DesktopDuplicator.cs" />
     <Compile Include="Utils\InputEvents.cs" />
@@ -874,11 +906,11 @@
     </Compile>
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
-    <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
-    <Compile Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
-    <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
-    <Compile Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
-    <Compile Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
+    <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
+    <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
+    <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
+    <None Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
+    <None Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
     <Compile Include="Profiles\Payday 2\Layers\Control_PD2StatesLayer.xaml.cs">
       <DependentUpon>Control_PD2StatesLayer.xaml</DependentUpon>
     </Compile>
@@ -1205,6 +1237,12 @@
     <None Include="kb_layouts\generic_laptop.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.iso.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.ansi.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\razer_blade.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1400,9 +1438,6 @@
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\ScriptBase.cs" />
     <Compile Include="Settings\VariableRegistry.cs" />
-    <Compile Include="Settings\Control_LayerManager.xaml.cs">
-      <DependentUpon>Control_LayerManager.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Control_ProfileManager.xaml.cs">
       <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
     </Compile>
@@ -1444,6 +1479,7 @@
     <Compile Include="Utils\KeyUtils.cs" />
     <Compile Include="Utils\MemoryReader.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
+    <Compile Include="Utils\RunningProcessMonitor.cs" />
     <Compile Include="Utils\SteamUtils.cs" />
     <Compile Include="Utils\ThreadPriorityChanger.cs" />
     <Compile Include="Utils\Time.cs" />
@@ -1538,8 +1574,10 @@
     <Resource Include="Resources\icons8-keyboard-30.png" />
     <Resource Include="Resources\osu_256x256.png" />
     <Resource Include="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
+    <Resource Include="Resources\Skype_300x300.png" />
     <Resource Include="Resources\Slime_Rancher.png" />
     <Resource Include="Resources\elite_dangerous_256x256.png" />
+    <Content Include="RazerSdkWrapper.dll" />
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1629,6 +1667,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_FieldPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Skype\Control_Skype.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Control_LayerList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2028,6 +2074,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Layers\Control_RazerLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Layers\Control_BinaryCounterLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2047,6 +2097,10 @@
     <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml">
       <SubType>Designer</SubType>
@@ -2201,10 +2255,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Window_GSIHttpDebug.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Control_LayerManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

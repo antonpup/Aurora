@@ -11,7 +11,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that accesses some specified game state variables (of numeric type) and returns it.
     /// </summary>
     [OverrideLogic("Numeric State Variable", category: OverrideLogicCategory.State)]
-    public class NumberGSINumeric : IEvaluatableNumber {
+    public class NumberGSINumeric : IEvaluatable<double> {
 
         /// <summary>Creates a new numeric game state lookup evaluatable that doesn't target anything.</summary>
         public NumberGSINumeric() { }
@@ -49,7 +49,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 VariablePath = string.Empty;
         }
 
-        public IEvaluatableNumber Clone() => new NumberGSINumeric { VariablePath = VariablePath };
+        public IEvaluatable<double> Clone() => new NumberGSINumeric { VariablePath = VariablePath };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

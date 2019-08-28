@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,12 +20,12 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Fetches a specific subset of logic operand types (e.g. all booleans).
         /// Caches results to that subsequent calls are marginally faster.</summary>
-        /// <typeparam name="T">The type to fetch (e.g. IEvaluatableBoolean).</typeparam>
+        /// <typeparam name="T">The type to fetch (e.g. IEvaluatable<bool>).</typeparam>
         public static Dictionary<Type, OverrideLogicAttribute> Get<T>() where T : IEvaluatable => Get(typeof(T));
 
         /// <summary>Fetches a specific subset of logic operand types (e.g. all booleans).
         /// Caches results to that subsequent calls are marginally faster.</summary>
-        /// <param name="t">The type to fetch (e.g. IEvaluatableBoolean).</param>
+        /// <param name="t">The type to fetch (e.g. IEvaluatable<bool>).</param>
         public static Dictionary<Type, OverrideLogicAttribute> Get(Type t) {
             if (!specificOverrideLogics.ContainsKey(t))
                 specificOverrideLogics[t] = allOverrideLogics
