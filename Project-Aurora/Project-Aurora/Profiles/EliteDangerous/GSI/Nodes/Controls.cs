@@ -9,329 +9,324 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {
     public static class Command
     {
-        public static readonly string KeyboardLayout = "KeyboardLayout";
-        public static readonly string MouseReset = "MouseReset";
-        public static readonly string YawAxisRaw = "YawAxisRaw";
-        public static readonly string YawLeftButton = "YawLeftButton";
-        public static readonly string YawRightButton = "YawRightButton";
-        public static readonly string YawToRollButton = "YawToRollButton";
-        public static readonly string RollAxisRaw = "RollAxisRaw";
-        public static readonly string RollLeftButton = "RollLeftButton";
-        public static readonly string RollRightButton = "RollRightButton";
-        public static readonly string PitchAxisRaw = "PitchAxisRaw";
-        public static readonly string PitchUpButton = "PitchUpButton";
-        public static readonly string PitchDownButton = "PitchDownButton";
-        public static readonly string LateralThrustRaw = "LateralThrustRaw";
-        public static readonly string LeftThrustButton = "LeftThrustButton";
-        public static readonly string RightThrustButton = "RightThrustButton";
-        public static readonly string VerticalThrustRaw = "VerticalThrustRaw";
-        public static readonly string UpThrustButton = "UpThrustButton";
-        public static readonly string DownThrustButton = "DownThrustButton";
-        public static readonly string AheadThrust = "AheadThrust";
-        public static readonly string ForwardThrustButton = "ForwardThrustButton";
-        public static readonly string BackwardThrustButton = "BackwardThrustButton";
-        public static readonly string UseAlternateFlightValuesToggle = "UseAlternateFlightValuesToggle";
-        public static readonly string YawAxisAlternate = "YawAxisAlternate";
-        public static readonly string RollAxisAlternate = "RollAxisAlternate";
-        public static readonly string PitchAxisAlternate = "PitchAxisAlternate";
-        public static readonly string LateralThrustAlternate = "LateralThrustAlternate";
-        public static readonly string VerticalThrustAlternate = "VerticalThrustAlternate";
-        public static readonly string ThrottleAxis = "ThrottleAxis";
-        public static readonly string ToggleReverseThrottleInput = "ToggleReverseThrottleInput";
-        public static readonly string ForwardKey = "ForwardKey";
-        public static readonly string BackwardKey = "BackwardKey";
-        public static readonly string SetSpeedMinus100 = "SetSpeedMinus100";
-        public static readonly string SetSpeedMinus75 = "SetSpeedMinus75";
-        public static readonly string SetSpeedMinus50 = "SetSpeedMinus50";
-        public static readonly string SetSpeedMinus25 = "SetSpeedMinus25";
-        public static readonly string SetSpeedZero = "SetSpeedZero";
-        public static readonly string SetSpeed25 = "SetSpeed25";
-        public static readonly string SetSpeed50 = "SetSpeed50";
-        public static readonly string SetSpeed75 = "SetSpeed75";
-        public static readonly string SetSpeed100 = "SetSpeed100";
-        public static readonly string YawAxis_Landing = "YawAxis_Landing";
-        public static readonly string YawLeftButton_Landing = "YawLeftButton_Landing";
-        public static readonly string YawRightButton_Landing = "YawRightButton_Landing";
-        public static readonly string PitchAxis_Landing = "PitchAxis_Landing";
-        public static readonly string PitchUpButton_Landing = "PitchUpButton_Landing";
-        public static readonly string PitchDownButton_Landing = "PitchDownButton_Landing";
-        public static readonly string RollAxis_Landing = "RollAxis_Landing";
-        public static readonly string RollLeftButton_Landing = "RollLeftButton_Landing";
-        public static readonly string RollRightButton_Landing = "RollRightButton_Landing";
-        public static readonly string LateralThrust_Landing = "LateralThrust_Landing";
-        public static readonly string LeftThrustButton_Landing = "LeftThrustButton_Landing";
-        public static readonly string RightThrustButton_Landing = "RightThrustButton_Landing";
-        public static readonly string VerticalThrust_Landing = "VerticalThrust_Landing";
-        public static readonly string UpThrustButton_Landing = "UpThrustButton_Landing";
-        public static readonly string DownThrustButton_Landing = "DownThrustButton_Landing";
-        public static readonly string AheadThrust_Landing = "AheadThrust_Landing";
-        public static readonly string ForwardThrustButton_Landing = "ForwardThrustButton_Landing";
-        public static readonly string BackwardThrustButton_Landing = "BackwardThrustButton_Landing";
-        public static readonly string ToggleFlightAssist = "ToggleFlightAssist";
-        public static readonly string UseBoostJuice = "UseBoostJuice";
-        public static readonly string HyperSuperCombination = "HyperSuperCombination";
-        public static readonly string Supercruise = "Supercruise";
-        public static readonly string Hyperspace = "Hyperspace";
-        public static readonly string DisableRotationCorrectToggle = "DisableRotationCorrectToggle";
-        public static readonly string OrbitLinesToggle = "OrbitLinesToggle";
-        public static readonly string SelectTarget = "SelectTarget";
-        public static readonly string CycleNextTarget = "CycleNextTarget";
-        public static readonly string CyclePreviousTarget = "CyclePreviousTarget";
-        public static readonly string SelectHighestThreat = "SelectHighestThreat";
-        public static readonly string CycleNextHostileTarget = "CycleNextHostileTarget";
-        public static readonly string CyclePreviousHostileTarget = "CyclePreviousHostileTarget";
-        public static readonly string TargetWingman0 = "TargetWingman0";
-        public static readonly string TargetWingman1 = "TargetWingman1";
-        public static readonly string TargetWingman2 = "TargetWingman2";
-        public static readonly string SelectTargetsTarget = "SelectTargetsTarget";
-        public static readonly string WingNavLock = "WingNavLock";
-        public static readonly string CycleNextSubsystem = "CycleNextSubsystem";
-        public static readonly string CyclePreviousSubsystem = "CyclePreviousSubsystem";
-        public static readonly string TargetNextRouteSystem = "TargetNextRouteSystem";
-        public static readonly string PrimaryFire = "PrimaryFire";
-        public static readonly string SecondaryFire = "SecondaryFire";
-        public static readonly string CycleFireGroupNext = "CycleFireGroupNext";
-        public static readonly string CycleFireGroupPrevious = "CycleFireGroupPrevious";
-        public static readonly string DeployHardpointToggle = "DeployHardpointToggle";
-        public static readonly string ToggleButtonUpInput = "ToggleButtonUpInput";
-        public static readonly string DeployHeatSink = "DeployHeatSink";
-        public static readonly string ShipSpotLightToggle = "ShipSpotLightToggle";
-        public static readonly string RadarRangeAxis = "RadarRangeAxis";
-        public static readonly string RadarIncreaseRange = "RadarIncreaseRange";
-        public static readonly string RadarDecreaseRange = "RadarDecreaseRange";
-        public static readonly string IncreaseEnginesPower = "IncreaseEnginesPower";
-        public static readonly string IncreaseWeaponsPower = "IncreaseWeaponsPower";
-        public static readonly string IncreaseSystemsPower = "IncreaseSystemsPower";
-        public static readonly string ResetPowerDistribution = "ResetPowerDistribution";
-        public static readonly string HMDReset = "HMDReset";
-        public static readonly string ToggleCargoScoop = "ToggleCargoScoop";
-        public static readonly string EjectAllCargo = "EjectAllCargo";
-        public static readonly string LandingGearToggle = "LandingGearToggle";
-        public static readonly string MicrophoneMute = "MicrophoneMute";
-        public static readonly string UseShieldCell = "UseShieldCell";
-        public static readonly string FireChaffLauncher = "FireChaffLauncher";
-        public static readonly string ChargeECM = "ChargeECM";
-        public static readonly string WeaponColourToggle = "WeaponColourToggle";
-        public static readonly string EngineColourToggle = "EngineColourToggle";
-        public static readonly string NightVisionToggle = "NightVisionToggle";
-        public static readonly string UIFocus = "UIFocus";
-        public static readonly string FocusLeftPanel = "FocusLeftPanel";
-        public static readonly string FocusCommsPanel = "FocusCommsPanel";
-        public static readonly string QuickCommsPanel = "QuickCommsPanel";
-        public static readonly string FocusRadarPanel = "FocusRadarPanel";
-        public static readonly string FocusRightPanel = "FocusRightPanel";
-        public static readonly string GalaxyMapOpen = "GalaxyMapOpen";
-        public static readonly string SystemMapOpen = "SystemMapOpen";
-        public static readonly string ShowPGScoreSummaryInput = "ShowPGScoreSummaryInput";
-        public static readonly string HeadLookToggle = "HeadLookToggle";
-        public static readonly string Pause = "Pause";
-        public static readonly string FriendsMenu = "FriendsMenu";
-        public static readonly string OpenCodexGoToDiscovery = "OpenCodexGoToDiscovery";
-        public static readonly string PlayerHUDModeToggle = "PlayerHUDModeToggle";
-        public static readonly string ExplorationFSSEnter = "ExplorationFSSEnter";
-        public static readonly string UI_Up = "UI_Up";
-        public static readonly string UI_Down = "UI_Down";
-        public static readonly string UI_Left = "UI_Left";
-        public static readonly string UI_Right = "UI_Right";
-        public static readonly string UI_Select = "UI_Select";
-        public static readonly string UI_Back = "UI_Back";
-        public static readonly string UI_Toggle = "UI_Toggle";
-        public static readonly string CycleNextPanel = "CycleNextPanel";
-        public static readonly string CyclePreviousPanel = "CyclePreviousPanel";
-        public static readonly string CycleNextPage = "CycleNextPage";
-        public static readonly string CyclePreviousPage = "CyclePreviousPage";
-        public static readonly string HeadLookReset = "HeadLookReset";
-        public static readonly string HeadLookPitchUp = "HeadLookPitchUp";
-        public static readonly string HeadLookPitchDown = "HeadLookPitchDown";
-        public static readonly string HeadLookPitchAxisRaw = "HeadLookPitchAxisRaw";
-        public static readonly string HeadLookYawLeft = "HeadLookYawLeft";
-        public static readonly string HeadLookYawRight = "HeadLookYawRight";
-        public static readonly string HeadLookYawAxis = "HeadLookYawAxis";
-        public static readonly string CamPitchAxis = "CamPitchAxis";
-        public static readonly string CamPitchUp = "CamPitchUp";
-        public static readonly string CamPitchDown = "CamPitchDown";
-        public static readonly string CamYawAxis = "CamYawAxis";
-        public static readonly string CamYawLeft = "CamYawLeft";
-        public static readonly string CamYawRight = "CamYawRight";
-        public static readonly string CamTranslateYAxis = "CamTranslateYAxis";
-        public static readonly string CamTranslateForward = "CamTranslateForward";
-        public static readonly string CamTranslateBackward = "CamTranslateBackward";
-        public static readonly string CamTranslateXAxis = "CamTranslateXAxis";
-        public static readonly string CamTranslateLeft = "CamTranslateLeft";
-        public static readonly string CamTranslateRight = "CamTranslateRight";
-        public static readonly string CamTranslateZAxis = "CamTranslateZAxis";
-        public static readonly string CamTranslateUp = "CamTranslateUp";
-        public static readonly string CamTranslateDown = "CamTranslateDown";
-        public static readonly string CamZoomAxis = "CamZoomAxis";
-        public static readonly string CamZoomIn = "CamZoomIn";
-        public static readonly string CamZoomOut = "CamZoomOut";
-        public static readonly string CamTranslateZHold = "CamTranslateZHold";
-        public static readonly string GalaxyMapHome = "GalaxyMapHome";
-        public static readonly string ToggleDriveAssist = "ToggleDriveAssist";
-        public static readonly string SteeringAxis = "SteeringAxis";
-        public static readonly string SteerLeftButton = "SteerLeftButton";
-        public static readonly string SteerRightButton = "SteerRightButton";
-        public static readonly string BuggyRollAxisRaw = "BuggyRollAxisRaw";
-        public static readonly string BuggyRollLeftButton = "BuggyRollLeftButton";
-        public static readonly string BuggyRollRightButton = "BuggyRollRightButton";
-        public static readonly string BuggyPitchAxis = "BuggyPitchAxis";
-        public static readonly string BuggyPitchUpButton = "BuggyPitchUpButton";
-        public static readonly string BuggyPitchDownButton = "BuggyPitchDownButton";
-        public static readonly string VerticalThrustersButton = "VerticalThrustersButton";
-        public static readonly string BuggyPrimaryFireButton = "BuggyPrimaryFireButton";
-        public static readonly string BuggySecondaryFireButton = "BuggySecondaryFireButton";
-        public static readonly string AutoBreakBuggyButton = "AutoBreakBuggyButton";
-        public static readonly string HeadlightsBuggyButton = "HeadlightsBuggyButton";
-        public static readonly string ToggleBuggyTurretButton = "ToggleBuggyTurretButton";
-        public static readonly string BuggyCycleFireGroupNext = "BuggyCycleFireGroupNext";
-        public static readonly string BuggyCycleFireGroupPrevious = "BuggyCycleFireGroupPrevious";
-        public static readonly string SelectTarget_Buggy = "SelectTarget_Buggy";
-        public static readonly string BuggyTurretYawAxisRaw = "BuggyTurretYawAxisRaw";
-        public static readonly string BuggyTurretYawLeftButton = "BuggyTurretYawLeftButton";
-        public static readonly string BuggyTurretYawRightButton = "BuggyTurretYawRightButton";
-        public static readonly string BuggyTurretPitchAxisRaw = "BuggyTurretPitchAxisRaw";
-        public static readonly string BuggyTurretPitchUpButton = "BuggyTurretPitchUpButton";
-        public static readonly string BuggyTurretPitchDownButton = "BuggyTurretPitchDownButton";
-        public static readonly string DriveSpeedAxis = "DriveSpeedAxis";
-        public static readonly string BuggyToggleReverseThrottleInput = "BuggyToggleReverseThrottleInput";
-        public static readonly string IncreaseSpeedButtonMax = "IncreaseSpeedButtonMax";
-        public static readonly string DecreaseSpeedButtonMax = "DecreaseSpeedButtonMax";
-        public static readonly string IncreaseSpeedButtonPartial = "IncreaseSpeedButtonPartial";
-        public static readonly string DecreaseSpeedButtonPartial = "DecreaseSpeedButtonPartial";
-        public static readonly string IncreaseEnginesPower_Buggy = "IncreaseEnginesPower_Buggy";
-        public static readonly string IncreaseWeaponsPower_Buggy = "IncreaseWeaponsPower_Buggy";
-        public static readonly string IncreaseSystemsPower_Buggy = "IncreaseSystemsPower_Buggy";
-        public static readonly string ResetPowerDistribution_Buggy = "ResetPowerDistribution_Buggy";
-        public static readonly string ToggleCargoScoop_Buggy = "ToggleCargoScoop_Buggy";
-        public static readonly string EjectAllCargo_Buggy = "EjectAllCargo_Buggy";
-        public static readonly string RecallDismissShip = "RecallDismissShip";
-        public static readonly string UIFocus_Buggy = "UIFocus_Buggy";
-        public static readonly string FocusLeftPanel_Buggy = "FocusLeftPanel_Buggy";
-        public static readonly string FocusCommsPanel_Buggy = "FocusCommsPanel_Buggy";
-        public static readonly string QuickCommsPanel_Buggy = "QuickCommsPanel_Buggy";
-        public static readonly string FocusRadarPanel_Buggy = "FocusRadarPanel_Buggy";
-        public static readonly string FocusRightPanel_Buggy = "FocusRightPanel_Buggy";
-        public static readonly string GalaxyMapOpen_Buggy = "GalaxyMapOpen_Buggy";
-        public static readonly string SystemMapOpen_Buggy = "SystemMapOpen_Buggy";
-        public static readonly string OpenCodexGoToDiscovery_Buggy = "OpenCodexGoToDiscovery_Buggy";
-        public static readonly string PlayerHUDModeToggle_Buggy = "PlayerHUDModeToggle_Buggy";
-        public static readonly string HeadLookToggle_Buggy = "HeadLookToggle_Buggy";
-        public static readonly string MultiCrewToggleMode = "MultiCrewToggleMode";
-        public static readonly string MultiCrewPrimaryFire = "MultiCrewPrimaryFire";
-        public static readonly string MultiCrewSecondaryFire = "MultiCrewSecondaryFire";
-        public static readonly string MultiCrewPrimaryUtilityFire = "MultiCrewPrimaryUtilityFire";
-        public static readonly string MultiCrewSecondaryUtilityFire = "MultiCrewSecondaryUtilityFire";
-        public static readonly string MultiCrewThirdPersonYawAxisRaw = "MultiCrewThirdPersonYawAxisRaw";
-        public static readonly string MultiCrewThirdPersonYawLeftButton = "MultiCrewThirdPersonYawLeftButton";
-        public static readonly string MultiCrewThirdPersonYawRightButton = "MultiCrewThirdPersonYawRightButton";
-        public static readonly string MultiCrewThirdPersonPitchAxisRaw = "MultiCrewThirdPersonPitchAxisRaw";
-        public static readonly string MultiCrewThirdPersonPitchUpButton = "MultiCrewThirdPersonPitchUpButton";
-        public static readonly string MultiCrewThirdPersonPitchDownButton = "MultiCrewThirdPersonPitchDownButton";
-        public static readonly string MultiCrewThirdPersonFovAxisRaw = "MultiCrewThirdPersonFovAxisRaw";
-        public static readonly string MultiCrewThirdPersonFovOutButton = "MultiCrewThirdPersonFovOutButton";
-        public static readonly string MultiCrewThirdPersonFovInButton = "MultiCrewThirdPersonFovInButton";
-        public static readonly string MultiCrewCockpitUICycleForward = "MultiCrewCockpitUICycleForward";
-        public static readonly string MultiCrewCockpitUICycleBackward = "MultiCrewCockpitUICycleBackward";
-        public static readonly string OrderRequestDock = "OrderRequestDock";
-        public static readonly string OrderDefensiveBehaviour = "OrderDefensiveBehaviour";
-        public static readonly string OrderAggressiveBehaviour = "OrderAggressiveBehaviour";
-        public static readonly string OrderFocusTarget = "OrderFocusTarget";
-        public static readonly string OrderHoldFire = "OrderHoldFire";
-        public static readonly string OrderHoldPosition = "OrderHoldPosition";
-        public static readonly string OrderFollow = "OrderFollow";
-        public static readonly string OpenOrders = "OpenOrders";
-        public static readonly string PhotoCameraToggle = "PhotoCameraToggle";
-        public static readonly string PhotoCameraToggle_Buggy = "PhotoCameraToggle_Buggy";
-        public static readonly string VanityCameraScrollLeft = "VanityCameraScrollLeft";
-        public static readonly string VanityCameraScrollRight = "VanityCameraScrollRight";
-        public static readonly string ToggleFreeCam = "ToggleFreeCam";
-        public static readonly string VanityCameraOne = "VanityCameraOne";
-        public static readonly string VanityCameraTwo = "VanityCameraTwo";
-        public static readonly string VanityCameraThree = "VanityCameraThree";
-        public static readonly string VanityCameraFour = "VanityCameraFour";
-        public static readonly string VanityCameraFive = "VanityCameraFive";
-        public static readonly string VanityCameraSix = "VanityCameraSix";
-        public static readonly string VanityCameraSeven = "VanityCameraSeven";
-        public static readonly string VanityCameraEight = "VanityCameraEight";
-        public static readonly string VanityCameraNine = "VanityCameraNine";
-        public static readonly string FreeCamToggleHUD = "FreeCamToggleHUD";
-        public static readonly string FreeCamSpeedInc = "FreeCamSpeedInc";
-        public static readonly string FreeCamSpeedDec = "FreeCamSpeedDec";
-        public static readonly string MoveFreeCamY = "MoveFreeCamY";
-        public static readonly string ToggleReverseThrottleInputFreeCam = "ToggleReverseThrottleInputFreeCam";
-        public static readonly string MoveFreeCamForward = "MoveFreeCamForward";
-        public static readonly string MoveFreeCamBackwards = "MoveFreeCamBackwards";
-        public static readonly string MoveFreeCamX = "MoveFreeCamX";
-        public static readonly string MoveFreeCamRight = "MoveFreeCamRight";
-        public static readonly string MoveFreeCamLeft = "MoveFreeCamLeft";
-        public static readonly string MoveFreeCamZ = "MoveFreeCamZ";
-        public static readonly string MoveFreeCamUpAxis = "MoveFreeCamUpAxis";
-        public static readonly string MoveFreeCamDownAxis = "MoveFreeCamDownAxis";
-        public static readonly string MoveFreeCamUp = "MoveFreeCamUp";
-        public static readonly string MoveFreeCamDown = "MoveFreeCamDown";
-        public static readonly string PitchCamera = "PitchCamera";
-        public static readonly string PitchCameraUp = "PitchCameraUp";
-        public static readonly string PitchCameraDown = "PitchCameraDown";
-        public static readonly string YawCamera = "YawCamera";
-        public static readonly string YawCameraLeft = "YawCameraLeft";
-        public static readonly string YawCameraRight = "YawCameraRight";
-        public static readonly string RollCamera = "RollCamera";
-        public static readonly string RollCameraLeft = "RollCameraLeft";
-        public static readonly string RollCameraRight = "RollCameraRight";
-        public static readonly string ToggleRotationLock = "ToggleRotationLock";
-        public static readonly string FixCameraRelativeToggle = "FixCameraRelativeToggle";
-        public static readonly string FixCameraWorldToggle = "FixCameraWorldToggle";
-        public static readonly string QuitCamera = "QuitCamera";
-        public static readonly string ToggleAdvanceMode = "ToggleAdvanceMode";
-        public static readonly string FreeCamZoomIn = "FreeCamZoomIn";
-        public static readonly string FreeCamZoomOut = "FreeCamZoomOut";
-        public static readonly string FStopDec = "FStopDec";
-        public static readonly string FStopInc = "FStopInc";
-        public static readonly string CommanderCreator_Undo = "CommanderCreator_Undo";
-        public static readonly string CommanderCreator_Redo = "CommanderCreator_Redo";
-        public static readonly string CommanderCreator_Rotation_MouseToggle = "CommanderCreator_Rotation_MouseToggle";
-        public static readonly string CommanderCreator_Rotation = "CommanderCreator_Rotation";
-        public static readonly string GalnetAudio_Play_Pause = "GalnetAudio_Play_Pause";
-        public static readonly string GalnetAudio_SkipForward = "GalnetAudio_SkipForward";
-        public static readonly string GalnetAudio_SkipBackward = "GalnetAudio_SkipBackward";
-        public static readonly string GalnetAudio_ClearQueue = "GalnetAudio_ClearQueue";
-        public static readonly string ExplorationFSSCameraPitch = "ExplorationFSSCameraPitch";
-
-        public static readonly string ExplorationFSSCameraPitchIncreaseButton =
-            "ExplorationFSSCameraPitchIncreaseButton";
-
-        public static readonly string ExplorationFSSCameraPitchDecreaseButton =
-            "ExplorationFSSCameraPitchDecreaseButton";
-
-        public static readonly string ExplorationFSSCameraYaw = "ExplorationFSSCameraYaw";
-        public static readonly string ExplorationFSSCameraYawIncreaseButton = "ExplorationFSSCameraYawIncreaseButton";
-        public static readonly string ExplorationFSSCameraYawDecreaseButton = "ExplorationFSSCameraYawDecreaseButton";
-        public static readonly string ExplorationFSSZoomIn = "ExplorationFSSZoomIn";
-        public static readonly string ExplorationFSSZoomOut = "ExplorationFSSZoomOut";
-        public static readonly string ExplorationFSSMiniZoomIn = "ExplorationFSSMiniZoomIn";
-        public static readonly string ExplorationFSSMiniZoomOut = "ExplorationFSSMiniZoomOut";
-        public static readonly string ExplorationFSSRadioTuningX_Raw = "ExplorationFSSRadioTuningX_Raw";
-        public static readonly string ExplorationFSSRadioTuningX_Increase = "ExplorationFSSRadioTuningX_Increase";
-        public static readonly string ExplorationFSSRadioTuningX_Decrease = "ExplorationFSSRadioTuningX_Decrease";
-        public static readonly string ExplorationFSSRadioTuningAbsoluteX = "ExplorationFSSRadioTuningAbsoluteX";
-        public static readonly string ExplorationFSSDiscoveryScan = "ExplorationFSSDiscoveryScan";
-        public static readonly string ExplorationFSSQuit = "ExplorationFSSQuit";
-        public static readonly string ExplorationFSSTarget = "ExplorationFSSTarget";
-        public static readonly string ExplorationFSSShowHelp = "ExplorationFSSShowHelp";
-
-        public static readonly string ExplorationSAAChangeScannedAreaViewToggle =
-            "ExplorationSAAChangeScannedAreaViewToggle";
-
-        public static readonly string ExplorationSAAExitThirdPerson = "ExplorationSAAExitThirdPerson";
-        public static readonly string SAAThirdPersonYawAxisRaw = "SAAThirdPersonYawAxisRaw";
-        public static readonly string SAAThirdPersonYawLeftButton = "SAAThirdPersonYawLeftButton";
-        public static readonly string SAAThirdPersonYawRightButton = "SAAThirdPersonYawRightButton";
-        public static readonly string SAAThirdPersonPitchAxisRaw = "SAAThirdPersonPitchAxisRaw";
-        public static readonly string SAAThirdPersonPitchUpButton = "SAAThirdPersonPitchUpButton";
-        public static readonly string SAAThirdPersonPitchDownButton = "SAAThirdPersonPitchDownButton";
-        public static readonly string SAAThirdPersonFovAxisRaw = "SAAThirdPersonFovAxisRaw";
-        public static readonly string SAAThirdPersonFovOutButton = "SAAThirdPersonFovOutButton";
-        public static readonly string SAAThirdPersonFovInButton = "SAAThirdPersonFovInButton";
+        public const string MouseReset = "MouseReset";
+        public const string YawLeftButton = "YawLeftButton";
+        public const string YawRightButton = "YawRightButton";
+        public const string YawToRollButton = "YawToRollButton";
+        public const string RollLeftButton = "RollLeftButton";
+        public const string RollRightButton = "RollRightButton";
+        public const string PitchUpButton = "PitchUpButton";
+        public const string PitchDownButton = "PitchDownButton";
+        public const string LeftThrustButton = "LeftThrustButton";
+        public const string RightThrustButton = "RightThrustButton";
+        public const string UpThrustButton = "UpThrustButton";
+        public const string DownThrustButton = "DownThrustButton";
+        public const string ForwardThrustButton = "ForwardThrustButton";
+        public const string BackwardThrustButton = "BackwardThrustButton";
+        public const string UseAlternateFlightValuesToggle = "UseAlternateFlightValuesToggle";
+        public const string ToggleReverseThrottleInput = "ToggleReverseThrottleInput";
+        
+        public const string ForwardKey = "ForwardKey";
+        public const string BackwardKey = "BackwardKey";
+        public const string SetSpeedMinus100 = "SetSpeedMinus100";
+        public const string SetSpeedMinus75 = "SetSpeedMinus75";
+        public const string SetSpeedMinus50 = "SetSpeedMinus50";
+        public const string SetSpeedMinus25 = "SetSpeedMinus25";
+        public const string SetSpeedZero = "SetSpeedZero";
+        public const string SetSpeed25 = "SetSpeed25";
+        public const string SetSpeed50 = "SetSpeed50";
+        public const string SetSpeed75 = "SetSpeed75";
+        public const string SetSpeed100 = "SetSpeed100";
+        
+        public const string YawLeftButton_Landing = "YawLeftButton_Landing";
+        public const string YawRightButton_Landing = "YawRightButton_Landing";
+        public const string PitchUpButton_Landing = "PitchUpButton_Landing";
+        public const string PitchDownButton_Landing = "PitchDownButton_Landing";
+        public const string RollLeftButton_Landing = "RollLeftButton_Landing";
+        public const string RollRightButton_Landing = "RollRightButton_Landing";
+        public const string LeftThrustButton_Landing = "LeftThrustButton_Landing";
+        public const string RightThrustButton_Landing = "RightThrustButton_Landing";
+        public const string UpThrustButton_Landing = "UpThrustButton_Landing";
+        public const string DownThrustButton_Landing = "DownThrustButton_Landing";
+        public const string ForwardThrustButton_Landing = "ForwardThrustButton_Landing";
+        public const string BackwardThrustButton_Landing = "BackwardThrustButton_Landing";
+        
+        public const string ToggleFlightAssist = "ToggleFlightAssist";
+        
+        public const string UseBoostJuice = "UseBoostJuice";
+        
+        public const string HyperSuperCombination = "HyperSuperCombination";
+        public const string Supercruise = "Supercruise";
+        public const string Hyperspace = "Hyperspace";
+        
+        public const string DisableRotationCorrectToggle = "DisableRotationCorrectToggle";
+        public const string OrbitLinesToggle = "OrbitLinesToggle";
+        
+        public const string SelectTarget = "SelectTarget";
+        public const string CycleNextTarget = "CycleNextTarget";
+        public const string CyclePreviousTarget = "CyclePreviousTarget";
+        
+        public const string SelectHighestThreat = "SelectHighestThreat";
+        public const string CycleNextHostileTarget = "CycleNextHostileTarget";
+        public const string CyclePreviousHostileTarget = "CyclePreviousHostileTarget";
+        
+        public const string TargetWingman0 = "TargetWingman0";
+        public const string TargetWingman1 = "TargetWingman1";
+        public const string TargetWingman2 = "TargetWingman2";
+        public const string SelectTargetsTarget = "SelectTargetsTarget";
+        public const string WingNavLock = "WingNavLock";
+        
+        public const string CycleNextSubsystem = "CycleNextSubsystem";
+        public const string CyclePreviousSubsystem = "CyclePreviousSubsystem";
+        
+        public const string TargetNextRouteSystem = "TargetNextRouteSystem";
+        
+        public const string PrimaryFire = "PrimaryFire";
+        public const string SecondaryFire = "SecondaryFire";
+        public const string CycleFireGroupNext = "CycleFireGroupNext";
+        public const string CycleFireGroupPrevious = "CycleFireGroupPrevious";
+        public const string DeployHardpointToggle = "DeployHardpointToggle";
+        
+        public const string ToggleButtonUpInput = "ToggleButtonUpInput"; //Silent running
+        public const string DeployHeatSink = "DeployHeatSink";
+        
+        public const string ShipSpotLightToggle = "ShipSpotLightToggle";
+        public const string RadarIncreaseRange = "RadarIncreaseRange";
+        public const string RadarDecreaseRange = "RadarDecreaseRange";
+        
+        public const string IncreaseEnginesPower = "IncreaseEnginesPower";
+        public const string IncreaseWeaponsPower = "IncreaseWeaponsPower";
+        public const string IncreaseSystemsPower = "IncreaseSystemsPower";
+        public const string ResetPowerDistribution = "ResetPowerDistribution";
+        
+        public const string HMDReset = "HMDReset";
+        public const string ToggleCargoScoop = "ToggleCargoScoop";
+        
+        public const string EjectAllCargo = "EjectAllCargo";
+        
+        public const string LandingGearToggle = "LandingGearToggle";
+        public const string MicrophoneMute = "MicrophoneMute";
+        
+        public const string UseShieldCell = "UseShieldCell";
+        public const string FireChaffLauncher = "FireChaffLauncher";
+        public const string ChargeECM = "ChargeECM";
+        
+        public const string WeaponColourToggle = "WeaponColourToggle";
+        public const string EngineColourToggle = "EngineColourToggle";
+        
+        public const string NightVisionToggle = "NightVisionToggle";
+        
+        public const string UIFocus = "UIFocus";
+        public const string FocusLeftPanel = "FocusLeftPanel";
+        public const string FocusCommsPanel = "FocusCommsPanel";
+        public const string QuickCommsPanel = "QuickCommsPanel";
+        public const string FocusRadarPanel = "FocusRadarPanel";
+        public const string FocusRightPanel = "FocusRightPanel";
+        
+        public const string GalaxyMapOpen = "GalaxyMapOpen";
+        public const string SystemMapOpen = "SystemMapOpen";
+        
+        public const string ShowPGScoreSummaryInput = "ShowPGScoreSummaryInput";
+        
+        public const string HeadLookToggle = "HeadLookToggle";
+        public const string Pause = "Pause";
+        public const string FriendsMenu = "FriendsMenu";
+        public const string OpenCodexGoToDiscovery = "OpenCodexGoToDiscovery";
+        
+        public const string PlayerHUDModeToggle = "PlayerHUDModeToggle";
+        public const string ExplorationFSSEnter = "ExplorationFSSEnter";
+        
+        public const string UI_Up = "UI_Up";
+        public const string UI_Down = "UI_Down";
+        public const string UI_Left = "UI_Left";
+        public const string UI_Right = "UI_Right";
+        public const string UI_Select = "UI_Select";
+        public const string UI_Back = "UI_Back";
+        public const string UI_Toggle = "UI_Toggle";
+        public const string CycleNextPanel = "CycleNextPanel";
+        public const string CyclePreviousPanel = "CyclePreviousPanel";
+        public const string CycleNextPage = "CycleNextPage";
+        public const string CyclePreviousPage = "CyclePreviousPage";
+        
+        public const string HeadLookReset = "HeadLookReset";
+        public const string HeadLookPitchUp = "HeadLookPitchUp";
+        public const string HeadLookPitchDown = "HeadLookPitchDown";
+        public const string HeadLookYawLeft = "HeadLookYawLeft";
+        public const string HeadLookYawRight = "HeadLookYawRight";
+        
+        public const string CamPitchUp = "CamPitchUp";
+        public const string CamPitchDown = "CamPitchDown";
+        public const string CamYawLeft = "CamYawLeft";
+        public const string CamYawRight = "CamYawRight";
+        public const string CamTranslateForward = "CamTranslateForward";
+        public const string CamTranslateBackward = "CamTranslateBackward";
+        public const string CamTranslateLeft = "CamTranslateLeft";
+        public const string CamTranslateRight = "CamTranslateRight";
+        public const string CamTranslateUp = "CamTranslateUp";
+        public const string CamTranslateDown = "CamTranslateDown";
+        public const string CamZoomIn = "CamZoomIn";
+        public const string CamZoomOut = "CamZoomOut";
+        public const string CamTranslateZHold = "CamTranslateZHold";
+        
+        public const string GalaxyMapHome = "GalaxyMapHome";
+        
+        public const string ToggleDriveAssist = "ToggleDriveAssist";
+        
+        public const string SteerLeftButton = "SteerLeftButton";
+        public const string SteerRightButton = "SteerRightButton";
+        public const string BuggyRollLeftButton = "BuggyRollLeftButton";
+        public const string BuggyRollRightButton = "BuggyRollRightButton";
+        public const string BuggyPitchUpButton = "BuggyPitchUpButton";
+        public const string BuggyPitchDownButton = "BuggyPitchDownButton";
+        public const string VerticalThrustersButton = "VerticalThrustersButton";
+        
+        public const string BuggyPrimaryFireButton = "BuggyPrimaryFireButton";
+        public const string BuggySecondaryFireButton = "BuggySecondaryFireButton";
+        public const string AutoBreakBuggyButton = "AutoBreakBuggyButton";
+        
+        public const string HeadlightsBuggyButton = "HeadlightsBuggyButton";
+        
+        public const string ToggleBuggyTurretButton = "ToggleBuggyTurretButton";
+        
+        public const string BuggyCycleFireGroupNext = "BuggyCycleFireGroupNext";
+        public const string BuggyCycleFireGroupPrevious = "BuggyCycleFireGroupPrevious";
+        
+        public const string SelectTarget_Buggy = "SelectTarget_Buggy";
+        
+        public const string BuggyTurretYawLeftButton = "BuggyTurretYawLeftButton";
+        public const string BuggyTurretYawRightButton = "BuggyTurretYawRightButton";
+        public const string BuggyTurretPitchUpButton = "BuggyTurretPitchUpButton";
+        public const string BuggyTurretPitchDownButton = "BuggyTurretPitchDownButton";
+        public const string BuggyToggleReverseThrottleInput = "BuggyToggleReverseThrottleInput";
+        
+        public const string IncreaseSpeedButtonMax = "IncreaseSpeedButtonMax";
+        public const string DecreaseSpeedButtonMax = "DecreaseSpeedButtonMax";
+        public const string IncreaseEnginesPower_Buggy = "IncreaseEnginesPower_Buggy";
+        
+        public const string IncreaseWeaponsPower_Buggy = "IncreaseWeaponsPower_Buggy";
+        public const string IncreaseSystemsPower_Buggy = "IncreaseSystemsPower_Buggy";
+        
+        public const string ResetPowerDistribution_Buggy = "ResetPowerDistribution_Buggy";
+        
+        public const string ToggleCargoScoop_Buggy = "ToggleCargoScoop_Buggy";
+        
+        public const string EjectAllCargo_Buggy = "EjectAllCargo_Buggy";
+        
+        public const string RecallDismissShip = "RecallDismissShip";
+        
+        public const string UIFocus_Buggy = "UIFocus_Buggy";
+        public const string FocusLeftPanel_Buggy = "FocusLeftPanel_Buggy";
+        public const string FocusCommsPanel_Buggy = "FocusCommsPanel_Buggy";
+        public const string QuickCommsPanel_Buggy = "QuickCommsPanel_Buggy";
+        public const string FocusRadarPanel_Buggy = "FocusRadarPanel_Buggy";
+        public const string FocusRightPanel_Buggy = "FocusRightPanel_Buggy";
+        
+        public const string GalaxyMapOpen_Buggy = "GalaxyMapOpen_Buggy";
+        public const string SystemMapOpen_Buggy = "SystemMapOpen_Buggy";
+        public const string OpenCodexGoToDiscovery_Buggy = "OpenCodexGoToDiscovery_Buggy";
+        
+        public const string PlayerHUDModeToggle_Buggy = "PlayerHUDModeToggle_Buggy";
+        public const string HeadLookToggle_Buggy = "HeadLookToggle_Buggy";
+        
+        public const string MultiCrewToggleMode = "MultiCrewToggleMode";
+        
+        public const string MultiCrewPrimaryFire = "MultiCrewPrimaryFire";
+        public const string MultiCrewSecondaryFire = "MultiCrewSecondaryFire";
+        
+        public const string MultiCrewPrimaryUtilityFire = "MultiCrewPrimaryUtilityFire";
+        public const string MultiCrewSecondaryUtilityFire = "MultiCrewSecondaryUtilityFire";
+        
+        public const string MultiCrewThirdPersonYawLeftButton = "MultiCrewThirdPersonYawLeftButton";
+        public const string MultiCrewThirdPersonYawRightButton = "MultiCrewThirdPersonYawRightButton";
+        public const string MultiCrewThirdPersonPitchUpButton = "MultiCrewThirdPersonPitchUpButton";
+        public const string MultiCrewThirdPersonPitchDownButton = "MultiCrewThirdPersonPitchDownButton";
+        public const string MultiCrewThirdPersonFovOutButton = "MultiCrewThirdPersonFovOutButton";
+        public const string MultiCrewThirdPersonFovInButton = "MultiCrewThirdPersonFovInButton";
+        
+        public const string MultiCrewCockpitUICycleForward = "MultiCrewCockpitUICycleForward";
+        public const string MultiCrewCockpitUICycleBackward = "MultiCrewCockpitUICycleBackward";
+        
+        public const string OrderRequestDock = "OrderRequestDock";
+        public const string OrderDefensiveBehaviour = "OrderDefensiveBehaviour";
+        public const string OrderAggressiveBehaviour = "OrderAggressiveBehaviour";
+        
+        public const string OrderFocusTarget = "OrderFocusTarget";
+        public const string OrderHoldFire = "OrderHoldFire";
+        public const string OrderHoldPosition = "OrderHoldPosition";
+        public const string OrderFollow = "OrderFollow";
+        
+        public const string OpenOrders = "OpenOrders";
+        
+        public const string PhotoCameraToggle = "PhotoCameraToggle";
+        public const string PhotoCameraToggle_Buggy = "PhotoCameraToggle_Buggy";
+        
+        public const string VanityCameraScrollLeft = "VanityCameraScrollLeft";
+        public const string VanityCameraScrollRight = "VanityCameraScrollRight";
+        public const string ToggleFreeCam = "ToggleFreeCam";
+        public const string VanityCameraOne = "VanityCameraOne";
+        public const string VanityCameraTwo = "VanityCameraTwo";
+        public const string VanityCameraThree = "VanityCameraThree";
+        public const string VanityCameraFour = "VanityCameraFour";
+        public const string VanityCameraFive = "VanityCameraFive";
+        public const string VanityCameraSix = "VanityCameraSix";
+        public const string VanityCameraSeven = "VanityCameraSeven";
+        public const string VanityCameraEight = "VanityCameraEight";
+        public const string VanityCameraNine = "VanityCameraNine";
+        public const string FreeCamToggleHUD = "FreeCamToggleHUD";
+        
+        public const string FreeCamSpeedInc = "FreeCamSpeedInc";
+        public const string FreeCamSpeedDec = "FreeCamSpeedDec";
+        public const string ToggleReverseThrottleInputFreeCam = "ToggleReverseThrottleInputFreeCam";
+        public const string MoveFreeCamForward = "MoveFreeCamForward";
+        public const string MoveFreeCamBackwards = "MoveFreeCamBackwards";
+        public const string MoveFreeCamRight = "MoveFreeCamRight";
+        public const string MoveFreeCamLeft = "MoveFreeCamLeft";
+        public const string MoveFreeCamUp = "MoveFreeCamUp";
+        public const string MoveFreeCamDown = "MoveFreeCamDown";
+        public const string PitchCameraUp = "PitchCameraUp";
+        public const string PitchCameraDown = "PitchCameraDown";
+        public const string YawCameraLeft = "YawCameraLeft";
+        public const string YawCameraRight = "YawCameraRight";
+        public const string RollCameraLeft = "RollCameraLeft";
+        public const string RollCameraRight = "RollCameraRight";
+        public const string ToggleRotationLock = "ToggleRotationLock";
+        public const string FixCameraRelativeToggle = "FixCameraRelativeToggle";
+        public const string FixCameraWorldToggle = "FixCameraWorldToggle";
+        public const string QuitCamera = "QuitCamera";
+        public const string ToggleAdvanceMode = "ToggleAdvanceMode";
+        public const string FreeCamZoomIn = "FreeCamZoomIn";
+        public const string FreeCamZoomOut = "FreeCamZoomOut";
+        public const string FStopDec = "FStopDec";
+        public const string FStopInc = "FStopInc";
+        public const string CommanderCreator_Undo = "CommanderCreator_Undo";
+        public const string CommanderCreator_Redo = "CommanderCreator_Redo";
+        public const string CommanderCreator_Rotation_MouseToggle = "CommanderCreator_Rotation_MouseToggle";
+        public const string GalnetAudio_Play_Pause = "GalnetAudio_Play_Pause";
+        public const string GalnetAudio_SkipForward = "GalnetAudio_SkipForward";
+        public const string GalnetAudio_SkipBackward = "GalnetAudio_SkipBackward";
+        public const string GalnetAudio_ClearQueue = "GalnetAudio_ClearQueue";
+        public const string ExplorationFSSCameraPitchIncreaseButton = "ExplorationFSSCameraPitchIncreaseButton";
+        public const string ExplorationFSSCameraPitchDecreaseButton = "ExplorationFSSCameraPitchDecreaseButton";
+        public const string ExplorationFSSCameraYawIncreaseButton = "ExplorationFSSCameraYawIncreaseButton";
+        public const string ExplorationFSSCameraYawDecreaseButton = "ExplorationFSSCameraYawDecreaseButton";
+        public const string ExplorationFSSZoomIn = "ExplorationFSSZoomIn";
+        public const string ExplorationFSSZoomOut = "ExplorationFSSZoomOut";
+        public const string ExplorationFSSMiniZoomIn = "ExplorationFSSMiniZoomIn";
+        public const string ExplorationFSSMiniZoomOut = "ExplorationFSSMiniZoomOut";
+        public const string ExplorationFSSRadioTuningX_Increase = "ExplorationFSSRadioTuningX_Increase";
+        public const string ExplorationFSSRadioTuningX_Decrease = "ExplorationFSSRadioTuningX_Decrease";
+        public const string ExplorationFSSDiscoveryScan = "ExplorationFSSDiscoveryScan";
+        public const string ExplorationFSSQuit = "ExplorationFSSQuit";
+        public const string ExplorationFSSTarget = "ExplorationFSSTarget";
+        public const string ExplorationFSSShowHelp = "ExplorationFSSShowHelp";
+        public const string ExplorationSAAChangeScannedAreaViewToggle = "ExplorationSAAChangeScannedAreaViewToggle";
+        public const string ExplorationSAAExitThirdPerson = "ExplorationSAAExitThirdPerson";
+        public const string SAAThirdPersonYawLeftButton = "SAAThirdPersonYawLeftButton";
+        public const string SAAThirdPersonYawRightButton = "SAAThirdPersonYawRightButton";
+        public const string SAAThirdPersonPitchUpButton = "SAAThirdPersonPitchUpButton";
+        public const string SAAThirdPersonPitchDownButton = "SAAThirdPersonPitchDownButton";
+        public const string SAAThirdPersonFovOutButton = "SAAThirdPersonFovOutButton";
+        public const string SAAThirdPersonFovInButton = "SAAThirdPersonFovInButton";
     }
 
     public class Bind
@@ -531,6 +526,13 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         {
             this.colorGroupName = colorGroupName;
             this.commands = commands.ToList();
+        }
+    }
+
+    public class ControlColorGroups
+    {
+        static ControlColorGroups()
+        {
         }
     }
 

@@ -1,9 +1,405 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
+using Aurora.Profiles.EliteDangerous.Layers;
 
 namespace Aurora.Profiles.EliteDangerous
 {
+    public class CommandColors
+    {
+        public static readonly Dictionary<string, string> commadsToColor = new Dictionary<string, string>();
+
+        private static void FillDictionary(Dictionary<string, string[]> commandColors)
+        {
+            foreach (KeyValuePair<string, string[]> colorGroup in commandColors)
+            {
+                foreach (string command in colorGroup.Value)
+                {
+                    commadsToColor.Add(command, colorGroup.Key);
+                }
+            }
+        }
+
+        public static string GetColorGroupForCommand(string command)
+        {
+            return commadsToColor[command];
+        }
+
+        static CommandColors()
+        {
+            CommandColors.FillDictionary(new Dictionary<string, string[]>()
+            {
+                {
+                    ColorGroup.MovementSpeedColor, new[]
+                    {
+                        Command.ForwardKey,
+                        Command.BackwardKey,
+                        Command.SetSpeedMinus100,
+                        Command.SetSpeedMinus75,
+                        Command.SetSpeedMinus50,
+                        Command.SetSpeedMinus25,
+                        Command.SetSpeedZero,
+                        Command.SetSpeed25,
+                        Command.SetSpeed50,
+                        Command.SetSpeed75,
+                        Command.SetSpeed100,
+
+                        Command.UseBoostJuice,
+                        Command.IncreaseEnginesPower,
+
+                        Command.CamTranslateForward,
+                        Command.CamTranslateBackward,
+                        Command.CamTranslateLeft,
+                        Command.CamTranslateRight,
+                        Command.CamTranslateUp,
+                        Command.CamTranslateDown,
+                        
+                        Command.IncreaseSpeedButtonMax,
+                        Command.DecreaseSpeedButtonMax,
+                        Command.IncreaseEnginesPower_Buggy,
+                        
+                        Command.OrderHoldPosition,
+                        
+                        Command.FreeCamSpeedInc,
+                        Command.FreeCamSpeedDec,
+                        
+                        Command.MoveFreeCamForward,
+                        Command.MoveFreeCamBackwards,
+                    }
+                },
+                {
+                    ColorGroup.MovementSecondaryColor, new[]
+                    {
+                        Command.YawLeftButton,
+                        Command.YawRightButton,
+                        Command.YawToRollButton,
+                        Command.RollLeftButton,
+                        Command.RollRightButton,
+                        Command.PitchUpButton,
+                        Command.PitchDownButton,
+                        Command.LeftThrustButton,
+                        Command.RightThrustButton,
+                        Command.UpThrustButton,
+                        Command.DownThrustButton,
+                        Command.ForwardThrustButton,
+                        Command.BackwardThrustButton,
+                        Command.UseAlternateFlightValuesToggle,
+                        Command.ToggleReverseThrottleInput,
+
+                        Command.YawLeftButton_Landing,
+                        Command.YawRightButton_Landing,
+                        Command.PitchUpButton_Landing,
+                        Command.PitchDownButton_Landing,
+                        Command.RollLeftButton_Landing,
+                        Command.RollRightButton_Landing,
+                        Command.LeftThrustButton_Landing,
+                        Command.RightThrustButton_Landing,
+                        Command.UpThrustButton_Landing,
+                        Command.DownThrustButton_Landing,
+                        Command.ForwardThrustButton_Landing,
+                        Command.BackwardThrustButton_Landing,
+
+                        Command.EngineColourToggle,
+
+                        Command.CamPitchUp,
+                        Command.CamPitchDown,
+                        Command.CamYawLeft,
+                        Command.CamYawRight,
+
+                        Command.CamZoomIn,
+                        Command.CamZoomOut,
+                        Command.CamTranslateZHold,
+                        
+                        Command.SteerLeftButton,
+                        Command.SteerRightButton,
+                        Command.BuggyRollLeftButton,
+                        Command.BuggyRollRightButton,
+                        Command.BuggyPitchUpButton,
+                        Command.BuggyPitchDownButton,
+                        Command.VerticalThrustersButton,
+                        
+                        Command.AutoBreakBuggyButton,
+                        
+                        Command.BuggyTurretYawLeftButton,
+                        Command.BuggyTurretYawRightButton,
+                        Command.BuggyTurretPitchUpButton,
+                        Command.BuggyTurretPitchDownButton,
+                        Command.BuggyToggleReverseThrottleInput,
+                        
+                        Command.MultiCrewThirdPersonYawLeftButton,
+                        Command.MultiCrewThirdPersonYawRightButton,
+                        Command.MultiCrewThirdPersonPitchUpButton,
+                        Command.MultiCrewThirdPersonPitchDownButton,
+                        Command.MultiCrewThirdPersonFovOutButton,
+                        Command.MultiCrewThirdPersonFovInButton,
+                        
+                        Command.OrderFollow,
+                        Command.ToggleReverseThrottleInputFreeCam,
+                        
+                        Command.MoveFreeCamRight,
+                        Command.MoveFreeCamLeft,
+                        Command.MoveFreeCamUp,
+                        Command.MoveFreeCamDown,
+                        Command.PitchCameraUp,
+                        Command.PitchCameraDown,
+                        Command.YawCameraLeft,
+                        Command.YawCameraRight,
+                        Command.RollCameraLeft,
+                        Command.RollCameraRight,
+                        
+                        Command.FreeCamZoomIn,
+                        Command.FreeCamZoomOut,
+                    }
+                },
+                {
+                    ColorGroup.ShipStuffColor, new[]
+                    {
+                        Command.ToggleFlightAssist,
+                        Command.DisableRotationCorrectToggle,
+                        Command.OrbitLinesToggle,
+                        Command.ShipSpotLightToggle,
+                        Command.RadarIncreaseRange,
+                        Command.RadarDecreaseRange,
+                        Command.HMDReset,
+                        Command.ToggleCargoScoop,
+                        Command.LandingGearToggle,
+                        Command.NightVisionToggle,
+
+                        Command.ShowPGScoreSummaryInput,
+                        Command.HeadLookToggle,
+                        Command.Pause,
+                        
+                        Command.ToggleDriveAssist,
+                        Command.HeadlightsBuggyButton,
+                        Command.ToggleCargoScoop_Buggy,
+                        
+                        Command.RecallDismissShip,
+                        
+                        Command.HeadLookToggle_Buggy,
+                        
+                        Command.ToggleRotationLock,
+                    }
+                },
+                {
+                    ColorGroup.NavigationColor, new[]
+                    {
+                        Command.HyperSuperCombination,
+                        Command.Supercruise,
+                        Command.Hyperspace,
+                        Command.TargetNextRouteSystem,
+
+                        Command.GalaxyMapOpen,
+                        Command.SystemMapOpen,
+                        Command.OpenCodexGoToDiscovery,
+                        Command.GalaxyMapHome,
+                        
+                        Command.GalaxyMapOpen_Buggy,
+                        Command.SystemMapOpen_Buggy,
+                        Command.OpenCodexGoToDiscovery_Buggy,
+                        
+                        Command.OrderRequestDock,
+                    }
+                },
+                {
+                    ColorGroup.UiColor, new[]
+                    {
+                        Command.UIFocus,
+                        Command.FocusLeftPanel,
+                        Command.FocusCommsPanel,
+                        Command.QuickCommsPanel,
+                        Command.FocusRadarPanel,
+                        Command.FocusRightPanel,
+
+                        Command.UI_Up,
+                        Command.UI_Down,
+                        Command.UI_Left,
+                        Command.UI_Right,
+                        Command.UI_Select,
+                        Command.UI_Back,
+                        Command.PlayerHUDModeToggle,
+                        
+                        Command.UIFocus_Buggy,
+                        Command.FocusLeftPanel_Buggy,
+                        Command.FocusCommsPanel_Buggy,
+                        Command.QuickCommsPanel_Buggy,
+                        Command.FocusRadarPanel_Buggy,
+                        Command.FocusRightPanel_Buggy,
+                        
+                        Command.PlayerHUDModeToggle_Buggy,
+                        
+                        Command.OrderAggressiveBehaviour,
+                        
+                        Command.OpenOrders,
+                    }
+                },
+                {
+                    ColorGroup.UiAltColor, new[]
+                    {
+                        Command.UI_Toggle,
+                        Command.CycleNextPanel,
+                        Command.CyclePreviousPanel,
+                        Command.CycleNextPage,
+                        Command.CyclePreviousPage,
+                        Command.SelectTarget,
+                        Command.CycleNextTarget,
+                        Command.CyclePreviousTarget,
+                        
+                        Command.SelectTarget_Buggy,
+                        
+                        Command.MultiCrewCockpitUICycleForward,
+                        Command.MultiCrewCockpitUICycleBackward,
+                    }
+                },
+                {
+                    ColorGroup.WingColor, new[]
+                    {
+                        Command.TargetWingman0,
+                        Command.TargetWingman1,
+                        Command.TargetWingman2,
+                        Command.SelectTargetsTarget,
+                        Command.WingNavLock,
+                        Command.MicrophoneMute,
+                        Command.FriendsMenu,
+                        
+                        Command.MultiCrewToggleMode,
+                        
+                        Command.OrderHoldFire,
+                    }
+                },
+                {
+                    ColorGroup.OffenceColor, new[]
+                    {
+                        Command.SelectHighestThreat,
+                        Command.CycleNextHostileTarget,
+                        Command.CyclePreviousHostileTarget,
+
+                        Command.CycleNextSubsystem,
+                        Command.CyclePreviousSubsystem,
+
+                        Command.PrimaryFire,
+                        Command.SecondaryFire,
+                        Command.CycleFireGroupNext,
+                        Command.CycleFireGroupPrevious,
+                        Command.DeployHardpointToggle,
+                        Command.IncreaseWeaponsPower,
+
+                        Command.WeaponColourToggle,
+                        
+                        Command.BuggyPrimaryFireButton,
+                        Command.BuggySecondaryFireButton,
+                        Command.ToggleBuggyTurretButton,
+                        Command.BuggyCycleFireGroupNext,
+                        Command.BuggyCycleFireGroupPrevious,
+                        Command.IncreaseWeaponsPower_Buggy,
+                        
+                        Command.MultiCrewPrimaryFire,
+                        Command.MultiCrewSecondaryFire,
+                        
+                        Command.OrderFocusTarget,
+                    }
+                },
+                {
+                    ColorGroup.DefenceColor, new[]
+                    {
+                        Command.ToggleButtonUpInput,
+                        Command.DeployHeatSink,
+                        Command.IncreaseSystemsPower,
+                        Command.UseShieldCell,
+                        Command.FireChaffLauncher,
+                        Command.ChargeECM,
+                        Command.IncreaseSystemsPower_Buggy,
+                        
+                        Command.MultiCrewPrimaryUtilityFire,
+                        Command.MultiCrewSecondaryUtilityFire,
+                        
+                        Command.OrderDefensiveBehaviour,
+                    }
+                },
+                {
+                    ColorGroup.HudModeCombatColor, new[]
+                    {
+                        Command.SelectHighestThreat,
+                    }
+                },
+                {
+                    ColorGroup.HudModeDiscoveryColor, new[]
+                    {
+                        Command.ExplorationFSSEnter,
+                    }
+                },
+                {
+                    ColorGroup.CameraColor, new[]
+                    {
+                        Command.HeadLookReset,
+                        Command.HeadLookPitchUp,
+                        Command.HeadLookPitchDown,
+                        Command.HeadLookYawLeft,
+                        Command.HeadLookYawRight,
+                        
+                        Command.PhotoCameraToggle,
+                        Command.PhotoCameraToggle_Buggy,
+                        Command.VanityCameraScrollLeft,
+                        Command.VanityCameraScrollRight,
+                        Command.VanityCameraOne,
+                        Command.VanityCameraTwo,
+                        Command.VanityCameraThree,
+                        Command.VanityCameraFour,
+                        Command.VanityCameraFive,
+                        Command.VanityCameraSix,
+                        Command.VanityCameraSeven,
+                        Command.VanityCameraEight,
+                        Command.VanityCameraNine,
+                        Command.FreeCamToggleHUD,
+                        
+                        Command.FixCameraRelativeToggle,
+                        Command.FixCameraWorldToggle,
+                        Command.QuitCamera,
+                        Command.ToggleAdvanceMode,
+                        
+                        Command.FStopDec,
+                        Command.FStopInc,
+                    }
+                },
+                {
+                    ColorGroup.OtherColor, new[]
+                    {
+                        Command.MouseReset,
+                        Command.CommanderCreator_Undo,
+                        Command.CommanderCreator_Redo,
+                        Command.CommanderCreator_Rotation_MouseToggle,
+                        Command.GalnetAudio_Play_Pause,
+                        Command.GalnetAudio_SkipForward,
+                        Command.GalnetAudio_SkipBackward,
+                        Command.GalnetAudio_ClearQueue,
+                        Command.ExplorationFSSCameraPitchIncreaseButton,
+                        Command.ExplorationFSSCameraPitchDecreaseButton,
+                        Command.ExplorationFSSCameraYawIncreaseButton,
+                        Command.ExplorationFSSCameraYawDecreaseButton,
+                        Command.ExplorationFSSZoomIn,
+                        Command.ExplorationFSSZoomOut,
+                        Command.ExplorationFSSMiniZoomIn,
+                        Command.ExplorationFSSMiniZoomOut,
+                        Command.ExplorationFSSRadioTuningX_Increase,
+                        Command.ExplorationFSSRadioTuningX_Decrease,
+                        Command.ExplorationFSSDiscoveryScan,
+                        Command.ExplorationFSSQuit,
+                        Command.ExplorationFSSTarget,
+                        Command.ExplorationFSSShowHelp,
+                        Command.ExplorationSAAChangeScannedAreaViewToggle,
+                        Command.ExplorationSAAExitThirdPerson,
+                        Command.SAAThirdPersonYawLeftButton,
+                        Command.SAAThirdPersonYawRightButton,
+                        Command.SAAThirdPersonPitchUpButton,
+                        Command.SAAThirdPersonPitchDownButton,
+                        Command.SAAThirdPersonFovOutButton,
+                        Command.SAAThirdPersonFovInButton,
+                    }
+                },
+            });
+        }
+    }
+
     public class ControlGroupSets
     {
         public static ControlGroupSet CONTROLS_MAIN = new ControlGroupSet(new[]
@@ -234,7 +630,10 @@ namespace Aurora.Profiles.EliteDangerous
                 })
             },
             new GameStateCondition(guiFocus: new[]
-                {GuiFocus.STATION_SERVICES, GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE, GuiFocus.PANEL_SYSTEMS}));
+            {
+                GuiFocus.STATION_SERVICES, GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE,
+                GuiFocus.PANEL_SYSTEMS
+            }));
     }
 
     public class KeyPresets

@@ -108,8 +108,8 @@ namespace Aurora.Profiles.EliteDangerous
                 XmlNodeList commands = doc.DocumentElement.ChildNodes;
                 foreach(XmlNode command in commands)
                 {
-//                    if(command.HasChildNodes)
-//                        Global.logger.Info("public static readonly string " + command.Name + " = \"" + command.Name + "\";");
+//                    if(command.HasChildNodes && command.SelectSingleNode("Deadzone") == null)
+//                        Global.logger.Info("public const string " + command.Name + " = \"" + command.Name + "\";");
                     Bind bind = new Bind(command.Name);
                     foreach (XmlNode xmlMapping in command.ChildNodes)
                     {

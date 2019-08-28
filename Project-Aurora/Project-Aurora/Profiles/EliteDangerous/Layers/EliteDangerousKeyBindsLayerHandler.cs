@@ -15,9 +15,35 @@ using CSScriptLibrary;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {
+    public class ColorGroup
+    {
+        public const string OtherColor = "OtherColor";
+        public const string HudModeCombatColor = "HudModeCombatColor";
+        public const string HudModeDiscoveryColor = "HudModeDiscoveryColor";
+        public const string UiColor = "UiColor";
+        public const string UiAltColor = "UiAltColor";
+        public const string ShipStuffColor = "ShipStuffColor";
+        public const string CameraColor = "CameraColor";
+        public const string DefenceColor = "DefenceColor";
+        public const string OffenceColor = "OffenceColor";
+        public const string MovementSpeedColor = "MovementSpeedColor";
+        public const string MovementSecondaryColor = "MovementSecondaryColor";
+        public const string WingColor = "WingColor";
+        public const string NavigationColor = "NavigationColor";
+        public const string ModeEnableColor = "ModeEnableColor";
+        public const string ModeDisableColor = "ModeDisableColor";
+    }
+    
     public class
         EliteDangerousKeyBindsHandlerProperties : LayerHandlerProperties2Color<EliteDangerousKeyBindsHandlerProperties>
     {
+        public Color? _OtherColor { get; set; }
+
+        public Color OtherColor
+        {
+            get { return Logic._OtherColor ?? _OtherColor ?? Color.Empty; }
+        }
+        
         public Color? _HudModeCombatColor { get; set; }
 
         public Color HudModeCombatColor
@@ -127,6 +153,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         public override void Default()
         {
             base.Default();
+            this._OtherColor = Color.FromArgb(255, 255, 255);
             this._HudModeCombatColor = Color.FromArgb(255, 80, 0);
             this._HudModeDiscoveryColor = Color.FromArgb(0, 160, 255);
             this._UiColor = Color.FromArgb(255, 80, 0);
@@ -147,23 +174,23 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         {
             switch (@colorVariableName)
             {
-                case "HudModeCombatColor": return HudModeCombatColor;
-                case "HudModeDiscoveryColor": return HudModeDiscoveryColor;
-                case "UiColor": return UiColor;
-                case "UiAltColor": return UiAltColor;
-                case "ShipStuffColor": return ShipStuffColor;
-                case "CameraColor": return CameraColor;
-                case "DefenceColor": return DefenceColor;
-                case "OffenceColor": return OffenceColor;
-                case "MovementSpeedColor": return MovementSpeedColor;
-                case "MovementSecondaryColor": return MovementSecondaryColor;
-                case "WingColor": return WingColor;
-                case "NavigationColor": return NavigationColor;
-                case "ModeEnableColor": return ModeEnableColor;
-                case "ModeDisableColor": return ModeDisableColor;
+                case ColorGroup.HudModeCombatColor: return HudModeCombatColor;
+                case ColorGroup.HudModeDiscoveryColor: return HudModeDiscoveryColor;
+                case ColorGroup.UiColor: return UiColor;
+                case ColorGroup.UiAltColor: return UiAltColor;
+                case ColorGroup.ShipStuffColor: return ShipStuffColor;
+                case ColorGroup.CameraColor: return CameraColor;
+                case ColorGroup.DefenceColor: return DefenceColor;
+                case ColorGroup.OffenceColor: return OffenceColor;
+                case ColorGroup.MovementSpeedColor: return MovementSpeedColor;
+                case ColorGroup.MovementSecondaryColor: return MovementSecondaryColor;
+                case ColorGroup.WingColor: return WingColor;
+                case ColorGroup.NavigationColor: return NavigationColor;
+                case ColorGroup.ModeEnableColor: return ModeEnableColor;
+                case ColorGroup.ModeDisableColor: return ModeDisableColor;
             }
 
-            return UiColor;
+            return OtherColor;
         }
     }
 
