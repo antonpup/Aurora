@@ -83,6 +83,7 @@ namespace Aurora.Settings
             {
                 LayerHandlerEntry enumVal = (LayerHandlerEntry)((sender as ComboBox).SelectedItem);
 
+                _Layer?.Dispose();
                 ResetLayer(enumVal);
             }
         }
