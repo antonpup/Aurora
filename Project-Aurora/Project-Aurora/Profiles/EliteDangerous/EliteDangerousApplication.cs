@@ -12,6 +12,7 @@ namespace Aurora.Profiles.EliteDangerous
                 Name = "Elite: Dangerous",
                 ID = "EliteDangerous",
                 ProcessNames = new[] { "EliteDangerous64.exe", "sublime_text.exe" },
+                UpdateInterval = 16,
                 SettingsType = typeof(FirstTimeApplicationSettings),
                 ProfileType = typeof(EliteDangerousProfile),
                 OverviewControlType = typeof(Control_EliteDangerous),

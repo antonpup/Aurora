@@ -17,6 +17,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 {
     public class ColorGroup
     {
+        public const string None = "None";
         public const string OtherColor = "OtherColor";
         public const string HudModeCombatColor = "HudModeCombatColor";
         public const string HudModeDiscoveryColor = "HudModeDiscoveryColor";
@@ -33,7 +34,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         public const string ModeEnableColor = "ModeEnableColor";
         public const string ModeDisableColor = "ModeDisableColor";
     }
-    
+
     public class
         EliteDangerousKeyBindsHandlerProperties : LayerHandlerProperties2Color<EliteDangerousKeyBindsHandlerProperties>
     {
@@ -43,7 +44,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         {
             get { return Logic._OtherColor ?? _OtherColor ?? Color.Empty; }
         }
-        
+
         public Color? _HudModeCombatColor { get; set; }
 
         public Color HudModeCombatColor
@@ -188,6 +189,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 case ColorGroup.NavigationColor: return NavigationColor;
                 case ColorGroup.ModeEnableColor: return ModeEnableColor;
                 case ColorGroup.ModeDisableColor: return ModeDisableColor;
+                case ColorGroup.None: return Color.FromArgb(0, 0, 0, 0);
             }
 
             return OtherColor;
@@ -241,7 +243,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         public override EffectLayer Render(IGameState state)
         {
             GameState_EliteDangerous gameState = state as GameState_EliteDangerous;
-           
+
             GSI.Nodes.Controls controls = (state as GameState_EliteDangerous).Controls;
 
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
@@ -252,8 +254,6 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
                 foreach (ControlGroup controlGroup in controlGroupSet.controlGroups)
                 {
-                    controlGroup.color = Properties.GetColorByVariableName(controlGroup.colorGroupName);
-
                     if (!controlGroup.IsSatisfied(gameState)) continue;
 
                     foreach (string command in controlGroup.commands)
@@ -269,7 +269,10 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                             foreach (DeviceKeys modifierKey in mapping.modifiers)
                             {
                                 keyBindsLayer.Set(modifierKey, Properties.ShipStuffColor);
-                                if (Array.IndexOf(Global.InputEvents.PressedKeys, KeyUtils.GetFormsKey(modifierKey)) == -1)
+                                if (Array.IndexOf(
+                                        Global.InputEvents.PressedKeys,
+                                        KeyUtils.GetFormsKey(modifierKey)
+                                    ) == -1)
                                 {
                                     allModifiersPressed = false;
                                     break;
@@ -277,9 +280,18 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                             }
 
                             if (!allModifiersPressed) continue;
-                            
+
                             keyBindsLayer.Set(mapping.key,
-                                blinkingKey ? GetBlinkingColor(controlGroup.color) : controlGroup.color);
+                                blinkingKey
+                                    ? GetBlinkingColor(
+                                        Properties.GetColorByVariableName(
+                                            CommandColors.GetColorGroupForCommand(command)
+                                        )
+                                    )
+                                    : Properties.GetColorByVariableName(
+                                        CommandColors.GetColorGroupForCommand(command)
+                                    )
+                            );
                         }
                     }
                 }

@@ -512,27 +512,17 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 
     public class ControlGroup : NeedsGameState
     {
-        public string colorGroupName;
-        public Color color;
         public List<string> commands;
 
-        public ControlGroup(string colorGroupName, string[] commands) : this(colorGroupName, commands, null)
+        public ControlGroup(string[] commands) : this(commands, null)
         {
         }
 
-        public ControlGroup(string colorGroupName, string[] commands,
+        public ControlGroup(string[] commands,
             GameStateCondition neededGameStateCondition) : base(
             neededGameStateCondition)
         {
-            this.colorGroupName = colorGroupName;
             this.commands = commands.ToList();
-        }
-    }
-
-    public class ControlColorGroups
-    {
-        static ControlColorGroups()
-        {
         }
     }
 

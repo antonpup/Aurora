@@ -8,27 +8,28 @@ namespace Aurora.Profiles.EliteDangerous
 {
     public class CommandColors
     {
-        public static readonly Dictionary<string, string> commadsToColor = new Dictionary<string, string>();
+        public static Dictionary<string, string> commadsToColorGroup;
 
         private static void FillDictionary(Dictionary<string, string[]> commandColors)
         {
+            commadsToColorGroup = new Dictionary<string, string>();
             foreach (KeyValuePair<string, string[]> colorGroup in commandColors)
             {
                 foreach (string command in colorGroup.Value)
                 {
-                    commadsToColor.Add(command, colorGroup.Key);
+                    commadsToColorGroup[command] = colorGroup.Key;
                 }
             }
         }
 
         public static string GetColorGroupForCommand(string command)
         {
-            return commadsToColor[command];
+            return commadsToColorGroup.ContainsKey(command) ? commadsToColorGroup[command] : ColorGroup.None;
         }
 
         static CommandColors()
         {
-            CommandColors.FillDictionary(new Dictionary<string, string[]>()
+            FillDictionary(new Dictionary<string, string[]>()
             {
                 {
                     ColorGroup.MovementSpeedColor, new[]
@@ -54,16 +55,16 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.CamTranslateRight,
                         Command.CamTranslateUp,
                         Command.CamTranslateDown,
-                        
+
                         Command.IncreaseSpeedButtonMax,
                         Command.DecreaseSpeedButtonMax,
                         Command.IncreaseEnginesPower_Buggy,
-                        
+
                         Command.OrderHoldPosition,
-                        
+
                         Command.FreeCamSpeedInc,
                         Command.FreeCamSpeedDec,
-                        
+
                         Command.MoveFreeCamForward,
                         Command.MoveFreeCamBackwards,
                     }
@@ -110,7 +111,7 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.CamZoomIn,
                         Command.CamZoomOut,
                         Command.CamTranslateZHold,
-                        
+
                         Command.SteerLeftButton,
                         Command.SteerRightButton,
                         Command.BuggyRollLeftButton,
@@ -118,25 +119,25 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.BuggyPitchUpButton,
                         Command.BuggyPitchDownButton,
                         Command.VerticalThrustersButton,
-                        
+
                         Command.AutoBreakBuggyButton,
-                        
+
                         Command.BuggyTurretYawLeftButton,
                         Command.BuggyTurretYawRightButton,
                         Command.BuggyTurretPitchUpButton,
                         Command.BuggyTurretPitchDownButton,
                         Command.BuggyToggleReverseThrottleInput,
-                        
+
                         Command.MultiCrewThirdPersonYawLeftButton,
                         Command.MultiCrewThirdPersonYawRightButton,
                         Command.MultiCrewThirdPersonPitchUpButton,
                         Command.MultiCrewThirdPersonPitchDownButton,
                         Command.MultiCrewThirdPersonFovOutButton,
                         Command.MultiCrewThirdPersonFovInButton,
-                        
+
                         Command.OrderFollow,
                         Command.ToggleReverseThrottleInputFreeCam,
-                        
+
                         Command.MoveFreeCamRight,
                         Command.MoveFreeCamLeft,
                         Command.MoveFreeCamUp,
@@ -147,7 +148,7 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.YawCameraRight,
                         Command.RollCameraLeft,
                         Command.RollCameraRight,
-                        
+
                         Command.FreeCamZoomIn,
                         Command.FreeCamZoomOut,
                     }
@@ -169,15 +170,15 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.ShowPGScoreSummaryInput,
                         Command.HeadLookToggle,
                         Command.Pause,
-                        
+
                         Command.ToggleDriveAssist,
                         Command.HeadlightsBuggyButton,
                         Command.ToggleCargoScoop_Buggy,
-                        
+
                         Command.RecallDismissShip,
-                        
+
                         Command.HeadLookToggle_Buggy,
-                        
+
                         Command.ToggleRotationLock,
                     }
                 },
@@ -193,11 +194,11 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.SystemMapOpen,
                         Command.OpenCodexGoToDiscovery,
                         Command.GalaxyMapHome,
-                        
+
                         Command.GalaxyMapOpen_Buggy,
                         Command.SystemMapOpen_Buggy,
                         Command.OpenCodexGoToDiscovery_Buggy,
-                        
+
                         Command.OrderRequestDock,
                     }
                 },
@@ -218,18 +219,18 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.UI_Select,
                         Command.UI_Back,
                         Command.PlayerHUDModeToggle,
-                        
+
                         Command.UIFocus_Buggy,
                         Command.FocusLeftPanel_Buggy,
                         Command.FocusCommsPanel_Buggy,
                         Command.QuickCommsPanel_Buggy,
                         Command.FocusRadarPanel_Buggy,
                         Command.FocusRightPanel_Buggy,
-                        
+
                         Command.PlayerHUDModeToggle_Buggy,
-                        
+
                         Command.OrderAggressiveBehaviour,
-                        
+
                         Command.OpenOrders,
                     }
                 },
@@ -244,9 +245,9 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.SelectTarget,
                         Command.CycleNextTarget,
                         Command.CyclePreviousTarget,
-                        
+
                         Command.SelectTarget_Buggy,
-                        
+
                         Command.MultiCrewCockpitUICycleForward,
                         Command.MultiCrewCockpitUICycleBackward,
                     }
@@ -261,9 +262,9 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.WingNavLock,
                         Command.MicrophoneMute,
                         Command.FriendsMenu,
-                        
+
                         Command.MultiCrewToggleMode,
-                        
+
                         Command.OrderHoldFire,
                     }
                 },
@@ -285,17 +286,17 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.IncreaseWeaponsPower,
 
                         Command.WeaponColourToggle,
-                        
+
                         Command.BuggyPrimaryFireButton,
                         Command.BuggySecondaryFireButton,
                         Command.ToggleBuggyTurretButton,
                         Command.BuggyCycleFireGroupNext,
                         Command.BuggyCycleFireGroupPrevious,
                         Command.IncreaseWeaponsPower_Buggy,
-                        
+
                         Command.MultiCrewPrimaryFire,
                         Command.MultiCrewSecondaryFire,
-                        
+
                         Command.OrderFocusTarget,
                     }
                 },
@@ -309,10 +310,10 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.FireChaffLauncher,
                         Command.ChargeECM,
                         Command.IncreaseSystemsPower_Buggy,
-                        
+
                         Command.MultiCrewPrimaryUtilityFire,
                         Command.MultiCrewSecondaryUtilityFire,
-                        
+
                         Command.OrderDefensiveBehaviour,
                     }
                 },
@@ -336,7 +337,7 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.HeadLookPitchDown,
                         Command.HeadLookYawLeft,
                         Command.HeadLookYawRight,
-                        
+
                         Command.PhotoCameraToggle,
                         Command.PhotoCameraToggle_Buggy,
                         Command.VanityCameraScrollLeft,
@@ -351,12 +352,12 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.VanityCameraEight,
                         Command.VanityCameraNine,
                         Command.FreeCamToggleHUD,
-                        
+
                         Command.FixCameraRelativeToggle,
                         Command.FixCameraWorldToggle,
                         Command.QuitCamera,
                         Command.ToggleAdvanceMode,
-                        
+
                         Command.FStopDec,
                         Command.FStopInc,
                     }
@@ -404,182 +405,157 @@ namespace Aurora.Profiles.EliteDangerous
     {
         public static ControlGroupSet CONTROLS_MAIN = new ControlGroupSet(new[]
         {
-            new ControlGroup("CameraColor", new[]
+            new ControlGroup(new[]
             {
                 Command.PhotoCameraToggle, Command.PhotoCameraToggle_Buggy, Command.VanityCameraScrollLeft,
                 Command.VanityCameraScrollRight, Command.ToggleFreeCam, Command.FreeCamToggleHUD,
-                Command.FixCameraRelativeToggle, Command.FixCameraWorldToggle
-            }),
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.ForwardKey, Command.BackwardKey, Command.IncreaseEnginesPower, Command.SetSpeedZero,
-                Command.SetSpeed25, Command.SetSpeed50, Command.SetSpeed75, Command.SetSpeed100
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
-            )),
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.SetSpeedMinus100, Command.SetSpeedMinus75, Command.SetSpeedMinus50,
-                Command.SetSpeedMinus25, Command.AutoBreakBuggyButton
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
-            )),
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.OrderHoldPosition
-            }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
+                Command.FixCameraRelativeToggle, Command.FixCameraWorldToggle,
 
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.UseBoostJuice
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.LANDING_GEAR | Flag.CARGO_SCOOP
-            )),
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.RollLeftButton, Command.RollRightButton, Command.PitchUpButton, Command.PitchDownButton
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
-            )),
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.LeftThrustButton, Command.RightThrustButton, Command.UpThrustButton,
-                Command.DownThrustButton,
-                Command.ForwardThrustButton, Command.BackwardThrustButton
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
-            )),
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.OrderFollow
-            }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
-            new ControlGroup("UiColor", new[]
-            {
                 Command.FocusLeftPanel, Command.FocusCommsPanel, Command.QuickCommsPanel,
-                Command.FocusRadarPanel, Command.FocusRightPanel, Command.UI_Select, Command.PlayerHUDModeToggle
-            }),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down
-            }, new GameStateCondition(flagsSet:
-                Flag.DOCKED
-            )),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down
-            }, new GameStateCondition(flagsSet:
-                Flag.LANDED_PLANET
-            )),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.OrderAggressiveBehaviour
-            }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
+                Command.FocusRadarPanel, Command.FocusRightPanel, Command.UI_Select, Command.PlayerHUDModeToggle,
 
-            new ControlGroup("NavigationColor", new[]
-            {
-                Command.GalaxyMapOpen, Command.SystemMapOpen, Command.TargetNextRouteSystem
-            }),
-            new ControlGroup("NavigationColor", new[]
-            {
-                Command.HyperSuperCombination, Command.Supercruise, Command.Hyperspace
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.MASS_LOCK | Flag.LANDING_GEAR | Flag.HARDPOINTS |
-                             Flag.CARGO_SCOOP
-            )),
-            new ControlGroup("NavigationColor", new[]
-            {
-                Command.OrderRequestDock
-            }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
-            new ControlGroup("ShipStuffColor", new[]
-            {
-                Command.ShipSpotLightToggle, Command.HeadlightsBuggyButton, Command.NightVisionToggle
-            }),
-            new ControlGroup("ShipStuffColor", new[]
-            {
-                Command.ToggleFlightAssist
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
-            )),
+                Command.GalaxyMapOpen, Command.SystemMapOpen, Command.TargetNextRouteSystem,
 
-            new ControlGroup("ShipStuffColor", new[]
-                {
-                    Command.ToggleCargoScoop, Command.LandingGearToggle
-                },
-                new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER)),
+                Command.ShipSpotLightToggle, Command.HeadlightsBuggyButton, Command.NightVisionToggle,
 
-            new ControlGroup("ShipStuffColor", new[]
-                {
-                    Command.ToggleCargoScoop_Buggy
-                },
-                new GameStateCondition(flagsSet: Flag.IN_SRV,
-                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER)),
-
-            new ControlGroup("DefenceColor", new[]
-            {
-                Command.IncreaseSystemsPower, Command.ChargeECM
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
-            )),
-            new ControlGroup("DefenceColor", new[]
-                {
-                    Command.FireChaffLauncher
-                },
-                new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
-                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE,
-                    callback: gameState => gameState.Journal.hasChaff)),
-            new ControlGroup("DefenceColor", new[]
-                {
-                    Command.DeployHeatSink
-                },
-                new GameStateCondition(flagsSet: Flag.UNSPECIFIED, flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET,
-                    callback: gameState => gameState.Journal.hasHeatSink)),
-            new ControlGroup("DefenceColor", new[]
-                {
-                    Command.UseShieldCell
-                },
-                new GameStateCondition(flagsSet: Flag.UNSPECIFIED, flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET,
-                    callback: gameState => gameState.Journal.hasShieldCellBank)),
-            new ControlGroup("DefenceColor", new[]
-            {
-                Command.OrderDefensiveBehaviour
-            }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
-
-            new ControlGroup("OffenceColor", new[]
-            {
                 Command.CycleFireGroupPrevious
             }),
-            new ControlGroup("OffenceColor", new[]
+
+            new ControlGroup(new[]
             {
+                Command.ForwardKey, Command.BackwardKey, Command.IncreaseEnginesPower, Command.SetSpeedZero,
+                Command.SetSpeed25, Command.SetSpeed50, Command.SetSpeed75, Command.SetSpeed100,
+
+                Command.RollLeftButton, Command.RollRightButton, Command.PitchUpButton, Command.PitchDownButton,
+
+                Command.IncreaseSystemsPower, Command.ChargeECM,
+
                 Command.IncreaseWeaponsPower, Command.CycleFireGroupNext, Command.SelectHighestThreat,
                 Command.CycleNextSubsystem, Command.CyclePreviousSubsystem, Command.CycleNextHostileTarget,
                 Command.CyclePreviousHostileTarget
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
+            }, new GameStateCondition(
+                flagsSet: Flag.UNSPECIFIED,
                 flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
             )),
-            new ControlGroup("OffenceColor", new[]
+
+            new ControlGroup(new[]
             {
-                Command.DeployHardpointToggle
-            }, new GameStateCondition(flagsSet: Flag.UNSPECIFIED,
+                Command.SetSpeedMinus100, Command.SetSpeedMinus75, Command.SetSpeedMinus50,
+                Command.SetSpeedMinus25, Command.AutoBreakBuggyButton,
+
+                Command.LeftThrustButton, Command.RightThrustButton, Command.UpThrustButton,
+                Command.DownThrustButton,
+                Command.ForwardThrustButton, Command.BackwardThrustButton,
+
+                Command.ToggleFlightAssist, Command.DeployHardpointToggle
+            }, new GameStateCondition(
+                flagsSet: Flag.UNSPECIFIED,
                 flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
             )),
-            new ControlGroup("OffenceColor", new[]
+
+            new ControlGroup(new[]
             {
-                Command.OrderFocusTarget
+                Command.OrderHoldPosition, Command.OrderFollow, Command.OrderAggressiveBehaviour,
+                Command.OrderRequestDock,
+                Command.OrderDefensiveBehaviour, Command.OrderFocusTarget
             }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
 
-            new ControlGroup("WingColor", new[]
+            new ControlGroup(new[]
+            {
+                Command.UseBoostJuice
+            }, new GameStateCondition(
+                flagsSet: Flag.UNSPECIFIED,
+                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.LANDING_GEAR | Flag.CARGO_SCOOP
+            )),
+
+            new ControlGroup(new[]
+            {
+                Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down
+            }, new GameStateCondition(
+                flagsSet: Flag.DOCKED
+            )),
+            new ControlGroup(new[]
+            {
+                Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down
+            }, new GameStateCondition(
+                flagsSet: Flag.LANDED_PLANET
+            )),
+
+            new ControlGroup(new[]
+                {
+                    Command.HyperSuperCombination, Command.Supercruise, Command.Hyperspace
+                },
+                new GameStateCondition(
+                    flagsSet: Flag.UNSPECIFIED,
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.MASS_LOCK | Flag.LANDING_GEAR |
+                                 Flag.HARDPOINTS | Flag.CARGO_SCOOP
+                )
+            ),
+
+            new ControlGroup(new[]
+                {
+                    Command.ToggleCargoScoop, Command.LandingGearToggle
+                },
+                new GameStateCondition(
+                    flagsSet: Flag.UNSPECIFIED,
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER
+                )
+            ),
+
+            new ControlGroup(new[]
+                {
+                    Command.ToggleCargoScoop_Buggy
+                },
+                new GameStateCondition(
+                    flagsSet: Flag.IN_SRV,
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER
+                )
+            ),
+
+            new ControlGroup(new[]
+                {
+                    Command.FireChaffLauncher
+                },
+                new GameStateCondition(
+                    flagsSet: Flag.UNSPECIFIED,
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE,
+                    callback: gameState => gameState.Journal.hasChaff
+                )
+            ),
+
+            new ControlGroup(new[]
+                {
+                    Command.DeployHeatSink
+                },
+                new GameStateCondition(
+                    flagsSet: Flag.UNSPECIFIED,
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET,
+                    callback: gameState => gameState.Journal.hasHeatSink
+                )
+            ),
+
+            new ControlGroup(new[]
+                {
+                    Command.UseShieldCell
+                },
+                new GameStateCondition(
+                    flagsSet: Flag.UNSPECIFIED,
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET,
+                    callback: gameState => gameState.Journal.hasShieldCellBank
+                )
+            ),
+
+            new ControlGroup(new[]
             {
                 Command.TargetWingman0, Command.TargetWingman1,
                 Command.TargetWingman2, Command.SelectTargetsTarget, Command.WingNavLock
-            }, new GameStateCondition(flagsSet: Flag.IN_WING
-            )),
-            new ControlGroup("WingColor", new[]
+            }, new GameStateCondition(flagsSet: Flag.IN_WING)),
+            new ControlGroup(new[]
             {
                 Command.OrderHoldFire
             }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
 
-            new ControlGroup("ModeEnableColor", new[]
+            new ControlGroup(new[]
                 {
                     Command.ExplorationFSSEnter
                 },
@@ -589,28 +565,17 @@ namespace Aurora.Profiles.EliteDangerous
 
         public static ControlGroupSet CONTROLS_SYSTEM_MAP = new ControlGroupSet(new[]
         {
-            new ControlGroup("MovementSpeedColor", new[]
+            new ControlGroup(new[]
             {
                 Command.CamTranslateForward, Command.CamTranslateBackward, Command.CamTranslateLeft,
-                Command.CamTranslateRight
-            }),
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.CamZoomIn, Command.CamZoomOut
-            }),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.UI_Back, Command.UI_Select
-            }),
-            new ControlGroup("NavigationColor", new[]
-            {
+                Command.CamTranslateRight, Command.CamZoomIn, Command.CamZoomOut, Command.UI_Back, Command.UI_Select,
                 Command.GalaxyMapOpen, Command.SystemMapOpen
-            })
+            }),
         }, new GameStateCondition(guiFocus: new[] {GuiFocus.MAP_SYSTEM}));
 
         public static ControlGroupSet CONTROLS_GALAXY_MAP = new ControlGroupSet(CONTROLS_SYSTEM_MAP, new[]
         {
-            new ControlGroup("MovementSecondaryColor", new[]
+            new ControlGroup(new[]
             {
                 Command.CamPitchUp, Command.CamPitchDown, Command.CamTranslateUp, Command.CamTranslateDown,
                 Command.CamYawLeft, Command.CamYawRight
@@ -619,15 +584,11 @@ namespace Aurora.Profiles.EliteDangerous
 
         public static ControlGroupSet UI_PANELS = new ControlGroupSet(CONTROLS_MAIN, new[]
             {
-                new ControlGroup("UiColor", new[]
+                new ControlGroup(new[]
                 {
                     Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down,
-                    Command.UI_Select, Command.UI_Back
+                    Command.UI_Select, Command.UI_Back, Command.CyclePreviousPanel, Command.CycleNextPanel
                 }),
-                new ControlGroup("UiAltColor", new[]
-                {
-                    Command.CyclePreviousPanel, Command.CycleNextPanel
-                })
             },
             new GameStateCondition(guiFocus: new[]
             {
