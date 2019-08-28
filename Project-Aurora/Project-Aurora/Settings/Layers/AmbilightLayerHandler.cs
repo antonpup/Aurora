@@ -212,26 +212,23 @@ namespace Aurora.Settings.Layers
             }
             if (fallback)
             {
-                var outputId = Properties.AmbilightOutputId;
                 var outputs = Screen.AllScreens;
                 if (Properties.AmbilightOutputId > (outputs.Count() - 1))
-                {
-                    outputId = 0;
-                }
-                currentScreenBounds = outputs.ElementAtOrDefault(outputId).Bounds;
+                    Properties._AmbilightOutputId = 0;
+
+                currentScreenBounds = outputs.ElementAtOrDefault(Properties.AmbilightOutputId).Bounds;
+                //we store the bounds of the current screen to handle display switching later
             }
             else
             {
                 var outputs = GetAdapters();
-                var outputId = Properties.AmbilightOutputId;
                 if (Properties.AmbilightOutputId > (outputs.Count() - 1))
-                {
-                    outputId = 0;
-                }
-                var output = outputs.ElementAtOrDefault(outputId);
+                    Properties._AmbilightOutputId = 0;
+
+                var output = outputs.ElementAtOrDefault(Properties.AmbilightOutputId);
                 var desktopbounds = output.Output.Description.DesktopBounds;
-                currentScreenBounds = new Rectangle(desktopbounds.Left, desktopbounds.Top, 
-                                        desktopbounds.Right - desktopbounds.Left, 
+                currentScreenBounds = new Rectangle(desktopbounds.Left, desktopbounds.Top,
+                                        desktopbounds.Right - desktopbounds.Left,
                                         desktopbounds.Bottom - desktopbounds.Top);
                 try
                 {
@@ -341,10 +338,8 @@ namespace Aurora.Settings.Layers
             if (!captureTimer.Enabled) // Static timer isn't running, start it!
                 captureTimer.Start();
 
-            // Handle different capture types
             Image newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            User32.Rect app_rect = new User32.Rect();
-            IntPtr foregroundapp;
+
             switch (Properties.AmbilightCaptureType)
             {
                 case AmbilightCaptureType.EntireMonitor:
@@ -354,12 +349,24 @@ namespace Aurora.Settings.Layers
                             graphics.DrawImage(screen, 0, 0, Effects.canvas_width, Effects.canvas_height);
                     }
                     break;
+                case AmbilightCaptureType.SpecificProcess:
                 case AmbilightCaptureType.ForegroundApp:
-                    if (screen != null)
+                    IntPtr handle = IntPtr.Zero;
+                    //the image processing is the same for both methods, 
+                    //only the handle of the window changes,
+                    //so we don't need to repeat that last part
+                    if (Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp)                
+                        handle = User32.GetForegroundWindow();                
+                    else if (!String.IsNullOrWhiteSpace(Properties.SpecificProcess))                 
+                        handle = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(Properties.SpecificProcess))
+                                .Where(p => p.MainWindowHandle != IntPtr.Zero).FirstOrDefault().MainWindowHandle;                    
+
+                    if (screen != null && handle != IntPtr.Zero)
                     {
-                        foregroundapp = User32.GetForegroundWindow();
-                        User32.GetWindowRect(foregroundapp, ref app_rect);
-                        Screen display = Screen.FromHandle(foregroundapp);
+                        var app_rect = new User32.Rect();
+
+                        User32.GetWindowRect(handle, ref app_rect);
+                        Screen display = Screen.FromHandle(handle);
 
                         if (SwitchDisplay(display.Bounds))
                             break;
@@ -372,37 +379,7 @@ namespace Aurora.Settings.Layers
 
                         using (var graphics = Graphics.FromImage(newImage))
                             graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
-                    }
-                    break;
-                case AmbilightCaptureType.SpecificProcess:
-                    if (!String.IsNullOrWhiteSpace(Properties.SpecificProcess))
-                    {
-                        var processes = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(Properties.SpecificProcess));
-                        foreach (Process p in processes)
-                        {
-                            if (p.MainWindowHandle != IntPtr.Zero)
-                            {
-                                if (screen != null)
-                                {
-                                    User32.GetWindowRect(p.MainWindowHandle, ref app_rect);
-                                    Screen display = Screen.FromHandle(p.MainWindowHandle);
-                                    if (SwitchDisplay(display.Bounds))
-                                        break;
-
-                                    Rectangle scr_region = Resize(new Rectangle(
-                                            app_rect.left - display.Bounds.Left,
-                                            app_rect.top - display.Bounds.Top,
-                                            app_rect.right - app_rect.left,
-                                            app_rect.bottom - app_rect.top));
-
-                                    using (var graphics = Graphics.FromImage(newImage))
-                                        graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
-                                }
-
-                                break;
-                            }
-                        }
-                    }
+                    }                   
                     break;
                 case AmbilightCaptureType.Coordinates:
                     if (screen != null)
