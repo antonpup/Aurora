@@ -23,23 +23,27 @@ namespace Aurora.Settings
 
         public JsonConfigManager(string path, IDictionary<string, object> defaultOverrides) : base(defaultOverrides)
         {
-            if (path.Contains(".json"))
+            if (path.EndsWith(".json"))
             {
                 filename = new FileInfo(path).Name;
                 this.path = path.Replace(filename, "");
             }
-            else this.path = path;
+            else
+                this.path = path;
+
             InitialiseDefaults();
             Load();
         }
 
         protected override void PerformLoad()
         {
-            if (string.IsNullOrEmpty(Filename) || !File.Exists(Filename)) return;
+            if (string.IsNullOrEmpty(Filename) || !File.Exists(Filename))
+                return;
 
             using (var reader = new StreamReader(Filename))
             {
                 var jObject = JsonConvert.DeserializeObject<JObject>(reader.ReadToEnd());
+
                 foreach (var jToken in jObject)
                 {
                     if (ConfigStore.TryGetValue(jToken.Key, out IBindable b))
@@ -59,9 +63,12 @@ namespace Aurora.Settings
                                             Set(jToken.Key, jToken.Value);
                                     }
                                 }
+
                                 break;
+
                             default:
                                 b.Parse(jToken.Value);
+
                                 break;
                         }
                     }
@@ -73,7 +80,8 @@ namespace Aurora.Settings
 
         protected override bool PerformSave()
         {
-            if (string.IsNullOrEmpty(Filename)) return false;
+            if (string.IsNullOrEmpty(Filename))
+                return false;
 
             try
             {
@@ -85,6 +93,7 @@ namespace Aurora.Settings
             catch (Exception e)
             {
                 Global.logger.Error($"Error performing save on {Filename}: {e.ToString()}");
+
                 return false;
             }
 

@@ -69,13 +69,6 @@ namespace Aurora.Devices.RGBNet
                     _surface.LoadDevices(_deviceProvider, throwExceptions: true,exclusiveAccessIfPossible: false);
                     _ledGroup?.Detach(); //DarthAffe 03.02.2019: This should never run, but safety first
                     _ledGroup = new ListLedGroup(_deviceProvider.Devices.SelectMany(d => d)) { Brush = _brush };
-                    //rgbDevice  = new CorsairDeviceProvider();
-                   // _deviceProvider.Initialize(RGBDeviceType.Fan|RGBDeviceType.Cooler|RGBDeviceType.HeadsetStand);
-                   
-                    
-                    //RGB.NET.Core.Color c = new RGB.NET.Core.Color(27, 184, 235);
-                    //ledGroup.Brush = new SolidColorBrush(c);
-                    //_surface.Update();
                     return IsInitialized();
                 }
                 catch (Exception ex)
@@ -94,17 +87,6 @@ namespace Aurora.Devices.RGBNet
             if (e.Cancel) return false;
 
             _brush.KeyColors = keyColors;
-
-            /*
-            if (keyColors.ContainsKey(DeviceKeys.Peripheral_Logo))
-            {
-                if (_deviceProvider != null) {
-                    var device = from d in _deviceProvider.Devices where d.DeviceInfo.DeviceType == RGBDeviceType.HeadsetStand select d;
-                ILedGroup ledGroup = new ListLedGroup(device.First());
-                ledGroup.Brush = new SolidColorBrush(new RGB.NET.Core.Color(234, 14, 214));
-                }
-            }
-            */
 
             _surface.Update();
             return true;

@@ -17,10 +17,7 @@ namespace Aurora.Settings.Bindables
     public class Bindable<T> : IBindable<T>, ISerializableBindable
     {
         [UsedImplicitly]
-        private Bindable() : this(default)
-        {
-
-        }
+        private Bindable() : this(default) { }
 
         public Bindable(T value = default)
         {
@@ -42,10 +39,8 @@ namespace Aurora.Settings.Bindables
 
             BindTo(tThem);
         }
-        public Bindable<T> BindTarget
-        {
-            set => BindTo(value);
-        }
+
+        public Bindable<T> BindTarget { set => BindTo(value); }
 
         public Bindable<T> GetBoundCopy()
         {
@@ -73,7 +68,8 @@ namespace Aurora.Settings.Bindables
             get => value;
             set
             {
-                if (EqualityComparer<T>.Default.Equals(this.value, value)) return;
+                if (EqualityComparer<T>.Default.Equals(this.value, value))
+                    return;
                 SetValue(this.value, value);
             }
         }
@@ -95,7 +91,7 @@ namespace Aurora.Settings.Bindables
         public void BindValueChanged(Action<ValueChangedEvent<T>> onChange, bool runOnceImmediatly = false)
         {
             ValueChanged = onChange;
-            if(runOnceImmediatly)
+            if (runOnceImmediatly)
                 onChange(new ValueChangedEvent<T>(Value, Value));
         }
 
@@ -166,12 +162,13 @@ namespace Aurora.Settings.Bindables
             {
                 foreach (var b in Bindings)
                 {
-                    if (b == source) continue;
+                    if (b == source)
+                        continue;
                     b.SetValue(previousValue, value, this);
                 }
             }
 
-            if(EqualityComparer<T>.Default.Equals(beforePropagation, value))
+            if (EqualityComparer<T>.Default.Equals(beforePropagation, value))
                 ValueChanged?.Invoke(new ValueChangedEvent<T>(previousValue, value));
         }
 
@@ -182,10 +179,12 @@ namespace Aurora.Settings.Bindables
 
         public void UnbindBindings()
         {
-            if (Bindings == null) return;
+            if (Bindings == null)
+                return;
 
-            foreach (var b in Bindings) b.Unbind(this);
-            
+            foreach (var b in Bindings)
+                b.Unbind(this);
+
             Bindings.Clear();
         }
 

@@ -16,12 +16,9 @@ namespace Aurora.Settings.Bindables
         public event Action<IEnumerable<KeyValuePair<TKey, TValue>>> ItemsRemoved;
 
         public readonly Dictionary<TKey, TValue> Collection;
-        
-        [UsedImplicitly]
-        private BindableDictionary() : this(default)
-        {
 
-        }
+        [UsedImplicitly]
+        private BindableDictionary() : this(default) { }
 
         public BindableDictionary(Dictionary<TKey, TValue> dictionary = default)
         {
@@ -43,7 +40,9 @@ namespace Aurora.Settings.Bindables
                     {
                         Add(keyValuePair);
                     }
+
                     break;
+
                 default:
                     throw new ArgumentException($"Could not parse provided {input.GetType()} ({input}) to {typeof(KeyValuePair<TKey, TValue>)}.");
             }
@@ -54,8 +53,7 @@ namespace Aurora.Settings.Bindables
             throw new NotImplementedException();
         }
 
-        #region IDictionary
-        
+#region IDictionary
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => Collection.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -68,13 +66,13 @@ namespace Aurora.Settings.Bindables
 
         public ICollection<TValue> Values => Collection.Values;
 
-        public object this[object key] { get => this[(TKey) key]; set => this[(TKey) key] = (TValue) value; }
+        public object this[object key] { get => this[(TKey)key]; set => this[(TKey)key] = (TValue)value; }
 
         public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
         public void Clear() => Collection.Clear();
 
-        bool ICollection<KeyValuePair<TKey,TValue>>.Contains(KeyValuePair<TKey,TValue> keyValuePair) => Collection.Contains(keyValuePair);
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> keyValuePair) => Collection.Contains(keyValuePair);
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int index)
         {
@@ -87,10 +85,13 @@ namespace Aurora.Settings.Bindables
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
             bool entry = Collection.ContainsKey(item.Key);
+
             if (entry || !EqualityComparer<TValue>.Default.Equals(Collection[item.Key], item.Value))
                 return false;
+
             Collection.Remove(item.Key);
             ItemsRemoved?.Invoke(new List<KeyValuePair<TKey, TValue>> {item});
+
             return true;
         }
 
@@ -111,11 +112,12 @@ namespace Aurora.Settings.Bindables
             var value = Collection[key];
             var ret = Collection.Remove(key);
             ItemsRemoved?.Invoke(new List<KeyValuePair<TKey, TValue>> {new KeyValuePair<TKey, TValue>(key, value)});
+
             return ret;
         }
-        #endregion
-        
-        #region IBindable
+#endregion
+
+#region IBindable
         void IBindable.BindTo(IBindable them)
         {
             if (!(them is BindableDictionary<TKey, TValue> tThem))
@@ -136,8 +138,10 @@ namespace Aurora.Settings.Bindables
         {
             if (them == null)
                 throw new ArgumentNullException(nameof(them));
+
             if (bindings?.Contains(weakReference) ?? false)
                 throw new ArgumentException("An already bound collection can not be bound again.");
+
             if (them == this)
                 throw new ArgumentException("A collection can not be bound to itself");
 
@@ -172,6 +176,7 @@ namespace Aurora.Settings.Bindables
         {
             var copy = (BindableDictionary<TKey, TValue>)Activator.CreateInstance(GetType(), Collection);
             copy.BindTo(this);
+
             return copy;
         }
 
@@ -179,7 +184,6 @@ namespace Aurora.Settings.Bindables
         {
             ItemsAdded?.Invoke(new KeyValuePair<TKey, TValue>[0]);
         }
-        #endregion
-
+#endregion
     }
 }

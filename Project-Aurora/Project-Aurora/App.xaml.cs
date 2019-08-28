@@ -26,6 +26,7 @@ using NLog;
 
 using System.Reflection;
 using System.Text;
+
 using RazerSdkWrapper;
 using RazerSdkWrapper.Utils;
 using RazerSdkWrapper.Data;
@@ -176,9 +177,9 @@ namespace Aurora
             base.OnStartup(e);
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
-                #if DEBUG
+#if DEBUG
                 Global.isDebug = true;
-                #endif
+#endif
                 Global.Initialize();
                 string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 Directory.SetCurrentDirectory(path);
@@ -191,7 +192,7 @@ namespace Aurora
                 try
                 {
                     var win_reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-                    string productName = (string) win_reg.GetValue("ProductName");
+                    string productName = (string)win_reg.GetValue("ProductName");
 
                     systeminfo_sb.AppendFormat("Operation System: {0}\r\n", productName);
                 }
@@ -277,7 +278,7 @@ namespace Aurora
                     currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
                 if (isDelayed)
-                    System.Threading.Thread.Sleep((int) delayTime);
+                    System.Threading.Thread.Sleep((int)delayTime);
 
                 this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
@@ -424,7 +425,7 @@ namespace Aurora
                 Global.logger.Info("Loading ConfigUI...");
 
                 MainWindow = new ConfigUI();
-                ((ConfigUI) MainWindow).Display();
+                ((ConfigUI)MainWindow).Display();
             }
             else
             {
@@ -465,7 +466,7 @@ namespace Aurora
 
         private static void InterceptVolumeAsBrightness(object sender, InputInterceptor.InputEventData e)
         {
-            var keys = (Keys) e.Data.VirtualKeyCode;
+            var keys = (Keys)e.Data.VirtualKeyCode;
             if ((keys.Equals(Keys.VolumeDown) || keys.Equals(Keys.VolumeUp)) && Global.InputEvents.Alt)
             {
                 e.Intercepted = true;
@@ -529,7 +530,7 @@ namespace Aurora
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception exc = (Exception) e.ExceptionObject;
+            Exception exc = (Exception)e.ExceptionObject;
             Global.logger.Fatal("Fatal Exception caught : " + exc);
             Global.logger.Fatal(String.Format("Runtime terminating: {0}", e.IsTerminating));
             LogManager.Flush();
@@ -541,7 +542,7 @@ namespace Aurora
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            Exception exc = (Exception) e.Exception;
+            Exception exc = (Exception)e.Exception;
             Global.logger.Fatal("Fatal Exception caught : " + exc);
             LogManager.Flush();
             if (!Global.isDebug)
@@ -569,7 +570,7 @@ namespace Aurora
             }
 
             //Patch 32-bit
-            string logitech_path = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null);//null gets the default value
+            string logitech_path = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null); //null gets the default value
             if (logitech_path == null || logitech_path == @"C:\Program Files\LGHUB\sdk_legacy_led_x86.dll")
             {
                 logitech_path = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
@@ -594,7 +595,7 @@ namespace Aurora
                 key.CreateSubKey("ServerBinary");
                 key = key.OpenSubKey("ServerBinary", true);
 
-                key.SetValue(null, logitech_path);//null to set the default value
+                key.SetValue(null, logitech_path); //null to set the default value
             }
 
             if (File.Exists(logitech_path) && !File.Exists(logitech_path + ".aurora_backup"))

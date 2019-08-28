@@ -19,6 +19,7 @@ namespace Aurora.Settings
         public string Title = "";
         public string Remark = "";
         public VariableFlags Flags = VariableFlags.None;
+
         [JsonIgnore]
         public IBindable Bindable { get; set; }
 
@@ -71,13 +72,10 @@ namespace Aurora.Settings
         {
             Value = defaultValue;
             Default = defaultValue;
-
             if (Value != null && max != null && Value.GetType() == max.GetType())
                 Max = max;
-
             if (Value != null && min != null && Value.GetType() == min.GetType())
                 Min = min;
-
             Title = title;
             Remark = remark;
             Flags = flags;
@@ -91,22 +89,22 @@ namespace Aurora.Settings
                     switch (Bindable)
                     {
                         case Bindable<bool> b:
-                            b.Value = (bool) newvalue;
+                            b.Value = (bool)newvalue;
                             break;
                         case BindableNumber<double> b:
-                            b.Value = (double) newvalue;
+                            b.Value = (double)newvalue;
                             break;
                         case BindableNumber<float> b:
-                            b.Value = (float) newvalue;
+                            b.Value = (float)newvalue;
                             break;
                         case BindableNumber<int> b:
-                            b.Value = (int) newvalue;
+                            b.Value = (int)newvalue;
                             break;
                         case BindableNumber<long> b:
-                            b.Value = (long) newvalue;
+                            b.Value = (long)newvalue;
                             break;
                         case BindableColor b:
-                            b.Value = (RealColor) newvalue;
+                            b.Value = (RealColor)newvalue;
                             break;
                     }
                 Value = newvalue;
@@ -125,7 +123,6 @@ namespace Aurora.Settings
                 Bindable = variableRegistryItem.Bindable;
                 var typ = Value.GetType();
                 var defaultType = variableRegistryItem.Default.GetType();
-
                 if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
                     Value = Enum.ToObject(defaultType, Value);
                 else if (!defaultType.Equals(typ) && Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
@@ -202,7 +199,8 @@ namespace Aurora.Settings
 
     public class VariableRegistry : ICloneable //Might want to implement something like IEnumerable here
     {
-        [JsonProperty("Variables")] private Dictionary<string, VariableRegistryItem> _variables;
+        [JsonProperty("Variables")]
+        private Dictionary<string, VariableRegistryItem> _variables;
 
         [JsonIgnore]
         public int Count => _variables.Count;
@@ -216,7 +214,6 @@ namespace Aurora.Settings
         {
             //Below doesn't work for added variables
             var vars = new Dictionary<string, VariableRegistryItem>();
-
             foreach (var variable in otherRegistry._variables)
                 if (removeMissing)
                 {
@@ -225,12 +222,10 @@ namespace Aurora.Settings
                         local.Merge(variable.Value);
                     else
                         local = variable.Value;
-
                     vars.Add(variable.Key, local);
                 }
                 else
                     Register(variable.Key, variable.Value);
-
             if (removeMissing)
                 _variables = vars;
         }
@@ -269,7 +264,6 @@ namespace Aurora.Settings
                 _variables[name].SetVariable(variable);
                 return true;
             }
-
             return false;
         }
 
@@ -285,7 +279,7 @@ namespace Aurora.Settings
         public T GetVariable<T>(string name)
         {
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Value != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
-                return (T) _variables[name].Value;
+                return (T)_variables[name].Value;
 
             return default;
         }
@@ -293,7 +287,7 @@ namespace Aurora.Settings
         public T GetVariableDefault<T>(string name)
         {
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Default != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
-                return (T) _variables[name].Default;
+                return (T)_variables[name].Default;
 
             return Activator.CreateInstance<T>();
         }
@@ -302,10 +296,9 @@ namespace Aurora.Settings
         {
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Max != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
-                value = (T) _variables[name].Max;
+                value = (T)_variables[name].Max;
                 return true;
             }
-
             value = Activator.CreateInstance<T>();
             return false;
         }
@@ -314,10 +307,9 @@ namespace Aurora.Settings
         {
             if (_variables.ContainsKey(name) && _variables[name] != null && _variables[name].Min != null && typeof(T).IsAssignableFrom(_variables[name].Value.GetType()))
             {
-                value = (T) _variables[name].Min;
+                value = (T)_variables[name].Min;
                 return true;
             }
-
             value = Activator.CreateInstance<T>();
             return false;
         }
@@ -363,8 +355,7 @@ namespace Aurora.Settings
         public object Clone()
         {
             var str = JsonConvert.SerializeObject(this, Formatting.None, Global.SerializerSettings);
-
-            return JsonConvert.DeserializeObject(str,GetType(),Global.SerializerSettings);
+            return JsonConvert.DeserializeObject(str, GetType(), Global.SerializerSettings);
         }
     }
 }

@@ -144,11 +144,21 @@ namespace Aurora.Devices.Hue
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            while (!keyColors.ContainsKey((DeviceKeys) curKey)) curKey++;
-            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(config.Get<int>("send_interval"))) return false;
-            var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
             var firstKey = config.Get<int>("first_key");
             var lastKey = config.Get<int>("last_key");
+            if (!(firstKey < lastKey && keyColors.Any(t => t.Key <= (DeviceKeys)lastKey && t.Key >= (DeviceKeys)firstKey)))
+                return false;
+            while (!keyColors.ContainsKey((DeviceKeys)curKey))
+            {
+                curKey++;
+                if (curKey > 338)
+                {
+                    curKey = 0;
+                }
+            }
+            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(config.Get<int>("send_interval")))
+                return false;
+            var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             foreach (var light in lights)
             {
@@ -171,8 +181,8 @@ namespace Aurora.Devices.Hue
             var brightness = config.Get<int>("brightness");
             var command = new LightCommand();
             var defaultCommand = new LightCommand().SetColor(defaultColor).TurnOn();
-            defaultCommand.Brightness = (byte) (defaultCommand.Brightness / (double) byte.MaxValue * (brightness / (double) byte.MaxValue) * byte.MaxValue);
-            command.SetColor(config.Get<bool>("blend_keys") ? keyColors.Where(t => t.Key <= (DeviceKeys) lastKey && t.Key >= (DeviceKeys) firstKey).Select(t => t.Value).GetHueDeviceColorMergedColor() : keyColors.Single(t => t.Key == (DeviceKeys) curKey).Value.GetHueDeviceColor());
+            defaultCommand.Brightness = (byte)(defaultCommand.Brightness / (double)byte.MaxValue * (brightness / (double)byte.MaxValue) * byte.MaxValue);
+            command.SetColor(config.Get<bool>("blend_keys") ? keyColors.Where(t => t.Key <= (DeviceKeys)lastKey && t.Key >= (DeviceKeys)firstKey).Select(t => t.Value).GetHueDeviceColorMergedColor() : keyColors.Single(t => t.Key == (DeviceKeys)curKey).Value.GetHueDeviceColor());
             if (brightness == 0)
             {
                 command.TurnOff();
@@ -185,7 +195,7 @@ namespace Aurora.Devices.Hue
                     command.SetColor(defaultColor);
                     lastFrameDefault = true;
                 }
-                command.Brightness = (byte) (command.Brightness / (double) byte.MaxValue * (brightness / (double) byte.MaxValue) * byte.MaxValue);
+                command.Brightness = (byte)(command.Brightness / (double)byte.MaxValue * (brightness / (double)byte.MaxValue) * byte.MaxValue);
                 if (command.Brightness == 0 && !lastFrameDefault)
                 {
                     command.Hue = lastFrame.Hue;
@@ -209,13 +219,15 @@ namespace Aurora.Devices.Hue
             lastCall = DateTime.Now;
             lastFrame = command;
             curItr++;
-            if (curItr > config.Get<int>("key_iteration_count")-1)
+            if (curItr > config.Get<int>("key_iteration_count") - 1)
             {
                 curKey++;
                 curItr = 0;
             }
-            if (curKey > lastKey) curKey = firstKey;
-            if (!command.IsColorSame(defaultColor)) lastFrameDefault = false;
+            if (curKey > lastKey)
+                curKey = firstKey;
+            if (!command.IsColorSame(defaultColor))
+                lastFrameDefault = false;
             return true;
         }
 
@@ -244,8 +256,8 @@ namespace Aurora.Devices.Hue
             Set("brightness", 255, 0, 255);
             Set("use_default", true);
             Set("key_iteration_count", 5, 1, int.MaxValue);
-            Set("first_key", (int) DeviceKeys.Peripheral_Logo, (int) DeviceKeys.Peripheral, (int) DeviceKeys.MONITORLIGHT103);
-            Set("last_key", (int) DeviceKeys.Peripheral_Logo, (int) DeviceKeys.Peripheral, (int) DeviceKeys.MONITORLIGHT103);
+            Set("first_key", (int)DeviceKeys.Peripheral_Logo, (int)DeviceKeys.Peripheral, (int)DeviceKeys.MONITORLIGHT103);
+            Set("last_key", (int)DeviceKeys.Peripheral_Logo, (int)DeviceKeys.Peripheral, (int)DeviceKeys.MONITORLIGHT103);
             Set("send_interval", 100, 100, int.MaxValue);
         }
 
@@ -261,13 +273,14 @@ namespace Aurora.Devices.Hue
 
         public static RGBColor GetHueDeviceColor(this Color color)
         {
-            return new RGBColor(color.R / (double) byte.MaxValue * (color.A / (double) byte.MaxValue), color.G / (double) byte.MaxValue * (color.A / (double) byte.MaxValue), color.B / (double) byte.MaxValue * (color.A / (double) byte.MaxValue));
+            return new RGBColor(color.R / (double)byte.MaxValue * (color.A / (double)byte.MaxValue), color.G / (double)byte.MaxValue * (color.A / (double)byte.MaxValue), color.B / (double)byte.MaxValue * (color.A / (double)byte.MaxValue));
         }
 
         public static RGBColor GetHueDeviceColorMergedColor(this IEnumerable<Color> colors)
         {
-            if (!colors.Any()) return new RGBColor(0, 0, 0);
-            var f = colors.Select(t => new {A = t.A / (double) byte.MaxValue, R = t.R / (double) byte.MaxValue, G = t.G / (double) byte.MaxValue, B = t.B / (double) byte.MaxValue}).ToList();
+            if (!colors.Any())
+                return new RGBColor(0, 0, 0);
+            var f = colors.Select(t => new {A = t.A / (double)byte.MaxValue, R = t.R / (double)byte.MaxValue, G = t.G / (double)byte.MaxValue, B = t.B / (double)byte.MaxValue}).ToList();
             return new RGBColor(f.Sum(t => t.R) / f.Count, f.Sum(t => t.G) / f.Count, f.Sum(t => t.B) / f.Count);
         }
 
