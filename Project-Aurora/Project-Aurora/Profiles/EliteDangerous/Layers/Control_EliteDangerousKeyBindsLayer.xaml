@@ -18,6 +18,8 @@
             <RowDefinition Height="24"/>
             <RowDefinition Height="24"/>
             <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -25,52 +27,40 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        
+        <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Content="HUD Combat:"/>
         <xctk:ColorPicker Grid.Column="1" Grid.Row="0" x:Name="ColorPicker_HudModeCombat" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_HudModeCombat_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Content="HUD Combat Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="0" x:Name="ColorPicker_HudModeDiscovery" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_HudModeDiscovery_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left" Content="HUD Discovery Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="1" x:Name="ColorPicker_None" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_None_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Content="None Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="1" x:Name="ColorPicker_Other" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Other_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Content="Other Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="2" x:Name="ColorPicker_Ui" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Ui_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" Content="UI Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="2" x:Name="ColorPicker_UiAlt" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_UiAlt_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="2" HorizontalAlignment="Left" Content="UI Alt Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="3" x:Name="ColorPicker_ShipStuff" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_ShipStuff_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" Content="Functions Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="3" x:Name="ColorPicker_Camera" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Camera_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="3" HorizontalAlignment="Left" Content="Camera Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="4" x:Name="ColorPicker_Defence" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Defence_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" Content="Defence Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="4" x:Name="ColorPicker_DefenceDimmed" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_DefenceDimmed_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" Content="Defence Dimmed Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="5" x:Name="ColorPicker_Offence" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Offence_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" Content="Offence Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="5" x:Name="ColorPicker_OffenceDimmed" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_OffenceDimmed_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="5" HorizontalAlignment="Left" Content="Offence Dimmed Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="6" x:Name="ColorPicker_MovementSpeed" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_MovementSpeed_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="6" HorizontalAlignment="Left" Content="Speed Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="6" x:Name="ColorPicker_MovementSpeedDimmed" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_MovementSpeedDimmed_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="6" HorizontalAlignment="Left" Content="Speed Dimmed Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="7" x:Name="ColorPicker_MovementSecondary" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_MovementSecondary_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" Content="Movement Other Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="7" x:Name="ColorPicker_Wing" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Wing_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="7" HorizontalAlignment="Left" Content="Wing Functions Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="8" x:Name="ColorPicker_Navigation" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Navigation_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="8" HorizontalAlignment="Left" Content="Navigation Color:"/>
-        <xctk:ColorPicker Grid.Column="3" Grid.Row="8" x:Name="ColorPicker_ModeEnable" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_ModeEnable_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="2" Grid.Row="8" HorizontalAlignment="Left" Content="Mode Enable Color:"/>
-        
-        <xctk:ColorPicker Grid.Column="1" Grid.Row="9" x:Name="ColorPicker_ModeDisable" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_ModeDisable_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label Grid.Column="0" Grid.Row="9" HorizontalAlignment="Left" Content="Mode Disable Color:"/>
+        <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Content="HUD Discovery:"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="1" x:Name="ColorPicker_HudModeDiscovery" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_HudModeDiscovery_SelectedColorChanged" UsingAlphaChannel="True" />
+
+        <Label Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" Content="UI Menu:"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="3" x:Name="ColorPicker_Ui" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Ui_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" Content="UI Menu Alt:"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="4" x:Name="ColorPicker_UiAlt" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_UiAlt_SelectedColorChanged" UsingAlphaChannel="True" />
+
+        <Label Grid.Column="0" Grid.Row="6" HorizontalAlignment="Left" Content="Ship Functions:"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="6" x:Name="ColorPicker_ShipStuff" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_ShipStuff_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" Content="Camera Controls:"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="7" x:Name="ColorPicker_Camera" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Camera_SelectedColorChanged" UsingAlphaChannel="True" />
+
+        <Label Grid.Column="0" Grid.Row="9" HorizontalAlignment="Left" Content="Defence (SYS):"/> 
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="9" x:Name="ColorPicker_Defence" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Defence_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label Grid.Column="0" Grid.Row="10" HorizontalAlignment="Left" Content="Offence (WEP):"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="10" x:Name="ColorPicker_Offence" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Offence_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label Grid.Column="0" Grid.Row="11" HorizontalAlignment="Left" Content="Movement (ENG):"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="11" x:Name="ColorPicker_MovementSpeed" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_MovementSpeed_SelectedColorChanged" UsingAlphaChannel="True" />
+
+        <Label Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left" Content="Movement Other:"/>
+        <xctk:ColorPicker Grid.Column="3" Grid.Row="0" x:Name="ColorPicker_MovementSecondary" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_MovementSecondary_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Content="Wing Functions:"/>
+        <xctk:ColorPicker Grid.Column="3" Grid.Row="1" x:Name="ColorPicker_Wing" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Wing_SelectedColorChanged" UsingAlphaChannel="True" />
+
+        <Label Grid.Column="2" Grid.Row="3" HorizontalAlignment="Left" Content="Navigation:"/>
+        <xctk:ColorPicker Grid.Column="3" Grid.Row="3" x:Name="ColorPicker_Navigation" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Navigation_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" Content="Enable:"/>
+        <xctk:ColorPicker Grid.Column="3" Grid.Row="4" x:Name="ColorPicker_ModeEnable" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_ModeEnable_SelectedColorChanged" UsingAlphaChannel="True" />
+
+        <Label Grid.Column="2" Grid.Row="6" HorizontalAlignment="Left" Content="Disable:"/>  
+        <xctk:ColorPicker Grid.Column="3" Grid.Row="6" x:Name="ColorPicker_ModeDisable" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_ModeDisable_SelectedColorChanged" UsingAlphaChannel="True" />
     </Grid>
 </UserControl>
