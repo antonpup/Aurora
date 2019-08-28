@@ -13,15 +13,12 @@ namespace Aurora.Settings.Bindables
     public class BindableDouble : BindableNumber<double>
     {
         public override bool IsDefault => Math.Abs(Value - Default) < Precision;
-
         protected override double DefaultMinValue => double.MinValue;
         protected override double DefaultMaxValue => double.MaxValue;
         protected override double DefaultPrecision => double.Epsilon;
 
         public BindableDouble(double value = 0)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         public override string ToString() => Value.ToString("0.0###", NumberFormatInfo.InvariantInfo);
     }
@@ -29,15 +26,12 @@ namespace Aurora.Settings.Bindables
     public class BindableFloat : BindableNumber<float>
     {
         public override bool IsDefault => Math.Abs(Value - Default) < Precision;
-
         protected override float DefaultMinValue => float.MinValue;
         protected override float DefaultMaxValue => float.MaxValue;
         protected override float DefaultPrecision => float.Epsilon;
 
         public BindableFloat(float value = 0)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         public override string ToString() => Value.ToString("0.0###", NumberFormatInfo.InvariantInfo);
     }
@@ -49,9 +43,7 @@ namespace Aurora.Settings.Bindables
         protected override int DefaultPrecision => 1;
 
         public BindableInt(int value = 0)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         public override string ToString() => Value.ToString(NumberFormatInfo.InvariantInfo);
     }
@@ -63,9 +55,7 @@ namespace Aurora.Settings.Bindables
         protected override long DefaultPrecision => 1;
 
         public BindableLong(long value = 0)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         public override string ToString() => Value.ToString(NumberFormatInfo.InvariantInfo);
     }
@@ -73,9 +63,7 @@ namespace Aurora.Settings.Bindables
     public class BindableBool : Bindable<bool>
     {
         public BindableBool(bool value = false)
-            : base(value)
-        {
-        }
+            : base(value) { }
 
         public override string ToString() => Value.ToString();
 
@@ -91,7 +79,7 @@ namespace Aurora.Settings.Bindables
 
         public void Toggle() => Value = !Value;
     }
-    
+
     public class BindableColor : Bindable<string>
     {
         public BindableColor(RealColor color)
@@ -111,7 +99,7 @@ namespace Aurora.Settings.Bindables
                     var k = f.Split('=');
                     return new KeyValuePair<string, string>(k[0], k[1]);
                 }).ToDictionary(f => f.Key, f => f.Value);
-                return new RealColor(Color.FromArgb(Convert.ToInt32(h["A"]),Convert.ToInt32(h["R"]),Convert.ToInt32(h["G"]),Convert.ToInt32(h["B"])));
+                return new RealColor(Color.FromArgb(Convert.ToInt32(h["A"]), Convert.ToInt32(h["R"]), Convert.ToInt32(h["G"]), Convert.ToInt32(h["B"])));
             }
             set => base.Value = value.ToString();
         }
@@ -126,7 +114,7 @@ namespace Aurora.Settings.Bindables
                     var k = f.Split('=');
                     return new KeyValuePair<string, string>(k[0], k[1]);
                 }).ToDictionary(f => f.Key, f => f.Value);
-                return new RealColor(Color.FromArgb(Convert.ToInt32(h["A"]),Convert.ToInt32(h["R"]),Convert.ToInt32(h["G"]),Convert.ToInt32(h["B"])));
+                return new RealColor(Color.FromArgb(Convert.ToInt32(h["A"]), Convert.ToInt32(h["R"]), Convert.ToInt32(h["G"]), Convert.ToInt32(h["B"])));
             }
             set => base.Default = value.ToString();
         }

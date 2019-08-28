@@ -92,7 +92,10 @@ namespace Aurora.Devices.Hue
                                 client.Initialize(key);
                                 File.WriteAllText(Path.Combine(Global.AppDataDirectory, bridge.BridgeId), key);
                             }
-                            catch { }
+                            catch
+                            {
+                                //Just catch the error RegisterAsync throws if the sync button isn't pressed yet
+                            }
                             Task.Delay(TimeSpan.FromSeconds(1)).GetAwaiter().GetResult(); //recheck the bridge for pairing every second
                         }
                     });
@@ -162,19 +165,20 @@ namespace Aurora.Devices.Hue
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             foreach (var light in lights)
             {
-                if (!config.Store.ContainsKey($"send_{light.Name.ToLower().Replace(" ", "_")}"))
+                var lightConfigName = $"send_{light.Name.ToLower().Replace(" ", "_")}";
+                if (!config.Store.ContainsKey(lightConfigName))
                 {
-                    config.Set($"send_{light.Name.ToLower().Replace(" ", "_")}", false);
+                    config.Set(lightConfigName, false);
                 }
                 else
                 {
                     try
                     {
-                        config.Get<bool>($"send_{light.Name.ToLower().Replace(" ", "_")}");
+                        config.Get<bool>(lightConfigName);
                     }
                     catch
                     {
-                        config.Set($"send_{light.Name.ToLower().Replace(" ", "_")}", Convert.ToBoolean(config.Get<string>($"send_{light.Name.ToLower().Replace(" ", "_")}")));
+                        config.Set(lightConfigName, Convert.ToBoolean(config.Get<string>(lightConfigName)));
                     }
                 }
             }
