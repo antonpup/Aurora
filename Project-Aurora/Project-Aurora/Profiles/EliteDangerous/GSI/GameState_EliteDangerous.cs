@@ -1,13 +1,85 @@
-﻿using Aurora.Profiles.EliteDangerous.GSI.Nodes;
+﻿using System;
+using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 
 namespace Aurora.Profiles.EliteDangerous.GSI
 {
+    public class GameStateCondition
+    {
+        long flagsSet;
+        long flagsNotSet;
+        GuiFocus guiFocus;
+        private Func<GameState_EliteDangerous, bool> callback = null;
+
+        public GameStateCondition(long flagsSet = -1, long flagsNotSet = -1, GuiFocus guiFocus = GuiFocus.UNSPECIFIED,
+            Func<GameState_EliteDangerous, bool> callback = null)
+        {
+            this.flagsSet = flagsSet;
+            this.guiFocus = guiFocus;
+            this.flagsNotSet = flagsNotSet;
+            this.callback = callback;
+        }
+
+        public GameStateCondition(Func<GameState_EliteDangerous, bool> callback)
+        {
+            this.callback = callback;
+        }
+
+        public bool IsSatisfied(GameState_EliteDangerous gameState)
+        {
+            if (callback != null && !callback(gameState))
+            {
+                return false;
+            }
+
+            if (guiFocus != GuiFocus.UNSPECIFIED && guiFocus != gameState.Status.GuiFocus)
+            {
+                return false;
+            }
+
+            if (flagsSet != -1 && !Flag.IsFlagSet(gameState.Status.Flags, flagsSet))
+            {
+                return false;
+            }
+
+            if (flagsNotSet != -1 && Flag.IsFlagSet(gameState.Status.Flags, flagsNotSet))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    public class NeedsGameState
+    {
+        public GameStateCondition NeededGameStateCondition;
+
+        public NeedsGameState()
+        {
+        }
+
+        public NeedsGameState(GameStateCondition neededGameStateCondition)
+        {
+            this.NeededGameStateCondition = neededGameStateCondition;
+        }
+
+        public bool IsSatisfied(GameState_EliteDangerous gameState)
+        {
+            if (NeededGameStateCondition != null)
+            {
+                return NeededGameStateCondition.IsSatisfied(gameState);
+            }
+
+            return true;
+        }
+    }
+
     public class GameState_EliteDangerous : GameState<GameState_EliteDangerous>
     {
         private Status status;
         private Journal journal;
         private Nodes.Controls controls;
-        
+
         public Journal Journal
         {
             get
@@ -18,7 +90,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI
                 return journal;
             }
         }
-        
+
         public Status Status
         {
             get
@@ -29,7 +101,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI
                 return status;
             }
         }
-        
+
         public Nodes.Controls Controls
         {
             get
@@ -40,6 +112,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI
                 return controls;
             }
         }
+
         /// <summary>
         /// Creates a default GameState_EliteDangerous instance.
         /// </summary>

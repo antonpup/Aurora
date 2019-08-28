@@ -2,102 +2,9 @@
 
 namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {
-
-    public class NeedsStatusState
-    {
-        public StatusState neededStatusState;
-
-        public NeedsStatusState()
-        {
-        }
-
-        public NeedsStatusState(StatusState neededStatusState)
-        {
-            this.neededStatusState = neededStatusState;
-        }
-        
-        public bool ConditionSatisfied(Status status)
-        {
-            return ConditionSatisfied(status.Flags, status.GuiFocus);
-        }
-
-        public bool ConditionSatisfied(long flags, int guiFocus)
-        {
-            if (neededStatusState != null)
-            {
-                return neededStatusState.ConditionSatisfied(flags, guiFocus);
-            }
-
-            return true;
-        }
-    }
-    
-    public class StatusState
-    {
-        long flagsSet = -1;
-        long flagsNotSet = -1;
-        int guiFocus = -1;
-        private Func<bool> conditionCallback = null;
-
-        public StatusState(long flagsSet, long flagsNotSet = -1) : this(flagsSet, -1, flagsNotSet, null)
-        {
-        }
-
-        public StatusState(long flagsSet, long flagsNotSet, Func<bool> conditionCallback) : this(flagsSet, -1,
-            flagsNotSet, conditionCallback)
-        {
-        }
-        public StatusState(int guiFocus) : this(Flag.NONE, guiFocus, Flag.NONE)
-        {
-        }
-
-        public StatusState(long flagsSet, int guiFocus, long flagsNotSet, Func<bool> conditionCallback = null)
-        {
-            this.flagsSet = flagsSet;
-            this.guiFocus = guiFocus;
-            this.flagsNotSet = flagsNotSet;
-            this.conditionCallback = conditionCallback;
-        }
-
-        public StatusState(Func<bool> conditionCallback)
-        {
-            this.conditionCallback = conditionCallback;
-        }
-
-        public bool ConditionSatisfied(Status status)
-        {
-            return ConditionSatisfied(status.Flags, status.GuiFocus);
-        }
-
-        public bool ConditionSatisfied(long flags, int guiFocus)
-        {
-            if (conditionCallback != null && !conditionCallback())
-            {
-                return false;
-            }
-
-            if (this.guiFocus != -1 && this.guiFocus != guiFocus)
-            {
-                return false;
-            }
-
-            if (this.flagsSet != -1 && !Flag.IsFlagSet(flags, this.flagsSet))
-            {
-                return false;
-            }
-
-            if (this.flagsNotSet != -1 && Flag.IsFlagSet(flags, this.flagsNotSet))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
     public static class Flag
     {
-        public static readonly int NONE = -1;
+        public static readonly int UNSPECIFIED = -1;
         public static readonly int DOCKED = 1;
         public static readonly int LANDED_PLANET = 1 << 1;
         public static readonly int LANDING_GEAR = 1 << 2;
@@ -134,21 +41,29 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         }
     }
 
-    public static class GuiFocus {
-        public static readonly int NONE                = 0;
-        public static readonly int PANEL_SYSTEMS       = 1;
-        public static readonly int PANEL_NAV           = 2;
-        public static readonly int PANEL_COMS          = 3;
-        public static readonly int PANEL_ROLE          = 4;
-        public static readonly int STATION_SERVICES    = 5;
+    public enum GuiFocus
+    {
+        UNSPECIFIED = -1,
+        NONE = 0,
+        PANEL_SYSTEMS = 1,
+        PANEL_NAV = 2,
+        PANEL_COMS = 3,
+        PANEL_ROLE = 4,
+        STATION_SERVICES = 5,
 
-        public static readonly int MAP_GALAXY          = 6;
-        public static readonly int MAP_SYSTEM          = 7;
-        public static readonly int MAP_ORRERY          = 8;
-        public static readonly int MODE_FSS            = 9;
-        public static readonly int MODE_ADS            = 10;
+        MAP_GALAXY = 6,
+        MAP_SYSTEM = 7,
+        MAP_ORRERY = 8,
+        MODE_FSS = 9,
+        MODE_ADS = 10
     }
     
+    public class Fuel
+    {
+        public double FuelMain;
+        public double FuelReservoir;
+    }
+
     /// <summary>
     /// Class representing player status
     /// </summary>
@@ -159,14 +74,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public long Flags;
         public int[] Pips;
         public int FireGroup;
-        public int GuiFocus;
-        public FuelClass Fuel;
+        public GuiFocus GuiFocus;
+        public Fuel Fuel;
         public double Cargo;
-
-        public class FuelClass
-        {
-            public double FuelMain;
-            public double FuelReservoir;
-        }
     }
 }

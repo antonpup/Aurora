@@ -425,12 +425,12 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         }
     }
 
-    public class ControlGroupSet : NeedsStatusState
+    public class ControlGroupSet : NeedsGameState
     {
         public ControlGroup[] controlGroups;
 
         public ControlGroupSet(ControlGroupSet copyFromSet, ControlGroup[] controlGroups,
-            StatusState neededStatusState = null)
+            GameStateCondition neededGameStateCondition = null)
         {
             List<ControlGroup> controlGroupList = new List<ControlGroup>();
             controlGroupList.AddRange(copyFromSet.controlGroups);
@@ -438,24 +438,24 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 
             this.controlGroups = controlGroupList.ToArray();
 
-            if (neededStatusState != null)
+            if (neededGameStateCondition != null)
             {
-                this.neededStatusState = neededStatusState;
+                this.NeededGameStateCondition = neededGameStateCondition;
             }
-            else if (copyFromSet.neededStatusState != null)
+            else if (copyFromSet.NeededGameStateCondition != null)
             {
-                this.neededStatusState = copyFromSet.neededStatusState;
+                this.NeededGameStateCondition = copyFromSet.NeededGameStateCondition;
             }
         }
 
-        public ControlGroupSet(ControlGroup[] controlGroups, StatusState neededStatusState = null) : base(
-            neededStatusState)
+        public ControlGroupSet(ControlGroup[] controlGroups, GameStateCondition neededGameStateCondition = null) : base(
+            neededGameStateCondition)
         {
             this.controlGroups = controlGroups;
         }
     }
 
-    public class ControlGroup : NeedsStatusState
+    public class ControlGroup : NeedsGameState
     {
         public string colorGroupName;
         public Color color;
@@ -465,8 +465,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         {
         }
 
-        public ControlGroup(string colorGroupName, string[] commands, StatusState neededStatusState) : base(
-            neededStatusState)
+        public ControlGroup(string colorGroupName, string[] commands, GameStateCondition neededGameStateCondition) : base(
+            neededGameStateCondition)
         {
             this.colorGroupName = colorGroupName;
             this.commands = commands.ToList();

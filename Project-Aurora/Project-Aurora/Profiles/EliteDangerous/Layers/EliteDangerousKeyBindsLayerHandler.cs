@@ -215,267 +215,12 @@ namespace Aurora.Profiles.EliteDangerous.Layers
     public class EliteDangerousKeyBindsLayerHandler : LayerHandler<EliteDangerousKeyBindsHandlerProperties>
     {
         private int blinkSpeed = 20;
-        public static GameState_EliteDangerous gameState = null;
-
-        private static ControlGroupSet CONTROLS_MAIN = new ControlGroupSet(new ControlGroup[]
-        {
-            new ControlGroup("CameraColor", new[]
-            {
-                Command.PhotoCameraToggle, Command.PhotoCameraToggle_Buggy, Command.VanityCameraScrollLeft,
-                Command.VanityCameraScrollRight, Command.ToggleFreeCam, Command.FreeCamToggleHUD,
-                Command.FixCameraRelativeToggle, Command.FixCameraWorldToggle
-            }),
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.ForwardKey, Command.BackwardKey, Command.IncreaseEnginesPower, Command.SetSpeedZero,
-                Command.SetSpeed25, Command.SetSpeed50, Command.SetSpeed75, Command.SetSpeed100
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET
-            )),
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.SetSpeedMinus100, Command.SetSpeedMinus75, Command.SetSpeedMinus50,
-                Command.SetSpeedMinus25, Command.AutoBreakBuggyButton
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
-            )),
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.OrderHoldPosition
-            }, new StatusState(() => gameState.Journal.fighterStatus != FighterStatus.None)),
-
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.UseBoostJuice
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.LANDING_GEAR | Flag.CARGO_SCOOP
-            )),
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.RollLeftButton, Command.RollRightButton, Command.PitchUpButton, Command.PitchDownButton
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET
-            )),
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.LeftThrustButton, Command.RightThrustButton, Command.UpThrustButton,
-                Command.DownThrustButton,
-                Command.ForwardThrustButton, Command.BackwardThrustButton
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
-            )),
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.OrderFollow
-            }, new StatusState(() => gameState.Journal.fighterStatus != FighterStatus.None)),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.FocusLeftPanel, Command.FocusCommsPanel, Command.QuickCommsPanel,
-                Command.FocusRadarPanel, Command.FocusRightPanel, Command.UI_Select, Command.PlayerHUDModeToggle
-            }),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down
-            }, new StatusState(
-                Flag.DOCKED
-            )),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down
-            }, new StatusState(
-                Flag.LANDED_PLANET
-            )),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.OrderAggressiveBehaviour
-            }, new StatusState(() => gameState.Journal.fighterStatus != FighterStatus.None)),
-
-            new ControlGroup("NavigationColor", new[]
-            {
-                Command.GalaxyMapOpen, Command.SystemMapOpen, Command.TargetNextRouteSystem
-            }),
-            new ControlGroup("NavigationColor", new[]
-            {
-                Command.HyperSuperCombination, Command.Supercruise, Command.Hyperspace
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET | Flag.MASS_LOCK | Flag.LANDING_GEAR | Flag.HARDPOINTS |
-                Flag.CARGO_SCOOP
-            )),
-            new ControlGroup("NavigationColor", new[]
-            {
-                Command.OrderRequestDock
-            }, new StatusState(() => gameState.Journal.fighterStatus != FighterStatus.None)),
-            new ControlGroup("ShipStuffColor", new[]
-            {
-                Command.ShipSpotLightToggle, Command.HeadlightsBuggyButton, Command.NightVisionToggle
-            }),
-            new ControlGroup("ShipStuffColor", new[]
-            {
-                Command.ToggleFlightAssist
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
-            )),
-
-            new ControlGroup("ShipStuffColor", new[]
-            {
-                Command.ToggleCargoScoop, Command.LandingGearToggle
-            }, new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER)),
-
-            new ControlGroup("ShipStuffColor", new[]
-            {
-                Command.ToggleCargoScoop_Buggy
-            }, new StatusState(Flag.IN_SRV, Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER)),
-
-            new ControlGroup("DefenceColor", new[]
-            {
-                Command.IncreaseSystemsPower, Command.ChargeECM
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET
-            )),
-            new ControlGroup("DefenceColor", new[]
-                {
-                    Command.FireChaffLauncher
-                },
-                new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE,
-                    () => gameState.Journal.hasChaff)),
-            new ControlGroup("DefenceColor", new[]
-            {
-                Command.DeployHeatSink
-            }, new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET, () => gameState.Journal.hasHeatSink)),
-            new ControlGroup("DefenceColor", new[]
-                {
-                    Command.UseShieldCell
-                },
-                new StatusState(Flag.NONE, Flag.DOCKED | Flag.LANDED_PLANET,
-                    () => gameState.Journal.hasShieldCellBank)),
-            new ControlGroup("DefenceColor", new[]
-            {
-                Command.OrderDefensiveBehaviour
-            }, new StatusState(() => gameState.Journal.fighterStatus != FighterStatus.None)),
-
-            new ControlGroup("OffenceColor", new[]
-            {
-                Command.CycleFireGroupPrevious
-            }),
-            new ControlGroup("OffenceColor", new[]
-            {
-                Command.IncreaseWeaponsPower, Command.CycleFireGroupNext, Command.SelectHighestThreat,
-                Command.CycleNextSubsystem, Command.CyclePreviousSubsystem, Command.CycleNextHostileTarget,
-                Command.CyclePreviousHostileTarget
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET
-            )),
-            new ControlGroup("OffenceColor", new[]
-            {
-                Command.DeployHardpointToggle
-            }, new StatusState(Flag.NONE,
-                Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
-            )),
-            new ControlGroup("OffenceColor", new[]
-            {
-                Command.OrderFocusTarget
-            }, new StatusState(() => gameState.Journal.fighterStatus != FighterStatus.None)),
-
-            new ControlGroup("WingColor", new[]
-            {
-                Command.TargetWingman0, Command.TargetWingman1,
-                Command.TargetWingman2, Command.SelectTargetsTarget, Command.WingNavLock
-            }, new StatusState(Flag.IN_WING
-            )),
-            new ControlGroup("WingColor", new[]
-            {
-                Command.OrderHoldFire
-            }, new StatusState(() => gameState.Journal.fighterStatus != FighterStatus.None)),
-
-            new ControlGroup("ModeEnableColor", new[]
-            {
-                Command.ExplorationFSSEnter
-            }, new StatusState(Flag.SUPERCRUISE | Flag.HUD_DISCOVERY_MODE, Flag.DOCKED | Flag.LANDED_PLANET))
-        }, new StatusState(GuiFocus.NONE));
-
-        private static ControlGroupSet CONTROLS_SYSTEM_MAP = new ControlGroupSet(new[]
-        {
-            new ControlGroup("MovementSpeedColor", new[]
-            {
-                Command.CamTranslateForward, Command.CamTranslateBackward, Command.CamTranslateLeft,
-                Command.CamTranslateRight
-            }),
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.CamZoomIn, Command.CamZoomOut
-            }),
-            new ControlGroup("UiColor", new[]
-            {
-                Command.UI_Back, Command.UI_Select
-            }),
-            new ControlGroup("NavigationColor", new[]
-            {
-                Command.GalaxyMapOpen, Command.SystemMapOpen
-            })
-        }, new StatusState(GuiFocus.MAP_SYSTEM));
-
-        private static ControlGroupSet CONTROLS_GALAXY_MAP = new ControlGroupSet(CONTROLS_SYSTEM_MAP, new[]
-        {
-            new ControlGroup("MovementSecondaryColor", new[]
-            {
-                Command.CamPitchUp, Command.CamPitchDown, Command.CamTranslateUp, Command.CamTranslateDown,
-                Command.CamYawLeft, Command.CamYawRight
-            })
-        }, new StatusState(GuiFocus.MAP_GALAXY));
 
         private ControlGroupSet[] controlGroupSets =
         {
-            CONTROLS_MAIN,
-            CONTROLS_SYSTEM_MAP,
-            CONTROLS_GALAXY_MAP
-        };
-
-        private Dictionary<string, StatusState> blinkingKeys = new Dictionary<string, StatusState>()
-        {
-            {
-                Command.LandingGearToggle, new StatusState(
-                    Flag.LANDING_GEAR,
-                    Flag.DOCKED | Flag.LANDED_PLANET
-                )
-            },
-            {
-                Command.DeployHardpointToggle, new StatusState(
-                    Flag.HARDPOINTS,
-                    Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER | Flag.IN_SRV
-                )
-            },
-            {
-                Command.ToggleCargoScoop, new StatusState(
-                    Flag.CARGO_SCOOP,
-                    Flag.DOCKED | Flag.LANDED_PLANET
-                )
-            },
-            {
-                Command.ToggleCargoScoop_Buggy, new StatusState(
-                    Flag.CARGO_SCOOP,
-                    Flag.DOCKED | Flag.LANDED_PLANET
-                )
-            },
-            {
-                Command.ShipSpotLightToggle, new StatusState(
-                    Flag.SHIP_LIGHTS
-                )
-            },
-            {
-                Command.HeadlightsBuggyButton, new StatusState(
-                    Flag.SHIP_LIGHTS
-                )
-            },
-            {
-                Command.NightVisionToggle, new StatusState(
-                    Flag.NIGHT_VISION
-                )
-            },
-            {
-                Command.AutoBreakBuggyButton, new StatusState(
-                    Flag.IN_SRV | Flag.SRV_HANDBRAKE
-                )
-            }
+            ControlGroupSets.CONTROLS_MAIN,
+            ControlGroupSets.CONTROLS_SYSTEM_MAP,
+            ControlGroupSets.CONTROLS_GALAXY_MAP
         };
 
         public EliteDangerousKeyBindsLayerHandler() : base()
@@ -512,27 +257,28 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            gameState = state as GameState_EliteDangerous;
+            GameState_EliteDangerous gameState = state as GameState_EliteDangerous;
+           
             GSI.Nodes.Controls controls = (state as GameState_EliteDangerous).Controls;
 
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
 
             foreach (ControlGroupSet controlGroupSet in controlGroupSets)
             {
-                if (!controlGroupSet.ConditionSatisfied(gameState.Status)) continue;
+                if (!controlGroupSet.IsSatisfied(gameState)) continue;
 
                 foreach (ControlGroup controlGroup in controlGroupSet.controlGroups)
                 {
                     controlGroup.color = Properties.GetColorByVariableName(controlGroup.colorGroupName);
 
-                    if (!controlGroup.ConditionSatisfied(gameState.Status)) continue;
+                    if (!controlGroup.IsSatisfied(gameState)) continue;
 
                     foreach (string command in controlGroup.commands)
                     {
                         if (!controls.commandToBind.ContainsKey(command)) continue;
 
-                        bool blinkingKey = blinkingKeys.ContainsKey(command) &&
-                                           blinkingKeys[command].ConditionSatisfied(gameState.Status);
+                        bool blinkingKey = KeyPresets.BLINKING_KEYS.ContainsKey(command) &&
+                                           KeyPresets.BLINKING_KEYS[command].IsSatisfied(gameState);
 
                         foreach (Bind.Mapping mapping in controls.commandToBind[command].mappings)
                         {
