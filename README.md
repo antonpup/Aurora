@@ -223,6 +223,8 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 #### Hue+
 
+### Philips Hue
+
 ## Video demonstrations
 
 Clone Hero Demo
