@@ -189,7 +189,7 @@ namespace Aurora.Profiles.EliteDangerous
                 },
                 new GameStateCondition(flagsSet: Flag.SUPERCRUISE | Flag.HUD_DISCOVERY_MODE,
                     flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET))
-        }, new GameStateCondition(guiFocus: GuiFocus.NONE));
+        }, new GameStateCondition(guiFocus: new[] {GuiFocus.NONE}));
 
         public static ControlGroupSet CONTROLS_SYSTEM_MAP = new ControlGroupSet(new[]
         {
@@ -210,7 +210,7 @@ namespace Aurora.Profiles.EliteDangerous
             {
                 Command.GalaxyMapOpen, Command.SystemMapOpen
             })
-        }, new GameStateCondition(guiFocus: GuiFocus.MAP_SYSTEM));
+        }, new GameStateCondition(guiFocus: new[] {GuiFocus.MAP_SYSTEM}));
 
         public static ControlGroupSet CONTROLS_GALAXY_MAP = new ControlGroupSet(CONTROLS_SYSTEM_MAP, new[]
         {
@@ -219,7 +219,22 @@ namespace Aurora.Profiles.EliteDangerous
                 Command.CamPitchUp, Command.CamPitchDown, Command.CamTranslateUp, Command.CamTranslateDown,
                 Command.CamYawLeft, Command.CamYawRight
             })
-        }, new GameStateCondition(guiFocus: GuiFocus.MAP_GALAXY));
+        }, new GameStateCondition(guiFocus: new[] {GuiFocus.MAP_GALAXY, GuiFocus.MAP_ORRERY}));
+
+        public static ControlGroupSet UI_PANELS = new ControlGroupSet(CONTROLS_MAIN, new[]
+            {
+                new ControlGroup("UiColor", new[]
+                {
+                    Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down,
+                    Command.UI_Select, Command.UI_Back
+                }),
+                new ControlGroup("UiAltColor", new[]
+                {
+                    Command.CyclePreviousPanel, Command.CycleNextPanel
+                })
+            },
+            new GameStateCondition(guiFocus: new[]
+                {GuiFocus.STATION_SERVICES, GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE, GuiFocus.PANEL_SYSTEMS}));
     }
 
     public class KeyPresets

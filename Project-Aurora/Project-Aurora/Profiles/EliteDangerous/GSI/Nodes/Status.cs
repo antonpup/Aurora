@@ -43,7 +43,6 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 
     public enum GuiFocus
     {
-        UNSPECIFIED = -1,
         NONE = 0,
         PANEL_SYSTEMS = 1,
         PANEL_NAV = 2,

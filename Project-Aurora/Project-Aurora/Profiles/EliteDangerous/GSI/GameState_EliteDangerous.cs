@@ -7,10 +7,10 @@ namespace Aurora.Profiles.EliteDangerous.GSI
     {
         long flagsSet;
         long flagsNotSet;
-        GuiFocus guiFocus;
+        GuiFocus[] guiFocus;
         private Func<GameState_EliteDangerous, bool> callback = null;
 
-        public GameStateCondition(long flagsSet = -1, long flagsNotSet = -1, GuiFocus guiFocus = GuiFocus.UNSPECIFIED,
+        public GameStateCondition(long flagsSet = -1, long flagsNotSet = -1, GuiFocus[] guiFocus = null,
             Func<GameState_EliteDangerous, bool> callback = null)
         {
             this.flagsSet = flagsSet;
@@ -31,7 +31,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI
                 return false;
             }
 
-            if (guiFocus != GuiFocus.UNSPECIFIED && guiFocus != gameState.Status.GuiFocus)
+            if (guiFocus != null && Array.IndexOf(guiFocus, gameState.Status.GuiFocus) == -1)
             {
                 return false;
             }
