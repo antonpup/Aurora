@@ -171,7 +171,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             this._ModeDisableColor = Color.FromArgb(61, 88, 156);
         }
 
-        public Color GetColorByVariableName(string colorVariableName)
+        public Color GetColorByGroupName(string colorVariableName)
         {
             switch (@colorVariableName)
             {
@@ -219,7 +219,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
             public bool Increment()
             {
-                transitionProgress = Math.Min(1, transitionProgress + 0.07);
+                transitionProgress = Math.Min(1, transitionProgress + 0.08);
 
                 return Finished();
             }
@@ -325,10 +325,10 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             GSI.Nodes.Controls controls = (state as GameState_EliteDangerous).Controls;
 
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
-
             HashSet<DeviceKeys> leftoverBlendStates = new HashSet<DeviceKeys>(keyBlendStates.Keys);
 
             Color newKeyColor;
+            Dictionary<DeviceKeys, Color> smoothColorSets = new Dictionary<DeviceKeys, Color>();
             foreach (ControlGroupSet controlGroupSet in controlGroupSets)
             {
                 if (!controlGroupSet.IsSatisfied(gameState)) continue;
@@ -363,8 +363,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
                             if (!allModifiersPressed) continue;
 
-                            newKeyColor = Properties.GetColorByVariableName(
-                                CommandColors.GetColorGroupForCommand(command)
+                            newKeyColor = Properties.GetColorByGroupName(
+                                controlGroup.colorGroupName ?? CommandColors.GetColorGroupForCommand(command)
                             );
 
                             if (blinkingKey)
@@ -373,7 +373,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                             }
                             else
                             {
-                                SetKeySmooth(keyBindsLayer, mapping.key, newKeyColor);
+                                smoothColorSets[mapping.key] = newKeyColor;
                             }
 
                             leftoverBlendStates.Remove(mapping.key);
@@ -382,6 +382,12 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 }
             }
 
+            //Apply smooth transitions for keys
+            foreach (KeyValuePair<DeviceKeys, Color> smoothKey in smoothColorSets)
+            {
+                SetKeySmooth(keyBindsLayer, smoothKey.Key, smoothKey.Value);
+            }            
+            
             //Fade out inactive keys
             foreach (DeviceKeys key in leftoverBlendStates)
             {

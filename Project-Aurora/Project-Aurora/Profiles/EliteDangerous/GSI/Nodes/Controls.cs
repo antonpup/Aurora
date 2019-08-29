@@ -25,7 +25,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const string BackwardThrustButton = "BackwardThrustButton";
         public const string UseAlternateFlightValuesToggle = "UseAlternateFlightValuesToggle";
         public const string ToggleReverseThrottleInput = "ToggleReverseThrottleInput";
-        
+
         public const string ForwardKey = "ForwardKey";
         public const string BackwardKey = "BackwardKey";
         public const string SetSpeedMinus100 = "SetSpeedMinus100";
@@ -37,7 +37,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const string SetSpeed50 = "SetSpeed50";
         public const string SetSpeed75 = "SetSpeed75";
         public const string SetSpeed100 = "SetSpeed100";
-        
+
         public const string YawLeftButton_Landing = "YawLeftButton_Landing";
         public const string YawRightButton_Landing = "YawRightButton_Landing";
         public const string PitchUpButton_Landing = "PitchUpButton_Landing";
@@ -50,92 +50,92 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const string DownThrustButton_Landing = "DownThrustButton_Landing";
         public const string ForwardThrustButton_Landing = "ForwardThrustButton_Landing";
         public const string BackwardThrustButton_Landing = "BackwardThrustButton_Landing";
-        
+
         public const string ToggleFlightAssist = "ToggleFlightAssist";
-        
+
         public const string UseBoostJuice = "UseBoostJuice";
-        
+
         public const string HyperSuperCombination = "HyperSuperCombination";
         public const string Supercruise = "Supercruise";
         public const string Hyperspace = "Hyperspace";
-        
+
         public const string DisableRotationCorrectToggle = "DisableRotationCorrectToggle";
         public const string OrbitLinesToggle = "OrbitLinesToggle";
-        
+
         public const string SelectTarget = "SelectTarget";
         public const string CycleNextTarget = "CycleNextTarget";
         public const string CyclePreviousTarget = "CyclePreviousTarget";
-        
+
         public const string SelectHighestThreat = "SelectHighestThreat";
         public const string CycleNextHostileTarget = "CycleNextHostileTarget";
         public const string CyclePreviousHostileTarget = "CyclePreviousHostileTarget";
-        
+
         public const string TargetWingman0 = "TargetWingman0";
         public const string TargetWingman1 = "TargetWingman1";
         public const string TargetWingman2 = "TargetWingman2";
         public const string SelectTargetsTarget = "SelectTargetsTarget";
         public const string WingNavLock = "WingNavLock";
-        
+
         public const string CycleNextSubsystem = "CycleNextSubsystem";
         public const string CyclePreviousSubsystem = "CyclePreviousSubsystem";
-        
+
         public const string TargetNextRouteSystem = "TargetNextRouteSystem";
-        
+
         public const string PrimaryFire = "PrimaryFire";
         public const string SecondaryFire = "SecondaryFire";
         public const string CycleFireGroupNext = "CycleFireGroupNext";
         public const string CycleFireGroupPrevious = "CycleFireGroupPrevious";
         public const string DeployHardpointToggle = "DeployHardpointToggle";
-        
+
         public const string ToggleButtonUpInput = "ToggleButtonUpInput"; //Silent running
         public const string DeployHeatSink = "DeployHeatSink";
-        
+
         public const string ShipSpotLightToggle = "ShipSpotLightToggle";
         public const string RadarIncreaseRange = "RadarIncreaseRange";
         public const string RadarDecreaseRange = "RadarDecreaseRange";
-        
+
         public const string IncreaseEnginesPower = "IncreaseEnginesPower";
         public const string IncreaseWeaponsPower = "IncreaseWeaponsPower";
         public const string IncreaseSystemsPower = "IncreaseSystemsPower";
         public const string ResetPowerDistribution = "ResetPowerDistribution";
-        
+
         public const string HMDReset = "HMDReset";
         public const string ToggleCargoScoop = "ToggleCargoScoop";
-        
+
         public const string EjectAllCargo = "EjectAllCargo";
-        
+
         public const string LandingGearToggle = "LandingGearToggle";
         public const string MicrophoneMute = "MicrophoneMute";
-        
+
         public const string UseShieldCell = "UseShieldCell";
         public const string FireChaffLauncher = "FireChaffLauncher";
         public const string ChargeECM = "ChargeECM";
-        
+
         public const string WeaponColourToggle = "WeaponColourToggle";
         public const string EngineColourToggle = "EngineColourToggle";
-        
+
         public const string NightVisionToggle = "NightVisionToggle";
-        
+
         public const string UIFocus = "UIFocus";
         public const string FocusLeftPanel = "FocusLeftPanel";
         public const string FocusCommsPanel = "FocusCommsPanel";
         public const string QuickCommsPanel = "QuickCommsPanel";
         public const string FocusRadarPanel = "FocusRadarPanel";
         public const string FocusRightPanel = "FocusRightPanel";
-        
+
         public const string GalaxyMapOpen = "GalaxyMapOpen";
         public const string SystemMapOpen = "SystemMapOpen";
-        
+
         public const string ShowPGScoreSummaryInput = "ShowPGScoreSummaryInput";
-        
+
         public const string HeadLookToggle = "HeadLookToggle";
         public const string Pause = "Pause";
         public const string FriendsMenu = "FriendsMenu";
         public const string OpenCodexGoToDiscovery = "OpenCodexGoToDiscovery";
-        
+
         public const string PlayerHUDModeToggle = "PlayerHUDModeToggle";
         public const string ExplorationFSSEnter = "ExplorationFSSEnter";
-        
+
         public const string UI_Up = "UI_Up";
         public const string UI_Down = "UI_Down";
         public const string UI_Left = "UI_Left";
@@ -147,13 +147,13 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const string CyclePreviousPanel = "CyclePreviousPanel";
         public const string CycleNextPage = "CycleNextPage";
         public const string CyclePreviousPage = "CyclePreviousPage";
-        
+
         public const string HeadLookReset = "HeadLookReset";
         public const string HeadLookPitchUp = "HeadLookPitchUp";
         public const string HeadLookPitchDown = "HeadLookPitchDown";
         public const string HeadLookYawLeft = "HeadLookYawLeft";
         public const string HeadLookYawRight = "HeadLookYawRight";
-        
+
         public const string CamPitchUp = "CamPitchUp";
         public const string CamPitchDown = "CamPitchDown";
         public const string CamYawLeft = "CamYawLeft";
@@ -167,11 +167,11 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const string CamZoomIn = "CamZoomIn";
         public const string CamZoomOut = "CamZoomOut";
         public const string CamTranslateZHold = "CamTranslateZHold";
-        
+
         public const string GalaxyMapHome = "GalaxyMapHome";
-        
+
         public const string ToggleDriveAssist = "ToggleDriveAssist";
-        
+
         public const string SteerLeftButton = "SteerLeftButton";
         public const string SteerRightButton = "SteerRightButton";
         public const string BuggyRollLeftButton = "BuggyRollLeftButton";
@@ -179,87 +179,87 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const string BuggyPitchUpButton = "BuggyPitchUpButton";
         public const string BuggyPitchDownButton = "BuggyPitchDownButton";
         public const string VerticalThrustersButton = "VerticalThrustersButton";
-        
+
         public const string BuggyPrimaryFireButton = "BuggyPrimaryFireButton";
         public const string BuggySecondaryFireButton = "BuggySecondaryFireButton";
         public const string AutoBreakBuggyButton = "AutoBreakBuggyButton";
-        
+
         public const string HeadlightsBuggyButton = "HeadlightsBuggyButton";
-        
+
         public const string ToggleBuggyTurretButton = "ToggleBuggyTurretButton";
-        
+
         public const string BuggyCycleFireGroupNext = "BuggyCycleFireGroupNext";
         public const string BuggyCycleFireGroupPrevious = "BuggyCycleFireGroupPrevious";
-        
+
         public const string SelectTarget_Buggy = "SelectTarget_Buggy";
-        
+
         public const string BuggyTurretYawLeftButton = "BuggyTurretYawLeftButton";
         public const string BuggyTurretYawRightButton = "BuggyTurretYawRightButton";
         public const string BuggyTurretPitchUpButton = "BuggyTurretPitchUpButton";
         public const string BuggyTurretPitchDownButton = "BuggyTurretPitchDownButton";
         public const string BuggyToggleReverseThrottleInput = "BuggyToggleReverseThrottleInput";
-        
+
         public const string IncreaseSpeedButtonMax = "IncreaseSpeedButtonMax";
         public const string DecreaseSpeedButtonMax = "DecreaseSpeedButtonMax";
         public const string IncreaseEnginesPower_Buggy = "IncreaseEnginesPower_Buggy";
-        
+
         public const string IncreaseWeaponsPower_Buggy = "IncreaseWeaponsPower_Buggy";
         public const string IncreaseSystemsPower_Buggy = "IncreaseSystemsPower_Buggy";
-        
+
         public const string ResetPowerDistribution_Buggy = "ResetPowerDistribution_Buggy";
-        
+
         public const string ToggleCargoScoop_Buggy = "ToggleCargoScoop_Buggy";
-        
+
         public const string EjectAllCargo_Buggy = "EjectAllCargo_Buggy";
-        
+
         public const string RecallDismissShip = "RecallDismissShip";
-        
+
         public const string UIFocus_Buggy = "UIFocus_Buggy";
         public const string FocusLeftPanel_Buggy = "FocusLeftPanel_Buggy";
         public const string FocusCommsPanel_Buggy = "FocusCommsPanel_Buggy";
         public const string QuickCommsPanel_Buggy = "QuickCommsPanel_Buggy";
         public const string FocusRadarPanel_Buggy = "FocusRadarPanel_Buggy";
         public const string FocusRightPanel_Buggy = "FocusRightPanel_Buggy";
-        
+
         public const string GalaxyMapOpen_Buggy = "GalaxyMapOpen_Buggy";
         public const string SystemMapOpen_Buggy = "SystemMapOpen_Buggy";
         public const string OpenCodexGoToDiscovery_Buggy = "OpenCodexGoToDiscovery_Buggy";
-        
+
         public const string PlayerHUDModeToggle_Buggy = "PlayerHUDModeToggle_Buggy";
         public const string HeadLookToggle_Buggy = "HeadLookToggle_Buggy";
-        
+
         public const string MultiCrewToggleMode = "MultiCrewToggleMode";
-        
+
         public const string MultiCrewPrimaryFire = "MultiCrewPrimaryFire";
         public const string MultiCrewSecondaryFire = "MultiCrewSecondaryFire";
-        
+
         public const string MultiCrewPrimaryUtilityFire = "MultiCrewPrimaryUtilityFire";
         public const string MultiCrewSecondaryUtilityFire = "MultiCrewSecondaryUtilityFire";
-        
+
         public const string MultiCrewThirdPersonYawLeftButton = "MultiCrewThirdPersonYawLeftButton";
         public const string MultiCrewThirdPersonYawRightButton = "MultiCrewThirdPersonYawRightButton";
         public const string MultiCrewThirdPersonPitchUpButton = "MultiCrewThirdPersonPitchUpButton";
         public const string MultiCrewThirdPersonPitchDownButton = "MultiCrewThirdPersonPitchDownButton";
         public const string MultiCrewThirdPersonFovOutButton = "MultiCrewThirdPersonFovOutButton";
         public const string MultiCrewThirdPersonFovInButton = "MultiCrewThirdPersonFovInButton";
-        
+
         public const string MultiCrewCockpitUICycleForward = "MultiCrewCockpitUICycleForward";
         public const string MultiCrewCockpitUICycleBackward = "MultiCrewCockpitUICycleBackward";
-        
+
         public const string OrderRequestDock = "OrderRequestDock";
         public const string OrderDefensiveBehaviour = "OrderDefensiveBehaviour";
         public const string OrderAggressiveBehaviour = "OrderAggressiveBehaviour";
-        
+
         public const string OrderFocusTarget = "OrderFocusTarget";
         public const string OrderHoldFire = "OrderHoldFire";
         public const string OrderHoldPosition = "OrderHoldPosition";
         public const string OrderFollow = "OrderFollow";
-        
+
         public const string OpenOrders = "OpenOrders";
-        
+
         public const string PhotoCameraToggle = "PhotoCameraToggle";
         public const string PhotoCameraToggle_Buggy = "PhotoCameraToggle_Buggy";
-        
+
         public const string VanityCameraScrollLeft = "VanityCameraScrollLeft";
         public const string VanityCameraScrollRight = "VanityCameraScrollRight";
         public const string ToggleFreeCam = "ToggleFreeCam";
@@ -273,7 +273,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const string VanityCameraEight = "VanityCameraEight";
         public const string VanityCameraNine = "VanityCameraNine";
         public const string FreeCamToggleHUD = "FreeCamToggleHUD";
-        
+
         public const string FreeCamSpeedInc = "FreeCamSpeedInc";
         public const string FreeCamSpeedDec = "FreeCamSpeedDec";
         public const string ToggleReverseThrottleInputFreeCam = "ToggleReverseThrottleInputFreeCam";
@@ -512,16 +512,23 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 
     public class ControlGroup : NeedsGameState
     {
+        public string colorGroupName = null;
         public List<string> commands;
 
         public ControlGroup(string[] commands) : this(commands, null)
         {
         }
 
-        public ControlGroup(string[] commands,
+        public ControlGroup(string[] commands, GameStateCondition neededGameStateCondition) : this(null, commands,
+            neededGameStateCondition)
+        {
+        }
+
+        public ControlGroup(string colorGroupName, string[] commands,
             GameStateCondition neededGameStateCondition) : base(
             neededGameStateCondition)
         {
+            this.colorGroupName = colorGroupName;
             this.commands = commands.ToList();
         }
     }

@@ -412,7 +412,7 @@ namespace Aurora.Profiles.EliteDangerous
                 Command.FixCameraRelativeToggle, Command.FixCameraWorldToggle,
 
                 Command.FocusLeftPanel, Command.FocusCommsPanel, Command.QuickCommsPanel,
-                Command.FocusRadarPanel, Command.FocusRightPanel, Command.UI_Select, Command.PlayerHUDModeToggle,
+                Command.FocusRadarPanel, Command.FocusRightPanel, Command.UI_Select,
 
                 Command.GalaxyMapOpen, Command.SystemMapOpen, Command.TargetNextRouteSystem,
 
@@ -420,6 +420,9 @@ namespace Aurora.Profiles.EliteDangerous
 
                 Command.CycleFireGroupPrevious
             }),
+
+            new ControlGroup(ColorGroup.HudModeCombatColor, new[] { Command.PlayerHUDModeToggle}, new GameStateCondition(flagsNotSet: Flag.HUD_DISCOVERY_MODE)),
+            new ControlGroup(ColorGroup.HudModeDiscoveryColor, new[] { Command.PlayerHUDModeToggle}, new GameStateCondition(Flag.HUD_DISCOVERY_MODE)),
 
             new ControlGroup(new[]
             {
@@ -450,7 +453,7 @@ namespace Aurora.Profiles.EliteDangerous
                 Command.ToggleFlightAssist, Command.DeployHardpointToggle
             }, new GameStateCondition(
                 flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
+                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
             )),
 
             new ControlGroup(new[]
@@ -559,7 +562,7 @@ namespace Aurora.Profiles.EliteDangerous
                 {
                     Command.ExplorationFSSEnter
                 },
-                new GameStateCondition(flagsSet: Flag.SUPERCRUISE | Flag.HUD_DISCOVERY_MODE,
+                new GameStateCondition(flagsSet: Flag.SUPERCRUISE,
                     flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET))
         }, new GameStateCondition(guiFocus: new[] {GuiFocus.NONE}));
 
@@ -611,7 +614,7 @@ namespace Aurora.Profiles.EliteDangerous
                 {
                     Command.DeployHardpointToggle, new GameStateCondition(flagsSet:
                         Flag.HARDPOINTS,
-                        flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER | Flag.IN_SRV
+                        flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.IN_FIGHTER | Flag.IN_SRV
                     )
                 },
                 {
@@ -639,6 +642,21 @@ namespace Aurora.Profiles.EliteDangerous
                 {
                     Command.NightVisionToggle, new GameStateCondition(flagsSet:
                         Flag.NIGHT_VISION
+                    )
+                },
+                {
+                    Command.Supercruise, new GameStateCondition(flagsSet:
+                        Flag.FSD_CHARGING
+                    )
+                },
+                {
+                    Command.Hyperspace, new GameStateCondition(flagsSet:
+                        Flag.FSD_CHARGING
+                    )
+                },
+                {
+                    Command.HyperSuperCombination, new GameStateCondition(flagsSet:
+                        Flag.FSD_CHARGING
                     )
                 },
                 {
