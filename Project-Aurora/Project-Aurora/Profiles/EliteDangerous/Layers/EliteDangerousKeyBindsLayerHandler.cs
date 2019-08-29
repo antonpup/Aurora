@@ -200,6 +200,41 @@ namespace Aurora.Profiles.EliteDangerous.Layers
     {
         private int blinkSpeed = 20;
 
+        private class KeyBlendState
+        {
+            public Color colorFrom = Color.Empty;
+            public Color colorTo = Color.Empty;
+            public double transitionProgress = 0;
+
+            public KeyBlendState(Color colorFrom, Color colorTo)
+            {
+                this.colorFrom = colorFrom;
+                this.colorTo = colorTo;
+            }
+
+            public bool Finished()
+            {
+                return transitionProgress >= 1;
+            }
+
+            public bool Increment()
+            {
+                transitionProgress = Math.Min(1, transitionProgress + 0.07);
+
+                return Finished();
+            }
+
+            public Color GetBlendedColor()
+            {
+                return ColorUtils.BlendColors(colorFrom, colorTo, transitionProgress);
+            }
+
+            public bool Equals(KeyBlendState blendState)
+            {
+                return colorFrom.Equals(blendState.colorFrom) && colorTo.Equals(blendState.colorTo);
+            }
+        }
+
         private ControlGroupSet[] controlGroupSets =
         {
             ControlGroupSets.CONTROLS_MAIN,
@@ -240,14 +275,60 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             );
         }
 
+        private Dictionary<DeviceKeys, Color> currentKeyColors = new Dictionary<DeviceKeys, Color>();
+        private Dictionary<DeviceKeys, KeyBlendState> keyBlendStates = new Dictionary<DeviceKeys, KeyBlendState>();
+        private void SetKey(EffectLayer layer, DeviceKeys key, Color color)
+        {
+            if (keyBlendStates.ContainsKey(key))
+            {
+                keyBlendStates.Remove(key);
+            }
+            currentKeyColors[key] = color;
+            layer.Set(key, color);
+        }
+        
+        private void SetKeySmooth(EffectLayer layer, DeviceKeys key, Color color)
+        {
+            if (!currentKeyColors.ContainsKey(key))
+            {
+                currentKeyColors[key] = Color.Empty;
+            }
+
+            KeyBlendState blendState = new KeyBlendState(currentKeyColors[key], color);
+            if (keyBlendStates.ContainsKey(key))
+            {
+                if (!keyBlendStates[key].colorTo.Equals(color))
+                {
+                    blendState.colorFrom = keyBlendStates[key].GetBlendedColor();
+                    keyBlendStates[key] = blendState;
+                }
+            }
+            else
+            {
+                keyBlendStates[key] = blendState;
+            }
+
+            keyBlendStates[key].Increment();
+            if (keyBlendStates[key].Finished())
+            {
+                SetKey(layer, key, color);
+            }
+            else
+            {
+                layer.Set(key, keyBlendStates[key].GetBlendedColor());
+            }
+        }
+
         public override EffectLayer Render(IGameState state)
         {
             GameState_EliteDangerous gameState = state as GameState_EliteDangerous;
-
             GSI.Nodes.Controls controls = (state as GameState_EliteDangerous).Controls;
 
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
 
+            HashSet<DeviceKeys> leftoverBlendStates = new HashSet<DeviceKeys>(keyBlendStates.Keys);
+
+            Color newKeyColor;
             foreach (ControlGroupSet controlGroupSet in controlGroupSets)
             {
                 if (!controlGroupSet.IsSatisfied(gameState)) continue;
@@ -268,7 +349,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                             bool allModifiersPressed = true;
                             foreach (DeviceKeys modifierKey in mapping.modifiers)
                             {
-                                keyBindsLayer.Set(modifierKey, Properties.ShipStuffColor);
+                                SetKey(keyBindsLayer, modifierKey, Properties.ShipStuffColor);
+                                leftoverBlendStates.Remove(modifierKey);
                                 if (Array.IndexOf(
                                         Global.InputEvents.PressedKeys,
                                         KeyUtils.GetFormsKey(modifierKey)
@@ -281,20 +363,29 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
                             if (!allModifiersPressed) continue;
 
-                            keyBindsLayer.Set(mapping.key,
-                                blinkingKey
-                                    ? GetBlinkingColor(
-                                        Properties.GetColorByVariableName(
-                                            CommandColors.GetColorGroupForCommand(command)
-                                        )
-                                    )
-                                    : Properties.GetColorByVariableName(
-                                        CommandColors.GetColorGroupForCommand(command)
-                                    )
+                            newKeyColor = Properties.GetColorByVariableName(
+                                CommandColors.GetColorGroupForCommand(command)
                             );
+
+                            if (blinkingKey)
+                            {
+                                SetKey(keyBindsLayer, mapping.key, GetBlinkingColor(newKeyColor));
+                            }
+                            else
+                            {
+                                SetKeySmooth(keyBindsLayer, mapping.key, newKeyColor);
+                            }
+
+                            leftoverBlendStates.Remove(mapping.key);
                         }
                     }
                 }
+            }
+
+            //Fade out inactive keys
+            foreach (DeviceKeys key in leftoverBlendStates)
+            {
+                SetKeySmooth(keyBindsLayer, key, Color.Empty);
             }
 
             return keyBindsLayer;
