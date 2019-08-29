@@ -114,7 +114,7 @@ namespace Aurora.Devices.YeeLight
 
                     using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
                     {
-                        socket.Connect(lightIP, Int16.MaxValue); // Int16.MaxValue is the max value a port can be on TCPv4 according to RFC793
+                        socket.Connect(lightIP, UInt16.MaxValue); // UInt16.MaxValue is the max value a port can be on TCPv4 according to RFC793
                         localIP = ((IPEndPoint)socket.LocalEndPoint).Address;
                     }
 
