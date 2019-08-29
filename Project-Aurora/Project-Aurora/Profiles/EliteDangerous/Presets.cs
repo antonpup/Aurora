@@ -435,7 +435,7 @@ namespace Aurora.Profiles.EliteDangerous
 
                 Command.IncreaseWeaponsPower, Command.CycleFireGroupNext, Command.SelectHighestThreat,
                 Command.CycleNextSubsystem, Command.CyclePreviousSubsystem, Command.CycleNextHostileTarget,
-                Command.CyclePreviousHostileTarget
+                Command.CyclePreviousHostileTarget, Command.DeployHardpointToggle
             }, new GameStateCondition(
                 flagsSet: Flag.UNSPECIFIED,
                 flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
@@ -450,10 +450,10 @@ namespace Aurora.Profiles.EliteDangerous
                 Command.DownThrustButton,
                 Command.ForwardThrustButton, Command.BackwardThrustButton,
 
-                Command.ToggleFlightAssist, Command.DeployHardpointToggle
+                Command.ToggleFlightAssist
             }, new GameStateCondition(
                 flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
+                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
             )),
 
             new ControlGroup(new[]
