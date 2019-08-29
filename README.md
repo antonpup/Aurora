@@ -212,6 +212,17 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 * Vanguard K08
 
+### NZXT
+
+#### KrakenX
+
+* x42
+* x52
+* x62
+* x72
+
+#### Hue+
+
 ## Video demonstrations
 
 Clone Hero Demo
@@ -544,7 +555,8 @@ I do not have any intent in charging money for Aurora, it will always be a free 
 * [LightFX Extender](https://github.com/Archomeda/lightfx-extender) - A LightFX wrapped by a friend of mine, used as a resource for LightFX Wrapper.
 * [ColorBox](http://colorbox.codeplex.com/) - Used for gradient editor/picker. This repo contains a modified version of ColorBox, to suit Aurora's needs a bit more.
 * [SharpDX](http://sharpdx.org/) - Used for Raw Input for nonblocking input reading for key binds and interactive effects
-
+* [HidLibrary](https://github.com/mikeobrien/HidLibrary) - Used for communication with HID devices
+* [NZXTSharp](https://github.com/akmadian/NZXTSharp) - NZXT SDK, Used for NZXT support
 ## Special thanks to these people:
 
 ### Contributions

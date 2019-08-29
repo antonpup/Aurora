@@ -100,6 +100,11 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
             frame.AddOverlayLayers(layers.ToArray());
         }
 
+        public override void UpdateOverlayLights(EffectFrame frame)
+        {
+            //base.UpdateOverlayLights(frame);
+        }
+
         public override void SetGameState(IGameState new_state)
         {
             if (new_state is State_SkypeOverlay)

@@ -104,21 +104,27 @@ namespace Aurora
                 // discard "fake keys" which are part of an escaped sequence
                 return;
             }
-
-            KeyUtils.CorrectRawInputData(e);
-
-			//Debug.WriteLine($"RawInput {e.Key} {e.MakeCode} {e.ScanCodeFlags} {e.GetDeviceKey()}", "InputEvents");
-
-			if (e.ScanCodeFlags.HasFlag(ScanCodeFlags.Break))
+            try
             {
-                pressedKeySequence.RemoveAll(k => k == e.Key);
-                KeyUp?.Invoke(sender, e);
+                KeyUtils.CorrectRawInputData(e);
+
+                //Debug.WriteLine($"RawInput {e.Key} {e.MakeCode} {e.ScanCodeFlags} {e.GetDeviceKey()}", "InputEvents");
+
+                if (e.ScanCodeFlags.HasFlag(ScanCodeFlags.Break))
+                {
+                    pressedKeySequence.RemoveAll(k => k == e.Key);
+                    KeyUp?.Invoke(sender, e);
+                }
+                else
+                {
+                    if (!pressedKeySequence.Contains(e.Key))
+                        pressedKeySequence.Add(e.Key);
+                    KeyDown?.Invoke(sender, e);
+                }
             }
-            else
+            catch (Exception exc)
             {
-                if (!pressedKeySequence.Contains(e.Key))
-                    pressedKeySequence.Add(e.Key);
-                KeyDown?.Invoke(sender, e);
+                Global.logger.Error("Exception while handling keyboard input. Error: " + exc.ToString());
             }
         }
 
@@ -126,17 +132,27 @@ namespace Aurora
         /// Handles a SharpDX MouseInput event and fires the relevant InputEvents event (Scroll, MouseButtonDown or MouseButtonUp).
         /// </summary>
         private void DeviceOnMouseInput(object sender, MouseInputEventArgs e) {
-            if (e.WheelDelta != 0)
-                Scroll?.Invoke(sender, e);
+            try
+            {
+                if (e.WheelDelta != 0)
+                    Scroll?.Invoke(sender, e);
 
-            if (e.IsMouseDownEvent()) {
-                if (!pressedMouseButtons.Contains(e.GetMouseButton()))
-                    pressedMouseButtons.Add(e.GetMouseButton());
-                MouseButtonDown?.Invoke(sender, e);
+                if (e.IsMouseDownEvent())
+                {
+                    if (!pressedMouseButtons.Contains(e.GetMouseButton()))
+                        pressedMouseButtons.Add(e.GetMouseButton());
+                    MouseButtonDown?.Invoke(sender, e);
 
-            } else if (e.IsMouseUpEvent()) {
-                pressedMouseButtons.Remove(e.GetMouseButton());
-                MouseButtonUp?.Invoke(sender, e);
+                }
+                else if (e.IsMouseUpEvent())
+                {
+                    pressedMouseButtons.Remove(e.GetMouseButton());
+                    MouseButtonUp?.Invoke(sender, e);
+                }
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error("Exception while handling mouse input. Error: " + exc.ToString());
             }
         }
 

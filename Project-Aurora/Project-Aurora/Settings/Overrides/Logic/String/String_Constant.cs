@@ -8,7 +8,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Represents a constant string value that will always evaluate to the same value.
     /// </summary>
     [OverrideLogic("String Constant", category: OverrideLogicCategory.String)]
-    public class StringConstant : IEvaluatableString {
+    public class StringConstant : IEvaluatable<string> {
 
         /// <summary>The value of the constant.</summary>
         public string Value { get; set; } = "";
@@ -32,7 +32,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public void SetApplication(Application application) { }
 
         /// <summary>Clones this constant string value.</summary>
-        public IEvaluatableString Clone() => new StringConstant { Value = Value };
+        public IEvaluatable<string> Clone() => new StringConstant { Value = Value };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

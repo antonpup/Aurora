@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Settings;
 using CUE.NET.Devices.Generic.Enums;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,19 @@ namespace Aurora.Utils
         ///     uCode and uMapType. If there is no translation, the return value is zero.
         /// </returns>
         [DllImport("user32.dll")]
-        private static extern uint MapVirtualKey(uint uCode, MapVirtualKeyMapTypes uMapType);
+        public static extern uint MapVirtualKey(uint uCode, MapVirtualKeyMapTypes uMapType);
+
+        [DllImport("user32.dll")]
+        public static extern uint MapVirtualKeyEx(uint uCode, MapVirtualKeyMapTypes uMapType, IntPtr dwhkl);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        public static extern IntPtr GetKeyboardLayout(uint idThread);
+
+        [DllImport("user32.dll")]
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
+
+        [DllImport("user32", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern int GetKeyNameTextW(uint lParam, StringBuilder lpString, int nSize);
 
         private static readonly int leftControlScanCode;
 
@@ -62,6 +75,155 @@ namespace Aurora.Utils
             return key;
         }
 
+        static Dictionary<uint, DeviceKeys> scanCodeConversion = new Dictionary<uint, DeviceKeys>()
+        {
+            /*{1, DeviceKeys.ESC},
+            {59, DeviceKeys.F1},
+            {60, DeviceKeys.F2},
+            {61, DeviceKeys.F3},
+            {62, DeviceKeys.F4},
+            {63, DeviceKeys.F5},
+            {64, DeviceKeys.F6},
+            {65, DeviceKeys.F7},
+            {66, DeviceKeys.F8},
+            {67, DeviceKeys.F9},
+            {68, DeviceKeys.F10},
+            {87, DeviceKeys.F11},
+            {88, DeviceKeys.F12},
+            {84, DeviceKeys.PRINT_SCREEN},
+            {70, DeviceKeys.SCROLL_LOCK},*/
+            //{0, DeviceKeys.PAUSE_BREAK},
+            {40, DeviceKeys.TILDE},
+            /*{2, DeviceKeys.ONE},
+            {3, DeviceKeys.TWO},
+            {4, DeviceKeys.THREE},
+            {5, DeviceKeys.FOUR},
+            {6, DeviceKeys.FIVE},
+            {7, DeviceKeys.SIX},
+            {8, DeviceKeys.SEVEN},
+            {9, DeviceKeys.EIGHT},
+            {10, DeviceKeys.NINE},
+            {11, DeviceKeys.ZERO},*/
+            {12, DeviceKeys.MINUS},
+            {13, DeviceKeys.EQUALS},
+            /*{14, DeviceKeys.BACKSPACE},
+            {114, DeviceKeys.INSERT},
+            {103, DeviceKeys.HOME},
+            {105, DeviceKeys.PAGE_UP},
+            {69, DeviceKeys.NUM_LOCK},
+            //{53, DeviceKeys.NUM_SLASH},
+            {55, DeviceKeys.NUM_ASTERISK},
+            {74, DeviceKeys.NUM_MINUS},
+            {15, DeviceKeys.TAB},*/
+            {16, DeviceKeys.Q},
+            {17, DeviceKeys.W},
+            {18, DeviceKeys.E},
+            {19, DeviceKeys.R},
+            {20, DeviceKeys.T},
+            {21, DeviceKeys.Y},
+            {22, DeviceKeys.U},
+            {23, DeviceKeys.I},
+            {24, DeviceKeys.O},
+            {25, DeviceKeys.P},
+            {26, DeviceKeys.OPEN_BRACKET},
+            {27, DeviceKeys.CLOSE_BRACKET},
+            {86, DeviceKeys.BACKSLASH},
+            /*{115, DeviceKeys.DELETE},
+            {111, DeviceKeys.END},
+            {113, DeviceKeys.PAGE_DOWN},
+            {71, DeviceKeys.NUM_SEVEN},
+            {72, DeviceKeys.NUM_EIGHT},
+            {73, DeviceKeys.NUM_NINE},
+            {78, DeviceKeys.NUM_PLUS},
+            {58, DeviceKeys.CAPS_LOCK},*/
+            {30, DeviceKeys.A},
+            {31, DeviceKeys.S},
+            {32, DeviceKeys.D},
+            {33, DeviceKeys.F},
+            {34, DeviceKeys.G},
+            {35, DeviceKeys.H},
+            {36, DeviceKeys.J},
+            {37, DeviceKeys.K},
+            {38, DeviceKeys.L},
+            {39, DeviceKeys.SEMICOLON},
+            {43, DeviceKeys.APOSTROPHE},
+            //{0, DeviceKeys.HASH},
+            /*{28, DeviceKeys.ENTER},
+            {75, DeviceKeys.NUM_FOUR},
+            {76, DeviceKeys.NUM_FIVE},
+            {77, DeviceKeys.NUM_SIX},
+            {42, DeviceKeys.LEFT_SHIFT},*/
+            //{0, DeviceKeys.BACKSLASH_UK},
+            {44, DeviceKeys.Z},
+            {45, DeviceKeys.X},
+            {46, DeviceKeys.C},
+            {47, DeviceKeys.V},
+            {48, DeviceKeys.B},
+            {49, DeviceKeys.N},
+            {50, DeviceKeys.M},
+            {51, DeviceKeys.COMMA},
+            {52, DeviceKeys.PERIOD},
+            {53, DeviceKeys.FORWARD_SLASH},
+            /*{54, DeviceKeys.RIGHT_SHIFT},
+            {104, DeviceKeys.ARROW_UP},
+            {79, DeviceKeys.NUM_ONE},
+            {80, DeviceKeys.NUM_TWO},
+            {81, DeviceKeys.NUM_THREE},
+            //{28, DeviceKeys.NUM_ENTER},
+            {29, DeviceKeys.LEFT_CONTROL},
+            {91, DeviceKeys.LEFT_WINDOWS},
+            {56, DeviceKeys.LEFT_ALT},
+            {57, DeviceKeys.SPACE},
+            //{56, DeviceKeys.RIGHT_ALT},
+            {92, DeviceKeys.RIGHT_WINDOWS},
+            {93, DeviceKeys.APPLICATION_SELECT},
+            //{29, DeviceKeys.RIGHT_CONTROL},
+            {107, DeviceKeys.ARROW_LEFT},
+            {112, DeviceKeys.ARROW_DOWN},
+            {109, DeviceKeys.ARROW_RIGHT},
+            {82, DeviceKeys.NUM_ZERO},
+            {83, DeviceKeys.NUM_PERIOD},*/
+            {41, DeviceKeys.OEM8},
+            /*{34, DeviceKeys.MEDIA_PLAY_PAUSE},
+            {0, DeviceKeys.MEDIA_PLAY},
+            {0, DeviceKeys.MEDIA_PAUSE},
+            {36, DeviceKeys.MEDIA_STOP},
+            {16, DeviceKeys.MEDIA_PREVIOUS},
+            {25, DeviceKeys.MEDIA_NEXT},
+            {32, DeviceKeys.VOLUME_MUTE},
+            {46, DeviceKeys.VOLUME_DOWN},
+            {48, DeviceKeys.VOLUME_UP},
+            {0, DeviceKeys.JPN_HALFFULLWIDTH},
+            {0, DeviceKeys.JPN_MUHENKAN},
+            {0, DeviceKeys.JPN_HENKAN},
+            {0, DeviceKeys.JPN_HIRAGANA_KATAKANA},
+            {0, DeviceKeys.OEM5},
+            {0, DeviceKeys.OEMTilde},
+            {0, DeviceKeys.OEM102},
+            {0, DeviceKeys.OEM6},
+            {0, DeviceKeys.OEM6},
+            {0, DeviceKeys.OEM1},
+            {0, DeviceKeys.OEM1},
+            {0, DeviceKeys.OEMPlus},
+            {0, DeviceKeys.OEMPlus},*/
+        };
+
+        static Dictionary<DeviceKeys, uint> KeyToScanCode = null;
+
+        public static int GetScanCode(DeviceKeys key)
+        {
+            if (KeyToScanCode == null)
+                KeyToScanCode = scanCodeConversion.ToList().ToDictionary((kvp) => kvp.Value, (kvp) => kvp.Key);
+
+            if (KeyToScanCode.TryGetValue(key, out uint scan))
+                return (int)scan;
+            else
+                return -1;
+        }
+
+
+        static bool hasOutput = false;
+
         /// <summary>
         /// Correcting RawInput data according to an article https://blog.molecular-matters.com/2011/09/05/properly-handling-keyboard-input/
         /// </summary>
@@ -71,7 +233,23 @@ namespace Aurora.Utils
             // see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
             bool isE0 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E0);
             bool isE1 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E1);
+            if (Global.kbLayout.Loaded_Localization.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
+            {
+                uint thread = GetWindowThreadProcessId(ActiveProcessMonitor.GetForegroundWindow(), IntPtr.Zero);
+                var layout = GetKeyboardLayout(thread);
+                var scan_code_locale = MapVirtualKeyEx((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc, layout);
+                if (scan_code_locale == 0)
+                    Global.logger.Warn($"Unable to convert key: {e.Key} to scan_code_locale. layout: {layout}");
+                else
+                {
 
+                    Keys k = (Keys)MapVirtualKey(scan_code_locale, MapVirtualKeyMapTypes.MapvkVscToVk);
+                    if (k != Keys.None)
+                        e.Key = k;
+                    else
+                        Global.logger.Warn($"Unable to convert scan_code_locale: {scan_code_locale} to Keys. Key: {e.Key}, layout: {layout}");
+                }
+            }
             if (isE1)
             {
                 // for escaped sequences, turn the virtual key into the correct scan code using MapVirtualKey.
@@ -1029,7 +1207,7 @@ namespace Aurora.Utils
         /// <summary>
         ///     The set of valid MapTypes used in MapVirtualKey
         /// </summary>
-        private enum MapVirtualKeyMapTypes : uint
+        public enum MapVirtualKeyMapTypes : uint
         {
             /// <summary>
             ///     The uCode parameter is a virtual-key code and is translated into a scan code. If it is a virtual-key code that does
