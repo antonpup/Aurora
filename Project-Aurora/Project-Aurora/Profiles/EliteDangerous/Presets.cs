@@ -461,7 +461,7 @@ namespace Aurora.Profiles.EliteDangerous
                 Command.OrderHoldPosition, Command.OrderFollow, Command.OrderAggressiveBehaviour,
                 Command.OrderRequestDock,
                 Command.OrderDefensiveBehaviour, Command.OrderFocusTarget
-            }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
+            }, new GameStateCondition(gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
 
             new ControlGroup(new[]
             {
@@ -556,7 +556,7 @@ namespace Aurora.Profiles.EliteDangerous
             new ControlGroup(new[]
             {
                 Command.OrderHoldFire
-            }, new GameStateCondition(callback: gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
+            }, new GameStateCondition(gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
 
             new ControlGroup(new[]
                 {

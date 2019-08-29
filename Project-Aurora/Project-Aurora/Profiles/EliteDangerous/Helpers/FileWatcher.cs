@@ -12,10 +12,8 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
             TAIL, TAIL_END, FULL
         };
         
-        public interface FileReadCallback {
-            void OnRead(int lineNumber, string lineValue);
-        }
-
+        public delegate void FileReadCallback(int lineNumber, string lineValue);
+        
         private readonly int READ_DELAY = 3;
         private Thread watcherThread;
         private string filename;
@@ -30,12 +28,13 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
             this.readCallback = readCallback;
         }
 
-        private void ReadFile()
+        private void TailFile()
         {
             FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             StreamReader reader = new StreamReader(stream, Encoding.UTF8);
             try
             {
+                int currentLineNumber = 0;
                 if (readMode == ReadMode.TAIL_END)
                 {
                     reader.ReadToEnd();
@@ -50,7 +49,7 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
                             reader.DiscardBufferedData();
                             lastFileWrite = writeTime;
                             
-                            readCallback.OnRead(0, reader.ReadToEnd());
+                            readCallback(currentLineNumber, reader.ReadToEnd());
                         }
                     }
                     else
@@ -58,7 +57,7 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            readCallback.OnRead(0, line);
+                            readCallback(currentLineNumber++, line);
                         }
                     }
 
@@ -71,11 +70,31 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
             }
         }
 
+        public static void ReadFileLines(string filename, FileReadCallback readCallback)
+        {
+            FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+            
+            try
+            {
+                string line;
+                int currentLineNumber = 0;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    readCallback(currentLineNumber++, line);
+                }
+            }
+            finally
+            {
+                reader.Close();
+            }
+        }
+
         public bool Start()
         {
             if (watcherThread == null)
             {
-                watcherThread = new Thread(ReadFile);
+                watcherThread = new Thread(TailFile);
                 watcherThread.Start();
                 return true;
             }

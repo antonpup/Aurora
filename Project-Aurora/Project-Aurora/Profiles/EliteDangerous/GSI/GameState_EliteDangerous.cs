@@ -77,15 +77,15 @@ namespace Aurora.Profiles.EliteDangerous.GSI
     public class GameState_EliteDangerous : GameState<GameState_EliteDangerous>
     {
         private Status status;
-        private Journal journal;
+        private Nodes.Journal journal;
         private Nodes.Controls controls;
 
-        public Journal Journal
+        public Nodes.Journal Journal
         {
             get
             {
                 if (journal == null)
-                    journal = new Journal();
+                    journal = new Nodes.Journal();
 
                 return journal;
             }

@@ -7,23 +7,22 @@ using System.Xml;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Helpers;
+using Aurora.Profiles.EliteDangerous.Journal;
 using Newtonsoft.Json;
 
 namespace Aurora.Profiles.EliteDangerous
 {
     public class GameEvent_EliteDangerous : GameEvent_Generic
     {
-        readonly DelayedMethodCaller delayedFileRead = new DelayedMethodCaller(1);
-
         private static readonly string journalFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), 
-            "Saved Games", 
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            "Saved Games",
             "Frontier Developments",
             "Elite Dangerous"
         );
+
         private static readonly string statusFile = Path.Combine(journalFolder, "Status.json");
-        private FileWatcher statusFileWatcher;
-        
+
         private static readonly string bindingsFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Frontier Developments",
@@ -31,14 +30,67 @@ namespace Aurora.Profiles.EliteDangerous
             "Options",
             "Bindings"
         );
+
         private static readonly string bindingsPresetFile = Path.Combine(bindingsFolder, "StartPreset.start");
+        readonly DelayedMethodCaller delayedFileRead = new DelayedMethodCaller(1);
+        private FileSystemWatcher bindWatcher = null;
 
         private string currentBindFile = null;
-        private FileSystemWatcher bindWatcher = null;
+        private FileWatcher statusFileWatcher;
 
         public GameEvent_EliteDangerous() : base()
         {
-            statusFileWatcher = new FileWatcher(statusFile, FileWatcher.ReadMode.FULL, new StatusReadCallback(this));
+            statusFileWatcher = new FileWatcher(statusFile, FileWatcher.ReadMode.FULL, StatusReadCallback);
+        }
+        
+        public void StatusReadCallback(int lineNumber, string lineValue)
+        {
+            if (string.IsNullOrEmpty(lineValue)) return;
+
+            Status newStatus = JsonConvert.DeserializeObject<Status>(lineValue);
+
+            @UpdateStatus(newStatus);
+        }
+        
+        public void UpdateStatus(Status newStatus)
+        {
+            Status status = (_game_state as GameState_EliteDangerous).Status;
+
+            status.timestamp = newStatus.timestamp;
+            status.@event = newStatus.@event;
+            status.Flags = newStatus.Flags;
+            status.Pips = newStatus.Pips;
+            status.FireGroup = newStatus.FireGroup;
+            status.GuiFocus = newStatus.GuiFocus;
+            status.Fuel = newStatus.Fuel;
+            status.Cargo = newStatus.Cargo;
+        }
+        
+        
+        public void JournalReadCallback(int lineNumber, string lineValue)
+        {
+            try
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                JournalEvent newEvent = JsonConvert.DeserializeObject<JournalEvent>(lineValue, settings);
+                if(newEvent != null)
+                {
+                    Global.logger.Error(newEvent + " : " + newEvent.@event);
+                }
+            }
+            catch (JsonSerializationException e)
+            {
+                
+            }
+        }
+
+        private void ReadAllJournalFiles()
+        {
+            foreach (string logFile in Directory.GetFiles(journalFolder, "*.log")
+                .OrderBy(p => new FileInfo(p).CreationTime))
+            {
+                FileWatcher.ReadFileLines(logFile, JournalReadCallback);
+            }
         }
 
         public void WatchBindFiles()
@@ -64,7 +116,7 @@ namespace Aurora.Profiles.EliteDangerous
                 bindWatcher = null;
             }
         }
-        
+
         private void OnBindsFileChanged(object sender, FileSystemEventArgs e)
         {
             /*
@@ -95,18 +147,18 @@ namespace Aurora.Profiles.EliteDangerous
         {
             //TODO: Parse configuration XML
             Global.logger.Error("Current bind file: " + currentBindFile);
-            
+
             HashSet<string> modifierKeys = new HashSet<string>();
 
             Dictionary<string, Bind> commandToBind = new Dictionary<string, Bind>();
             Dictionary<Bind, string> bindToCommand = new Dictionary<Bind, string>();
-            
+
             XmlDocument doc = new XmlDocument();
             try
             {
                 doc.Load(currentBindFile);
                 XmlNodeList commands = doc.DocumentElement.ChildNodes;
-                foreach(XmlNode command in commands)
+                foreach (XmlNode command in commands)
                 {
 //                    if(command.HasChildNodes && command.SelectSingleNode("Deadzone") == null)
 //                        Global.logger.Info("public const string " + command.Name + " = \"" + command.Name + "\";");
@@ -114,19 +166,20 @@ namespace Aurora.Profiles.EliteDangerous
                     foreach (XmlNode xmlMapping in command.ChildNodes)
                     {
                         if (xmlMapping.Name != "Primary" && xmlMapping.Name != "Secondary") continue;
-                        
+
                         Bind.Mapping mapping = new Bind.Mapping();
 
                         if (xmlMapping.Attributes["Device"].Value == "Keyboard")
                         {
                             mapping.SetKey(xmlMapping.Attributes["Key"].Value);
                         }
-                        
+
                         foreach (XmlNode property in xmlMapping.ChildNodes)
                         {
                             if (property.Name != "Modifier") continue;
-                            
-                            if (property.Attributes["Device"].Value == "Keyboard" && !string.IsNullOrEmpty(property.Attributes["Key"].Value))
+
+                            if (property.Attributes["Device"].Value == "Keyboard" &&
+                                !string.IsNullOrEmpty(property.Attributes["Key"].Value))
                             {
                                 modifierKeys.Add(property.Attributes["Key"].Value);
                                 mapping.AddModifier(property.Attributes["Key"].Value);
@@ -148,44 +201,13 @@ namespace Aurora.Profiles.EliteDangerous
             }
             catch (System.IO.FileNotFoundException)
             {
-                Global.logger.Error("Error loading binds file: " + currentBindFile);      
+                Global.logger.Error("Error loading binds file: " + currentBindFile);
             }
-            
+
             GSI.Nodes.Controls controls = (_game_state as GameState_EliteDangerous).Controls;
             controls.modifierKeys = modifierKeys;
             controls.commandToBind = commandToBind;
-            controls.bindToCommand = bindToCommand;  
-        }
-
-        public void UpdateStatus(Status newStatus)
-        {
-            Status status = (_game_state as GameState_EliteDangerous).Status;
-
-            status.timestamp = newStatus.timestamp;
-            status.@event = newStatus.@event;
-            status.Flags = newStatus.Flags;
-            status.Pips = newStatus.Pips;
-            status.FireGroup = newStatus.FireGroup;
-            status.GuiFocus = newStatus.GuiFocus;
-            status.Fuel = newStatus.Fuel;
-            status.Cargo = newStatus.Cargo;
-        }
-
-        private class StatusReadCallback : FileWatcher.FileReadCallback
-        {
-            private GameEvent_EliteDangerous @event;
-            public StatusReadCallback(GameEvent_EliteDangerous @event)
-            {
-                this.@event = @event;
-            }
-            public void OnRead(int lineNumber, string lineValue)
-            {
-                if (string.IsNullOrEmpty(lineValue)) return;
-                
-                Status newStatus = JsonConvert.DeserializeObject<Status>(lineValue);
-
-                @event.UpdateStatus(newStatus);
-            }
+            controls.bindToCommand = bindToCommand;
         }
 
         public override void OnStart()
@@ -193,6 +215,7 @@ namespace Aurora.Profiles.EliteDangerous
             ReadBindFiles();
             WatchBindFiles();
             statusFileWatcher.Start();
+            ReadAllJournalFiles();
             //TODO: Enable Journal API reading
         }
 
