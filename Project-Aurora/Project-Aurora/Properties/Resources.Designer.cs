@@ -623,6 +623,16 @@ namespace Aurora.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Skype_300x300 {
+            get {
+                object obj = ResourceManager.GetObject("Skype_300x300", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SteelSeriesInstall_Step1 {
             get {
                 object obj = ResourceManager.GetObject("SteelSeriesInstall_Step1", resourceCulture);

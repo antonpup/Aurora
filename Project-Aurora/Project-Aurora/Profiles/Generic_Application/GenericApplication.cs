@@ -47,7 +47,7 @@ namespace Aurora.Profiles.Generic_Application
 
         public override string GetProfileFolderPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles", Config.ID);
+            return Path.Combine(Global.AppDataDirectory, "AdditionalProfiles", Config.ID);
         }
 
         protected override ApplicationProfile CreateNewProfile(string profileName)

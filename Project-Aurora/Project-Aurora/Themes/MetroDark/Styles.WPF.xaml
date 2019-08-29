@@ -745,10 +745,6 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type AControls:ArrangeListBox}" BasedOn="{StaticResource {x:Type ListBox}}">
-
-    </Style>
-
     <!-- *********************************  ListView Style  ********************************* -->
     <Style x:Key="ListViewStyle" TargetType="ListView">
         <Setter Property="Padding" Value="0" />
