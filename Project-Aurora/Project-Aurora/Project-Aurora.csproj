@@ -173,20 +173,17 @@
       <HintPath>.\Roccat-Talk.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.4.0.1\lib\net45\SharpDX.dll</HintPath>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.D3DCompiler.4.0.1\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D11.4.0.1\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.DXGI, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.DXGI.4.0.1\lib\net45\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.RawInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.RawInput.4.0.1\lib\net45\SharpDX.RawInput.dll</HintPath>
+    <Reference Include="SharpDX.RawInput, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.RawInput.4.2.0\lib\net45\SharpDX.RawInput.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -1573,6 +1570,7 @@
     <Resource Include="Resources\icons8-keyboard-30.png" />
     <Resource Include="Resources\osu_256x256.png" />
     <Resource Include="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
+    <Resource Include="Resources\info.png" />
     <Resource Include="Resources\Skype_300x300.png" />
     <Resource Include="Resources\Slime_Rancher.png" />
     <Resource Include="Resources\elite_dangerous_256x256.png" />
