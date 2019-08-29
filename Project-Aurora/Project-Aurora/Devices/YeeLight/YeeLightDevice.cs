@@ -103,6 +103,18 @@ namespace Aurora.Devices.YeeLight
             }
         }
 
+        private int GetFreeTCPPort()
+        {
+            int freePort;
+
+            // When a TCPListener is created with 0 as port, the TCP/IP stack will asign it a free port
+            TcpListener listener = new TcpListener(IPAddress.Loopback, 0); // Create a TcpListener on loopback with 0 as the port
+            listener.Start();
+            freePort = ((IPEndPoint)listener.LocalEndpoint).Port; // Gets the local port the TcpListener is listening on
+            listener.Stop();
+            return freePort;
+        }
+
         public void Connect(IPAddress lightIP, DoWorkEventArgs token = null)
         {
             try
@@ -110,15 +122,16 @@ namespace Aurora.Devices.YeeLight
                 if (!light.isConnected())
                 {
                     IPAddress localIP;
-                    int localListenPort = 55443; // This can be any port
+                    int lightListenPort = 55443; // The YeeLight smart bulb listens for commands on this port
+                    int localListenPort = GetFreeTCPPort(); // This can be any port
 
                     using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
                     {
-                        socket.Connect(lightIP, UInt16.MaxValue); // UInt16.MaxValue is the max value a port can be on TCPv4 according to RFC793
+                        socket.Connect(lightIP, lightListenPort);
                         localIP = ((IPEndPoint)socket.LocalEndPoint).Address;
                     }
 
-                    isConnected = light.Connect(lightIP, localListenPort) && light.SetMusicMode(localIP, 54321);
+                    isConnected = light.Connect(lightIP, lightListenPort) && light.SetMusicMode(localIP, localListenPort);
                 }
             }
             catch (Exception exc)
