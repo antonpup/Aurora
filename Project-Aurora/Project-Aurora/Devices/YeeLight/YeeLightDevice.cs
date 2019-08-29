@@ -23,6 +23,7 @@ namespace Aurora.Devices.YeeLight
         private Stopwatch watch = new Stopwatch();
         private YeeLightAPI.YeeLight light = new YeeLightAPI.YeeLight();
         private long lastUpdateTime = 0;
+        private const int lightListenPort = 55443; // The YeeLight smart bulb listens for commands on this port
 
         private VariableRegistry default_registry = null;
 
@@ -122,7 +123,6 @@ namespace Aurora.Devices.YeeLight
                 if (!light.isConnected())
                 {
                     IPAddress localIP;
-                    int lightListenPort = 55443; // The YeeLight smart bulb listens for commands on this port
                     int localListenPort = GetFreeTCPPort(); // This can be any port
 
                     using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
