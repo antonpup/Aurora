@@ -26,19 +26,12 @@ namespace Aurora.Devices.Hue
     class HueDevice : Device
     {
         private HueConfig config = new HueConfig();
-
         private string name = "Philips Hue";
-
         private bool initialized => client?.IsInitialized ?? false;
-
         private LocatedBridge bridge;
-
         private LocalHueClient client;
-
         private BridgeConfig conf;
-
         private List<Light> lights;
-
         private int curKey = 0;
         private int curItr = 0;
 
@@ -151,6 +144,7 @@ namespace Aurora.Devices.Hue
             var lastKey = config.Get<int>("last_key");
             if (!(firstKey < lastKey && keyColors.Any(t => t.Key <= (DeviceKeys)lastKey && t.Key >= (DeviceKeys)firstKey)))
                 return false;
+
             while (!keyColors.ContainsKey((DeviceKeys)curKey))
             {
                 curKey++;
@@ -161,6 +155,7 @@ namespace Aurora.Devices.Hue
             }
             if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(config.Get<int>("send_interval")))
                 return false;
+
             var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             foreach (var light in lights)
@@ -236,9 +231,7 @@ namespace Aurora.Devices.Hue
         }
 
         public LightCommand lastFrame;
-
         public bool lastFrameDefault;
-
         public DateTime lastCall;
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
@@ -284,7 +277,14 @@ namespace Aurora.Devices.Hue
         {
             if (!colors.Any())
                 return new RGBColor(0, 0, 0);
-            var f = colors.Select(t => new {A = t.A / (double)byte.MaxValue, R = t.R / (double)byte.MaxValue, G = t.G / (double)byte.MaxValue, B = t.B / (double)byte.MaxValue}).ToList();
+
+            var f = colors.Select(t => new
+            {
+                A = t.A / (double)byte.MaxValue,
+                R = t.R / (double)byte.MaxValue,
+                G = t.G / (double)byte.MaxValue,
+                B = t.B / (double)byte.MaxValue
+            }).ToList();
             return new RGBColor(f.Sum(t => t.R) / f.Count, f.Sum(t => t.G) / f.Count, f.Sum(t => t.B) / f.Count);
         }
 

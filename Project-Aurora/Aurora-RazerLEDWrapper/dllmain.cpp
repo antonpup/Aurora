@@ -103,7 +103,6 @@ typedef enum
 	BITLOC_SEMICOLON = 292,
 	BITLOC_APOSTROPHE = 296,
 	BITLOC_HASHTAG = 300,
-	//300
 	BITLOC_ENTER = 304,
 	//308
 	//312
@@ -437,10 +436,14 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved
 {
 	switch (ul_reason_for_call)
 	{
-	case DLL_PROCESS_ATTACH: write_text_to_log_file("DLL_PROCESS_ATTACH");
-	case DLL_THREAD_ATTACH: write_text_to_log_file("DLL_THREAD_ATTACH");
-	case DLL_THREAD_DETACH: write_text_to_log_file("DLL_THREAD_DETACH");
-	case DLL_PROCESS_DETACH: write_text_to_log_file("DLL_PROCESS_DETACH");
+	case DLL_PROCESS_ATTACH:
+		write_text_to_log_file("DLL_PROCESS_ATTACH");
+	case DLL_THREAD_ATTACH:
+		write_text_to_log_file("DLL_THREAD_ATTACH");
+	case DLL_THREAD_DETACH:
+		write_text_to_log_file("DLL_THREAD_DETACH");
+	case DLL_PROCESS_DETACH:
+		write_text_to_log_file("DLL_PROCESS_DETACH");
 		break;
 	}
 	return TRUE;
@@ -581,17 +584,23 @@ bool __fastcall WriteToPipe(WRAPPER_EFFECT effect)
 			DWORD last_error = GetLastError();
 			switch (last_error)
 			{
-			case ERROR_PIPE_BUSY: write_text_to_log_file("Pipe error, ERROR_PIPE_BUSY");
+			case ERROR_PIPE_BUSY:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_BUSY");
 				break;
-			case ERROR_PIPE_CONNECTED: write_text_to_log_file("Pipe error, ERROR_PIPE_CONNECTED");
+			case ERROR_PIPE_CONNECTED:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_CONNECTED");
 				break;
-			case ERROR_PIPE_LISTENING: write_text_to_log_file("Pipe error, ERROR_PIPE_LISTENING");
+			case ERROR_PIPE_LISTENING:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_LISTENING");
 				break;
-			case ERROR_PIPE_LOCAL: write_text_to_log_file("Pipe error, ERROR_PIPE_LOCAL");
+			case ERROR_PIPE_LOCAL:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_LOCAL");
 				break;
-			case ERROR_PIPE_NOT_CONNECTED: write_text_to_log_file("Pipe error, ERROR_PIPE_NOT_CONNECTED");
+			case ERROR_PIPE_NOT_CONNECTED:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_NOT_CONNECTED");
 				break;
-			default: write_text_to_log_file("Non-pipe related error");
+			default:
+				write_text_to_log_file("Non-pipe related error");
 				break;
 			}
 			return false;
@@ -884,11 +893,14 @@ WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZ
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
 			switch (breathing_effect->Type)
 			{
-			case ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE::Type::TWO_COLORS: additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			case ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE::Type::TWO_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
 				break;
-			case ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS: additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
+			case ChromaSDK::Keyboard::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
 				break;
-			default: additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
 				break;
 			}
 		}
@@ -904,15 +916,20 @@ WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZ
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_REACTIVE" << "\"" << ',';
 			switch (reactive_effect->Duration)
 			{
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_NONE: additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_NONE:
+				additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
 				break;
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT: additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT:
+				additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
 				break;
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM: additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM:
+				additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
 				break;
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG: additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG:
+				additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
 				break;
-			default: additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
 				break;
 			}
 		}
@@ -929,13 +946,17 @@ WRAPPER_EFFECT HandleKeyboardEffect(ChromaSDK::Keyboard::EFFECT_TYPE Effect, PRZ
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_WAVE" << "\"" << ',';
 			switch (wave_effect->Direction)
 			{
-			case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_NONE: additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
+			case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_NONE:
+				additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
 				break;
-			case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_LEFT_TO_RIGHT: additional_effect_data << "\"effect_config\": " << "\"" << "LEFT_TO_RIGHT" << "\"";
+			case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_LEFT_TO_RIGHT:
+				additional_effect_data << "\"effect_config\": " << "\"" << "LEFT_TO_RIGHT" << "\"";
 				break;
-			case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_RIGHT_TO_LEFT: additional_effect_data << "\"effect_config\": " << "\"" << "RIGHT_TO_LEFT" << "\"";
+			case ChromaSDK::Keyboard::WAVE_EFFECT_TYPE::DIRECTION_RIGHT_TO_LEFT:
+				additional_effect_data << "\"effect_config\": " << "\"" << "RIGHT_TO_LEFT" << "\"";
 				break;
-			default: additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
 				break;
 			}
 		}
@@ -963,13 +984,6 @@ WRAPPER_EFFECT HandleMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE Effect, PRZPARAM 
 	WRAPPER_EFFECT return_effect;
 	std::stringstream additional_effect_data;
 	additional_effect_data << ',';
-	switch (Effect)
-	{
-	case ChromaSDK::Mouse::CHROMA_WAVE: break;
-	case ChromaSDK::Mouse::CHROMA_CUSTOM2: break;
-	case ChromaSDK::Mouse::CHROMA_INVALID: break;
-	default: break;
-	}
 	if (Effect == ChromaSDK::Mouse::CHROMA_STATIC)
 	{
 		struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE* static_effect = (struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *)pParam;
@@ -1042,13 +1056,17 @@ WRAPPER_EFFECT HandleMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE Effect, PRZPARAM 
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
 			switch (breathing_effect->Type)
 			{
-			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::ONE_COLOR: additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::ONE_COLOR:
+				additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
 				break;
-			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::TWO_COLORS: additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::TWO_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
 				break;
-			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS: additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
 				break;
-			default: additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
 				break;
 			}
 		}
@@ -1064,13 +1082,17 @@ WRAPPER_EFFECT HandleMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE Effect, PRZPARAM 
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_REACTIVE" << "\"" << ',';
 			switch (reactive_effect->Duration)
 			{
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT: additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT:
+				additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
 				break;
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM: additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM:
+				additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
 				break;
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG: additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG:
+				additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
 				break;
-			default: additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
 				break;
 			}
 		}
@@ -1191,13 +1213,17 @@ WRAPPER_EFFECT HandleChromaLinkEffect(ChromaSDK::ChromaLink::EFFECT_TYPE Effect,
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
 			switch (breathing_effect->Type)
 			{
-			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::ONE_COLOR: additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::ONE_COLOR:
+				additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
 				break;
-			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::TWO_COLORS: additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::TWO_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
 				break;
-			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS: additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
 				break;
-			default: additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
 				break;
 			}
 		}
@@ -1213,13 +1239,17 @@ WRAPPER_EFFECT HandleChromaLinkEffect(ChromaSDK::ChromaLink::EFFECT_TYPE Effect,
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_REACTIVE" << "\"" << ',';
 			switch (reactive_effect->Duration)
 			{
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT: additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT:
+				additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
 				break;
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM: additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM:
+				additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
 				break;
-			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG: additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG:
+				additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
 				break;
-			default: additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
 				break;
 			}
 		}
@@ -1268,12 +1298,6 @@ WRAPPER_EFFECT HandleMousepadEffect(ChromaSDK::Mousepad::EFFECT_TYPE Effect, PRZ
 	WRAPPER_EFFECT return_effect;
 	std::stringstream additional_effect_data;
 	additional_effect_data << ',';
-	switch (Effect)
-	{
-	case ChromaSDK::Mousepad::CHROMA_WAVE: break;
-	case ChromaSDK::Mousepad::CHROMA_INVALID: break;
-	default: break;
-	}
 	if (Effect == ChromaSDK::Mousepad::CHROMA_STATIC)
 	{
 		struct ChromaSDK::Mousepad::STATIC_EFFECT_TYPE* static_effect = (struct ChromaSDK::Mousepad::STATIC_EFFECT_TYPE *)pParam;
@@ -1343,11 +1367,14 @@ WRAPPER_EFFECT HandleMousepadEffect(ChromaSDK::Mousepad::EFFECT_TYPE Effect, PRZ
 			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
 			switch (breathing_effect->Type)
 			{
-			case ChromaSDK::Mousepad::BREATHING_EFFECT_TYPE::Type::TWO_COLORS: additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+			case ChromaSDK::Mousepad::BREATHING_EFFECT_TYPE::Type::TWO_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
 				break;
-			case ChromaSDK::Mousepad::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS: additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
+			case ChromaSDK::Mousepad::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
 				break;
-			default: additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
 				break;
 			}
 		}
@@ -1407,17 +1434,23 @@ __declspec(dllexport) RZRESULT Init()
 			DWORD last_error = GetLastError();
 			switch (last_error)
 			{
-			case ERROR_PIPE_BUSY: write_text_to_log_file("Pipe error, ERROR_PIPE_BUSY");
+			case ERROR_PIPE_BUSY:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_BUSY");
 				break;
-			case ERROR_PIPE_CONNECTED: write_text_to_log_file("Pipe error, ERROR_PIPE_CONNECTED");
+			case ERROR_PIPE_CONNECTED:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_CONNECTED");
 				break;
-			case ERROR_PIPE_LISTENING: write_text_to_log_file("Pipe error, ERROR_PIPE_LISTENING");
+			case ERROR_PIPE_LISTENING:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_LISTENING");
 				break;
-			case ERROR_PIPE_LOCAL: write_text_to_log_file("Pipe error, ERROR_PIPE_LOCAL");
+			case ERROR_PIPE_LOCAL:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_LOCAL");
 				break;
-			case ERROR_PIPE_NOT_CONNECTED: write_text_to_log_file("Pipe error, ERROR_PIPE_NOT_CONNECTED");
+			case ERROR_PIPE_NOT_CONNECTED:
+				write_text_to_log_file("Pipe error, ERROR_PIPE_NOT_CONNECTED");
 				break;
-			default: write_text_to_log_file("Non-pipe related error");
+			default:
+				write_text_to_log_file("Non-pipe related error");
 				break;
 			}
 			isInitialized = false;
@@ -1453,23 +1486,32 @@ __declspec(dllexport) RZRESULT CreateEffect(RZDEVICEID DeviceId, ChromaSDK::EFFE
 			ChromaSDK::Keyboard::EFFECT_TYPE kbType;
 			switch (Effect)
 			{
-			case ChromaSDK::CHROMA_NONE: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_NONE;
+			case ChromaSDK::CHROMA_NONE:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_NONE;
 				break;
-			case ChromaSDK::CHROMA_WAVE: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_WAVE;
+			case ChromaSDK::CHROMA_WAVE:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_WAVE;
 				break;
-			case ChromaSDK::CHROMA_SPECTRUMCYCLING: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_SPECTRUMCYCLING;
+			case ChromaSDK::CHROMA_SPECTRUMCYCLING:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_SPECTRUMCYCLING;
 				break;
-			case ChromaSDK::CHROMA_BREATHING: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_BREATHING;
+			case ChromaSDK::CHROMA_BREATHING:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_BREATHING;
 				break;
-			case ChromaSDK::CHROMA_REACTIVE: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_REACTIVE;
+			case ChromaSDK::CHROMA_REACTIVE:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_REACTIVE;
 				break;
-			case ChromaSDK::CHROMA_STATIC: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_STATIC;
+			case ChromaSDK::CHROMA_STATIC:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_STATIC;
 				break;
-			case ChromaSDK::CHROMA_CUSTOM: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_CUSTOM;
+			case ChromaSDK::CHROMA_CUSTOM:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_CUSTOM;
 				break;
-			case ChromaSDK::CHROMA_RESERVED: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_RESERVED;
+			case ChromaSDK::CHROMA_RESERVED:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_RESERVED;
 				break;
-			default: kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_INVALID;
+			default:
+				kbType = ChromaSDK::Keyboard::EFFECT_TYPE::CHROMA_INVALID;
 				break;
 			}
 			createdEffect = HandleKeyboardEffect(kbType, pParam);
@@ -1479,23 +1521,32 @@ __declspec(dllexport) RZRESULT CreateEffect(RZDEVICEID DeviceId, ChromaSDK::EFFE
 			ChromaSDK::Mouse::EFFECT_TYPE mouseType;
 			switch (Effect)
 			{
-			case ChromaSDK::CHROMA_NONE: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_NONE;
+			case ChromaSDK::CHROMA_NONE:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_NONE;
 				break;
-			case ChromaSDK::CHROMA_WAVE: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_WAVE;
+			case ChromaSDK::CHROMA_WAVE:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_WAVE;
 				break;
-			case ChromaSDK::CHROMA_SPECTRUMCYCLING: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_SPECTRUMCYCLING;
+			case ChromaSDK::CHROMA_SPECTRUMCYCLING:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_SPECTRUMCYCLING;
 				break;
-			case ChromaSDK::CHROMA_BREATHING: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_BREATHING;
+			case ChromaSDK::CHROMA_BREATHING:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_BREATHING;
 				break;
-			case ChromaSDK::CHROMA_BLINKING: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_BLINKING;
+			case ChromaSDK::CHROMA_BLINKING:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_BLINKING;
 				break;
-			case ChromaSDK::CHROMA_REACTIVE: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_REACTIVE;
+			case ChromaSDK::CHROMA_REACTIVE:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_REACTIVE;
 				break;
-			case ChromaSDK::CHROMA_STATIC: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_STATIC;
+			case ChromaSDK::CHROMA_STATIC:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_STATIC;
 				break;
-			case ChromaSDK::CHROMA_CUSTOM: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_CUSTOM2;
+			case ChromaSDK::CHROMA_CUSTOM:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_CUSTOM2;
 				break;
-			default: mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_INVALID;
+			default:
+				mouseType = ChromaSDK::Mouse::EFFECT_TYPE::CHROMA_INVALID;
 				break;
 			}
 			createdEffect = HandleMouseEffect(mouseType, pParam);
