@@ -1166,20 +1166,6 @@ WRAPPER_EFFECT HandleMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE Effect, PRZPARAM 
 
 	switch (Effect)
 	{
-		//case ChromaSDK::Mouse::CHROMA_NONE:
-		//	break;
-		//case ChromaSDK::Mouse::CHROMA_BLINKING:
-		//	break;
-		//case ChromaSDK::Mouse::CHROMA_BREATHING:
-		//	break;
-		//case ChromaSDK::Mouse::CHROMA_CUSTOM:
-		//	break;
-		//case ChromaSDK::Mouse::CHROMA_REACTIVE:
-		//	break;
-		//case ChromaSDK::Mouse::CHROMA_SPECTRUMCYCLING:
-		//	break;
-		//case ChromaSDK::Mouse::CHROMA_STATIC:
-		//	break;
 	case ChromaSDK::Mouse::CHROMA_WAVE:
 		break;
 	case ChromaSDK::Mouse::CHROMA_CUSTOM2:
@@ -1191,6 +1177,200 @@ WRAPPER_EFFECT HandleMouseEffect(ChromaSDK::Mouse::EFFECT_TYPE Effect, PRZPARAM 
 	}
 
 	if (Effect == ChromaSDK::Mouse::CHROMA_STATIC)
+	{
+		struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *static_effect = (struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *)pParam;
+		if (static_effect != NULL)
+		{
+			unsigned char blue = GetBValue(static_effect->Color);
+			unsigned char green = GetGValue(static_effect->Color);
+			unsigned char red = GetRValue(static_effect->Color);
+
+			if (static_effect->LEDId == ChromaSDK::Mouse::RZLED::RZLED_LOGO || static_effect->LEDId == ChromaSDK::Mouse::RZLED::RZLED_ALL)
+			{
+				if (current_peripheral[0] != blue ||
+					current_peripheral[1] != green ||
+					current_peripheral[2] != red
+					)
+					requiresUpdate = true;
+
+				return_effect.peripheral[0] = blue;
+				return_effect.peripheral[1] = green;
+				return_effect.peripheral[2] = red;
+				return_effect.peripheral[3] = (char)255;
+			}
+
+			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_STATIC" << "\"";
+		}
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_BLINKING)
+	{
+		struct ChromaSDK::Mouse::BLINKING_EFFECT_TYPE *blinking_effect = (struct ChromaSDK::Mouse::BLINKING_EFFECT_TYPE *)pParam;
+		if (blinking_effect != NULL)
+		{
+			additional_effect_data << "\"red_start\": " << "\"" << GetRValue(blinking_effect->Color) << "\"" << ',';
+			additional_effect_data << "\"green_start\": " << "\"" << GetGValue(blinking_effect->Color) << "\"" << ',';
+			additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(blinking_effect->Color) << "\"" << ',';
+			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BLINKING" << "\"";
+		}
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_NONE)
+	{
+		if (current_peripheral[0] != 0 ||
+			current_peripheral[1] != 0 ||
+			current_peripheral[2] != 0
+			)
+			requiresUpdate = true;
+
+		return_effect.peripheral[0] = (char)0;
+		return_effect.peripheral[1] = (char)0;
+		return_effect.peripheral[2] = (char)0;
+		return_effect.peripheral[3] = (char)255;
+
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_NONE" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_CUSTOM)
+	{
+		struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE *custom_effect = (struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE *)pParam;
+		if (custom_effect != NULL)
+		{
+			unsigned char blue = GetBValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
+			unsigned char green = GetGValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
+			unsigned char red = GetRValue(custom_effect->Color[ChromaSDK::Mouse::RZLED::RZLED_LOGO]);
+
+			if (current_peripheral[0] != blue ||
+				current_peripheral[1] != green ||
+				current_peripheral[2] != red
+				)
+				requiresUpdate = true;
+
+			return_effect.peripheral[0] = blue;
+			return_effect.peripheral[1] = green;
+			return_effect.peripheral[2] = red;
+			return_effect.peripheral[3] = (char)255;
+
+			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM" << "\"";
+		}
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_BREATHING)
+	{
+		struct ChromaSDK::Mouse::BREATHING_EFFECT_TYPE *breathing_effect = (struct ChromaSDK::Mouse::BREATHING_EFFECT_TYPE *)pParam;
+		if (breathing_effect != NULL)
+		{
+			additional_effect_data << "\"red_start\": " << "\"" << GetRValue(breathing_effect->Color1) << "\"" << ',';
+			additional_effect_data << "\"green_start\": " << "\"" << GetGValue(breathing_effect->Color1) << "\"" << ',';
+			additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(breathing_effect->Color1) << "\"" << ',';
+			additional_effect_data << "\"red_end\": " << "\"" << GetRValue(breathing_effect->Color2) << "\"" << ',';
+			additional_effect_data << "\"green_end\": " << "\"" << GetGValue(breathing_effect->Color2) << "\"" << ',';
+			additional_effect_data << "\"blue_end\": " << "\"" << GetBValue(breathing_effect->Color2) << "\"" << ',';
+			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_BREATHING" << "\"" << ',';
+
+			switch (breathing_effect->Type)
+			{
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::ONE_COLOR:
+				additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+				break;
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::TWO_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "TWO_COLORS" << "\"";
+				break;
+			case ChromaSDK::Mouse::BREATHING_EFFECT_TYPE::Type::RANDOM_COLORS:
+				additional_effect_data << "\"effect_config\": " << "\"" << "RANDOM_COLORS" << "\"";
+				break;
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "INVALID" << "\"";
+				break;
+			}
+		}
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_REACTIVE)
+	{
+		struct ChromaSDK::Mouse::REACTIVE_EFFECT_TYPE *reactive_effect = (struct ChromaSDK::Mouse::REACTIVE_EFFECT_TYPE *)pParam;
+		if (reactive_effect != NULL)
+		{
+			additional_effect_data << "\"red_start\": " << "\"" << GetRValue(reactive_effect->Color) << "\"" << ',';
+			additional_effect_data << "\"green_start\": " << "\"" << GetGValue(reactive_effect->Color) << "\"" << ',';
+			additional_effect_data << "\"blue_start\": " << "\"" << GetBValue(reactive_effect->Color) << "\"" << ',';
+			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_REACTIVE" << "\"" << ',';
+
+			switch (reactive_effect->Duration)
+			{
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_SHORT:
+				additional_effect_data << "\"effect_config\": " << "\"" << "SHORT" << "\"";
+				break;
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_MEDIUM:
+				additional_effect_data << "\"effect_config\": " << "\"" << "MEDIUM" << "\"";
+				break;
+			case ChromaSDK::Keyboard::REACTIVE_EFFECT_TYPE::Duration::DURATION_LONG:
+				additional_effect_data << "\"effect_config\": " << "\"" << "LONG" << "\"";
+				break;
+			default:
+				additional_effect_data << "\"effect_config\": " << "\"" << "NONE" << "\"";
+				break;
+			}
+		}
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_SPECTRUMCYCLING)
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_SPECTRUMCYCLING" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_WAVE)
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_WAVE" << "\"";
+	}
+	else if (Effect == ChromaSDK::Mouse::CHROMA_CUSTOM2)
+	{
+		struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE2 *custom_effect = (struct ChromaSDK::Mouse::CUSTOM_EFFECT_TYPE2 *)pParam;
+		if (custom_effect != NULL)
+		{
+			unsigned char blue = GetBValue(custom_effect->Color[HIBYTE(ChromaSDK::Mouse::RZLED2_LOGO)][LOBYTE(ChromaSDK::Mouse::RZLED2_LOGO)]);
+			unsigned char green = GetGValue(custom_effect->Color[HIBYTE(ChromaSDK::Mouse::RZLED2_LOGO)][LOBYTE(ChromaSDK::Mouse::RZLED2_LOGO)]);
+			unsigned char red = GetRValue(custom_effect->Color[HIBYTE(ChromaSDK::Mouse::RZLED2_LOGO)][LOBYTE(ChromaSDK::Mouse::RZLED2_LOGO)]);
+
+			if (current_peripheral[0] != blue ||
+				current_peripheral[1] != green ||
+				current_peripheral[2] != red
+				)
+				requiresUpdate = true;
+
+			return_effect.peripheral[0] = blue;
+			return_effect.peripheral[1] = green;
+			return_effect.peripheral[2] = red;
+			return_effect.peripheral[3] = (char)255;
+
+			additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_CUSTOM2" << "\"";
+		}
+	}
+	else
+	{
+		additional_effect_data << "\"effect_type\": " << "\"" << "CHROMA_INVALID" << "\"";
+	}
+
+	std::stringstream ss;
+	ss << "\"command\": " << "\"CreateMouseEffect\"" << ',';
+	ss << "\"command_data\": {";
+
+	ss << "\"custom_mode\": " << 0;
+	ss << additional_effect_data.str();
+	ss << '}';
+
+	return_effect.command_cargo = ss.str();
+
+	return return_effect;
+}
+
+WRAPPER_EFFECT HandleChromaLinkEffect(ChromaSDK::ChromaLink::EFFECT_TYPE Effect, PRZPARAM pParam)
+{
+	WRAPPER_EFFECT return_effect;
+	std::stringstream additional_effect_data;
+
+	additional_effect_data << ',';
+
+	switch (Effect)
+	{
+	default:
+		break;
+	}
+
+	if (Effect == ChromaSDK::ChromaLink::CHROMA_STATIC)
 	{
 		struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *static_effect = (struct ChromaSDK::Mouse::STATIC_EFFECT_TYPE *)pParam;
 		if (static_effect != NULL)
@@ -1868,31 +2048,20 @@ extern "C" {
 	{
 		if (isInitialized)
 		{
-			// Not Implemented
+			WRAPPER_EFFECT chromaLinkEffect = HandleChromaLinkEffect(Effect, pParam);
 
-			/*
-			switch (Effect)
+			if (pEffectId == NULL)
 			{
-			case ChromaSDK::Keypad::CHROMA_NONE:
-			break;
-			case ChromaSDK::Keypad::CHROMA_BREATHING:
-			break;
-			case ChromaSDK::Keypad::CHROMA_CUSTOM:
-			break;
-			case ChromaSDK::Keypad::CHROMA_REACTIVE:
-			break;
-			case ChromaSDK::Keypad::CHROMA_SPECTRUMCYCLING:
-			break;
-			case ChromaSDK::Keypad::CHROMA_STATIC:
-			break;
-			case ChromaSDK::Keypad::CHROMA_WAVE:
-			break;
-			case ChromaSDK::Keypad::CHROMA_INVALID:
-			break;
-			default:
-			break;
+				WriteToPipe(chromaLinkEffect);
 			}
-			*/
+			else
+			{
+				if (*pEffectId == GUID_NULL)
+					CoCreateGuid(pEffectId);
+
+				effects[*pEffectId] = chromaLinkEffect;
+			}
+
 			return RZRESULT_SUCCESS;
 		}
 		else
