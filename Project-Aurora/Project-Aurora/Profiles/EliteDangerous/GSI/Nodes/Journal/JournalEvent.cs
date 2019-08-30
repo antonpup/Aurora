@@ -38,6 +38,7 @@ namespace Aurora.Profiles.EliteDangerous.Journal
             Type objectType, object existingValue, JsonSerializer serializer)
         {
             JObject item = JObject.Load(reader);
+
             switch (item["event"].Value<string>())
             {
                 case "FSDTarget": return item.ToObject<FSDTarget>();
@@ -54,7 +55,8 @@ namespace Aurora.Profiles.EliteDangerous.Journal
                 case "FighterRebuilt": return item.ToObject<FighterRebuilt>();
             }
                 
-            return item.ToObject<JournalEvent>();
+            //Do not deserialize an event we don't need since it's REALLY SLOW!
+            return null;
         }
 
         public override void WriteJson(JsonWriter writer, 

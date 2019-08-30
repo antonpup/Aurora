@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Timers;
@@ -57,18 +58,13 @@ namespace Aurora.Profiles.EliteDangerous
 
         public void JournalReadCallback(int lineNumber, string lineValue)
         {
-            Global.logger.Error(lineValue);
             try
             {
                 JournalEvent newEvent = JsonConvert.DeserializeObject<JournalEvent>(lineValue, journalSerializerSettings);
                 if(newEvent != null)
                 {
-                    Global.logger.Error(newEvent + " : " + newEvent.@event);
-                    if (newEvent.GetType() == typeof(FSDJump))
-                    {
-                        Global.logger.Error("------------------------------------");
-                        Global.logger.Error(((FSDJump)newEvent).StarSystem);
-                    }
+                    //If the event is known, do something with it
+                    (_game_state as GameState_EliteDangerous).Journal.ProcessEvent(newEvent);
                 }
             }
             catch (JsonSerializationException e)
@@ -79,12 +75,22 @@ namespace Aurora.Profiles.EliteDangerous
 
         private void ReadAllJournalFiles()
         {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            
             foreach (string logFile in Directory.GetFiles(EliteConfig.JOURNAL_API_DIR, "*.log")
                 .OrderBy(p => new FileInfo(p).CreationTime))
             {
-                Global.logger.Error("****************" + logFile + "********************");
+                Global.logger.Debug("****************" + logFile + "********************");
                 FileWatcher.ReadFileLines(logFile, JournalReadCallback);
             }
+            
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            Global.logger.Error("Journal read time " + elapsedTime);
         }
 
         public void WatchBindFiles()
