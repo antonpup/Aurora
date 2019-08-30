@@ -494,7 +494,11 @@ namespace Aurora.Profiles.EliteDangerous
                 new GameStateCondition(
                     flagsSet: Flag.UNSPECIFIED,
                     flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.MASS_LOCK | Flag.LANDING_GEAR |
-                                 Flag.HARDPOINTS | Flag.CARGO_SCOOP
+                                 Flag.HARDPOINTS | Flag.CARGO_SCOOP | Flag.FSD_COOLDOWN,
+                    callback: gameState =>
+                    {
+                        return !gameState.Journal.fsdBeforeCooldown;
+                    }
                 )
             ),
 

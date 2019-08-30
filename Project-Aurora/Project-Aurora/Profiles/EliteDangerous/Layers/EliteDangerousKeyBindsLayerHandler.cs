@@ -326,6 +326,11 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
             HashSet<DeviceKeys> leftoverBlendStates = new HashSet<DeviceKeys>(keyBlendStates.Keys);
 
+            if (gameState.Journal.fsdBeforeCooldown && gameState.Status.IsFlagSet(Flag.FSD_COOLDOWN))
+            {
+                gameState.Journal.fsdBeforeCooldown = false;
+            }
+
             Color newKeyColor;
             Dictionary<DeviceKeys, Color> smoothColorSets = new Dictionary<DeviceKeys, Color>();
             foreach (ControlGroupSet controlGroupSet in controlGroupSets)

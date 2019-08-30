@@ -26,6 +26,7 @@ namespace Aurora.Profiles.EliteDangerous
             {
                 new LayerHandlerEntry("EliteDangerousBackground", "Elite: Dangerous Background Layer", typeof(EliteDangerousBackgroundLayerHandler)),
                 new LayerHandlerEntry("EliteDangerousKeyBinds", "Elite: Dangerous Key Binds Layer", typeof(EliteDangerousKeyBindsLayerHandler)),
+                new LayerHandlerEntry("EliteDangerousAnimations", "Elite: Dangerous Animation Layer", typeof(EliteDangerousAnimationLayerHandler)),
             };
 
             Global.LightingStateManager.RegisterLayerHandlers(extra, false);

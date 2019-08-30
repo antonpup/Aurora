@@ -21,6 +21,7 @@ namespace Aurora.Profiles.EliteDangerous
             base.Reset();
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
+                new Layer("Animations", new Layers.EliteDangerousAnimationLayerHandler()),
                 new Layer("Key Binds", new Layers.EliteDangerousKeyBindsLayerHandler()),
                 new Layer("Background", new Layers.EliteDangerousBackgroundLayerHandler()),
             };

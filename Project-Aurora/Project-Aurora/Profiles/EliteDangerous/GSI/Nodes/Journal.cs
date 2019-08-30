@@ -32,6 +32,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public string jumpStarType = null;
         
         private bool nextLoadoutIsFighter = false;
+
+        public bool fsdBeforeCooldown = false;
         
         private void SetModulesFromLoadout(Loadout loadout)
         {
@@ -78,17 +80,21 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                         jumpStarType = null;
                     }
 
+                    fsdBeforeCooldown = true;
                     //Should start FSD countdown animation
                     fsdChargeStartTime = Utils.Time.GetMillisecondsSinceEpoch();
                     break;
                 case EventType.SupercruiseEntry:
                     ResetFsd();
+                    fsdBeforeCooldown = false;
                     break;
                 case EventType.SupercruiseExit:
                     ResetFsd();
+                    fsdBeforeCooldown = true;
                     break;
                 case EventType.FSDJump:
                     ResetFsd();
+                    fsdBeforeCooldown = true;
                     //Should stop hyperspace animation
                     break;
                 case EventType.Music:
