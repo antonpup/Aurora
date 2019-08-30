@@ -34,6 +34,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const long IN_SRV = 1 << 26;
         public const long HUD_DISCOVERY_MODE = 1 << 27;
         public const long NIGHT_VISION = 1 << 28;
+        public const long ALTITUDE_FROM_AVERAGE_RADIUS = 1 << 29;
 
         public static bool IsFlagSet(long bitmask, long flag)
         {
@@ -59,7 +60,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         MAP_SYSTEM = 7,
         MAP_ORRERY = 8,
         MODE_FSS = 9,
-        MODE_ADS = 10
+        MODE_ADS = 10,
+        CODEX = 11,
     }
     
     public class Fuel

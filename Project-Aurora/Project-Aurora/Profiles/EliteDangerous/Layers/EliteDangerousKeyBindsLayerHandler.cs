@@ -238,7 +238,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             ControlGroupSets.CONTROLS_MAIN,
             ControlGroupSets.CONTROLS_SYSTEM_MAP,
             ControlGroupSets.CONTROLS_GALAXY_MAP,
-            ControlGroupSets.UI_PANELS
+            ControlGroupSets.UI_PANELS,
+            ControlGroupSets.UI_PANEL_TABS,
         };
 
         public EliteDangerousKeyBindsLayerHandler() : base()

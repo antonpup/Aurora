@@ -562,7 +562,11 @@ namespace Aurora.Profiles.EliteDangerous
                 },
                 new GameStateCondition(flagsSet: Flag.SUPERCRUISE,
                     flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET))
-        }, new GameStateCondition(guiFocus: new[] {GuiFocus.NONE}));
+        }, new GameStateCondition(guiFocus: new[]
+        {
+            GuiFocus.NONE, GuiFocus.STATION_SERVICES, GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE,
+            GuiFocus.PANEL_SYSTEMS
+        }));
 
         public static ControlGroupSet CONTROLS_SYSTEM_MAP = new ControlGroupSet(new[]
         {
@@ -583,18 +587,30 @@ namespace Aurora.Profiles.EliteDangerous
             })
         }, new GameStateCondition(guiFocus: new[] {GuiFocus.MAP_GALAXY, GuiFocus.MAP_ORRERY}));
 
-        public static ControlGroupSet UI_PANELS = new ControlGroupSet(CONTROLS_MAIN, new[]
+        public static ControlGroupSet UI_PANELS = new ControlGroupSet(new[]
             {
                 new ControlGroup(new[]
                 {
                     Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down,
-                    Command.UI_Select, Command.UI_Back, Command.CyclePreviousPanel, Command.CycleNextPanel
+                    Command.UI_Select, Command.UI_Back
                 }),
             },
             new GameStateCondition(guiFocus: new[]
             {
                 GuiFocus.STATION_SERVICES, GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE,
-                GuiFocus.PANEL_SYSTEMS
+                GuiFocus.PANEL_SYSTEMS, GuiFocus.CODEX
+            }));
+
+        public static ControlGroupSet UI_PANEL_TABS = new ControlGroupSet(new[]
+            {
+                new ControlGroup(new[]
+                {
+                    Command.CyclePreviousPanel, Command.CycleNextPanel
+                }),
+            },
+            new GameStateCondition(guiFocus: new[]
+            {
+                GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE,  GuiFocus.PANEL_SYSTEMS
             }));
     }
 
