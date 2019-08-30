@@ -198,8 +198,6 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
     public class EliteDangerousKeyBindsLayerHandler : LayerHandler<EliteDangerousKeyBindsHandlerProperties>
     {
-        private int blinkSpeed = 20;
-
         private class KeyBlendState
         {
             public Color colorFrom = Color.Empty;
@@ -256,7 +254,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         private float GetBlinkStep()
         {
             float animationPosition =
-                Utils.Time.GetMillisecondsSinceEpoch() % (10000L / blinkSpeed) / (10000.0f / blinkSpeed);
+                Utils.Time.GetMillisecondsSinceEpoch() % (10000L / EliteConfig.KEY_BLINK_SPEED) / (10000.0f / EliteConfig.KEY_BLINK_SPEED);
             float animationStep = animationPosition * 2;
             return animationStep > 1 ? 1F + (1F - animationStep) : animationStep;
         }

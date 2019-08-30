@@ -8,39 +8,28 @@ using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Helpers;
 using Aurora.Profiles.EliteDangerous.Journal;
+using Aurora.Profiles.EliteDangerous.Journal.Events;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Aurora.Profiles.EliteDangerous
 {
     public class GameEvent_EliteDangerous : GameEvent_Generic
     {
-        private static readonly string journalFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            "Saved Games",
-            "Frontier Developments",
-            "Elite Dangerous"
-        );
-
-        private static readonly string statusFile = Path.Combine(journalFolder, "Status.json");
-
-        private static readonly string bindingsFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "Frontier Developments",
-            "Elite Dangerous",
-            "Options",
-            "Bindings"
-        );
-
-        private static readonly string bindingsPresetFile = Path.Combine(bindingsFolder, "StartPreset.start");
         readonly DelayedMethodCaller delayedFileRead = new DelayedMethodCaller(1);
         private FileSystemWatcher bindWatcher = null;
 
         private string currentBindFile = null;
         private FileWatcher statusFileWatcher;
+        
+        JsonSerializerSettings journalSerializerSettings = new JsonSerializerSettings()
+        {
+            Converters = new List<JsonConverter>() { new JournalEventJsonConverter() }
+        };
 
         public GameEvent_EliteDangerous() : base()
         {
-            statusFileWatcher = new FileWatcher(statusFile, FileWatcher.ReadMode.FULL, StatusReadCallback);
+            statusFileWatcher = new FileWatcher(EliteConfig.STATUS_FILE, FileWatcher.ReadMode.FULL, StatusReadCallback);
         }
         
         public void StatusReadCallback(int lineNumber, string lineValue)
@@ -65,17 +54,21 @@ namespace Aurora.Profiles.EliteDangerous
             status.Fuel = newStatus.Fuel;
             status.Cargo = newStatus.Cargo;
         }
-        
-        
+
         public void JournalReadCallback(int lineNumber, string lineValue)
         {
+            Global.logger.Error(lineValue);
             try
             {
-                JsonSerializerSettings settings = new JsonSerializerSettings();
-                JournalEvent newEvent = JsonConvert.DeserializeObject<JournalEvent>(lineValue, settings);
+                JournalEvent newEvent = JsonConvert.DeserializeObject<JournalEvent>(lineValue, journalSerializerSettings);
                 if(newEvent != null)
                 {
                     Global.logger.Error(newEvent + " : " + newEvent.@event);
+                    if (newEvent.GetType() == typeof(FSDJump))
+                    {
+                        Global.logger.Error("------------------------------------");
+                        Global.logger.Error(((FSDJump)newEvent).StarSystem);
+                    }
                 }
             }
             catch (JsonSerializationException e)
@@ -86,9 +79,10 @@ namespace Aurora.Profiles.EliteDangerous
 
         private void ReadAllJournalFiles()
         {
-            foreach (string logFile in Directory.GetFiles(journalFolder, "*.log")
+            foreach (string logFile in Directory.GetFiles(EliteConfig.JOURNAL_API_DIR, "*.log")
                 .OrderBy(p => new FileInfo(p).CreationTime))
             {
+                Global.logger.Error("****************" + logFile + "********************");
                 FileWatcher.ReadFileLines(logFile, JournalReadCallback);
             }
         }
@@ -96,11 +90,11 @@ namespace Aurora.Profiles.EliteDangerous
         public void WatchBindFiles()
         {
             StopWatchingBindFiles();
-            if (Directory.Exists(bindingsFolder))
+            if (Directory.Exists(EliteConfig.BINDINGS_DIR))
             {
                 bindWatcher = new FileSystemWatcher()
                 {
-                    Path = bindingsFolder,
+                    Path = EliteConfig.BINDINGS_DIR,
                     NotifyFilter = NotifyFilters.LastWrite,
                     EnableRaisingEvents = true
                 };
@@ -128,10 +122,10 @@ namespace Aurora.Profiles.EliteDangerous
 
         private void ReadBindFiles()
         {
-            if (File.Exists(bindingsPresetFile))
+            if (File.Exists(EliteConfig.BINDINGS_PRESET_FILE))
             {
-                string currentBindPrefix = File.ReadAllText(bindingsPresetFile).Trim();
-                foreach (string bindFile in Directory.GetFiles(bindingsFolder, currentBindPrefix + ".*.binds"))
+                string currentBindPrefix = File.ReadAllText(EliteConfig.BINDINGS_PRESET_FILE).Trim();
+                foreach (string bindFile in Directory.GetFiles(EliteConfig.BINDINGS_DIR, currentBindPrefix + ".*.binds"))
                 {
                     currentBindFile = bindFile;
                 }

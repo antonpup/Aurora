@@ -1,5 +1,10 @@
 ﻿namespace Aurora.Profiles.EliteDangerous.Journal.Events
 {
+    public class SystemFaction
+    {
+        public string Name;
+        public string FactionState;
+    }
     public class FSDJump : JournalEvent
     {
         public string StarSystem;
@@ -21,6 +26,6 @@
         public double FuelUsed;
         public double FuelLevel;
 
-        public string SystemFaction;
+        public SystemFaction SystemFaction;
     }
 }
