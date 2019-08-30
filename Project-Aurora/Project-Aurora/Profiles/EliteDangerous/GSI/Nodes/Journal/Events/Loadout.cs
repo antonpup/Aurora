@@ -8,8 +8,8 @@
     }
     public class LoadoutModuleEngineering {
         public string Engineer;
-        public long EngineerID;
-        public long BlueprintID;
+        public ulong EngineerID;
+        public ulong BlueprintID;
         public string BlueprintName;
         public int Level;
         public double Quality;
@@ -27,7 +27,7 @@
     public class Loadout : JournalEvent
     {
         public string Ship;
-        public int ShipID;
+        public ulong ShipID;
         public string ShipName;
         public string ShipIdent;
         public long HullValue;

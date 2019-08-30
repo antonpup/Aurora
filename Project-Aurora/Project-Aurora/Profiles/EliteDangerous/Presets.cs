@@ -525,7 +525,14 @@ namespace Aurora.Profiles.EliteDangerous
                 new GameStateCondition(
                     flagsSet: Flag.UNSPECIFIED,
                     flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE,
-                    callback: gameState => gameState.Journal.hasChaff
+                    callback: gameState =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.IN_FIGHTER))
+                        {
+                            return gameState.Journal.fighterLoadout.hasChaff;
+                        }
+                        return gameState.Journal.shipLoadout.hasChaff;
+                    }
                 )
             ),
 
@@ -536,7 +543,14 @@ namespace Aurora.Profiles.EliteDangerous
                 new GameStateCondition(
                     flagsSet: Flag.UNSPECIFIED,
                     flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET,
-                    callback: gameState => gameState.Journal.hasHeatSink
+                    callback: gameState =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.IN_FIGHTER))
+                        {
+                            return gameState.Journal.fighterLoadout.hasHeatSink;
+                        }
+                        return gameState.Journal.shipLoadout.hasHeatSink;
+                    }
                 )
             ),
 
@@ -547,7 +561,14 @@ namespace Aurora.Profiles.EliteDangerous
                 new GameStateCondition(
                     flagsSet: Flag.UNSPECIFIED,
                     flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET,
-                    callback: gameState => gameState.Journal.hasShieldCellBank
+                    callback: gameState =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.IN_FIGHTER))
+                        {
+                            return gameState.Journal.fighterLoadout.hasShieldCellBank;
+                        }
+                        return gameState.Journal.shipLoadout.hasShieldCellBank;
+                    }
                 )
             ),
 

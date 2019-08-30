@@ -70,6 +70,10 @@ namespace Aurora.Profiles.EliteDangerous
             }
             catch (JsonSerializationException e)
             {
+                Global.logger.Error("Error deserializing Journal event in " + currentJournalFile + " at line " + lineNumber);
+                Global.logger.Error(lineValue);
+                Global.logger.Error(e.Message);
+                Global.logger.Error(e.StackTrace);
             }
         }
 

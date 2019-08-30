@@ -83,5 +83,10 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public GuiFocus GuiFocus;
         public Fuel Fuel;
         public double Cargo;
+
+        public bool IsFlagSet(long flag)
+        {
+            return Flag.IsFlagSet(Flags, flag);
+        }
     }
 }
