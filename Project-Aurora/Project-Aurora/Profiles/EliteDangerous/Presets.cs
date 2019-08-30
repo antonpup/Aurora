@@ -458,10 +458,13 @@ namespace Aurora.Profiles.EliteDangerous
 
             new ControlGroup(new[]
             {
-                Command.OrderHoldPosition, Command.OrderFollow, Command.OrderAggressiveBehaviour,
-                Command.OrderRequestDock,
-                Command.OrderDefensiveBehaviour, Command.OrderFocusTarget
+                Command.OrderRequestDock, Command.OrderHoldPosition, Command.OrderFollow
             }, new GameStateCondition(gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
+            new ControlGroup(new[]
+            {
+                Command.OrderDefensiveBehaviour, Command.OrderAggressiveBehaviour,
+                Command.OrderFocusTarget, Command.OrderHoldFire
+            }, new GameStateCondition(gameState => gameState.Journal.fighterStatus == FighterStatus.Launched)),
 
             new ControlGroup(new[]
             {
@@ -553,11 +556,6 @@ namespace Aurora.Profiles.EliteDangerous
                 Command.TargetWingman0, Command.TargetWingman1,
                 Command.TargetWingman2, Command.SelectTargetsTarget, Command.WingNavLock
             }, new GameStateCondition(flagsSet: Flag.IN_WING)),
-            new ControlGroup(new[]
-            {
-                Command.OrderHoldFire
-            }, new GameStateCondition(gameState => gameState.Journal.fighterStatus != FighterStatus.None)),
-
             new ControlGroup(new[]
                 {
                     Command.ExplorationFSSEnter

@@ -20,8 +20,8 @@ namespace Aurora.Profiles.EliteDangerous
         readonly DelayedMethodCaller delayedFileRead = new DelayedMethodCaller(1);
         private FileSystemWatcher bindWatcher = null;
 
-        private string currentBindFile = null;
-        private FileWatcher statusFileWatcher;
+        private string currentBindFile, currentJournalFile;
+        private FileWatcher statusFileWatcher, journalFileWatcher;
 
         JsonSerializerSettings journalSerializerSettings = new JsonSerializerSettings()
         {
@@ -73,11 +73,31 @@ namespace Aurora.Profiles.EliteDangerous
             }
         }
 
+        private void WatchJournalFile()
+        {
+            StopWatchingJournalFile();
+            if (currentJournalFile != null)
+            {
+                journalFileWatcher = new FileWatcher(currentJournalFile, FileWatcher.ReadMode.TAIL_END, JournalReadCallback);
+                journalFileWatcher.Start();
+            }
+        }
+        
+        public void StopWatchingJournalFile()
+        {
+            if (journalFileWatcher != null)
+            {
+                journalFileWatcher.Stop();
+                journalFileWatcher = null;
+            }
+        }
+
         private void ReadAllJournalFiles()
         {
             foreach (string logFile in Directory.GetFiles(EliteConfig.JOURNAL_API_DIR, "*.log")
                 .OrderBy(p => new FileInfo(p).CreationTime))
             {
+                currentJournalFile = logFile;
                 FileWatcher.ReadFileLines(logFile, JournalReadCallback);
             }
         }
@@ -206,12 +226,14 @@ namespace Aurora.Profiles.EliteDangerous
             WatchBindFiles();
             statusFileWatcher.Start();
             ReadAllJournalFiles();
+            WatchJournalFile();
             //TODO: Enable Journal API reading
         }
 
         public override void OnStop()
         {
             StopWatchingBindFiles();
+            StopWatchingJournalFile();
             statusFileWatcher.Stop();
             //TODO: Disable Journal API reading
         }
