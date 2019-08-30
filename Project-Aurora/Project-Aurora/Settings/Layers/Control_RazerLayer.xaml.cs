@@ -80,15 +80,21 @@ namespace Aurora.Settings.Layers
 
         private void OnDeleteKeyCloneButtonClick(object sender, RoutedEventArgs e)
         {
-            if (KeyCloneListBox.SelectedItem == null)
+            if (KeyCloneListBox.SelectedItems == null)
                 return;
 
             var cloneMap = Context.Properties.KeyCloneMap;
-            var item = (KeyValuePair<DeviceKeys, DeviceKeys>)KeyCloneListBox.SelectedItem;
-            if (!cloneMap.ContainsKey(item.Key) || cloneMap[item.Key] != item.Value)
-                return;
+            foreach (var o in KeyCloneListBox.SelectedItems)
+            {
+                if (o is KeyValuePair<DeviceKeys, DeviceKeys> item)
+                {
+                    if (!cloneMap.ContainsKey(item.Key) || cloneMap[item.Key] != item.Value)
+                        continue;
 
-            cloneMap.Remove(item.Key);
+                    cloneMap.Remove(item.Key);
+                }
+            }
+
             CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
         }
 

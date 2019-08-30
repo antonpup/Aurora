@@ -105,7 +105,7 @@
                     </ComboBox>
                     <Button x:Name="AddKeyCloneButton" Grid.Column="3" Grid.Row="1" Content="+" Foreground="LightGreen" FontSize="15" Click="OnAddKeyCloneButtonClick"/>
 
-                    <ListBox x:Name="KeyCloneListBox" Grid.Row="2" Grid.ColumnSpan="3" Margin="5 10 5 0" ItemsSource="{Binding Properties._KeyCloneMap}" MinHeight="20" Grid.IsSharedSizeScope="True">
+                    <ListBox x:Name="KeyCloneListBox" Grid.Row="2" Grid.ColumnSpan="3" Margin="5 10 5 0" ItemsSource="{Binding Properties._KeyCloneMap}" MinHeight="20" Grid.IsSharedSizeScope="True" SelectionMode="Extended">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
