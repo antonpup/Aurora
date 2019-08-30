@@ -500,7 +500,7 @@ namespace Aurora.Profiles.EliteDangerous
 
             new ControlGroup(new[]
                 {
-                    Command.ToggleCargoScoop, Command.LandingGearToggle
+                    Command.ToggleCargoScoop, Command.LandingGearToggle, Command.ToggleButtonUpInput
                 },
                 new GameStateCondition(
                     flagsSet: Flag.UNSPECIFIED,
@@ -640,6 +640,11 @@ namespace Aurora.Profiles.EliteDangerous
         public static Dictionary<string, GameStateCondition> BLINKING_KEYS =
             new Dictionary<string, GameStateCondition>()
             {
+                {
+                    Command.ToggleButtonUpInput, new GameStateCondition(flagsSet:
+                        Flag.SILENT_RUNNING
+                    )
+                },
                 {
                     Command.LandingGearToggle, new GameStateCondition(flagsSet:
                         Flag.LANDING_GEAR,
