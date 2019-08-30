@@ -89,7 +89,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface! Devices from supported brands generally should work even if they aren't listed here.
 
 ### Asus
-* Most Asus peripherals should work
+* Most Asus devices should work
 
 ### Logitech
 
