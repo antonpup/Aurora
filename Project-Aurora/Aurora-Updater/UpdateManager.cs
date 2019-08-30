@@ -563,7 +563,7 @@ namespace Aurora_Updater
             if (lhs.FinalVersion == rhs.FinalVersion ||
                 lhs.MajorVersion == rhs.MajorVersion ||
                 lhs.MinorVersion == rhs.MinorVersion ||
-                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) == 0
+                String.Compare(rhs.AdditionalVersionModifier, lhs.AdditionalVersionModifier) == 0
                 )
                 return true;
 
@@ -580,7 +580,7 @@ namespace Aurora_Updater
             if (lhs.FinalVersion < rhs.FinalVersion ||
                 lhs.MajorVersion < rhs.MajorVersion ||
                 lhs.MinorVersion < rhs.MinorVersion ||
-                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) < 0
+                String.Compare(rhs.AdditionalVersionModifier, lhs.AdditionalVersionModifier) < 0
                 )
                 return true;
 
@@ -592,7 +592,7 @@ namespace Aurora_Updater
             if (lhs.FinalVersion > rhs.FinalVersion ||
                 lhs.MajorVersion > rhs.MajorVersion ||
                 lhs.MinorVersion > rhs.MinorVersion ||
-                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) > 0
+                String.Compare(rhs.AdditionalVersionModifier, lhs.AdditionalVersionModifier) > 0
                 )
                 return true;
 
@@ -604,7 +604,7 @@ namespace Aurora_Updater
             if (lhs.FinalVersion <= rhs.FinalVersion &&
                 lhs.MajorVersion <= rhs.MajorVersion &&
                 lhs.MinorVersion <= rhs.MinorVersion &&
-                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) <= 0
+                String.Compare(rhs.AdditionalVersionModifier, lhs.AdditionalVersionModifier) <= 0
                 )
                 return true;
 
@@ -616,7 +616,7 @@ namespace Aurora_Updater
             if (lhs.FinalVersion >= rhs.FinalVersion &&
                 lhs.MajorVersion >= rhs.MajorVersion &&
                 lhs.MinorVersion >= rhs.MinorVersion &&
-                String.Compare(lhs.AdditionalVersionModifier, rhs.AdditionalVersionModifier) >= 0
+                String.Compare(rhs.AdditionalVersionModifier, lhs.AdditionalVersionModifier) >= 0
                 )
                 return true;
 
