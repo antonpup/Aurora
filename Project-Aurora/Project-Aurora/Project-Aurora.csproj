@@ -317,6 +317,9 @@
       <HintPath>..\packages\Xceed.Wpf.Toolkit.2.9.15603.14400\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="YeeLightAPI, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YeeLightAPI_SnakePin.0.0.1\lib\netstandard2.0\YeeLightAPI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -438,6 +441,7 @@
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Wooting\WootingDevice.cs" />
+    <Compile Include="Devices\YeeLight\YeeLightDevice.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
