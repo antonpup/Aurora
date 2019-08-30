@@ -241,7 +241,7 @@ Many Chroma Connect compatible devices should work with Aurora assuming you have
 * Nanoleaf
 * LIFX
 * Philip Hue
- [Full List of Chroma Connect Compatible Devices here](https://www2.razer.com/chroma-workshop/connected-devices)
+* [Full List of Chroma Connect Compatible Devices here](https://www2.razer.com/chroma-workshop/connected-devices)
 
 
 ## Video demonstrations
