@@ -11,12 +11,14 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
         public bool IsDayTime;
         public bool IsRaining;
         public float RainStrength;
+        public int DimensionID;
 
         internal WorldNode(string json) : base(json) {
             WorldTime = GetLong("worldTime");
             IsDayTime = GetBool("isDayTime");
             IsRaining = GetBool("isRaining");
             RainStrength = GetFloat("rainStrength");
+            DimensionID = GetInt("dimensionID");
         }
     }
 }
