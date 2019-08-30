@@ -22,17 +22,17 @@ namespace Aurora.Profiles.EliteDangerous
 
         private string currentBindFile = null;
         private FileWatcher statusFileWatcher;
-        
+
         JsonSerializerSettings journalSerializerSettings = new JsonSerializerSettings()
         {
-            Converters = new List<JsonConverter>() { new JournalEventJsonConverter() }
+            Converters = new List<JsonConverter>() {new JournalEventJsonConverter()}
         };
 
         public GameEvent_EliteDangerous() : base()
         {
             statusFileWatcher = new FileWatcher(EliteConfig.STATUS_FILE, FileWatcher.ReadMode.FULL, StatusReadCallback);
         }
-        
+
         public void StatusReadCallback(int lineNumber, string lineValue)
         {
             if (string.IsNullOrEmpty(lineValue)) return;
@@ -41,7 +41,7 @@ namespace Aurora.Profiles.EliteDangerous
 
             @UpdateStatus(newStatus);
         }
-        
+
         public void UpdateStatus(Status newStatus)
         {
             Status status = (_game_state as GameState_EliteDangerous).Status;
@@ -60,8 +60,9 @@ namespace Aurora.Profiles.EliteDangerous
         {
             try
             {
-                JournalEvent newEvent = JsonConvert.DeserializeObject<JournalEvent>(lineValue, journalSerializerSettings);
-                if(newEvent != null)
+                JournalEvent newEvent =
+                    JsonConvert.DeserializeObject<JournalEvent>(lineValue, journalSerializerSettings);
+                if (newEvent != null)
                 {
                     //If the event is known, do something with it
                     (_game_state as GameState_EliteDangerous).Journal.ProcessEvent(newEvent);
@@ -69,28 +70,16 @@ namespace Aurora.Profiles.EliteDangerous
             }
             catch (JsonSerializationException e)
             {
-                
             }
         }
 
         private void ReadAllJournalFiles()
         {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            
             foreach (string logFile in Directory.GetFiles(EliteConfig.JOURNAL_API_DIR, "*.log")
                 .OrderBy(p => new FileInfo(p).CreationTime))
             {
-                Global.logger.Debug("****************" + logFile + "********************");
                 FileWatcher.ReadFileLines(logFile, JournalReadCallback);
             }
-            
-            stopWatch.Stop();
-            TimeSpan ts = stopWatch.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                ts.Hours, ts.Minutes, ts.Seconds,
-                ts.Milliseconds / 10);
-            Global.logger.Error("Journal read time " + elapsedTime);
         }
 
         public void WatchBindFiles()
@@ -131,7 +120,8 @@ namespace Aurora.Profiles.EliteDangerous
             if (File.Exists(EliteConfig.BINDINGS_PRESET_FILE))
             {
                 string currentBindPrefix = File.ReadAllText(EliteConfig.BINDINGS_PRESET_FILE).Trim();
-                foreach (string bindFile in Directory.GetFiles(EliteConfig.BINDINGS_DIR, currentBindPrefix + ".*.binds"))
+                foreach (string bindFile in Directory.GetFiles(EliteConfig.BINDINGS_DIR, currentBindPrefix + ".*.binds")
+                )
                 {
                     currentBindFile = bindFile;
                 }
