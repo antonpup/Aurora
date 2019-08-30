@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Principal;
 using System.Windows.Forms;
 using System.Linq;
+using Version = SemVer.Version;
 
 namespace Aurora_Updater
 {
@@ -27,8 +28,8 @@ namespace Aurora_Updater
         private static string passedArgs = "";
         private static bool isSilent = false;
         private static bool isSilentMinor = false;
-        private static UpdateVersion versionMajor;
-        private static UpdateVersion versionMinor;
+        private static Version versionMajor;
+        private static Version versionMinor;
         public static string exePath = "";
         private static UpdateType installType = UpdateType.Undefined;
         public static bool isElevated = false;
@@ -100,10 +101,10 @@ namespace Aurora_Updater
 
                 if (!String.IsNullOrWhiteSpace(_maj))
                 {
-                    UpdateVersion latestV = new UpdateVersion(StaticStorage.Manager.LatestRelease.TagName.TrimStart('v'));
-                    versionMajor = new UpdateVersion(_maj);
+                    Version latestV = new Version(StaticStorage.Manager.LatestRelease.TagName.TrimStart('v'), true);
+                    versionMajor = new Version(_maj);
 
-                    if (!(latestV <= versionMajor))
+                    if (latestV > versionMajor)
                     {
                         UpdateInfoForm userResult = new UpdateInfoForm()
                         {
