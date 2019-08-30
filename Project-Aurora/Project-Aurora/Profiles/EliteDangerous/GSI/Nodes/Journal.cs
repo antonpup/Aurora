@@ -8,6 +8,11 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         None, Launched, Unmanned
     }
 
+    public enum FSDState
+    {
+        Idle, JumpingSupercruise, JumpingHyperspace
+    }
+
     public class SimpleShipLoadout
     {
         public bool hasChaff;
@@ -21,6 +26,10 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         
         public SimpleShipLoadout shipLoadout = new SimpleShipLoadout();
         public SimpleShipLoadout fighterLoadout = new SimpleShipLoadout();
+        
+        public FSDState fsdState;
+        private long fsdChargeStartTime = -1;
+        public string jumpStarType = null;
         
         private bool nextLoadoutIsFighter = false;
         
@@ -49,6 +58,49 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
             nextLoadoutIsFighter = false;
         }
 
+        private void ResetFsd()
+        {
+            fsdState = FSDState.Idle;
+            fsdChargeStartTime = -1;
+        }
+
+        public void ProcessEventForFSD(JournalEvent journalEvent)
+        {
+            switch(journalEvent.@event) {
+                case EventType.StartJump:
+                    StartJump startJump = (StartJump) journalEvent;
+                    if(startJump.JumpType == JumpType.Hyperspace)
+                    {
+                        fsdState = FSDState.JumpingHyperspace;
+                        jumpStarType = startJump.StarClass.ToLower();
+                    } else {
+                        fsdState = FSDState.JumpingSupercruise;
+                        jumpStarType = null;
+                    }
+
+                    //Should start FSD countdown animation
+                    fsdChargeStartTime = Utils.Time.GetMillisecondsSinceEpoch();
+                    break;
+                case EventType.SupercruiseEntry:
+                    ResetFsd();
+                    break;
+                case EventType.SupercruiseExit:
+                    ResetFsd();
+                    break;
+                case EventType.FSDJump:
+                    ResetFsd();
+                    //Should stop hyperspace animation
+                    break;
+                case EventType.Music:
+                    if (fsdState != FSDState.JumpingHyperspace && ((Music) journalEvent).MusicTrack.Equals("NoTrack"))
+                    {
+                        ResetFsd();
+                        //Should start hyperspace animation
+                    }
+                    break;
+            }
+        }
+
         public void ProcessEvent(JournalEvent journalEvent)
         {
             switch (journalEvent.@event) {
@@ -64,6 +116,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                     SetModulesFromLoadout((Loadout) journalEvent);
                     break;
             }
+            
+            ProcessEventForFSD(journalEvent);
         }
     }
 }
