@@ -71,7 +71,7 @@ namespace Aurora.Settings.Layers
                 return;
 
             var cloneMap = Context.Properties.KeyCloneMap;
-            if (cloneMap.ContainsKey(destKey) && cloneMap[destKey] == sourceKey)
+            if (cloneMap.ContainsKey(destKey))
                 return;
 
             cloneMap.Add(destKey, sourceKey);
