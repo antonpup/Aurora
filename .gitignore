@@ -228,6 +228,7 @@ Project-Aurora/Project-Aurora.VC.opendb
 Project-Aurora/Project-Aurora.VC.db
 Web Installer/output/*
 Project-Aurora/.vs/*
+Project-Aurora/.idea/*
 
 # NuGet Packages
 *.nupkg

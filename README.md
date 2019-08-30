@@ -36,7 +36,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 4. Run "Aurora.exe", from that point, Aurora should provide you with further instructions and options.
 
 ## Natively Supported Games
-
+* Apex Legends
 * American Truck Simulator
 * Battlefield 1
 * Battlefield 3
@@ -53,6 +53,7 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Euro Truck Simulator 2
 * Evolve Stage 2
 * Factorio
+* Fortnite
 * Grand Theft Auto V
 * Guild Wars 2
 * Hotline Miami
@@ -73,16 +74,22 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 * Robot Roller-Derby Disco Dodgeball
 * Rocket League
 * Serious Sam 3
+* Slime Rancher
 * Subnautica
 * The Division
 * The Talos Principle
 * The Witcher 3
 * Worms W.M.D
 * XCOM: Enemy Unknown
+* Warframe
+* and many more games natively supported by [Razer](https://www2.razer.com/chroma-workshop/games), [Logitech](https://www.logitechg.com/en-sg/microsite/lightsync) and [LightFX](https://eu.alienwarearena.com/groups/alienfx/links)
 
 ## Natively Supported Devices
 
 If you don't see some of these devices in the menu, select a similar one and it will probably work. Submit an issue for proper support in the interface! Devices from supported brands generally should work even if they aren't listed here.
+
+### Asus
+* Most Asus devices should work
 
 ### Logitech
 
@@ -110,7 +117,7 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ### Corsair
 
-* Most Keyboards, Mice, Headsets and mousepads should work.
+* Most Corsair devices should work.
 
 #### Keyboards
 
@@ -132,6 +139,10 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 * MM800 Mousepad
 * ST100 Headset Stand
+* RAM
+* LED Strips
+* Fans
+* Cooler
 
 ### Razer
 
@@ -222,6 +233,15 @@ If you don't see some of these devices in the menu, select a similar one and it 
 * x72
 
 #### Hue+
+
+### Yeelight
+
+### More Devices support using Chroma Connect
+Many Chroma Connect compatible devices should work with Aurora assuming you have latest Razer SDK or Synapse installed. For Example:
+* Nanoleaf
+* LIFX
+* [Full List of Chroma Connect Compatible Devices here](https://www2.razer.com/chroma-workshop/connected-devices)
+
 
 ### Philips Hue
 
