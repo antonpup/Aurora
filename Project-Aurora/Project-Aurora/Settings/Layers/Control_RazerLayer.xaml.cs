@@ -75,6 +75,8 @@ namespace Aurora.Settings.Layers
                 return;
 
             cloneMap.Add(destKey, sourceKey);
+
+            KeyCloneDestinationButtonComboBox.SelectedItem = null;
             CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
         }
 
