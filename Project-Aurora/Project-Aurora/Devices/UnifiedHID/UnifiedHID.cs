@@ -307,7 +307,7 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        public bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue)
+        public virtual bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue)
         {
             if (this.deviceKeyMap.TryGetValue(key, out Func<byte, byte, byte, bool> func))
                 return func.Invoke(red, green, blue);
