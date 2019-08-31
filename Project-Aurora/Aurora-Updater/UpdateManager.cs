@@ -77,11 +77,11 @@ namespace Aurora_Updater
         private GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-updater"));
         public Release LatestRelease;
 
-        public UpdateManager()
+        public UpdateManager(Version version)
         {
             LoadSettings();
             PerformCleanup();
-            FetchData();
+            FetchData(version);
         }
 
         public void LoadSettings()
@@ -111,7 +111,7 @@ namespace Aurora_Updater
             return (int)((downloadProgess + extractProgess) / 2.0f * 100.0f);
         }
 
-        private bool FetchData()
+        private bool FetchData(Version version)
         {
 
             
@@ -119,7 +119,7 @@ namespace Aurora_Updater
 
             try
             {
-                if (Config.GetDevReleases)
+                if (Config.GetDevReleases || !String.IsNullOrWhiteSpace(version.PreRelease))
                     LatestRelease = gClient.Repository.Release.GetAll("antonpup", "Aurora", new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
                 else
                     LatestRelease = gClient.Repository.Release.GetLatest("antonpup", "Aurora").Result;
