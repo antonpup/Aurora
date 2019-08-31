@@ -17,6 +17,7 @@ using System.Windows.Data;
 using RazerSdkWrapper.Utils;
 using System.Net;
 using RazerSdkWrapper.Data;
+using System.Windows.Threading;
 
 namespace Aurora.Settings
 {
@@ -167,7 +168,7 @@ namespace Aurora.Settings
 
                     appList.Update();
                     Global.logger.Debug("RazerManager current app: {0} [{1}]", appList.CurrentAppExecutable ?? "None", appList.CurrentAppPid);
-                    Dispatcher.Invoke(() => this.razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]");
+                    Dispatcher.BeginInvoke(DispatcherPriority.Background, (System.Action)(() => this.razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]"));
                 };
             }
             else
