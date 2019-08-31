@@ -840,8 +840,8 @@ namespace Aurora.Settings
                 {
                     case 3010:
                         {
-                            Xceed.Wpf.Toolkit.MessageBox.Show("Razer SDK requested system restart!\nPlease reboot your pc and re-run the installation.",
-                                "Restart required!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                            Application.Current.Dispatcher.Invoke(() => Xceed.Wpf.Toolkit.MessageBox.Show("Razer SDK requested system restart!\nPlease reboot your pc and re-run the installation.",
+                                "Restart required!", MessageBoxButton.OK, MessageBoxImage.Exclamation));
                             return false;
                         }
                 }
@@ -871,8 +871,8 @@ namespace Aurora.Settings
                 }
                 catch (OperationCanceledException ex)
                 {
-                    Xceed.Wpf.Toolkit.MessageBox.Show($"{ex.Message}:\n{ex.InnerException.ToString()}",
-                        "Exception!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Application.Current.Dispatcher.Invoke(() => Xceed.Wpf.Toolkit.MessageBox.Show($"{ex.Message}:\n{ex.InnerException.ToString()}",
+                        "Exception!", MessageBoxButton.OK, MessageBoxImage.Error));
                     return false;
                 }
 
@@ -882,8 +882,8 @@ namespace Aurora.Settings
                 if (t.Result)
                 {
                     SetState("Success!");
-                    Xceed.Wpf.Toolkit.MessageBox.Show("Installation successful!\nPlease restart Aurora for changes to take effect.",
-                        "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Application.Current.Dispatcher.Invoke(() => Xceed.Wpf.Toolkit.MessageBox.Show("Installation successful!\nPlease restart Aurora for changes to take effect.",
+                        "Success!", MessageBoxButton.OK, MessageBoxImage.Information));
                 }
                 else
                 {
