@@ -12,9 +12,6 @@ namespace Aurora.Devices.UnifiedHID
 
     internal class RoccatTyon : UnifiedBase
     {
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        static internal extern bool WriteFile(IntPtr hFile, IntPtr lpBuffer, uint nNumberOfBytesToWrite, out uint lpNumberOfBytesWritten, [System.Runtime.InteropServices.In] ref System.Threading.NativeOverlapped lpOverlapped);
-
         private static HidDevice ctrl_device_leds;
         private static HidDevice ctrl_device;
 
