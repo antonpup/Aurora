@@ -1,32 +1,63 @@
 ﻿namespace Aurora.Profiles.RocketLeague.GSI.Nodes
 {
     /// <summary>
+    /// Represents the match type in rocketleague
+    /// </summary>
+    public enum RocketLeagueMatchType
+    {
+        Replay,
+        OnlineGame,
+        Freeplay,
+        Training,
+        Spectate,
+        None
+    };
+
+    public enum RocketLeagueGameMode
+    {
+        Soccar,
+        Hoops,
+        SnowDay,
+        Dropshot
+    }
+
+    /// <summary>
     /// Class representing match information
     /// </summary>
     public class Match_RocketLeague : Node<Match_RocketLeague>
     {
         /// <summary>
-        /// Blue team's score
+        /// The type the current match is
         /// </summary>
-        public int BlueTeam_Score = 0;
+        public RocketLeagueMatchType Type;
 
         /// <summary>
-        /// Orange team's score
+        /// The current mode being played
         /// </summary>
-        public int OrangeTeam_Score = 0;
+        public RocketLeagueGameMode Mode;
 
         /// <summary>
-        /// Your team's previous score
+        /// The Blue team playing in the match
         /// </summary>
-        public int YourTeam_LastScore = 0;
+        public Team_RocketLeague Blue;
 
         /// <summary>
-        /// Enemy team's previous score
+        /// The Blue team playing in the match
         /// </summary>
-        public int EnemyTeam_LastScore = 0;
+        public Team_RocketLeague Orange;
+
+        /// <summary>
+        /// Remaining seconds in the match
+        /// </summary>
+        public int RemainingSeconds = 0;
 
         internal Match_RocketLeague(string json_data) : base(json_data)
         {
+            Blue = new Team_RocketLeague(_ParsedData["team_0"]?.ToString() ?? "");
+            Orange = new Team_RocketLeague(_ParsedData["team_1"]?.ToString() ?? "");
+            Type = GetEnum<RocketLeagueMatchType>("type");
+            Mode = GetEnum<RocketLeagueGameMode>("mode");
+            RemainingSeconds = GetInt("time");
         }
     }
 }

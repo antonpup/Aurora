@@ -39,9 +39,9 @@ namespace Aurora.Profiles.RocketLeague
 
             if (!this.preview_team.HasItems)
             {
-                this.preview_team.Items.Add(PlayerTeam.Spectator);
-                this.preview_team.Items.Add(PlayerTeam.Blue);
-                this.preview_team.Items.Add(PlayerTeam.Orange);
+                this.preview_team.Items.Add(RocketLeagueTeam.Spectator);
+                this.preview_team.Items.Add(RocketLeagueTeam.Blue);
+                this.preview_team.Items.Add(RocketLeagueTeam.Orange);
             }
         }
 
@@ -56,7 +56,7 @@ namespace Aurora.Profiles.RocketLeague
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.Team = (PlayerTeam)this.preview_team.SelectedItem;
+            (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.Team = (RocketLeagueTeam)this.preview_team.SelectedItem;
         }
 
         private void preview_boost_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -66,20 +66,20 @@ namespace Aurora.Profiles.RocketLeague
                 this.preview_boost_amount_label.Text = (int)((sender as Slider).Value)+"%";
 
                 if(IsLoaded)
-                    (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.BoostAmount = (int)((sender as Slider).Value);
+                    (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.Boost = (int)((sender as Slider).Value);
             }
         }
 
         private void preview_team1_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if(IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
-                (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.OrangeTeam_Score = (sender as IntegerUpDown).Value.Value;
+            //if(IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
+            //    (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.OrangeTeam_Score = (sender as IntegerUpDown).Value.Value;
         }
 
         private void preview_team2_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
-                (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.BlueTeam_Score = (sender as IntegerUpDown).Value.Value;
+            //if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
+            //    (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.BlueTeam_Score = (sender as IntegerUpDown).Value.Value;
         }
     }
 }

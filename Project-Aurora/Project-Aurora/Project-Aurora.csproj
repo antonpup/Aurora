@@ -367,6 +367,7 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
     </Compile>
@@ -624,7 +625,6 @@
     <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
       <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
@@ -633,7 +633,6 @@
     </Compile>
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
     <Compile Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\GameState_Slime_Rancher.cs" />

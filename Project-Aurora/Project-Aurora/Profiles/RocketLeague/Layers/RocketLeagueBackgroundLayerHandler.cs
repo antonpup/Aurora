@@ -69,21 +69,6 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
     public class RocketLeagueBackgroundLayerHandler : LayerHandler<RocketLeagueBackgroundLayerHandlerProperties>
     {
-        private AnimationTrack goal_explosion_track = new AnimationTrack( "Goal Explosion Track", 1.0f, 0.0f );
-        private AnimationTrack goal_explosion_track_1 = new AnimationTrack( "Goal Explosion Track_1", 1.0f, 0.5f );
-        private AnimationTrack goal_explosion_track_2 = new AnimationTrack( "Goal Explosion Track_2", 1.0f, 1.0f );
-        private AnimationTrack goal_explosion_track_3 = new AnimationTrack( "Goal Explosion Track_3", 1.0f, 1.5f );
-        private AnimationTrack goal_explosion_track_4 = new AnimationTrack( "Goal Explosion Track_4", 1.0f, 2.0f );
-
-
-        private long previoustime = 0;
-        private long currenttime = 0;
-
-        private static float goalEffect_keyframe = 0.0f;
-        private const float goalEffect_animationTime = 3.0f;
-
-        private bool showAnimation_Explosion = false;
-
         public RocketLeagueBackgroundLayerHandler() : base()
         {
             _ID = "RocketLeagueBackground";
@@ -96,9 +81,6 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            previoustime = currenttime;
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
-
             EffectLayer bg_layer = new EffectLayer( "Rocket League - Background" );
             AnimationMix goal_explosion_mix = new AnimationMix();
             Color playerColor = new Color();
@@ -111,12 +93,12 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
                 switch (rlstate.Player.Team)
                 {
-                    case PlayerTeam.Blue:
+                    case RocketLeagueTeam.Blue:
                         bg_layer.Fill(Properties.BlueColor);
                         playerColor = Properties.BlueColor;
                         enemyColor = Properties.OrangeColor;
                         break;
-                    case PlayerTeam.Orange:
+                    case RocketLeagueTeam.Orange:
                         bg_layer.Fill(Properties.OrangeColor);
                         playerColor = Properties.OrangeColor;
                         enemyColor = Properties.BlueColor;
@@ -131,9 +113,9 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 if (Properties.ShowTeamScoreSplit)
                 {
 
-                    if (rlstate.Match.BlueTeam_Score != 0 || rlstate.Match.OrangeTeam_Score != 0)
+                    if (rlstate.Match.Blue.Goals != 0 || rlstate.Match.Orange.Goals != 0)
                     {
-                        int total_score = rlstate.Match.BlueTeam_Score + rlstate.Match.OrangeTeam_Score;
+                        int total_score = rlstate.Match.Blue.Goals + rlstate.Match.Orange.Goals;
 
 
                         LinearGradientBrush the__split_brush = new LinearGradientBrush(
@@ -150,18 +132,18 @@ namespace Aurora.Profiles.RocketLeague.Layers
                         int num_colors = colors.Length;
                         float[] blend_positions = new float[num_colors];
 
-                        if (rlstate.Match.OrangeTeam_Score > rlstate.Match.BlueTeam_Score)
+                        if (rlstate.Match.Orange.Goals > rlstate.Match.Blue.Goals)
                         {
                             blend_positions[0] = 0.0f;
-                            blend_positions[1] = ((float)rlstate.Match.OrangeTeam_Score / (float)total_score) - 0.01f;
-                            blend_positions[2] = ((float)rlstate.Match.OrangeTeam_Score / (float)total_score) + 0.01f;
+                            blend_positions[1] = ((float)rlstate.Match.Orange.Goals / (float)total_score) - 0.01f;
+                            blend_positions[2] = ((float)rlstate.Match.Orange.Goals / (float)total_score) + 0.01f;
                             blend_positions[3] = 1.0f;
                         }
-                        else if (rlstate.Match.OrangeTeam_Score < rlstate.Match.BlueTeam_Score)
+                        else if (rlstate.Match.Orange.Goals < rlstate.Match.Blue.Goals)
                         {
                             blend_positions[0] = 0.0f;
-                            blend_positions[1] = (1.0f - ((float)rlstate.Match.BlueTeam_Score / (float)total_score)) - 0.01f;
-                            blend_positions[2] = (1.0f - ((float)rlstate.Match.BlueTeam_Score / (float)total_score)) + 0.01f;
+                            blend_positions[1] = (1.0f - ((float)rlstate.Match.Blue.Goals / (float)total_score)) - 0.01f;
+                            blend_positions[2] = (1.0f - ((float)rlstate.Match.Blue.Goals / (float)total_score)) + 0.01f;
                             blend_positions[3] = 1.0f;
                         }
                         else
@@ -181,114 +163,6 @@ namespace Aurora.Profiles.RocketLeague.Layers
                     }
                 }
 
-                if (Properties.ShowGoalExplosion)
-                {
-                    if (rlstate.Match.YourTeam_LastScore < (rlstate.Player.Team == PlayerTeam.Blue ? rlstate.Match.BlueTeam_Score
-                                                                                     : rlstate.Match.OrangeTeam_Score))
-                    {
-                        goal_explosion_track.SetFrame(0.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
-                        );
-                        goal_explosion_track.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
-                        );
-
-                        goal_explosion_track_1.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
-                       );
-                        goal_explosion_track_1.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
-                        );
-
-                        goal_explosion_track_2.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
-                       );
-                        goal_explosion_track_2.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
-                        );
-
-                        goal_explosion_track_3.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
-                       );
-                        goal_explosion_track_3.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
-                        );
-
-                        goal_explosion_track_4.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, playerColor, 4)
-                       );
-                        goal_explosion_track_4.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, playerColor, 4)
-                        );
-
-                        goal_explosion_mix.Clear();
-                        showAnimation_Explosion = true;
-                    }
-                }
-
-                if (Properties.ShowEnemyExplosion)
-                {
-                    if (rlstate.Match.EnemyTeam_LastScore < (rlstate.Player.Team == PlayerTeam.Orange ? rlstate.Match.BlueTeam_Score
-                                                                                 : rlstate.Match.OrangeTeam_Score))
-                    {
-                        goal_explosion_track.SetFrame(0.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                        );
-                        goal_explosion_track.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                        );
-
-                        goal_explosion_track_1.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                       );
-                        goal_explosion_track_1.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                        );
-
-                        goal_explosion_track_2.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                       );
-                        goal_explosion_track_2.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                        );
-
-                        goal_explosion_track_3.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                       );
-                        goal_explosion_track_3.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                        );
-
-                        goal_explosion_track_4.SetFrame(0.0f,
-                           new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, 0, enemyColor, 4)
-                       );
-                        goal_explosion_track_4.SetFrame(1.0f,
-                            new AnimationCircle((int)(Effects.canvas_width_center * 0.9), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, enemyColor, 4)
-                        );
-
-                        goal_explosion_mix.Clear();
-                        showAnimation_Explosion = true;
-                    }
-                }
-
-                if (showAnimation_Explosion)
-                {
-                    bg_layer.Fill(Color.FromArgb(0, 0, 0));
-                    goal_explosion_mix.AddTrack(goal_explosion_track);
-                    goal_explosion_mix.AddTrack(goal_explosion_track_1);
-                    goal_explosion_mix.AddTrack(goal_explosion_track_2);
-                    goal_explosion_mix.AddTrack(goal_explosion_track_3);
-                    goal_explosion_mix.AddTrack(goal_explosion_track_4);
-
-                    goal_explosion_mix.Draw(bg_layer.GetGraphics(), goalEffect_keyframe);
-                    goalEffect_keyframe += (currenttime - previoustime) / 1000.0f;
-
-                    if (goalEffect_keyframe >= goalEffect_animationTime)
-                    {
-                        showAnimation_Explosion = false;
-                        goalEffect_keyframe = 0;
-                    }
-                }
             }
             return bg_layer;
         }

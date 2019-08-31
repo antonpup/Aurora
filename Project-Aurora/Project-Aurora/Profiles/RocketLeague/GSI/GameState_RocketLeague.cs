@@ -8,8 +8,8 @@ namespace Aurora.Profiles.RocketLeague.GSI
     /// </summary>
     public class GameState_RocketLeague : GameState<GameState_RocketLeague>
     {
-        private Player_RocketLeague player;
-        private Match_RocketLeague match;
+        private Player_RocketLeague _Player;
+        private Match_RocketLeague _Match;
 
         /// <summary>
         /// Information about the local player
@@ -18,10 +18,10 @@ namespace Aurora.Profiles.RocketLeague.GSI
         {
             get
             {
-                if (player == null)
-                    player = new Player_RocketLeague("");
+                if (_Player == null)
+                    _Player = new Player_RocketLeague(_ParsedData["player"]?.ToString() ?? "");
 
-                return player;
+                return _Player;
             }
         }
 
@@ -32,10 +32,10 @@ namespace Aurora.Profiles.RocketLeague.GSI
         {
             get
             {
-                if (match == null)
-                    match = new Match_RocketLeague("");
+                if (_Match == null)
+                    _Match = new Match_RocketLeague(_ParsedData["match"]?.ToString() ?? "");
 
-                return match;
+                return _Match;
             }
         }
 
