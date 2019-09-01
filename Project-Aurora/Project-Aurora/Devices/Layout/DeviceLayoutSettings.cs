@@ -71,7 +71,7 @@ namespace Aurora.Devices.Layout
 
         public override void Default()
         {
-            _devices.Add(KeyboardDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new KeyboardDeviceLayout() { Style = KeyboardDeviceLayout.PreferredKeyboard.Wooting_One, Language = KeyboardDeviceLayout.PreferredKeyboardLocalization.uk } });
+            _devices.Add(KeyboardDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new KeyboardDeviceLayout() { Style = PreferredKeyboard.Wooting_One, Language = PreferredKeyboardLocalization.uk } });
             _devices.Add(MouseDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new MouseDeviceLayout() { Style = MouseDeviceLayout.PreferredMouse.SteelSeries_Rival_300 } });
         }
     }

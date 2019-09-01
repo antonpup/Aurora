@@ -499,11 +499,11 @@ namespace Aurora.Devices.Razer
             }
         }
 
-        private int[] GetKeyCoord(KeyboardKeys key, KeyboardDeviceLayout.PreferredKeyboard keyLayout)
+        private int[] GetKeyCoord(KeyboardKeys key, PreferredKeyboard keyLayout)
         {
             Dictionary<KeyboardKeys, int[]> layout = RazerLayoutMap.GenericKeyboard;
 
-            if (keyLayout == KeyboardDeviceLayout.PreferredKeyboard.Razer_Blade)
+            if (keyLayout == PreferredKeyboard.Razer_Blade)
                 layout = RazerLayoutMap.Blade;
 
             if (layout.ContainsKey(key))

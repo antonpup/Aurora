@@ -1,5 +1,6 @@
 ﻿using Aurora.Devices;
 using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 using Aurora.Profiles.Desktop;
 using Aurora.Profiles.GTA5;
 using Aurora.Profiles.Payday_2.GSI.Nodes;
@@ -149,7 +150,7 @@ namespace Aurora.Utils
 
     public class KbBrandToStringVC : EnumToStringVC
     {
-        public KbBrandToStringVC() : base(Devices.Layout.Layouts.KeyboardDeviceLayout.PreferredKeyboard.None) { }
+        public KbBrandToStringVC() : base(PreferredKeyboard.None) { }
     }
 
     public class MouseBrandToStringVC : EnumToStringVC

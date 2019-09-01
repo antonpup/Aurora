@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Settings.Keycaps
 {
@@ -133,7 +134,7 @@ namespace Aurora.Settings.Keycaps
                     keyBorder.BorderThickness = new Thickness(0);
                 }
             }
-            //UpdateText();
+            UpdateText();
         }
 
         private void keyBorder_MouseDown(object sender, MouseButtonEventArgs e)
@@ -182,22 +183,22 @@ namespace Aurora.Settings.Keycaps
                 virtualkeyboard_key_selected(associatedKey);
         }
 
-        /*public void UpdateText()
+        public void UpdateText()
         {
-            if (Global.kbLayout.Loaded_Localization.IsAutomaticGeneration())
+            if (this.associatedKey.Layout is KeyboardDeviceLayout kb && kb.Language.IsAutomaticGeneration())
             {
 
                 //if (keyCap.Text.Length > 1)
                 //    return;
 
                 StringBuilder sb = new StringBuilder(2);
-                var scan_code = KeyUtils.GetScanCode(associatedKey);
+                var scan_code = KeyUtils.GetScanCode((KeyboardKeys)associatedKey.LedID);
                 if (scan_code == -1)
                     return;
 
                 int ret = KeyUtils.GetKeyNameTextW((uint)scan_code << 16, sb, 2);
                 keyCap.Text = sb.ToString();
             }
-        }*/
+        }
     }
 }

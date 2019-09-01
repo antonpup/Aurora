@@ -354,7 +354,7 @@ namespace Aurora.Devices.Logitech
         {
             try
             {
-                bool isZoneKeyboard = keyboard.Style == KeyboardDeviceLayout.PreferredKeyboard.Logitech_G213;
+                bool isZoneKeyboard = keyboard.Style == PreferredKeyboard.Logitech_G213;
 
                 if (!isZoneKeyboard)
                 {

@@ -377,11 +377,9 @@ namespace Aurora.Devices.Roccat
             try
             {
                 RoccatDeviceLayout layout = RoccatDeviceLayout.ISO;
-                if (kb.Language == KeyboardDeviceLayout.PreferredKeyboardLocalization.dvorak
-                    || kb.Language == KeyboardDeviceLayout.PreferredKeyboardLocalization.us
-                    || kb.Language == KeyboardDeviceLayout.PreferredKeyboardLocalization.ru)
+                if (kb.Language.IsANSI())
                     layout = RoccatDeviceLayout.ANSI;
-                else if (kb.Language == KeyboardDeviceLayout.PreferredKeyboardLocalization.jpn)
+                else if (kb.Language == PreferredKeyboardLocalization.jpn)
                     layout = RoccatDeviceLayout.JP;
 
                 foreach (KeyValuePair<LEDINT, System.Drawing.Color> key in kb.DeviceColours.deviceColours)

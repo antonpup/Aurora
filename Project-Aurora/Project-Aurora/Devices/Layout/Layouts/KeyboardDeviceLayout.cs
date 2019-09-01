@@ -1189,147 +1189,168 @@ namespace Aurora.Devices.Layout.Layouts
         NONE = -1,
     };
 
-    
+    public enum PreferredKeyboard
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Generic Laptop")]
+        GenericLaptop = 1,
+
+        [Description("Generic Laptop (Numpad)")]
+        GenericLaptopNumpad = 2,
+        /*
+        [Description("Logitech")]
+        Logitech = 1,
+        [Description("Corsair")]
+        Corsair = 2,
+        [Description("Razer")]
+        Razer = 3,
+
+        [Description("Clevo")]
+        Clevo = 4,
+        [Description("Cooler Master")]
+        CoolerMaster = 5,
+        */
+
+        //Logitech range is 100-199
+        [Description("Logitech - G910")]
+        Logitech_G910 = 100,
+        [Description("Logitech - G410")]
+        Logitech_G410 = 101,
+        [Description("Logitech - G810")]
+        Logitech_G810 = 102,
+        [Description("Logitech - GPRO")]
+        Logitech_GPRO = 103,
+        [Description("Logitech - G213")]
+        Logitech_G213 = 104,
+
+        //Corsair range is 200-299
+        [Description("Corsair - K95")]
+        Corsair_K95 = 200,
+        [Description("Corsair - K70")]
+        Corsair_K70 = 201,
+        [Description("Corsair - K65")]
+        Corsair_K65 = 202,
+        [Description("Corsair - STRAFE")]
+        Corsair_STRAFE = 203,
+        [Description("Corsair - K95 Platinum")]
+        Corsair_K95_PL = 204,
+        [Description("Corsair - K68")]
+        Corsair_K68 = 205,
+        [Description("Corsair - K70 MK2")]
+        Corsair_K70MK2 = 206
+                ,
+        //Razer range is 300-399
+        [Description("Razer - Blackwidow")]
+        Razer_Blackwidow = 300,
+        [Description("Razer - Blackwidow X")]
+        Razer_Blackwidow_X = 301,
+        [Description("Razer - Blackwidow Tournament Edition")]
+        Razer_Blackwidow_TE = 302,
+        [Description("Razer - Blade")]
+        Razer_Blade = 303,
+
+        //Clevo range is 400-499
+
+        //Cooler Master range is 500-599
+        [Description("Cooler Master - Masterkeys Pro L")]
+        Masterkeys_Pro_L = 500,
+        [Description("Cooler Master - Masterkeys Pro S")]
+        Masterkeys_Pro_S = 501,
+        [Description("Cooler Master - Masterkeys Pro M")]
+        Masterkeys_Pro_M = 502,
+        [Description("Cooler Master - Masterkeys MK750")]
+        Masterkeys_MK750 = 503,
+
+        //Roccat range is 600-699
+        [Description("Roccat Ryos")]
+        Roccat_Ryos = 600,
+
+        //Steelseries range is 700-799
+        [Description("SteelSeries Apex M800")]
+        SteelSeries_Apex_M800 = 700,
+        [Description("SteelSeries Apex M750")]
+        SteelSeries_Apex_M750 = 701,
+        [Description("SteelSeries Apex M750 TKL")]
+        SteelSeries_Apex_M750_TKL = 702,
+
+        [Description("Wooting One")]
+        Wooting_One = 800,
+        [Description("Wooting Two")]
+        Wooting_Two = 801,
+
+        [Description("Asus Strix Flare")]
+        Asus_Strix_Flare = 900,
+
+        //Drevo range is 1000-1099
+        [Description("Drevo BladeMaster")]
+        Drevo_BladeMaster = 1000,
+
+        //Creative range is 1100-1199
+        [Description("SoundBlasterX VanguardK08")]
+        SoundBlasterX_Vanguard_K08 = 1100,
+    }
+
+    public enum PreferredKeyboardLocalization
+    {
+        [Description("Automatic Detection")]
+        None = 0,
+        [Description("International")]
+        intl = 1,
+        [Description("United States")]
+        us = 2,
+        [Description("United Kingdom")]
+        uk = 3,
+        [Description("Russian")]
+        ru = 4,
+        [Description("French")]
+        fr = 5,
+        [Description("Deutsch")]
+        de = 6,
+        [Description("Japanese")]
+        jpn = 7,
+        [Description("Turkish")]
+        tr = 8,
+        [Description("Nordic")]
+        nordic = 9,
+        [Description("Swiss")]
+        swiss = 10,
+        [Description("Portuguese (Brazilian ABNT2)")]
+        abnt2 = 11,
+        [Description("DVORAK (US)")]
+        dvorak = 12,
+        [Description("DVORAK (INT)")]
+        dvorak_int = 13,
+        [Description("Hungarian")]
+        hu = 14,
+        [Description("Italian")]
+        it = 15,
+        [Description("Latin America")]
+        la = 16,
+        [Description("Spanish")]
+        es = 17,
+        [Description("ISO - Automatic (Experimental)")]
+        iso = 18,
+        [Description("ANSI - Automatic (Experimental)")]
+        ansi = 19,
+    }
+    public static class ExtensionHelpers
+    {
+        public static bool IsAutomaticGeneration(this PreferredKeyboardLocalization self)
+        {
+            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.iso;
+        }
+
+        public static bool IsANSI(this PreferredKeyboardLocalization self)
+        {
+            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.dvorak || self == PreferredKeyboardLocalization.us;
+        }
+    }
+
 
     public class KeyboardDeviceLayout : DeviceLayout
     {
-
-        public enum PreferredKeyboard
-        {
-            [Description("None")]
-            None = 0,
-
-            [Description("Generic Laptop")]
-            GenericLaptop = 1,
-
-            [Description("Generic Laptop (Numpad)")]
-            GenericLaptopNumpad = 2,
-            /*
-            [Description("Logitech")]
-            Logitech = 1,
-            [Description("Corsair")]
-            Corsair = 2,
-            [Description("Razer")]
-            Razer = 3,
-
-            [Description("Clevo")]
-            Clevo = 4,
-            [Description("Cooler Master")]
-            CoolerMaster = 5,
-            */
-
-            //Logitech range is 100-199
-            [Description("Logitech - G910")]
-            Logitech_G910 = 100,
-            [Description("Logitech - G410")]
-            Logitech_G410 = 101,
-            [Description("Logitech - G810")]
-            Logitech_G810 = 102,
-            [Description("Logitech - GPRO")]
-            Logitech_GPRO = 103,
-            [Description("Logitech - G213")]
-            Logitech_G213 = 104,
-
-            //Corsair range is 200-299
-            [Description("Corsair - K95")]
-            Corsair_K95 = 200,
-            [Description("Corsair - K70")]
-            Corsair_K70 = 201,
-            [Description("Corsair - K65")]
-            Corsair_K65 = 202,
-            [Description("Corsair - STRAFE")]
-            Corsair_STRAFE = 203,
-            [Description("Corsair - K95 Platinum")]
-            Corsair_K95_PL = 204,
-            [Description("Corsair - K68")]
-            Corsair_K68 = 205,
-            [Description("Corsair - K70 MK2")]
-            Corsair_K70MK2 = 206
-                ,
-            //Razer range is 300-399
-            [Description("Razer - Blackwidow")]
-            Razer_Blackwidow = 300,
-            [Description("Razer - Blackwidow X")]
-            Razer_Blackwidow_X = 301,
-            [Description("Razer - Blackwidow Tournament Edition")]
-            Razer_Blackwidow_TE = 302,
-            [Description("Razer - Blade")]
-            Razer_Blade = 303,
-
-            //Clevo range is 400-499
-
-            //Cooler Master range is 500-599
-            [Description("Cooler Master - Masterkeys Pro L")]
-            Masterkeys_Pro_L = 500,
-            [Description("Cooler Master - Masterkeys Pro S")]
-            Masterkeys_Pro_S = 501,
-            [Description("Cooler Master - Masterkeys Pro M")]
-            Masterkeys_Pro_M = 502,
-            [Description("Cooler Master - Masterkeys MK750")]
-            Masterkeys_MK750 = 503,
-
-            //Roccat range is 600-699
-            [Description("Roccat Ryos")]
-            Roccat_Ryos = 600,
-
-            //Steelseries range is 700-799
-            [Description("SteelSeries Apex M800")]
-            SteelSeries_Apex_M800 = 700,
-            [Description("SteelSeries Apex M750")]
-            SteelSeries_Apex_M750 = 701,
-            [Description("SteelSeries Apex M750 TKL")]
-            SteelSeries_Apex_M750_TKL = 702,
-
-            [Description("Wooting One")]
-            Wooting_One = 800,
-            [Description("Wooting Two")]
-            Wooting_Two = 801,
-
-            [Description("Asus Strix Flare")]
-            Asus_Strix_Flare = 900,
-
-            //Drevo range is 1000-1099
-            [Description("Drevo BladeMaster")]
-            Drevo_BladeMaster = 1000,
-
-            //Creative range is 1100-1199
-            [Description("SoundBlasterX VanguardK08")]
-            SoundBlasterX_Vanguard_K08 = 1100,
-        }
-
-        public enum PreferredKeyboardLocalization
-        {
-            [Description("Automatic Detection")]
-            None = 0,
-            [Description("International")]
-            intl = 1,
-            [Description("United States")]
-            us = 2,
-            [Description("United Kingdom")]
-            uk = 3,
-            [Description("Russian")]
-            ru = 4,
-            [Description("French")]
-            fr = 5,
-            [Description("Deutsch")]
-            de = 6,
-            [Description("Japanese")]
-            jpn = 7,
-            [Description("Turkish")]
-            tr = 8,
-            [Description("Nordic")]
-            nordic = 9,
-            [Description("Swiss")]
-            swiss = 10,
-            [Description("Portuguese (Brazilian ABNT2)")]
-            abnt2 = 11,
-            [Description("DVORAK (US)")]
-            dvorak = 12,
-            [Description("DVORAK (INT)")]
-            dvorak_int = 13,
-            [Description("Hungarian")]
-            hu = 14
-        }
 
         [JsonIgnore]
         public new static readonly byte DeviceTypeID = 0;
@@ -1376,196 +1397,294 @@ namespace Aurora.Devices.Layout.Layouts
                 //Load keyboard layout
                 if (Directory.Exists(layoutsPath))
                 {
-                    string culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+                    PreferredKeyboardLocalization layout = this.Language;
 
-                    switch (this.Language)
+                    if (layout == PreferredKeyboardLocalization.iso)
                     {
-                        case PreferredKeyboardLocalization.None:
-                            break;
-                        case PreferredKeyboardLocalization.intl:
-                            culture = "intl";
-                            break;
-                        case PreferredKeyboardLocalization.us:
-                            culture = "en-US";
-                            break;
-                        case PreferredKeyboardLocalization.uk:
-                            culture = "en-GB";
-                            break;
-                        case PreferredKeyboardLocalization.ru:
-                            culture = "ru-RU";
-                            break;
-                        case PreferredKeyboardLocalization.fr:
-                            culture = "fr-FR";
-                            break;
-                        case PreferredKeyboardLocalization.de:
-                            culture = "de-DE";
-                            break;
-                        case PreferredKeyboardLocalization.jpn:
-                            culture = "ja-JP";
-                            break;
-                        case PreferredKeyboardLocalization.nordic:
-                            culture = "nordic";
-                            break;
-                        case PreferredKeyboardLocalization.tr:
-                            culture = "tr-TR";
-                            break;
-                        case PreferredKeyboardLocalization.swiss:
-                            culture = "de-CH";
-                            break;
-                        case PreferredKeyboardLocalization.abnt2:
-                            culture = "pt-BR";
-                            break;
-                        case PreferredKeyboardLocalization.dvorak:
-                            culture = "dvorak";
-                            break;
-                        case PreferredKeyboardLocalization.dvorak_int:
-                            culture = "dvorak_int";
-                            break;
-                        case PreferredKeyboardLocalization.hu:
-                            culture = "hu-HU";
-                            break;
+                        LoadCulture("iso");
+                        _loaded_localization = layout;
                     }
-
-                    switch (culture)
+                    else if (layout == PreferredKeyboardLocalization.ansi)
                     {
-                        case ("tr-TR"):
-                            LoadCulture("tr");
-                            break;
-                        case ("ja-JP"):
-                            LoadCulture("jpn");
-                            break;
-                        case ("de-DE"):
-                        case ("hsb-DE"):
-                        case ("dsb-DE"):
-                            _loaded_localization = PreferredKeyboardLocalization.de;
-                            LoadCulture("de");
-                            break;
-                        case ("fr-CH"):
-                        case ("de-CH"):
-                            _loaded_localization = PreferredKeyboardLocalization.swiss;
-                            LoadCulture("swiss");
-                            break;
-                        case ("fr-FR"):
-                        case ("br-FR"):
-                        case ("oc-FR"):
-                        case ("co-FR"):
-                        case ("gsw-FR"):
-                            _loaded_localization = PreferredKeyboardLocalization.fr;
-                            LoadCulture("fr");
-                            break;
-                        case ("cy-GB"):
-                        case ("gd-GB"):
-                        case ("en-GB"):
-                            _loaded_localization = PreferredKeyboardLocalization.uk;
-                            LoadCulture("uk");
-                            break;
-                        case ("ru-RU"):
-                        case ("tt-RU"):
-                        case ("ba-RU"):
-                        case ("sah-RU"):
-                            _loaded_localization = PreferredKeyboardLocalization.ru;
-                            LoadCulture("ru");
-                            break;
-                        case ("en-US"):
-                            _loaded_localization = PreferredKeyboardLocalization.us;
-                            LoadCulture("us");
-                            break;
-                        case ("da-DK"):
-                        case ("se-SE"):
-                        case ("nb-NO"):
-                        case ("nn-NO"):
-                        case ("nordic"):
-                            _loaded_localization = PreferredKeyboardLocalization.nordic;
-                            LoadCulture("nordic");
-                            break;
-                        case ("pt-BR"):
-                            _loaded_localization = PreferredKeyboardLocalization.abnt2;
-                            LoadCulture("abnt2");
-                            break;
-                        case ("dvorak"):
-                            _loaded_localization = PreferredKeyboardLocalization.dvorak;
-                            LoadCulture("dvorak");
-                            break;
-                        case ("dvorak_int"):
-                            _loaded_localization = PreferredKeyboardLocalization.dvorak_int;
-                            LoadCulture("dvorak_int");
-                            break;
-                        case ("hu-HU"):
-                            _loaded_localization = PreferredKeyboardLocalization.hu;
-                            LoadCulture("hu");
-                            break;
-                        default:
-                            _loaded_localization = PreferredKeyboardLocalization.intl;
-                            LoadCulture("intl");
-                            break;
+                        LoadCulture("ansi");
+                        _loaded_localization = layout;
+                    }
+                    else
+                    {
 
+                        string culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+                        switch (layout)
+                        {
+                            case PreferredKeyboardLocalization.None:
+                                break;
+                            case PreferredKeyboardLocalization.intl:
+                                culture = "intl";
+                                break;
+                            case PreferredKeyboardLocalization.us:
+                                culture = "en-US";
+                                break;
+                            case PreferredKeyboardLocalization.uk:
+                                culture = "en-GB";
+                                break;
+                            case PreferredKeyboardLocalization.ru:
+                                culture = "ru-RU";
+                                break;
+                            case PreferredKeyboardLocalization.fr:
+                                culture = "fr-FR";
+                                break;
+                            case PreferredKeyboardLocalization.de:
+                                culture = "de-DE";
+                                break;
+                            case PreferredKeyboardLocalization.jpn:
+                                culture = "ja-JP";
+                                break;
+                            case PreferredKeyboardLocalization.nordic:
+                                culture = "nordic";
+                                break;
+                            case PreferredKeyboardLocalization.tr:
+                                culture = "tr-TR";
+                                break;
+                            case PreferredKeyboardLocalization.swiss:
+                                culture = "de-CH";
+                                break;
+                            case PreferredKeyboardLocalization.abnt2:
+                                culture = "pt-BR";
+                                break;
+                            case PreferredKeyboardLocalization.dvorak:
+                                culture = "dvorak";
+                                break;
+                            case PreferredKeyboardLocalization.dvorak_int:
+                                culture = "dvorak_int";
+                                break;
+                            case PreferredKeyboardLocalization.hu:
+                                culture = "hu-HU";
+                                break;
+                            case PreferredKeyboardLocalization.it:
+                                culture = "it-IT";
+                                break;
+                            case PreferredKeyboardLocalization.la:
+                                culture = "es-AR";
+                                break;
+                            case PreferredKeyboardLocalization.es:
+                                culture = "es-ES";
+                                break;
+                            case PreferredKeyboardLocalization.iso:
+                                culture = "iso";
+                                break;
+                            case PreferredKeyboardLocalization.ansi:
+                                culture = "ansi";
+                                break;
+                        }
+
+                        switch (culture)
+                        {
+                            case ("tr-TR"):
+                                LoadCulture("tr");
+                                break;
+                            case ("ja-JP"):
+                                LoadCulture("jpn");
+                                break;
+                            case ("de-DE"):
+                            case ("hsb-DE"):
+                            case ("dsb-DE"):
+                                _loaded_localization = PreferredKeyboardLocalization.de;
+                                LoadCulture("de");
+                                break;
+                            case ("fr-CH"):
+                            case ("de-CH"):
+                                _loaded_localization = PreferredKeyboardLocalization.swiss;
+                                LoadCulture("swiss");
+                                break;
+                            case ("fr-FR"):
+                            case ("br-FR"):
+                            case ("oc-FR"):
+                            case ("co-FR"):
+                            case ("gsw-FR"):
+                                _loaded_localization = PreferredKeyboardLocalization.fr;
+                                LoadCulture("fr");
+                                break;
+                            case ("cy-GB"):
+                            case ("gd-GB"):
+                            case ("en-GB"):
+                                _loaded_localization = PreferredKeyboardLocalization.uk;
+                                LoadCulture("uk");
+                                break;
+                            case ("ru-RU"):
+                            case ("tt-RU"):
+                            case ("ba-RU"):
+                            case ("sah-RU"):
+                                _loaded_localization = PreferredKeyboardLocalization.ru;
+                                LoadCulture("ru");
+                                break;
+                            case ("en-US"):
+                                _loaded_localization = PreferredKeyboardLocalization.us;
+                                LoadCulture("us");
+                                break;
+                            case ("da-DK"):
+                            case ("se-SE"):
+                            case ("nb-NO"):
+                            case ("nn-NO"):
+                            case ("nordic"):
+                                _loaded_localization = PreferredKeyboardLocalization.nordic;
+                                LoadCulture("nordic");
+                                break;
+                            case ("pt-BR"):
+                                _loaded_localization = PreferredKeyboardLocalization.abnt2;
+                                LoadCulture("abnt2");
+                                break;
+                            case ("dvorak"):
+                                _loaded_localization = PreferredKeyboardLocalization.dvorak;
+                                LoadCulture("dvorak");
+                                break;
+                            case ("dvorak_int"):
+                                _loaded_localization = PreferredKeyboardLocalization.dvorak_int;
+                                LoadCulture("dvorak_int");
+                                break;
+                            case ("hu-HU"):
+                                _loaded_localization = PreferredKeyboardLocalization.hu;
+                                LoadCulture("hu");
+                                break;
+                            case ("it-IT"):
+                                _loaded_localization = PreferredKeyboardLocalization.it;
+                                LoadCulture("it");
+                                break;
+                            case ("es-AR"):
+                            case ("es-BO"):
+                            case ("es-CL"):
+                            case ("es-CO"):
+                            case ("es-CR"):
+                            case ("es-EC"):
+                            case ("es-MX"):
+                            case ("es-PA"):
+                            case ("es-PY"):
+                            case ("es-PE"):
+                            case ("es-UY"):
+                            case ("es-VE"):
+                            case ("es-419"):
+                                _loaded_localization = PreferredKeyboardLocalization.la;
+                                LoadCulture("la");
+                                break;
+                            case ("es-ES"):
+                                _loaded_localization = PreferredKeyboardLocalization.es;
+                                LoadCulture("es");
+                                break;
+                            case ("iso"):
+                                _loaded_localization = PreferredKeyboardLocalization.iso;
+                                LoadCulture("iso");
+                                break;
+                            case ("ansi"):
+                                _loaded_localization = PreferredKeyboardLocalization.ansi;
+                                LoadCulture("ansi");
+                                break;
+                            default:
+                                _loaded_localization = PreferredKeyboardLocalization.intl;
+                                LoadCulture("intl");
+                                break;
+
+                        }
                     }
                 }
 
                 var layoutConfigPath = "";
-
-                if (Style == PreferredKeyboard.Logitech_G910)
-                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g910.json");
-                else if (Style == PreferredKeyboard.Logitech_G810)
-                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g810.json");
-                else if (Style == PreferredKeyboard.Logitech_GPRO)
-                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
-                else if (Style == PreferredKeyboard.Logitech_G410)
-                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
-                else if (Style == PreferredKeyboard.Corsair_K95)
-                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
-                else if (Style == PreferredKeyboard.Corsair_K95_PL)
-                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95_platinum.json");
-                else if (Style == PreferredKeyboard.Corsair_K70)
-                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
-                else if (Style == PreferredKeyboard.Corsair_K70MK2)
-                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70_mk2.json");
-                else if (Style == PreferredKeyboard.Corsair_K65)
-                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
-                else if (Style == PreferredKeyboard.Corsair_STRAFE)
-                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
-                else if (Style == PreferredKeyboard.Corsair_K68)
-                    layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
-                else if (Style == PreferredKeyboard.Razer_Blackwidow)
-                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow.json");
-                else if (Style == PreferredKeyboard.Razer_Blackwidow_X)
-                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_x.json");
-                else if (Style == PreferredKeyboard.Razer_Blackwidow_TE)
-                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_te.json");
-                else if (Style == PreferredKeyboard.Razer_Blade)
-                    layoutConfigPath = Path.Combine(layoutsPath, "razer_blade.json");
-                else if (Style == PreferredKeyboard.Masterkeys_Pro_L)
-                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
-                else if (Style == PreferredKeyboard.Masterkeys_Pro_S)
-                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
-                else if (Style == PreferredKeyboard.Masterkeys_Pro_M)
-                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
-                else if (Style == PreferredKeyboard.Masterkeys_MK750)
-                    layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
-                else if (Style == PreferredKeyboard.Roccat_Ryos)
-                    layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
-                else if (Style == PreferredKeyboard.SteelSeries_Apex_M800)
-                    layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m800.json");
-                else if (Style == PreferredKeyboard.SteelSeries_Apex_M750)
-                    layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750.json");
-                else if (Style == PreferredKeyboard.SteelSeries_Apex_M750_TKL)
-                    layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750_tkl.json");
-                else if (Style == PreferredKeyboard.Wooting_One)
-                    layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
-                else if (Style == PreferredKeyboard.Asus_Strix_Flare)
-                    layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
-                else if (Style == PreferredKeyboard.SoundBlasterX_Vanguard_K08)
-                    layoutConfigPath = Path.Combine(layoutsPath, "soundblasterx_vanguardk08.json");
-                else if (Style == PreferredKeyboard.GenericLaptop)
-                    layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
-                else if (Style == PreferredKeyboard.GenericLaptopNumpad)
-                    layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
-                else if (Style == PreferredKeyboard.Drevo_BladeMaster)
-                    layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
-                else
+                switch (this.Style)
                 {
-                    //LoadNone();
-                    //return;
+                    case (PreferredKeyboard.Logitech_G910):
+                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_g910.json");
+                        break;
+                    case (PreferredKeyboard.Logitech_G810):
+                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_g810.json");
+                        break;
+                    case (PreferredKeyboard.Logitech_GPRO):
+                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
+                        break;
+                    case (PreferredKeyboard.Logitech_G410):
+                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
+                        break;
+                    case (PreferredKeyboard.Logitech_G213):
+                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
+                        break;
+                    case (PreferredKeyboard.Corsair_K95):
+                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
+                        break;
+                    case (PreferredKeyboard.Corsair_K95_PL):
+                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95_platinum.json");
+                        break;
+                    case (PreferredKeyboard.Corsair_K70):
+                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
+                        break;
+                    case (PreferredKeyboard.Corsair_K70MK2):
+                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70_mk2.json");
+                        break;
+                    case (PreferredKeyboard.Corsair_K65):
+                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
+                        break;
+                    case (PreferredKeyboard.Corsair_STRAFE):
+                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+                        break;
+                    case (PreferredKeyboard.Corsair_K68):
+                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
+                        break;
+                    case (PreferredKeyboard.Razer_Blackwidow):
+                        layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow.json");
+                        break;
+                    case (PreferredKeyboard.Razer_Blackwidow_X):
+                        layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_x.json");
+                        break;
+                    case (PreferredKeyboard.Razer_Blackwidow_TE):
+                        layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_te.json");
+                        break;
+                    case (PreferredKeyboard.Razer_Blade):
+                        layoutConfigPath = Path.Combine(layoutsPath, "razer_blade.json");
+                        break;
+                    case (PreferredKeyboard.Masterkeys_Pro_L):
+                        layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
+                        break;
+                    case (PreferredKeyboard.Masterkeys_Pro_S):
+                        layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
+                        break;
+                    case (PreferredKeyboard.Masterkeys_Pro_M):
+                        layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
+                        break;
+                    case (PreferredKeyboard.Masterkeys_MK750):
+                        layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
+                        break;
+                    case (PreferredKeyboard.Roccat_Ryos):
+                        layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
+                        break;
+                    case (PreferredKeyboard.SteelSeries_Apex_M800):
+                        layoutConfigPath = Path.Combine(layoutsPath, "stecase (ries_apex_m800.json");
+                        break;
+                    case (PreferredKeyboard.SteelSeries_Apex_M750):
+                        layoutConfigPath = Path.Combine(layoutsPath, "stecase (ries_apex_m750.json");
+                        break;
+                    case (PreferredKeyboard.SteelSeries_Apex_M750_TKL):
+                        layoutConfigPath = Path.Combine(layoutsPath, "stecase (ries_apex_m750_tkl.json");
+                        break;
+                    case (PreferredKeyboard.Wooting_One):
+                        layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
+                        break;
+                    case (PreferredKeyboard.Asus_Strix_Flare):
+                        layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
+                        break;
+                    case (PreferredKeyboard.SoundBlasterX_Vanguard_K08):
+                        layoutConfigPath = Path.Combine(layoutsPath, "soundblasterx_vanguardk08.json");
+                        break;
+                    case (PreferredKeyboard.GenericLaptop):
+                        layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
+                        break;
+                    case (PreferredKeyboard.GenericLaptopNumpad):
+                        layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
+                        break;
+                    case (PreferredKeyboard.Drevo_BladeMaster):
+                        layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
+                        break;
+                    case (PreferredKeyboard.Wooting_Two):
+                        layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
+                        break;
+                    default:
+                        Global.logger.LogLine("No match for PreferredKeyboard style", Logging_Level.Error);
+                        return;
                 }
 
                 if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
