@@ -686,7 +686,6 @@
     <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
       <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\AuroraConfigManager.cs" />
     <Compile Include="Settings\Bindables\Bindable.cs" />
     <Compile Include="Settings\Bindables\BindableBindableDictionary.cs" />
     <Compile Include="Settings\Bindables\BindableDictionary.cs" />

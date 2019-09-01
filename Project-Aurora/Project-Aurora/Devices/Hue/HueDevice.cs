@@ -40,7 +40,7 @@ namespace Aurora.Devices.Hue
             VariableRegistry registry = new VariableRegistry();
             foreach (var pair in config.Store)
             {
-                registry.Register($"{name.ToLower().Replace(" ", "_")}_{pair.Key}", pair.Value);
+                registry.Register($"{name.ToLower().Replace(" ", "_")}_{pair.Key}", pair.Value, HueVisualNames.GetTitle(pair.Key), HueVisualNames.GetRemark(pair.Key));
             }
             return registry;
         }
@@ -142,12 +142,14 @@ namespace Aurora.Devices.Hue
         {
             var firstKey = config.Get<int>("first_key");
             var lastKey = config.Get<int>("last_key");
-            if (!(firstKey < lastKey && keyColors.Any(t => t.Key <= (DeviceKeys)lastKey && t.Key >= (DeviceKeys)firstKey)))
+            if (!(firstKey <= lastKey && keyColors.Any(t => t.Key <= (DeviceKeys)lastKey && t.Key >= (DeviceKeys)firstKey)))
                 return false;
 
             while (!keyColors.ContainsKey((DeviceKeys)curKey))
             {
                 curKey++;
+                if (curKey > lastKey)
+                    curKey = firstKey;
                 if (curKey > 338)
                 {
                     curKey = 0;
@@ -237,6 +239,44 @@ namespace Aurora.Devices.Hue
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             return UpdateDevice(colorComposition.keyColors, e, forced);
+        }
+    }
+
+    static class HueVisualNames
+    {
+        private static Dictionary<string, HueIdentifiers> _identifiers = new Dictionary<string, HueIdentifiers>
+        {
+            {"default_delay", new HueIdentifiers("Delay", "The delay before sending default color in seconds")},
+            {"default_color", new HueIdentifiers("Default Color", "The default color to use to send to hue if not active")},
+            {"blend_keys", new HueIdentifiers("Blend key selection", "")},
+            {"force_default", new HueIdentifiers("Force default color", "")},
+            {"brightness", new HueIdentifiers("Brightness", "Brightness on bulbs (0-255)")},
+            {"use_default", new HueIdentifiers("Use default delay", "")},
+            {"key_iteration_count", new HueIdentifiers("Iteration count", "How many times to iterate on one key before jumping to the next one")},
+            {"first_key", new HueIdentifiers("First key selection", "The first key to iterate on (must be lower or equal than last key)")},
+            {"last_key", new HueIdentifiers("Last key selection", "The last key to iterate on (must be higher or equal than first key)")},
+            {"send_interval", new HueIdentifiers("Delay", "The delay to use to send to hue (min 100ms)")}
+        };
+
+        public static string GetTitle(string v)
+        {
+            return !_identifiers.ContainsKey(v) ? "" : _identifiers[v].Title;
+        }
+        public static string GetRemark(string v)
+        {
+            return !_identifiers.ContainsKey(v) ? "" : _identifiers[v].Remark;
+        }
+
+        struct HueIdentifiers
+        {
+            public string Title;
+            public string Remark;
+
+            public HueIdentifiers(string title, string remark)
+            {
+                Title = title;
+                Remark = remark;
+            }
         }
     }
 
