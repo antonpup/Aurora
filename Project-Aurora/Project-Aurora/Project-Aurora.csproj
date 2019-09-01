@@ -157,9 +157,6 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.5\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NZXTSharp, Version=2.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NZXTSharp.2.1.2\lib\netstandard2.0\NZXTSharp.dll</HintPath>
-    </Reference>
     <Reference Include="Octokit, Version=0.32.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Octokit.0.32.0\lib\net45\Octokit.dll</HintPath>
     </Reference>
@@ -2541,6 +2538,10 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NZXTSharp\NZXTSharp\NZXTSharp.csproj">
+      <Project>{62094023-0479-4dd4-8a74-4321cc0f08dd}</Project>
+      <Name>NZXTSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
       <Project>{053a704b-5c79-4cde-b1fc-b952051acaa0}</Project>
       <Name>SBAuroraReactive</Name>
