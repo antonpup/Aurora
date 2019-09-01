@@ -236,14 +236,14 @@ If you don't see some of these devices in the menu, select a similar one and it 
 
 ### Yeelight
 
+### Philips Hue
+
 ### More Devices support using Chroma Connect
 Many Chroma Connect compatible devices should work with Aurora assuming you have latest Razer SDK or Synapse installed. For Example:
 * Nanoleaf
 * LIFX
 * [Full List of Chroma Connect Compatible Devices here](https://www2.razer.com/chroma-workshop/connected-devices)
 
-
-### Philips Hue
 
 ## Video demonstrations
 
