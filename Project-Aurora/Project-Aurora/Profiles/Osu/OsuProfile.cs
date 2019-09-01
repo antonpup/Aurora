@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout.Layouts;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
@@ -31,14 +32,14 @@ namespace Aurora.Profiles.Osu {
                 new Layer("Drawing", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = Color.DeepSkyBlue,
-                        _Sequence = new KeySequence(new[] { DeviceKeys.C })
+                        _Sequence = new KeySequence(new[] { KeyboardKeys.C })
                     }
                 }),
 
                 new Layer("Clickers", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = Color.FromArgb(255, 0, 240),
-                        _Sequence = new KeySequence(new[] { DeviceKeys.Z,DeviceKeys.LEFT_ALT })
+                        _Sequence = new KeySequence(new[] { KeyboardKeys.Z,KeyboardKeys.LEFT_ALT })
                     }
                 }),
 
@@ -48,7 +49,7 @@ namespace Aurora.Profiles.Osu {
                         _SecondaryColor = Color.Red,
                         _VariablePath = "Game/Accuracy",
                         _MaxVariablePath = "100",
-                        _Sequence = new KeySequence(new[] { DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE, DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO }),
+                        _Sequence = new KeySequence(new[] { KeyboardKeys.ONE, KeyboardKeys.TWO, KeyboardKeys.THREE, KeyboardKeys.FOUR, KeyboardKeys.FIVE, KeyboardKeys.SIX, KeyboardKeys.SEVEN, KeyboardKeys.EIGHT, KeyboardKeys.NINE, KeyboardKeys.ZERO }),
                         _PercentType = PercentEffectType.Progressive_Gradual
                     }
                 }),
@@ -89,7 +90,7 @@ namespace Aurora.Profiles.Osu {
                         _SecondaryColor = Color.Black,
                         _VariablePath = "Game/HP",
                         _MaxVariablePath = "200",
-                        _Sequence = new KeySequence(new[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4, DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8, DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 }),
+                        _Sequence = new KeySequence(new[] { KeyboardKeys.F1, KeyboardKeys.F2, KeyboardKeys.F3, KeyboardKeys.F4, KeyboardKeys.F5, KeyboardKeys.F6, KeyboardKeys.F7, KeyboardKeys.F8, KeyboardKeys.F9, KeyboardKeys.F10, KeyboardKeys.F11, KeyboardKeys.F12 }),
                         _PercentType = PercentEffectType.Progressive_Gradual
                     }
                 }),

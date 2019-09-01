@@ -700,38 +700,6 @@ namespace Aurora.Settings
             }
         }*/
 
-        private void devices_disable_keyboard_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_keyboard = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
-            }
-        }
-
-        private void devices_disable_mouse_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_mouse = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
-            }
-        }
-
-        private void devices_disable_headset_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_headset = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
-            }
-        }
         
         private void start_silently_enabled_Checked(object sender, RoutedEventArgs e)
         {

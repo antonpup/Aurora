@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout.Layouts;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.ResidentEvil2.GSI;
 using Aurora.Profiles.ResidentEvil2.GSI.Nodes;
@@ -25,9 +26,9 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
         public override void Default()
         {
             base.Default();
-            this._Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR, Devices.DeviceKeys.FIVE,
-                            Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT, Devices.DeviceKeys.NINE
+            this._Sequence = new KeySequence(new KeyboardKeys[] {
+                            KeyboardKeys.ONE, KeyboardKeys.TWO, KeyboardKeys.THREE, KeyboardKeys.FOUR, KeyboardKeys.FIVE,
+                            KeyboardKeys.SIX, KeyboardKeys.SEVEN, KeyboardKeys.EIGHT, KeyboardKeys.NINE
                         });
         }
 

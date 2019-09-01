@@ -4,6 +4,7 @@ using Aurora.Settings;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using NLog;
+using RazerSdkWrapper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +30,10 @@ namespace Aurora
 
         public static string SavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora");
 
+
         private static string _ExecutingDirectory = "";
+        private static string _AppDataDirectory = "";
+        private static string _LogsDirectory = "";
 
         /// <summary>
         /// The path to the application executing directory
@@ -44,6 +48,29 @@ namespace Aurora
                 return _ExecutingDirectory;
             }
         }
+
+        public static string AppDataDirectory
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_AppDataDirectory))
+                    _AppDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora");
+
+                return _AppDataDirectory;
+            }
+        }
+
+        public static string LogsDirectory
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_LogsDirectory))
+                    _LogsDirectory = Path.Combine(AppDataDirectory, "Logs");
+
+                return _LogsDirectory;
+            }
+        }
+
 
 
         /// <summary>
@@ -86,6 +113,7 @@ namespace Aurora
         public static DeviceManager dev_manager;
         public static Effects effengine;
         public static KeyRecorder key_recorder;
+        public static RzManager razerManager;
 
         /// <summary>
         /// Currently held down modifer key

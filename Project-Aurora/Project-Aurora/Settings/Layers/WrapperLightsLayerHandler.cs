@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using Aurora.Devices;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Settings.Layers
 {

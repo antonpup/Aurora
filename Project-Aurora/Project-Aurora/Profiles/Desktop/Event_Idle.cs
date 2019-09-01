@@ -205,7 +205,7 @@ namespace Aurora.Profiles.Desktop
 					{
 						for (int x = 0; x < Global.Configuration.idle_amount; x++)
 						{
-							Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
+							DeviceLED star = allKeys[randomizer.Next(allKeys.Count)];
 							if (raindrops.ContainsKey(star))
 								raindrops[star] = 1.0f;
 							else
@@ -222,11 +222,11 @@ namespace Aurora.Profiles.Desktop
 
 					var drops = raindrops.Keys.ToArray().Select(d =>
 					{
-						PointF pt = Effects.GetBitmappingFromDeviceKey(d).Center;
+						PointF pt = GlobalDeviceLayout.Instance.GetDeviceLEDBitmapRegion(d).Center;
 						float transitionValue = 1.0f - raindrops[d];
-						float radius = transitionValue * Effects.canvas_biggest;
+						float radius = transitionValue * GlobalDeviceLayout.Instance.CanvasBiggest;
 						raindrops[d] -= getDeltaTime() * 0.05f * Global.Configuration.idle_speed;
-						return new Tuple<Devices.DeviceKeys, PointF, float, float>(d, pt, transitionValue, radius);
+						return new Tuple<DeviceLED, PointF, float, float>(d, pt, transitionValue, radius);
 
 					}).Where(d => d.Item3 <= 1.5).ToArray();
 
@@ -234,7 +234,7 @@ namespace Aurora.Profiles.Desktop
 
 					foreach (var key in allKeys)
 					{
-						var keyInfo = Effects.GetBitmappingFromDeviceKey(key);
+						var keyInfo = GlobalDeviceLayout.Instance.GetDeviceLEDBitmapRegion(key);
 
 						// For easy calculation every button considered as circle with this radius
 						var btnRadius = ((keyInfo.Width + keyInfo.Height) / 4f);

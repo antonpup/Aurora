@@ -341,7 +341,6 @@
       <DependentUpon>ConfigUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="Const.cs" />
-    <Compile Include="Controls\ArrangeListBox.cs" />
     <None Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </None>
@@ -363,6 +362,7 @@
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ReorderableListBox.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
     </Compile>
@@ -411,16 +411,13 @@
     <Compile Include="Controls\LayerEditor.xaml.cs">
       <DependentUpon>LayerEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LogicCheckEdit.xaml.cs">
-      <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
-    </Compile>
     <None Include="Devices\Integrations\AtmoOrb\AtmoOrbDevice.cs" />
     <None Include="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
     <None Include="Devices\Integrations\Clevo\ClevoDevice.cs" />
     <Compile Include="Devices\Integrations\Corsair\CorsairInstallInstructions.xaml.cs">
       <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
+    <None Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
     <Compile Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
     <Compile Include="Devices\Integrations\Drevo\DrevoDevice.cs" />
@@ -445,8 +442,8 @@
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
     <None Include="Devices\Integrations\ScriptedDevice\ScriptedDevice.cs" />
-    <Compile Include="Devices\Integrations\SteelSeries\GameSenseSDK.cs" />
-    <Compile Include="Devices\Integrations\SteelSeries\SteelSeriesDevice.cs" />
+    <Content Include="Devices\Integrations\SteelSeries\GameSenseSDK.cs" />
+    <None Include="Devices\Integrations\SteelSeries\SteelSeriesDevice.cs" />
     <Compile Include="Devices\Integrations\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -1004,6 +1001,7 @@
     <Compile Include="Devices\Integrations\SteelSeries\USBHIDCodes.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\MouseUtils.cs" />
+    <Compile Include="Utils\PointerUpdateUtils.cs" />
     <Compile Include="Utils\PointUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
@@ -1302,7 +1300,7 @@
     <Content Include="Settings\ColorZone.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Devices\DeviceManager.cs" />
-    <Compile Include="Devices\Integrations\Corsair\CorsairDevice.cs" />
+    <None Include="Devices\Integrations\Corsair\CorsairDevice.cs" />
     <Compile Include="Devices\Device.cs" />
     <Compile Include="Devices\Integrations\Logitech\LogitechDevice.cs" />
     <Compile Include="EffectsEngine\EffectColor.cs" />
@@ -1729,10 +1727,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\LayerEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\LogicCheckEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2485,7 +2479,7 @@
     <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
       <Project>{053a704b-5c79-4cde-b1fc-b952051acaa0}</Project>
       <Name>SBAuroraReactive</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj">
       <Project>{fea699ae-db83-43dc-ab85-99f2e90c328f}</Project>

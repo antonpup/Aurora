@@ -52,8 +52,8 @@ namespace Aurora.Utils
                 case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
                 case "Aurora.Profiles.ColorEnhanceProfile":
                     return typeof(Profiles.WrapperProfile);
-                case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
-                    return typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice);
+                //case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
+                //    return typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice);
                 case "Aurora.Settings.Overrides.Logic.IEvaluatableBoolean":
                     return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<bool>);
                 case "Aurora.Settings.Overrides.Logic.IEvaluatableNumber":

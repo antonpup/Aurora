@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
 using Microsoft.Win32;
 using RazerSdkWrapper.Utils;
 using System;
@@ -48,7 +49,7 @@ namespace Aurora.Settings.Layers
                 BrightnessSlider.Value = Context.Properties.BrightnessChange;
                 SaturationSlider.Value = Context.Properties.SaturationChange;
                 HueSlider.Value = Context.Properties.HueShift;
-                CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
+                //CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
                 settingsset = true;
             }
         }
@@ -59,13 +60,13 @@ namespace Aurora.Settings.Layers
             Loaded -= OnUserControlLoaded;
         }
 
-        private void OnAddKeyCloneButtonClick(object sender, RoutedEventArgs e)
+        /*private void OnAddKeyCloneButtonClick(object sender, RoutedEventArgs e)
         {
             if (KeyCloneSourceButtonComboBox.SelectedItem == null || KeyCloneDestinationButtonComboBox.SelectedItem == null)
                 return;
 
-            var sourceKey = (DeviceKeys)KeyCloneSourceButtonComboBox.SelectedItem;
-            var destKey = (DeviceKeys)KeyCloneDestinationButtonComboBox.SelectedItem;
+            var sourceKey = (DeviceLED)KeyCloneSourceButtonComboBox.SelectedItem;
+            var destKey = (DeviceLED)KeyCloneDestinationButtonComboBox.SelectedItem;
 
             if (sourceKey == destKey)
                 return;
@@ -88,7 +89,7 @@ namespace Aurora.Settings.Layers
             var cloneMap = Context.Properties.KeyCloneMap;
             foreach (var o in KeyCloneListBox.SelectedItems)
             {
-                if (o is KeyValuePair<DeviceKeys, DeviceKeys> item)
+                if (o is KeyValuePair<DeviceLED, DeviceLED> item)
                 {
                     if (!cloneMap.ContainsKey(item.Key) || cloneMap[item.Key] != item.Value)
                         continue;
@@ -98,7 +99,7 @@ namespace Aurora.Settings.Layers
             }
 
             CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
-        }
+        }*/
 
         private void OnSdkDumpToggleButtonChecked(object sender, RoutedEventArgs e)
         {

@@ -1,4 +1,6 @@
 using Aurora.Devices;
+using Aurora.Devices.Layout;
+using Aurora.Devices.Layout.Layouts;
 using Aurora.Devices.Razer;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
@@ -38,9 +40,9 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public double HueShift => Logic._HueShift ?? _HueShift ?? 0;
 
-        public Dictionary<DeviceKeys, DeviceKeys> _KeyCloneMap { get; set; }
+        public Dictionary<DeviceLED, DeviceLED> _KeyCloneMap { get; set; }
         [JsonIgnore]
-        public Dictionary<DeviceKeys, DeviceKeys> KeyCloneMap => Logic._KeyCloneMap ?? _KeyCloneMap ?? new Dictionary<DeviceKeys, DeviceKeys>();
+        public Dictionary<DeviceLED, DeviceLED> KeyCloneMap => Logic._KeyCloneMap ?? _KeyCloneMap ?? new Dictionary<DeviceLED, DeviceLED>();
 
         public RazerLayerHandlerProperties() : base() { }
 
@@ -54,7 +56,7 @@ namespace Aurora.Settings.Layers
             _BrightnessChange = 0;
             _SaturationChange = 0;
             _HueShift = 0;
-            _KeyCloneMap = new Dictionary<DeviceKeys, DeviceKeys>();
+            _KeyCloneMap = new Dictionary<DeviceLED, DeviceLED>();
         }
     }
 
@@ -162,16 +164,16 @@ namespace Aurora.Settings.Layers
 
             if (!IsCurrentAppValid())
                 return layer;
-
-            foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
+            foreach (var key in GlobalDeviceLayout.Instance.AllLeds)
             {
                 Color color;
-                if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
+                if (key.DeviceTypeID == KeyboardDeviceLayout.DeviceTypeID && RazerLayoutMap.GenericKeyboard.TryGetValue((KeyboardKeys)key.LedID, out var position))
                     color = _keyboardColors[position[1] + position[0] * 22];
-                else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
+                //TODO: Fix this
+                /*else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
                     color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
                 else if (key == DeviceKeys.Peripheral)
-                    color = _mouseColor;
+                    color = _mouseColor;*/
                 else
                     continue;
 

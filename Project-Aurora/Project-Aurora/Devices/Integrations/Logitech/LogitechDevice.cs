@@ -350,102 +350,90 @@ namespace Aurora.Devices.Logitech
                 , (int)Math.Round((double)(100 * blue) / 255.0f));
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(KeyboardDeviceLayout keyboard, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
-                bool isZoneKeyboard = (Global.Configuration.keyboard_brand == PreferredKeyboard.Logitech_G213);
+                bool isZoneKeyboard = keyboard.Style == KeyboardDeviceLayout.PreferredKeyboard.Logitech_G213;
 
-                if (!Global.Configuration.devices_disable_keyboard && !isZoneKeyboard)
+                if (!isZoneKeyboard)
                 {
-                    foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                    foreach (KeyValuePair<LEDINT, Color> keyColour in keyboard.DeviceColours.deviceColours)
                     {
+                        KeyboardKeys key = (KeyboardKeys)keyColour.Key;
                         if (e.Cancel) return false;
 
-                        Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key.Key);
-
-                        if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN &&
-                            (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral))
+                        Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key);
+   
+                        if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN)
                         {
-                            if (!Global.Configuration.devices_disable_mouse ||
-                                !Global.Configuration.devices_disable_headset)
-                                SendColorToPeripheral((Color)key.Value, forced || !peripheral_updated);
-                        }
-                        else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN)
-                        {
-                            double alpha_amt = (key.Value.A / 255.0);
-                            int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
-                            int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
-                            int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+                            double alpha_amt = (keyColour.Value.A / 255.0);
+                            int red_amt = (int)(((keyColour.Value.R * alpha_amt) / 255.0) * 100.0);
+                            int green_amt = (int)(((keyColour.Value.G * alpha_amt) / 255.0) * 100.0);
+                            int blue_amt = (int)(((keyColour.Value.B * alpha_amt) / 255.0) * 100.0);
 
-                            if (!Global.Configuration.devices_disable_keyboard)
-                            {
                                 LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
-                                switch (key.Key)
+                                switch (key)
                                 {
-                                    case DeviceKeys.OEM8:
+                                    case KeyboardKeys.OEM8:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(220, red_amt, green_amt,
                                             blue_amt);
                                         break;
-                                    case DeviceKeys.G1:
+                                    case KeyboardKeys.G1:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_1, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.G2:
+                                    case KeyboardKeys.G2:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_2, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.G3:
+                                    case KeyboardKeys.G3:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_3, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.G4:
+                                    case KeyboardKeys.G4:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_4, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.G5:
+                                    case KeyboardKeys.G5:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_5, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.G6:
+                                    case KeyboardKeys.G6:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_6, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.G7:
+                                    case KeyboardKeys.G7:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_7, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.G8:
+                                    case KeyboardKeys.G8:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_8, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.G9:
+                                    case KeyboardKeys.G9:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_9, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.LOGO:
+                                    case KeyboardKeys.LOGO:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_LOGO, red_amt,
                                             green_amt, blue_amt);
                                         break;
-                                    case DeviceKeys.LOGO2:
+                                    case KeyboardKeys.LOGO2:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_BADGE, red_amt,
                                             green_amt, blue_amt);
                                         break;
                                 }
-                            }
                         }
                         else if (localKey != Logitech_keyboardBitmapKeys.UNKNOWN)
                         {
-                            if (!Global.Configuration.devices_disable_keyboard)
-                            {
                                 LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
-                                SetOneKey(localKey, (Color)key.Value);
-                            }
+                                SetOneKey(localKey, (Color)keyColour.Value);
                         }
                     }
                 }
 
-                else if (!Global.Configuration.devices_disable_keyboard && isZoneKeyboard)
+                else if (isZoneKeyboard)
                 {
                     List<Color> leftColor = new List<Color>();
                     List<Color> centerColor = new List<Color>();
@@ -453,80 +441,71 @@ namespace Aurora.Devices.Logitech
                     List<Color> arrowColor = new List<Color>();
                     List<Color> numpadColor = new List<Color>();
 
-                    foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                    foreach (KeyValuePair<LEDINT, Color> keyColour in keyboard.DeviceColours.deviceColours)
                     {
+                        KeyboardKeys key = (KeyboardKeys)keyColour.Key;
                         if (e.Cancel) return false;
 
-                        Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key.Key);
+                        Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key);
 
-                        if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN &&
-                            (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral))
+                        if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN)
                         {
-                            if (!Global.Configuration.devices_disable_mouse ||
-                                !Global.Configuration.devices_disable_headset)
-                                SendColorToPeripheral((Color)key.Value, forced || !peripheral_updated);
-                        }
-                        else if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN)
-                        {
-                            double alpha_amt = (key.Value.A / 255.0);
-                            int red_amt = (int)(((key.Value.R * alpha_amt) / 255.0) * 100.0);
-                            int green_amt = (int)(((key.Value.G * alpha_amt) / 255.0) * 100.0);
-                            int blue_amt = (int)(((key.Value.B * alpha_amt) / 255.0) * 100.0);
+                            double alpha_amt = (keyColour.Value.A / 255.0);
+                            int red_amt = (int)(((keyColour.Value.R * alpha_amt) / 255.0) * 100.0);
+                            int green_amt = (int)(((keyColour.Value.G * alpha_amt) / 255.0) * 100.0);
+                            int blue_amt = (int)(((keyColour.Value.B * alpha_amt) / 255.0) * 100.0);
 
-                            if (!Global.Configuration.devices_disable_keyboard)
+                            LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
+                            switch (key)
                             {
-                                LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
-                                switch (key.Key)
-                                {
-                                    case DeviceKeys.OEM8:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(220, red_amt, green_amt,
-                                            blue_amt);
-                                        break;
-                                    case DeviceKeys.G1:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_1, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.G2:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_2, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.G3:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_3, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.G4:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_4, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.G5:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_5, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.G6:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_6, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.G7:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_7, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.G8:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_8, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.G9:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_9, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.LOGO:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_LOGO, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                    case DeviceKeys.LOGO2:
-                                        LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_BADGE, red_amt,
-                                            green_amt, blue_amt);
-                                        break;
-                                }
+                                case KeyboardKeys.OEM8:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(220, red_amt, green_amt,
+                                        blue_amt);
+                                    break;
+                                case KeyboardKeys.G1:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_1, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.G2:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_2, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.G3:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_3, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.G4:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_4, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.G5:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_5, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.G6:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_6, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.G7:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_7, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.G8:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_8, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.G9:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_9, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.LOGO:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_LOGO, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
+                                case KeyboardKeys.LOGO2:
+                                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(keyboardNames.G_BADGE, red_amt,
+                                        green_amt, blue_amt);
+                                    break;
                             }
                         }
                         else if (localKey != Logitech_keyboardBitmapKeys.UNKNOWN)
@@ -542,9 +521,9 @@ namespace Aurora.Devices.Logitech
                                 || localKey == Logitech_keyboardBitmapKeys.W || localKey == Logitech_keyboardBitmapKeys.S || localKey == Logitech_keyboardBitmapKeys.X
                                 || localKey == Logitech_keyboardBitmapKeys.LEFT_ALT
                                 || localKey == Logitech_keyboardBitmapKeys.F3 || localKey == Logitech_keyboardBitmapKeys.THREE)
-                                && (key.Value.R >= 0 || key.Value.G >= 0 || key.Value.B >= 0))
+                                && (keyColour.Value.R >= 0 || keyColour.Value.G >= 0 || keyColour.Value.B >= 0))
                             {
-                                leftColor.Add(key.Value);
+                                leftColor.Add(keyColour.Value);
                             }
                             //right
                             else if ((localKey == Logitech_keyboardBitmapKeys.F11
@@ -555,9 +534,9 @@ namespace Aurora.Devices.Logitech
                                 || localKey == Logitech_keyboardBitmapKeys.MINUS
                                 || localKey == Logitech_keyboardBitmapKeys.FORWARD_SLASH || localKey == Logitech_keyboardBitmapKeys.ENTER
                                 || localKey == Logitech_keyboardBitmapKeys.RIGHT_CONTROL || localKey == Logitech_keyboardBitmapKeys.CLOSE_BRACKET)
-                                && (key.Value.R >= 0 || key.Value.G >= 0 || key.Value.B >= 0))
+                                && (keyColour.Value.R >= 0 || keyColour.Value.G >= 0 || keyColour.Value.B >= 0))
                             {
-                                rightColor.Add(key.Value);
+                                rightColor.Add(keyColour.Value);
                             }
                             //center
                             else if ((localKey == Logitech_keyboardBitmapKeys.Y || localKey == Logitech_keyboardBitmapKeys.H || localKey == Logitech_keyboardBitmapKeys.B
@@ -578,9 +557,9 @@ namespace Aurora.Devices.Logitech
                                 || localKey == Logitech_keyboardBitmapKeys.F6 || localKey == Logitech_keyboardBitmapKeys.SIX || localKey == Logitech_keyboardBitmapKeys.T
                                 || localKey == Logitech_keyboardBitmapKeys.G || localKey == Logitech_keyboardBitmapKeys.B
                                 || localKey == Logitech_keyboardBitmapKeys.Y || localKey == Logitech_keyboardBitmapKeys.H || localKey == Logitech_keyboardBitmapKeys.SEVEN)
-                                && (key.Value.R >= 0 || key.Value.G >= 0 || key.Value.B >= 0))
+                                && (keyColour.Value.R >= 0 || keyColour.Value.G >= 0 || keyColour.Value.B >= 0))
                             {
-                                centerColor.Add(key.Value);
+                                centerColor.Add(keyColour.Value);
                             }
 
                             //arrow
@@ -591,9 +570,9 @@ namespace Aurora.Devices.Logitech
                                 || localKey == Logitech_keyboardBitmapKeys.PAGE_DOWN || localKey == Logitech_keyboardBitmapKeys.ARROW_UP
                                 || localKey == Logitech_keyboardBitmapKeys.ARROW_DOWN || localKey == Logitech_keyboardBitmapKeys.ARROW_LEFT
                                 || localKey == Logitech_keyboardBitmapKeys.ARROW_RIGHT)
-                                && (key.Value.R >= 0 || key.Value.G >= 0 || key.Value.B >= 0))
+                                && (keyColour.Value.R >= 0 || keyColour.Value.G >= 0 || keyColour.Value.B >= 0))
                             {
-                                arrowColor.Add(key.Value);
+                                arrowColor.Add(keyColour.Value);
                             }
 
                             //numpad
@@ -606,9 +585,9 @@ namespace Aurora.Devices.Logitech
                                 || localKey == Logitech_keyboardBitmapKeys.NUM_SIX || localKey == Logitech_keyboardBitmapKeys.NUM_SLASH
                                 || localKey == Logitech_keyboardBitmapKeys.NUM_THREE || localKey == Logitech_keyboardBitmapKeys.NUM_TWO
                                 || localKey == Logitech_keyboardBitmapKeys.NUM_ZERO /*|| localKey == Logitech_keyboardBitmapKeys.NUM_ZEROZERO)*/
-                                && (key.Value.R >= 0 || key.Value.G >= 0 || key.Value.B >= 0))
+                                && (keyColour.Value.R >= 0 || keyColour.Value.G >= 0 || keyColour.Value.B >= 0))
                             {
-                                numpadColor.Add(key.Value);
+                                numpadColor.Add(keyColour.Value);
                             }
                         }
                     }
@@ -680,7 +659,7 @@ namespace Aurora.Devices.Logitech
                     return false;
                 }
 
-                if (!Global.Configuration.devices_disable_keyboard && !isZoneKeyboard)
+                if (!isZoneKeyboard)
                 {
                     SendColorsToKeyboard(forced || !keyboard_updated);
                 }

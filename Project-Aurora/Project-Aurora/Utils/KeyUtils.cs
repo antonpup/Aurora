@@ -76,142 +76,142 @@ namespace Aurora.Utils
             return (KeyboardKeys)key.GetDeviceLED().Sanitize().LedID;
         }
 
-        static Dictionary<uint, DeviceKeys> scanCodeConversion = new Dictionary<uint, DeviceKeys>()
+        static Dictionary<uint, KeyboardKeys> scanCodeConversion = new Dictionary<uint, KeyboardKeys>()
         {
-            /*{1, DeviceKeys.ESC},
-            {59, DeviceKeys.F1},
-            {60, DeviceKeys.F2},
-            {61, DeviceKeys.F3},
-            {62, DeviceKeys.F4},
-            {63, DeviceKeys.F5},
-            {64, DeviceKeys.F6},
-            {65, DeviceKeys.F7},
-            {66, DeviceKeys.F8},
-            {67, DeviceKeys.F9},
-            {68, DeviceKeys.F10},
-            {87, DeviceKeys.F11},
-            {88, DeviceKeys.F12},
-            {84, DeviceKeys.PRINT_SCREEN},
-            {70, DeviceKeys.SCROLL_LOCK},*/
-            //{0, DeviceKeys.PAUSE_BREAK},
-            {40, DeviceKeys.TILDE},
-            /*{2, DeviceKeys.ONE},
-            {3, DeviceKeys.TWO},
-            {4, DeviceKeys.THREE},
-            {5, DeviceKeys.FOUR},
-            {6, DeviceKeys.FIVE},
-            {7, DeviceKeys.SIX},
-            {8, DeviceKeys.SEVEN},
-            {9, DeviceKeys.EIGHT},
-            {10, DeviceKeys.NINE},
-            {11, DeviceKeys.ZERO},*/
-            {12, DeviceKeys.MINUS},
-            {13, DeviceKeys.EQUALS},
-            /*{14, DeviceKeys.BACKSPACE},
-            {114, DeviceKeys.INSERT},
-            {103, DeviceKeys.HOME},
-            {105, DeviceKeys.PAGE_UP},
-            {69, DeviceKeys.NUM_LOCK},
-            //{53, DeviceKeys.NUM_SLASH},
-            {55, DeviceKeys.NUM_ASTERISK},
-            {74, DeviceKeys.NUM_MINUS},
-            {15, DeviceKeys.TAB},*/
-            {16, DeviceKeys.Q},
-            {17, DeviceKeys.W},
-            {18, DeviceKeys.E},
-            {19, DeviceKeys.R},
-            {20, DeviceKeys.T},
-            {21, DeviceKeys.Y},
-            {22, DeviceKeys.U},
-            {23, DeviceKeys.I},
-            {24, DeviceKeys.O},
-            {25, DeviceKeys.P},
-            {26, DeviceKeys.OPEN_BRACKET},
-            {27, DeviceKeys.CLOSE_BRACKET},
-            {86, DeviceKeys.BACKSLASH},
-            /*{115, DeviceKeys.DELETE},
-            {111, DeviceKeys.END},
-            {113, DeviceKeys.PAGE_DOWN},
-            {71, DeviceKeys.NUM_SEVEN},
-            {72, DeviceKeys.NUM_EIGHT},
-            {73, DeviceKeys.NUM_NINE},
-            {78, DeviceKeys.NUM_PLUS},
-            {58, DeviceKeys.CAPS_LOCK},*/
-            {30, DeviceKeys.A},
-            {31, DeviceKeys.S},
-            {32, DeviceKeys.D},
-            {33, DeviceKeys.F},
-            {34, DeviceKeys.G},
-            {35, DeviceKeys.H},
-            {36, DeviceKeys.J},
-            {37, DeviceKeys.K},
-            {38, DeviceKeys.L},
-            {39, DeviceKeys.SEMICOLON},
-            {43, DeviceKeys.APOSTROPHE},
-            //{0, DeviceKeys.HASH},
-            /*{28, DeviceKeys.ENTER},
-            {75, DeviceKeys.NUM_FOUR},
-            {76, DeviceKeys.NUM_FIVE},
-            {77, DeviceKeys.NUM_SIX},
-            {42, DeviceKeys.LEFT_SHIFT},*/
-            //{0, DeviceKeys.BACKSLASH_UK},
-            {44, DeviceKeys.Z},
-            {45, DeviceKeys.X},
-            {46, DeviceKeys.C},
-            {47, DeviceKeys.V},
-            {48, DeviceKeys.B},
-            {49, DeviceKeys.N},
-            {50, DeviceKeys.M},
-            {51, DeviceKeys.COMMA},
-            {52, DeviceKeys.PERIOD},
-            {53, DeviceKeys.FORWARD_SLASH},
-            /*{54, DeviceKeys.RIGHT_SHIFT},
-            {104, DeviceKeys.ARROW_UP},
-            {79, DeviceKeys.NUM_ONE},
-            {80, DeviceKeys.NUM_TWO},
-            {81, DeviceKeys.NUM_THREE},
-            //{28, DeviceKeys.NUM_ENTER},
-            {29, DeviceKeys.LEFT_CONTROL},
-            {91, DeviceKeys.LEFT_WINDOWS},
-            {56, DeviceKeys.LEFT_ALT},
-            {57, DeviceKeys.SPACE},
-            //{56, DeviceKeys.RIGHT_ALT},
-            {92, DeviceKeys.RIGHT_WINDOWS},
-            {93, DeviceKeys.APPLICATION_SELECT},
-            //{29, DeviceKeys.RIGHT_CONTROL},
-            {107, DeviceKeys.ARROW_LEFT},
-            {112, DeviceKeys.ARROW_DOWN},
-            {109, DeviceKeys.ARROW_RIGHT},
-            {82, DeviceKeys.NUM_ZERO},
-            {83, DeviceKeys.NUM_PERIOD},*/
-            {41, DeviceKeys.OEM8},
-            /*{34, DeviceKeys.MEDIA_PLAY_PAUSE},
-            {0, DeviceKeys.MEDIA_PLAY},
-            {0, DeviceKeys.MEDIA_PAUSE},
-            {36, DeviceKeys.MEDIA_STOP},
-            {16, DeviceKeys.MEDIA_PREVIOUS},
-            {25, DeviceKeys.MEDIA_NEXT},
-            {32, DeviceKeys.VOLUME_MUTE},
-            {46, DeviceKeys.VOLUME_DOWN},
-            {48, DeviceKeys.VOLUME_UP},
-            {0, DeviceKeys.JPN_HALFFULLWIDTH},
-            {0, DeviceKeys.JPN_MUHENKAN},
-            {0, DeviceKeys.JPN_HENKAN},
-            {0, DeviceKeys.JPN_HIRAGANA_KATAKANA},
-            {0, DeviceKeys.OEM5},
-            {0, DeviceKeys.OEMTilde},
-            {0, DeviceKeys.OEM102},
-            {0, DeviceKeys.OEM6},
-            {0, DeviceKeys.OEM6},
-            {0, DeviceKeys.OEM1},
-            {0, DeviceKeys.OEM1},
-            {0, DeviceKeys.OEMPlus},
-            {0, DeviceKeys.OEMPlus},*/
+            /*{1, KeyboardKeys.ESC},
+            {59, KeyboardKeys.F1},
+            {60, KeyboardKeys.F2},
+            {61, KeyboardKeys.F3},
+            {62, KeyboardKeys.F4},
+            {63, KeyboardKeys.F5},
+            {64, KeyboardKeys.F6},
+            {65, KeyboardKeys.F7},
+            {66, KeyboardKeys.F8},
+            {67, KeyboardKeys.F9},
+            {68, KeyboardKeys.F10},
+            {87, KeyboardKeys.F11},
+            {88, KeyboardKeys.F12},
+            {84, KeyboardKeys.PRINT_SCREEN},
+            {70, KeyboardKeys.SCROLL_LOCK},*/
+            //{0, KeyboardKeys.PAUSE_BREAK},
+            {40, KeyboardKeys.TILDE},
+            /*{2, KeyboardKeys.ONE},
+            {3, KeyboardKeys.TWO},
+            {4, KeyboardKeys.THREE},
+            {5, KeyboardKeys.FOUR},
+            {6, KeyboardKeys.FIVE},
+            {7, KeyboardKeys.SIX},
+            {8, KeyboardKeys.SEVEN},
+            {9, KeyboardKeys.EIGHT},
+            {10, KeyboardKeys.NINE},
+            {11, KeyboardKeys.ZERO},*/
+            {12, KeyboardKeys.MINUS},
+            {13, KeyboardKeys.EQUALS},
+            /*{14, KeyboardKeys.BACKSPACE},
+            {114, KeyboardKeys.INSERT},
+            {103, KeyboardKeys.HOME},
+            {105, KeyboardKeys.PAGE_UP},
+            {69, KeyboardKeys.NUM_LOCK},
+            //{53, KeyboardKeys.NUM_SLASH},
+            {55, KeyboardKeys.NUM_ASTERISK},
+            {74, KeyboardKeys.NUM_MINUS},
+            {15, KeyboardKeys.TAB},*/
+            {16, KeyboardKeys.Q},
+            {17, KeyboardKeys.W},
+            {18, KeyboardKeys.E},
+            {19, KeyboardKeys.R},
+            {20, KeyboardKeys.T},
+            {21, KeyboardKeys.Y},
+            {22, KeyboardKeys.U},
+            {23, KeyboardKeys.I},
+            {24, KeyboardKeys.O},
+            {25, KeyboardKeys.P},
+            {26, KeyboardKeys.OPEN_BRACKET},
+            {27, KeyboardKeys.CLOSE_BRACKET},
+            {86, KeyboardKeys.BACKSLASH},
+            /*{115, KeyboardKeys.DELETE},
+            {111, KeyboardKeys.END},
+            {113, KeyboardKeys.PAGE_DOWN},
+            {71, KeyboardKeys.NUM_SEVEN},
+            {72, KeyboardKeys.NUM_EIGHT},
+            {73, KeyboardKeys.NUM_NINE},
+            {78, KeyboardKeys.NUM_PLUS},
+            {58, KeyboardKeys.CAPS_LOCK},*/
+            {30, KeyboardKeys.A},
+            {31, KeyboardKeys.S},
+            {32, KeyboardKeys.D},
+            {33, KeyboardKeys.F},
+            {34, KeyboardKeys.G},
+            {35, KeyboardKeys.H},
+            {36, KeyboardKeys.J},
+            {37, KeyboardKeys.K},
+            {38, KeyboardKeys.L},
+            {39, KeyboardKeys.SEMICOLON},
+            {43, KeyboardKeys.APOSTROPHE},
+            //{0, KeyboardKeys.HASH},
+            /*{28, KeyboardKeys.ENTER},
+            {75, KeyboardKeys.NUM_FOUR},
+            {76, KeyboardKeys.NUM_FIVE},
+            {77, KeyboardKeys.NUM_SIX},
+            {42, KeyboardKeys.LEFT_SHIFT},*/
+            //{0, KeyboardKeys.BACKSLASH_UK},
+            {44, KeyboardKeys.Z},
+            {45, KeyboardKeys.X},
+            {46, KeyboardKeys.C},
+            {47, KeyboardKeys.V},
+            {48, KeyboardKeys.B},
+            {49, KeyboardKeys.N},
+            {50, KeyboardKeys.M},
+            {51, KeyboardKeys.COMMA},
+            {52, KeyboardKeys.PERIOD},
+            {53, KeyboardKeys.FORWARD_SLASH},
+            /*{54, KeyboardKeys.RIGHT_SHIFT},
+            {104, KeyboardKeys.ARROW_UP},
+            {79, KeyboardKeys.NUM_ONE},
+            {80, KeyboardKeys.NUM_TWO},
+            {81, KeyboardKeys.NUM_THREE},
+            //{28, KeyboardKeys.NUM_ENTER},
+            {29, KeyboardKeys.LEFT_CONTROL},
+            {91, KeyboardKeys.LEFT_WINDOWS},
+            {56, KeyboardKeys.LEFT_ALT},
+            {57, KeyboardKeys.SPACE},
+            //{56, KeyboardKeys.RIGHT_ALT},
+            {92, KeyboardKeys.RIGHT_WINDOWS},
+            {93, KeyboardKeys.APPLICATION_SELECT},
+            //{29, KeyboardKeys.RIGHT_CONTROL},
+            {107, KeyboardKeys.ARROW_LEFT},
+            {112, KeyboardKeys.ARROW_DOWN},
+            {109, KeyboardKeys.ARROW_RIGHT},
+            {82, KeyboardKeys.NUM_ZERO},
+            {83, KeyboardKeys.NUM_PERIOD},*/
+            {41, KeyboardKeys.OEM8},
+            /*{34, KeyboardKeys.MEDIA_PLAY_PAUSE},
+            {0, KeyboardKeys.MEDIA_PLAY},
+            {0, KeyboardKeys.MEDIA_PAUSE},
+            {36, KeyboardKeys.MEDIA_STOP},
+            {16, KeyboardKeys.MEDIA_PREVIOUS},
+            {25, KeyboardKeys.MEDIA_NEXT},
+            {32, KeyboardKeys.VOLUME_MUTE},
+            {46, KeyboardKeys.VOLUME_DOWN},
+            {48, KeyboardKeys.VOLUME_UP},
+            {0, KeyboardKeys.JPN_HALFFULLWIDTH},
+            {0, KeyboardKeys.JPN_MUHENKAN},
+            {0, KeyboardKeys.JPN_HENKAN},
+            {0, KeyboardKeys.JPN_HIRAGANA_KATAKANA},
+            {0, KeyboardKeys.OEM5},
+            {0, KeyboardKeys.OEMTilde},
+            {0, KeyboardKeys.OEM102},
+            {0, KeyboardKeys.OEM6},
+            {0, KeyboardKeys.OEM6},
+            {0, KeyboardKeys.OEM1},
+            {0, KeyboardKeys.OEM1},
+            {0, KeyboardKeys.OEMPlus},
+            {0, KeyboardKeys.OEMPlus},*/
         };
 
-        static Dictionary<DeviceKeys, uint> KeyToScanCode = null;
+        static Dictionary<KeyboardKeys, uint> KeyToScanCode = null;
 
-        public static int GetScanCode(DeviceKeys key)
+        public static int GetScanCode(KeyboardKeys key)
         {
             if (KeyToScanCode == null)
                 KeyToScanCode = scanCodeConversion.ToList().ToDictionary((kvp) => kvp.Value, (kvp) => kvp.Key);
@@ -234,7 +234,7 @@ namespace Aurora.Utils
             // see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
             bool isE0 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E0);
             bool isE1 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E1);
-            if (Global.kbLayout.Loaded_Localization.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
+            if (GlobalDeviceLayout.Instance.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
             {
                 uint thread = GetWindowThreadProcessId(ActiveProcessMonitor.GetForegroundWindow(), IntPtr.Zero);
                 var layout = GetKeyboardLayout(thread);
@@ -575,10 +575,10 @@ namespace Aurora.Utils
             }
         }
         /// <summary>
-        /// Converts Devices.DeviceKeys from RawInput event
+        /// Converts Devices.KeyboardKeys from RawInput event
         /// </summary>
         /// <param name="eventArgs">RawInput event data</param>
-        /// <returns>The resulting Devices.DeviceKeys</returns>
+        /// <returns>The resulting Devices.KeyboardKeys</returns>
         public static KeyboardKeys GetKeyboardKey(this KeyboardInputEventArgs eventArgs)
         {
             return GetDeviceKey(eventArgs.Key, eventArgs.MakeCode, eventArgs.ScanCodeFlags.HasFlag(ScanCodeFlags.E0));
@@ -590,10 +590,10 @@ namespace Aurora.Utils
         }
 
         /// <summary>
-        /// Converts Forms.Keys to Devices.DeviceKeys
+        /// Converts Forms.Keys to Devices.KeyboardKeys
         /// </summary>
         /// <param name="forms_key">The Forms.Key to be converted</param>
-        /// <returns>The resulting Devices.DeviceKeys</returns>
+        /// <returns>The resulting Devices.KeyboardKeys</returns>
         private static KeyboardKeys getDeviceKey(Keys forms_key, int scanCode = 0, bool isExtendedKey = false)
         {
             switch (forms_key)
@@ -886,11 +886,11 @@ namespace Aurora.Utils
         }
 
         /// <summary>
-        /// Converts Forms.Keys to Devices.DeviceKeys
+        /// Converts Forms.Keys to Devices.KeyboardKeys
         /// </summary>
         /// <param name="formsKeys">Array of Forms.Keys to be converted</param>
-        /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static KeyboardKeys[] GetDeviceKeys(Keys[] formsKeys, bool extendedKeys = false, bool getBoth = false)
+        /// <returns>The resulting Devices.KeyboardKeys</returns>
+        public static KeyboardKeys[] GetKeyboardKeys(Keys[] formsKeys, bool extendedKeys = false, bool getBoth = false)
         {
             HashSet<KeyboardKeys> _returnKeys = new HashSet<KeyboardKeys>();
 
@@ -905,10 +905,10 @@ namespace Aurora.Utils
         }
 
         /// <summary>
-        /// Converts CorsairLedId to Devices.DeviceKeys
+        /// Converts CorsairLedId to Devices.KeyboardKeys
         /// </summary>
         /// <param name="CorsairKey">The CorsairLedId to be converted</param>
-        /// <returns>The resulting Devices.DeviceKeys</returns>
+        /// <returns>The resulting Devices.KeyboardKeys</returns>
         public static KeyboardKeys ToKeyboardKeys(CorsairLedId CorsairKey)
         {
             switch (CorsairKey)

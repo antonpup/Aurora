@@ -556,7 +556,7 @@ namespace Aurora.EffectsEngine
             } else {
                 for (int i = 0; i < keys.Count(); i++)
                 {
-                    Devices.DeviceKeys current_key = keys[i];
+                    DeviceLED current_key = keys[i];
 
                     switch (percentEffectType)
                     {

@@ -316,15 +316,6 @@ namespace Aurora
             }
         }
 
-        private static void InputEventsOnKeyDown(object sender, KeyboardInputEventArgs e)
-        {
-            if (e.Key == Keys.VolumeUp || e.Key == Keys.VolumeDown)
-            {
-                Global.LightingStateManager.AddOverlayForDuration(
-                    new Profiles.Overlays.Event_VolumeOverlay(), Global.Configuration.volume_overlay_settings.delay * 1000);
-            }
-        }
-
         private static void SetupVolumeAsBrightness(object sender, PropertyChangedEventArgs eventArgs)
         {
             if (eventArgs.PropertyName == nameof(Global.Configuration.UseVolumeAsBrightness))

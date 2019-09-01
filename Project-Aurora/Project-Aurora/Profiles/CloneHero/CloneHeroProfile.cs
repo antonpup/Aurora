@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-using DK = Aurora.Devices.DeviceKeys;
+using DK = Aurora.Devices.Layout.Layouts.KeyboardKeys;
 
 namespace Aurora.Profiles.CloneHero
 {

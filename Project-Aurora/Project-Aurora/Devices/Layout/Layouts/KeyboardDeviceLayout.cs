@@ -1193,6 +1193,7 @@ namespace Aurora.Devices.Layout.Layouts
 
     public class KeyboardDeviceLayout : DeviceLayout
     {
+
         public enum PreferredKeyboard
         {
             [Description("None")]
@@ -1226,6 +1227,8 @@ namespace Aurora.Devices.Layout.Layouts
             Logitech_G810 = 102,
             [Description("Logitech - GPRO")]
             Logitech_GPRO = 103,
+            [Description("Logitech - G213")]
+            Logitech_G213 = 104,
 
             //Corsair range is 200-299
             [Description("Corsair - K95")]
@@ -1242,7 +1245,7 @@ namespace Aurora.Devices.Layout.Layouts
             Corsair_K68 = 205,
             [Description("Corsair - K70 MK2")]
             Corsair_K70MK2 = 206
-            ,
+                ,
             //Razer range is 300-399
             [Description("Razer - Blackwidow")]
             Razer_Blackwidow = 300,
@@ -1279,6 +1282,8 @@ namespace Aurora.Devices.Layout.Layouts
 
             [Description("Wooting One")]
             Wooting_One = 800,
+            [Description("Wooting Two")]
+            Wooting_Two = 801,
 
             [Description("Asus Strix Flare")]
             Asus_Strix_Flare = 900,

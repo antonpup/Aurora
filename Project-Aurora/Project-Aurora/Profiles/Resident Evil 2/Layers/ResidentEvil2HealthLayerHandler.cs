@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.ResidentEvil2.GSI;
 using Aurora.Profiles.ResidentEvil2.GSI.Nodes;
@@ -52,22 +53,22 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
         private static float[] animationTimes = { 4.0f, 3.0f, 2.0f };
         private static float[] breakTimes = { 2.0f, 1.0f, 1.0f };
         private static float[] fullAnimTimes = { animationTimes[0] + breakTimes[0], animationTimes[1] + breakTimes[1], animationTimes[2] + breakTimes[2] };
-
+        
         static AnimationTrack hbFine = new AnimationTrack("HBScan", fullAnimTimes[0])
-            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Green))
-            .SetFrame(animationTimes[0], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Green))
+            .SetFrame(0, new AnimationFilledRectangle(-5, GlobalDeviceLayout.Instance.CanvasHeightCenter, 20, GlobalDeviceLayout.Instance.CanvasHeight, Color.Green))
+            .SetFrame(animationTimes[0], new AnimationFilledRectangle(125, GlobalDeviceLayout.Instance.CanvasHeightCenter, 20, GlobalDeviceLayout.Instance.CanvasHeight, Color.Green))
             .SetFrame(breakTimes[0], new AnimationFill(Color.Black));
         static AnimationTrack hbLiteFine = new AnimationTrack("HBScan", fullAnimTimes[0])
-            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.YellowGreen))
-            .SetFrame(animationTimes[0], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.YellowGreen))
+            .SetFrame(0, new AnimationFilledRectangle(-5, GlobalDeviceLayout.Instance.CanvasHeightCenter, 20, GlobalDeviceLayout.Instance.CanvasHeight, Color.YellowGreen))
+            .SetFrame(animationTimes[0], new AnimationFilledRectangle(125, GlobalDeviceLayout.Instance.CanvasHeightCenter, 20, GlobalDeviceLayout.Instance.CanvasHeight, Color.YellowGreen))
             .SetFrame(breakTimes[0], new AnimationFill(Color.Black));
         static AnimationTrack hbCaution = new AnimationTrack("HBScan", fullAnimTimes[1])
-            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Gold))
-            .SetFrame(animationTimes[1], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Gold))
+            .SetFrame(0, new AnimationFilledRectangle(-5, GlobalDeviceLayout.Instance.CanvasHeightCenter, 20, GlobalDeviceLayout.Instance.CanvasHeight, Color.Gold))
+            .SetFrame(animationTimes[1], new AnimationFilledRectangle(125, GlobalDeviceLayout.Instance.CanvasHeightCenter, 20, GlobalDeviceLayout.Instance.CanvasHeight, Color.Gold))
             .SetFrame(breakTimes[1], new AnimationFill(Color.Black));
         static AnimationTrack hbDanger = new AnimationTrack("HBScan", fullAnimTimes[2])
-            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Red))
-            .SetFrame(animationTimes[2], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Red))
+            .SetFrame(0, new AnimationFilledRectangle(-5, GlobalDeviceLayout.Instance.CanvasHeightCenter, 20, GlobalDeviceLayout.Instance.CanvasHeight, Color.Red))
+            .SetFrame(animationTimes[2], new AnimationFilledRectangle(125, GlobalDeviceLayout.Instance.CanvasHeightCenter, 20, GlobalDeviceLayout.Instance.CanvasHeight, Color.Red))
             .SetFrame(breakTimes[2], new AnimationFill(Color.Black));
 
         AnimationMix mixFine = new AnimationMix(new[] { hbFine });
@@ -131,22 +132,22 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
                         case Player_ResidentEvil2.PlayerStatus.Fine:
                             bg_layer.Fill(Color.FromArgb(8, Color.Green.R, Color.Green.G, Color.Green.B));
                             heartbeat_animationTime = fullAnimTimes[0];
-                            mixFine.Draw(bg_layer.GetGraphics(), heartbeat_keyframe);
+                            mixFine.Draw(bg_layer.GetCanvas(), heartbeat_keyframe);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.LiteFine:
                             bg_layer.Fill(Color.FromArgb(8, Color.YellowGreen.R, Color.YellowGreen.G, Color.YellowGreen.B));
                             heartbeat_animationTime = fullAnimTimes[0];
-                            mixLiteFine.Draw(bg_layer.GetGraphics(), heartbeat_keyframe);
+                            mixLiteFine.Draw(bg_layer.GetCanvas(), heartbeat_keyframe);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Caution:
                             bg_layer.Fill(Color.FromArgb(8, Color.Gold.R, Color.Gold.G, Color.Gold.B));
                             heartbeat_animationTime = fullAnimTimes[1];
-                            mixCaution.Draw(bg_layer.GetGraphics(), heartbeat_keyframe);
+                            mixCaution.Draw(bg_layer.GetCanvas(), heartbeat_keyframe);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Danger:
                             bg_layer.Fill(Color.FromArgb(8, Color.Red.R, Color.Red.G, Color.Red.B));
                             heartbeat_animationTime = fullAnimTimes[2];
-                            mixDanger.Draw(bg_layer.GetGraphics(), heartbeat_keyframe);
+                            mixDanger.Draw(bg_layer.GetCanvas(), heartbeat_keyframe);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Dead:
                             bg_layer.Fill(Color.DarkGray);

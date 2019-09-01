@@ -189,7 +189,7 @@ namespace Aurora.Devices.SteelSeries
                         colorEvent.data.Add("mouselogo", colorPayload);
                         break;
                 }
-                    
+
 
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
@@ -208,47 +208,48 @@ namespace Aurora.Devices.SteelSeries
                     if (e.Cancel) return false;
                     //CorsairLedId localKey = ToCorsair(key.Key);
 
-                SendColorToPeripheralZone((MouseLights)key.Key, color);
-            }
-
-                    if (e.Cancel) return false;
-
-                    switch (key.Key)
-                    {
-                        case DeviceKeys.Peripheral:
-                            SendColorToPeripheral(color, payload, forced);
-                            break;
-                        case DeviceKeys.Peripheral_Logo:
-                        case DeviceKeys.Peripheral_FrontLight:
-                        case DeviceKeys.Peripheral_ScrollWheel:
-                            SendColorToPeripheralZone(key.Key, color, payload);
-                            break;
-                        case DeviceKeys.MOUSEPADLIGHT1:
-                        case DeviceKeys.MOUSEPADLIGHT2:
-                        case DeviceKeys.MOUSEPADLIGHT3:
-                        case DeviceKeys.MOUSEPADLIGHT4:
-                        case DeviceKeys.MOUSEPADLIGHT5:
-                        case DeviceKeys.MOUSEPADLIGHT6:
-                        case DeviceKeys.MOUSEPADLIGHT7:
-                        case DeviceKeys.MOUSEPADLIGHT8:
-                        case DeviceKeys.MOUSEPADLIGHT9:
-                        case DeviceKeys.MOUSEPADLIGHT10:
-                        case DeviceKeys.MOUSEPADLIGHT11:
-                        case DeviceKeys.MOUSEPADLIGHT12:
-                            // colors_mousepad[Convert.ToInt32(key.Key) - 201] = Tuple.Create(color.R, color.G, color.B);
-                            colorsMousepad.Add(Tuple.Create(color.R, color.G, color.B));
-                            break;
-                        default:
-                            byte hid = GetHIDCode(key.Key);
-
-                            if (hid != (byte)USBHIDCodes.ERROR)
-                            {
-                                hids.Add(hid);
-                                colors.Add(Tuple.Create(color.R, color.G, color.B));
-                            }
-                            break;
-                    }
+                    SendColorToPeripheralZone((MouseLights)key.Key, color);
                 }
+
+                if (e.Cancel) return false;
+
+                switch (key.Key)
+                {
+                    case DeviceKeys.Peripheral:
+                        SendColorToPeripheral(color, payload, forced);
+                        break;
+                    case DeviceKeys.Peripheral_Logo:
+                    case DeviceKeys.Peripheral_FrontLight:
+                    case DeviceKeys.Peripheral_ScrollWheel:
+                        SendColorToPeripheralZone(key.Key, color, payload);
+                        break;
+                    case DeviceKeys.MOUSEPADLIGHT1:
+                    case DeviceKeys.MOUSEPADLIGHT2:
+                    case DeviceKeys.MOUSEPADLIGHT3:
+                    case DeviceKeys.MOUSEPADLIGHT4:
+                    case DeviceKeys.MOUSEPADLIGHT5:
+                    case DeviceKeys.MOUSEPADLIGHT6:
+                    case DeviceKeys.MOUSEPADLIGHT7:
+                    case DeviceKeys.MOUSEPADLIGHT8:
+                    case DeviceKeys.MOUSEPADLIGHT9:
+                    case DeviceKeys.MOUSEPADLIGHT10:
+                    case DeviceKeys.MOUSEPADLIGHT11:
+                    case DeviceKeys.MOUSEPADLIGHT12:
+                        // colors_mousepad[Convert.ToInt32(key.Key) - 201] = Tuple.Create(color.R, color.G, color.B);
+                        colorsMousepad.Add(Tuple.Create(color.R, color.G, color.B));
+                        break;
+                    default:
+                        byte hid = GetHIDCode(key.Key);
+
+                        if (hid != (byte)USBHIDCodes.ERROR)
+                        {
+                            hids.Add(hid);
+                            colors.Add(Tuple.Create(color.R, color.G, color.B));
+                        }
+                        break;
+                }
+            }
+        }
 
         public bool UpdateDevice(KeyboardDeviceLayout device, PayloadColorEventJSON colorEvent, DoWorkEventArgs e, bool forced = false)
         {

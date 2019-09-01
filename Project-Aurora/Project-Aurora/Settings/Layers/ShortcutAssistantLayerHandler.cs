@@ -153,8 +153,8 @@ namespace Aurora.Settings.Layers
                     if (Properties.DimBackground)
                         sc_assistant_layer.Fill(Properties.DimColor);
 
-                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(shortcutKeys, true, !Console.NumberLock).ToList().ConvertAll(s => s.GetDeviceLED()), Properties.PrimaryColor);
-                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(heldKeys, true).ToList().ConvertAll(s => s.GetDeviceLED()), Properties.PrimaryColor);
+                    sc_assistant_layer.Set(Utils.KeyUtils.GetKeyboardKeys(shortcutKeys, true, !Console.NumberLock).ToList().ConvertAll(s => s.GetDeviceLED()), Properties.PrimaryColor);
+                    sc_assistant_layer.Set(Utils.KeyUtils.GetKeyboardKeys(heldKeys, true).ToList().ConvertAll(s => s.GetDeviceLED()), Properties.PrimaryColor);
                 }
             }
 

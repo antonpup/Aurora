@@ -73,6 +73,11 @@ namespace Aurora.Devices.Layout
         public int CanvasWidthCenter => CanvasWidth / 2;
         public int CanvasHeightCenter => CanvasHeight / 2;
 
+        /// <summary>
+        /// Creates a new FreeFormObject that perfectly occupies the entire canvas.
+        /// </summary>
+        public Aurora.Settings.FreeFormObject WholeCanvasFreeForm => new Settings.FreeFormObject(0, 0, Width, Height);
+
         public event NewLayerRendered NewLayerRender = delegate { };
 
 
@@ -414,6 +419,12 @@ namespace Aurora.Devices.Layout
             //grid.IsHitTestVisible = false;
 
             return (control = grid);
+        }
+
+        public bool IsAutomaticGeneration()
+        {
+            //TODO: Proper implementation
+            return false;
         }
 
         #region IDisposable Support

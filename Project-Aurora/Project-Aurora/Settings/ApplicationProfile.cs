@@ -73,9 +73,9 @@ namespace Aurora.Settings
 
         public Dictionary<string, ScriptSettings> ScriptSettings { get { return _ScriptSettings; } set { UpdateVar(ref _ScriptSettings, value); } }
 
-        public ObservableCollection<Layer> Layers { get => _Layers; set { _Layers = value; InvokePropertyChanged(); } }
+        public ObservableCollection<Layer> Layers { get => _Layers; set { UpdateVar(ref _Layers, value); } }
 
-        public ObservableCollection<Layer> OverlayLayers { get => _OverlayLayers; set { _OverlayLayers = value; InvokePropertyChanged(); } }
+        public ObservableCollection<Layer> OverlayLayers { get => _OverlayLayers; set { UpdateVar(ref _OverlayLayers, value); } }
         #endregion
 
         public ApplicationProfile()

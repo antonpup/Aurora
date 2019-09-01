@@ -12,7 +12,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DK = Aurora.Devices.DeviceKeys;
+using DK = Aurora.Devices.Layout.Layouts.KeyboardKeys;
 
 namespace Aurora.Profiles.Slime_Rancher
 {

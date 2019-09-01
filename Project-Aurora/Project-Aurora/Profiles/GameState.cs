@@ -275,9 +275,10 @@ namespace Aurora.Profiles
         private static MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
         private static NAudio.Wave.WaveInEvent waveInEvent = new NAudio.Wave.WaveInEvent();
 
-        public int DS4Battery => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Battery ?? 0;
+        //TODO: Fix these
+        //public int DS4Battery => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Battery ?? 0;
 
-        public bool DS4Charging => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Charging ?? false;
+        //public bool DS4Charging => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Charging ?? false;
 
 
         /// <summary>

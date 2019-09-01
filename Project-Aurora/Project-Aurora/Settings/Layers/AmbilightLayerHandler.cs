@@ -339,7 +339,7 @@ namespace Aurora.Settings.Layers
             if (!captureTimer.Enabled) // Static timer isn't running, start it!
                 captureTimer.Start();
 
-            Image newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            Image newImage = new Bitmap(GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
 
             switch (Properties.AmbilightCaptureType)
             {
@@ -347,7 +347,7 @@ namespace Aurora.Settings.Layers
                     if (screen != null)
                     {
                         using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen, 0, 0, Effects.canvas_width, Effects.canvas_height);
+                            graphics.DrawImage(screen, 0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight);
                     }
                     break;
                 case AmbilightCaptureType.SpecificProcess:
@@ -379,7 +379,7 @@ namespace Aurora.Settings.Layers
                                 app_rect.bottom - app_rect.top));
 
                         using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
+                            graphics.DrawImage(screen, new Rectangle(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), scr_region, GraphicsUnit.Pixel);
                     }                   
                     break;
                 case AmbilightCaptureType.Coordinates:
@@ -395,7 +395,7 @@ namespace Aurora.Settings.Layers
                                 Properties.Coordinates.Height));
 
                         using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
+                            graphics.DrawImage(screen, new Rectangle(0, 0, GlobalDeviceLayout.Instance.CanvasWidth, GlobalDeviceLayout.Instance.CanvasHeight), scr_region, GraphicsUnit.Pixel);
                     }
                     break;
             }
@@ -409,8 +409,8 @@ namespace Aurora.Settings.Layers
             if (Properties.AmbilightType == AmbilightType.Default)
             {
                 Canvas g = ambilight_layer.GetCanvas();
-                if (screen_image != null)
-                    g.DrawImageUnscaled(screen_image, 0, 0);
+                if (newImage != null)
+                    g.DrawImageUnscaled(newImage, 0, 0);
             }
             else if (Properties.AmbilightType == AmbilightType.AverageColor)
             {

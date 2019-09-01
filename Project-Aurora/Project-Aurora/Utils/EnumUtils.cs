@@ -149,7 +149,7 @@ namespace Aurora.Utils
 
     public class KbBrandToStringVC : EnumToStringVC
     {
-        public KbBrandToStringVC() : base(PreferredKeyboard.None) { }
+        public KbBrandToStringVC() : base(Devices.Layout.Layouts.KeyboardDeviceLayout.PreferredKeyboard.None) { }
     }
 
     public class MouseBrandToStringVC : EnumToStringVC

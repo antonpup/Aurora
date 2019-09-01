@@ -8,6 +8,7 @@ using Aurora.Settings.Overrides.Logic;
 using Aurora.EffectsEngine;
 using System.Runtime.Serialization;
 using System.Linq;
+using Aurora.Devices.Layout.Layouts;
 
 namespace Aurora.Profiles.Skype
 {
@@ -29,8 +30,8 @@ namespace Aurora.Profiles.Skype
                 {
                     Properties = new BreathingLayerHandlerProperties()
                     {
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                                Devices.DeviceKeys.PRINT_SCREEN, Devices.DeviceKeys.SCROLL_LOCK, Devices.DeviceKeys.PAUSE_BREAK
+                        _Sequence = new KeySequence(new KeyboardKeys[] {
+                                KeyboardKeys.PRINT_SCREEN, KeyboardKeys.SCROLL_LOCK, KeyboardKeys.PAUSE_BREAK
                             }),
                         _PrimaryColor = Color.Orange,
                         _SecondaryColor = Color.Black,
@@ -42,9 +43,9 @@ namespace Aurora.Profiles.Skype
                 {
                     Properties = new BreathingLayerHandlerProperties()
                     {
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                                Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP,
-                                Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN
+                        _Sequence = new KeySequence(new KeyboardKeys[] {
+                                KeyboardKeys.INSERT, KeyboardKeys.HOME, KeyboardKeys.PAGE_UP,
+                                KeyboardKeys.DELETE, KeyboardKeys.END, KeyboardKeys.PAGE_DOWN
                             }),
                         _PrimaryColor = Color.Green,
                         _SecondaryColor = Color.Black,

@@ -8,6 +8,7 @@ using System.Text;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
+using Aurora.Devices.Layout;
 
 namespace Aurora.Settings
 {
@@ -143,108 +144,6 @@ namespace Aurora.Settings
         LeftHanded = 2
     }
 
-    public enum PreferredKeyboard
-    {
-        [Description("None")]
-        None = 0,
-
-        [Description("Generic Laptop")]
-        GenericLaptop = 1,
-
-        [Description("Generic Laptop (Numpad)")]
-        GenericLaptopNumpad = 2,
-        /*
-        [Description("Logitech")]
-        Logitech = 1,
-        [Description("Corsair")]
-        Corsair = 2,
-        [Description("Razer")]
-        Razer = 3,
-        
-        [Description("Clevo")]
-        Clevo = 4,
-        [Description("Cooler Master")]
-        CoolerMaster = 5,
-        */
-
-        //Logitech range is 100-199
-        [Description("Logitech - G910")]
-        Logitech_G910 = 100,
-        [Description("Logitech - G410")]
-        Logitech_G410 = 101,
-        [Description("Logitech - G810")]
-        Logitech_G810 = 102,
-        [Description("Logitech - GPRO")]
-        Logitech_GPRO = 103,
-		[Description("Logitech - G213")]
-        Logitech_G213 = 104,
-
-        //Corsair range is 200-299
-        [Description("Corsair - K95")]
-        Corsair_K95 = 200,
-        [Description("Corsair - K70")]
-        Corsair_K70 = 201,
-        [Description("Corsair - K65")]
-        Corsair_K65 = 202,
-        [Description("Corsair - STRAFE")]
-        Corsair_STRAFE = 203,
-        [Description("Corsair - K95 Platinum")]
-        Corsair_K95_PL = 204,
-        [Description("Corsair - K68")]
-        Corsair_K68 = 205,
-        [Description("Corsair - K70 MK2")]
-        Corsair_K70MK2 = 206
-            ,
-        //Razer range is 300-399
-        [Description("Razer - Blackwidow")]
-        Razer_Blackwidow = 300,
-        [Description("Razer - Blackwidow X")]
-        Razer_Blackwidow_X = 301,
-        [Description("Razer - Blackwidow Tournament Edition")]
-        Razer_Blackwidow_TE = 302,
-        [Description("Razer - Blade")]
-        Razer_Blade = 303,
-
-        //Clevo range is 400-499
-
-        //Cooler Master range is 500-599
-        [Description("Cooler Master - Masterkeys Pro L")]
-        Masterkeys_Pro_L = 500,
-        [Description("Cooler Master - Masterkeys Pro S")]
-        Masterkeys_Pro_S = 501,
-        [Description("Cooler Master - Masterkeys Pro M")]
-        Masterkeys_Pro_M = 502,
-        [Description("Cooler Master - Masterkeys MK750")]
-        Masterkeys_MK750 = 503,
-
-        //Roccat range is 600-699
-        [Description("Roccat Ryos")]
-        Roccat_Ryos = 600,
-
-        //Steelseries range is 700-799
-        [Description("SteelSeries Apex M800")]
-        SteelSeries_Apex_M800 = 700,
-        [Description("SteelSeries Apex M750")]
-        SteelSeries_Apex_M750 = 701,
-        [Description("SteelSeries Apex M750 TKL")]
-        SteelSeries_Apex_M750_TKL = 702,
-
-        [Description("Wooting One")]
-        Wooting_One = 800,
-        [Description("Wooting Two")]
-        Wooting_Two = 801,
-
-        [Description("Asus Strix Flare")]
-        Asus_Strix_Flare = 900,
-
-        //Drevo range is 1000-1099
-        [Description("Drevo BladeMaster")]
-        Drevo_BladeMaster = 1000,
-
-	//Creative range is 1100-1199
-        [Description("SoundBlasterX VanguardK08")]
-        SoundBlasterX_Vanguard_K08 = 1100,
-    }
 
     public enum PreferredKeyboardLocalization
     {
@@ -386,7 +285,7 @@ namespace Aurora.Settings
         public bool GetDevReleases { get { return getDevReleases; } set { UpdateVar(ref getDevReleases, value); } }
 
         private bool getPointerUpdates = true;
-        public bool GetPointerUpdates { get { return getPointerUpdates; } set { getPointerUpdates = value; InvokePropertyChanged(); } }
+        public bool GetPointerUpdates { get { return getPointerUpdates; } set { UpdateVar(ref getPointerUpdates, value); } }
 
         private bool highPriority = false;
         public bool HighPriority { get { return highPriority; } set { UpdateVar(ref highPriority, value); } }
@@ -395,7 +294,7 @@ namespace Aurora.Settings
         public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { UpdateVar(ref bitmapAccuracy, value); } }
 
         private bool enableAudioCapture;
-        public bool EnableAudioCapture { get => enableAudioCapture; set { enableAudioCapture = value; InvokePropertyChanged(); } }
+        public bool EnableAudioCapture { get => enableAudioCapture; set { UpdateVar(ref enableAudioCapture, value); } }
 
         public bool updates_check_on_start_up;
         public bool start_silently;
@@ -437,10 +336,10 @@ namespace Aurora.Settings
 
         //Debug Settings
         private bool bitmapDebugTopMost;
-        public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
+        public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { UpdateVar(ref bitmapDebugTopMost, value); } }
 
         private bool httpDebugTopMost;
-        public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
+        public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { UpdateVar(ref httpDebugTopMost, value); } }
 
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
@@ -470,9 +369,9 @@ namespace Aurora.Settings
             excluded_programs = new HashSet<string>();
             //additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
             devices_disabled = new HashSet<Type>();
-            devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
+            /*devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
-            devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));
+            devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));*/
             OverlaysInPreview = false;
 
             //Blackout and Night theme

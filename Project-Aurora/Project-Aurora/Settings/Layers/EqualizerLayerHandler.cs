@@ -1,6 +1,5 @@
 ﻿using Aurora.Devices.Layout;
 using Aurora.EffectsEngine;
-using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
@@ -20,6 +19,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using Canvas = Aurora.Devices.Layout.Canvas;
 
 namespace Aurora.Settings.Layers
 {
@@ -128,7 +128,7 @@ namespace Aurora.Settings.Layers
         public override void Default()
         {
             base.Default();
-            _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
+            _Sequence = new KeySequence(GlobalDeviceLayout.Instance.WholeCanvasFreeForm);
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
             _Gradient = new EffectBrush(ColorSpectrum.RainbowLoop).SetBrushType(EffectBrush.BrushType.Linear);
@@ -266,61 +266,39 @@ namespace Aurora.Settings.Layers
                 Devices.Layout.Canvas g = equalizer_layer.GetCanvas();
                 int wave_step_amount = _local_fft.Length / GlobalDeviceLayout.Instance.CanvasWidth;
 
-                switch (Properties.EQType)
                 // The region in which to draw the equalizer.
                 var rect = Properties.Sequence.GetAffectedRegion(); //new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
 
                 if (BgEnabled)
                     equalizer_layer.Set(Properties.Sequence, Properties.DimColor);
 
-                using (Graphics g = equalizer_layer.GetGraphics())
+
+                switch (Properties.EQType)
                 {
                     case EqualizerType.Waveform:
-                        for (int x = 0; x < GlobalDeviceLayout.Instance.CanvasWidth; x++)
+                        for (int x = 0; x < (int)rect.Width; x++)
                         {
                             float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
-                    g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
-                            Brush brush = GetBrush(fft_val, x, GlobalDeviceLayout.Instance.CanvasWidth);
-                    int wave_step_amount = _local_fft.Length / (int)rect.Width;
+                            Brush brush = GetBrush(fft_val, x, rect.Width);
 
-                    switch (Properties.EQType)
-                    {
-                        case EqualizerType.Waveform:
-                            for (int x = 0; x < (int)rect.Width; x++)
-                            {
-                                float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
-
-                            g.DrawLine(new Pen(brush), new PointF(x, GlobalDeviceLayout.Instance.CanvasHeightCenter), new PointF(x, GlobalDeviceLayout.Instance.CanvasHeightCenter - fft_val / scaled_max_amplitude * 500.0f));
+                            g.DrawLine(new Pen(brush), x + rect.X, (rect.Height / 2) + rect.Y, x + rect.X, (rect.Height / 2) + rect.Y - Math.Max(Math.Min(fft_val / scaled_max_amplitude * 500.0f, rect.Height / 2), -rect.Height / 2));
                         }
                         break;
                     case EqualizerType.Waveform_Bottom:
-                        for (int x = 0; x < GlobalDeviceLayout.Instance.CanvasWidth; x++)
+                        for (int x = 0; x < (int)rect.Width; x++)
                         {
                             float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
-                                Brush brush = GetBrush(fft_val, x, rect.Width);
 
-                            Brush brush = GetBrush(fft_val, x, GlobalDeviceLayout.Instance.CanvasWidth);
-                                g.DrawLine(new Pen(brush), x + rect.X, (rect.Height / 2) + rect.Y, x + rect.X, (rect.Height / 2) + rect.Y - Math.Max(Math.Min(fft_val / scaled_max_amplitude * 500.0f, rect.Height / 2), -rect.Height / 2));
-                            }
-                            break;
-                        case EqualizerType.Waveform_Bottom:
-                            for (int x = 0; x < (int)rect.Width; x++)
-                            {
-                                float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
+                            Brush brush = GetBrush(fft_val, x, rect.Width);
 
-                            g.DrawLine(new Pen(brush), x, GlobalDeviceLayout.Instance.CanvasHeight, x, GlobalDeviceLayout.Instance.CanvasHeight - Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f);
+                            g.DrawLine(new Pen(brush), x + rect.X, rect.Height + rect.Y, x + rect.X, rect.Height + rect.Y - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, rect.Height));
                         }
                         break;
                     case EqualizerType.PowerBars:
-                                Brush brush = GetBrush(fft_val, x, rect.Width);
 
                         //Perform FFT again to get frequencies
                         FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _local_fft);
-                                g.DrawLine(new Pen(brush), x + rect.X, rect.Height + rect.Y, x + rect.X, rect.Height + rect.Y - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, rect.Height));
-                            }
-                            break;
-                        case EqualizerType.PowerBars:
 
                         while (flux_array.Count < freqs.Length)
                         {
@@ -356,9 +334,8 @@ namespace Aurora.Settings.Layers
                         }
 
                         //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
-                            float bar_width = rect.Width / (float)(freqs.Length - 1);
 
-                        float bar_width = GlobalDeviceLayout.Instance.CanvasWidth / (float)(freqs.Length - 1);
+                        float bar_width = rect.Width / (float)(freqs.Length - 1);
 
                         for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
                         {
@@ -368,27 +345,21 @@ namespace Aurora.Settings.Layers
 
                             if (previous_freq_results[f_x] - fft_val > 0.10)
                                 fft_val = previous_freq_results[f_x] - 0.15f;
-                                float x = (f_x * bar_width) + rect.X;
-                                float y = rect.Height + rect.Y;
-                                float height = fft_val * rect.Height;
 
-                            float x = f_x * bar_width;
-                            float y = GlobalDeviceLayout.Instance.CanvasHeight;
-                            float width = bar_width;
-                            float height = fft_val * GlobalDeviceLayout.Instance.CanvasHeight;
+                            float x = (f_x * bar_width) + rect.X;
+                            float y = rect.Height + rect.Y;
+                            float height = fft_val * rect.Height;
 
                             previous_freq_results[f_x] = fft_val;
 
                             Brush brush = GetBrush(-(f_x % 2), f_x, freq_results.Length - 1);
-                                g.FillRectangle(brush, x, y - height, bar_width, height);
-                            }
 
-                            g.FillRectangle(brush, x, y - height, width, height);
+                            g.FillRectangle(brush, x, y - height, bar_width, height);
                         }
 
                         break;
-                    
                 }
+
 
                 var hander = NewLayerRender;
                 if (hander != null)
