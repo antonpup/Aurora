@@ -73,7 +73,7 @@ namespace Aurora_Updater
         public UpdateStatus updateState = UpdateStatus.None;
         private int downloadProgressCheck = 0;
         private int secondsLeft = 15;
-        private Aurora.Settings.Configuration Config;
+        private Aurora.AuroraCoreSettings Config;
         private GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-updater"));
         public Release LatestRelease;
 
@@ -88,11 +88,14 @@ namespace Aurora_Updater
         {
             try
             {
-                Config = Aurora.Settings.ConfigManager.Load();
+                var core = new Aurora.AuroraCore();
+                core.LoadSettings();
+                Config = core.Settings;
             }
             catch (Exception e)
             {
-                Config = new Aurora.Settings.Configuration();
+                MessageBox.Show("Could not get Aurora Settings, defaulting to no pre-release updates. Exc:"+e.ToString());
+                Config = null;
             }
         }
 
@@ -119,7 +122,7 @@ namespace Aurora_Updater
 
             try
             {
-                if (Config.GetDevReleases || !String.IsNullOrWhiteSpace(version.PreRelease))
+                if (Config?.GetDevReleases ?? false || !String.IsNullOrWhiteSpace(version.PreRelease))
                     LatestRelease = gClient.Repository.Release.GetAll("antonpup", "Aurora", new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
                 else
                     LatestRelease = gClient.Repository.Release.GetLatest("antonpup", "Aurora").Result;

@@ -109,31 +109,31 @@ namespace Aurora.Devices
                         device.Shutdown();
                     }
                 }
-                
+                device.SaveSettings();
             };
         }
         public DeviceManager()
         {
             RegisterDevice(new Logitech.LogitechDevice());         // Logitech Device
-            //devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
-            devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
-            devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
-            //devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
-            //devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
-            //devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
-            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
-            devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
+            //RegisterDevice(new Devices.SteelSeries.SteelSeriesDevice());   // SteelSeries Device
+            RegisterDevice(new Devices.Wooting.WootingDevice());           // Wooting Device
+            RegisterDevice(new Devices.Razer.RazerDevice());               // Razer Device
+            //RegisterDevice(new Devices.Creative.SoundBlasterXDevice());    // SoundBlasterX Device
+            //RegisterDevice(new Devices.CoolerMaster.CoolerMasterDevice()); // CoolerMaster Device
+            //RegisterDevice(new Devices.Corsair.CorsairDevice());           // Corsair Device
+            RegisterDevice(new Devices.Drevo.DrevoDevice());               // Drevo Device
+            RegisterDevice(new Devices.Roccat.RoccatDevice());             // Roccat Device
 
             /*
-            devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
-            devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
-            devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
-            devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
-            devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
-            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
-            devices.Add(new DeviceContainer(new Devices.YeeLight.YeeLightDevice()));         // YeeLight Device
-            devices.Add(new DeviceContainer(new Devices.Asus.AsusDevice()));               // Asus Device
-            devices.Add(new DeviceContainer(new Devices.NZXT.NZXTDevice()));                 //NZXT Device
+            RegisterDevice(new Devices.Clevo.ClevoDevice());               // Clevo Device
+            RegisterDevice(new Devices.AtmoOrbDevice.AtmoOrbDevice());     // AtmoOrb Ambilight Device
+            RegisterDevice(new Devices.UnifiedHID.UnifiedHIDDevice());     // UnifiedHID Device
+            RegisterDevice(new Devices.LightFX.LightFxDevice());           //Alienware
+            RegisterDevice(new Devices.Dualshock.DualshockDevice());       //DualShock 4 Device
+            RegisterDevice(new Devices.Drevo.DrevoDevice());               // Drevo Device
+            RegisterDevice(new Devices.YeeLight.YeeLightDevice());         // YeeLight Device
+            RegisterDevice(new Devices.Asus.AsusDevice());               // Asus Device
+            RegisterDevice(new Devices.NZXT.NZXTDevice());                 //NZXT Device
             
             */
             string devices_scripts_path = System.IO.Path.Combine(App.ExecutingDirectory, "Scripts", "Devices");
@@ -156,7 +156,7 @@ namespace Aurora.Devices
 
                                     Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
-                                    devices.Add(new DeviceContainer(scripted_device));
+                                    RegisterDevice(scripted_device));
                                 }
                                 else
                                     Global.logger.Error("Script \"{0}\" does not contain a public 'main' class", device_script);
@@ -170,7 +170,7 @@ namespace Aurora.Devices
 
                                     Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
-                                    devices.Add(new DeviceContainer(scripted_device));
+                                    RegisterDevice(scripted_device));
                                 }
 
                                 break;

@@ -296,7 +296,7 @@ namespace Aurora.Profiles
                     this.Settings.ProfileOrder.Remove(key);
             }
 
-            this.Settings.ProfileOrder.Remove("desktop");
+            this.Settings.ProfileOrder.RemoveAll((s) => s.Equals("desktop"));
             this.Settings.ProfileOrder.Insert(0, "desktop");
         }
 
@@ -810,7 +810,7 @@ namespace Aurora.Profiles
             }
             catch (Exception e)
             {
-                Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);
+                logger.Warn("Exception during GameStateUpdate(), error: " + e);
             }
 #endif
         }

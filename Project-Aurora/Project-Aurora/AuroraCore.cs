@@ -29,8 +29,6 @@ namespace Aurora
 
         private static InputInterceptor InputInterceptor;
 
-        public static string SavePath = App.AppDataDirectory;
-
         public static string ScriptDirectory = "Scripts";
         public static ScriptEngine PythonEngine = Python.CreateEngine();
 
@@ -62,7 +60,7 @@ namespace Aurora
         public KeyRecorder key_recorder;
         public RzManager razerManager;
 
-        public AuroraCore() : base("CoreSettings.json")
+        public AuroraCore() : base()
         {
 
         }

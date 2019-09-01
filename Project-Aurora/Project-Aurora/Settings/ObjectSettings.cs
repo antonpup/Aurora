@@ -21,7 +21,7 @@ namespace Aurora.Settings
         }
         public ObjectSettings(string prefix)
         {
-            this.SettingsSavePath = Path.Combine(AuroraCore.SavePath, prefix, this.GetType().Name + ".json");
+            this.SettingsSavePath = Path.Combine(App.AppDataDirectory, prefix + this.GetType().Name + ".json");
         }
 
         public void SaveSettings()
@@ -42,7 +42,7 @@ namespace Aurora.Settings
             File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented }));
         }
 
-        protected void LoadSettings()
+        public void LoadSettings()
         {
             this.LoadSettings(typeof(T));
         }
