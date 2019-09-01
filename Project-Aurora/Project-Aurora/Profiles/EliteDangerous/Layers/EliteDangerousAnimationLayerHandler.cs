@@ -16,6 +16,12 @@ using Aurora.Utils;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {
+    public enum EliteAnimation
+    {
+        None,
+        FsdCountdowm,
+        Hyperspace
+    }
     public class EliteDangerousAnimationHandlerProperties : LayerHandlerProperties2Color<EliteDangerousAnimationHandlerProperties>
     {
         public EliteDangerousAnimationHandlerProperties() : base() { }
@@ -29,12 +35,6 @@ namespace Aurora.Profiles.EliteDangerous.Layers
     }
     public class EliteDangerousAnimationLayerHandler : LayerHandler<EliteDangerousAnimationHandlerProperties>
     {
-        enum EliteAnimation
-        {
-            None,
-            FsdCountdowm,
-            Hyperspace
-        }
         private AnimationMix fsd_countdown_mix;
         private AnimationMix hyperspace_mix;
         
@@ -47,10 +47,9 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         }
 
         private float layerFadeState = 0;
-        private static float animationKeyframe = 0.0f;
+        private static float totalAnimationTime, animationKeyframe = 0.0f;
         private static EliteAnimation currentAnimation = EliteAnimation.None;
         private static float animationTime = 0.0f;
-        private bool init = false;
         
         public EliteDangerousAnimationLayerHandler() : base()
         {
@@ -89,18 +88,15 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         {
             GameState_EliteDangerous gameState = state as GameState_EliteDangerous;
 
-            if (!init)
-            {
-                init = true;
-                UpdateAnimations();
-            }
-            
             previousTime = currentTime;
             currentTime = Time.GetMillisecondsSinceEpoch();
 
             EffectLayer animation_layer = new EffectLayer("Elite: Dangerous - Animations");
-            
-            if (gameState.Journal.fsdState == FSDState.Idle)
+
+            if (gameState.animateOnce != EliteAnimation.None)
+            {
+                currentAnimation = gameState.animateOnce;
+            } else if (gameState.Journal.fsdState == FSDState.Idle)
             {
                 currentAnimation = EliteAnimation.None;
             } else if (gameState.Journal.fsdState == FSDState.CountdownSupercruise || gameState.Journal.fsdState == FSDState.CountdownHyperspace)
@@ -114,6 +110,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             if (currentAnimation == EliteAnimation.None)
             {
                 animationKeyframe = 0;
+                totalAnimationTime = 0;
             }
 
             if (currentAnimation != EliteAnimation.None || gameState.Journal.fsdWaitingSupercruise)
@@ -126,18 +123,30 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 layerFadeState = Math.Max(0, layerFadeState - 0.03f);
                 animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
             }
-            
+
+            float deltaTime = 0f, currentAnimationDuration = 0f;
             if(currentAnimation == EliteAnimation.FsdCountdowm) {
                 fsd_countdown_mix.Draw(animation_layer.GetGraphics(), animationKeyframe);
-                animationKeyframe += getDeltaTime();
+                deltaTime = getDeltaTime();
+                animationKeyframe += deltaTime;
+
+                currentAnimationDuration = fsd_countdown_mix.GetDuration();
             } else if (currentAnimation == EliteAnimation.Hyperspace)
             {
                 hyperspace_mix.Draw(animation_layer.GetGraphics(), animationKeyframe);
                 hyperspace_mix.Draw(animation_layer.GetGraphics(), findMod(animationKeyframe + 1.2f, hyperspace_mix.GetDuration()));
                 hyperspace_mix.Draw(animation_layer.GetGraphics(), findMod(animationKeyframe + 2.8f, hyperspace_mix.GetDuration()));
+                deltaTime = getDeltaTime();
                 //Loop the animation
-                animationKeyframe = findMod(animationKeyframe + (getDeltaTime()), hyperspace_mix.GetDuration());
-           }
+                animationKeyframe = findMod(animationKeyframe + (deltaTime), hyperspace_mix.GetDuration());
+                
+                currentAnimationDuration = hyperspace_mix.GetDuration();
+            }
+            totalAnimationTime += deltaTime;
+            if (totalAnimationTime > currentAnimationDuration)
+            {
+                gameState.animateOnce = EliteAnimation.None;
+            }
 
             return animation_layer;
         }

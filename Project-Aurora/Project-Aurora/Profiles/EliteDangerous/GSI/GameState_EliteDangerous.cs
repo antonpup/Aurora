@@ -1,5 +1,6 @@
 ﻿using System;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
+using Aurora.Profiles.EliteDangerous.Layers;
 
 namespace Aurora.Profiles.EliteDangerous.GSI
 {
@@ -8,6 +9,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI
         long flagsSet;
         long flagsNotSet;
         GuiFocus[] guiFocus;
+
         private Func<GameState_EliteDangerous, bool> callback = null;
 
         public GameStateCondition(long flagsSet = Flag.UNSPECIFIED, long flagsNotSet = Flag.UNSPECIFIED, GuiFocus[] guiFocus = null,
@@ -79,6 +81,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI
         private Status status;
         private Nodes.Journal journal;
         private Nodes.Controls controls;
+        public EliteAnimation animateOnce = EliteAnimation.None;
 
         public Nodes.Journal Journal
         {
