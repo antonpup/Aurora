@@ -236,6 +236,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         private ControlGroupSet[] controlGroupSets =
         {
             ControlGroupSets.CONTROLS_MAIN,
+            ControlGroupSets.CONTROLS_SHIP,
+            ControlGroupSets.CONTROLS_SRV,
             ControlGroupSets.CONTROLS_SYSTEM_MAP,
             ControlGroupSets.CONTROLS_GALAXY_MAP,
             ControlGroupSets.UI_PANELS,

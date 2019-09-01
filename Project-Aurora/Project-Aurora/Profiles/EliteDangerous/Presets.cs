@@ -407,7 +407,7 @@ namespace Aurora.Profiles.EliteDangerous
         {
             new ControlGroup(new[]
             {
-                Command.PhotoCameraToggle, Command.PhotoCameraToggle_Buggy, Command.VanityCameraScrollLeft,
+                Command.PhotoCameraToggle, Command.VanityCameraScrollLeft,
                 Command.VanityCameraScrollRight, Command.ToggleFreeCam, Command.FreeCamToggleHUD,
                 Command.FixCameraRelativeToggle, Command.FixCameraWorldToggle,
 
@@ -444,7 +444,7 @@ namespace Aurora.Profiles.EliteDangerous
             new ControlGroup(new[]
             {
                 Command.SetSpeedMinus100, Command.SetSpeedMinus75, Command.SetSpeedMinus50,
-                Command.SetSpeedMinus25, Command.AutoBreakBuggyButton,
+                Command.SetSpeedMinus25,
 
                 Command.LeftThrustButton, Command.RightThrustButton, Command.UpThrustButton,
                 Command.DownThrustButton,
@@ -468,14 +468,6 @@ namespace Aurora.Profiles.EliteDangerous
 
             new ControlGroup(new[]
             {
-                Command.UseBoostJuice
-            }, new GameStateCondition(
-                flagsSet: Flag.UNSPECIFIED,
-                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.LANDING_GEAR | Flag.CARGO_SCOOP
-            )),
-
-            new ControlGroup(new[]
-            {
                 Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down
             }, new GameStateCondition(
                 flagsSet: Flag.DOCKED
@@ -486,7 +478,36 @@ namespace Aurora.Profiles.EliteDangerous
             }, new GameStateCondition(
                 flagsSet: Flag.LANDED_PLANET
             )),
+            
+            new ControlGroup(new[]
+                {
+                    Command.ToggleCargoScoop, Command.LandingGearToggle, Command.ToggleButtonUpInput
+                },
+                new GameStateCondition(
+                    flagsSet: Flag.UNSPECIFIED,
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER
+                )
+            ),
 
+            new ControlGroup(new[]
+            {
+                Command.TargetWingman0, Command.TargetWingman1,
+                Command.TargetWingman2, Command.SelectTargetsTarget, Command.WingNavLock
+            }, new GameStateCondition(flagsSet: Flag.IN_WING)),
+            new ControlGroup(new[]
+                {
+                    Command.ExplorationFSSEnter
+                },
+                new GameStateCondition(flagsSet: Flag.SUPERCRUISE,
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET))
+        }, new GameStateCondition(guiFocus: new[]
+        {
+            GuiFocus.NONE, GuiFocus.STATION_SERVICES, GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE,
+            GuiFocus.PANEL_SYSTEMS
+        }));
+        
+        public static ControlGroupSet CONTROLS_SHIP = new ControlGroupSet(new[]
+        {
             new ControlGroup(new[]
                 {
                     Command.HyperSuperCombination, Command.Supercruise, Command.Hyperspace
@@ -501,27 +522,13 @@ namespace Aurora.Profiles.EliteDangerous
                     }
                 )
             ),
-
             new ControlGroup(new[]
-                {
-                    Command.ToggleCargoScoop, Command.LandingGearToggle, Command.ToggleButtonUpInput
-                },
-                new GameStateCondition(
-                    flagsSet: Flag.UNSPECIFIED,
-                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER
-                )
-            ),
-
-            new ControlGroup(new[]
-                {
-                    Command.ToggleCargoScoop_Buggy
-                },
-                new GameStateCondition(
-                    flagsSet: Flag.IN_SRV,
-                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.IN_FIGHTER
-                )
-            ),
-
+            {
+                Command.UseBoostJuice
+            }, new GameStateCondition(
+                flagsSet: Flag.UNSPECIFIED,
+                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE | Flag.LANDING_GEAR | Flag.CARGO_SCOOP
+            )),
             new ControlGroup(new[]
                 {
                     Command.FireChaffLauncher
@@ -575,23 +582,15 @@ namespace Aurora.Profiles.EliteDangerous
                     }
                 )
             ),
-
+        }, new GameStateCondition(flagsNotSet: Flag.IN_SRV));
+        
+        public static ControlGroupSet CONTROLS_SRV = new ControlGroupSet(new[]
+        {
             new ControlGroup(new[]
             {
-                Command.TargetWingman0, Command.TargetWingman1,
-                Command.TargetWingman2, Command.SelectTargetsTarget, Command.WingNavLock
-            }, new GameStateCondition(flagsSet: Flag.IN_WING)),
-            new ControlGroup(new[]
-                {
-                    Command.ExplorationFSSEnter
-                },
-                new GameStateCondition(flagsSet: Flag.SUPERCRUISE,
-                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET))
-        }, new GameStateCondition(guiFocus: new[]
-        {
-            GuiFocus.NONE, GuiFocus.STATION_SERVICES, GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE,
-            GuiFocus.PANEL_SYSTEMS
-        }));
+                Command.PhotoCameraToggle_Buggy, Command.ToggleCargoScoop_Buggy, Command.AutoBreakBuggyButton,
+            }),
+        }, new GameStateCondition(Flag.IN_SRV));
 
         public static ControlGroupSet CONTROLS_SYSTEM_MAP = new ControlGroupSet(new[]
         {
