@@ -412,7 +412,7 @@ namespace Aurora.Profiles.EliteDangerous
                 Command.FixCameraRelativeToggle, Command.FixCameraWorldToggle,
 
                 Command.FocusLeftPanel, Command.FocusCommsPanel, Command.QuickCommsPanel,
-                Command.FocusRadarPanel, Command.FocusRightPanel, Command.UI_Select,
+                Command.FocusRadarPanel, Command.FocusRightPanel,
 
                 Command.GalaxyMapOpen, Command.SystemMapOpen, Command.TargetNextRouteSystem,
 
@@ -426,16 +426,11 @@ namespace Aurora.Profiles.EliteDangerous
 
             new ControlGroup(new[]
             {
-                Command.ForwardKey, Command.BackwardKey, Command.IncreaseEnginesPower, Command.SetSpeedZero,
-                Command.SetSpeed25, Command.SetSpeed50, Command.SetSpeed75, Command.SetSpeed100,
-
-                Command.RollLeftButton, Command.RollRightButton, Command.PitchUpButton, Command.PitchDownButton,
-
-                Command.IncreaseSystemsPower, Command.ChargeECM,
+                Command.IncreaseEnginesPower, Command.IncreaseSystemsPower, Command.ChargeECM,
 
                 Command.IncreaseWeaponsPower, Command.CycleFireGroupNext, Command.SelectHighestThreat,
                 Command.CycleNextSubsystem, Command.CyclePreviousSubsystem, Command.CycleNextHostileTarget,
-                Command.CyclePreviousHostileTarget, Command.DeployHardpointToggle
+                Command.CyclePreviousHostileTarget
             }, new GameStateCondition(
                 flagsSet: Flag.UNSPECIFIED,
                 flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
@@ -445,10 +440,6 @@ namespace Aurora.Profiles.EliteDangerous
             {
                 Command.SetSpeedMinus100, Command.SetSpeedMinus75, Command.SetSpeedMinus50,
                 Command.SetSpeedMinus25,
-
-                Command.LeftThrustButton, Command.RightThrustButton, Command.UpThrustButton,
-                Command.DownThrustButton,
-                Command.ForwardThrustButton, Command.BackwardThrustButton,
 
                 Command.ToggleFlightAssist
             }, new GameStateCondition(
@@ -472,13 +463,7 @@ namespace Aurora.Profiles.EliteDangerous
             }, new GameStateCondition(
                 flagsSet: Flag.DOCKED
             )),
-            new ControlGroup(new[]
-            {
-                Command.UI_Left, Command.UI_Right, Command.UI_Up, Command.UI_Down
-            }, new GameStateCondition(
-                flagsSet: Flag.LANDED_PLANET
-            )),
-            
+
             new ControlGroup(new[]
                 {
                     Command.ToggleCargoScoop, Command.LandingGearToggle, Command.ToggleButtonUpInput
@@ -508,6 +493,36 @@ namespace Aurora.Profiles.EliteDangerous
         
         public static ControlGroupSet CONTROLS_SHIP = new ControlGroupSet(new[]
         {
+            new ControlGroup(new[]
+            {
+                Command.ForwardKey, Command.BackwardKey,
+                Command.SetSpeedZero, Command.SetSpeed25, Command.SetSpeed50, Command.SetSpeed75, Command.SetSpeed100,
+                Command.RollLeftButton, Command.RollRightButton, Command.PitchUpButton, Command.PitchDownButton,
+                
+                Command.DeployHardpointToggle
+            }, new GameStateCondition(
+                flagsSet: Flag.UNSPECIFIED,
+                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
+            )),
+            
+            new ControlGroup(new[]
+            {
+                Command.SetSpeedMinus100, Command.SetSpeedMinus75, Command.SetSpeedMinus50, Command.SetSpeedMinus25,
+                
+                Command.LeftThrustButton, Command.RightThrustButton, Command.DownThrustButton,
+                Command.ForwardThrustButton, Command.BackwardThrustButton,
+            }, new GameStateCondition(
+                flagsSet: Flag.UNSPECIFIED,
+                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.SUPERCRUISE
+            )),
+            new ControlGroup(new[]
+            {
+                Command.UpThrustButton
+            }, new GameStateCondition(
+                flagsSet: Flag.UNSPECIFIED,
+                flagsNotSet: Flag.DOCKED | Flag.SUPERCRUISE
+            )),
+            
             new ControlGroup(new[]
                 {
                     Command.HyperSuperCombination, Command.Supercruise, Command.Hyperspace
@@ -588,8 +603,73 @@ namespace Aurora.Profiles.EliteDangerous
         {
             new ControlGroup(new[]
             {
-                Command.PhotoCameraToggle_Buggy, Command.ToggleCargoScoop_Buggy, Command.AutoBreakBuggyButton,
+                Command.ToggleDriveAssist,
+
+                Command.SteerLeftButton,
+                Command.SteerRightButton,
+                Command.BuggyRollLeftButton,
+                Command.BuggyRollRightButton,
+                Command.BuggyPitchUpButton,
+                Command.BuggyPitchDownButton,
+                
+                
+                Command.BuggyPrimaryFireButton,
+                Command.BuggySecondaryFireButton,
+                Command.AutoBreakBuggyButton,
+
+                Command.HeadlightsBuggyButton,
+                
+                Command.BuggyCycleFireGroupNext,
+                Command.BuggyCycleFireGroupPrevious,
+
+                Command.SelectTarget_Buggy,
+
+                Command.BuggyToggleReverseThrottleInput,
+                
+                Command.IncreaseSpeedButtonMax,
+                Command.DecreaseSpeedButtonMax,
+                Command.IncreaseEnginesPower_Buggy,
+
+                Command.IncreaseWeaponsPower_Buggy,
+                Command.IncreaseSystemsPower_Buggy,
+
+                Command.ResetPowerDistribution_Buggy,
+
+                Command.ToggleCargoScoop_Buggy,
+
+                Command.EjectAllCargo_Buggy,
+                
+                Command.RecallDismissShip,
+
+                Command.UIFocus_Buggy,
+                Command.FocusLeftPanel_Buggy,
+                Command.FocusCommsPanel_Buggy,
+                Command.QuickCommsPanel_Buggy,
+                Command.FocusRadarPanel_Buggy,
+                Command.FocusRightPanel_Buggy,
+
+                Command.GalaxyMapOpen_Buggy,
+                Command.SystemMapOpen_Buggy,
+                Command.OpenCodexGoToDiscovery_Buggy,
+
+                Command.PlayerHUDModeToggle_Buggy,
+                Command.HeadLookToggle_Buggy,
             }),
+            
+            new ControlGroup(new[]
+            {
+                Command.VerticalThrustersButton,  Command.ToggleBuggyTurretButton,
+            }, new GameStateCondition(
+                flagsNotSet: Flag.SRV_UNDER_SHIP
+            )),
+            
+            new ControlGroup(new[]
+            {
+                Command.BuggyTurretYawLeftButton, Command.BuggyTurretYawRightButton, Command.BuggyTurretPitchUpButton,
+                Command.BuggyTurretPitchDownButton,
+            }, new GameStateCondition(
+                flagsSet: Flag.SRV_TURRET
+            )),
         }, new GameStateCondition(Flag.IN_SRV));
 
         public static ControlGroupSet CONTROLS_SYSTEM_MAP = new ControlGroupSet(new[]
