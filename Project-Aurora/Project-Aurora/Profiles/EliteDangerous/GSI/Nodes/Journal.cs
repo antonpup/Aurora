@@ -3,6 +3,10 @@ using Aurora.Profiles.EliteDangerous.Journal.Events;
 
 namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {
+    public enum StarType
+    {
+        None, K
+    }
     public enum FighterStatus
     {
         None, Launched, Unmanned
@@ -37,6 +41,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 
         public bool fsdWaitingCooldown = false;
         public bool fsdWaitingSupercruise = false;
+
+        public StarType exitStarType = StarType.None;
         
         private void SetModulesFromLoadout(Loadout loadout)
         {
@@ -94,7 +100,6 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                     }
 
                     SetFsdWaitingCooldown(true);
-                    //Should start FSD countdown animation
                     fsdChargeStartTime = Utils.Time.GetMillisecondsSinceEpoch();
                     break;
                 case EventType.SupercruiseEntry:
@@ -108,6 +113,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                 case EventType.FSDJump:
                     ResetFsd();
                     SetFsdWaitingCooldown(true);
+                    exitStarType = StarType.K;
                     break;
                 case EventType.Music:
                     if (fsdState == FSDState.CountdownHyperspace && ((Music) journalEvent).MusicTrack.Equals("NoTrack"))

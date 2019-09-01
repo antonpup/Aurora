@@ -26,6 +26,6 @@
         public double FuelUsed;
         public double FuelLevel;
 
-        public SystemFaction SystemFaction;
+//        public SystemFaction SystemFaction;
     }
 }

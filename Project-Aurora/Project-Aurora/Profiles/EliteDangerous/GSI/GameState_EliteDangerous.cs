@@ -81,7 +81,6 @@ namespace Aurora.Profiles.EliteDangerous.GSI
         private Status status;
         private Nodes.Journal journal;
         private Nodes.Controls controls;
-        public EliteAnimation animateOnce = EliteAnimation.None;
 
         public Nodes.Journal Journal
         {

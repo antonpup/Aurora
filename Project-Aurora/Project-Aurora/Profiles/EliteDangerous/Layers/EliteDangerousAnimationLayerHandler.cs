@@ -20,7 +20,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
     {
         None,
         FsdCountdowm,
-        Hyperspace
+        Hyperspace,
+        StarEntry,
     }
     public class EliteDangerousAnimationHandlerProperties : LayerHandlerProperties2Color<EliteDangerousAnimationHandlerProperties>
     {
@@ -37,6 +38,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
     {
         private AnimationMix fsd_countdown_mix;
         private AnimationMix hyperspace_mix;
+        private AnimationMix star_entry_mix;
         
         private long previousTime = Time.GetMillisecondsSinceEpoch();
         private long currentTime = Time.GetMillisecondsSinceEpoch();
@@ -50,6 +52,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         private static float totalAnimationTime, animationKeyframe = 0.0f;
         private static EliteAnimation currentAnimation = EliteAnimation.None;
         private static float animationTime = 0.0f;
+        private EliteAnimation animateOnce = EliteAnimation.None;
         
         public EliteDangerousAnimationLayerHandler() : base()
         {
@@ -82,7 +85,20 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 return -mod; 
       
             return mod; 
-        } 
+        }
+
+        private void BgFadeIn(EffectLayer animation_layer)
+        {
+            layerFadeState = Math.Min(1, layerFadeState + 0.07f);
+            animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+        }
+
+        private void BgFadeOut(EffectLayer animation_layer)
+        {
+            if (!(layerFadeState > 0)) return;
+            layerFadeState = Math.Max(0, layerFadeState - 0.03f);
+            animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+        }
 
         public override EffectLayer Render(IGameState state)
         {
@@ -92,10 +108,18 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             currentTime = Time.GetMillisecondsSinceEpoch();
 
             EffectLayer animation_layer = new EffectLayer("Elite: Dangerous - Animations");
-
-            if (gameState.animateOnce != EliteAnimation.None)
+            
+            if (gameState.Journal.exitStarType != StarType.None)
             {
-                currentAnimation = gameState.animateOnce;
+                gameState.Journal.exitStarType = StarType.None;
+                animateOnce = EliteAnimation.StarEntry;
+                totalAnimationTime = 0;
+                animationKeyframe = 0;
+            }
+
+            if (animateOnce != EliteAnimation.None)
+            {
+                currentAnimation = animateOnce;
             } else if (gameState.Journal.fsdState == FSDState.Idle)
             {
                 currentAnimation = EliteAnimation.None;
@@ -106,7 +130,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             {
                 currentAnimation = EliteAnimation.Hyperspace;
             }
-
+            
             if (currentAnimation == EliteAnimation.None)
             {
                 animationKeyframe = 0;
@@ -115,37 +139,42 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
             if (currentAnimation != EliteAnimation.None || gameState.Journal.fsdWaitingSupercruise)
             {
-                layerFadeState = Math.Min(1, layerFadeState + 0.07f);
-                animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+                BgFadeIn(animation_layer);
             }
             else if (layerFadeState > 0)
             {
-                layerFadeState = Math.Max(0, layerFadeState - 0.03f);
-                animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+                BgFadeOut(animation_layer);
             }
 
             float deltaTime = 0f, currentAnimationDuration = 0f;
             if(currentAnimation == EliteAnimation.FsdCountdowm) {
+                currentAnimationDuration = fsd_countdown_mix.GetDuration();
                 fsd_countdown_mix.Draw(animation_layer.GetGraphics(), animationKeyframe);
                 deltaTime = getDeltaTime();
                 animationKeyframe += deltaTime;
-
-                currentAnimationDuration = fsd_countdown_mix.GetDuration();
             } else if (currentAnimation == EliteAnimation.Hyperspace)
             {
+                currentAnimationDuration = hyperspace_mix.GetDuration();
                 hyperspace_mix.Draw(animation_layer.GetGraphics(), animationKeyframe);
-                hyperspace_mix.Draw(animation_layer.GetGraphics(), findMod(animationKeyframe + 1.2f, hyperspace_mix.GetDuration()));
-                hyperspace_mix.Draw(animation_layer.GetGraphics(), findMod(animationKeyframe + 2.8f, hyperspace_mix.GetDuration()));
+                hyperspace_mix.Draw(animation_layer.GetGraphics(), findMod(animationKeyframe + 1.2f, currentAnimationDuration));
+                hyperspace_mix.Draw(animation_layer.GetGraphics(), findMod(animationKeyframe + 2.8f, currentAnimationDuration));
                 deltaTime = getDeltaTime();
                 //Loop the animation
-                animationKeyframe = findMod(animationKeyframe + (deltaTime), hyperspace_mix.GetDuration());
-                
-                currentAnimationDuration = hyperspace_mix.GetDuration();
+                animationKeyframe = findMod(animationKeyframe + (deltaTime), currentAnimationDuration);
+               
+            } else if (currentAnimation == EliteAnimation.StarEntry)
+            {
+                currentAnimationDuration = star_entry_mix.GetDuration();
+                star_entry_mix.Draw(animation_layer.GetGraphics(), animationKeyframe);
+                deltaTime = getDeltaTime();
+
+                animationKeyframe += deltaTime;
             }
+            
             totalAnimationTime += deltaTime;
             if (totalAnimationTime > currentAnimationDuration)
             {
-                gameState.animateOnce = EliteAnimation.None;
+                animateOnce = EliteAnimation.None;
             }
 
             return animation_layer;
@@ -238,6 +267,20 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 85, 1.3f, hyperspace_mix.GetTracks().Count));
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 93, 2.1f, hyperspace_mix.GetTracks().Count));
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 100, 0.4f, hyperspace_mix.GetTracks().Count));
+            
+            star_entry_mix = new AnimationMix();
+            Color starEntryColor = Color.FromArgb(255, 140, 0);
+            AnimationTrack star_entry = new AnimationTrack("Star entry", 2.0f);
+            star_entry.SetFrame(0.0f,
+                new AnimationFilledCircle(startingX, Effects.canvas_height_center, 0, starEntryColor, 1)
+            );
+            star_entry.SetFrame(1.2f,
+                new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, starEntryColor, 1)
+            );
+            star_entry.SetFrame(2f,
+                new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, Color.Empty, 1)
+            );
+            star_entry_mix.AddTrack(star_entry);
         }
 
         float hyperspaceAnimationDuration = 0.8f; 
