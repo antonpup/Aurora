@@ -10,7 +10,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 
     public enum FSDState
     {
-        Idle, JumpingSupercruise, JumpingHyperspace
+        Idle, CountdownSupercruise, CountdownHyperspace, InHyperspace
     }
 
     public class SimpleShipLoadout
@@ -85,10 +85,10 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                     StartJump startJump = (StartJump) journalEvent;
                     if(startJump.JumpType == JumpType.Hyperspace)
                     {
-                        fsdState = FSDState.JumpingHyperspace;
+                        fsdState = FSDState.CountdownHyperspace;
                         jumpStarType = startJump.StarClass.ToLower();
                     } else {
-                        fsdState = FSDState.JumpingSupercruise;
+                        fsdState = FSDState.CountdownSupercruise;
                         jumpStarType = null;
                         SetFsdWaitingSupercruise(true);
                     }
@@ -108,13 +108,12 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                 case EventType.FSDJump:
                     ResetFsd();
                     SetFsdWaitingCooldown(true);
-                    //Should stop hyperspace animation
                     break;
                 case EventType.Music:
-                    if (fsdState != FSDState.JumpingHyperspace && ((Music) journalEvent).MusicTrack.Equals("NoTrack"))
+                    if (fsdState == FSDState.CountdownHyperspace && ((Music) journalEvent).MusicTrack.Equals("NoTrack"))
                     {
                         ResetFsd();
-                        //Should start hyperspace animation
+                        fsdState = FSDState.InHyperspace;
                     }
                     break;
             }
