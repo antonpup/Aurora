@@ -506,6 +506,7 @@ namespace Aurora
             }
 
             LogManager.Shutdown();
+            Environment.Exit(0);
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
