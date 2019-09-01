@@ -6,4 +6,4 @@
 	url = https://github.com/rajkosto/SBAuroraR.NET.git
 [submodule "NZXTSharp"]
 	path = NZXTSharp
-	url = https://github.com/diogotr7/NZXTSharp.git
+	url = https://github.com/akmadian/NZXTSharp.git
