@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Layers;
@@ -597,7 +598,15 @@ namespace Aurora.Profiles.EliteDangerous
                     }
                 )
             ),
-        }, new GameStateCondition(flagsNotSet: Flag.IN_SRV));
+        }, new GameStateCondition(flagsNotSet: Flag.IN_SRV, callback: gameState =>
+        {
+            GuiFocus[] blacklistedGuiModes = new GuiFocus[]
+            {
+                GuiFocus.CODEX, GuiFocus.MODE_ADS, GuiFocus.MODE_FSS, GuiFocus.MAP_GALAXY, GuiFocus.MAP_ORRERY, 
+                GuiFocus.MAP_SYSTEM
+            };
+            return !blacklistedGuiModes.Contains(gameState.Status.GuiFocus);
+        }));
         
         public static ControlGroupSet CONTROLS_SRV = new ControlGroupSet(new[]
         {
@@ -670,7 +679,15 @@ namespace Aurora.Profiles.EliteDangerous
             }, new GameStateCondition(
                 flagsSet: Flag.SRV_TURRET
             )),
-        }, new GameStateCondition(Flag.IN_SRV));
+        }, new GameStateCondition(Flag.IN_SRV, callback: gameState =>
+        {
+            GuiFocus[] blacklistedGuiModes = new GuiFocus[]
+            {
+                GuiFocus.CODEX, GuiFocus.MODE_ADS, GuiFocus.MODE_FSS, GuiFocus.MAP_GALAXY, GuiFocus.MAP_ORRERY, 
+                GuiFocus.MAP_SYSTEM
+            };
+            return !blacklistedGuiModes.Contains(gameState.Status.GuiFocus);
+        }));
 
         public static ControlGroupSet CONTROLS_SYSTEM_MAP = new ControlGroupSet(new[]
         {
