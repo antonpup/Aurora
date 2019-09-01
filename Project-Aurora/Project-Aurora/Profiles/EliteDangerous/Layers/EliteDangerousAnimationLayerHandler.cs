@@ -103,7 +103,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             if (gameState.Journal.fsdState == FSDState.Idle)
             {
                 currentAnimation = EliteAnimation.None;
-            } else if (gameState.Journal.fsdState == FSDState.CountdownHyperspace || gameState.Journal.fsdState == FSDState.CountdownHyperspace)
+            } else if (gameState.Journal.fsdState == FSDState.CountdownSupercruise || gameState.Journal.fsdState == FSDState.CountdownHyperspace)
             {
                 currentAnimation = EliteAnimation.FsdCountdowm;
             } else if (gameState.Journal.fsdState == FSDState.InHyperspace)
