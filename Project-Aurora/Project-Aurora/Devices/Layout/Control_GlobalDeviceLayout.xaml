@@ -7,7 +7,7 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Background="White">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="KeycapType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -55,6 +55,26 @@
 
         <CheckBox Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Content="Use Anti-Aliasing" IsChecked="{Binding Settings.AntiAliasing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <!--<Button x:Name="btnEditLayout" Grid.Column="0" Grid.Row="4" Height="20" Content="Edit Layout" Click="BtnEditLayout_Click" IsVisibleChanged="BtnEditLayout_IsVisibleChanged"/>-->
+
+        <ListView x:Name="lstDeviceTypes" Grid.Column="0" Grid.Row="4" VerticalAlignment="Stretch" MinHeight="300" SelectedIndex="0" Margin="5" ItemsSource="{Binding DeviceLayoutTypes.Values}" SelectionChanged="LstDeviceTypes_Selected">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Title}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ListView x:Name="lstDevices" Grid.Column="1" Grid.Row="4" VerticalAlignment="Stretch" MinHeight="300" SelectedIndex="0" Margin="5">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
         <TextBlock Grid.Column="2" TextWrapping="Wrap" Margin="5" Text="To change the positions of each Device simply drag them around while in this tab!"/>
     </Grid>

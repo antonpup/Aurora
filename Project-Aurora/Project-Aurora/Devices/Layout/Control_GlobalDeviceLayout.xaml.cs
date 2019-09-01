@@ -26,9 +26,8 @@ namespace Aurora.Devices.Layout
         {
             InitializeComponent();
             this.DataContext = GlobalDeviceLayout.Instance;
+            
         }
-
-        
 
         bool _isEditingLayout = false;
         bool isEditingLayout { get => _isEditingLayout; set { _isEditingLayout = value; isEditingChanged(); } }
@@ -44,6 +43,11 @@ namespace Aurora.Devices.Layout
         private void Grid_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             isEditingLayout = this.IsVisible;
+        }
+
+        private void LstDeviceTypes_Selected(object sender, SelectionChangedEventArgs e)
+        {
+            this.lstDevices.ItemsSource = ((GlobalDeviceLayout)this.DataContext).Settings.Devices[((TypeEntry)this.lstDeviceTypes.SelectedValue).Key];
         }
 
         /*private void BtnEditLayout_Click(object sender, RoutedEventArgs e)

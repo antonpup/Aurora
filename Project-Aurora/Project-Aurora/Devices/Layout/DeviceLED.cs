@@ -74,7 +74,7 @@ namespace Aurora.Devices.Layout
         }
 
         [JsonIgnore]
-        public bool IsNone => this.Equals(None);
+        public bool IsNone => this.Equals(None) || this.LedID == -1;
 
         public static bool operator ==(DeviceLED lhs, DeviceLED rhs)
         {

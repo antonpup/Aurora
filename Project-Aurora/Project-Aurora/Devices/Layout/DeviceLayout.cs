@@ -188,5 +188,10 @@ namespace Aurora.Devices.Layout
             if (e.Action == NotifyCollectionChangedAction.Move)
                 this.DeviceID = (byte)((ObservableCollection<DeviceLayout>)sender).IndexOf(this);
         }
+
+        public override string ToString()
+        {
+            return "Device Layout";
+        }
     }
 }

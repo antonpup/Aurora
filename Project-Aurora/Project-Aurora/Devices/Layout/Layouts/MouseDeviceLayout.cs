@@ -229,6 +229,11 @@ namespace Aurora.Devices.Layout.Layouts
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return Style.GetDescription();
+        }
     }
 
 }

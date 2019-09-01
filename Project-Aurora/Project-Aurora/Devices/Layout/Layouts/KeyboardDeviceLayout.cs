@@ -1,4 +1,4 @@
-﻿using Aurora.Settings;
+using Aurora.Settings;
 using Aurora.Settings.Keycaps;
 using Aurora.Utils;
 using Newtonsoft.Json;
@@ -1857,5 +1857,11 @@ namespace Aurora.Devices.Layout.Layouts
 
             return base.Sanitize(ledID);
         }
+
+        public override string ToString()
+        {
+            return Style.GetDescription() + " | " + Language.GetDescription();
+        }
     }
+
 }

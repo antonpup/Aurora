@@ -26,9 +26,9 @@ namespace Aurora.Devices.Layout
 
         public string Title { get; set; }
 
-        public string Key { get; set; }
+        public byte Key { get; set; }
 
-        public TypeEntry(string key, string title, Type type)
+        public TypeEntry(byte key, string title, Type type)
         {
             this.Type = type;
             this.Title = title;
@@ -49,7 +49,7 @@ namespace Aurora.Devices.Layout
 
         public List<DeviceLayout> AllLayouts => DeviceLookup.Values.ToList();
 
-        public Dictionary<string, TypeEntry> DeviceLayoutTypes { get; private set; } = new Dictionary<string, TypeEntry>();
+        public Dictionary<byte, TypeEntry> DeviceLayoutTypes { get; private set; } = new Dictionary<byte, TypeEntry>();
 
         private bool isIntialized = false;
         public bool Initialized => isIntialized;
@@ -93,8 +93,8 @@ namespace Aurora.Devices.Layout
 
             RegisterDeviceLayoutType(new List<TypeEntry>
             {
-                new TypeEntry("keyboard", "Keyboard", typeof(KeyboardDeviceLayout)),
-                new TypeEntry("mouse", "Mouse", typeof(MouseDeviceLayout))
+                new TypeEntry(KeyboardDeviceLayout.DeviceTypeID, "Keyboard", typeof(KeyboardDeviceLayout)),
+                new TypeEntry(MouseDeviceLayout.DeviceTypeID, "Mouse", typeof(MouseDeviceLayout))
             });
 
             LoadSettings();
@@ -256,12 +256,12 @@ namespace Aurora.Devices.Layout
             return true;
         }
 
-        public bool RegisterDeviceLayoutType(string key, string title, Type type, bool @default = true)
+        public bool RegisterDeviceLayoutType(byte key, string title, Type type, bool @default = true)
         {
             return RegisterDeviceLayoutType(new TypeEntry(key, title, type));
         }
 
-        public Type GetLayerHandlerType(string key)
+        public Type GetDeviceLayoutType(byte key)
         {
             return DeviceLayoutTypes.ContainsKey(key) ? DeviceLayoutTypes[key].Type : null;
         }
@@ -271,7 +271,7 @@ namespace Aurora.Devices.Layout
             return (DeviceLayout)Activator.CreateInstance(entry.Type);
         }
 
-        public DeviceLayout GetLayerHandlerInstance(string key)
+        public DeviceLayout GetDeviceLayoutInstance(byte key)
         {
             if (DeviceLayoutTypes.ContainsKey(key))
                 return GetDeviceLayoutInstance(DeviceLayoutTypes[key]);
@@ -316,8 +316,10 @@ namespace Aurora.Devices.Layout
 
         public void UpdateDeviceControlColors()
         {
-            foreach (KeyValuePair<(byte type, byte id), DeviceLayout> device in this.DeviceLookup)
-                device.Value.VirtualGroup.UpdateColors(device.Value.DeviceColours);
+            foreach (KeyValuePair<(byte type, byte id), DeviceLayout> device in this.DeviceLookup) {
+                if (device.Value.DeviceColours != null)
+                    device.Value.VirtualGroup.UpdateColors(device.Value.DeviceColours);
+            }
         }
 
         public (DeviceLayout layout, LEDINT led) GetDeviceFromDeviceLED(DeviceLED led)

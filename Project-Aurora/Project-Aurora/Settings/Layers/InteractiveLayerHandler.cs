@@ -185,13 +185,13 @@ namespace Aurora.Settings.Layers
             }
             if (!device_key.IsNone && !Properties.Sequence.keys.Contains(device_key))
             {
-                PointF pt = GlobalDeviceLayout.Instance.GetDeviceLEDBitmapRegion(device_key).Center;
-                if (pt != new PointF(0, 0))
+                PointF? pt = GlobalDeviceLayout.Instance.GetDeviceLEDBitmapRegion(device_key)?.Center;
+                if (pt != null && pt != new PointF(0, 0))
                 {
                     lock (TimeOfLastPress)
                         TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
 
-                    _input_list.Add(CreateInputItem(device_key, pt));
+                    _input_list.Add(CreateInputItem(device_key, pt.Value));
                     previous_key = e.Key;
                 }
             }

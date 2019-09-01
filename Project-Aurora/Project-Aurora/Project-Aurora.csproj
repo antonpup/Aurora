@@ -453,7 +453,7 @@
       <DependentUpon>Control_GlobalDeviceLayout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Layout\DeviceLayout.cs" />
-    <Compile Include="Devices\Layout\DeviceLayoutSettings.cs" />
+    <Compile Include="Devices\Layout\GlobalDeviceLayoutSettings.cs" />
     <Compile Include="Devices\Layout\DeviceLED.cs" />
     <Compile Include="Devices\Layout\GlobalDeviceLayout.cs" />
     <Compile Include="Devices\Layout\Layouts\KeyboardDeviceLayout.cs" />
