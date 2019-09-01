@@ -61,7 +61,7 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            current_sine = (float)Math.Round(Math.Pow(Math.Sin((double)((Utils.Time.GetMillisecondsSinceEpoch() % 10000L) / 10000.0f) * 2 * Math.PI * Properties.EffectSpeed), 2));
+            current_sine = (float)Math.Round(Math.Pow(Math.Sin((double)((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 10000L) / 10000.0f) * 2 * Math.PI * Properties.EffectSpeed), 2));
 
             if (current_sine == 0.0f && Properties.RandomSecondaryColor)
                 current_secondary_color = Utils.ColorUtils.GenerateRandomColor();

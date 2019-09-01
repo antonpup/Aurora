@@ -28,7 +28,7 @@ namespace Aurora.Profiles.ResidentEvil2
                 new LayerHandlerEntry("ResidentEvil2Rank", "RE2 Rank Layer", typeof(ResidentEvil2RankLayerHandler))
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(extra, false);
 
             foreach (var entry in extra)
             {

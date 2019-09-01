@@ -131,7 +131,7 @@ namespace Aurora.Profiles.Witcher3
             }
             catch (Exception e)
             {
-                Global.logger.Error("Error installing the Witcher 3 mod: " + e.Message);
+                App.logger.Error("Error installing the Witcher 3 mod: " + e.Message);
                 MessageBox.Show("Witcher 3 directory is not found.\r\nCould not install the mod.");
                 return;
             }
@@ -170,7 +170,7 @@ namespace Aurora.Profiles.Witcher3
             }
             catch (Exception e)
             {
-                Global.logger.Error("Error uninstalling witcher 3 mod: " + e.Message);
+                App.logger.Error("Error uninstalling witcher 3 mod: " + e.Message);
                 MessageBox.Show("Witcher 3 mod uninstall failed!");
                 return;
             }

@@ -1378,7 +1378,7 @@ namespace Aurora.Devices.Layout.Layouts
 
         static KeyboardDeviceLayout()
         {
-            layoutsPath = Path.Combine(Global.ExecutingDirectory, cultures_folder);
+            layoutsPath = Path.Combine(App.ExecutingDirectory, cultures_folder);
         }
 
         protected override void loadLayouts()
@@ -1683,7 +1683,7 @@ namespace Aurora.Devices.Layout.Layouts
                         layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
                         break;
                     default:
-                        Global.logger.LogLine("No match for PreferredKeyboard style", Logging_Level.Error);
+                        App.logger.Error("No match for PreferredKeyboard style");
                         return;
                 }
 
@@ -1746,7 +1746,7 @@ namespace Aurora.Devices.Layout.Layouts
             }
             catch (Exception e)
             {
-                Global.logger.Error(e.ToString());
+                App.logger.Error(e.ToString());
             }
 
             //Perform end of load functions

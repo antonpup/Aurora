@@ -58,7 +58,7 @@ namespace Aurora.Controls
             }
             catch (Exception ex)
             {
-                Global.logger.Warn(ex.ToString());
+                App.logger.Warn(ex.ToString());
             }
         }
 
@@ -66,7 +66,7 @@ namespace Aurora.Controls
         {
             if(sender is Button)
             {
-                if(Device.Device.IsInitialized())
+                if(Device.Device.Initialized)
                     Device.Device.Shutdown();
                 else
                     Device.Device.Initialize();
@@ -77,14 +77,7 @@ namespace Aurora.Controls
 
         private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
         {
-            if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
-                Global.Configuration.devices_disabled.Remove(Device.Device.GetType());
-            else
-            {
-                Global.Configuration.devices_disabled.Add(Device.Device.GetType());
-                Device.Device.Shutdown();
-            }
-
+            Device.Device.Enabled = !Device.Device.Enabled;
             UpdateControls();
         }
 
@@ -95,7 +88,7 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            if (Device.Device.IsInitialized())
+            if (Device.Device.Initialized)
                 btnToggleOnOff.Content = "Stop";
             else
                 btnToggleOnOff.Content = "Start";
@@ -108,25 +101,25 @@ namespace Aurora.Controls
                 btnToggleEnableDisable.IsEnabled = false;
             else
             {*/
-            if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
-                {
-                    btnToggleEnableDisable.Content = "Enable";
-                    btnToggleOnOff.IsEnabled = false;
-                }
-                else
-                {
-                    btnToggleEnableDisable.Content = "Disable";
-                    btnToggleOnOff.IsEnabled = true;
-                }
+            if (!Device.Device.Enabled)
+            {
+                btnToggleEnableDisable.Content = "Enable";
+                btnToggleOnOff.IsEnabled = false;
+            }
+            else
+            {
+                btnToggleEnableDisable.Content = "Disable";
+                btnToggleOnOff.IsEnabled = true;
+            }
             //}
 
-            if(Device.Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
-                btnViewOptions.IsEnabled = false;
+            //if(Device.Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
+            //    btnViewOptions.IsEnabled = false;
         }
 
         private void btnViewOptions_Click(object sender, RoutedEventArgs e)
         {
-            Window_VariableRegistryEditor options_window = new Window_VariableRegistryEditor();
+            /*Window_VariableRegistryEditor options_window = new Window_VariableRegistryEditor();
             options_window.Title = $"{Device.Device.GetDeviceName()} - Options";
             options_window.SizeToContent = SizeToContent.WidthAndHeight;
             options_window.VarRegistryEditor.RegisteredVariables = Device.Device.GetRegisteredVariables();
@@ -135,7 +128,7 @@ namespace Aurora.Controls
                 ConfigManager.Save(Global.Configuration);
             };
 
-            options_window.ShowDialog();
+            options_window.ShowDialog();*/
         }
     }
 }

@@ -98,7 +98,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
         public override EffectLayer Render(IGameState state)
         {
             previoustime = currenttime;
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+            currenttime = Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
             EffectLayer bg_layer = new EffectLayer( "Rocket League - Background" );
             AnimationMix goal_explosion_mix = new AnimationMix();

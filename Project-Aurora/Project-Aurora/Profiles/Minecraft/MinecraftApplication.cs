@@ -29,7 +29,7 @@ namespace Aurora.Profiles.Minecraft {
                 new LayerHandlerEntry("MinecraftKeyConflictLayer", "Minecraft Key Conflict Layer", typeof(MinecraftKeyConflictLayerHandler))
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(minecraftLayers, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(minecraftLayers, false);
             foreach (var layer in minecraftLayers)
                 Config.ExtraAvailableLayers.Add(layer.Key);
         }

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Linq;
+using Aurora.Profiles;
 
 namespace Aurora.Settings
 {

@@ -29,7 +29,7 @@ namespace Aurora.Profiles.Skype
                     proc.Kill();
 
                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = Path.Combine(Global.ExecutingDirectory, "Aurora-SkypeIntegration.exe");
+                startInfo.FileName = Path.Combine(App.ExecutingDirectory, "Aurora-SkypeIntegration.exe");
                 Process.Start(startInfo);
             }
             catch (Exception exc)

@@ -58,9 +58,9 @@ namespace Aurora.Settings.Layers
             EffectLayer gradient_layer = new EffectLayer();
 
             //Get current color
-            Properties.GradientConfig.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - Properties.GradientConfig.last_effect_call) / 1000.0f) * 5.0f * Properties.GradientConfig.speed;
+            Properties.GradientConfig.shift_amount += ((Utils.TimeUtils.GetMillisecondsSinceEpoch() - Properties.GradientConfig.last_effect_call) / 1000.0f) * 5.0f * Properties.GradientConfig.speed;
             Properties.GradientConfig.shift_amount = Properties.GradientConfig.shift_amount % GlobalDeviceLayout.Instance.CanvasBiggest;
-            Properties.GradientConfig.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+            Properties.GradientConfig.last_effect_call = Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
             Color selected_color = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, GlobalDeviceLayout.Instance.CanvasBiggest);
 

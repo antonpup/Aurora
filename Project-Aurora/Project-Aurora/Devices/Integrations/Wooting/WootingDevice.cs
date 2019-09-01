@@ -15,67 +15,84 @@ using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Wooting
 {
-    class WootingDevice : Device
+
+    public class WootingSettings : DeviceSettings
     {
+        //default_registry.Register($"{devicename}_scalar_r", 100, "Red Scalar", 100, 0);
+        //default_registry.Register($"{devicename}_scalar_g", 100, "Green Scalar", 100, 0);
+        //default_registry.Register($"{devicename}_scalar_b", 100, "Blue Scalar", 100, 0,"In percent");
+
+        private byte scalarR = 100;
+        public byte ScalarR { get { return scalarR; } set { UpdateVar(ref scalarR, value); } }
+
+        private byte scalarG = 100;
+        public byte ScalarG { get { return scalarG; } set { UpdateVar(ref scalarG, value); } }
+
+        private byte scalarB = 100;
+        public byte ScalarB { get { return scalarB; } set { UpdateVar(ref scalarB, value); } }
+    }
+
+    class WootingDevice : Device<WootingSettings>
+    {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private String devicename = "Wooting";
-        private bool isInitialized = false;
 
         private bool keyboard_updated = false;
-        private VariableRegistry default_registry = null;
 
         private readonly object action_lock = new object();
 
-        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        private long lastUpdateTime = 0;
-
-        public bool Initialize()
+        public WootingDevice() : base()
+        {
+        }
+        public override bool Initialize()
         {
             lock (action_lock)
             {
-                if (!isInitialized)
+                if (!Initialized)
                 {
                     try
                     {
                         if (RGBControl.IsConnected())
                         {
-                            isInitialized = true;
+                            Initialized = true;
                         }
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("There was an error initializing Wooting SDK.\r\n" + exc.Message);
+                        logger.Error("There was an error initializing Wooting SDK.\r\n" + exc.Message);
 
                         return false;
                     }
                 }
 
-                if (!isInitialized)
-                    Global.logger.Info("No Wooting devices successfully Initialized!");
+                if (!Initialized)
+                    logger.Info("No Wooting devices successfully Initialized!");
 
-                return isInitialized;
+                return Initialized;
             }
         }
 
         ~WootingDevice()
         {
+            this.SaveSettings();
             this.Shutdown();
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             lock (action_lock)
             {
-                if (isInitialized)
+                if (Initialized)
                 {
                     RGBControl.Reset();
-                    isInitialized = false;
+                    Initialized = false;
                 }
             }
         }
 
-        public string GetDeviceDetails()
+        public override string GetDeviceDetails()
         {
-            if (isInitialized)
+            if (Initialized)
             {
                 string devString = devicename + ": ";
                 devString += "Connected";
@@ -87,32 +104,27 @@ namespace Aurora.Devices.Wooting
             }
         }
 
-        public string GetDeviceName()
+        public override string GetDeviceName()
         {
             return devicename;
         }
 
-        public void Reset()
+        public override void Reset()
         {
-            if (this.IsInitialized() && keyboard_updated)
+            if (this.Initialized && keyboard_updated)
             {
                 keyboard_updated = false;
             }
         }
 
-        public bool Reconnect()
+        public override bool Reconnect()
         {
             throw new NotImplementedException();
         }
 
-        public bool IsConnected()
+        public override bool IsConnected()
         {
             throw new NotImplementedException();
-        }
-
-        public bool IsInitialized()
-        {
-            return this.isInitialized;
         }
 
         public bool UpdateKeyboard(KeyboardDeviceLayout device, DoWorkEventArgs e, bool forced = false)
@@ -122,7 +134,7 @@ namespace Aurora.Devices.Wooting
                 //Do this to prevent setting lighting again after the keyboard has been shutdown and reset
                 lock (action_lock)
                 {
-                    if (!this.isInitialized)
+                    if (!this.Initialized)
                         return false;
 
                     foreach (KeyValuePair<LEDINT, Color> key in device.DeviceColours.deviceColours)
@@ -137,9 +149,9 @@ namespace Aurora.Devices.Wooting
                         //(byte row, byte column) coordinates = WootingRgbControl.KeyMap[devKey];
                         //colourMap[coordinates.row, coordinates.column] = new KeyColour(clr.red, clr.green, clr.blue);
                         
-                        RGBControl.SetKey(devKey, (byte)(clr.R * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_r")/100),
-                                                  (byte)(clr.G * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_g")/100),
-                                                  (byte)(clr.B * Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_scalar_b")/100));
+                        RGBControl.SetKey(devKey, (byte)(clr.R * this.Settings.ScalarR/100),
+                                                  (byte)(clr.G * this.Settings.ScalarG / 100),
+                                                  (byte)(clr.B * this.Settings.ScalarB / 100));
                     }
                     if (e.Cancel) return false;
                     //AlsoWootingRgbControl.SetFull(colourMap);
@@ -149,48 +161,24 @@ namespace Aurora.Devices.Wooting
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Failed to Update Device" + exc.ToString());
+                logger.Error("Failed to Update Device" + exc.ToString());
                 return false;
             }
         }
 
-        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public override bool PerformUpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
-            watch.Restart();
-
-            bool update_result = UpdateKeyboard((KeyboardDeviceLayout)devices.First(s => s is KeyboardDeviceLayout), e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
+            return UpdateKeyboard((KeyboardDeviceLayout)devices.First(s => s is KeyboardDeviceLayout), e, forced);
         }
 
-        public bool IsKeyboardConnected()
+        public override bool IsKeyboardConnected()
         {
-            return isInitialized;
+            return Initialized;
         }
 
-        public bool IsPeripheralConnected()
+        public override bool IsPeripheralConnected()
         {
-            return isInitialized;
-        }
-
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            if (default_registry == null)
-            {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_scalar_r", 100, "Red Scalar", 100, 0);
-                default_registry.Register($"{devicename}_scalar_g", 100, "Green Scalar", 100, 0);
-                default_registry.Register($"{devicename}_scalar_b", 100, "Blue Scalar", 100, 0,"In percent");
-            }
-            return default_registry;
+            return Initialized;
         }
 
         public static Dictionary<KeyboardKeys, WootingKey.Keys> KeyMap = new Dictionary<KeyboardKeys, WootingKey.Keys> {

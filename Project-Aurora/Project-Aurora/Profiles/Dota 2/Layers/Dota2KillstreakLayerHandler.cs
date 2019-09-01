@@ -114,7 +114,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            if (isPlayingKillStreakAnimation && Utils.Time.GetMillisecondsSinceEpoch() >= ks_end_time)
+            if (isPlayingKillStreakAnimation && Utils.TimeUtils.GetMillisecondsSinceEpoch() >= ks_end_time)
                 isPlayingKillStreakAnimation = false;
 
             EffectLayer killstreak_layer = new EffectLayer("Dota 2 - Killstreak");
@@ -127,7 +127,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 {
                     isPlayingKillStreakAnimation = true;
 
-                    ks_end_time = Utils.Time.GetMillisecondsSinceEpoch() + ks_duration;
+                    ks_end_time = Utils.TimeUtils.GetMillisecondsSinceEpoch() + ks_duration;
                 }
                 current_kill_count = dota2state.Player.Kills;
 

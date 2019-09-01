@@ -32,7 +32,7 @@ namespace Aurora.Profiles.ATS {
                 new LayerHandlerEntry("ETS2Beacon", "ATS Beacon", typeof(ETS2BeaconLayerHandler))
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(atsLayers, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(atsLayers, false);
             foreach (var layer in atsLayers)
                 Config.ExtraAvailableLayers.Add(layer.Key);
         }

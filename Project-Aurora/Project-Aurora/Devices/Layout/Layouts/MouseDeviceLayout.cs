@@ -133,7 +133,7 @@ namespace Aurora.Devices.Layout.Layouts
 
         static MouseDeviceLayout()
         {
-            layoutsPath = Path.Combine(Global.ExecutingDirectory, cultures_folder);
+            layoutsPath = Path.Combine(App.ExecutingDirectory, cultures_folder);
         }
 
         private class MouseLayout

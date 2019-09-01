@@ -60,7 +60,7 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+            currenttime = Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
             if(previoustime + (Properties.UpdateInterval * 1000L) <= currenttime)
             {

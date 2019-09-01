@@ -92,7 +92,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         private void ability1_keys_callback(DeviceLED[] resulting_keys)
         {
-            Global.key_recorder.FinishedRecording -= ability1_keys_callback;
+            App.Core.key_recorder.FinishedRecording -= ability1_keys_callback;
 
             Dispatcher.Invoke(() =>
                 {
@@ -107,7 +107,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     }
                 });
 
-            Global.key_recorder.Reset();
+            App.Core.key_recorder.Reset();
         }
 
         private void ability_key2_textblock_MouseDown(object sender, MouseButtonEventArgs e)
@@ -117,7 +117,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         private void ability2_keys_callback(DeviceLED[] resulting_keys)
         {
-            Global.key_recorder.FinishedRecording -= ability2_keys_callback;
+            App.Core.key_recorder.FinishedRecording -= ability2_keys_callback;
 
             Dispatcher.Invoke(() =>
                 {
@@ -132,7 +132,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     }
                 });
 
-            Global.key_recorder.Reset();
+            App.Core.key_recorder.Reset();
         }
 
         private void ability_key3_textblock_MouseDown(object sender, MouseButtonEventArgs e)
@@ -142,7 +142,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         private void ability3_keys_callback(DeviceLED[] resulting_keys)
         {
-            Global.key_recorder.FinishedRecording -= ability3_keys_callback;
+            App.Core.key_recorder.FinishedRecording -= ability3_keys_callback;
 
             Dispatcher.Invoke(() =>
                 {
@@ -157,7 +157,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     }
                 });
 
-            Global.key_recorder.Reset();
+            App.Core.key_recorder.Reset();
         }
 
         private void ability_key4_textblock_MouseDown(object sender, MouseButtonEventArgs e)
@@ -167,7 +167,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         private void ability4_keys_callback(DeviceLED[] resulting_keys)
         {
-            Global.key_recorder.FinishedRecording -= ability4_keys_callback;
+            App.Core.key_recorder.FinishedRecording -= ability4_keys_callback;
 
             Dispatcher.Invoke(() =>
                 {
@@ -182,7 +182,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     }
                 });
 
-            Global.key_recorder.Reset();
+            App.Core.key_recorder.Reset();
         }
 
         private void ability_key5_textblock_MouseDown(object sender, MouseButtonEventArgs e)
@@ -192,7 +192,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         private void ability5_keys_callback(DeviceLED[] resulting_keys)
         {
-            Global.key_recorder.FinishedRecording -= ability5_keys_callback;
+            App.Core.key_recorder.FinishedRecording -= ability5_keys_callback;
 
             Dispatcher.Invoke(() =>
                 {
@@ -207,7 +207,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     }
                 });
 
-            Global.key_recorder.Reset();
+            App.Core.key_recorder.Reset();
         }
 
         private void ability_key6_textblock_MouseDown(object sender, MouseButtonEventArgs e)
@@ -217,7 +217,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         private void ability6_keys_callback(DeviceLED[] resulting_keys)
         {
-            Global.key_recorder.FinishedRecording -= ability6_keys_callback;
+            App.Core.key_recorder.FinishedRecording -= ability6_keys_callback;
 
             Dispatcher.Invoke(() =>
                 {
@@ -232,29 +232,29 @@ namespace Aurora.Profiles.Dota_2.Layers
                     }
                 });
 
-            Global.key_recorder.Reset();
+            App.Core.key_recorder.Reset();
         }
 
         private void RecordSingleKey(string whoisrecording, TextBlock textblock, KeyRecorder.RecordingFinishedHandler callback)
         {
-            if (Global.key_recorder.IsRecording())
+            if (App.Core.key_recorder.IsRecording())
             {
 
-                if (Global.key_recorder.GetRecordingType().Equals(whoisrecording))
+                if (App.Core.key_recorder.GetRecordingType().Equals(whoisrecording))
                 {
-                    Global.key_recorder.StopRecording();
+                    App.Core.key_recorder.StopRecording();
 
-                    Global.key_recorder.Reset();
+                    App.Core.key_recorder.Reset();
                 }
                 else
                 {
-                    MessageBox.Show("You are already recording a key sequence for " + Global.key_recorder.GetRecordingType());
+                    MessageBox.Show("You are already recording a key sequence for " + App.Core.key_recorder.GetRecordingType());
                 }
             }
             else
             {
-                Global.key_recorder.FinishedRecording += callback;
-                Global.key_recorder.StartRecording(whoisrecording, true);
+                App.Core.key_recorder.FinishedRecording += callback;
+                App.Core.key_recorder.StartRecording(whoisrecording, true);
                 textblock.Background = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
             }
         }

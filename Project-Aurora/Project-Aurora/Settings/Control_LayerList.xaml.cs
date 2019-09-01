@@ -97,7 +97,7 @@ namespace Aurora.Settings {
         /// <summary>
         /// This returns the currently selected layer collection.
         /// </summary>
-        public ObservableCollection<Layer> ActiveLayerCollection => Global.Configuration.nighttime_enabled && showSecondaryCollection.IsChecked == true ? SecondaryLayerCollection : LayerCollection;
+        public ObservableCollection<Layer> ActiveLayerCollection => App.Core.LightingStateManager.Settings.NightTimeEnabled && showSecondaryCollection.IsChecked == true ? SecondaryLayerCollection : LayerCollection;
         #endregion
 
         #region SelectedLayer Property
@@ -135,7 +135,7 @@ namespace Aurora.Settings {
         /// Property that returns a <see cref="Visibility"/> indicating whether or not the day/night (collection/secondary collection) checkboxes should be shown
         /// based on whether night time feature is enabled and whether a secondary collection has been provided or not.
         /// </summary>
-        public Visibility DayNightCheckboxesVisiblity => Global.Configuration.nighttime_enabled && SecondaryLayerCollection != null ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility DayNightCheckboxesVisiblity => App.Core.LightingStateManager.Settings.NightTimeEnabled && SecondaryLayerCollection != null ? Visibility.Visible : Visibility.Collapsed;
         #endregion
 
         #region Methods
@@ -154,25 +154,25 @@ namespace Aurora.Settings {
         /// When the add button is clicked, adds a new default layer.
         /// </summary>
         private void AddButton_Click(object sender, RoutedEventArgs e) {
-            AddLayer(new Layer("New layer " + Utils.Time.GetMilliSeconds()));
+            AddLayer(new Layer("New layer " + Utils.TimeUtils.GetMilliSeconds()));
         }
         
         /// <summary>
-        /// Creates a clone of the selected layer and sets <see cref="Global.Clipboard"/> to the clone. The reason for cloning is so that should the layer be
+        /// Creates a clone of the selected layer and sets <see cref="AuroraCore.Clipboard"/> to the clone. The reason for cloning is so that should the layer be
         /// changed after copying, the pasted version will not have this changes (as should be expected).
         /// </summary>
         private void CopyButton_Click(object sender, RoutedEventArgs e) {
-            Global.Clipboard = SelectedLayer?.Clone();
+            AuroraCore.Clipboard = SelectedLayer?.Clone();
         }
 
         /// <summary>
-        /// Checks if the <see cref="Global.Clipboard"/> object is a layer, and if so adds a copy of this layer to the active collection. The reason for taking
+        /// Checks if the <see cref="AuroraCore.Clipboard"/> object is a layer, and if so adds a copy of this layer to the active collection. The reason for taking
         /// a clone of the layer is so that if it was to be pasted again, the two pasted layers don't equal one another (i.e. don't have the same reference).
         /// </summary>
         private void PasteButton_Click(object sender, RoutedEventArgs e) {
             // Check if clipboard is layer and also that either: The layer on the clipboard is available to ALL applications OR the layer is available to the current application type.
             // This check is to avoid being able to copy application specific layers to other applications, e.g. prevent copying Minecraft health layer to CSGO.
-            if (Global.Clipboard is Layer clipboardLayer && (Global.LightingStateManager.DefaultLayerHandlers.Contains(clipboardLayer.Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(clipboardLayer.Handler.ID))) {
+            if (AuroraCore.Clipboard is Layer clipboardLayer && (App.Core.LightingStateManager.DefaultLayerHandlers.Contains(clipboardLayer.Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(clipboardLayer.Handler.ID))) {
                 var newLayer = (Layer)clipboardLayer.Clone();
                 newLayer.Name += " - Copy";
                 AddLayer(newLayer);

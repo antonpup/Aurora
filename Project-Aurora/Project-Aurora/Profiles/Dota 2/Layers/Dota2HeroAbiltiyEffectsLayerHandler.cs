@@ -139,7 +139,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         public override EffectLayer Render(IGameState state)
         {
             previoustime = currenttime;
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+            currenttime = Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
             if (currenttime - previoustime > 300000 || (currenttime == 0 && previoustime == 0))
                 UpdateAnimations();
@@ -545,7 +545,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                             }
                             else
                             {
-                                if (Global.isDebug)
+                                if (App.isDebug)
                                     System.Diagnostics.Debug.WriteLine("Unknown Ability: " + ability.Name);
                             }
 

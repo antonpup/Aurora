@@ -33,7 +33,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
-        public bool Evaluate(IGameState gameState) => Global.InputEvents.PressedKeys.Contains(TargetKey);
+        public bool Evaluate(IGameState gameState) => AuroraCore.InputEvents.PressedKeys.Contains(TargetKey);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         /// <summary>Do nothing - this is an application-independent condition.</summary>
@@ -89,7 +89,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
         public bool Evaluate(IGameState gameState) {
-            if (Global.InputEvents.PressedKeys.Contains(TargetKey))
+            if (AuroraCore.InputEvents.PressedKeys.Contains(TargetKey))
             {
                 watch.Restart();
                 return true;
@@ -135,7 +135,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>True if the global event bus's pressed mouse button list contains the target button.</summary>
-        public bool Evaluate(IGameState gameState) => Global.InputEvents.PressedButtons.Contains(TargetButton);
+        public bool Evaluate(IGameState gameState) => AuroraCore.InputEvents.PressedButtons.Contains(TargetButton);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         /// <summary>Do nothing - this is an application-independent condition.</summary>

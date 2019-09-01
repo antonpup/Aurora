@@ -93,11 +93,11 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.ColorBreathing:
                     Fill(effect_config.primary);
-                    float sine = (float)Math.Pow(Math.Sin((double)((Utils.Time.GetMillisecondsSinceEpoch() % 10000L) / 10000.0f) * 2 * Math.PI * effect_config.speed), 2);
+                    float sine = (float)Math.Pow(Math.Sin((double)((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 10000L) / 10000.0f) * 2 * Math.PI * effect_config.speed), 2);
                     Fill(Color.FromArgb((byte)(sine * 255), effect_config.secondary));
                     break;
                 case LayerEffects.RainbowShift_Horizontal:
-                    effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
+                    effect_config.shift_amount += ((Utils.TimeUtils.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % canvas.Width;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
@@ -112,10 +112,10 @@ namespace Aurora.EffectsEngine
 
                     Fill(brush);
 
-                    effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+                    effect_config.last_effect_call = Utils.TimeUtils.GetMillisecondsSinceEpoch();
                     break;
                 case LayerEffects.RainbowShift_Vertical:
-                    effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
+                    effect_config.shift_amount += ((Utils.TimeUtils.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % canvas.Width;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
@@ -130,10 +130,10 @@ namespace Aurora.EffectsEngine
 
                     Fill(brush);
 
-                    effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+                    effect_config.last_effect_call = Utils.TimeUtils.GetMillisecondsSinceEpoch();
                     break;
                 case LayerEffects.RainbowShift_Diagonal:
-                    effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
+                    effect_config.shift_amount += ((Utils.TimeUtils.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % canvas.Width;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
@@ -148,10 +148,10 @@ namespace Aurora.EffectsEngine
 
                     Fill(brush);
 
-                    effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+                    effect_config.last_effect_call = Utils.TimeUtils.GetMillisecondsSinceEpoch();
                     break;
                 case LayerEffects.RainbowShift_Diagonal_Other:
-                    effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
+                    effect_config.shift_amount += ((Utils.TimeUtils.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % canvas.Width;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
@@ -166,10 +166,10 @@ namespace Aurora.EffectsEngine
 
                     Fill(brush);
 
-                    effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+                    effect_config.last_effect_call = Utils.TimeUtils.GetMillisecondsSinceEpoch();
                     break;
                 case LayerEffects.RainbowShift_Custom_Angle:
-                    effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
+                    effect_config.shift_amount += ((Utils.TimeUtils.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % canvas.Width;
 
 
@@ -185,10 +185,10 @@ namespace Aurora.EffectsEngine
 
                     Fill(brush);
 
-                    effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+                    effect_config.last_effect_call = Utils.TimeUtils.GetMillisecondsSinceEpoch();
                     break;
                 case LayerEffects.GradientShift_Custom_Angle:
-                    effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 0.067f * effect_config.speed;
+                    effect_config.shift_amount += ((Utils.TimeUtils.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 0.067f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % canvas.Width;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
@@ -262,7 +262,7 @@ namespace Aurora.EffectsEngine
 
                     Fill(brush);
 
-                    effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+                    effect_config.last_effect_call = Utils.TimeUtils.GetMillisecondsSinceEpoch();
                     break;
                 default:
                     break;
@@ -448,7 +448,7 @@ namespace Aurora.EffectsEngine
             }
             catch (Exception exc)
             {
-                Global.logger.Error("EffectLayer.Get() Exception: " + exc);
+                App.logger.Error("EffectLayer.Get() Exception: " + exc);
 
                 return Color.FromArgb(0, 0, 0);
             }
@@ -542,9 +542,9 @@ namespace Aurora.EffectsEngine
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
                     if (blink_background)
-                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, Color.FromArgb(0, 0, 0, 0), Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, Color.FromArgb(0, 0, 0, 0), Math.Sin((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                     else
-                        foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                        foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
             }
 
@@ -612,7 +612,7 @@ namespace Aurora.EffectsEngine
             {
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
-                    flash_amount = Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI);
+                    flash_amount = Math.Sin((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI);
                 }
             }
 
@@ -669,9 +669,9 @@ namespace Aurora.EffectsEngine
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
                     if(!blink_background)
-                        foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                        foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                     if(blink_background)
-                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
             }
 
@@ -715,7 +715,7 @@ namespace Aurora.EffectsEngine
             {
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
-                    flash_amount = Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI);
+                    flash_amount = Math.Sin((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI);
                 }
             }
             RectangleF rect = freeform.RectangleBitmap;

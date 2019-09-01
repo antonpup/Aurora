@@ -116,8 +116,8 @@ namespace Aurora.Settings.Layers
             _ID = "Animation";
 
             // Listen for key events for the key-based triggers
-            Global.InputEvents.KeyDown += InputEvents_KeyDown;
-            Global.InputEvents.KeyUp += InputEvents_KeyUp;
+            AuroraCore.InputEvents.KeyDown += InputEvents_KeyDown;
+            AuroraCore.InputEvents.KeyUp += InputEvents_KeyUp;
         }
 
         protected override UserControl CreateControl() {

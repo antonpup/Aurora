@@ -7,7 +7,8 @@ namespace Aurora
 {
 	internal sealed class MessagePumpThread : IDisposable
 	{
-		private Thread thread;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private Thread thread;
 		private readonly TaskCompletionSource<Exception> initResult
 			= new TaskCompletionSource<Exception>();
 		private ApplicationContext applicationContext;
@@ -27,7 +28,7 @@ namespace Aurora
 				{
 					if (!initResult.TrySetResult(e))
 					{
-						Global.logger.Error("Exception in dedicated message pump thread. Exception: " + e);
+						logger.Error("Exception in dedicated message pump thread. Exception: " + e);
 					}
 				}
 			});

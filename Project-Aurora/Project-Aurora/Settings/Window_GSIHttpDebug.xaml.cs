@@ -15,17 +15,17 @@ namespace Aurora.Settings {
 
         public Window_GSIHttpDebug() {
             InitializeComponent();
-            DataContext = Global.Configuration;
+            DataContext = App.Core.Settings;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             // When the window has opened and loaded, start listening to the NetworkListener for when it
             // recieves new GameStates.
-            Global.net_listener.NewGameState += Net_listener_NewGameState;
+            App.Core.net_listener.NewGameState += Net_listener_NewGameState;
 
             // If a gamestate is already stored by the network listener, display it to the user immediately.
-            if (Global.net_listener.CurrentGameState != null)
-                SetJsonText(Global.net_listener.CurrentGameState.json);
+            if (App.Core.net_listener.CurrentGameState != null)
+                SetJsonText(App.Core.net_listener.CurrentGameState.json);
 
             // Start a timer to update the time displays for the request
             timeDisplayTimer = new Timer(_ => Dispatcher.Invoke(() => {
@@ -37,7 +37,7 @@ namespace Aurora.Settings {
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             // When the window closes, we need to clean up our listener, otherwise it'll keep listening and
             // this window will never get garbage collected.
-            Global.net_listener.NewGameState -= Net_listener_NewGameState;
+            App.Core.net_listener.NewGameState -= Net_listener_NewGameState;
 
             // Destory the timer to ensure it doesn't keep running and eating memory.
             timeDisplayTimer.Dispose();

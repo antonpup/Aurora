@@ -92,7 +92,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch(Exception exc)
                 {
-                    Global.logger.Error("Effect script with key {0} encountered an error. Exception: {1}", this.Properties.Script, exc);
+                    App.logger.Error("Effect script with key {0} encountered an error. Exception: {1}", this.Properties.Script, exc);
                     ScriptException = exc;
                 }
             }

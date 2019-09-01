@@ -150,20 +150,37 @@ namespace Aurora.Devices.Logitech
         //500
     };
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    
 
-    class LogitechDevice : Device
+    public class LogitechSettings : FirstTimeDeviceSettings
     {
+        // default_registry.Register($"{devicename}_set_default", false, "Set Default Color");
+        //default_registry.Register($"{devicename}_default_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), "Default Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
+        //default_registry.Register($"{devicename}_override_dll", false, "Override DLL", null, null, "Requires restart to take effect");
+        //default_registry.Register($"{devicename}_override_dll_option", LogitechGSDK.LGDLL.LGS, "Override DLL Selection", null, null, "Requires restart to take effect");
+
+        private bool setDefault = false;
+        public bool SetDefault { get { return setDefault; } set { UpdateVar(ref setDefault, value); } }
+
+        private System.Drawing.Color defaultColor = System.Drawing.Color.FromArgb(255, 255, 255, 255);
+        public System.Drawing.Color DefaultColor { get { return defaultColor; } set { UpdateVar(ref defaultColor, value); } }
+
+        private bool overrideDLL = false;
+        public bool OverrideDLL { get { return overrideDLL; } set { UpdateVar(ref overrideDLL, value); } }
+
+        private LogitechGSDK.LGDLL overrideDLLOption = LogitechGSDK.LGDLL.LGS;
+        public LogitechGSDK.LGDLL OverrideDLLOption { get { return overrideDLLOption; } set { UpdateVar(ref overrideDLLOption, value); } }
+    }
+
+    class LogitechDevice : Device<LogitechSettings>
+    {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private String devicename = "Logitech";
-        private bool isInitialized = false;
 
         private bool keyboard_updated = false;
         private bool peripheral_updated = false;
 
         private readonly object action_lock = new object();
-
-        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        private long lastUpdateTime = 0;
-        private VariableRegistry default_registry = null;
 
         //Keyboard stuff
         private Logitech_keyboardBitmapKeys[] allKeys = Enum.GetValues(typeof(Logitech_keyboardBitmapKeys)).Cast<Logitech_keyboardBitmapKeys>().ToArray();
@@ -173,44 +190,46 @@ namespace Aurora.Devices.Logitech
         private byte[] previous_bitmap = new byte[LogitechGSDK.LOGI_LED_BITMAP_SIZE];
         private Color previous_peripheral_Color = Color.Black;
 
-        public bool Initialize()
+        public LogitechDevice() : base()
+        {
+        }
+        public override bool Initialize()
         {
             lock (action_lock)
             {
-                if (!isInitialized)
+                if (!Initialized)
                 {
                     try
                     {
                         LogitechGSDK.LGDLL? dll = null;
-                        if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_override_dll"))
-                            dll = Global.Configuration.VarRegistry.GetVariable<LogitechGSDK.LGDLL>($"{devicename}_override_dll_option");
+                        if (this.Settings.OverrideDLL)
+                            dll = this.Settings.OverrideDLLOption;
 
                         LogitechGSDK.InitDLL(dll);
 
                         if (!LogitechGSDK.LogiLedInit())
                         {
-                            Global.logger.Error("Logitech LED SDK could not be initialized.");
+                            logger.Error("Logitech LED SDK could not be initialized.");
 
-                            isInitialized = false;
+                            Initialized = false;
                             return false;
                         }
 
                         if (LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_ALL) && LogitechGSDK.LogiLedSaveCurrentLighting())
                         {
-                            if (Global.Configuration.logitech_first_time)
+                            if (this.Settings.FirstTime)
                             {
                                 App.Current.Dispatcher.Invoke(() =>
                                 {
                                     LogitechInstallInstructions instructions = new LogitechInstallInstructions();
                                     instructions.ShowDialog();
                                 });
-                                Global.Configuration.logitech_first_time = false;
-                                Settings.ConfigManager.Save(Global.Configuration);
+                                this.Settings.FirstTime = false;
                             }
 
-                            if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_set_default"))
+                            if (this.Settings.SetDefault)
                             {
-                                Color default_color = Global.Configuration.VarRegistry.GetVariable<Aurora.Utils.RealColor>($"{devicename}_default_color").GetDrawingColor();
+                                Color default_color = this.Settings.DefaultColor;
                                 double alpha_amt = (default_color.A / 255.0);
                                 int red_amt = (int)(((default_color.R * alpha_amt) / 255.0) * 100.0);
                                 int green_amt = (int)(((default_color.G * alpha_amt) / 255.0) * 100.0);
@@ -218,14 +237,14 @@ namespace Aurora.Devices.Logitech
                                 LogitechGSDK.LogiLedSetLighting(red_amt, green_amt, blue_amt);
                             }
 
-                            isInitialized = true;
+                            Initialized = true;
                             return true;
                         }
                         else
                         {
-                            Global.logger.Error("Logitech LED SDK could not be initialized. (LogiLedSetTargetDevice or LogiLedSaveCurrentLighting failed)");
+                            logger.Error("Logitech LED SDK could not be initialized. (LogiLedSetTargetDevice or LogiLedSaveCurrentLighting failed)");
 
-                            isInitialized = false;
+                            Initialized = false;
                             return false;
                         }
 
@@ -233,32 +252,32 @@ namespace Aurora.Devices.Logitech
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("There was an error initializing Logitech LED SDK.\r\n" + exc.Message);
+                        logger.Error("There was an error initializing Logitech LED SDK.\r\n" + exc.Message);
 
                         return false;
                     }
                 }
 
-                return isInitialized;
+                return Initialized;
             }
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             lock (action_lock)
             {
-                if (isInitialized)
+                if (Initialized)
                 {
                     this.Reset();
                     LogitechGSDK.LogiLedShutdown();
-                    isInitialized = false;
+                    Initialized = false;
                 }
             }
         }
 
-        public string GetDeviceDetails()
+        public override string GetDeviceDetails()
         {
-            if (isInitialized)
+            if (Initialized)
             {
                 return devicename + ": Connected";
             }
@@ -268,14 +287,14 @@ namespace Aurora.Devices.Logitech
             }
         }
 
-        public string GetDeviceName()
+        public override string GetDeviceName()
         {
             return devicename;
         }
 
-        public void Reset()
+        public override void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (this.Initialized && (keyboard_updated || peripheral_updated))
             {
                 LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_ALL);
                 LogitechGSDK.LogiLedRestoreLighting();
@@ -284,12 +303,12 @@ namespace Aurora.Devices.Logitech
             }
         }
 
-        public bool Reconnect()
+        public override bool Reconnect()
         {
             throw new NotImplementedException();
         }
 
-        public bool IsConnected()
+        public override bool IsConnected()
         {
             throw new NotImplementedException();
         }
@@ -336,12 +355,6 @@ namespace Aurora.Devices.Logitech
                 peripheral_updated = true;
             }
         }
-
-        public bool IsInitialized()
-        {
-            return this.isInitialized;
-        }
-
         private void SetZoneColor(byte deviceType, int zone, byte red, byte green, byte blue)
         {
             LogitechGSDK.LogiLedSetLightingForTargetZone(deviceType, zone
@@ -667,7 +680,7 @@ namespace Aurora.Devices.Logitech
             }
             catch (Exception exc)
             {
-                Global.logger.Error(exc.ToString());
+                logger.Error(exc.ToString());
                 return false;
             }
         }
@@ -694,14 +707,13 @@ namespace Aurora.Devices.Logitech
             }
             catch (Exception exc)
             {
-                Global.logger.Error(exc.ToString());
+                logger.Error(exc.ToString());
                 return false;
             }
         }
 
-        public bool UpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public override bool PerformUpdateDevice(Color globalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
-            watch.Restart();
 
             bool updateResult = true;
 
@@ -728,12 +740,11 @@ namespace Aurora.Devices.Logitech
             }
             catch (Exception ex)
             {
-                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
+                logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
                 return false;
             }
 
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
+            
 
             return updateResult;
         }
@@ -1431,32 +1442,16 @@ namespace Aurora.Devices.Logitech
             }
         }
 
-        public bool IsKeyboardConnected()
+        public override bool IsKeyboardConnected()
         {
-            return isInitialized;
+            return Initialized;
         }
 
-        public bool IsPeripheralConnected()
+        public override bool IsPeripheralConnected()
         {
-            return isInitialized;
+            return Initialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            if (default_registry == null)
-            {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_set_default", false, "Set Default Color");
-                default_registry.Register($"{devicename}_default_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), "Default Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
-                default_registry.Register($"{devicename}_override_dll", false, "Override DLL", null, null, "Requires restart to take effect");
-                default_registry.Register($"{devicename}_override_dll_option", LogitechGSDK.LGDLL.LGS, "Override DLL Selection", null, null, "Requires restart to take effect");
-            }
-            return default_registry;
-        }
+        
     }
 }

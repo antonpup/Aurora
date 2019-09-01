@@ -170,27 +170,27 @@ namespace Aurora.Profiles
         /// <summary>
         /// The current hour
         /// </summary>
-        public int CurrentHour { get { return Utils.Time.GetHours(); } }
+        public int CurrentHour { get { return Utils.TimeUtils.GetHours(); } }
 
         /// <summary>
         /// The current minute
         /// </summary>
-        public int CurrentMinute { get { return Utils.Time.GetMinutes(); } }
+        public int CurrentMinute { get { return Utils.TimeUtils.GetMinutes(); } }
 
         /// <summary>
         /// The current second
         /// </summary>
-        public int CurrentSecond { get { return Utils.Time.GetSeconds(); } }
+        public int CurrentSecond { get { return Utils.TimeUtils.GetSeconds(); } }
 
         /// <summary>
         /// The current millisecond
         /// </summary>
-        public int CurrentMillisecond { get { return Utils.Time.GetMilliSeconds(); } }
+        public int CurrentMillisecond { get { return Utils.TimeUtils.GetMilliSeconds(); } }
 
         /// <summary>
         /// The total number of milliseconds since the epoch
         /// </summary>
-        public long MillisecondsSinceEpoch => Utils.Time.GetMillisecondsSinceEpoch();
+        public long MillisecondsSinceEpoch => Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
         /// <summary>
         /// Used RAM
@@ -306,14 +306,14 @@ namespace Aurora.Profiles
             }
             catch(Exception exc)
             {
-                Global.logger.LogLine("Failed to create PerformanceCounter. Try: https://stackoverflow.com/a/34615451 Exception: " + exc);
+                App.logger.Error("Failed to create PerformanceCounter. Try: https://stackoverflow.com/a/34615451 Exception: " + exc);
             }
 
             void StartStopRecording() {
                 // We must start recording to be able to capture audio in, but only do this if the user has the option set. Allowing them
                 // to turn it off will give them piece of mind we're not spying on them and will stop the Windows 10 mic icon appearing.
                 try {
-                    if (Global.Configuration.EnableAudioCapture)
+                    if (App.Core.Settings.EnableAudioCapture)
                         waveInEvent.StartRecording();
                     else
                         waveInEvent.StopRecording();
@@ -321,8 +321,8 @@ namespace Aurora.Profiles
             }
 
             StartStopRecording();
-            Global.Configuration.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == "EnableAudioCapture")
+            App.Core.Settings.PropertyChanged += (sender, e) => {
+                if (e.PropertyName == nameof(AuroraCoreSettings.EnableAudioCapture))
                     StartStopRecording();
             };
         }
@@ -345,7 +345,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.Error("PerformanceCounter exception: " + exc);
+                App.logger.Error("PerformanceCounter exception: " + exc);
             }
         }
     }

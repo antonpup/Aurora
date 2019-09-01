@@ -10,12 +10,13 @@ using System.Threading;
 using Microsoft.Win32;
 using Aurora.Devices.Layout;
 using System.Linq;
+using Aurora.Settings;
 
 namespace Aurora.Devices
 {
     public class DeviceContainer
     {
-        public Device Device { get; set; }
+        public IDevice Device { get; set; }
 
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
@@ -23,7 +24,7 @@ namespace Aurora.Devices
         private (Color, List<DeviceLayout>, bool) currentComp;
         private bool newFrame = false;
 
-        public DeviceContainer(Device device)
+        public DeviceContainer(IDevice device)
         {
             this.Device = device;
             Worker.DoWork += WorkerOnDoWork;
@@ -73,6 +74,7 @@ namespace Aurora.Devices
 
     public class DeviceManager : IDisposable
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private List<DeviceContainer> devices = new List<DeviceContainer>();
 
         public DeviceContainer[] Devices { get { return devices.ToArray(); } }
@@ -96,9 +98,23 @@ namespace Aurora.Devices
         }
         public event EventHandler NewDevicesInitialized;
 
+        public void RegisterDevice<T>(Device<T> device) where T : DeviceSettings
+        {
+            devices.Add(new DeviceContainer(device));
+            device.Settings.PropertyChanged += (sender, args) => {
+                if (args.PropertyName.Equals(nameof(DeviceSettings.IsEnabled)))
+                {
+                    if (!device.Settings.IsEnabled)
+                    {
+                        device.Shutdown();
+                    }
+                }
+                
+            };
+        }
         public DeviceManager()
         {
-            devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
+            RegisterDevice(new Logitech.LogitechDevice());         // Logitech Device
             //devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
             devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
@@ -120,7 +136,7 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.NZXT.NZXTDevice()));                 //NZXT Device
             
             */
-            string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
+            string devices_scripts_path = System.IO.Path.Combine(App.ExecutingDirectory, "Scripts", "Devices");
 
             /*if (Directory.Exists(devices_scripts_path))
             {
@@ -176,10 +192,10 @@ namespace Aurora.Devices
         bool resumed = false;
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            Global.logger.Info($"SessionSwitch triggered with {e.Reason}");
+            logger.Info($"SessionSwitch triggered with {e.Reason}");
             if (e.Reason.Equals(SessionSwitchReason.SessionUnlock) && (suspended || resumed))
             {
-                Global.logger.Info("Resuming Devices -- Session Switch Session Unlock");
+                logger.Info("Resuming Devices -- Session Switch Session Unlock");
                 suspended = false;
                 resumed = false;
                 this.Initialize(true);
@@ -191,12 +207,12 @@ namespace Aurora.Devices
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Global.logger.Info("Suspending Devices");
+                    logger.Info("Suspending Devices");
                     suspended = true;
                     this.Shutdown();
                     break;
                 case PowerModes.Resume:
-                    Global.logger.Info("Resuming Devices -- PowerModes.Resume");
+                    logger.Info("Resuming Devices -- PowerModes.Resume");
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     resumed = true;
                     suspended = false;
@@ -204,14 +220,6 @@ namespace Aurora.Devices
                     break;
             }
         }
-
-        public void RegisterVariables()
-        {
-            //Register any variables
-            foreach (var device in devices)
-                Global.Configuration.VarRegistry.Combine(device.Device.GetRegisteredVariables());
-        }
-
         public void Initialize(bool forceRetry = false)
         {
             if (suspended)
@@ -220,7 +228,7 @@ namespace Aurora.Devices
             int devicesToRetryNo = 0;
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
+                if (device.Device.Initialized || !device.Device.Enabled)
                     continue;
 
                 if (device.Device.Initialize())
@@ -228,7 +236,7 @@ namespace Aurora.Devices
                 else
                     devicesToRetryNo++;
 
-                Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
+                logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.Initialized ? "" : " not") + " initialized");
             }
 
 
@@ -255,21 +263,21 @@ namespace Aurora.Devices
                 return;
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
-                Global.logger.Info("Retrying Device Initialization");
+                logger.Info("Retrying Device Initialization");
                 if (suspended)
                     continue;
                 int devicesAttempted = 0;
                 bool _anyInitialized = false;
                 foreach (DeviceContainer device in devices)
                 {
-                    if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
+                    if (device.Device.Initialized || !device.Device.Enabled)
                         continue;
 
                     devicesAttempted++;
                     if (device.Device.Initialize())
                         _anyInitialized = true;
 
-                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
+                    logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.Initialized ? "" : " not") + " initialized");
                 }
 
                 retryAttemptsLeft--;
@@ -300,13 +308,13 @@ namespace Aurora.Devices
             return anyInitialized;
         }
 
-        public Device[] GetInitializedDevices()
+        public IDevice[] GetInitializedDevices()
         {
-            List<Device> ret = new List<Device>();
+            List<IDevice> ret = new List<IDevice>();
 
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Device.Initialized)
                 {
                     ret.Add(device.Device);
                 }
@@ -319,10 +327,10 @@ namespace Aurora.Devices
         {
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Device.Initialized)
                 {
                     device.Device.Shutdown();
-                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was shutdown");
+                    logger.Info("Device, " + device.Device.GetDeviceName() + ", was shutdown");
                 }
             }
 
@@ -333,7 +341,7 @@ namespace Aurora.Devices
         {
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Device.Initialized)
                 {
                     device.Device.Reset();
                 }
@@ -344,9 +352,9 @@ namespace Aurora.Devices
         {
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Device.Initialized)
                 {
-                    if (Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
+                    if (!device.Device.Enabled)
                     {
                         //Initialized when it's supposed to be disabled? SMACK IT!
                         device.Device.Shutdown();

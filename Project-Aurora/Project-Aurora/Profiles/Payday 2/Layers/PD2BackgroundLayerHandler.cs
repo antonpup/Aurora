@@ -127,7 +127,7 @@ namespace Aurora.Profiles.Payday_2.Layers
 
                 Color bg_color = Properties.AmbientColor;
 
-                long currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+                long currenttime = Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
                 if ((pd2.Level.Phase == LevelPhase.Assault || pd2.Level.Phase == LevelPhase.Winters) && pd2.Game.State == GameStates.Ingame)
                 {

@@ -81,9 +81,8 @@ namespace Aurora.Devices.Layout
         public event NewLayerRendered NewLayerRender = delegate { };
 
 
-        private GlobalDeviceLayout()
+        private GlobalDeviceLayout() : base ()
         {
-            SettingsSavePath = Path.Combine(Global.SavePath, "GlobalDeviceLayout.json");
         }
 
         public bool Initialize()
@@ -308,7 +307,7 @@ namespace Aurora.Devices.Layout
                 device.Value.UpdateColors(canvas.GetDeviceBitmap(device.Key));
 
             //Push to DeviceManager
-            Global.dev_manager.UpdateDevices(canvas.GlobalColour, this.DeviceLookup.Values.ToList());
+            App.Core.dev_manager.UpdateDevices(canvas.GlobalColour, this.DeviceLookup.Values.ToList());
 
             //Call NewLayerRender
             NewLayerRender?.Invoke(canvas);

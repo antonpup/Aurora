@@ -337,6 +337,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AuroraCore.cs" />
     <Compile Include="ConfigUI.xaml.cs">
       <DependentUpon>ConfigUI.xaml</DependentUpon>
     </Compile>
@@ -675,6 +676,7 @@
     <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
       <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\ManagerBase.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
       <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
@@ -976,7 +978,7 @@
     </Compile>
     <Compile Include="Profiles\XCOM\XCOMApplication.cs" />
     <Compile Include="Profiles\XCOM\XCOMProfile.cs" />
-    <Compile Include="Settings\ApplicationSettings.cs" />
+    <Compile Include="Profiles\ApplicationSettings.cs" />
     <Compile Include="Settings\Control_ProfileControlPresenter.xaml.cs">
       <DependentUpon>Control_ProfileControlPresenter.xaml</DependentUpon>
     </Compile>
@@ -1438,9 +1440,9 @@
     <Compile Include="Settings\Control_ProfileManager.xaml.cs">
       <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Control_Settings.xaml.cs">
+    <None Include="Settings\Control_Settings.xaml.cs">
       <DependentUpon>Control_Settings.xaml</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="Settings\FreeFormObject.cs" />
     <Compile Include="Settings\Layers\Control_DefaultLayer.xaml.cs">
       <DependentUpon>Control_DefaultLayer.xaml</DependentUpon>
@@ -1451,7 +1453,7 @@
     <Compile Include="Settings\KeyRecorder.cs" />
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
-    <Compile Include="Settings\ApplicationProfile.cs" />
+    <Compile Include="Profiles\ApplicationProfile.cs" />
     <Compile Include="Controls\Control_VariableRegistryEditor.xaml.cs">
       <DependentUpon>Control_VariableRegistryEditor.xaml</DependentUpon>
     </Compile>
@@ -1462,7 +1464,6 @@
     <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\GenericUtils.cs" />
-    <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Integrations\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2242,10 +2243,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Control_Settings.xaml">
+    <None Include="Settings\Control_Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
+    </None>
     <Page Include="Settings\Layers\Control_DefaultLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

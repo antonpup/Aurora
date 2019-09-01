@@ -15,12 +15,11 @@ using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Creative
 {
-    class SoundBlasterXDevice : Device
+    class SoundBlasterXDevice : Device<DeviceSettings>
     {
-        private readonly object action_lock = new object();
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private Stopwatch watch = new Stopwatch();
-        private long lastUpdateTime = 0;
+        private readonly object action_lock = new object();
 
         private LEDManager sbScanner;
 
@@ -32,7 +31,7 @@ namespace Aurora.Devices.Creative
         private EnumeratedDevice sbMouseInfo;
         private LedSettings sbMouseSettings;
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             lock (action_lock)
             {
@@ -46,7 +45,7 @@ namespace Aurora.Devices.Creative
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("There was an error scanning for SoundBlasterX devices.\r\n" + exc.Message);
+                    logger.Error("There was an error scanning for SoundBlasterX devices.\r\n" + exc.Message);
                     return false;
                 }
                 
@@ -76,7 +75,7 @@ namespace Aurora.Devices.Creative
                         }
                         catch (Exception exc)
                         {
-                            Global.logger.Error("There was an error opening " + devicesArr[kbdIdx].friendlyName + ".\r\n" + exc.Message);
+                            logger.Error("There was an error opening " + devicesArr[kbdIdx].friendlyName + ".\r\n" + exc.Message);
                         }
                         finally
                         {
@@ -113,7 +112,7 @@ namespace Aurora.Devices.Creative
                         }
                         catch (Exception exc)
                         {
-                            Global.logger.Error("There was an error opening " + devicesArr[moosIdx].friendlyName + ".\r\n" + exc.Message);
+                            logger.Error("There was an error opening " + devicesArr[moosIdx].friendlyName + ".\r\n" + exc.Message);
                         }
                         finally
                         {
@@ -126,7 +125,7 @@ namespace Aurora.Devices.Creative
                     }
                 }
 
-                return (sbKeyboard != null) || (sbMouse != null);
+                return Initialized = ((sbKeyboard != null) || (sbMouse != null));
             }
         }
 
@@ -135,7 +134,7 @@ namespace Aurora.Devices.Creative
             this.Shutdown();
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             lock (action_lock)
             {
@@ -149,7 +148,7 @@ namespace Aurora.Devices.Creative
                         }
                         catch (Exception exc)
                         {
-                            Global.logger.Error("There was an error freeing " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
+                            logger.Error("There was an error freeing " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
                         }
                     }
                     sbMouseSettings = null;
@@ -161,7 +160,7 @@ namespace Aurora.Devices.Creative
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("There was an error closing " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
+                        logger.Error("There was an error closing " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
                     }
                     finally
                     {
@@ -182,7 +181,7 @@ namespace Aurora.Devices.Creative
                         }
                         catch (Exception exc)
                         {
-                            Global.logger.Error("There was an error freeing " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
+                            logger.Error("There was an error freeing " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
                         }
                     }
                     sbKeyboardSettings = null;
@@ -194,7 +193,7 @@ namespace Aurora.Devices.Creative
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("There was an error closing " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
+                        logger.Error("There was an error closing " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
                     }
                     finally
                     {
@@ -214,17 +213,19 @@ namespace Aurora.Devices.Creative
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("There was an error closing SoundBlasterX scanner.\r\n" + exc.Message);
+                        logger.Error("There was an error closing SoundBlasterX scanner.\r\n" + exc.Message);
                     }
                     finally
                     {
                         sbScanner = null;
                     }
                 }
+
+                Initialized = false;
             }
         }
 
-        public string GetDeviceDetails()
+        public override string GetDeviceDetails()
         {
             if (sbKeyboard == null && sbMouse == null)
             {
@@ -244,7 +245,7 @@ namespace Aurora.Devices.Creative
             return outDetails + ":Connected";
         }
 
-        public string GetDeviceName()
+        public override string GetDeviceName()
         {
             if (sbKeyboard != null && sbMouse == null)
                 return sbKeyboardInfo.friendlyName;
@@ -254,7 +255,7 @@ namespace Aurora.Devices.Creative
                 return "SoundBlasterX";
         }
 
-        public void Reset()
+        public override void Reset()
         {
             if (sbKeyboard != null)
             {
@@ -266,7 +267,7 @@ namespace Aurora.Devices.Creative
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("There was an error freeing " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
+                        logger.Error("There was an error freeing " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
                     }
                 }
                 try
@@ -275,7 +276,7 @@ namespace Aurora.Devices.Creative
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("There was an error resetting " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
+                    logger.Error("There was an error resetting " + sbKeyboardInfo.friendlyName + ".\r\n" + exc.Message);
                 }
             }
             if (sbMouse != null)
@@ -288,7 +289,7 @@ namespace Aurora.Devices.Creative
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("There was an error freeing " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
+                        logger.Error("There was an error freeing " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
                     }
                 }
                 try
@@ -297,49 +298,31 @@ namespace Aurora.Devices.Creative
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("There was an error resetting " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
+                    logger.Error("There was an error resetting " + sbMouseInfo.friendlyName + ".\r\n" + exc.Message);
                 }
             }
         }
 
-        public bool Reconnect()
+        public override bool Reconnect()
         {
             throw new NotImplementedException();
         }
 
-        public bool IsConnected()
+        public override bool IsConnected()
         {
             throw new NotImplementedException();
         }
-
-        public bool IsInitialized()
-        {
-            return (sbKeyboard != null || sbMouse != null);
-        }
-
-        public bool IsKeyboardConnected()
+        public override bool IsKeyboardConnected()
         {
             return (sbKeyboard != null);
         }
 
-        public bool IsPeripheralConnected()
+        public override bool IsPeripheralConnected()
         {
             return (sbMouse != null);
         }
-
-        public string GetDeviceUpdatePerformance()
+        public override bool PerformUpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
-            return (IsInitialized() ? lastUpdateTime + " ms" : "");
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
-
-        public bool UpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
 
             bool updateResult = true;
 
@@ -363,12 +346,9 @@ namespace Aurora.Devices.Creative
             }
             catch (Exception ex)
             {
-                Global.logger.Error("SoundBlasterX device, error when updating device: " + ex);
+                logger.Error("SoundBlasterX device, error when updating device: " + ex);
                 return false;
             }
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
 
             return updateResult;
         }
@@ -452,7 +432,7 @@ namespace Aurora.Devices.Creative
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("Failed to Update Device " + sbKeyboardInfo.friendlyName + ": " + exc.ToString());
+                        logger.Error("Failed to Update Device " + sbKeyboardInfo.friendlyName + ": " + exc.ToString());
                         return false;
                     }
                     finally
@@ -655,7 +635,7 @@ namespace Aurora.Devices.Creative
                         }
                         catch (Exception exc)
                         {
-                            Global.logger.Error("Failed to setup data for " + sbMouseInfo.friendlyName + ": " + exc.ToString());
+                            logger.Error("Failed to setup data for " + sbMouseInfo.friendlyName + ": " + exc.ToString());
                             if (sbMouseSettings.payloadData.Value.opaqueSize > 0)
                                 sbMouseSettings.payloadData = sbMouse.LedPayloadCleanup(sbMouseSettings.payloadData.Value, sbMouseInfo.totalNumLeds);
 
@@ -671,7 +651,7 @@ namespace Aurora.Devices.Creative
                         }
                         catch (Exception exc)
                         {
-                            Global.logger.Error("Failed to fill color data for " + sbMouseInfo.friendlyName + ": " + exc.ToString());
+                            logger.Error("Failed to fill color data for " + sbMouseInfo.friendlyName + ": " + exc.ToString());
                             return false;
                         }
                     }
@@ -682,7 +662,7 @@ namespace Aurora.Devices.Creative
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("Failed to Update Device " + sbMouseInfo.friendlyName + ": " + exc.ToString());
+                        logger.Error("Failed to Update Device " + sbMouseInfo.friendlyName + ": " + exc.ToString());
                         return false;
                     }
                 }

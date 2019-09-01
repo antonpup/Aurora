@@ -25,7 +25,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
                 try
                 {
                     ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-SkypeIntegration.exe");
+                    startInfo.FileName = System.IO.Path.Combine(App.ExecutingDirectory, "Aurora-SkypeIntegration.exe");
                     Process.Start(startInfo);
                 }
                 catch (Exception exc)

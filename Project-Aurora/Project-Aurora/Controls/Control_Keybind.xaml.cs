@@ -54,7 +54,7 @@ namespace Aurora.Controls
         {
             InitializeComponent();
 
-            Global.InputEvents.KeyDown += InputEventsKeyDown;
+            AuroraCore.InputEvents.KeyDown += InputEventsKeyDown;
         }
 
         private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
@@ -65,7 +65,7 @@ namespace Aurora.Controls
 
                     if (this.Equals(_ActiveKeybind))
                     {
-                        System.Windows.Forms.Keys[] _PressedKeys = Global.InputEvents.PressedKeys;
+                        System.Windows.Forms.Keys[] _PressedKeys = AuroraCore.InputEvents.PressedKeys;
 
                         if (ContextKeybind != null)
                         {

@@ -43,7 +43,7 @@ namespace Aurora.Profiles {
 
             // Create file system watcher to watch for changes in the pointer directory
             FileSystemWatcher watcher = new FileSystemWatcher {
-                Path = Path.Combine(Global.ExecutingDirectory, "Pointers"),
+                Path = Path.Combine(App.ExecutingDirectory, "Pointers"),
                 EnableRaisingEvents = true
             };
             watcher.Changed += (sender, e) => {
@@ -60,7 +60,7 @@ namespace Aurora.Profiles {
         /// Loads the pointer data from the target JSON file in the Pointers directory.
         /// </summary>
         private void ReloadPointers() {
-            string path = Path.Combine(Global.ExecutingDirectory, "Pointers", pointerFilename);
+            string path = Path.Combine(App.ExecutingDirectory, "Pointers", pointerFilename);
 
             if (File.Exists(path)) {
                 try {
@@ -71,7 +71,7 @@ namespace Aurora.Profiles {
                         pointers = (TPointers)serializer.Deserialize(sr, typeof(TPointers));
                     }
                 } catch (Exception exc) {
-                    Global.logger.Error(exc.Message);
+                    App.logger.Error(exc.Message);
                     isInitialized = false;
                 }
 

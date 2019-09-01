@@ -132,7 +132,7 @@ namespace Aurora.Settings.Layers
             EffectLayer effects_layer = new EffectLayer("Aurora Wrapper - Effects");
 
             DeviceLED[] effect_keys = key_effects.Keys.ToArray();
-            long currentTime = Utils.Time.GetMillisecondsSinceEpoch();
+            long currentTime = Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
             foreach (var key in effect_keys)
             {
@@ -374,7 +374,7 @@ namespace Aurora.Settings.Layers
                 Color secondary = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
 
                 if (current_effect != null)
-                    primary = current_effect.GetCurrentColor(Utils.Time.GetMillisecondsSinceEpoch() - current_effect.timeStarted);
+                    primary = current_effect.GetCurrentColor(Utils.TimeUtils.GetMillisecondsSinceEpoch() - current_effect.timeStarted);
 
                 switch (ngw_state.Command_Data.effect_type)
                 {
@@ -455,7 +455,7 @@ namespace Aurora.Settings.Layers
             }
             else
             {
-                Global.logger.Info("Unknown Wrapper Command: " + ngw_state.Command);
+                App.logger.Info("Unknown Wrapper Command: " + ngw_state.Command);
             }
         }
 
@@ -534,7 +534,7 @@ namespace Aurora.Settings.Layers
             this.color = color;
             this.duration = duration;
             this.interval = interval;
-            this.timeStarted = Utils.Time.GetMillisecondsSinceEpoch();
+            this.timeStarted = Utils.TimeUtils.GetMillisecondsSinceEpoch();
         }
 
         public virtual Color GetColor(long time)
@@ -582,7 +582,7 @@ namespace Aurora.Settings.Layers
             this.color = color;
             this.duration = duration;
             this.interval = interval;
-            this.timeStarted = Utils.Time.GetMillisecondsSinceEpoch();
+            this.timeStarted = Utils.TimeUtils.GetMillisecondsSinceEpoch();
         }
 
         public virtual Color GetCurrentColor(long time)

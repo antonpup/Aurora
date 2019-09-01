@@ -170,7 +170,7 @@ namespace Aurora.Controls
             RenderedBitmap = g;
 
             if (chkbxDrawToDevices.IsChecked.Value)
-                Global.effengine.ForceImageRender(RenderedBitmap);
+                App.Core.effengine.ForceImageRender(RenderedBitmap);
 
             AnimationMixRendered?.Invoke(this);
         }
@@ -188,7 +188,7 @@ namespace Aurora.Controls
         private void chkbxDrawToDevices_Checked(object sender, RoutedEventArgs e)
         {
             if (!(sender as CheckBox).IsChecked.Value)
-                Global.effengine.ForceImageRender(null);
+                App.Core.effengine.ForceImageRender(null);
         }
 
         private void btnAddTrack_Click(object sender, RoutedEventArgs e)
@@ -267,7 +267,7 @@ namespace Aurora.Controls
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Global.effengine.ForceImageRender(null);
+            App.Core.effengine.ForceImageRender(null);
         }
 
         private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)

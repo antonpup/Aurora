@@ -60,14 +60,14 @@ namespace Aurora.Settings.Overrides.Logic {
         /// </summary>
         private void CopyButton_Click(object sender, RoutedEventArgs e) {
             if (Expression != null)
-                Global.Clipboard = Expression.Clone(); // We clone it so if the user changes the evaluatable after pressing copy, the changes don't effect the one on the clipboard.
+                AuroraCore.Clipboard = Expression.Clone(); // We clone it so if the user changes the evaluatable after pressing copy, the changes don't effect the one on the clipboard.
         }
 
         /// <summary>
         /// Replaces the current IEvaluatable with the one on the clipboard
         /// </summary>
         private void PasteButton_Click(object sender, RoutedEventArgs e) {
-            if (Global.Clipboard is IEvaluatable clipboardContents && MessageBox.Show("Are you sure you wish to REPLACE this expression with the one on your clipboard?", "Confirm paste", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
+            if (AuroraCore.Clipboard is IEvaluatable clipboardContents && MessageBox.Show("Are you sure you wish to REPLACE this expression with the one on your clipboard?", "Confirm paste", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
                 var @new = clipboardContents.Clone(); // We clone again when pasting so that if the user pastes it in two places, they aren't the same object
                 ExpressionChanged?.Invoke(this, new ExpressionChangeEventArgs { OldExpression = Expression, NewExpression = @new });
                 Expression = @new;

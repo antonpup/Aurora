@@ -162,9 +162,9 @@ namespace LedCSharp
                 ghub = dll.Equals(LGDLL.GHUB);
 
             if (ghub)
-                Global.logger.LogLine("Loading GHUB DLL", Logging_Level.Info);
+                App.logger.Info("Loading GHUB DLL");
             else
-                Global.logger.LogLine("Loading LGS DLL", Logging_Level.Info);
+                App.logger.Info("Loading LGS DLL");
             path = Path.Combine(path, "Logi", ghub ? "GHUB" : "LGS");
             bool ok = SetDllDirectory(path);
             if (!ok) throw new System.ComponentModel.Win32Exception();

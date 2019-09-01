@@ -28,12 +28,12 @@ namespace Aurora.Profiles.Skype
                     try
                     {
                         ProcessStartInfo startInfo = new ProcessStartInfo();
-                        startInfo.FileName = Path.Combine(Global.ExecutingDirectory, "Aurora-SkypeIntegration.exe");
+                        startInfo.FileName = Path.Combine(App.ExecutingDirectory, "Aurora-SkypeIntegration.exe");
                         Process.Start(startInfo);
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("Could not start Skype Integration. Error: " + exc);
+                        App.logger.Error("Could not start Skype Integration. Error: " + exc);
                     }
                 }
             }

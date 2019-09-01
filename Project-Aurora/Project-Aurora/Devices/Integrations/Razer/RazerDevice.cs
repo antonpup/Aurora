@@ -17,10 +17,10 @@ using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Razer
 {
-    class RazerDevice : Device
+    class RazerDevice : Device<FirstTimeDeviceSettings>
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private String devicename = "Razer";
-        private bool isInitialized = false;
 
         private bool keyboard_updated = false;
         private bool mouse_updated = false;
@@ -39,14 +39,11 @@ namespace Aurora.Devices.Razer
 
         private readonly object action_lock = new object();
 
-        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        private long lastUpdateTime = 0;
-
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
 
-        public string GetDeviceDetails()
+        public override string GetDeviceDetails()
         {
-            if (isInitialized)
+            if (Initialized)
             {
                 return devicename + ": " + (keyboard != null ? "Keyboard Connected " : "") + (mouse != null ? "Mouse Connected " : "") + (headset != null ? "Headset Connected " : "") + (mousepad != null ? "Mousepad Connected " : "") + (chromalink != null ? "ChromaLink Connected " : "");
             }
@@ -56,26 +53,15 @@ namespace Aurora.Devices.Razer
             }
         }
 
-        public string GetDeviceName()
+        public override string GetDeviceName()
         {
             return devicename;
         }
-
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
-
-        public bool Initialize()
+        public override bool Initialize()
         {
             lock (action_lock)
             {
-                if (!IsInitialized())
+                if (!Initialized)
                 {
                     try
                     {
@@ -84,7 +70,7 @@ namespace Aurora.Devices.Razer
 
                         Chroma.Instance.Initialize();
 
-                        Global.logger.Info("Razer device, Initialized");
+                        logger.Info("Razer device, Initialized");
 
                         keyboard = Chroma.Instance.Keyboard;
                         mouse = Chroma.Instance.Mouse;
@@ -109,92 +95,83 @@ namespace Aurora.Devices.Razer
                             /*if (Chroma.Instance.Query(Corale.Colore.Razer.Devices.BladeStealth).Connected || Chroma.Instance.Query(Corale.Colore.Razer.Devices.Blade14).Connected)
                                 bladeLayout = true;*/
 
-                            if (Global.Configuration.razer_first_time)
+                            if (!this.Settings.FirstTime)
                             {
                                 App.Current.Dispatcher.Invoke(() =>
                                 {
                                     RazerInstallInstructions instructions = new RazerInstallInstructions();
                                     instructions.ShowDialog();
                                 });
-                                Global.Configuration.razer_first_time = false;
-                                Settings.ConfigManager.Save(Global.Configuration);
+                                this.Settings.FirstTime = true;
                             }
 
-                            isInitialized = true;
+                            Initialized = true;
                             return true;
                         }
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.Error("Razer device, Exception! Message:" + ex);
+                        logger.Error("Razer device, Exception! Message:" + ex);
                     }
 
-                    isInitialized = false;
+                    Initialized = false;
                     return false;
                 }
 
-                return isInitialized;
+                return Initialized;
             }
         }
 
-        public bool IsConnected()
+        public override bool IsConnected()
         {
             throw new NotImplementedException();
         }
-
-        public bool IsInitialized()
-        {
-            return isInitialized && Chroma.Instance.Initialized;
-        }
-
-        public bool IsKeyboardConnected()
+        public override bool IsKeyboardConnected()
         {
             return keyboard != null;
         }
 
-        public bool IsPeripheralConnected()
+        public override bool IsPeripheralConnected()
         {
             return (mouse != null || headset != null || mousepad != null);
         }
 
-        public bool Reconnect()
+        public override bool Reconnect()
         {
             throw new NotImplementedException();
         }
 
-        public void Reset()
+        public override void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (Initialized && (keyboard_updated || peripheral_updated))
             {
                 keyboard_updated = false;
                 peripheral_updated = false;
             }
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             lock (action_lock)
             {
                 try
                 {
-                    if (IsInitialized())
+                    if (Initialized)
                     {
                         //Chroma.Instance.Uninitialize();
-                        isInitialized = false;
+                        Initialized = false;
                     }
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("Razer device, Exception during Shutdown. Message: " + exc);
-                    isInitialized = false;
+                    logger.Error("Razer device, Exception during Shutdown. Message: " + exc);
+                    Initialized = false;
                 }
             }
         }
 
-        public bool UpdateDevice(System.Drawing.Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public override bool PerformUpdateDevice(System.Drawing.Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
-            watch.Restart();
-
             bool updateResult = true;
 
             try
@@ -217,12 +194,9 @@ namespace Aurora.Devices.Razer
             }
             catch (Exception ex)
             {
-                Global.logger.Error("Razer device, error when updating device: " + ex);
+                logger.Error("Razer device, error when updating device: " + ex);
                 return false;
             }
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
 
             return updateResult;
         }
@@ -256,7 +230,7 @@ namespace Aurora.Devices.Razer
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Razer device, error when updating device. Error: " + exc);
+                logger.Error("Razer device, error when updating device. Error: " + exc);
                 Console.WriteLine(exc);
                 return false;
             }
@@ -533,7 +507,7 @@ namespace Aurora.Devices.Razer
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Razer device, error when updating device. Error: " + exc);
+                logger.Error("Razer device, error when updating device. Error: " + exc);
                 Console.WriteLine(exc);
                 return false;
             }

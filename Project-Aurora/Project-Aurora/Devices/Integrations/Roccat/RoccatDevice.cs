@@ -38,20 +38,31 @@ using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Roccat
 {
-    class RoccatDevice : Device
+    
+    public class RoccatSettings : FirstTimeDeviceSettings
     {
+        //default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
+        //default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
+        //default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
+        private bool enableGeneric = true;
+        public bool EnableGeneric { get { return enableGeneric; } set { UpdateVar(ref enableGeneric, value); } }
+
+        private bool enableRyos = true;
+        public bool EnableRyos { get { return enableRyos; } set { UpdateVar(ref enableRyos, value); } }
+
+        private System.Drawing.Color restoreFallback = System.Drawing.Color.FromArgb(255,0,0,255);
+        public System.Drawing.Color RestoreFallback { get { return restoreFallback; } set { UpdateVar(ref restoreFallback, value); } }
+    }
+    class RoccatDevice : Device<RoccatSettings>
+    {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private String devicename = "Roccat";
-        private bool isInitialized = false;
 
         private TalkFxConnection talkFX = null;
         private RyosTalkFXConnection RyosTalkFX = null;
         private bool RyosInitialized = false;
         private bool generic_deactivated_first_time = true;
         private bool generic_activated_first_time = true;
-
-        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        private long lastUpdateTime = 0;
-        private VariableRegistry default_registry = null;
 
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
         public static Dictionary<KeyboardKeys, byte> KeyboardKeysMap = new Dictionary<KeyboardKeys, byte>
@@ -176,14 +187,18 @@ namespace Aurora.Devices.Roccat
 
         private byte layout = 0x01; //TALKFX_RYOS_LAYOUT_US
 
-        public string GetDeviceName()
+        public RoccatDevice() : base()
+        {
+        }
+
+        public override string GetDeviceName()
         {
             return devicename;
         }
 
-        public string GetDeviceDetails()
+        public override string GetDeviceDetails()
         {
-            if (isInitialized)
+            if (Initialized)
             {
                 return devicename + ": " + (talkFX != null ? "TalkFX Initialized " : "") + (RyosTalkFX != null && RyosInitialized ? "RyosTalkFX Initialized " : "");
             }
@@ -193,9 +208,9 @@ namespace Aurora.Devices.Roccat
             }
         }
 
-        public bool Initialize()
+        public override bool Initialize()
         {
-            if (!isInitialized)
+            if (!Initialized)
             {
                 try
                 {
@@ -215,32 +230,31 @@ namespace Aurora.Devices.Roccat
                     {
                         throw new Exception("No devices connected");
                     }
-                    if (Global.Configuration.roccat_first_time)
+                    if (this.Settings.FirstTime)
                     {
                         App.Current.Dispatcher.Invoke(() =>
                         {
                             RoccatInstallInstructions instructions = new RoccatInstallInstructions();
                             instructions.ShowDialog();
                         });
-                        Global.Configuration.roccat_first_time = false;
-                        Settings.ConfigManager.Save(Global.Configuration);
+                        this.Settings.FirstTime = false;
                     }
-                    isInitialized = true;
+                    Initialized = true;
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.Error("Roccat device, Exception! Message:" + ex);
+                    logger.Error("Roccat device, Exception! Message:" + ex);
                 }
 
-                isInitialized = false;
+                Initialized = false;
                 return false;
             }
 
-            return isInitialized;
+            return Initialized;
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             if (talkFX != null)
             {
@@ -251,12 +265,12 @@ namespace Aurora.Devices.Roccat
             {
                 RyosTalkFX.ExitSdkMode();
             }
-            isInitialized = false;
+            Initialized = false;
         }
 
-        public void Reset()
+        public override void Reset()
         {
-            if (this.IsInitialized())
+            if (Initialized)
             {
                 Restoregeneric();
             }
@@ -266,7 +280,7 @@ namespace Aurora.Devices.Roccat
         {
             //Workaround
             //Global.logger.LogLine("restore Roccat generic");
-            System.Drawing.Color restore_fallback = Global.Configuration.VarRegistry.GetVariable<Aurora.Utils.RealColor>($"{devicename}_restore_fallback").GetDrawingColor();
+            System.Drawing.Color restore_fallback = this.Settings.RestoreFallback;
             restore_fallback = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(restore_fallback, restore_fallback.A / 255.0D));
 
             //Global.logger.LogLine("restore Roccat generic" + restore_fallback + restore_fallback.R + restore_fallback.G + restore_fallback.B);
@@ -285,56 +299,31 @@ namespace Aurora.Devices.Roccat
             talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Color(color.R, color.G, color.B)); ;
         }
 
-        public bool Reconnect()
+        public override bool Reconnect()
         {
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
-
-        public bool IsConnected()
+        public override bool IsConnected()
         {
             throw new NotImplementedException();
         }
 
-        public bool IsKeyboardConnected()
+        public override bool IsKeyboardConnected()
         {
             return false;
         }
 
-        public bool IsPeripheralConnected()
+        public override bool IsPeripheralConnected()
         {
-            return this.IsInitialized();
-        }
-
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            if (default_registry == null)
-            {
-
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
-                default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
-                default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
-            }
-
-            return default_registry;
+            return Initialized;
         }
 
         byte[] stateStruct = new byte[110];
         Roccat_Talk.TalkFX.Color[] colorStruct = new Roccat_Talk.TalkFX.Color[110];
 
-        public bool UpdateDevice(System.Drawing.Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public override bool PerformUpdateDevice(System.Drawing.Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
-            watch.Restart();
 
             bool updateResult = true;
 
@@ -357,12 +346,9 @@ namespace Aurora.Devices.Roccat
             }
             catch (Exception ex)
             {
-                Global.logger.Error("Roccat device, error when updating device: " + ex);
+                logger.Error("Roccat device, error when updating device: " + ex);
                 return false;
             }
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
 
             return updateResult;
         }
@@ -404,7 +390,7 @@ namespace Aurora.Devices.Roccat
                 }
 
                 //send KeyboardState to Ryos only when enabled
-                if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_enable_ryos"))
+                if (this.Settings.EnableRyos)
                 {
                     RyosTalkFX.SetMkFxKeyboardState(stateStruct, colorStruct, (byte)layout);
                 }
@@ -413,7 +399,7 @@ namespace Aurora.Devices.Roccat
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Roccat device, error when updating device. Error: " + exc);
+                logger.Error("Roccat device, error when updating device. Error: " + exc);
                 return false;
             }
         }
@@ -430,7 +416,7 @@ namespace Aurora.Devices.Roccat
                 foreach (KeyValuePair<LEDINT, System.Drawing.Color> key in mouse.DeviceColours.deviceColours)
                 {
                     if (e.Cancel) return false;
-                    if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_enable_generic") == true)
+                    if (this.Settings.EnableGeneric)
                     {
                         generic_deactivated_first_time = true;
                         if ((MouseLights)key.Key == MouseLights.Peripheral_Logo)
@@ -461,7 +447,7 @@ namespace Aurora.Devices.Roccat
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Roccat device, error when updating device. Error: " + exc);
+                logger.Error("Roccat device, error when updating device. Error: " + exc);
                 return false;
             }
         }

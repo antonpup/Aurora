@@ -10,14 +10,26 @@ namespace Aurora.Settings
 {
     public class ObjectSettings<T> : NotifyPropertyChangedEx where T : Settings.SettingsBase
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         protected string SettingsSavePath { get; set; }
         public T Settings { get; protected set; }
+
+        public ObjectSettings() : this("")
+        {
+
+        }
+        public ObjectSettings(string prefix)
+        {
+            this.SettingsSavePath = Path.Combine(AuroraCore.SavePath, prefix, this.GetType().Name + ".json");
+        }
 
         public void SaveSettings()
         {
             this.SaveSettings(typeof(T));
         }
 
+        //TODO: Async save
         protected void SaveSettings(Type settingsType)
         {
             if (Settings == null)
@@ -45,12 +57,18 @@ namespace Aurora.Settings
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error($"Exception occured while loading \"{this.GetType().Name}\" Settings.\nException:" + exc);
+                    logger.Error($"Exception occured while loading \"{this.GetType().Name}\" Settings.\nException:" + exc);
                     SaveSettings(settingsType);
                 }
             }
             else
                 SaveSettings(settingsType);
+        }
+
+        public virtual void ResetSettings()
+        {
+            Settings = null;
+            SaveSettings();
         }
     }
 }

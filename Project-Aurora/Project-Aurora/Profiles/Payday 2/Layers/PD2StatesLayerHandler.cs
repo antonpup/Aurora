@@ -101,7 +101,7 @@ namespace Aurora.Profiles.Payday_2.Layers
 
                     if (pd2state.LocalPlayer.IsSwanSong && Properties.ShowSwanSong)
                     {
-                        double blend_percent = Math.Pow(Math.Cos((Utils.Time.GetMillisecondsSinceEpoch() % 1300L) / 1300.0D * Properties.SwanSongSpeedMultiplier * 2.0D * Math.PI), 2.0D);
+                        double blend_percent = Math.Pow(Math.Cos((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 1300L) / 1300.0D * Properties.SwanSongSpeedMultiplier * 2.0D * Math.PI), 2.0D);
 
                         Color swansongColor = Utils.ColorUtils.MultiplyColorByScalar(Properties.SwanSongColor, blend_percent);
 

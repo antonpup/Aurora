@@ -24,7 +24,7 @@ namespace Aurora.Profiles.Payday_2
                 new LayerHandlerEntry("PD2States", "Payday 2 States Layer", typeof(PD2StatesLayerHandler)),
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(extra, false);
 
             foreach (var entry in extra)
             {

@@ -17,6 +17,7 @@ namespace Aurora.Settings
 {
     public static class ProfileImporter
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Imports a file from disk as a profile into the given application.
@@ -149,7 +150,7 @@ namespace Aurora.Settings
                                                             }
                                                             else
                                                             {
-                                                                Global.logger.Warn($"CorsairLedId not mapped, skipping {key.Value}");
+                                                                logger.Warn($"CorsairLedId not mapped, skipping {key.Value}");
                                                             }
                                                             break;
                                                     }
@@ -168,7 +169,7 @@ namespace Aurora.Settings
                                                 }
                                                 catch (Exception exception)
                                                 {
-                                                    Global.logger.Error(exception, "Exception in profile: " + exception.StackTrace);
+                                                    logger.Error(exception, "Exception in profile: " + exception.StackTrace);
                                                     //break;
                                                 }
                                             }
@@ -369,7 +370,7 @@ namespace Aurora.Settings
                                                     }
                                                     catch (Exception exception)
                                                     {
-                                                        Global.logger.Error(exception, "Wave Ex " + exception.StackTrace);
+                                                        logger.Error(exception, "Wave Ex " + exception.StackTrace);
                                                     }
                                                 }
 
@@ -703,7 +704,7 @@ namespace Aurora.Settings
                                             else
                                             {
                                                 //Null, it's unknown.
-                                                Global.logger.Warn("Unknown CUE Layer Type");
+                                                logger.Warn("Unknown CUE Layer Type");
                                             }
                                         }
 
@@ -741,7 +742,7 @@ namespace Aurora.Settings
 
                 // Copy any valid layers from the read profile to the new one
                 for (int i = 0; i < inProf.Layers.Count; i++)
-                    if (Global.LightingStateManager.DefaultLayerHandlers.Contains(inProf.Layers[i].Handler.ID) || app.Config.ExtraAvailableLayers.Contains(inProf.Layers[i].Handler.ID))
+                    if (App.Core.LightingStateManager.DefaultLayerHandlers.Contains(inProf.Layers[i].Handler.ID) || app.Config.ExtraAvailableLayers.Contains(inProf.Layers[i].Handler.ID))
                         newProf.Layers.Add((Layer)inProf.Layers[i].Clone());
 
                 // Force a save to write the new profile to disk in the appdata dir
@@ -750,7 +751,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.Error(ex);
+                logger.Error(ex);
                 System.Windows.Forms.MessageBox.Show("Error importing the profile: " + ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }

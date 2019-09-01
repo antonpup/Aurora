@@ -22,6 +22,8 @@ using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
 using System.ComponentModel;
+using System.Drawing;
+using Aurora.Devices;
 
 namespace Aurora.Profiles
 {
@@ -46,27 +48,87 @@ namespace Aurora.Profiles
         }
     }    
 
-    public class ProfilesManagerSettings : SettingsBase
+    
+
+    public class LightingStateManagerSettings : SettingsBase
     {
-        public ProfilesManagerSettings() : base()
-        {
+        //Blackout and Night theme
+        private bool dimmingAffectsGames = false;
+        public bool DimmingAffectsGames { get => dimmingAffectsGames; set { UpdateVar(ref dimmingAffectsGames, value); } }
 
-        }
+        private bool dimmingEnabled = false;
+        public bool DimmingEnabled { get => dimmingEnabled; set { UpdateVar(ref dimmingEnabled, value); } }
 
-        public override void Default()
-        {
-            
-        }
+        private TimeSpan dimmingStart = new TimeSpan(21, 0, 0);
+        public TimeSpan DimmingStart { get => dimmingStart; set { UpdateVar(ref dimmingStart, value); } }
+
+        private TimeSpan dimmingEnd = new TimeSpan(8, 0, 0);
+        public TimeSpan DimmingEnd { get => dimmingEnd; set { UpdateVar(ref dimmingEnd, value); } }
+
+        private bool nightTimeEnabled = false;
+        public bool NightTimeEnabled { get => nightTimeEnabled; set { UpdateVar(ref nightTimeEnabled, value); } }
+
+        private TimeSpan nightTimeStart = new TimeSpan(21, 0, 0);
+        public TimeSpan NightTimeStart { get => nightTimeStart; set { UpdateVar(ref nightTimeStart, value); } }
+
+        private TimeSpan nightTimeEnd = new TimeSpan(7, 0, 0);
+        public TimeSpan NightTimeEnd { get => nightTimeEnd; set { UpdateVar(ref nightTimeEnd, value); } }
+
+        #region Idle Effect
+        private IdleEffects idleType = IdleEffects.None;
+        public IdleEffects IdleType { get => idleType; set { UpdateVar(ref idleType, value); } }
+
+        private int idleDelay = 5;
+        public int IdleDelay { get => idleDelay; set { UpdateVar(ref idleDelay, value); } }
+
+        private float idleSpeed = 1.0f;
+        public float IdleSpeed { get => idleSpeed; set { UpdateVar(ref idleSpeed, value); } }
+
+        private Color idleEffectPrimaryColor = Color.FromArgb(0, 255, 0);
+        public Color IdleEffectPrimaryColor { get => idleEffectPrimaryColor; set { UpdateVar(ref idleEffectPrimaryColor, value); } }
+
+        private Color idleEffectSecondaryColor = Color.FromArgb(0, 0, 0);
+        public Color IdleEffectSecondaryColor { get => idleEffectSecondaryColor; set { UpdateVar(ref idleEffectSecondaryColor, value); } }
+
+        private int idleAmount = 5;
+        public int IdleAmount { get => idleAmount; set { UpdateVar(ref idleAmount, value); } }
+
+        private float idleFrequency = 2.5f;
+        public float IdleFrequency { get => idleFrequency; set { UpdateVar(ref idleFrequency, value); } }
+        #endregion
+
+        private ApplicationDetectionMode detectionMode = ApplicationDetectionMode.WindowsEvents;
+        public ApplicationDetectionMode DetectionMode { get => detectionMode; set { UpdateVar(ref detectionMode, value); } }
+
+        public List<string> profileOrder = new List<string>();
+        public List<string> ProfileOrder { get => profileOrder; set { UpdateVar(ref profileOrder, value); } }
+
+        private HashSet<string> excludedPrograms = new HashSet<string>();
+        public HashSet<string> ExcludedPrograms { get => excludedPrograms; set { UpdateVar(ref excludedPrograms, value); } }
+
+        private bool overlaysInPreview = false;
+        public bool OverlaysInPreview { get => overlaysInPreview; set { UpdateVar(ref overlaysInPreview, value); } }
+
+        private bool allowAllLogitechBitmaps = false;
+        public bool AllowAllLogitechBitmaps { get { return allowAllLogitechBitmaps; } set { UpdateVar(ref allowAllLogitechBitmaps, value); } }
+
+        private bool allowWrappersInBackground = true;
+        public bool AllowWrappersInBackground { get { return allowWrappersInBackground; } set { UpdateVar(ref allowWrappersInBackground, value); } }
 
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
 
         }
+
+        public bool DimmingActive => this.DimmingEnabled && TimeUtils.IsCurrentTimeBetween(DimmingStart, DimmingEnd);
+        public bool NightTimeActive => this.NightTimeEnabled && TimeUtils.IsCurrentTimeBetween(NightTimeStart, NightTimeEnd);
     }
 
-    public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit
+    public class LightingStateManager : ManagerSettings<LightingStateManagerSettings>
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
 
         public Desktop.Desktop DesktopProfile { get { return (Desktop.Desktop)Events["desktop"]; } }
@@ -88,7 +150,7 @@ namespace Aurora.Profiles
 
         public List<string> DefaultLayerHandlers { get; private set; } = new List<string>();
 
-        public string AdditionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
+        public string AdditionalProfilesPath = Path.Combine(App.AppDataDirectory, "AdditionalProfiles");
 
         public event EventHandler PreUpdate;
         public event EventHandler PostUpdate;
@@ -96,18 +158,17 @@ namespace Aurora.Profiles
         private ActiveProcessMonitor processMonitor;
         private RunningProcessMonitor runningProcessMonitor;
 
-        public LightingStateManager()
+        public LightingStateManager() : base("LightingStateManagerSettings.json")
         {
-            SettingsSavePath = Path.Combine(Global.SavePath, "ProfilesSettings.json");
         }
 
-        public bool Initialized { get; private set; }
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             if (Initialized)
                 return true;
 
+            base.Initialize();
             processMonitor = new ActiveProcessMonitor();
             runningProcessMonitor = new RunningProcessMonitor();
 
@@ -193,9 +254,6 @@ namespace Aurora.Profiles
 
             #endregion
 
-            LoadSettings();
-
-            this.LoadPlugins();
 
             if (Directory.Exists(AdditionalProfilesPath))
             {
@@ -215,18 +273,11 @@ namespace Aurora.Profiles
                 profile.Value.Initialize();
             }
 
-            this.InitUpdate();
-
             // Listen for profile keybind triggers
-            Global.InputEvents.KeyDown += CheckProfileKeybinds;
+            AuroraCore.InputEvents.KeyDown += CheckProfileKeybinds;
 
             Initialized = true;
             return Initialized;
-        }
-
-        private void LoadPlugins()
-        {
-            Global.PluginManager.ProcessManager(this);
         }
 
         protected override void LoadSettings(Type settingsType)
@@ -235,21 +286,21 @@ namespace Aurora.Profiles
 
             foreach (var kvp in Events)
             {
-                if (!Global.Configuration.ProfileOrder.Contains(kvp.Key) && kvp.Value is Application)
-                    Global.Configuration.ProfileOrder.Add(kvp.Key);
+                if (!this.Settings.ProfileOrder.Contains(kvp.Key) && kvp.Value is Application)
+                    this.Settings.ProfileOrder.Add(kvp.Key);
             }
 
-            foreach(string key in Global.Configuration.ProfileOrder.ToList())
+            foreach(string key in this.Settings.ProfileOrder.ToList())
             {
                 if (!Events.ContainsKey(key) || !(Events[key] is Application))
-                    Global.Configuration.ProfileOrder.Remove(key);
+                    this.Settings.ProfileOrder.Remove(key);
             }
 
-            Global.Configuration.ProfileOrder.Remove("desktop");
-            Global.Configuration.ProfileOrder.Insert(0, "desktop");
+            this.Settings.ProfileOrder.Remove("desktop");
+            this.Settings.ProfileOrder.Insert(0, "desktop");
         }
 
-        public void SaveAll()
+        public override void Save()
         {
             SaveSettings();
 
@@ -349,8 +400,8 @@ namespace Aurora.Profiles
 
             if (@event is Application)
             {
-                if (!Global.Configuration.ProfileOrder.Contains(key))
-                    Global.Configuration.ProfileOrder.Add(key);
+                if (!this.Settings.ProfileOrder.Contains(key))
+                    this.Settings.ProfileOrder.Add(key);
             }
 
             this.InsertLightEvent(@event);
@@ -385,7 +436,7 @@ namespace Aurora.Profiles
                     return;
                 GenericApplication profile = (GenericApplication)Events[key];
                 Events.Remove(key);
-                Global.Configuration.ProfileOrder.Remove(key);
+                this.Settings.ProfileOrder.Remove(key);
 
                 profile.Dispose();
 
@@ -402,7 +453,7 @@ namespace Aurora.Profiles
             if (EventProcesses.ContainsKey(process))
             {
                 if (!Events.ContainsKey(EventProcesses[process]))
-                    Global.logger.Warn($"GetProfileFromProcess: The process '{process}' exists in EventProcesses but subsequently '{EventProcesses[process]}' does not in Events!");
+                    logger.Warn($"GetProfileFromProcess: The process '{process}' exists in EventProcesses but subsequently '{EventProcesses[process]}' does not in Events!");
 
                 return Events[EventProcesses[process]];
             }
@@ -416,7 +467,7 @@ namespace Aurora.Profiles
             foreach (var entry in EventTitles) {
                 if (Regex.IsMatch(title, entry.Key, RegexOptions.IgnoreCase)) {
                     if (!Events.ContainsKey(entry.Value))
-                        Global.logger.Warn($"GetProfileFromProcess: The process with title '{title}' matchs an item in EventTitles but subsequently '{entry.Value}' does not in Events!");
+                        logger.Warn($"GetProfileFromProcess: The process with title '{title}' matchs an item in EventTitles but subsequently '{entry.Value}' does not in Events!");
                     else
                         return Events[entry.Value]; // added in an else so we keep searching for more valid regexes.
                 }
@@ -429,7 +480,7 @@ namespace Aurora.Profiles
             if (EventAppIDs.ContainsKey(appid))
             {
                 if (!Events.ContainsKey(EventAppIDs[appid]))
-                    Global.logger.Warn($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs but subsequently '{EventAppIDs[appid]}' does not in Events!");
+                    logger.Warn($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs but subsequently '{EventAppIDs[appid]}' does not in Events!");
                 return Events[EventAppIDs[appid]];
             }
             else if (Events.ContainsKey(appid))
@@ -485,13 +536,9 @@ namespace Aurora.Profiles
             return null;
         }
 
-        private Timer updateTimer;
-
-        private const int defaultTimerInterval = 33;
-        private int timerInterval = defaultTimerInterval;
+        
 
         private long nextProcessNameUpdate;
-        private long currentTick;
         private string previewModeProfileKey = "";
 
         private List<TimedListObject> overlays = new List<TimedListObject>();
@@ -499,35 +546,11 @@ namespace Aurora.Profiles
 
         public string PreviewProfileKey { get { return previewModeProfileKey; } set { previewModeProfileKey = value ?? string.Empty; } }
 
-        private void InitUpdate()
-        {
-            updateTimer = new System.Threading.Timer(g => {
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-                if (Global.isDebug)
-                    Update();
-                else
-                {
-                    try
-                    {
-                        Update();
-                    }
-                    catch (Exception exc)
-                    {
-                        Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
-                    }
-                }
+        
 
-                watch.Stop();
-                currentTick += timerInterval + watch.ElapsedMilliseconds;
-                updateTimer?.Change(Math.Max(timerInterval, 0), Timeout.Infinite);
-            }, null, 0, System.Threading.Timeout.Infinite);
-            GC.KeepAlive(updateTimer);
-        }
-
-        private void UpdateProcess()
+        private void UpdateProcess(long currentTick)
         {
-            if (Global.Configuration.detection_mode == ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
+            if (this.Settings.DetectionMode == ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
             {
                 processMonitor.GetActiveWindowsProcessname();
                 nextProcessNameUpdate = currentTick + 1000L;
@@ -545,11 +568,9 @@ namespace Aurora.Profiles
             {
                 IdleTime = System.Environment.TickCount - LastInput.dwTime;
 
-                if (IdleTime >= Global.Configuration.idle_delay * 60 * 1000)
+                if (IdleTime >= this.Settings.IdleDelay * 60 * 1000)
                 {
-                    if (!(Global.Configuration.time_based_dimming_enabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
-                    )
+                    if (!(this.Settings.DimmingActive))
                     {
                         UpdateEvent(idle_e, newFrame);
                     }
@@ -591,14 +612,13 @@ namespace Aurora.Profiles
             return true;
         }
 
-        private void Update()
+        public void Update(long currentTick, DeviceManager deviceManager, Effects effects)
         {
             PreUpdate?.Invoke(this, null);
             UpdatedEvents.Clear();
 
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
-            if ((Global.Configuration.time_based_dimming_enabled &&
-               Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
+            if (this.Settings.DimmingActive)
             {
                 StopUnUpdatedEvents();
                 return;
@@ -606,7 +626,7 @@ namespace Aurora.Profiles
 
             string raw_process_name = Path.GetFileName(processMonitor.ProcessPath);
 
-            UpdateProcess();
+            UpdateProcess(currentTick);
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 
 
@@ -616,20 +636,20 @@ namespace Aurora.Profiles
             
             ILightEvent profile = GetCurrentProfile(out bool preview);
 
-            timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
+            //timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
             // If the current foreground process is excluded from Aurora, disable the lighting manager
-            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
+            if ((profile is Desktop.Desktop && !profile.IsEnabled) || this.Settings.ExcludedPrograms.Contains(raw_process_name))
             {
                 StopUnUpdatedEvents();
-                Global.dev_manager.Shutdown();
-                Global.effengine.PushFrame(newFrame);
+                deviceManager.Shutdown();
+                effects.PushFrame(newFrame);
                 return;
             }
             else
-                Global.dev_manager.InitializeOnce();
+                deviceManager.InitializeOnce();
 
-            if (Global.Configuration.OverlaysInPreview || !preview)
+            if (this.Settings.OverlaysInPreview || !preview)
             {
                 foreach (var underlay in Underlays)
                 {
@@ -643,7 +663,7 @@ namespace Aurora.Profiles
             if (profile.IsEnabled)
                 UpdateEvent(profile, newFrame);
 
-            if (Global.Configuration.OverlaysInPreview || !preview)
+            if (this.Settings.OverlaysInPreview || !preview)
             {
                 // Update any overlays registered in the Overlays array. This includes applications with type set to Overlay and things such as skype overlay
                 foreach (var overlay in Overlays)
@@ -665,7 +685,7 @@ namespace Aurora.Profiles
                 var events = GetOverlayActiveProfiles().ToList();
 
                 //Add the Light event that we're previewing to be rendered as an overlay
-                if (preview && Global.Configuration.OverlaysInPreview && !events.Contains(profile))
+                if (preview && this.Settings.OverlaysInPreview && !events.Contains(profile))
                     events.Add(profile);
 
                 foreach (var @event in events)
@@ -674,7 +694,7 @@ namespace Aurora.Profiles
                 UpdateIdleEffects(newFrame);
             }
 
-            Global.effengine.PushFrame(newFrame);
+            effects.PushFrame(newFrame);
 
             StopUnUpdatedEvents();
             PostUpdate?.Invoke(this, null);
@@ -696,7 +716,7 @@ namespace Aurora.Profiles
             {
                 profile = tempProfile;
                 preview = true;
-            } else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+            } else if (this.Settings.AllowWrappersInBackground && App.Core.net_listener != null && App.Core.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(App.Core.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
                 profile = tempProfile;
 
             profile = profile ?? DesktopProfile;
@@ -769,7 +789,7 @@ namespace Aurora.Profiles
                         gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json);
                     profile.SetGameState(gameState);
                 }
-                else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
+                else if (gs is GameState_Wrapper && this.Settings.AllowAllLogitechBitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
                     lock (Events)
@@ -830,13 +850,15 @@ namespace Aurora.Profiles
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            updateTimer.Dispose();
-            updateTimer = null;
-
             foreach (var app in this.Events)
                 app.Value.Dispose();
+        }
+
+        public override void AcceptPlugins(List<Type> plugin)
+        {
+
         }
     }
 }

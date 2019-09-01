@@ -85,7 +85,7 @@ namespace Aurora.Profiles.CSGO.Layers
                 if (csgostate.Player.State.Health == 100 && ((csgostate.Previously.Player.State.Health > -1 && csgostate.Previously.Player.State.Health < 100) || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined)) && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
                 {
                     isDimming = false;
-                    dim_bg_at = Utils.Time.GetMillisecondsSinceEpoch() + (long)(this.Properties.DimDelay * 1000D);
+                    dim_bg_at = Utils.TimeUtils.GetMillisecondsSinceEpoch() + (long)(this.Properties.DimDelay * 1000D);
                     dim_value = 1.0;
                 }
 
@@ -105,7 +105,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
                 if (csgostate.Player.Team == PlayerTeam.CT || csgostate.Player.Team == PlayerTeam.T)
                 {
-                    if (dim_bg_at <= Utils.Time.GetMillisecondsSinceEpoch() || csgostate.Player.State.Health == 0)
+                    if (dim_bg_at <= Utils.TimeUtils.GetMillisecondsSinceEpoch() || csgostate.Player.State.Health == 0)
                     {
                         isDimming = true;
                         bg_color = Utils.ColorUtils.MultiplyColorByScalar(bg_color, getDimmingValue());

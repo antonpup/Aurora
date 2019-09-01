@@ -28,7 +28,7 @@ namespace Aurora
 {
     partial class ConfigUI : Window, INotifyPropertyChanged
     {
-        Control_Settings settingsControl = new Control_Settings();
+        //Control_Settings settingsControl = new Control_Settings();
         Control_LayerControlPresenter layerPresenter = new Control_LayerControlPresenter();
         Control_ProfileControlPresenter profilePresenter = new Control_ProfileControlPresenter();
 
@@ -65,7 +65,7 @@ namespace Aurora
             set
             {
                 SetValue(FocusedApplicationProperty, value);
-                Global.LightingStateManager.PreviewProfileKey = value != null ? value.Config.ID : string.Empty;
+                App.Core.LightingStateManager.PreviewProfileKey = value != null ? value.Config.ID : string.Empty;
             }
         }
 
@@ -96,14 +96,14 @@ namespace Aurora
             ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
             GenerateProfileStack();
-            settingsControl.DataContext = this;
+            //settingsControl.DataContext = this;
 
             
         }
 
         internal void Display()
         {
-            if (App.isSilent || Global.Configuration.start_silently)
+            if (App.isSilent || App.Core.Settings.StartSilently)
             {
                 this.Visibility = Visibility.Hidden;
                 this.WindowStyle = WindowStyle.None;
@@ -233,7 +233,7 @@ namespace Aurora
 
                             GlobalDeviceLayout.Instance.UpdateDeviceControlColors();
 
-                            if (Global.key_recorder.IsRecording())
+                            if (App.Core.key_recorder.IsRecording())
                                 this.keyboard_record_message.Visibility = Visibility.Visible;
                             else
                                 this.keyboard_record_message.Visibility = Visibility.Hidden;
@@ -267,28 +267,28 @@ namespace Aurora
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Global.Configuration.close_mode == AppExitMode.Ask)
+            switch (App.Core.Settings.CloseMode)
             {
-                MessageBoxResult result = MessageBox.Show("Would you like to Exit Aurora?", "Aurora", MessageBoxButton.YesNo);
+                case AppExitMode.Ask:
+                    MessageBoxResult result = MessageBox.Show("Would you like to Exit Aurora?", "Aurora", MessageBoxButton.YesNo);
 
-                if (result == MessageBoxResult.No)
-                {
+                    if (result == MessageBoxResult.No)
+                    {
+                        minimizeApp();
+                        e.Cancel = true;
+                    }
+                    else
+                    {
+                        exitApp();
+                    }
+                    break;
+                case (AppExitMode.Minimize):
                     minimizeApp();
                     e.Cancel = true;
-                }
-                else
-                {
+                    break;
+                default:
                     exitApp();
-                }
-            }
-            else if (Global.Configuration.close_mode == AppExitMode.Minimize)
-            {
-                minimizeApp();
-                e.Cancel = true;
-            }
-            else
-            {
-                exitApp();
+                    break;
             }
         }
 
@@ -309,7 +309,7 @@ namespace Aurora
                 shownHiddenMessage = true;
             }
 
-            Global.LightingStateManager.PreviewProfileKey = string.Empty;
+            App.Core.LightingStateManager.PreviewProfileKey = string.Empty;
 
             //Hide Window
             System.Windows.Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (System.Windows.Threading.DispatcherOperationCallback)delegate (object o)
@@ -322,13 +322,13 @@ namespace Aurora
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            Global.LightingStateManager.PreviewProfileKey = saved_preview_key;
+            App.Core.LightingStateManager.PreviewProfileKey = saved_preview_key;
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
-            saved_preview_key = Global.LightingStateManager.PreviewProfileKey;
-            Global.LightingStateManager.PreviewProfileKey = string.Empty;
+            saved_preview_key = App.Core.LightingStateManager.PreviewProfileKey;
+            App.Core.LightingStateManager.PreviewProfileKey = string.Empty;
         }
 
         private Image profile_add;
@@ -354,12 +354,12 @@ namespace Aurora
             this.profiles_stack.Children.Add(profile_desktop);*/
 
             //Included Game Profiles
-            foreach (string profile_k in Global.Configuration.ProfileOrder)
+            foreach (string profile_k in App.Core.LightingStateManager.Settings.ProfileOrder)
             {
-                if (!Global.LightingStateManager.Events.ContainsKey(profile_k))
+                if (!App.Core.LightingStateManager.Events.ContainsKey(profile_k))
                     continue;
 
-                Profiles.Application application = (Profiles.Application)Global.LightingStateManager.Events[profile_k];
+                Profiles.Application application = (Profiles.Application)App.Core.LightingStateManager.Events[profile_k];
                 ImageSource icon = application.Icon;
                 UserControl control = application.Control;
                 if (icon != null && control != null)
@@ -590,13 +590,13 @@ namespace Aurora
             {
                 string name = (sender as Image).Tag as string;
 
-                if (Global.LightingStateManager.Events.ContainsKey(name))
+                if (App.Core.LightingStateManager.Events.ContainsKey(name))
                 {
-                    if (MessageBox.Show("Are you sure you want to delete profile for " + (((Profiles.Application)Global.LightingStateManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if (MessageBox.Show("Are you sure you want to delete profile for " + (((Profiles.Application)App.Core.LightingStateManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
-                        var eventList = Global.Configuration.ProfileOrder;
+                        var eventList = App.Core.LightingStateManager.Settings.ProfileOrder;
                         string prevProfile = eventList[eventList.FindIndex(s => s.Equals(name)) - 1];
-                        Global.LightingStateManager.RemoveGenericProfile(name);
+                        App.Core.LightingStateManager.RemoveGenericProfile(name);
                         //ConfigManager.Save(Global.Configuration);
                         this.GenerateProfileStack(prevProfile);
                     }
@@ -612,10 +612,10 @@ namespace Aurora
 
                 string filename = Path.GetFileName(dialog.ChosenExecutablePath.ToLowerInvariant());
 
-                if (Global.LightingStateManager.Events.ContainsKey(filename))
+                if (App.Core.LightingStateManager.Events.ContainsKey(filename))
                 {
-                    if (Global.LightingStateManager.Events[filename] is GameEvent_Aurora_Wrapper)
-                        Global.LightingStateManager.Events.Remove(filename);
+                    if (App.Core.LightingStateManager.Events[filename] is GameEvent_Aurora_Wrapper)
+                        App.Core.LightingStateManager.Events.Remove(filename);
                     else
                     {
                         MessageBox.Show("Profile for this application already exists.");
@@ -638,8 +638,7 @@ namespace Aurora
                 }
                 ico.Dispose();
 
-                Global.LightingStateManager.RegisterEvent(gen_app_pm);
-                ConfigManager.Save(Global.Configuration);
+                App.Core.LightingStateManager.RegisterEvent(gen_app_pm);
                 GenerateProfileStack(filename);
             }
         }
@@ -647,7 +646,7 @@ namespace Aurora
         private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.FocusedApplication = null;
-            SelectedControl = settingsControl;
+            //SelectedControl = settingsControl;
 
             current_color = desktop_color_scheme;
             transitionamount = 0.0f;
@@ -723,7 +722,7 @@ namespace Aurora
 
         public void ShowWindow()
         {
-            Global.logger.Info("Show Window called");
+            App.logger.Info("Show Window called");
             this.Visibility = Visibility.Visible;
             this.WindowStyle = WindowStyle.SingleBorderWindow;
             this.ShowInTaskbar = true;

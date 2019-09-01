@@ -123,7 +123,7 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
                 else if (Properties.DisplayType == ResidentEvil2HealthLayerHandlerProperties.HealthDisplayType.Scanning)
                 {
                     previoustime = currenttime;
-                    currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+                    currenttime = Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
                     GameState_ResidentEvil2 re2state = state as GameState_ResidentEvil2;
 

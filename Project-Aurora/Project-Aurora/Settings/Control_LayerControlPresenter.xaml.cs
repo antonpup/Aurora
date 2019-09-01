@@ -55,10 +55,10 @@ namespace Aurora.Settings
 
             cmbLayerType.Items.Clear();
 
-            foreach(var layertype in Global.LightingStateManager.DefaultLayerHandlers.Concat(layer.AssociatedApplication.Config.ExtraAvailableLayers))
-                cmbLayerType.Items.Add(Global.LightingStateManager.LayerHandlers[layertype]);
+            foreach(var layertype in App.Core.LightingStateManager.DefaultLayerHandlers.Concat(layer.AssociatedApplication.Config.ExtraAvailableLayers))
+                cmbLayerType.Items.Add(App.Core.LightingStateManager.LayerHandlers[layertype]);
 
-            cmbLayerType.SelectedItem = Global.LightingStateManager.LayerHandlers[Layer.Handler.ID];
+            cmbLayerType.SelectedItem = App.Core.LightingStateManager.LayerHandlers[Layer.Handler.ID];
             ctrlLayerTypeConfig.Content = layer.Control;
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
             chk_ExcludeMask.IsChecked = Layer.Handler._EnableExclusionMask ?? false;
@@ -92,7 +92,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer)
             {
-                _Layer.Handler = Global.LightingStateManager.GetLayerHandlerInstance(type);
+                _Layer.Handler = App.Core.LightingStateManager.GetLayerHandlerInstance(type);
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
                 chkLayerSmoothing.IsChecked = _Layer.Handler.EnableSmoothing;

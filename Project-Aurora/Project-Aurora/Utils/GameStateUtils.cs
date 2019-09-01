@@ -11,6 +11,8 @@ namespace Aurora.Utils
 {
     public static class GameStateUtils
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         static Dictionary<Type, bool> AdditionalAllowedTypes = new Dictionary<Type, bool>
         {
             { typeof(string), true },
@@ -161,7 +163,7 @@ namespace Aurora.Utils
 
         public static object RetrieveGameStateParameter(IGameState state, string parameter_path, params object[] input_values)
         {
-            if (Global.isDebug)
+            if (App.isDebug)
                 return _RetrieveGameStateParameter(state, parameter_path, input_values);
             else
             {
@@ -171,7 +173,7 @@ namespace Aurora.Utils
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error($"Exception: {exc}");
+                    logger.Error($"Exception: {exc}");
                     return null;
                 }
             }
@@ -188,7 +190,7 @@ namespace Aurora.Utils
                     value = Convert.ToDouble(RetrieveGameStateParameter(state, path));
                 } catch (Exception exc) {
                     value = 0;
-                    if (Global.isDebug)
+                    if (App.isDebug)
                         throw exc;
                 }
             }

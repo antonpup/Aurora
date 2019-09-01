@@ -77,11 +77,11 @@ namespace Aurora.Settings.Layers
             _keyboardColors = new Color[22 * 6];
             _mousepadColors = new Color[16];
 
-            if (Global.razerManager != null)
+            if (App.Core.razerManager != null)
             {
-                Global.razerManager.DataUpdated += OnDataUpdated;
+                App.Core.razerManager.DataUpdated += OnDataUpdated;
 
-                var appList = Global.razerManager.GetDataProvider<RzAppListDataProvider>();
+                var appList = App.Core.razerManager.GetDataProvider<RzAppListDataProvider>();
                 appList.Update();
                 _currentAppExecutable = appList.CurrentAppExecutable;
                 _currentAppPid = appList.CurrentAppPid;
@@ -126,7 +126,7 @@ namespace Aurora.Settings.Layers
 
         public bool StartDumpingData()
         {
-            var root = Global.LogsDirectory;
+            var root = App.LogsDirectory;
             if (!Directory.Exists(root))
                 return false;
 
@@ -137,20 +137,20 @@ namespace Aurora.Settings.Layers
             foreach (var file in Directory.EnumerateFiles(path, "*.bin", SearchOption.TopDirectoryOnly))
                 File.Delete(file);
 
-            Global.logger.Info("RazerLayerHandler started dumping data");
+            App.logger.Info("RazerLayerHandler started dumping data");
             _isDumping = true;
             return true;
         }
 
         public void StopDumpingData()
         {
-            Global.logger.Info("RazerLayerHandler stopped dumping data");
+            App.logger.Info("RazerLayerHandler stopped dumping data");
             _isDumping = false;
         }
 
         public void DumpData(AbstractDataProvider provider)
         {
-            var path = Path.Combine(Global.LogsDirectory, "RazerLayer");
+            var path = Path.Combine(App.LogsDirectory, "RazerLayer");
             var filename = $"{provider.GetType().Name}_{Environment.TickCount}.bin";
             using (var file = File.Open($@"{path}\{filename}", FileMode.Create)) {
                 var data = provider.ReadData();
@@ -211,8 +211,8 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            if(Global.razerManager != null)
-                Global.razerManager.DataUpdated -= OnDataUpdated;
+            if(App.Core.razerManager != null)
+                App.Core.razerManager.DataUpdated -= OnDataUpdated;
 
             base.Dispose();
         }

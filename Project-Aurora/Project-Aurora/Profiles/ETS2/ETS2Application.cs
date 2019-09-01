@@ -14,7 +14,7 @@ namespace Aurora.Profiles.ETS2 {
             ID = "ets2",
             AppID = "227300",
             ProcessNames = new[] { "eurotrucks2.exe" },
-            SettingsType = typeof(Aurora.Settings.FirstTimeApplicationSettings),
+            SettingsType = typeof(FirstTimeApplicationSettings),
             ProfileType = typeof(ETS2Profile),
             OverviewControlType = typeof(Control_ETS2),
             GameStateType = typeof(GSI.GameState_ETS2),
@@ -27,7 +27,7 @@ namespace Aurora.Profiles.ETS2 {
                 new LayerHandlerEntry("ETS2Beacon", "ETS2 Beacon", typeof(ETS2BeaconLayerHandler))
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(ets2Layers, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(ets2Layers, false);
             foreach (var layer in ets2Layers)
                 Config.ExtraAvailableLayers.Add(layer.Key);
         }

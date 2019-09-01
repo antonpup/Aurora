@@ -244,9 +244,9 @@ namespace Aurora.Settings.Layers
                     if (e.Descriptor == ResultCode.Unsupported)
                     {
                         fallback = true;
-                        Global.logger.Fatal("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
+                        App.logger.Fatal("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
                     }
-                    Global.logger.Debug(e, String.Format("Caught exception when trying to setup desktop duplication. Retrying in {0} ms", AmbilightLayerHandler.retryTimer.Interval));
+                    App.logger.Debug(e, String.Format("Caught exception when trying to setup desktop duplication. Retrying in {0} ms", AmbilightLayerHandler.retryTimer.Interval));
                     captureTimer?.Stop();
                     retryTimer.Elapsed += RetryTimer_Elapsed;
                     retryTimer.Start();
@@ -303,7 +303,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (SharpDXException err)
                 {
-                    Global.logger.Error("Failed to capture screen, reinitializing. Error was: " + err.Message);
+                    App.logger.Error("Failed to capture screen, reinitializing. Error was: " + err.Message);
                     processing = false;
                     this.Initialize();
                     return;
@@ -326,7 +326,7 @@ namespace Aurora.Settings.Layers
 
             screen = smallScreen;
 
-            if (Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
+            if (Utils.TimeUtils.GetMillisecondsSinceEpoch() - last_use_time > 2000)
                 // Stop if layer wasn't active for 2 seconds
                 captureTimer.Stop();
             processing = false;
@@ -334,7 +334,7 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            last_use_time = Utils.Time.GetMillisecondsSinceEpoch();
+            last_use_time = Utils.TimeUtils.GetMillisecondsSinceEpoch();
 
             if (!captureTimer.Enabled) // Static timer isn't running, start it!
                 captureTimer.Start();

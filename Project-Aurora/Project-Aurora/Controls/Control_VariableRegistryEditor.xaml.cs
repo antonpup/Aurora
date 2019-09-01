@@ -46,7 +46,7 @@ namespace Aurora.Controls
         {
             get
             {
-                return GetValue(VarRegistrySourceProperty) as VariableRegistry ?? Global.Configuration.VarRegistry;
+                return GetValue(VarRegistrySourceProperty) as VariableRegistry ?? new VariableRegistry();
             }
             set
             {

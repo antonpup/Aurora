@@ -114,29 +114,30 @@ namespace Aurora.Settings
         }
     }
 
-    public class PluginManager : ObjectSettings<PluginManagerSettings>, IInit, IPluginHost
+    public class PluginManager : ObjectSettings<PluginManagerSettings>, IPluginHost //IInit
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public List<IShortcut> PredefinedShortcuts { get; protected set; } = new List<IShortcut>();
 
         public const string PluginDirectory = "Plugins";
 
         public Dictionary<string, IPlugin> Plugins { get; set; } = new Dictionary<string, IPlugin>();
 
-        public PluginManager()
+        public PluginManager() : base()
         {
-            SettingsSavePath = Path.Combine(Global.AppDataDirectory, "PluginSettings.json");
             this.CreateDefaults();
         }
 
         public bool Initialized { get; protected set; }
 
-        public bool Initialize()
+        public bool Initialize(IManager manager)
         {
             if (Initialized)
                 return true;
 
             this.LoadSettings();
-            this.LoadPlugins();
+            this.LoadPlugins(manager);
 
             return Initialized = true;
         }
@@ -149,9 +150,9 @@ namespace Aurora.Settings
             }
         }
 
-        private void LoadPlugins()
+        private void LoadPlugins(IManager manager)
         {
-            string dir = Path.Combine(Global.ExecutingDirectory, PluginDirectory);
+            string dir = Path.Combine(App.ExecutingDirectory, PluginDirectory);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
@@ -169,7 +170,9 @@ namespace Aurora.Settings
                     foreach (AssemblyName name in dllPlugin.GetReferencedAssemblies())
                         AppDomain.CurrentDomain.Load(name);
 
-                    foreach (Type typ in dllPlugin.GetExportedTypes())
+                    manager.AcceptPlugins(dllPlugin.GetExportedTypes().ToList());
+
+                    /*foreach (Type typ in dllPlugin.GetExportedTypes())
                     {
                         if (typeof(IPlugin).IsAssignableFrom(typ))
                         {
@@ -184,12 +187,12 @@ namespace Aurora.Settings
 
                             this.Plugins.Add(id, objPlugin);
                         }
-                    }
+                    }*/
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error(exc.ToString());
-                    if (Global.isDebug)
+                    logger.Error(exc.ToString());
+                    if (App.isDebug)
                         throw exc;
                 }
             }

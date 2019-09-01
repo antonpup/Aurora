@@ -56,7 +56,7 @@ namespace Aurora.Settings.Layers
         private void PopulatePresets(MenuItem item = null, ShortcutNode node = null)
         {
             MenuItem currentItem = item ?? menuPresets;
-            foreach (IShortcut shortcut in node?.Children ?? Global.PluginManager.PredefinedShortcuts)
+            foreach (IShortcut shortcut in node?.Children ?? App.Core.PluginManager.PredefinedShortcuts)
             {
                 MenuItem newItem = new MenuItem { Header = shortcut.Title, Tag = shortcut };
                 newItem.Click += ShortcutPresetClick;

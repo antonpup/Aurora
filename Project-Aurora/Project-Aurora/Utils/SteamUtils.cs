@@ -133,6 +133,8 @@ namespace Aurora.Utils
     /// </summary>
     public static class SteamUtils
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Retrieves a path to a specified AppID
         /// </summary>
@@ -140,7 +142,7 @@ namespace Aurora.Utils
         /// <returns>Path to the location of AppID's install</returns>
         public static string GetGamePath(int gameId)
         {
-            Global.logger.Debug("Trying to get game path for: " + gameId);
+            logger.Debug("Trying to get game path for: " + gameId);
 
             try
             {
@@ -218,7 +220,7 @@ namespace Aurora.Utils
             }
             catch (Exception exc)
             {
-                Global.logger.Error("SteamUtils: GetGamePath(" + gameId + ") exception: " + exc);
+                logger.Error("SteamUtils: GetGamePath(" + gameId + ") exception: " + exc);
             }
 
             return null;

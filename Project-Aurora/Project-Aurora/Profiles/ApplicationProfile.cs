@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Aurora.Settings
+namespace Aurora.Profiles
 {
     public class ScriptSettings : SettingsBase
     {
@@ -87,7 +87,7 @@ namespace Aurora.Settings
         {
             _Layers = new ObservableCollection<Layer>();
             _OverlayLayers = new ObservableCollection<Layer>();
-            _ScriptSettings = new Dictionary<string, Aurora.Settings.ScriptSettings>();
+            _ScriptSettings = new Dictionary<string, ScriptSettings>();
             _triggerKeybind = new Keybind();
         }
 

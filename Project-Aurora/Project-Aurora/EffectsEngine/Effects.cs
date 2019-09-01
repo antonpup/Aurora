@@ -204,7 +204,7 @@ namespace Aurora
                     background += layer;
 
                 //if (Global.Configuration.UseVolumeAsBrightness)
-                    background *= Global.Configuration.GlobalBrightness;
+                    background *= App.Core.Settings.GlobalBrightness;
 
 
                 pushedframes++;

@@ -15,6 +15,7 @@ namespace Aurora
     public class DesktopDuplicator : IDisposable
     {
         #region Fields
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly Device _device;
         private readonly OutputDuplication _deskDupl;
 
@@ -26,7 +27,7 @@ namespace Aurora
 
         public DesktopDuplicator(Adapter1 adapter, Output1 output, Rectangle Rect)
         {
-            Global.logger.Info("Starting desktop duplicator");
+            logger.Info("Starting desktop duplicator");
             _rect = Rect;
             _device = new Device(adapter);
             var textureDesc = new Texture2DDescription
@@ -58,24 +59,24 @@ namespace Aurora
             }
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.WaitTimeout)
             {
-                Global.logger.Debug(String.Format("Timeout of {0}ms exceeded while acquiring next frame", timeout));
+                logger.Debug(String.Format("Timeout of {0}ms exceeded while acquiring next frame", timeout));
                 return null;
             }
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessLost)
             {
                 // Can happen when going fullscreen / exiting fullscreen
-                Global.logger.Warn(e.Message);
+                logger.Warn(e.Message);
                 throw e;
             }
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessDenied)
             {
                 // Happens when locking PC
-                Global.logger.Debug(e.Message);
+                logger.Debug(e.Message);
                 throw e;
             }
             catch (SharpDXException e) when (e.ResultCode.Failure)
             {
-                Global.logger.Warn(e.Message);
+                logger.Warn(e.Message);
                 return null;
             }
 
@@ -129,7 +130,7 @@ namespace Aurora
             {
                 if (e.ResultCode.Failure)
                 {
-                    Global.logger.Warn(e.Message);
+                    logger.Warn(e.Message);
                 }
                 return true;
             }

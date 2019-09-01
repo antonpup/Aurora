@@ -34,7 +34,7 @@ namespace Aurora.Controls
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Could not set brush, exception: " + exc);
+                App.logger.Error("Could not set brush, exception: " + exc);
 
                 //this.gradient_editor.Brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
             }
@@ -61,7 +61,7 @@ namespace Aurora.Controls
             }
             catch(Exception exc)
             {
-                Global.logger.Error("Could not set brush, exception: " + exc);
+                App.logger.Error("Could not set brush, exception: " + exc);
 
                 //this.gradient_editor.Brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
             }
@@ -122,12 +122,12 @@ namespace Aurora.Controls
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            Global.LightingStateManager.PreviewProfileKey = preview_key;
+            App.Core.LightingStateManager.PreviewProfileKey = preview_key;
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
-            Global.LightingStateManager.PreviewProfileKey = null;
+            App.Core.LightingStateManager.PreviewProfileKey = null;
         }
 
         private void effect_angle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

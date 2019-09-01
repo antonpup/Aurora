@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Aurora.Utils
 {
+
+
     /// <summary>
     /// A class for various Time Utilities
     /// </summary>
-    public static class Time
+    public static class TimeUtils
     {
         private static DateTime epoch = new DateTime(1970, 1, 1);
 

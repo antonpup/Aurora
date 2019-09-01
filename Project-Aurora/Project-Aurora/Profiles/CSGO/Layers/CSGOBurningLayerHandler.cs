@@ -72,7 +72,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
                     if (Properties.Animated)
                     {
-                        int red_adjusted = (int)(burncolor.R + (Math.Cos((Utils.Time.GetMillisecondsSinceEpoch() + randomizer.Next(75)) / 75.0) * 0.15 * 255));
+                        int red_adjusted = (int)(burncolor.R + (Math.Cos((Utils.TimeUtils.GetMillisecondsSinceEpoch() + randomizer.Next(75)) / 75.0) * 0.15 * 255));
                         byte red = 0;
 
                         if (red_adjusted > 255)
@@ -82,7 +82,7 @@ namespace Aurora.Profiles.CSGO.Layers
                         else
                             red = (byte)red_adjusted;
 
-                        int green_adjusted = (int)(burncolor.G + (Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() + randomizer.Next(150)) / 75.0) * 0.15 * 255));
+                        int green_adjusted = (int)(burncolor.G + (Math.Sin((Utils.TimeUtils.GetMillisecondsSinceEpoch() + randomizer.Next(150)) / 75.0) * 0.15 * 255));
                         byte green = 0;
 
                         if (green_adjusted > 255)
@@ -92,7 +92,7 @@ namespace Aurora.Profiles.CSGO.Layers
                         else
                             green = (byte)green_adjusted;
 
-                        int blue_adjusted = (int)(burncolor.B + (Math.Cos((Utils.Time.GetMillisecondsSinceEpoch() + randomizer.Next(225)) / 75.0) * 0.15 * 255));
+                        int blue_adjusted = (int)(burncolor.B + (Math.Cos((Utils.TimeUtils.GetMillisecondsSinceEpoch() + randomizer.Next(225)) / 75.0) * 0.15 * 255));
                         byte blue = 0;
 
                         if (blue_adjusted > 255)

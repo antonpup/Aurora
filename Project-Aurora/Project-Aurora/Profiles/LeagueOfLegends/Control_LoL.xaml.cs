@@ -96,7 +96,7 @@ namespace Aurora.Profiles.LeagueOfLegends
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Leage of Legends path exception: " + exc);
+                App.logger.Error("Leage of Legends path exception: " + exc);
             }
         }
 

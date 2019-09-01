@@ -15,7 +15,7 @@ namespace Aurora.Controls {
 
         // Static constructor so that we only have to add a input event listener once.
         static Control_SingleKeyEditor() {
-            Global.InputEvents.KeyDown += InputEvents_KeyDown;
+            AuroraCore.InputEvents.KeyDown += InputEvents_KeyDown;
         }
 
         // Instance constructor to create UI elements

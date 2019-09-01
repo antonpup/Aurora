@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using Aurora.Profiles;
 
 namespace Aurora.Utils
 {
@@ -45,7 +46,7 @@ namespace Aurora.Utils
                 case "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandlerProperties":
                     return typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandlerProperties);
                 case "Aurora.Profiles.TheDivision.TheDivisionSettings":
-                    return typeof(Settings.ApplicationProfile);
+                    return typeof(ApplicationProfile);
                 case "Aurora.Profiles.Overwatch.OverwatchProfile":
                 case "Aurora.Profiles.WormsWMD.WormsWMDProfile":
                 case "Aurora.Profiles.Blade_and_Soul.BnSProfile":
@@ -62,6 +63,10 @@ namespace Aurora.Utils
                     return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<string>);
                 case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableBoolean, Aurora]]":
                     return typeof(ObservableCollection<Settings.Overrides.Logic.IEvaluatable<bool>>);
+                case "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Aurora.Settings.ScriptSettings, Aurora]]":
+                    return typeof(Dictionary<string, ScriptSettings>);
+                case "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Aurora.Profiles.ScriptSettings, Aurora]]":
+                    return typeof(Dictionary<string, ScriptSettings>);
                 default:
                     if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
                         return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));

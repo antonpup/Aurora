@@ -472,7 +472,7 @@ namespace Aurora.Settings
 
         public KeyboardLayoutManager()
         {
-            layoutsPath = Path.Combine(Global.ExecutingDirectory, cultures_folder);
+            layoutsPath = Path.Combine(App.ExecutingDirectory, cultures_folder);
             Global.Configuration.PropertyChanged += Configuration_PropertyChanged;
         }
 
@@ -1002,14 +1002,14 @@ namespace Aurora.Settings
         {
             if (e.PropertyName.Equals(nameof(Configuration.BitmapAccuracy)))
             {
-                Global.LightingStateManager.PostUpdate += this.LightingStateManager_PostUpdate;
+                App.Core.LightingStateManager.PostUpdate += this.LightingStateManager_PostUpdate;
             }
         }
 
         private void LightingStateManager_PostUpdate(object sender, EventArgs e)
         {
             this.LoadBrandDefault();
-            Global.LightingStateManager.PostUpdate -= this.LightingStateManager_PostUpdate;
+            App.Core.LightingStateManager.PostUpdate -= this.LightingStateManager_PostUpdate;
         }
 
         public void CalculateBitmap()
@@ -1069,8 +1069,8 @@ namespace Aurora.Settings
 
                 _bitmapMapInvalid = false;
                 //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
-                Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
-                Global.effengine.SetBitmapping(this.bitmap_map);
+                App.Core.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
+                App.Core.effengine.SetBitmapping(this.bitmap_map);
             }
 
         }
@@ -1080,17 +1080,17 @@ namespace Aurora.Settings
             if (key.Tag is Devices.DeviceKeys && (Devices.DeviceKeys)key.Tag != DeviceKeys.NONE)
             {
                 //Multi key
-                if (Global.key_recorder.IsSingleKey())
+                if (App.Core.key_recorder.IsSingleKey())
                 {
-                    Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
-                    Global.key_recorder.StopRecording();
+                    App.Core.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
+                    App.Core.key_recorder.StopRecording();
                 }
                 else
                 {
-                    if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)(key.Tag)))
-                        Global.key_recorder.RemoveKey((Devices.DeviceKeys)(key.Tag));
+                    if (App.Core.key_recorder.HasRecorded((Devices.DeviceKeys)(key.Tag)))
+                        App.Core.key_recorder.RemoveKey((Devices.DeviceKeys)(key.Tag));
                     else
-                        Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
+                        App.Core.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
                     last_selected_element = key;
                 }
             }

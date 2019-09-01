@@ -75,7 +75,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
         public new bool IsEnabled
         {
-            get { return Global.Configuration.allow_all_logitech_bitmaps; }
+            get { return App.Core.LightingStateManager.Settings.AllowAllLogitechBitmaps; }
         }
     }
     

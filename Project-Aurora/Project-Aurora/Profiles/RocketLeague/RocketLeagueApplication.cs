@@ -27,7 +27,7 @@ namespace Aurora.Profiles.RocketLeague
                 new LayerHandlerEntry("RocketLeagueBackground", "Rocket League Layer", typeof(RocketLeagueBackgroundLayerHandler)),
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(extra, false);
 
             foreach (var entry in extra)
             {

@@ -27,7 +27,7 @@ namespace Aurora.Profiles.Subnautica {
                 //    new LayerHandlerEntry("SubnauticaNotificationLayer", "Subnautica Notification Layer", typeof(SubnauticaNotificationLayerHandler))
             };
         
-           // Global.LightingStateManager.RegisterLayerHandlers(SubnauticaLayers, false);
+           // App.Core.LightingStateManager.RegisterLayerHandlers(SubnauticaLayers, false);
            // foreach (var layer in SubnauticaLayers)
            //     Config.ExtraAvailableLayers.Add(layer.Key);
         }

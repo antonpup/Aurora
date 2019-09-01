@@ -107,8 +107,8 @@ namespace Aurora.Settings.Keycaps
                 current_color = key_color;
             }
 
-            if (Global.key_recorder.HasRecorded(GetKey()))
-                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
+            if (App.Core.key_recorder.HasRecorded(GetKey()))
+                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.TimeUtils.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
             else
             {
                 if (keyBorder.IsEnabled)
@@ -142,10 +142,10 @@ namespace Aurora.Settings.Keycaps
         {
             if (!key.IsNone)
             {
-                if (Global.key_recorder.HasRecorded(key))
-                    Global.key_recorder.RemoveKey(key);
+                if (App.Core.key_recorder.HasRecorded(key))
+                    App.Core.key_recorder.RemoveKey(key);
                 else
-                    Global.key_recorder.AddKey(key);
+                    App.Core.key_recorder.AddKey(key);
             }
         }
 

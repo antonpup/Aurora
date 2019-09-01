@@ -83,7 +83,7 @@ namespace Aurora.Settings
             }
             catch(Exception exc)
             {
-                Global.logger.Error("Error caught when updating startup task. Error: " + exc.ToString());
+                App.logger.Error("Error caught when updating startup task. Error: " + exc.ToString());
             }
 
             string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
@@ -148,18 +148,18 @@ namespace Aurora.Settings
             this.razer_wrapper_enabled_label.Content = rzSdkEnabled ? "Enabled" : "Disabled";
             this.razer_wrapper_enabled_label.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
 
-            if (Global.razerManager != null)
+            if (App.Core.razerManager != null)
             {
                 this.razer_wrapper_connection_status_label.Content = "Success";
                 this.razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.LightGreen);
 
                 {
-                    var appList = Global.razerManager.GetDataProvider<RzAppListDataProvider>();
+                    var appList = App.Core.razerManager.GetDataProvider<RzAppListDataProvider>();
                     appList.Update();
                     this.razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]";
                 }
 
-                Global.razerManager.DataUpdated += (s, _) =>
+                App.Core.razerManager.DataUpdated += (s, _) =>
                 {
                     if (!(s is RzAppListDataProvider appList))
                         return;
@@ -347,15 +347,15 @@ namespace Aurora.Settings
 
         private void RecordKeySequence(string whoisrecording, Button button, ListBox sequence_listbox)
         {
-            if (Global.key_recorder.IsRecording())
+            if (App.Core.key_recorder.IsRecording())
             {
-                if (Global.key_recorder.GetRecordingType().Equals(whoisrecording))
+                if (App.Core.key_recorder.GetRecordingType().Equals(whoisrecording))
                 {
-                    Global.key_recorder.StopRecording();
+                    App.Core.key_recorder.StopRecording();
 
                     button.Content = "Assign Keys";
 
-                    DeviceLED[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceLED[] recorded_keys = App.Core.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {
@@ -372,16 +372,16 @@ namespace Aurora.Settings
                             sequence_listbox.Items.Add(key);
                     }
 
-                    Global.key_recorder.Reset();
+                    App.Core.key_recorder.Reset();
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("You are already recording a key sequence for " + Global.key_recorder.GetRecordingType());
+                    System.Windows.MessageBox.Show("You are already recording a key sequence for " + App.Core.key_recorder.GetRecordingType());
                 }
             }
             else
             {
-                Global.key_recorder.StartRecording(whoisrecording);
+                App.Core.key_recorder.StartRecording(whoisrecording);
                 button.Content = "Stop Assigning";
             }
         }
@@ -457,9 +457,9 @@ namespace Aurora.Settings
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Global.effengine.ToggleRecord();
+            App.Core.effengine.ToggleRecord();
 
-            if (Global.effengine.isrecording)
+            if (App.Core.effengine.isrecording)
                 (sender as Button).Content = "Stop Recording";
             else
                 (sender as Button).Content = "Record";
@@ -576,7 +576,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded)
             {
-                string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
+                string updater_path = System.IO.Path.Combine(App.ExecutingDirectory, "Aurora-Updater.exe");
 
                 if (File.Exists(updater_path))
                 {
@@ -1030,7 +1030,7 @@ namespace Aurora.Settings
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
-                System.Diagnostics.Process.Start(System.IO.Path.Combine(Global.LogsDirectory));
+                Process.Start(Path.Combine(App.LogsDirectory));
         }
 
         private void chkOverlayPreview_Checked(object sender, RoutedEventArgs e)

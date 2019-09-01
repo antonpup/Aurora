@@ -23,7 +23,7 @@ namespace Aurora.Profiles
             }
             catch(Exception exc)
             {
-                Global.logger.Error($"Exception during Node parsing. Exception: {exc}");
+                App.logger.Error($"Exception during Node parsing. Exception: {exc}");
 
                 _ParsedData = Newtonsoft.Json.Linq.JObject.Parse("{}");
             }

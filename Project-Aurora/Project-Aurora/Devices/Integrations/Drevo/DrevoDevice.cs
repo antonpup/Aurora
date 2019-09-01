@@ -15,10 +15,10 @@ using LEDINT = System.Int16;
 
 namespace Aurora.Devices.Drevo
 {
-    class DrevoDevice : Device
+    class DrevoDevice : Device<DeviceSettings>
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private String devicename = "Drevo";
-        private bool isInitialized = false;
 
         private bool keyboard_updated = false;
         private bool peripheral_updated = false;
@@ -38,15 +38,15 @@ namespace Aurora.Devices.Drevo
         }
 
         /// Gets the device name.
-        public string GetDeviceName()
+        public override string GetDeviceName()
         {
             return devicename;
         }
 
         /// Gets specific details about the device instance.
-        public string GetDeviceDetails()
+        public override string GetDeviceDetails()
         {
-            if (isInitialized)
+            if (Initialized)
             {
                 return devicename + ": Connected";
             }
@@ -56,69 +56,61 @@ namespace Aurora.Devices.Drevo
             }
         }
 
-        /// Gets the device update performance.
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
-
         /// Attempts to initialize the device instance.
-        public bool Initialize()
+        public override bool Initialize()
         {
             lock (action_lock)
             {
-                if (!isInitialized)
+                if (!Initialized)
                 {
                     try
                     {
                         if (!DrevoRadiSDK.DrevoRadiInit())
                         {
-                            Global.logger.Error("Drevo Radi SDK could not be initialized.");
+                            logger.Error("Drevo Radi SDK could not be initialized.");
 
-                            isInitialized = false;
-                            return false;
+                            return Initialized = false;
                         }
 
-                        isInitialized = true;
-                        return true;
+                        return Initialized = true;
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error("There was an error initializing Drevo Radi SDK.\r\n" + exc.Message);
+                        logger.Error("There was an error initializing Drevo Radi SDK.\r\n" + exc.Message);
 
-                        return false;
+                        return Initialized = false;
                     }
                 }
-                return isInitialized;
+                return Initialized;
             }
         }
 
         /// Shuts down the device instance.
-        public void Shutdown()
+        public override void Shutdown()
         {
             lock (action_lock)
             {
                 try
                 {
-                    if (IsInitialized())
+                    if (Initialized)
                     {
                         this.Reset();
-                        isInitialized = false;
+                        Initialized = false;
                         DrevoRadiSDK.DrevoRadiShutdown();
                     }
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("Drevo device, Exception during Shutdown. Message: " + exc);
-                    isInitialized = false;
+                    logger.Error("Drevo device, Exception during Shutdown. Message: " + exc);
+                    Initialized = false;
                 }
             }
         }
 
         /// Resets the device instance.
-        public void Reset()
+        public override void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (Initialized && (keyboard_updated || peripheral_updated))
             {
                 keyboard_updated = false;
                 peripheral_updated = false;
@@ -126,40 +118,32 @@ namespace Aurora.Devices.Drevo
         }
 
         /// Attempts to reconnect the device. [NOT IMPLEMENTED]
-        public bool Reconnect()
+        public override bool Reconnect()
         {
             throw new NotImplementedException();
         }
 
-        /// Gets the initialization status of this device instance.
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
-
         /// Gets the connection status of this device instance. [NOT IMPLEMENTED]
-        public bool IsConnected()
+        public override bool IsConnected()
         {
             throw new NotImplementedException();
         }
 
         /// Gets the keyboard connection status for this device instance.
-        public bool IsKeyboardConnected()
+        public override bool IsKeyboardConnected()
         {
-            return isInitialized;
+            return Initialized;
         }
 
         /// Gets the peripheral connection status for this device instance.
-        public bool IsPeripheralConnected()
+        public override bool IsPeripheralConnected()
         {
-            return isInitialized;
+            return Initialized;
         }
 
         /// Updates the device with a specified color arrangement.
-        public bool UpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
+        public override bool PerformUpdateDevice(Color GlobalColor, List<DeviceLayout> devices, DoWorkEventArgs e, bool forced = false)
         {
-            watch.Restart();
-
             bool updateResult = true;
 
             try
@@ -178,12 +162,9 @@ namespace Aurora.Devices.Drevo
             }
             catch (Exception ex)
             {
-                Global.logger.Error("Drevo device, error when updating device: " + ex);
+                logger.Error("Drevo device, error when updating device: " + ex);
                 return false;
             }
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
 
             return updateResult;
         }
@@ -212,7 +193,7 @@ namespace Aurora.Devices.Drevo
                         bitmap[index + 2] = key.Value.B;
                     }
                 }
-                if (this.IsInitialized())
+                if (Initialized)
                 {
                     DrevoRadiSDK.DrevoRadiSetRGB(bitmap, 392);
                 }
@@ -221,7 +202,7 @@ namespace Aurora.Devices.Drevo
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Drevo device, error when updating device. Error: " + exc);
+                logger.Error("Drevo device, error when updating device. Error: " + exc);
                 Console.WriteLine(exc);
                 return false;
             }

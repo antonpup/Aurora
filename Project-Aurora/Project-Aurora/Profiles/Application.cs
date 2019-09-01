@@ -45,7 +45,7 @@ namespace Aurora.Profiles
 
         public LightEvent Event { get; set; }
 
-        public int? UpdateInterval { get; set; } = null;
+        //public int? UpdateInterval { get; set; } = null;
 
         public string IconURI { get; set; }
 
@@ -106,9 +106,10 @@ namespace Aurora.Profiles
         #endregion
 
         #region Private Fields/Properties
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         #endregion
 
-        public Application(LightEventConfig config)
+        public Application(LightEventConfig config) : base()
         {
             Config = config;
             SettingsSavePath = Path.Combine(GetProfileFolderPath(), "settings.json");
@@ -234,8 +235,8 @@ namespace Aurora.Profiles
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Error($"Could not delete profile with path \"{profile.ProfileFilepath}\"");
-                        Global.logger.Error($"Exception: {exc}");
+                        logger.Error($"Could not delete profile with path \"{profile.ProfileFilepath}\"");
+                        logger.Error($"Exception: {exc}");
                     }
                 }
 
@@ -261,7 +262,7 @@ namespace Aurora.Profiles
 
         public virtual string GetProfileFolderPath()
         {
-            return Path.Combine(Global.AppDataDirectory, "Profiles", Config.ID);
+            return Path.Combine(App.AppDataDirectory, "Profiles", Config.ID);
         }
 
         public void ResetProfile()
@@ -280,7 +281,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.Error(string.Format("Exception Resetting Profile, Exception: {0}", exc));
+                logger.Error(string.Format("Exception Resetting Profile, Exception: {0}", exc));
             }
         }
 
@@ -309,7 +310,7 @@ namespace Aurora.Profiles
                         void InitialiseLayerCollection(ObservableCollection<Layer> collection) { 
                             foreach (Layer lyr in collection.ToList()) {
                                 //Remove any Layers that have non-functional handlers
-                                if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID)) {
+                                if (lyr.Handler == null || !App.Core.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID)) {
                                     prof.Layers.Remove(lyr);
                                     continue;
                                 }
@@ -337,7 +338,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.Error(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc));
+                logger.Error(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc));
                 if (Path.GetFileNameWithoutExtension(path).Equals("default"))
                 {
                     string newPath = path + ".corrupted";
@@ -387,7 +388,7 @@ namespace Aurora.Profiles
 
             if (this.EffectScripts.ContainsKey(key))
             {
-                Global.logger.Warn(string.Format("Effect script with key {0} already exists!", key));
+                logger.Warn(string.Format("Effect script with key {0} already exists!", key));
                 return false;
             }
 
@@ -480,7 +481,7 @@ namespace Aurora.Profiles
 
             this.EffectScripts.Clear();
 
-            string scripts_path = Path.Combine(profiles_path, Global.ScriptDirectory);
+            string scripts_path = Path.Combine(profiles_path, AuroraCore.ScriptDirectory);
             if (!Directory.Exists(scripts_path))
                 Directory.CreateDirectory(scripts_path);
 
@@ -493,7 +494,7 @@ namespace Aurora.Profiles
                     switch (ext)
                     {
                         case ".py":
-                            var scope = Global.PythonEngine.ExecuteFile(script);
+                            var scope = AuroraCore.PythonEngine.ExecuteFile(script);
                             foreach (var v in scope.GetItems())
                             {
                                 if (v.Value is IronPython.Runtime.Types.PythonType)
@@ -501,16 +502,16 @@ namespace Aurora.Profiles
                                     Type typ = ((IronPython.Runtime.Types.PythonType)v.Value).__clrtype__();
                                     if (!typ.IsInterface && typeof(IEffectScript).IsAssignableFrom(typ))
                                     {
-                                        IEffectScript obj = Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
+                                        IEffectScript obj = AuroraCore.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
                                         if (obj != null)
                                         {
                                             if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                                Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
+                                                logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
                                             else
                                                 anyLoaded = true;
                                         }
                                         else
-                                            Global.logger.Error($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
+                                            logger.Error($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
                                     }
                                 }
                             }
@@ -526,7 +527,7 @@ namespace Aurora.Profiles
                                 {
                                     IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
                                     if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                        Global.logger.Warn(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName));
+                                        logger.Warn(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName));
                                     else
                                         anyLoaded = true;
                                 }
@@ -534,16 +535,16 @@ namespace Aurora.Profiles
 
                             break;
                         default:
-                            Global.logger.Warn(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext));
+                            logger.Warn(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext));
                             continue;
                     }
 
                     if (!anyLoaded)
-                        Global.logger.Warn($"Script \"{script}\": No compatible effects found. Does this script need to be updated?");
+                        logger.Warn($"Script \"{script}\": No compatible effects found. Does this script need to be updated?");
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc));
+                    logger.Error(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc));
                     //Maybe MessageBox info dialog could be included.
                 }
             }
@@ -600,7 +601,7 @@ namespace Aurora.Profiles
             }
             else
             {
-                Global.logger.Info(string.Format("Profiles directory for {0} does not exist.", Config.Name));
+                logger.Info(string.Format("Profiles directory for {0} does not exist.", Config.Name));
             }
 
             if (Profile == null)
@@ -634,7 +635,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.Error(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc));
+                logger.Error(string.Format("Exception Saving Profile: {0}, Exception: {1}", path, exc));
             }
         }
 
@@ -664,7 +665,7 @@ namespace Aurora.Profiles
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Exception during SaveProfiles, " + exc);
+                logger.Error("Exception during SaveProfiles, " + exc);
             }
         }
 

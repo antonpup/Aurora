@@ -28,7 +28,7 @@ namespace Aurora.Profiles.CSGO
                 new LayerHandlerEntry("CSGOTyping", "CSGO Typing Layer", typeof(CSGOTypingIndicatorLayerHandler)),
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(extra, false);
 
             foreach (var entry in extra)
             {

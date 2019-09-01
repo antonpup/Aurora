@@ -34,7 +34,7 @@ namespace Aurora.Profiles.Witcher3
                 new LayerHandlerEntry("Witcher3Background", "Witcher 3 Background Layer", typeof(Witcher3BackgroundLayerHandler)),
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(extra, false);
 
             foreach (var entry in extra)
             {

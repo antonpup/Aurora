@@ -48,14 +48,14 @@ namespace Aurora.Settings.Layers {
             _ID = "Toolbar";
 
             // Listen for relevant events
-            Global.InputEvents.KeyDown += InputEvents_KeyDown;
-            Global.InputEvents.Scroll += InputEvents_Scroll;
+            AuroraCore.InputEvents.KeyDown += InputEvents_KeyDown;
+            AuroraCore.InputEvents.Scroll += InputEvents_Scroll;
         }
 
         public override void Dispose() {
             // Remove listeners on dispose
-            Global.InputEvents.KeyDown -= InputEvents_KeyDown;
-            Global.InputEvents.Scroll -= InputEvents_Scroll;
+            AuroraCore.InputEvents.KeyDown -= InputEvents_KeyDown;
+            AuroraCore.InputEvents.Scroll -= InputEvents_Scroll;
             base.Dispose();
         }
 

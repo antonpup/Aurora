@@ -22,9 +22,6 @@ namespace Aurora.Settings
 
         public SettingsBase()
         {
-            this.Default();
         }
-
-        public virtual void Default() { }
     }
 }

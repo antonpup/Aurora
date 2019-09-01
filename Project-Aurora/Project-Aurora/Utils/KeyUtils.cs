@@ -19,6 +19,7 @@ namespace Aurora.Utils
     /// </summary>
     public static class KeyUtils
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         /// <summary>
         ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code into a
         ///     virtual-key code.
@@ -240,7 +241,7 @@ namespace Aurora.Utils
                 var layout = GetKeyboardLayout(thread);
                 var scan_code_locale = MapVirtualKeyEx((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc, layout);
                 if (scan_code_locale == 0)
-                    Global.logger.Warn($"Unable to convert key: {e.Key} to scan_code_locale. layout: {layout}");
+                    logger.Warn($"Unable to convert key: {e.Key} to scan_code_locale. layout: {layout}");
                 else
                 {
 
@@ -248,7 +249,7 @@ namespace Aurora.Utils
                     if (k != Keys.None)
                         e.Key = k;
                     else
-                        Global.logger.Warn($"Unable to convert scan_code_locale: {scan_code_locale} to Keys. Key: {e.Key}, layout: {layout}");
+                        logger.Warn($"Unable to convert scan_code_locale: {scan_code_locale} to Keys. Key: {e.Key}, layout: {layout}");
                 }
             }
             if (isE1)

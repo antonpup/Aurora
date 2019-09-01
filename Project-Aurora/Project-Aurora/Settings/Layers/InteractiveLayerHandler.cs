@@ -130,8 +130,8 @@ namespace Aurora.Settings.Layers
         {
             _ID = "Interactive";
 
-            Global.InputEvents.KeyDown += InputEventsKeyDown;
-            Global.InputEvents.KeyUp += InputEventsKeyUp;
+            AuroraCore.InputEvents.KeyDown += InputEventsKeyDown;
+            AuroraCore.InputEvents.KeyUp += InputEventsKeyUp;
         }
 
         protected override System.Windows.Controls.UserControl CreateControl()
@@ -141,7 +141,7 @@ namespace Aurora.Settings.Layers
 
         private void InputEventsKeyUp(object sender, KeyboardInputEventArgs e)
         {
-            if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
+            if (Utils.TimeUtils.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
             DeviceLED deviceKey = e.GetKeyboardKey().GetDeviceLED();
@@ -163,7 +163,7 @@ namespace Aurora.Settings.Layers
 
         private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
         {
-            if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
+            if (Utils.TimeUtils.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
 
@@ -177,7 +177,7 @@ namespace Aurora.Settings.Layers
             {
                 if (TimeOfLastPress.ContainsKey(device_key))
                 {
-                    if (Properties.UsePressBuffer && (currentTime = Utils.Time.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
+                    if (Properties.UsePressBuffer && (currentTime = Utils.TimeUtils.GetMillisecondsSinceEpoch()) - TimeOfLastPress[device_key] < pressBuffer)
                         return;
                     else
                         TimeOfLastPress.Remove(device_key);
@@ -189,7 +189,7 @@ namespace Aurora.Settings.Layers
                 if (pt != null && pt != new PointF(0, 0))
                 {
                     lock (TimeOfLastPress)
-                        TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
+                        TimeOfLastPress.Add(device_key, currentTime ?? Utils.TimeUtils.GetMillisecondsSinceEpoch());
 
                     _input_list.Add(CreateInputItem(device_key, pt.Value));
                     previous_key = e.Key;
@@ -293,7 +293,7 @@ namespace Aurora.Settings.Layers
         public override EffectLayer Render(IGameState gamestate)
         {
             previoustime = currenttime;
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+            currenttime = Utils.TimeUtils.GetMillisecondsSinceEpoch();
             lock (TimeOfLastPress)
             {
                 foreach (var lengthPresses in TimeOfLastPress.ToList())
@@ -336,7 +336,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("Interative layer exception, " + exc);
+                    App.logger.Error("Interative layer exception, " + exc);
                 }
             }
 
@@ -357,7 +357,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("Interative layer exception, " + exc);
+                    App.logger.Error("Interative layer exception, " + exc);
                 }
             }
 

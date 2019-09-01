@@ -196,7 +196,7 @@ namespace Aurora.Settings.Layers
             waveIn.DataAvailable += OnDataAvailable;
 
             waveIn.StartRecording();
-            startTime = Time.GetSecondsSinceEpoch();
+            startTime = TimeUtils.GetSecondsSinceEpoch();
         }
 
         private void CheckForDeviceChange()
@@ -206,9 +206,9 @@ namespace Aurora.Settings.Layers
             if (((WasapiLoopbackCapture)waveIn)?.CaptureState == CaptureState.Stopped
                 || default_device == null
                 || default_device.ID != current_device.ID
-                || (((WasapiLoopbackCapture)waveIn)?.CaptureState != CaptureState.Capturing && (Time.GetSecondsSinceEpoch() - startTime) > 20)) //Check if it has taken over 20 seconds to start the capture which may indicate that there has been an issue
+                || (((WasapiLoopbackCapture)waveIn)?.CaptureState != CaptureState.Capturing && (TimeUtils.GetSecondsSinceEpoch() - startTime) > 20)) //Check if it has taken over 20 seconds to start the capture which may indicate that there has been an issue
             {
-                Global.logger.LogLine($"CaptureState is {((WasapiLoopbackCapture)waveIn)?.CaptureState}");
+                App.logger.Info($"CaptureState is {((WasapiLoopbackCapture)waveIn)?.CaptureState}");
                 UpdateAudioCapture(current_device);
             }
             else
@@ -369,7 +369,7 @@ namespace Aurora.Settings.Layers
             }
             catch(Exception exc)
             {
-                Global.logger.Error("Error encountered in the Equalizer layer. Exception: " + exc.ToString());
+                App.logger.Error("Error encountered in the Equalizer layer. Exception: " + exc.ToString());
                 return new EffectLayer();
             }
         }
@@ -434,7 +434,7 @@ namespace Aurora.Settings.Layers
                 return e_brush.GetDrawingBrush();
             }
             else if (Properties.ViewType == EqualizerPresentationType.GradientColorShift)
-                return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000));
+                return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.TimeUtils.GetMilliSeconds(), 1000));
             else if (Properties.ViewType == EqualizerPresentationType.GradientVertical)
             {
                 EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());

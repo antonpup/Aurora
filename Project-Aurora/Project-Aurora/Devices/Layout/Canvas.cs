@@ -71,7 +71,7 @@ namespace Aurora.Devices.Layout
                     this.globalColour = s.Color;
                     break;
                 default:
-                    Global.logger.Warn($"Brush of type {brush.GetType()} is not supported by SetGlobalColor!");
+                    App.logger.Warn($"Brush of type {brush.GetType()} is not supported by SetGlobalColor!");
                     break;
                     //throw new NotImplementedException();
             }

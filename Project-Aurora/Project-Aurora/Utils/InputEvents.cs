@@ -15,6 +15,7 @@ namespace Aurora
     /// </summary>
     public sealed class InputEvents : IDisposable
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly MessagePumpThread thread = new MessagePumpThread();
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Aurora
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Exception while handling keyboard input. Error: " + exc.ToString());
+                logger.Error("Exception while handling keyboard input. Error: " + exc.ToString());
             }
         }
 
@@ -152,7 +153,7 @@ namespace Aurora
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Exception while handling mouse input. Error: " + exc.ToString());
+                logger.Error("Exception while handling mouse input. Error: " + exc.ToString());
             }
         }
 

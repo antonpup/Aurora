@@ -17,7 +17,8 @@ namespace Aurora.Utils
 
 	public sealed class ActiveProcessMonitor
 	{
-		private const uint WINEVENT_OUTOFCONTEXT = 0;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private const uint WINEVENT_OUTOFCONTEXT = 0;
 		private const uint EVENT_SYSTEM_FOREGROUND = 3;
 		private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
 		private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017;
@@ -44,7 +45,7 @@ namespace Aurora.Utils
 
 		public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
-			if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.WindowsEvents)
+			if (App.Core.LightingStateManager.Settings.DetectionMode == Settings.ApplicationDetectionMode.WindowsEvents)
 			{
 				GetActiveWindowsProcessname();
 			}
@@ -162,7 +163,7 @@ namespace Aurora.Utils
 			}
 			catch (Exception exc)
 			{
-				Global.logger.Error("Exception in GetActiveWindowsProcessname" + exc);
+				logger.Error("Exception in GetActiveWindowsProcessname" + exc);
 			}
 
 			/*try
@@ -186,13 +187,13 @@ namespace Aurora.Utils
             catch (ArgumentException aex)
             {
                 Global.logger.LogLine("Argument Exception: " + aex, Logging_Level.Error);
-                //if (Global.isDebug)
+                //if (App.isDebug)
                     //throw aex;
             }
             catch (Exception exc)
             {
                 Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
-                //if (Global.isDebug)
+                //if (App.isDebug)
                     //throw exc;
             }*/
 
@@ -207,7 +208,7 @@ namespace Aurora.Utils
                 if (GetWindowText(windowHandle, text, text.Capacity) > 0)
                     return text.ToString();
             } catch (Exception exc) {
-                Global.logger.Error("Exception in GetActiveWindowsProcessTitle" + exc);
+                logger.Error("Exception in GetActiveWindowsProcessTitle" + exc);
             }
             return "";
         }

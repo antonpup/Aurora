@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Aurora.Settings;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aurora.Settings
+namespace Aurora.Profiles
 {
     public class ApplicationSettings : SettingsBase
     {

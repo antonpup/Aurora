@@ -62,7 +62,7 @@ namespace Aurora.Settings.Layers
 
                 if (Properties.Pulse)
                 {
-                    double d = Math.Pow(Math.Sin(((Utils.Time.GetMillisecondsSinceEpoch() % 1500L) / 1500.0D) * Math.PI), 2);
+                    double d = Math.Pow(Math.Sin(((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 1500L) / 1500.0D) * Math.PI), 2);
                     clr = ColorUtils.MultiplyColorByScalar(clr, d);
                 }
             }

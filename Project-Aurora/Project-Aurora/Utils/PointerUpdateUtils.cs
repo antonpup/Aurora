@@ -15,6 +15,7 @@ namespace Aurora.Utils
     /// </summary>
     public static class PointerUpdateUtils
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static HashSet<string> appsToUpdate = new HashSet<string>();
         private static GitHubClient octokitClient = new GitHubClient(new ProductHeaderValue("aurora-pointer-updater"));
         private static readonly HttpClient pointerClient = new HttpClient()
@@ -45,7 +46,7 @@ namespace Aurora.Utils
             if (appsToUpdate.Count == 0) return;
 
             // Update pointer files in Aurora/Pointers/
-            string pointerPath = Path.Combine(Global.ExecutingDirectory, "Pointers");
+            string pointerPath = Path.Combine(App.ExecutingDirectory, "Pointers");
             string repoPath = "Project-Aurora/Project-Aurora/Pointers";
 
             foreach (string app in appsToUpdate)
@@ -60,7 +61,7 @@ namespace Aurora.Utils
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchPointers Octokit exception, " + e);
+                        logger.Error("FetchPointers Octokit exception, " + e);
                     }
                 }
                 else
@@ -74,7 +75,7 @@ namespace Aurora.Utils
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchPointers HTTP exception, " + e);
+                        logger.Error("FetchPointers HTTP exception, " + e);
                     }
                 }
             }
@@ -89,7 +90,7 @@ namespace Aurora.Utils
         public static async Task FetchDevPointers(string branch, bool useOctokit = false)
         {
             // Update pointer files in Aurora/Pointers/
-            string pointerPath = Path.Combine(Global.ExecutingDirectory, "Pointers");
+            string pointerPath = Path.Combine(App.ExecutingDirectory, "Pointers");
             string repoPath = "Project-Aurora/Project-Aurora/Pointers";
 
             // API call to get directory in repo where pointer jsons are held
@@ -107,7 +108,7 @@ namespace Aurora.Utils
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchDevPointers Octokit exception, " + e);
+                        logger.Error("FetchDevPointers Octokit exception, " + e);
                     }
                 }
                 else
@@ -124,7 +125,7 @@ namespace Aurora.Utils
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchDevPointers HTTP exception, " + e);
+                        logger.Error("FetchDevPointers HTTP exception, " + e);
                     }
                 }
             }

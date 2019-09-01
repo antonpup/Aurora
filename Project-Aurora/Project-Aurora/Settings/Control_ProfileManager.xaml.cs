@@ -216,7 +216,7 @@ namespace Aurora.Settings
             }
             catch (Exception exception)
             {
-                Global.logger.Error("Exception Found: " + exception.ToString());
+                App.logger.Error("Exception Found: " + exception.ToString());
             }
         }
 
@@ -234,15 +234,15 @@ namespace Aurora.Settings
 
         private void btnCopyProfile_Click(object sender, RoutedEventArgs e)
         {
-            Global.Clipboard = (lstProfiles.SelectedItem as ApplicationProfile)?.Clone();
+            AuroraCore.Clipboard = (lstProfiles.SelectedItem as ApplicationProfile)?.Clone();
         }
 
         private void btnPasteProfile_Click(object sender, RoutedEventArgs e)
         {
-            Global.isDebug = false;
-            if (!(Global.Clipboard is ApplicationProfile)) return;
+            App.isDebug = false;
+            if (!(AuroraCore.Clipboard is ApplicationProfile)) return;
 
-            ApplicationProfile src = (ApplicationProfile)Global.Clipboard;
+            ApplicationProfile src = (ApplicationProfile)AuroraCore.Clipboard;
 
             // Since we may be copying from one application to another, we need to re-create an application
             // profile since GTA profiles would not work with Desktop profiles for example.
@@ -254,7 +254,7 @@ namespace Aurora.Settings
             // Check all the layers types to ensure that they can be added to this application (to prevent
             // crashes when copying a layer from an application that has a special layer unique to that app)
             for (int i = 0; i < src.Layers.Count; i++)
-                if (Global.LightingStateManager.DefaultLayerHandlers.Contains(src.Layers[i].Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(src.Layers[i].Handler.ID))
+                if (App.Core.LightingStateManager.DefaultLayerHandlers.Contains(src.Layers[i].Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(src.Layers[i].Handler.ID))
                     @new.Layers.Add((Layer)src.Layers[i].Clone());
             
             FocusedApplication.SaveProfiles();

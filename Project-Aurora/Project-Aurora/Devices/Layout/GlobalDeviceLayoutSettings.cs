@@ -61,18 +61,15 @@ namespace Aurora.Devices.Layout
         [JsonIgnore]
         public SmoothingMode SmoothingMode => antiAliasing ? SmoothingMode.AntiAlias : SmoothingMode.None;
 
-        public GlobalDeviceLayoutSettings() : base() { }
+        public GlobalDeviceLayoutSettings() : base() {
+            _devices.Add(KeyboardDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new KeyboardDeviceLayout() { Style = PreferredKeyboard.Wooting_One, Language = PreferredKeyboardLocalization.uk } });
+            _devices.Add(MouseDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new MouseDeviceLayout() { Style = MouseDeviceLayout.PreferredMouse.SteelSeries_Rival_300 } });
+        }
 
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
             //TODO: Check if the Dictionary index (Device type ID) matches device type id of matching DeviceLayouts
-        }
-
-        public override void Default()
-        {
-            _devices.Add(KeyboardDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new KeyboardDeviceLayout() { Style = PreferredKeyboard.Wooting_One, Language = PreferredKeyboardLocalization.uk } });
-            _devices.Add(MouseDeviceLayout.DeviceTypeID, new ObservableCollection<DeviceLayout>() { new MouseDeviceLayout() { Style = MouseDeviceLayout.PreferredMouse.SteelSeries_Rival_300 } });
         }
     }
 }

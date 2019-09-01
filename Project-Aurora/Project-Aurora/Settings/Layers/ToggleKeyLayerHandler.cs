@@ -35,12 +35,12 @@ namespace Aurora.Settings.Layers {
         public ToggleKeyLayerHandler() : base() {
             _ID = "ToggleKey";
 
-            Global.InputEvents.KeyDown += InputEvents_KeyDown;
+            AuroraCore.InputEvents.KeyDown += InputEvents_KeyDown;
         }
 
         public override void Dispose() {
             base.Dispose();
-            Global.InputEvents.KeyDown -= InputEvents_KeyDown;
+            AuroraCore.InputEvents.KeyDown -= InputEvents_KeyDown;
         }        
 
         protected override System.Windows.Controls.UserControl CreateControl() {

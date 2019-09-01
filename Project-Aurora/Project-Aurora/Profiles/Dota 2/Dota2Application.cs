@@ -39,7 +39,7 @@ namespace Aurora.Profiles.Dota_2
                 new LayerHandlerEntry("Dota2Killstreak", "Dota 2 Killstreak Layer", typeof(Dota2KillstreakLayerHandler)),
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(extra, false);
 
             foreach (var entry in extra)
             {

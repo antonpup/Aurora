@@ -185,15 +185,15 @@ namespace Aurora.Controls
 
         private void RecordKeySequence(string whoisrecording, Button button, ListBox sequence_listbox)
         {
-            if (Global.key_recorder.IsRecording())
+            if (App.Core.key_recorder.IsRecording())
             {
-                if (Global.key_recorder.GetRecordingType().Equals(whoisrecording))
+                if (App.Core.key_recorder.GetRecordingType().Equals(whoisrecording))
                 {
-                    Global.key_recorder.StopRecording();
+                    App.Core.key_recorder.StopRecording();
 
                     button.Content = "Assign Keys";
 
-                    DeviceLED[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceLED[] recorded_keys = App.Core.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {
@@ -210,16 +210,16 @@ namespace Aurora.Controls
                             sequence_listbox.Items.Add(key);
                     }
 
-                    Global.key_recorder.Reset();
+                    App.Core.key_recorder.Reset();
                 }
                 else
                 {
-                    MessageBox.Show("You are already recording a key sequence for " + Global.key_recorder.GetRecordingType());
+                    MessageBox.Show("You are already recording a key sequence for " + App.Core.key_recorder.GetRecordingType());
                 }
             }
             else
             {
-                Global.key_recorder.StartRecording(whoisrecording);
+                App.Core.key_recorder.StartRecording(whoisrecording);
                 button.Content = "Stop Assigning";
             }
         }

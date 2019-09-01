@@ -128,7 +128,7 @@ namespace Aurora.Settings.Layers
         {
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
 
-            Keys[] heldKeys = Global.InputEvents.PressedKeys;
+            Keys[] heldKeys = AuroraCore.InputEvents.PressedKeys;
 
             
 

@@ -23,7 +23,7 @@ namespace Aurora.Profiles.GTA5
                 new LayerHandlerEntry("GTA5PoliceSiren", "GTA 5 Police Siren Layer", typeof(GTA5PoliceSirenLayerHandler)),
             };
 
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
+            App.Core.LightingStateManager.RegisterLayerHandlers(extra, false);
 
             foreach (var entry in extra)
             {

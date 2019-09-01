@@ -59,12 +59,12 @@ namespace Aurora.Settings.Layers {
             timer = new CustomTimer();
             timer.Trigger += Timer_Elapsed;
 
-            Global.InputEvents.KeyDown += InputEvents_KeyDown;
+            AuroraCore.InputEvents.KeyDown += InputEvents_KeyDown;
         }
         
         public override void Dispose() {
             base.Dispose();
-            Global.InputEvents.KeyDown -= InputEvents_KeyDown;
+            AuroraCore.InputEvents.KeyDown -= InputEvents_KeyDown;
         }
 
         protected override UserControl CreateControl() {
