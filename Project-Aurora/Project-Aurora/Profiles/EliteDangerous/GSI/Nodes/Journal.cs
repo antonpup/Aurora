@@ -26,6 +26,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         
         public SimpleShipLoadout shipLoadout = new SimpleShipLoadout();
         public SimpleShipLoadout fighterLoadout = new SimpleShipLoadout();
+
+        public bool initialJournalRead = true;
         
         public FSDState fsdState;
         private long fsdChargeStartTime = -1;
@@ -33,7 +35,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         
         private bool nextLoadoutIsFighter = false;
 
-        public bool fsdBeforeCooldown = false;
+        public bool fsdWaitingCooldown = false;
+        public bool fsdWaitingSupercruise = false;
         
         private void SetModulesFromLoadout(Loadout loadout)
         {
@@ -66,6 +69,15 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
             fsdChargeStartTime = -1;
         }
 
+        private void SetFsdWaitingCooldown(bool fsdWaitingCooldown)
+        {
+            this.fsdWaitingCooldown = fsdWaitingCooldown && !initialJournalRead;
+        }
+        private void SetFsdWaitingSupercruise(bool fsdWaitingSupercruise)
+        {
+            this.fsdWaitingSupercruise = fsdWaitingSupercruise && !initialJournalRead;
+        }
+
         public void ProcessEventForFSD(JournalEvent journalEvent)
         {
             switch(journalEvent.@event) {
@@ -78,23 +90,24 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                     } else {
                         fsdState = FSDState.JumpingSupercruise;
                         jumpStarType = null;
+                        SetFsdWaitingSupercruise(true);
                     }
 
-                    fsdBeforeCooldown = true;
+                    SetFsdWaitingCooldown(true);
                     //Should start FSD countdown animation
                     fsdChargeStartTime = Utils.Time.GetMillisecondsSinceEpoch();
                     break;
                 case EventType.SupercruiseEntry:
                     ResetFsd();
-                    fsdBeforeCooldown = false;
+                    SetFsdWaitingCooldown(false);
                     break;
                 case EventType.SupercruiseExit:
                     ResetFsd();
-                    fsdBeforeCooldown = true;
+                    SetFsdWaitingCooldown(true);
                     break;
                 case EventType.FSDJump:
                     ResetFsd();
-                    fsdBeforeCooldown = true;
+                    SetFsdWaitingCooldown(true);
                     //Should stop hyperspace animation
                     break;
                 case EventType.Music:

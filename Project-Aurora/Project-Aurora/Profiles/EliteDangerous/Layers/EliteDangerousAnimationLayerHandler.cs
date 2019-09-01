@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {
@@ -44,7 +45,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         {
             return (currentTime - previousTime) / 1000.0f;
         }
-        
+
+        private float layerFadeState = 0;
         private static float animationKeyframe = 0.0f;
         private static EliteAnimation currentAnimation = EliteAnimation.None;
         private static float animationTime = 0.0f;
@@ -52,6 +54,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         public EliteDangerousAnimationLayerHandler() : base()
         {
             _ID = "EliteDangerousAnimations";
+            UpdateAnimations();
         }
 
         protected override UserControl CreateControl()
@@ -66,9 +69,6 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             previousTime = currentTime;
             currentTime = Utils.Time.GetMillisecondsSinceEpoch();
 
-            if (currentTime - previousTime > 300000 || (currentTime == 0 && previousTime == 0))
-                UpdateAnimations();
-            
             EffectLayer animation_layer = new EffectLayer("Elite: Dangerous - Animations");
             
             if (gameState.Journal.fsdState == FSDState.Idle)
@@ -80,9 +80,14 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 currentAnimation = EliteAnimation.FsdCountdowm;
             }
 
-            if (currentAnimation != EliteAnimation.None)
+            if (currentAnimation != EliteAnimation.None || gameState.Journal.fsdWaitingSupercruise)
             {
-                animation_layer.Fill(Color.Black);
+                layerFadeState = Math.Min(1, layerFadeState + 0.07f);
+                animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+            } else if (layerFadeState > 0)
+            {
+                layerFadeState = Math.Max(0, layerFadeState - 0.03f);
+                animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
             }
             
             if(currentAnimation == EliteAnimation.FsdCountdowm) {
@@ -109,7 +114,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             Color pulseStartColor = Color.FromArgb(0, 126, 255);
             Color pulseEndColor = Color.FromArgb(200, 0, 126, 255);
 
-            float startingX = 42F;
+            float startingX = Effects.canvas_width_center - 10;
             int pulseStartWidth = 10;
             int pulseEndWidth = 2;
             float animationDuration = 0.7f;

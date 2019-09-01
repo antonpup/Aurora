@@ -497,7 +497,7 @@ namespace Aurora.Profiles.EliteDangerous
                                  Flag.HARDPOINTS | Flag.CARGO_SCOOP | Flag.FSD_COOLDOWN,
                     callback: gameState =>
                     {
-                        return !gameState.Journal.fsdBeforeCooldown;
+                        return !gameState.Journal.fsdWaitingCooldown;
                     }
                 )
             ),
