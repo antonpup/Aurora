@@ -23,6 +23,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         Hyperspace,
         HyperspaceExit,
     }
+    
     public class EliteDangerousAnimationHandlerProperties : LayerHandlerProperties2Color<EliteDangerousAnimationHandlerProperties>
     {
         public EliteDangerousAnimationHandlerProperties() : base() { }
@@ -39,7 +40,50 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         private AnimationMix fsd_countdown_mix;
         private AnimationMix hyperspace_mix;
         private AnimationMix hypespace_exit_mix;
-        private StarType hyperspace_exit_star = StarType.None;
+        private StarClass hyperspace_exit_star = StarClass.None;
+        
+        public static Dictionary<StarClass, Color> starColors = new Dictionary<StarClass, Color>()
+        {
+            {StarClass.O, Color.FromArgb(132, 187, 255)},
+            {StarClass.B, Color.FromArgb(191, 255, 251)},
+            {StarClass.A, Color.FromArgb(255, 255, 255)},
+            {StarClass.F, Color.FromArgb(254, 250, 98)},
+            {StarClass.G, Color.FromArgb(255, 140, 0)},
+            {StarClass.K, Color.FromArgb(255, 140, 0)},
+            {StarClass.M, Color.FromArgb(255, 67, 26)},
+            {StarClass.L, Color.FromArgb(255, 0, 0)},
+            {StarClass.T, Color.FromArgb(148, 0, 44)}, 
+            {StarClass.Y, Color.FromArgb(148, 0, 44)},
+            // TTS, AeBe, - same as K?
+            {StarClass.W, Color.FromArgb(180, 180, 255)},
+            {StarClass.WN, Color.FromArgb(180, 180, 255)},
+            // WNC, - same as K?
+            {StarClass.WC, Color.FromArgb(180, 180, 255)},
+            {StarClass.WO, Color.FromArgb(180, 180, 255)},
+            // CS, - unknown
+            {StarClass.C, Color.FromArgb(230, 0, 0)},
+            // CN, CJ, CH, CHd, - same as K
+            // MS, S, - same as K
+            {StarClass.D, Color.FromArgb(255, 255, 255)},
+            {StarClass.DA, Color.FromArgb(255, 255, 255)},
+            {StarClass.DAB, Color.FromArgb(255, 255, 255)},
+            {StarClass.DAO, Color.FromArgb(255, 255, 255)},
+            {StarClass.DAZ, Color.FromArgb(255, 255, 255)},
+            {StarClass.DAV, Color.FromArgb(255, 255, 255)},
+            {StarClass.DB, Color.FromArgb(255, 255, 255)},
+            {StarClass.DBZ, Color.FromArgb(255, 255, 255)},
+            {StarClass.DBV, Color.FromArgb(255, 255, 255)},
+            {StarClass.DO, Color.FromArgb(255, 255, 255)},
+            {StarClass.DOV, Color.FromArgb(255, 255, 255)},
+            {StarClass.DQ, Color.FromArgb(255, 255, 255)},
+            {StarClass.DC, Color.FromArgb(255, 255, 255)},
+            {StarClass.DCV, Color.FromArgb(255, 255, 255)},
+            {StarClass.DX, Color.FromArgb(255, 255, 255)},
+                          
+            {StarClass.N, Color.FromArgb(156, 202, 255)},
+            {StarClass.H, Color.FromArgb(0, 0, 40)},
+            // X, - exotic (whatever that means)
+        };
         
         private long previousTime = Time.GetMillisecondsSinceEpoch();
         private long currentTime = Time.GetMillisecondsSinceEpoch();
@@ -111,10 +155,10 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
             EffectLayer animation_layer = new EffectLayer("Elite: Dangerous - Animations");
             
-            if (gameState.Journal.exitStarType != StarType.None)
+            if (gameState.Journal.ExitStarClass != StarClass.None)
             {
-                RegenerateHyperspaceExitAnimation(gameState.Journal.exitStarType);
-                gameState.Journal.exitStarType = StarType.None;
+                RegenerateHyperspaceExitAnimation(gameState.Journal.ExitStarClass);
+                gameState.Journal.ExitStarClass = StarClass.None;
                 animateOnce = EliteAnimation.HyperspaceExit;
                 totalAnimationTime = 0;
                 animationKeyframe = 0;
@@ -221,22 +265,13 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 100, 0.4f, hyperspace_mix.GetTracks().Count));
         }
 
-        private void RegenerateHyperspaceExitAnimation(StarType starType = StarType.K)
+        private void RegenerateHyperspaceExitAnimation(StarClass starClass = StarClass.K)
         {
-            if (starType == hyperspace_exit_star) return;
+            if (starClass == hyperspace_exit_star) return;
             
             hypespace_exit_mix = new AnimationMix();
             float startingX = Effects.canvas_width_center - 10;
-            Color hyperspaceExitColor;
-            switch (starType)
-            {
-                case StarType.K:
-                    hyperspaceExitColor = Color.FromArgb(255, 140, 0);
-                    break;
-                default:
-                    hyperspaceExitColor = Color.FromArgb(255, 140, 0);
-                    break;
-            }
+            Color hyperspaceExitColor = starColors.ContainsKey(starClass) ? starColors[starClass] : starColors[StarClass.K];
             
             AnimationTrack star_entry = new AnimationTrack("Hyperspace exit", 2.0f);
             star_entry.SetFrame(0.0f,

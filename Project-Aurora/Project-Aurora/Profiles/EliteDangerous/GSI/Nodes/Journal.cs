@@ -1,11 +1,30 @@
-﻿using Aurora.Profiles.EliteDangerous.Journal;
+﻿using System;
+using Aurora.Profiles.EliteDangerous.Journal;
 using Aurora.Profiles.EliteDangerous.Journal.Events;
 
 namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
 {
-    public enum StarType
+    public enum StarClass
     {
-        None, K
+        None,
+        O, B, A, F, G, K, M, L, T, Y, //Main sequence
+        TTS, AeBe, //Proto stars
+        W, WN, WNC, WC, WO, //Wolf-Rayet
+        CS, C, CN, CJ, CH, CHd, //Carbon stars
+        MS, S,
+        D, DA, DAB, DAO, DAZ, DAV, DB, DBZ, DBV, DO, DOV, DQ, DC, DCV, DX, //White dwarfs
+        N, //Neutron
+        H, //Black Hole
+        X, //exotic
+        SupermassiveBlackHole,
+        A_BlueWhiteSuperGiant,
+        F_WhiteSuperGiant,
+        M_RedSuperGiant,
+        M_RedGiant,
+        K_OrangeGiant,
+        RoguePlanet,
+        Nebula,
+        StellarRemnantNebula,
     }
     public enum FighterStatus
     {
@@ -35,14 +54,14 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         
         public FSDState fsdState;
         private long fsdChargeStartTime = -1;
-        public string jumpStarType = null;
+        public StarClass jumpStarClass = StarClass.None;
         
         private bool nextLoadoutIsFighter = false;
 
         public bool fsdWaitingCooldown = false;
         public bool fsdWaitingSupercruise = false;
 
-        public StarType exitStarType = StarType.None;
+        public StarClass ExitStarClass = StarClass.None;
         
         private void SetModulesFromLoadout(Loadout loadout)
         {
@@ -92,10 +111,17 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                     if(startJump.JumpType == JumpType.Hyperspace)
                     {
                         fsdState = FSDState.CountdownHyperspace;
-                        jumpStarType = startJump.StarClass.ToLower();
+                        try
+                        {
+                            jumpStarClass = (StarClass) Enum.Parse(typeof(StarClass), startJump.StarClass, true);
+                        }
+                        catch (Exception e)
+                        {
+                            jumpStarClass = StarClass.K;
+                        }
                     } else {
                         fsdState = FSDState.CountdownSupercruise;
-                        jumpStarType = null;
+                        jumpStarClass = StarClass.None;
                         SetFsdWaitingSupercruise(true);
                     }
 
@@ -113,7 +139,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
                 case EventType.FSDJump:
                     ResetFsd();
                     SetFsdWaitingCooldown(true);
-                    exitStarType = StarType.K;
+                    ExitStarClass = jumpStarClass;
                     break;
                 case EventType.Music:
                     if (fsdState == FSDState.CountdownHyperspace && ((Music) journalEvent).MusicTrack.Equals("NoTrack"))
