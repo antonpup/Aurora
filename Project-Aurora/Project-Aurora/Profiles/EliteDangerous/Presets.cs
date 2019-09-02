@@ -708,6 +708,42 @@ namespace Aurora.Profiles.EliteDangerous
             })
         }, new GameStateCondition(guiFocus: new[] {GuiFocus.MAP_GALAXY, GuiFocus.MAP_ORRERY}));
 
+        public static ControlGroupSet CONTROLS_FSS = new ControlGroupSet(new[]
+        {
+            new ControlGroup(new[]
+            {
+                Command.ExplorationFSSCameraPitchIncreaseButton,
+                Command.ExplorationFSSCameraPitchDecreaseButton,
+                Command.ExplorationFSSCameraYawIncreaseButton,
+                Command.ExplorationFSSCameraYawDecreaseButton,
+                Command.ExplorationFSSZoomIn,
+                Command.ExplorationFSSZoomOut,
+                Command.ExplorationFSSMiniZoomIn,
+                Command.ExplorationFSSMiniZoomOut,
+                Command.ExplorationFSSRadioTuningX_Increase,
+                Command.ExplorationFSSRadioTuningX_Decrease,
+                Command.ExplorationFSSDiscoveryScan,
+                Command.ExplorationFSSQuit,
+                Command.ExplorationFSSTarget,
+                Command.ExplorationFSSShowHelp,
+            })
+        }, new GameStateCondition(guiFocus: new[] {GuiFocus.MODE_FSS}));
+
+        public static ControlGroupSet CONTROLS_ADS = new ControlGroupSet(new[]
+        {
+            new ControlGroup(new[]
+            {
+                Command.ExplorationSAAChangeScannedAreaViewToggle,
+                Command.ExplorationSAAExitThirdPerson,
+                Command.SAAThirdPersonYawLeftButton,
+                Command.SAAThirdPersonYawRightButton,
+                Command.SAAThirdPersonPitchUpButton,
+                Command.SAAThirdPersonPitchDownButton,
+                Command.SAAThirdPersonFovOutButton,
+                Command.SAAThirdPersonFovInButton,
+            })
+        }, new GameStateCondition(guiFocus: new[] {GuiFocus.MODE_ADS}));
+
         public static ControlGroupSet UI_PANELS = new ControlGroupSet(new[]
             {
                 new ControlGroup(new[]

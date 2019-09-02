@@ -240,6 +240,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             ControlGroupSets.CONTROLS_SRV,
             ControlGroupSets.CONTROLS_SYSTEM_MAP,
             ControlGroupSets.CONTROLS_GALAXY_MAP,
+            ControlGroupSets.CONTROLS_FSS,
+            ControlGroupSets.CONTROLS_ADS,
             ControlGroupSets.UI_PANELS,
             ControlGroupSets.UI_PANEL_TABS,
         };
