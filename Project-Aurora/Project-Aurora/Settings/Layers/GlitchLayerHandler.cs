@@ -1,4 +1,4 @@
-﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
@@ -83,6 +83,7 @@ namespace Aurora.Settings.Layers
                 _GlitchLayer.Set(kvp.Key, kvp.Value);
             }
 
+            _GlitchLayer.OnlyInclude(Properties.Sequence);
             return _GlitchLayer;
         }
 
