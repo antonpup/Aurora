@@ -21,7 +21,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         None,
         FsdCountdowm,
         Hyperspace,
-        StarEntry,
+        HyperspaceExit,
     }
     public class EliteDangerousAnimationHandlerProperties : LayerHandlerProperties2Color<EliteDangerousAnimationHandlerProperties>
     {
@@ -38,7 +38,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
     {
         private AnimationMix fsd_countdown_mix;
         private AnimationMix hyperspace_mix;
-        private AnimationMix star_entry_mix;
+        private AnimationMix hypespace_exit_mix;
+        private StarType hyperspace_exit_star = StarType.None;
         
         private long previousTime = Time.GetMillisecondsSinceEpoch();
         private long currentTime = Time.GetMillisecondsSinceEpoch();
@@ -58,6 +59,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         {
             _ID = "EliteDangerousAnimations";
             UpdateAnimations();
+            RegenerateHyperspaceExitAnimation();
         }
 
         protected override UserControl CreateControl()
@@ -111,8 +113,9 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             
             if (gameState.Journal.exitStarType != StarType.None)
             {
+                RegenerateHyperspaceExitAnimation(gameState.Journal.exitStarType);
                 gameState.Journal.exitStarType = StarType.None;
-                animateOnce = EliteAnimation.StarEntry;
+                animateOnce = EliteAnimation.HyperspaceExit;
                 totalAnimationTime = 0;
                 animationKeyframe = 0;
             }
@@ -131,15 +134,13 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 currentAnimation = EliteAnimation.Hyperspace;
             }
 
-            currentAnimation = EliteAnimation.StarEntry;
-            
             if (currentAnimation == EliteAnimation.None)
             {
                 animationKeyframe = 0;
                 totalAnimationTime = 0;
             }
 
-            if ((currentAnimation != EliteAnimation.None && currentAnimation != EliteAnimation.StarEntry) || gameState.Journal.fsdWaitingSupercruise)
+            if ((currentAnimation != EliteAnimation.None && currentAnimation != EliteAnimation.HyperspaceExit) || gameState.Journal.fsdWaitingSupercruise)
             {
                 BgFadeIn(animation_layer);
             }
@@ -164,10 +165,10 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 //Loop the animation
                 animationKeyframe = findMod(animationKeyframe + (deltaTime), currentAnimationDuration);
                
-            } else if (currentAnimation == EliteAnimation.StarEntry)
+            } else if (currentAnimation == EliteAnimation.HyperspaceExit)
             {
-                currentAnimationDuration = star_entry_mix.GetDuration();
-                star_entry_mix.Draw(animation_layer.GetGraphics(), animationKeyframe);
+                currentAnimationDuration = hypespace_exit_mix.GetDuration();
+                hypespace_exit_mix.Draw(animation_layer.GetGraphics(), animationKeyframe);
                 deltaTime = getDeltaTime();
 
                 animationKeyframe += deltaTime;
@@ -218,23 +219,40 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 85, 1.3f, hyperspace_mix.GetTracks().Count));
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 93, 2.1f, hyperspace_mix.GetTracks().Count));
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 100, 0.4f, hyperspace_mix.GetTracks().Count));
+        }
+
+        private void RegenerateHyperspaceExitAnimation(StarType starType = StarType.K)
+        {
+            if (starType == hyperspace_exit_star) return;
             
-            star_entry_mix = new AnimationMix();
+            hypespace_exit_mix = new AnimationMix();
             float startingX = Effects.canvas_width_center - 10;
-            Color starEntryColor = Color.FromArgb(255, 140, 0);
+            Color hyperspaceExitColor;
+            switch (starType)
+            {
+                case StarType.K:
+                    hyperspaceExitColor = Color.FromArgb(255, 140, 0);
+                    break;
+                default:
+                    hyperspaceExitColor = Color.FromArgb(255, 140, 0);
+                    break;
+            }
             
-            AnimationTrack star_entry = new AnimationTrack("Star entry", 2.0f);
+            AnimationTrack star_entry = new AnimationTrack("Hyperspace exit", 2.0f);
             star_entry.SetFrame(0.0f,
-                new AnimationFilledCircle(startingX, Effects.canvas_height_center, 0, starEntryColor, 1)
+                new AnimationFilledCircle(startingX, Effects.canvas_height_center, 0, hyperspaceExitColor, 1)
+            );
+            star_entry.SetFrame(1.0f,
+                new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, hyperspaceExitColor, 1)
             );
             star_entry.SetFrame(1.2f,
-                new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, starEntryColor, 1)
+                new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, hyperspaceExitColor, 1)
             );
             star_entry.SetFrame(2f,
                 new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, Color.Empty, 1)
             );
             
-            AnimationTrack star_entry_bg = new AnimationTrack("Star entry bg", 2f);
+            AnimationTrack star_entry_bg = new AnimationTrack("Hyperspace exit bg", 2f);
             star_entry_bg.SetFrame(0.0f,
                 new AnimationFill(Color.Black)
             );
@@ -242,8 +260,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 new AnimationFill(Color.Black)
             );
 
-            star_entry_mix.AddTrack(star_entry_bg);
-            star_entry_mix.AddTrack(star_entry);
+            hypespace_exit_mix.AddTrack(star_entry_bg);
+            hypespace_exit_mix.AddTrack(star_entry);
         }
 
         private AnimationTrack GenerateFsdPulse(int index = 0)
