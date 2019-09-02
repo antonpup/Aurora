@@ -118,7 +118,7 @@ namespace Aurora.Devices
             //RegisterDevice(new Devices.SteelSeries.SteelSeriesDevice());   // SteelSeries Device
             RegisterDevice(new Devices.Wooting.WootingDevice());           // Wooting Device
             RegisterDevice(new Devices.Razer.RazerDevice());               // Razer Device
-            //RegisterDevice(new Devices.Creative.SoundBlasterXDevice());    // SoundBlasterX Device
+            RegisterDevice(new Devices.Creative.SoundBlasterXDevice());    // SoundBlasterX Device
             //RegisterDevice(new Devices.CoolerMaster.CoolerMasterDevice()); // CoolerMaster Device
             //RegisterDevice(new Devices.Corsair.CorsairDevice());           // Corsair Device
             RegisterDevice(new Devices.Drevo.DrevoDevice());               // Drevo Device

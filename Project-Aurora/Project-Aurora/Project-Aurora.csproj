@@ -2480,7 +2480,7 @@
     <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
       <Project>{053a704b-5c79-4cde-b1fc-b952051acaa0}</Project>
       <Name>SBAuroraReactive</Name>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj">
       <Project>{fea699ae-db83-43dc-ab85-99f2e90c328f}</Project>
