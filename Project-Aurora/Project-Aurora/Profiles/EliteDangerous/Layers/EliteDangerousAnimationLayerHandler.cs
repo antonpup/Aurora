@@ -130,6 +130,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             {
                 currentAnimation = EliteAnimation.Hyperspace;
             }
+
+            currentAnimation = EliteAnimation.StarEntry;
             
             if (currentAnimation == EliteAnimation.None)
             {
@@ -137,7 +139,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                 totalAnimationTime = 0;
             }
 
-            if (currentAnimation != EliteAnimation.None || gameState.Journal.fsdWaitingSupercruise)
+            if ((currentAnimation != EliteAnimation.None && currentAnimation != EliteAnimation.StarEntry) || gameState.Journal.fsdWaitingSupercruise)
             {
                 BgFadeIn(animation_layer);
             }
@@ -189,62 +191,11 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         public void UpdateAnimations()
         {
             fsd_countdown_mix = new AnimationMix();
-            Color pulseStartColor = Color.FromArgb(0, 126, 255);
-            Color pulseEndColor = Color.FromArgb(200, 0, 126, 255);
-
-            float startingX = Effects.canvas_width_center - 10;
-            int pulseStartWidth = 10;
-            int pulseEndWidth = 2;
-            
-            float pulseFrameDuration = 1;
-            float pulseDuration = 0.7f;
-            
-            AnimationTrack countdown_pulse_1 = new AnimationTrack("Fsd countdown pulse 1", pulseFrameDuration);
-            countdown_pulse_1.SetFrame(0.0f,
-                new AnimationCircle(startingX, Effects.canvas_height_center, 0, pulseStartColor, pulseStartWidth)
-            );
-            countdown_pulse_1.SetFrame(pulseDuration,
-                new AnimationCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, pulseEndColor, pulseEndWidth)
-            );
-            
-            AnimationTrack countdown_pulse_2 = new AnimationTrack("Fsd countdown pulse 2", pulseFrameDuration, 1);
-            countdown_pulse_2.SetFrame(0.0f,
-                new AnimationCircle(startingX, Effects.canvas_height_center, 0, pulseStartColor, pulseStartWidth)
-            );
-            countdown_pulse_2.SetFrame(pulseDuration,
-                new AnimationCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, pulseEndColor, pulseEndWidth)
-            );
-            
-            AnimationTrack countdown_pulse_3 = new AnimationTrack("Fsd countdown pulse 3", pulseFrameDuration, 2);
-            countdown_pulse_3.SetFrame(0.0f,
-                new AnimationCircle(startingX, Effects.canvas_height_center, 0, pulseStartColor, pulseStartWidth)
-            );
-            countdown_pulse_3.SetFrame(pulseDuration,
-                new AnimationCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, pulseEndColor, pulseEndWidth)
-            );
-            
-            AnimationTrack countdown_pulse_4 = new AnimationTrack("Fsd countdown pulse 4", pulseFrameDuration, 3);
-            countdown_pulse_4.SetFrame(0.0f,
-                new AnimationCircle(startingX, Effects.canvas_height_center, 0, pulseStartColor, pulseStartWidth)
-            );
-            countdown_pulse_4.SetFrame(pulseDuration,
-                new AnimationCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, pulseEndColor, pulseEndWidth)
-            );
-            
-            AnimationTrack countdown_pulse_5 = new AnimationTrack("Fsd countdown pulse 5", pulseFrameDuration, 4);
-            countdown_pulse_5.SetFrame(0.0f,
-                new AnimationCircle(startingX, Effects.canvas_height_center, 0, pulseStartColor, pulseStartWidth)
-            );
-            countdown_pulse_5.SetFrame(pulseDuration,
-                new AnimationCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, pulseEndColor, pulseEndWidth)
-            );
-
-            fsd_countdown_mix.AddTrack(countdown_pulse_1);
-            fsd_countdown_mix.AddTrack(countdown_pulse_2);
-            fsd_countdown_mix.AddTrack(countdown_pulse_3);
-            fsd_countdown_mix.AddTrack(countdown_pulse_4);
-            fsd_countdown_mix.AddTrack(countdown_pulse_5);
-            fsd_countdown_mix.AddTrack(new AnimationTrack("Fsd countdown delay", pulseFrameDuration, 4));
+            fsd_countdown_mix.AddTrack(GenerateFsdPulse());
+            fsd_countdown_mix.AddTrack(GenerateFsdPulse(1));
+            fsd_countdown_mix.AddTrack(GenerateFsdPulse(2));
+            fsd_countdown_mix.AddTrack(GenerateFsdPulse(3));
+            fsd_countdown_mix.AddTrack(GenerateFsdPulse(4));
             
             hyperspace_mix = new AnimationMix();
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 0, 1.5f, hyperspace_mix.GetTracks().Count));
@@ -269,7 +220,9 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width / 100 * 100, 0.4f, hyperspace_mix.GetTracks().Count));
             
             star_entry_mix = new AnimationMix();
+            float startingX = Effects.canvas_width_center - 10;
             Color starEntryColor = Color.FromArgb(255, 140, 0);
+            
             AnimationTrack star_entry = new AnimationTrack("Star entry", 2.0f);
             star_entry.SetFrame(0.0f,
                 new AnimationFilledCircle(startingX, Effects.canvas_height_center, 0, starEntryColor, 1)
@@ -280,26 +233,59 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             star_entry.SetFrame(2f,
                 new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, Color.Empty, 1)
             );
+            
+            AnimationTrack star_entry_bg = new AnimationTrack("Star entry bg", 2f);
+            star_entry_bg.SetFrame(0.0f,
+                new AnimationFill(Color.Black)
+            );
+            star_entry_bg.SetFrame(1.2f,
+                new AnimationFill(Color.Black)
+            );
+
+            star_entry_mix.AddTrack(star_entry_bg);
             star_entry_mix.AddTrack(star_entry);
         }
 
-        float hyperspaceAnimationDuration = 0.8f; 
+        private AnimationTrack GenerateFsdPulse(int index = 0)
+        {
+            Color pulseStartColor = Color.FromArgb(0, 126, 255);
+            Color pulseEndColor = Color.FromArgb(200, 0, 126, 255);
+
+            float startingX = Effects.canvas_width_center - 10;
+            int pulseStartWidth = 10;
+            int pulseEndWidth = 2;
+            
+            float pulseFrameDuration = 1;
+            float pulseDuration = 0.7f;
+            
+            AnimationTrack countdown_pulse = new AnimationTrack("Fsd countdown pulse " + index, pulseFrameDuration, index);
+            countdown_pulse.SetFrame(0.0f,
+                new AnimationCircle(startingX, Effects.canvas_height_center, 0, pulseStartColor, pulseStartWidth)
+            );
+            countdown_pulse.SetFrame(pulseDuration,
+                new AnimationCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, pulseEndColor, pulseEndWidth)
+            );
+
+            return countdown_pulse;
+        }
+        
         private AnimationTrack GenerateHyperspaceStreak(float xOffset, float timeShift, int index = 0)
         {
             Color streakEndColor = Color.FromArgb(178, 217, 255);
             Color streakStartColor = Color.FromArgb(0, 64, 135);
 
+            float animationDuration = 0.8f; 
             int streakSize = 7;
             int streakWidth = 3;
 
             int startPosition = -40;
             int endPosition = Effects.canvas_height + streakSize * 2;
             
-            AnimationTrack streak = new AnimationTrack("Hyperspace streak " + index, hyperspaceAnimationDuration, timeShift);
+            AnimationTrack streak = new AnimationTrack("Hyperspace streak " + index, animationDuration, timeShift);
             streak.SetFrame(0.0f,
                 new AnimationLine(new PointF(xOffset, startPosition), new PointF(xOffset, startPosition + streakSize), streakStartColor, streakEndColor, streakWidth)
             );
-            streak.SetFrame(hyperspaceAnimationDuration,
+            streak.SetFrame(animationDuration,
                 new AnimationLine(new PointF(xOffset, endPosition), new PointF(xOffset, endPosition + streakSize), streakStartColor, streakEndColor, streakWidth)
             );
 
