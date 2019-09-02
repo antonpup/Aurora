@@ -144,7 +144,7 @@ namespace Aurora.Profiles.Slime_Rancher
                         .AddEntry(Color.FromArgb(182,201,89), new BooleanGSIBoolean("Location/In/TheAncientRuinsCourtyard"))
                         .AddEntry(Color.FromArgb(81,108,69), new BooleanGSIBoolean("Location/In/TheWilds"))
                         .AddEntry(Color.FromArgb(128,146,35), new BooleanGSIBoolean("Location/In/OgdensRetreat"))
-                        .AddEntry(Color.FromArgb(192,192,192), new BooleanGSIBoolean("Location/In/NibleValley"))
+                        .AddEntry(Color.FromArgb(192,192,192), new BooleanGSIBoolean("Location/In/NimbleValley"))
                         .AddEntry(Color.FromArgb(107,82,170), new BooleanGSIBoolean("Location/In/MochisManor"))
                         .AddEntry(Color.FromArgb(184,30,107), new BooleanGSIBoolean("Location/In/TheSlimeulation"))
                         .AddEntry(Color.FromArgb(107,163,209), new BooleanGSIBoolean("Location/In/ViktorsWorkshop"))
