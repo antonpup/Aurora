@@ -33,6 +33,7 @@ namespace Aurora.Settings.Layers
         {
             base.Default();
             this._UpdateInterval = 1.0;
+            this._Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
     }
 
