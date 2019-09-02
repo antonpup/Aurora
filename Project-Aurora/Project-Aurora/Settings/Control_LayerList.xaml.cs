@@ -209,7 +209,17 @@ namespace Aurora.Settings {
         private void CollectionSelection_Checked(object sender, RoutedEventArgs e) {
             Notify("ActiveLayerCollection");
         }
+
+        /// <summary>
+        /// Force selection of the first item of the list when we Get Focus (which is forced from ConfigUI), prevents empty LayerPresenter
+        /// </summary>
+        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if ((LayerCollection?.Count ?? 0) > 0)
+                this.lstLayers.SelectedItem = LayerCollection[0];
+        }
         #endregion
-        #endregion
+
+        #endregion 
     }
 }
