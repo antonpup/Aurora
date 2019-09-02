@@ -66,7 +66,7 @@ namespace Aurora.Settings.Layers
             {
                 previoustime = currenttime;
 
-                foreach(Devices.DeviceKeys key in Enum.GetValues(typeof(Devices.DeviceKeys)))
+                foreach (Devices.DeviceKeys key in (Properties.Sequence.type == KeySequenceType.FreeForm) ? Enum.GetValues(typeof(Devices.DeviceKeys)) : Properties.Sequence.keys.ToArray())
                 {
                     Color clr = (Properties.AllowTransparency ? (randomizer.Next() % 2 == 0 ? Color.Transparent : Utils.ColorUtils.GenerateRandomColor()) : Utils.ColorUtils.GenerateRandomColor());
 
