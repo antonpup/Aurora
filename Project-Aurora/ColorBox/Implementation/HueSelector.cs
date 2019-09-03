@@ -9,16 +9,15 @@
 
 ***********************************************************************************/
 
-using System;
-using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ColorBox
 {
     class HueSelector : BaseSelector
-    {       
+    {
         public double Hue
         {
             get { return (double)GetValue(HueProperty); }
@@ -93,7 +92,7 @@ namespace ColorBox
             this.ReleaseMouseCapture();
             base.OnMouseUp(e);
         }
-       
+
         protected override void OnRender(DrawingContext dc)
         {
             LinearGradientBrush lb = new LinearGradientBrush();

@@ -55,16 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ColorBox\ColorBox.csproj">
-      <Project>{40085232-aced-4cbe-945b-90ba8153c151}</Project>
-      <Name>ColorBox</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Project-Aurora\Project-Aurora.csproj">
-      <Project>{18d2d471-3f57-4ece-9c62-836a801473d8}</Project>
-      <Name>Project-Aurora</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Profiles\" />
   </ItemGroup>
   <ItemGroup>

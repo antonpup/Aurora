@@ -9,10 +9,8 @@
 
 ***********************************************************************************/
 
-using System;
-
 namespace ColorBox
-{    
+{
     internal enum SpinDirection
     {
         Increase,

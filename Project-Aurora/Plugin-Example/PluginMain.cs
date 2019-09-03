@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Aurora.Profiles;
-using Plugin_Example.Layers;
+﻿using Aurora.Profiles;
 using Aurora.Settings;
+using Plugin_Example.Layers;
+using System;
 
 namespace Plugin_Example
 {
@@ -21,8 +17,11 @@ namespace Plugin_Example
 
         private IPluginHost pluginHost;
 
-        public IPluginHost PluginHost { get { return pluginHost; }
-            set {
+        public IPluginHost PluginHost
+        {
+            get { return pluginHost; }
+            set
+            {
                 pluginHost = value;
                 //Add stuff to the plugin manager
             }

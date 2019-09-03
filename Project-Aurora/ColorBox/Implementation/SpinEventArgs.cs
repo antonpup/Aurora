@@ -20,7 +20,7 @@ namespace ColorBox
             get;
             private set;
         }
-      
+
         public SpinEventArgs(SpinDirection direction)
             : base()
         {

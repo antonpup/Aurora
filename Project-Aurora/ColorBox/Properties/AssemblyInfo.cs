@@ -10,7 +10,6 @@
 ***********************************************************************************/
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Markup;
@@ -21,7 +20,7 @@ using System.Windows.Markup;
 [assembly: AssemblyTitle("ColorBox Library")]
 [assembly: AssemblyDescription("This assembly implements a solid and gradient brush picker control for Windows Presentation Foundation. ")]
 [assembly: AssemblyCompany("NCore Softwares Pvt. Ltd.")]
-[assembly: AssemblyProduct("ColorBox")] 
+[assembly: AssemblyProduct("ColorBox")]
 [assembly: AssemblyCopyright("Copyright © NCore Softwares Pvt. Ltd. 2013")]
 [assembly: ThemeInfo(ResourceDictionaryLocation.SourceAssembly, ResourceDictionaryLocation.SourceAssembly)]
 

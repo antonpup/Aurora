@@ -10,11 +10,10 @@
 ***********************************************************************************/
 
 using System;
-using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Collections.ObjectModel;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace ColorBox
@@ -28,11 +27,11 @@ namespace ColorBox
             if (e.Source is GradientStopAdder && this.ColorBox != null)
             {
                 Button btn = e.Source as Button;
-                
+
                 GradientStop _gs = new GradientStop();
                 _gs.Offset = Mouse.GetPosition(btn).X / btn.ActualWidth;
                 //_gs.Color = this.ColorBox.Color;
-                _gs.Color = GetColorFromImage(e.GetPosition(this));                
+                _gs.Color = GetColorFromImage(e.GetPosition(this));
                 this.ColorBox.Gradients.Add(_gs);
                 this.ColorBox.SelectedGradient = _gs;
                 this.ColorBox.Color = _gs.Color;
@@ -69,13 +68,13 @@ namespace ColorBox
                 return this.ColorBox.Color;
             }
         }
-        
+
         public ColorBox ColorBox
         {
             get { return (ColorBox)GetValue(ColorBoxProperty); }
             set { SetValue(ColorBoxProperty, value); }
         }
         public static readonly DependencyProperty ColorBoxProperty =
-            DependencyProperty.Register("ColorBox", typeof(ColorBox), typeof(GradientStopAdder));       
+            DependencyProperty.Register("ColorBox", typeof(ColorBox), typeof(GradientStopAdder));
     }
 }

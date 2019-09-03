@@ -10,9 +10,6 @@
 ***********************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Media;
 
 namespace ColorBox
@@ -24,7 +21,7 @@ namespace ColorBox
         public static string MakeValidColorString(string S)
         {
             string s = S;
-            
+
             for (int i = 0; i < s.Length; i++)
             {
                 char c = s[i];
@@ -35,9 +32,9 @@ namespace ColorBox
                     i--;
                 }
             }
-         
+
             if (s.Length > 8) s = s.Substring(0, 8);
-          
+
             while (s.Length <= 8 && s.Length != 3 && s.Length != 4 && s.Length != 6 && s.Length != 8)
             {
                 s = s + "0";
@@ -54,14 +51,14 @@ namespace ColorBox
             byte R = 0;
             byte G = 0;
             byte B = 0;
-            
+
             if (s.Length == 3)
             {
                 R = byte.Parse(s.Substring(0, 1) + s.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
                 G = byte.Parse(s.Substring(1, 1) + s.Substring(1, 1), System.Globalization.NumberStyles.HexNumber);
                 B = byte.Parse(s.Substring(2, 1) + s.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
             }
-            
+
             if (s.Length == 4)
             {
                 A = byte.Parse(s.Substring(0, 1) + s.Substring(0, 1), System.Globalization.NumberStyles.HexNumber);
@@ -69,7 +66,7 @@ namespace ColorBox
                 G = byte.Parse(s.Substring(2, 1) + s.Substring(2, 1), System.Globalization.NumberStyles.HexNumber);
                 B = byte.Parse(s.Substring(3, 1) + s.Substring(3, 1), System.Globalization.NumberStyles.HexNumber);
             }
-            
+
             if (s.Length == 6)
             {
                 R = byte.Parse(s.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
@@ -87,11 +84,11 @@ namespace ColorBox
 
             return Color.FromArgb(A, R, G, B);
         }
-        
+
         public static string StringFromColor(Color c)
         {
             byte[] bytes = new byte[4] { c.A, c.R, c.G, c.B };
-     
+
             char[] chars = new char[bytes.Length * 2];
 
             for (int i = 0; i < bytes.Length; i++)
@@ -142,7 +139,7 @@ namespace ColorBox
         }
 
         public static void HSBFromColor(Color C, ref double H, ref double S, ref double B)
-        {     
+        {
             byte red = C.R;
             byte green = C.G;
             byte blue = C.B;
@@ -176,6 +173,6 @@ namespace ColorBox
             Color r = ColorFromHSB(H, S, B);
             r.A = (byte)Math.Round(A * 255);
             return r;
-        }        
+        }
     }
 }

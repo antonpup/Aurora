@@ -10,12 +10,11 @@
 ***********************************************************************************/
 
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Globalization;
-using System.Windows.Media;
 
 namespace ColorBox
 {
@@ -24,8 +23,8 @@ namespace ColorBox
     abstract class UpDownBase : Control, IValidateInput
     {
         #region Members
-   
-        internal const string PART_TextBox = "PART_TextBox";  
+
+        internal const string PART_TextBox = "PART_TextBox";
         internal const string PART_Spinner = "PART_Spinner";
         private bool _isSyncingTextAndValueProperties;
         private bool _isTextChangedFromUI;
@@ -67,7 +66,7 @@ namespace ColorBox
             if (inputBase != null)
                 inputBase.OnCultureInfoChanged((CultureInfo)e.OldValue, (CultureInfo)e.NewValue);
         }
-      
+
         #endregion //CultureInfo
 
         #region IsReadOnly
@@ -91,7 +90,7 @@ namespace ColorBox
             if (inputBase != null)
                 inputBase.OnReadOnlyChanged((bool)e.OldValue, (bool)e.NewValue);
         }
-   
+
         #endregion //IsReadOnly
 
         #region Text
@@ -114,7 +113,7 @@ namespace ColorBox
             UpDownBase inputBase = o as UpDownBase;
             if (inputBase != null)
                 inputBase.OnTextChanged((string)e.OldValue, (string)e.NewValue);
-        }   
+        }
 
         #endregion //Text
 
@@ -433,7 +432,7 @@ namespace ColorBox
                     TextBox.Text = "0.0";
                 else
                     TextBox.Text = Text;
-                          
+
                 TextBox.LostFocus += new RoutedEventHandler(TextBox_LostFocus);
                 TextBox.TextChanged += new TextChangedEventHandler(TextBox_TextChanged);
             }
@@ -483,8 +482,8 @@ namespace ColorBox
             switch (e.Key)
             {
                 case Key.Enter:
-                    {                       
-                        bool commitSuccess = CommitInput();                       
+                    {
+                        bool commitSuccess = CommitInput();
                         e.Handled = !commitSuccess;
                         break;
                     }
@@ -561,7 +560,7 @@ namespace ColorBox
         public event InputValidationErrorEventHandler InputValidationError;
 
         #region ValueChanged Event
-      
+
         public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent("ValueChanged", RoutingStrategy.Bubble, typeof(RoutedPropertyChangedEventHandler<object>), typeof(UpDownBase));
         public event RoutedPropertyChangedEventHandler<object> ValueChanged
         {
@@ -581,7 +580,7 @@ namespace ColorBox
 
 
         #region Methods
-                       
+
         private void DoDecrement()
         {
             if (Spinner == null)
@@ -589,7 +588,7 @@ namespace ColorBox
                 OnDecrement();
             }
         }
- 
+
         private void DoIncrement()
         {
             if (Spinner == null)
@@ -723,10 +722,10 @@ namespace ColorBox
             result = result / 100;
 
             return result;
-        }        
+        }
 
         #endregion
- 
+
 
         #region Abstract
 

@@ -10,9 +10,6 @@
 ***********************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ColorBox
 {
@@ -27,8 +24,8 @@ namespace ColorBox
         {
             Exception = e;
         }
-    
- 
+
+
         public Exception Exception
         {
             get
@@ -40,7 +37,7 @@ namespace ColorBox
                 _exception = value;
             }
         }
-            
+
         public bool ThrowException
         {
             get
@@ -51,7 +48,7 @@ namespace ColorBox
             {
                 _throwException = value;
             }
-        }        
+        }
     }
 
     internal interface IValidateInput

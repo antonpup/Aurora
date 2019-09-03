@@ -9,11 +9,9 @@
 
 ***********************************************************************************/
 
-using System;
-using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ColorBox
 {
@@ -26,13 +24,13 @@ namespace ColorBox
         }
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register("Orientation", typeof(Orientation), typeof(BaseSelector), new UIPropertyMetadata(Orientation.Vertical));
-        
+
         public Color Color
         {
             get { return (Color)GetValue(ColorProperty); }
             protected set { SetValue(ColorProperty, value); }
         }
         public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(BaseSelector), new UIPropertyMetadata(Colors.Red));       
+            DependencyProperty.Register("Color", typeof(Color), typeof(BaseSelector), new UIPropertyMetadata(Colors.Red));
     }
 }

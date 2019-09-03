@@ -19,8 +19,9 @@ namespace Aurora_SkypeIntegration
         private static int missedmessages
         {
             get { return integration_data.MissedMessagesCount; }
-            set {
-                if(value != integration_data.MissedMessagesCount)
+            set
+            {
+                if (value != integration_data.MissedMessagesCount)
                 {
                     integration_data.MissedMessagesCount = value;
                     wasUpdated = true;
@@ -74,7 +75,7 @@ namespace Aurora_SkypeIntegration
                     {
                         bool isCalled = false;
 
-                        foreach(Call call in skype.ActiveCalls)
+                        foreach (Call call in skype.ActiveCalls)
                         {
                             if (call.Status == TCallStatus.clsRinging && (call.Type == TCallType.cltIncomingP2P || call.Type == TCallType.cltIncomingPSTN) && !isCalled)
                                 isCalled = true;
@@ -85,7 +86,7 @@ namespace Aurora_SkypeIntegration
                     else
                         iscalled = false;
 
-                    if(wasUpdated)
+                    if (wasUpdated)
                     {
                         string content = JsonConvert.SerializeObject(integration_data, Formatting.None);
 

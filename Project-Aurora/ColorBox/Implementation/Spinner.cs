@@ -12,7 +12,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 
 namespace ColorBox
 {
@@ -35,12 +34,12 @@ namespace ColorBox
             ValidSpinDirections newvalue = (ValidSpinDirections)e.NewValue;
         }
 
-        public event EventHandler<SpinEventArgs> Spin; 
+        public event EventHandler<SpinEventArgs> Spin;
         protected virtual void OnSpin(SpinEventArgs e)
         {
             EventHandler<SpinEventArgs> handler = Spin;
-            if (handler != null)            
-                handler(this, e);            
+            if (handler != null)
+                handler(this, e);
         }
     }
 }

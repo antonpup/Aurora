@@ -1,16 +1,14 @@
-﻿using System;
+﻿using Ionic.Zip;
+using Octokit;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.ComponentModel;
-using System.IO;
-using Ionic.Zip;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Diagnostics;
-using System.Text;
-using Octokit;
-using SemVer;
 using Version = SemVer.Version;
 
 namespace Aurora_Updater
@@ -94,7 +92,7 @@ namespace Aurora_Updater
             }
             catch (Exception e)
             {
-                MessageBox.Show("Could not get Aurora Settings, defaulting to no pre-release updates. Exc:"+e.ToString());
+                MessageBox.Show("Could not get Aurora Settings, defaulting to no pre-release updates. Exc:" + e.ToString());
                 Config = null;
             }
         }
@@ -117,7 +115,7 @@ namespace Aurora_Updater
         private bool FetchData(Version version)
         {
 
-            
+
 
 
             try
@@ -145,7 +143,7 @@ namespace Aurora_Updater
             try
             {
                 string url = LatestRelease.Assets.First(s => s.Name.StartsWith("release") || s.Name.StartsWith("Aurora-v")).BrowserDownloadUrl;
-                
+
                 if (!String.IsNullOrWhiteSpace(url))
                 {
                     this.log.Enqueue(new LogEntry("Starting download... "));

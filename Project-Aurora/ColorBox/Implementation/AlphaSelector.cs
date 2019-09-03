@@ -10,10 +10,10 @@
 ***********************************************************************************/
 
 using System;
-using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ColorBox
 {
@@ -48,7 +48,7 @@ namespace ColorBox
             private set { SetValue(AlphaOffsetProperty, value); }
         }
         public static readonly DependencyProperty AlphaOffsetProperty =
-            DependencyProperty.Register("AlphaOffset", typeof(double), typeof(AlphaSelector), new UIPropertyMetadata(0.0));        
+            DependencyProperty.Register("AlphaOffset", typeof(double), typeof(AlphaSelector), new UIPropertyMetadata(0.0));
 
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -131,7 +131,7 @@ namespace ColorBox
 
         private void SetColor()
         {
-            Color = Color.FromArgb((byte)Math.Round(Alpha * 255), 0, 0, 0);            
+            Color = Color.FromArgb((byte)Math.Round(Alpha * 255), 0, 0, 0);
             //Brush = new SolidColorBrush(Color);
         }
     }

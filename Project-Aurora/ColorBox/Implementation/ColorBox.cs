@@ -11,15 +11,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Media;
-using System.Windows.Controls;
-using System.Windows;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
-using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ColorBox
 {
@@ -45,7 +42,7 @@ namespace ColorBox
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ColorBox), new FrameworkPropertyMetadata(typeof(ColorBox)));
         }
-        
+
         public static RoutedCommand RemoveGradientStop = new RoutedCommand();
         public static RoutedCommand ReverseGradientStop = new RoutedCommand();
 
@@ -56,7 +53,7 @@ namespace ColorBox
             CurrentColorTextBox = GetTemplateChild(PART_CurrentColor) as TextBox;
             if (CurrentColorTextBox != null)
             {
-                CurrentColorTextBox.PreviewKeyDown += CurrentColorTextBox_PreviewKeyDown;        
+                CurrentColorTextBox.PreviewKeyDown += CurrentColorTextBox_PreviewKeyDown;
             }
 
             this.CommandBindings.Add(new CommandBinding(ColorBox.RemoveGradientStop, RemoveGradientStop_Executed));
@@ -66,7 +63,7 @@ namespace ColorBox
         void CurrentColorTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-            {                
+            {
                 BindingExpression be = CurrentColorTextBox.GetBindingExpression(TextBox.TextProperty);
                 if (be != null)
                 {
@@ -74,7 +71,7 @@ namespace ColorBox
                 }
             }
         }
-        
+
         private void RemoveGradientStop_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (this.Gradients != null && this.Gradients.Count > 2)
@@ -392,7 +389,7 @@ namespace ColorBox
                 c.SetBrush();
             }
         }
-        
+
         #endregion
 
         #region Public Properties
@@ -440,7 +437,7 @@ namespace ColorBox
             , new FrameworkPropertyMetadata(null, new PropertyChangedCallback(BrushChangedInternal)));
         static void BrushChangedInternal(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
-            ColorBox c = property as ColorBox;         
+            ColorBox c = property as ColorBox;
             Brush brush = args.NewValue as Brush;
 
             if (!c._BrushSetInternally)
@@ -466,7 +463,7 @@ namespace ColorBox
                     c.EndX = lgb.EndPoint.X;
                     c.EndY = lgb.EndPoint.Y;
                     c.MappingMode = lgb.MappingMode;
-                    c.SpreadMethod = lgb.SpreadMethod;                       
+                    c.SpreadMethod = lgb.SpreadMethod;
                     c.Gradients = new ObservableCollection<GradientStop>(lgb.GradientStops);
                     c.BrushType = BrushTypes.Linear;
                     //c.Color = lgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
@@ -492,7 +489,7 @@ namespace ColorBox
                     c.BrushType = BrushTypes.Radial;
                     //c.Color = rgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
                     //c.SelectedGradient = rgb.GradientStops.OrderBy(x => x.Offset).Last();
-                    
+
                 }
 
                 c._BrushTypeSetInternally = false;
@@ -501,7 +498,7 @@ namespace ColorBox
             {
                 c.RaiseBrushChangedEvent((Brush)args.NewValue);
             }
-        }        
+        }
 
         public Color Color
         {
@@ -542,7 +539,7 @@ namespace ColorBox
                     // update RGB value based on new value of color
 
                     c._RGBSetInternally = true;
-                  
+
                     c.A = color.A;
                     c.R = color.R;
                     c.G = color.G;
@@ -550,14 +547,14 @@ namespace ColorBox
 
                     c._RGBSetInternally = false;
                 }
-                
+
                 c.RaiseColorChangedEvent((Color)e.NewValue);
             }
         }
 
         #endregion
 
-        
+
         #region Color Specific Properties
 
         private double Hue
@@ -666,7 +663,7 @@ namespace ColorBox
         private static readonly DependencyProperty BProperty =
             DependencyProperty.Register("B", typeof(int), typeof(ColorBox),
             new FrameworkPropertyMetadata(default(int), new PropertyChangedCallback(UpdateColorRGB), new CoerceValueCallback(RGBCoerce)));
-        
+
 
         private static object RGBCoerce(DependencyObject d, object value)
         {
@@ -718,7 +715,7 @@ namespace ColorBox
             c._RGBSetInternally = false;
         }
 
-       
+
         #region ColorChanged Event
 
         public delegate void ColorChangedEventHandler(object sender, ColorChangedEventArgs e);
@@ -740,7 +737,7 @@ namespace ColorBox
 
         #endregion
 
-        
+
         #region BrushChanged Event
 
         public delegate void BrushChangedEventHandler(object sender, BrushChangedEventArgs e);
@@ -761,7 +758,7 @@ namespace ColorBox
         }
 
         #endregion
-        
+
 
         internal void SetBrush()
         {
@@ -784,14 +781,14 @@ namespace ColorBox
                 //case BrushTypes.None: Brush = null; break;
 
                 case BrushTypes.Solid:
-                    
+
                     Brush = new SolidColorBrush(this.Color);
 
                     break;
 
                 case BrushTypes.Linear:
 
-                    var brush = new LinearGradientBrush();                    
+                    var brush = new LinearGradientBrush();
                     foreach (GradientStop g in Gradients)
                     {
                         brush.GradientStops.Add(new GradientStop(g.Color, g.Offset));
@@ -801,13 +798,13 @@ namespace ColorBox
                     brush.MappingMode = this.MappingMode;
                     brush.SpreadMethod = this.SpreadMethod;
                     Brush = brush;
-                    
+
                     break;
 
-                
+
                 case BrushTypes.Radial:
 
-                    var brush1 = new RadialGradientBrush();                   
+                    var brush1 = new RadialGradientBrush();
                     foreach (GradientStop g in Gradients)
                     {
                         brush1.GradientStops.Add(new GradientStop(g.Color, g.Offset));
@@ -822,7 +819,7 @@ namespace ColorBox
 
                     break;
             }
-            
+
             /*
             if (this.BrushType != BrushTypes.None)
             {
@@ -834,5 +831,5 @@ namespace ColorBox
 
             this._BrushSetInternally = false;
         }
-    }    
+    }
 }

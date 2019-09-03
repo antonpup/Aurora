@@ -10,9 +10,8 @@
 ***********************************************************************************/
 
 using System;
-using System.Windows;
 using System.Globalization;
-using System.IO;
+using System.Windows;
 
 namespace ColorBox
 {
@@ -101,7 +100,7 @@ namespace ColorBox
         }
 
         private void ValidateDefaultMinMax(double? value)
-        {           
+        {
             if (object.Equals(value, DefaultValue))
                 return;
 
@@ -149,7 +148,7 @@ namespace ColorBox
             string currentValueText = ConvertValueToText();
             if (object.Equals(currentValueText, text))
                 return this.Value;
-    
+
             result = FormatString.Contains("P")
               ? _fromDecimal(ParsePercent(text, CultureInfo))
               : _fromText(text, this.ParsingNumberStyle, CultureInfo);
@@ -162,7 +161,7 @@ namespace ColorBox
         protected override void SetValidSpinDirection()
         {
             ValidSpinDirections validDirections = ValidSpinDirections.None;
-            
+
             if ((this.Increment != null) && !IsReadOnly)
             {
                 if (IsLowerThan(Value, Maximum) || !Value.HasValue)

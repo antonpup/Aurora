@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security.Principal;
 using System.Windows.Forms;
-using System.Linq;
 using Version = SemVer.Version;
 
 namespace Aurora_Updater

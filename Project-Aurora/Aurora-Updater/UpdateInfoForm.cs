@@ -41,7 +41,7 @@ namespace Aurora_Updater
 
         private void linkLabelViewHistory_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if(sender is LinkLabel)
+            if (sender is LinkLabel)
             {
                 (sender as LinkLabel).LinkVisited = true;
                 System.Diagnostics.Process.Start("https://github.com/antonpup/Aurora/releases");

@@ -1,0 +1,1626 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="App.xaml.cs" />
+    <Compile Remove="Devices\Integrations\Asus\AsusDevice.cs" />
+    <Compile Remove="Devices\Integrations\Asus\AsusRGBNetBrush.cs" />
+    <Compile Remove="Devices\Integrations\AtmoOrb\AtmoOrbDevice.cs" />
+    <Compile Remove="Devices\Integrations\Clevo\ClevoDevice.cs" />
+    <Compile Remove="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
+    <Compile Remove="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
+    <Compile Remove="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
+    <Compile Remove="Devices\Integrations\Corsair\CorsairDevice.cs" />
+    <Compile Remove="Devices\Integrations\Corsair\CorsairRGBNetBrush.cs" />
+    <Compile Remove="Devices\Integrations\Dualshock4\Dualshock4Device.cs" />
+    <Compile Remove="Devices\Integrations\LightFX\LightFX.cs" />
+    <Compile Remove="Devices\Integrations\LightFX\LightFXSDK.cs" />
+    <Compile Remove="Devices\Integrations\NZXT\NZXTDevice.cs" />
+    <Compile Remove="Devices\Integrations\NZXT\NZXTLayoutMap.cs" />
+    <Compile Remove="Devices\Integrations\ScriptedDevice\ScriptedDevice.cs" />
+    <Compile Remove="Devices\Integrations\SteelSeries\GameSenseSDK.cs" />
+    <Compile Remove="Devices\Integrations\SteelSeries\SteelSeriesDevice.cs" />
+    <Compile Remove="Devices\Integrations\SteelSeries\USBHIDCodes.cs" />
+    <Compile Remove="Devices\Integrations\UnifiedHID\AsusPugio.cs" />
+    <Compile Remove="Devices\Integrations\UnifiedHID\RivalMouses.cs" />
+    <Compile Remove="Devices\Integrations\UnifiedHID\RoccatVulcan.cs" />
+    <Compile Remove="Devices\Integrations\UnifiedHID\UnifiedHID.cs" />
+    <Compile Remove="Devices\Integrations\YeeLight\YeeLightDevice.cs" />
+    <Compile Remove="Devices\RGBNet\AbstractRGBNetDevice.cs" />
+    <Compile Remove="Devices\RGBNet\AuroraRGBNetBrush.cs" />
+    <Compile Remove="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
+    <Compile Remove="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
+    <Compile Remove="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
+    <Compile Remove="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
+    <Compile Remove="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
+    <Compile Remove="Settings\ColorZone.cs" />
+    <Compile Remove="Settings\KeyboardLayoutManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="CroccatTalkWrapper\win32-x86-64\talkfx-c.dll" />
+    <None Remove="CroccatTalkWrapper\win32-x86\talkfx-c.dll" />
+    <None Remove="DrevoRadi.dll" />
+    <None Remove="DS4WindowsApi.dll" />
+    <None Remove="kb_layouts\Extra Features\images\Corsair_Katar_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Corsair_Katar_outline.png" />
+    <None Remove="kb_layouts\Extra Features\images\Corsair_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Corsair_M65_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Corsair_M65_outline.png" />
+    <None Remove="kb_layouts\Extra Features\images\Corsair_M65_scrollwheel.png" />
+    <None Remove="kb_layouts\Extra Features\images\Corsair_strafe_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G502_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G502_outline.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G810_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G900_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G900_outline.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G910_badge.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G910_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Omen_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Razer_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Sabre_front_lights.png" />
+    <None Remove="kb_layouts\Extra Features\images\Sabre_outline.png" />
+    <None Remove="kb_layouts\Extra Features\images\Sabre_scrollwheel.png" />
+    <None Remove="kb_layouts\Extra Features\images\SoundBlasterX_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\SteelSeries_Apex_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\SteelSeries_Rival_300_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\SteelSeries_Rival_300_outline.png" />
+    <None Remove="kb_layouts\Extra Features\images\SteelSeries_Rival_300_scrollwheel.png" />
+    <None Remove="LightFX_SDK.dll" />
+    <None Remove="Logi\GHUB\LogitechLed.dll" />
+    <None Remove="Logi\LGS\LogitechLed.dll" />
+    <None Remove="NLog.config" />
+    <None Remove="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
+    <None Remove="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
+    <None Remove="Profiles\ETS2\GSI\ets2-telemetry-server-x64.dll" />
+    <None Remove="Profiles\ETS2\GSI\ets2-telemetry-server-x86.dll" />
+    <None Remove="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
+    <None Remove="Profiles\Payday 2\GSI\PD2_GSI.zip" />
+    <None Remove="Profiles\Witcher3\GSI\Resources\witcher3-mod.zip" />
+    <None Remove="Resources\AddProfile_Icon.png" />
+    <None Remove="Resources\AnimationEditor_ScrubberTop.png" />
+    <None Remove="Resources\ats_64x64.png" />
+    <None Remove="Resources\aurora_icon.ico" />
+    <None Remove="Resources\aurora_logo.png" />
+    <None Remove="Resources\bf1_128x128.png" />
+    <None Remove="Resources\bf3_64x64.png" />
+    <None Remove="Resources\blacklight_64x64.png" />
+    <None Remove="Resources\bns_48x48.png" />
+    <None Remove="Resources\Borderlands2_256x256.png" />
+    <None Remove="Resources\ch_128x128.png" />
+    <None Remove="Resources\CorsairInstall\Step1.png" />
+    <None Remove="Resources\CorsairInstall\Step2.png" />
+    <None Remove="Resources\csgo_64x64.png" />
+    <None Remove="Resources\Daytime_Icon.png" />
+    <None Remove="Resources\deadcells_128x128.png" />
+    <None Remove="Resources\desktop_icon.png" />
+    <None Remove="Resources\dh_128x128.png" />
+    <None Remove="Resources\diablo3_120x120.png" />
+    <None Remove="Resources\disco_dodgeball_32x32.png" />
+    <None Remove="Resources\division_64x64.png" />
+    <None Remove="Resources\dl_128x128.png" />
+    <None Remove="Resources\doom_256x256.png" />
+    <None Remove="Resources\dota2_64x64.png" />
+    <None Remove="Resources\ets2_64x64.png" />
+    <None Remove="Resources\evolve_48x48.png" />
+    <None Remove="Resources\Export_Icon.png" />
+    <None Remove="Resources\factorio_64x64.png" />
+    <None Remove="Resources\FreeForm_Circle.png" />
+    <None Remove="Resources\FreeForm_CircleFilled.png" />
+    <None Remove="Resources\FreeForm_Line.png" />
+    <None Remove="Resources\FreeForm_ManualColor.png" />
+    <None Remove="Resources\FreeForm_Rectangle.png" />
+    <None Remove="Resources\FreeForm_RectangleFilled.png" />
+    <None Remove="Resources\gta5_64x64.png" />
+    <None Remove="Resources\gw2_48x48.png" />
+    <None Remove="Resources\hotline_32x32.png" />
+    <None Remove="Resources\icons8-checked-checkbox-30.png" />
+    <None Remove="Resources\icons8-diamonds-30.png" />
+    <None Remove="Resources\icons8-keyboard-30.png" />
+    <None Remove="Resources\icons8-numbers-30.png" />
+    <None Remove="Resources\icons8-paint-palette-30.png" />
+    <None Remove="Resources\Import_Icon.png" />
+    <None Remove="Resources\info.png" />
+    <None Remove="Resources\keycap_backglow.png" />
+    <None Remove="Resources\kf2.png" />
+    <None Remove="Resources\LayerConditions_icon.png" />
+    <None Remove="Resources\LayerConfig_icon.png" />
+    <None Remove="Resources\Layers_Add.png" />
+    <None Remove="Resources\Layers_Copy.png" />
+    <None Remove="Resources\Layers_Drag.png" />
+    <None Remove="Resources\Layers_Paste.png" />
+    <None Remove="Resources\Layers_Remove.png" />
+    <None Remove="Resources\leagueoflegends_48x48.png" />
+    <None Remove="Resources\LogitechInstall\Step1.png" />
+    <None Remove="Resources\LogitechInstall\Step2.png" />
+    <None Remove="Resources\LogitechInstall\Step3.png" />
+    <None Remove="Resources\LogitechInstall\Step4.png" />
+    <None Remove="Resources\LogitechInstall\Step5.png" />
+    <None Remove="Resources\magic_duels_64x64.png" />
+    <None Remove="Resources\mc_clock_day.png" />
+    <None Remove="Resources\mc_clock_night.png" />
+    <None Remove="Resources\metro_ll_48x48.png" />
+    <None Remove="Resources\minecraft_128x128.png" />
+    <None Remove="Resources\MoD.png" />
+    <None Remove="Resources\Nighttime_Icon.png" />
+    <None Remove="Resources\Not Visible.png" />
+    <None Remove="Resources\osu_256x256.png" />
+    <None Remove="Resources\overwatch_icon.png" />
+    <None Remove="Resources\pd2_64x64.png" />
+    <None Remove="Resources\qc_256x256.png" />
+    <None Remove="Resources\quakechampions_195x195.png" />
+    <None Remove="Resources\Question_Help.png" />
+    <None Remove="Resources\RazerInstall\Step1.png" />
+    <None Remove="Resources\RazerInstall\Step2.png" />
+    <None Remove="Resources\re2_256x256.png" />
+    <None Remove="Resources\RemoveProfile_Icon.png" />
+    <None Remove="Resources\rocketleague_256x256.png" />
+    <None Remove="Resources\rot_tombraider.png" />
+    <None Remove="Resources\Save_Icon.png" />
+    <None Remove="Resources\settings_icon.png" />
+    <None Remove="Resources\shadow_of_mordor_64x64.png" />
+    <None Remove="Resources\Skype_300x300.png" />
+    <None Remove="Resources\Slime_Rancher.png" />
+    <None Remove="Resources\ssam3_48x48.png" />
+    <None Remove="Resources\SteelSeriesInstall\Step1.png" />
+    <None Remove="Resources\SteelSeriesInstall\Step2.png" />
+    <None Remove="Resources\Subnautica.png" />
+    <None Remove="Resources\talosprinciple_64x64.png" />
+    <None Remove="Resources\unknown_app_icon.png" />
+    <None Remove="Resources\Visible.png" />
+    <None Remove="Resources\Win32\Aurora-LightFXWrapper.dll" />
+    <None Remove="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
+    <None Remove="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
+    <None Remove="Resources\Win64\Aurora-LightFXWrapper.dll" />
+    <None Remove="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
+    <None Remove="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
+    <None Remove="Resources\witcher3_256x256.png" />
+    <None Remove="Resources\worms_wmd.png" />
+    <None Remove="Resources\xcom_64x64.png" />
+    <None Remove="wooting-rgb-sdk.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </None>
+    <None Include="Devices\Integrations\Asus\AsusDevice.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="CroccatTalkWrapper\win32-x86-64\talkfx-c.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CroccatTalkWrapper\win32-x86\talkfx-c.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Integrations\SteelSeries\GameSenseSDK.cs" />
+    <Content Include="DrevoRadi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DS4WindowsApi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Corsair_Katar_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Corsair_Katar_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Corsair_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Corsair_M65_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Corsair_M65_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Corsair_M65_scrollwheel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Corsair_strafe_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Logi_G502_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Logi_G502_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Logi_G810_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Logi_G900_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Logi_G900_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Logi_G910_badge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Logi_G910_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Omen_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Razer_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Sabre_front_lights.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Sabre_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Sabre_scrollwheel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SoundBlasterX_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Apex_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_scrollwheel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LightFX_SDK.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Logi\GHUB\LogitechLed.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Logi\LGS\LogitechLed.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\CorsairInstall\Step1.png" />
+    <Content Include="Resources\CorsairInstall\Step2.png" />
+    <Content Include="Resources\LogitechInstall\Step1.png" />
+    <Content Include="Resources\LogitechInstall\Step2.png" />
+    <Content Include="Resources\LogitechInstall\Step3.png" />
+    <Content Include="Resources\LogitechInstall\Step4.png" />
+    <Content Include="Resources\LogitechInstall\Step5.png" />
+    <Content Include="Resources\RazerInstall\Step1.png" />
+    <Content Include="Resources\RazerInstall\Step2.png" />
+    <Content Include="Resources\SteelSeriesInstall\Step1.png" />
+    <Content Include="Resources\SteelSeriesInstall\Step2.png" />
+    <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
+    <Content Include="wooting-rgb-sdk.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Devices\Integrations\Asus\AsusRGBNetBrush.cs" />
+    <None Include="Devices\Integrations\NZXT\NZXTDevice.cs" />
+    <None Include="Devices\Integrations\NZXT\NZXTLayoutMap.cs" />
+    <None Include="Devices\Integrations\SteelSeries\USBHIDCodes.cs" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
+    <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
+    <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
+    <Content Include="Settings\ColorZone.cs" />
+    <Content Include="Settings\KeyboardLayoutManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Profiles\Slime Rancher\layers\" />
+    <Folder Include="Profiles\Subnautica\layers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Devices\Integrations\AtmoOrb\AtmoOrbDevice.cs" />
+    <None Include="Devices\Integrations\Clevo\ClevoDevice.cs" />
+    <None Include="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
+    <None Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
+    <None Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
+    <None Include="Devices\Integrations\Corsair\CorsairDevice.cs" />
+    <None Include="Devices\Integrations\Corsair\CorsairRGBNetBrush.cs" />
+    <None Include="Devices\Integrations\Dualshock4\Dualshock4Device.cs" />
+    <None Include="Devices\Integrations\LightFX\LightFX.cs" />
+    <None Include="Devices\Integrations\LightFX\LightFXSDK.cs" />
+    <None Include="Devices\Integrations\ScriptedDevice\ScriptedDevice.cs" />
+    <None Include="Devices\Integrations\SteelSeries\SteelSeriesDevice.cs" />
+    <None Include="Devices\Integrations\UnifiedHID\AsusPugio.cs" />
+    <None Include="Devices\Integrations\UnifiedHID\RoccatVulcan.cs" />
+    <None Include="Devices\Integrations\UnifiedHID\UnifiedHID.cs" />
+    <None Include="Devices\Integrations\YeeLight\YeeLightDevice.cs" />
+    <None Include="Devices\RGBNet\AbstractRGBNetDevice.cs" />
+    <None Include="Devices\RGBNet\AuroraRGBNetBrush.cs" />
+    <None Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
+    <None Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Colore" Version="5.2.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="3.0.0-preview8.19405.3" />
+    <PackageReference Include="MouseKeyHook" Version="5.6.0" />
+    <PackageReference Include="NAudio" Version="1.9.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NLog" Version="4.6.7" />
+    <PackageReference Include="Octokit" Version="0.32.0" />
+    <PackageReference Include="RGB.NET.Brushes" Version="0.1.26" />
+    <PackageReference Include="RGB.NET.Devices.Asus" Version="0.1.26" />
+    <PackageReference Include="RGB.NET.Devices.Corsair" Version="0.1.26" />
+    <PackageReference Include="RGB.NET.Groups" Version="0.1.26" />
+    <PackageReference Include="RGB.NET.Resources.Asus" Version="0.3.0" />
+    <PackageReference Include="RGB.NET.Resources.Corsair" Version="0.3.0.234" />
+    <PackageReference Include="SharpDX" Version="4.0.1" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.0.1" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.0.1" />
+    <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
+    <PackageReference Include="TaskScheduler" Version="2.8.15" />
+    <PackageReference Include="YeeLightAPI_SnakePin" Version="0.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj" />
+    <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Devices\Integrations\UnifiedHID\RivalMouses.cs" />
+    <Reference Include="RazerSdkWrapper">
+      <HintPath>..\Project-Aurora\RazerSdkWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Roccat-Talk">
+      <HintPath>..\Project-Aurora\Roccat-Talk.dll</HintPath>
+    </Reference>
+    <Resource Include="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
+    <Resource Include="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
+    <Resource Include="Profiles\ETS2\GSI\ets2-telemetry-server-x64.dll" />
+    <Resource Include="Profiles\ETS2\GSI\ets2-telemetry-server-x86.dll" />
+    <Resource Include="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
+    <Resource Include="Profiles\Payday 2\GSI\PD2_GSI.zip" />
+    <Resource Include="Profiles\Witcher3\GSI\Resources\witcher3-mod.zip" />
+    <Resource Include="Resources\AddProfile_Icon.png" />
+    <Resource Include="Resources\AnimationEditor_ScrubberTop.png" />
+    <Resource Include="Resources\ats_64x64.png" />
+    <Resource Include="Resources\aurora_icon.ico" />
+    <Resource Include="Resources\aurora_logo.png" />
+    <Resource Include="Resources\bf1_128x128.png" />
+    <Resource Include="Resources\bf3_64x64.png" />
+    <Resource Include="Resources\blacklight_64x64.png" />
+    <Resource Include="Resources\bns_48x48.png" />
+    <Resource Include="Resources\Borderlands2_256x256.png" />
+    <Resource Include="Resources\ch_128x128.png" />
+    <Resource Include="Resources\csgo_64x64.png" />
+    <Resource Include="Resources\Daytime_Icon.png" />
+    <Resource Include="Resources\deadcells_128x128.png" />
+    <Resource Include="Resources\desktop_icon.png" />
+    <Resource Include="Resources\dh_128x128.png" />
+    <Resource Include="Resources\diablo3_120x120.png" />
+    <Resource Include="Resources\disco_dodgeball_32x32.png" />
+    <Resource Include="Resources\division_64x64.png" />
+    <Resource Include="Resources\dl_128x128.png" />
+    <Resource Include="Resources\doom_256x256.png" />
+    <Resource Include="Resources\dota2_64x64.png" />
+    <Resource Include="Resources\ets2_64x64.png" />
+    <Resource Include="Resources\evolve_48x48.png" />
+    <Resource Include="Resources\Export_Icon.png" />
+    <Resource Include="Resources\factorio_64x64.png" />
+    <Resource Include="Resources\FreeForm_Circle.png" />
+    <Resource Include="Resources\FreeForm_CircleFilled.png" />
+    <Resource Include="Resources\FreeForm_Line.png" />
+    <Resource Include="Resources\FreeForm_ManualColor.png" />
+    <Resource Include="Resources\FreeForm_Rectangle.png" />
+    <Resource Include="Resources\FreeForm_RectangleFilled.png" />
+    <Resource Include="Resources\gta5_64x64.png" />
+    <Resource Include="Resources\gw2_48x48.png" />
+    <Resource Include="Resources\hotline_32x32.png" />
+    <Resource Include="Resources\icons8-checked-checkbox-30.png" />
+    <Resource Include="Resources\icons8-diamonds-30.png" />
+    <Resource Include="Resources\icons8-keyboard-30.png" />
+    <Resource Include="Resources\icons8-numbers-30.png" />
+    <Resource Include="Resources\icons8-paint-palette-30.png" />
+    <Resource Include="Resources\Import_Icon.png" />
+    <Resource Include="Resources\info.png" />
+    <Resource Include="Resources\keycap_backglow.png" />
+    <Resource Include="Resources\kf2.png" />
+    <Resource Include="Resources\LayerConditions_icon.png" />
+    <Resource Include="Resources\LayerConfig_icon.png" />
+    <Resource Include="Resources\Layers_Add.png" />
+    <Resource Include="Resources\Layers_Copy.png" />
+    <Resource Include="Resources\Layers_Drag.png" />
+    <Resource Include="Resources\Layers_Paste.png" />
+    <Resource Include="Resources\Layers_Remove.png" />
+    <Resource Include="Resources\leagueoflegends_48x48.png" />
+    <Resource Include="Resources\magic_duels_64x64.png" />
+    <Resource Include="Resources\mc_clock_day.png" />
+    <Resource Include="Resources\mc_clock_night.png" />
+    <Resource Include="Resources\metro_ll_48x48.png" />
+    <Resource Include="Resources\minecraft_128x128.png" />
+    <Resource Include="Resources\MoD.png" />
+    <Resource Include="Resources\Nighttime_Icon.png" />
+    <Resource Include="Resources\Not Visible.png" />
+    <Resource Include="Resources\osu_256x256.png" />
+    <Resource Include="Resources\overwatch_icon.png" />
+    <Resource Include="Resources\pd2_64x64.png" />
+    <Resource Include="Resources\qc_256x256.png" />
+    <Resource Include="Resources\quakechampions_195x195.png" />
+    <Resource Include="Resources\Question_Help.png" />
+    <Resource Include="Resources\re2_256x256.png" />
+    <Resource Include="Resources\RemoveProfile_Icon.png" />
+    <Resource Include="Resources\rocketleague_256x256.png" />
+    <Resource Include="Resources\rot_tombraider.png" />
+    <Resource Include="Resources\Save_Icon.png" />
+    <Resource Include="Resources\settings_icon.png" />
+    <Resource Include="Resources\shadow_of_mordor_64x64.png" />
+    <Resource Include="Resources\Skype_300x300.png" />
+    <Resource Include="Resources\Slime_Rancher.png" />
+    <Resource Include="Resources\ssam3_48x48.png" />
+    <Resource Include="Resources\Subnautica.png" />
+    <Resource Include="Resources\talosprinciple_64x64.png" />
+    <Resource Include="Resources\unknown_app_icon.png" />
+    <Resource Include="Resources\Visible.png" />
+    <Resource Include="Resources\Win32\Aurora-LightFXWrapper.dll" />
+    <Resource Include="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
+    <Resource Include="Resources\Win64\Aurora-LightFXWrapper.dll" />
+    <Resource Include="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
+    <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
+    <Resource Include="Resources\witcher3_256x256.png" />
+    <Resource Include="Resources\worms_wmd.png" />
+    <Resource Include="Resources\xcom_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="kb_layouts\asus_strix_flare.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\corsair_k65.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\corsair_k68.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\corsair_k70.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\corsair_k70_mk2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\corsair_k95.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\corsair_k95_platinum.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\corsair_sabre.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\corsair_strafe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\drevo_blademaster.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\asus_pugio_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\clevo_touchpad_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_k65_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_k68_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_k70_mk2_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_k95_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_k95_platinum_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_k95_platinum_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_k95_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_katar_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_m65_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_sabre_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_strafe_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\corsair_strafe_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\drevo_blademaster_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\generic_laptop_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\generic_laptop_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\generic_laptop_numpad_right_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\generic_laptop_numpad_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\generic_laptop_right_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\generic_laptop_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\generic_mousepad.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\generic_peripheral.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\images\Asus_Pugio_backlights.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\images\Asus_Pugio_body.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\images\Asus_Pugio_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\images\Asus_Pugio_wheel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\logitech_g502_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\logitech_g810_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\logitech_g900_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\logitech_g910_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\logitech_g910_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\logitech_gpro_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\masterkeys_mk750_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\masterkeys_mk750_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\masterkeys_mk750_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\masterkeys_pro_l_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\masterkeys_pro_m_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\razer_blackwidow_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\razer_blackwidow_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\razer_blade_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\razer_blade_right_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\razer_blade_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\roccat_ryos_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\soundblasterx_vanguardk08_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\soundblasterx_vanguardk08_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\steelseries_apex_m750_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\steelseries_apex_m750_tkl_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\steelseries_apex_m800_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\steelseries_apex_m800_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\steelseries_qck_2zone_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\steelseries_qck_prism_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\steelseries_rival_300_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\steelseries_rival_300_hp_omen_edition_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\wooting_two_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\generic_laptop.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\generic_laptop_numpad.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\logitech_g213.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\logitech_g410.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\logitech_g810.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\logitech_g910.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\logitech_gpro.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\masterkeys_mk750.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\masterkeys_pro_l.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\masterkeys_pro_m.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\masterkeys_pro_s.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.abnt2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.ansi.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.de.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.dvorak.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.dvorak_int.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.es.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.fr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.hu.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.intl.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.iso.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.it.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.jpn.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.la.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.nordic.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.ru.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.swiss.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.tr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.uk.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Plain Keyboard\layout.us.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\razer_blackwidow.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\razer_blackwidow_te.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\razer_blackwidow_x.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\razer_blade.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\roccat_ryos.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\soundblasterx_vanguardk08.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\steelseries_apex_m750.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\steelseries_apex_m750_tkl.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\steelseries_apex_m800.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\wooting_one.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\wooting_two.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Pointers\Borderlands2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Pointers\CloneHero.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Pointers\Dishonored.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Pointers\ResidentEvil2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Pointers\RocketLeague.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\CorsairInstall\Step1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\CorsairInstall\Step1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\CorsairInstall\Step2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\CorsairInstall\Step2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\LogitechInstall\Step1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\LogitechInstall\Step1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\LogitechInstall\Step2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\LogitechInstall\Step2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\LogitechInstall\Step3.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\LogitechInstall\Step3.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\LogitechInstall\Step4.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\LogitechInstall\Step4.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\LogitechInstall\Step5.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\LogitechInstall\Step5.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\RazerInstall\Step1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\RazerInstall\Step1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\RazerInstall\Step2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\RazerInstall\Step2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\SteelSeriesInstall\Step1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\SteelSeriesInstall\Step1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\SteelSeriesInstall\Step2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\SteelSeriesInstall\Step2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Win32\Aurora-LightFXWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Win32\Aurora-LightFXWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Win64\Aurora-LightFXWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Win64\Aurora-LightFXWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\AddProfile_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\AddProfile_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\AnimationEditor_ScrubberTop.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\AnimationEditor_ScrubberTop.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\ats_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\ats_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\aurora_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\aurora_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\aurora_logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\aurora_logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\bf1_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\bf1_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\bf3_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\bf3_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\blacklight_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\blacklight_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\bns_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\bns_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Borderlands2_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Borderlands2_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\ch_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\ch_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\csgo_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\csgo_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Daytime_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Daytime_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\deadcells_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\deadcells_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\desktop_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\desktop_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\dh_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\dh_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\diablo3_120x120.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\diablo3_120x120.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\disco_dodgeball_32x32.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\disco_dodgeball_32x32.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\division_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\division_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\dl_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\dl_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\doom_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\doom_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\dota2_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\dota2_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\ets2_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\ets2_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\evolve_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\evolve_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Export_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Export_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\factorio_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\factorio_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\FreeForm_Circle.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\FreeForm_Circle.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\FreeForm_CircleFilled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\FreeForm_CircleFilled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\FreeForm_Line.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\FreeForm_Line.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\FreeForm_ManualColor.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\FreeForm_ManualColor.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\FreeForm_Rectangle.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\FreeForm_Rectangle.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\FreeForm_RectangleFilled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\FreeForm_RectangleFilled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\gta5_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\gta5_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\gw2_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\gw2_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\hotline_32x32.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\hotline_32x32.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\icons8-checked-checkbox-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\icons8-checked-checkbox-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\icons8-diamonds-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\icons8-diamonds-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\icons8-keyboard-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\icons8-keyboard-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\icons8-numbers-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\icons8-numbers-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\icons8-paint-palette-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\icons8-paint-palette-30.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Import_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Import_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\info.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\info.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\keycap_backglow.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\keycap_backglow.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\kf2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\kf2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\LayerConditions_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\LayerConditions_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\LayerConfig_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\LayerConfig_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Layers_Add.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Layers_Add.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Layers_Copy.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Layers_Copy.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Layers_Drag.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Layers_Drag.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Layers_Paste.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Layers_Paste.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Layers_Remove.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Layers_Remove.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\leagueoflegends_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\leagueoflegends_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\magic_duels_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\magic_duels_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\mc_clock_day.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\mc_clock_day.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\mc_clock_night.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\mc_clock_night.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\metro_ll_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\metro_ll_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\minecraft_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\minecraft_128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\MoD.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\MoD.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Nighttime_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Nighttime_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Not Visible.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Not Visible.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\osu_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\osu_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\overwatch_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\overwatch_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\pd2_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\pd2_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\qc_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\qc_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\quakechampions_195x195.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\quakechampions_195x195.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Question_Help.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Question_Help.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\re2_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\re2_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\RemoveProfile_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\RemoveProfile_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\rocketleague_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\rocketleague_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\rot_tombraider.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\rot_tombraider.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Save_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Save_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\settings_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\settings_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\shadow_of_mordor_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\shadow_of_mordor_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Skype_300x300.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Skype_300x300.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Slime_Rancher.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Slime_Rancher.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\ssam3_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\ssam3_48x48.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Subnautica.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Subnautica.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\talosprinciple_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\talosprinciple_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\unknown_app_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\unknown_app_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\Visible.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\Visible.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\witcher3_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\witcher3_256x256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\worms_wmd.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\worms_wmd.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AsusSDKFiles Remove="Resources\xcom_64x64.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CueSDKFiles Remove="Resources\xcom_64x64.png" />
+  </ItemGroup>
+
+</Project>

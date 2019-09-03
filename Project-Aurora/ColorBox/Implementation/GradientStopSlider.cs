@@ -9,7 +9,6 @@
 
 ***********************************************************************************/
 
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,11 +25,11 @@ namespace ColorBox
             if (this.ColorBox != null)
             {
                 this.ColorBox._BrushSetInternally = true;
-                this.ColorBox._UpdateBrush = false;        
+                this.ColorBox._UpdateBrush = false;
 
                 this.ColorBox.SelectedGradient = this.SelectedGradient;
                 this.ColorBox.Color = this.SelectedGradient.Color;
-                
+
                 this.ColorBox._UpdateBrush = true;
                 //this.ColorBox._BrushSetInternally = false;
 
@@ -51,7 +50,7 @@ namespace ColorBox
                 this.ColorBox._HSBSetInternally = false;
                 //this.ColorBox._RGBSetInternally = false;
                 //this.ColorBox._BrushSetInternally = false;
-            }            
+            }
         }
 
         public ColorBox ColorBox

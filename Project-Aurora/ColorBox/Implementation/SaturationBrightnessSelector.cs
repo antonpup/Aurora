@@ -9,7 +9,6 @@
 
 ***********************************************************************************/
 
-using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -70,7 +69,7 @@ namespace ColorBox
             if (v < 0) return 0.0;
             if (v > 1) return 1.0;
             return v;
-        }       
+        }
 
 
         public double BrightnessOffset
@@ -103,7 +102,7 @@ namespace ColorBox
             return v;
         }
 
-        
+
 
         protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
         {
