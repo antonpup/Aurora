@@ -106,8 +106,6 @@ namespace Aurora.Settings.Layers
 
     public interface ILayerHandler : IDisposable
     {
-        UserControl Control { get; }
-
         string ID { get; }
 
         IStringProperty Properties { get; set; }
@@ -136,12 +134,6 @@ namespace Aurora.Settings.Layers
     {
         [JsonIgnore]
         public Application Application { get; protected set; }
-
-        [JsonIgnore]
-        protected UserControl _Control;
-
-        [JsonIgnore]
-        public UserControl Control => _Control ?? (_Control = this.CreateControl());
 
         [JsonIgnore]
         protected string _ID;
@@ -238,11 +230,6 @@ namespace Aurora.Settings.Layers
         public virtual void SetApplication(Application profile)
         {
             Application = profile;
-        }
-
-        protected virtual UserControl CreateControl()
-        {
-            return new Control_DefaultLayer();
         }
 
         public virtual void Dispose()

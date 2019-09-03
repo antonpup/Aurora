@@ -47,11 +47,6 @@ namespace Aurora.Settings.Layers
             _ID = "Image";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_ImageLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer image_layer = new EffectLayer();

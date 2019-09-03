@@ -89,12 +89,6 @@ namespace Aurora.Profiles.RocketLeague.Layers
         {
             _ID = "RocketLeagueBackground";
         }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_RocketLeagueBackgroundLayer( this );
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             previoustime = currenttime;
@@ -292,12 +286,6 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 }
             }
             return bg_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            ( Control as Control_RocketLeagueBackgroundLayer ).SetProfile( profile );
-            base.SetApplication( profile );
         }
     }
 }

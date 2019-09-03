@@ -54,11 +54,6 @@ namespace Aurora.Settings.Layers
             _ID = "Breathing";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_BreathingLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             current_sine = (float)Math.Pow(Math.Sin((double)((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 10000L) / 10000.0f) * 2 * Math.PI * Properties.EffectSpeed), 2);

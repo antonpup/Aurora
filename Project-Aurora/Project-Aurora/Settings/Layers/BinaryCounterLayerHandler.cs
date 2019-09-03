@@ -38,12 +38,8 @@ namespace Aurora.Settings.Layers {
             _ID = "BinaryCounter";
         }
 
-        private Control_BinaryCounterLayer control;
-        protected override UserControl CreateControl() => control ?? (control = new Control_BinaryCounterLayer(this));
-
         public override void SetApplication(Application profile) {
             base.SetApplication(profile);
-            control?.SetApplication(profile);
         }
 
         public override EffectLayer Render(IGameState gamestate) {

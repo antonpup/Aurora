@@ -69,11 +69,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             _ID = "Dota2Background";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_Dota2BackgroundLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer bg_layer = new EffectLayer("Dota 2 - Background");
@@ -123,13 +118,6 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             return bg_layer;
         }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_Dota2BackgroundLayer).SetProfile(profile);
-            base.SetApplication(profile);
-        }
-
         private double getDimmingValue()
         {
             if (isDimming && Properties.DimEnabled)

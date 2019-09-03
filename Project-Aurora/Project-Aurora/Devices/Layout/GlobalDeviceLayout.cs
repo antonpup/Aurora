@@ -214,7 +214,6 @@ namespace Aurora.Devices.Layout
                     AllLeds.AddRange(deviceLayout.GetAllDeviceLEDs());
                 }
             }
-            control = null;
             LayoutChanged?.Invoke(this);
         }
 
@@ -380,7 +379,7 @@ namespace Aurora.Devices.Layout
             return new Canvas(this);
         }
 
-        private Grid control = null;
+        /*private Grid control = null;
         
         public Grid GetControl(bool abstractView = false)
         {
@@ -420,7 +419,7 @@ namespace Aurora.Devices.Layout
             //grid.IsHitTestVisible = false;
 
             return (control = grid);
-        }
+        }*/
 
         public bool IsAutomaticGeneration()
         {

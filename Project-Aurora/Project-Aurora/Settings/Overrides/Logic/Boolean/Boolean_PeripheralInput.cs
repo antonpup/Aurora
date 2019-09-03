@@ -25,13 +25,6 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>The key to be checked to see if it is held down.</summary>
         public Keys TargetKey { get; set; } = Keys.Space;
 
-        /// <summary>Create a control where the user can select the key they wish to detect.</summary>
-        public Visual GetControl(Application application) {
-            var c = new Controls.Control_FieldPresenter { Type = typeof(Keys), Margin = new System.Windows.Thickness(0, 0, 0, 6) };
-            c.SetBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay });
-            return c;
-        }
-
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
         public bool Evaluate(IGameState gameState) => AuroraCore.InputEvents.PressedKeys.Contains(TargetKey);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
@@ -61,32 +54,6 @@ namespace Aurora.Settings.Overrides.Logic {
         public Keys TargetKey { get; set; } = Keys.Space;
         public float Seconds { get; set; } = 1;
 
-        /// <summary>Create a control where the user can select the key they wish to detect.</summary>
-        public Visual GetControl(Application application)
-        {
-            StackPanel panel = new StackPanel();
-
-            var c = new Controls.Control_FieldPresenter { Type = typeof(Keys), Margin = new System.Windows.Thickness(0, 0, 0, 6) };
-            c.SetBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay });
-            panel.Children.Add(c);
-
-            StackPanel time = new StackPanel();
-            time.Orientation = Orientation.Horizontal;
-            var text = new TextBlock();
-            text.Text = "For";
-            time.Children.Add(text);
-
-            c = new Controls.Control_FieldPresenter { Type = typeof(float), Margin = new System.Windows.Thickness(5, 0, 5, 6) };
-            c.SetBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("Seconds") { Source = this, Mode = BindingMode.TwoWay });
-            time.Children.Add(c);
-
-            text = new TextBlock();
-            text.Text = "Seconds";
-            time.Children.Add(text);
-            
-            panel.Children.Add(time);
-            return panel;
-        }
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
         public bool Evaluate(IGameState gameState) {
             if (AuroraCore.InputEvents.PressedKeys.Contains(TargetKey))
@@ -126,13 +93,6 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>The mouse button to be checked to see if it is held down.</summary>
         public System.Windows.Forms.MouseButtons TargetButton { get; set; } = System.Windows.Forms.MouseButtons.Left;
-        
-        /// <summary>Create a control where the user can select the mouse button they wish to detect.</summary>
-        public Visual GetControl(Application application) {
-            var c = new Controls.Control_FieldPresenter { Type = typeof(System.Windows.Forms.MouseButtons), Margin = new System.Windows.Thickness(0, 0, 0, 6) };
-            c.SetBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetButton") { Source = this, Mode = BindingMode.TwoWay });
-            return c;
-        }
 
         /// <summary>True if the global event bus's pressed mouse button list contains the target button.</summary>
         public bool Evaluate(IGameState gameState) => AuroraCore.InputEvents.PressedButtons.Contains(TargetButton);
@@ -158,13 +118,6 @@ namespace Aurora.Settings.Overrides.Logic {
         public BooleanLockKeyActive(Keys target) { TargetKey = target; }
 
         public Keys TargetKey { get; set; } = Keys.CapsLock;
-
-        /// <summary>Create a control allowing the user to specify which lock key to check.</summary>
-        public Visual GetControl(Application application) {
-            var cb = new ComboBox { ItemsSource = new[] { Keys.CapsLock, Keys.NumLock, Keys.Scroll } };
-            cb.SetBinding(ComboBox.SelectedValueProperty, new Binding("TargetKey") { Source = this, Mode=BindingMode.TwoWay });
-            return cb;
-        }
 
         /// <summary>Return true if the target lock key is active.</summary>
         public bool Evaluate(IGameState gameState) => System.Windows.Forms.Control.IsKeyLocked(TargetKey);

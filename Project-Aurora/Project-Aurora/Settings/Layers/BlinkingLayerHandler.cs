@@ -53,12 +53,6 @@ namespace Aurora.Settings.Layers
         {
             _ID = "Blinking";
         }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_BlinkingLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             current_sine = (float)Math.Round(Math.Pow(Math.Sin((double)((Utils.TimeUtils.GetMillisecondsSinceEpoch() % 10000L) / 10000.0f) * 2 * Math.PI * Properties.EffectSpeed), 2));

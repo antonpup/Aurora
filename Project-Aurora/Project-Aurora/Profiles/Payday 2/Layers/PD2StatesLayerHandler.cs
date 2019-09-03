@@ -66,11 +66,6 @@ namespace Aurora.Profiles.Payday_2.Layers
             _ID = "PD2States";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_PD2StatesLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer states_layer = new EffectLayer("Payday 2 - States");
@@ -113,12 +108,6 @@ namespace Aurora.Profiles.Payday_2.Layers
             }
 
             return states_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (_Control as Control_PD2StatesLayer)?.SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

@@ -42,11 +42,6 @@ namespace Aurora.Profiles.CSGO.Layers
             _ID = "CSGOFlashbang";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_CSGOFlashbangLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer flashed_layer = new EffectLayer("CSGO - Flashed");
@@ -65,12 +60,6 @@ namespace Aurora.Profiles.CSGO.Layers
             }
 
             return flashed_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_CSGOFlashbangLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

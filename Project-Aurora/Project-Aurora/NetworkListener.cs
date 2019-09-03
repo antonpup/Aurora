@@ -378,7 +378,7 @@ namespace Aurora
             {
                 case "restore":
                     logger.Info("Initiating command restore");
-                    System.Windows.Application.Current.Dispatcher.Invoke(() => ((ConfigUI)System.Windows.Application.Current.MainWindow).ShowWindow());
+                    //System.Windows.Application.Current.Dispatcher.Invoke(() => ((ConfigUI)System.Windows.Application.Current.MainWindow).ShowWindow());
                     break;
             }
         }

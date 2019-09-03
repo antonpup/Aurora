@@ -166,15 +166,6 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        [JsonIgnore]
-        public UserControl Control
-        {
-            get
-            {
-                return _Handler.Control;
-            }
-        }
-
         protected bool _Enabled = true;
 
         public bool Enabled

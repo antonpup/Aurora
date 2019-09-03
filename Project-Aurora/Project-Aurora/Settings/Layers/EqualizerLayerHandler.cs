@@ -171,11 +171,6 @@ namespace Aurora.Settings.Layers
             sampleAggregator.PerformFFT = true;
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_EqualizerLayer(this);
-        }
-
         long startTime;
         private void UpdateAudioCapture(MMDevice defaultDevice)
         {

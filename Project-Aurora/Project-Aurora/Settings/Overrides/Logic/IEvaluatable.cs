@@ -52,7 +52,7 @@ namespace Aurora.Settings.Overrides.Logic {
         object Evaluate(IGameState gameState);
 
         /// <summary>Should return a control that is bound to this logic element.</summary>
-        Visual GetControl(Application application);
+        //Visual GetControl(Application application);
 
         /// <summary>Indicates the UserControl should be updated with a new application.</summary>
         void SetApplication(Application application);

@@ -86,11 +86,6 @@ namespace Aurora.Profiles.CSGO.Layers
             _ID = "CSGOBomb";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_CSGOBombLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer bomb_effect_layer = new EffectLayer("CSGO - Bomb Effect");
@@ -191,12 +186,6 @@ namespace Aurora.Profiles.CSGO.Layers
             }
 
             return bomb_effect_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_CSGOBombLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

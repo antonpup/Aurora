@@ -27,11 +27,6 @@ namespace Aurora.Settings.Layers {
         public ConditionalLayerHandler() {
             _ID = "Conditional";
         }
-
-        protected override UserControl CreateControl() {
-            return new Control_ConditionalLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer layer = new EffectLayer("Conditional Layer");
 
@@ -51,7 +46,6 @@ namespace Aurora.Settings.Layers {
                 if (!string.IsNullOrWhiteSpace(Properties._ConditionPath) && !profile.ParameterLookup.ContainsKey(Properties._ConditionPath))
                     Properties._ConditionPath = string.Empty;
             }
-            (Control as Control_ConditionalLayer).SetProfile(profile);
             base.SetApplication(profile);
         }
     }

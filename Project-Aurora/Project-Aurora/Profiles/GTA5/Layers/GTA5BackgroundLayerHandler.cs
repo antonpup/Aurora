@@ -100,11 +100,6 @@ namespace Aurora.Profiles.GTA5.Layers
             _ID = "GTA5Background";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_GTA5BackgroundLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer bg_layer = new EffectLayer("GTA 5 - Background");
@@ -156,12 +151,6 @@ namespace Aurora.Profiles.GTA5.Layers
             }
 
             return bg_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_GTA5BackgroundLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

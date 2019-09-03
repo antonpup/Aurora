@@ -95,7 +95,7 @@ namespace Aurora.Devices.Razer
                             /*if (Chroma.Instance.Query(Corale.Colore.Razer.Devices.BladeStealth).Connected || Chroma.Instance.Query(Corale.Colore.Razer.Devices.Blade14).Connected)
                                 bladeLayout = true;*/
 
-                            if (!this.Settings.FirstTime)
+                            /*if (!this.Settings.FirstTime)
                             {
                                 App.Current.Dispatcher.Invoke(() =>
                                 {
@@ -103,7 +103,7 @@ namespace Aurora.Devices.Razer
                                     instructions.ShowDialog();
                                 });
                                 this.Settings.FirstTime = true;
-                            }
+                            }*/
 
                             Initialized = true;
                             return true;

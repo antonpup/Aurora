@@ -28,8 +28,6 @@ namespace Aurora.Settings.Overrides.Logic
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseGeneric(ObservableCollection<Branch> cases) : this() { Cases = cases; }
 
-        public Visual GetControl(Application application) => new Control_Ternary<T>(this, application);
-
         /// <summary>Evaluate conditions and return the appropriate evaluation.</summary>
         public T Evaluate(IGameState gameState) {
             foreach (var branch in Cases)

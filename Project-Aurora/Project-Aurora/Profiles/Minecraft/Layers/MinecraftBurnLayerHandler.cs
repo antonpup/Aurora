@@ -23,10 +23,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
             _ID = "MinecraftBurningLayer";
         }
 
-        protected override UserControl CreateControl() {
-            return new Control_MinecraftBurnLayer();
-        }
-
         private void CreateFireParticle() {
             float randomX = (float)rnd.NextDouble() * GlobalDeviceLayout.Instance.CanvasWidth;
             float randomOffset = ((float)rnd.NextDouble() * 15) - 7.5f;

@@ -39,8 +39,6 @@ namespace Aurora.Profiles
 
         public Type ProfileType { get; set; } = typeof(ApplicationProfile);
 
-        public Type OverviewControlType { get; set; }
-
         public Type GameStateType { get; set; }
 
         public LightEvent Event { get; set; }
@@ -100,8 +98,6 @@ namespace Aurora.Profiles
         public virtual ImageSource Icon => icon ?? (icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
 
         protected UserControl control;
-        public virtual UserControl Control { get { return control ?? (control = (UserControl)Activator.CreateInstance(this.Config.OverviewControlType, this)); } }
-
         internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
 

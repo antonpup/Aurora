@@ -45,10 +45,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
             _ID = "MinecraftRainLayer";
         }
 
-        protected override UserControl CreateControl() {
-            return new Control_MinecraftRainLayer(this);
-        }
-
         private void CreateRainDrop() {
             float randomX = (float)rnd.NextDouble() * GlobalDeviceLayout.Instance.CanvasWidth;
             raindrops.Add(new Droplet() {

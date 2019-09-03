@@ -119,11 +119,6 @@ namespace Aurora.Settings.Layers
             _ID = "ShortcutAssistant";
         }
 
-        protected override System.Windows.Controls.UserControl CreateControl()
-        {
-            return new Control_ShortcutAssistantLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");

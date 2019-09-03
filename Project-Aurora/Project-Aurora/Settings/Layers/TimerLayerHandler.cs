@@ -67,10 +67,6 @@ namespace Aurora.Settings.Layers {
             AuroraCore.InputEvents.KeyDown -= InputEvents_KeyDown;
         }
 
-        protected override UserControl CreateControl() {
-            return new Control_TimerLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer layer = new EffectLayer();
             if (isActive) {

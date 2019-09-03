@@ -111,11 +111,6 @@ namespace Aurora.Profiles.Payday_2.Layers
             _ID = "PD2Background";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_PD2BackgroundLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer bg_layer = new EffectLayer("Payday 2 - Background");
@@ -246,12 +241,6 @@ namespace Aurora.Profiles.Payday_2.Layers
             }
 
             return bg_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (_Control as Control_PD2BackgroundLayer)?.SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

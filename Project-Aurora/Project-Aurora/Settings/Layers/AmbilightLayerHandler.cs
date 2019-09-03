@@ -261,12 +261,6 @@ namespace Aurora.Settings.Layers
             }
             captureTimer.Start();
         }
-
-        protected override System.Windows.Controls.UserControl CreateControl()
-        {
-            return new Control_AmbilightLayer(this);
-        }
-
         private void RetryTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             retryTimer.Stop();

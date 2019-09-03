@@ -38,7 +38,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public MathsOperator Operator { get; set; } = MathsOperator.Add;
         
         // The control allowing the user to edit the evaluatable
-        [JsonIgnore]
+        /*[JsonIgnore]
         private Control_BinaryOperationHolder control;
         public Visual GetControl(Application application) {
             if (control == null) {
@@ -48,7 +48,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 control.SetBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
             }
             return control;
-        }
+        }*/
 
         /// <summary>Resolves the two operands and then compares them using the user specified operator</summary>
         public double Evaluate(IGameState gameState) {
@@ -67,7 +67,6 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Updates the user control and the operands with a new application context.</summary>
         public void SetApplication(Application application) {
-            control?.SetApplication(application);
             Operand1?.SetApplication(application);
             Operand2?.SetApplication(application);
         }
@@ -94,7 +93,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable<double> Operand { get; set; } = new NumberConstant();
 
         // Get the control allowing the user to set the operand
-        [JsonIgnore]
+        /*[JsonIgnore]
         private Control_NumericUnaryOpHolder control;
         public Visual GetControl(Application application) {
             if (control == null) {
@@ -102,7 +101,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 control.SetBinding(Control_NumericUnaryOpHolder.OperandProperty, new Binding("Operand") { Source = this, Mode = BindingMode.TwoWay });
             }
             return control;
-        }
+        }*/
 
         /// <summary>Evaluate the operand and return the absolute value of it.</summary>
         public double Evaluate(IGameState gameState) => Math.Abs(Operand.Evaluate(gameState));
@@ -143,7 +142,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public ComparisonOperator Operator { get; set; } = ComparisonOperator.EQ;
 
         // The control allowing the user to edit the evaluatable
-        [JsonIgnore]
+        /*[JsonIgnore]
         private Control_BinaryOperationHolder control;
         public Visual GetControl(Application application) {
             if (control == null) {
@@ -153,7 +152,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 control.SetBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
             }
             return control;
-        }
+        }*/
 
         /// <summary>Resolves the two operands and then compares them with the user-specified operator.</summary>
         public bool Evaluate(IGameState gameState) {
@@ -173,7 +172,6 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Updates the user control and the operands with a new application context.</summary>
         public void SetApplication(Application application) {
-            control?.SetApplication(application);
             Operand1?.SetApplication(application);
             Operand2?.SetApplication(application);
         }
@@ -214,9 +212,9 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable<double> ToMax { get; set; } = new NumberConstant(1);
 
         // The control to edit the map parameters
-        [JsonIgnore]
+        /*[JsonIgnore]
         private Control_NumericMap control;
-        public Visual GetControl(Application application) => control ?? (control = new Control_NumericMap(this, application));
+        public Visual GetControl(Application application) => control ?? (control = new Control_NumericMap(this, application));*/
 
         /// <summary>Evaluate the from range and to range and return the value in the new range.</summary>
         public double Evaluate(IGameState gameState) {

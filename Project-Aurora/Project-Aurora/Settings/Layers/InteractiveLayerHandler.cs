@@ -133,12 +133,6 @@ namespace Aurora.Settings.Layers
             AuroraCore.InputEvents.KeyDown += InputEventsKeyDown;
             AuroraCore.InputEvents.KeyUp += InputEventsKeyUp;
         }
-
-        protected override System.Windows.Controls.UserControl CreateControl()
-        {
-            return new Control_InteractiveLayer(this);
-        }
-
         private void InputEventsKeyUp(object sender, KeyboardInputEventArgs e)
         {
             if (Utils.TimeUtils.GetMillisecondsSinceEpoch() - previoustime > 1000L)

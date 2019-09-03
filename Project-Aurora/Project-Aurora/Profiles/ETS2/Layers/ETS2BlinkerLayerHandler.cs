@@ -50,10 +50,6 @@ namespace Aurora.Profiles.ETS2.Layers {
             _ID = "ETS2BlinkerIndicator";
         }
 
-        protected override UserControl CreateControl() {
-            return new Control_ETS2BlinkerLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer blinker_layer = new EffectLayer("ETS2 - Blinker Layer");
             if (gamestate is GameState_ETS2) {

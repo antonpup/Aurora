@@ -77,11 +77,6 @@ namespace Aurora.Settings.Layers
             this._ID = "WrapperLights";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_WrapperLightsLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             if (!(gamestate is GameState_Wrapper))

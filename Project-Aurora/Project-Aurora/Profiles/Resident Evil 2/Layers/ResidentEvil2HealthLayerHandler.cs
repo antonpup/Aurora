@@ -80,12 +80,6 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
         {
             _ID = "ResidentEvil2Health";
         }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_ResidentEvil2HealthLayer( this );
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer bg_layer = new EffectLayer("Resident Evil 2 - Health");
@@ -172,12 +166,6 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
                 }
             }
             else return bg_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            ( Control as Control_ResidentEvil2HealthLayer ).SetProfile( profile );
-            base.SetApplication( profile );
         }
     }
 }

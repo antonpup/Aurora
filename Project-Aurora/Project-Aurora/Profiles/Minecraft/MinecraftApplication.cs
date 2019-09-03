@@ -15,7 +15,6 @@ namespace Aurora.Profiles.Minecraft {
             //ProcessNames = new[] { "java.exe", "javaw.exe" },
             ProcessTitles = new[] { @"^Minecraft [0-9.]*$" }, // Match anything that has a title like "Minecraft 1.12.2" or "Minecraft 1.5")
             ProfileType = typeof(MinecraftProfile),
-            OverviewControlType = typeof(Control_Minecraft),
             GameStateType = typeof(GSI.GameState_Minecraft),
             Event = new GameEvent_Generic(),
             IconURI = "Resources/minecraft_128x128.png"

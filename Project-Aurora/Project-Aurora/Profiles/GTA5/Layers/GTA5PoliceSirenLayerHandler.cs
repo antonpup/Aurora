@@ -81,11 +81,6 @@ namespace Aurora.Profiles.GTA5.Layers
             _ID = "GTA5PoliceSiren";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_GTA5PoliceSirenLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer sirens_layer = new EffectLayer("GTA 5 - Police Sirens");
@@ -227,12 +222,6 @@ namespace Aurora.Profiles.GTA5.Layers
             }
 
             return sirens_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_GTA5PoliceSirenLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

@@ -39,10 +39,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
             _ID = "MinecraftKeyConflictLayer";
         }
 
-        protected override UserControl CreateControl() {
-            return new Control_MinecraftKeyConflictLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer layer = new EffectLayer("Minecraft Key Conflict Layer");
             if (gamestate is GameState_Minecraft && (gamestate as GameState_Minecraft).Game.ControlsGuiOpen) {

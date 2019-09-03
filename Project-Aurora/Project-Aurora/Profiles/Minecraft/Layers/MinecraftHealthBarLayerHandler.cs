@@ -77,10 +77,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
             _ID = "MinecraftHealthBarLayer";
         }
 
-        protected override UserControl CreateControl() {
-            return new Control_MinecraftHealthBarLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             // Ensure the gamestate is for Minecraft, and store a casted reference to it
             if (!(gamestate is GameState_Minecraft)) return new EffectLayer();

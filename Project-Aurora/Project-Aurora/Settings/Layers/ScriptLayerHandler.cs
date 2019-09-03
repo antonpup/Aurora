@@ -123,13 +123,7 @@ namespace Aurora.Settings.Layers
         public override void SetApplication(Application profile)
         {
             profileManager = profile;
-            (_Control as Control_ScriptLayer)?.SetProfile(profile);
             this.OnScriptChanged();
-        }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_ScriptLayer(this);
         }
 
         protected void InvokePropertyChanged([CallerMemberName] string propertyName = null)

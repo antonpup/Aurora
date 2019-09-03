@@ -60,11 +60,6 @@ namespace Aurora.Profiles.CSGO.Layers
             _ID = "CSGOKillsIndicator";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_CSGOKillIndicatorLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer kills_indicator_layer = new EffectLayer("CSGO - Kills Indicator");
@@ -112,12 +107,6 @@ namespace Aurora.Profiles.CSGO.Layers
             }
 
             return kills_indicator_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_CSGOKillIndicatorLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

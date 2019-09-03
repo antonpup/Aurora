@@ -44,11 +44,6 @@ namespace Aurora.Profiles.Payday_2.Layers
             _ID = "PD2Flashbang";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_PD2FlashbangLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer flashed_layer = new EffectLayer("Payday 2 - Flashed");
@@ -67,12 +62,6 @@ namespace Aurora.Profiles.Payday_2.Layers
             }
 
             return flashed_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_PD2FlashbangLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

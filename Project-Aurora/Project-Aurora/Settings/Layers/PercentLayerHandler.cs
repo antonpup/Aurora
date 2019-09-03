@@ -99,7 +99,6 @@ namespace Aurora.Settings.Layers
                 if (!double.TryParse(Properties._MaxVariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._MaxVariablePath) && !profile.ParameterLookup.ContainsKey(Properties._MaxVariablePath))
                     Properties._MaxVariablePath = string.Empty;
             }
-            (Control as Control_PercentLayer).SetProfile(profile);
             base.SetApplication(profile);
         }
     }
@@ -109,11 +108,6 @@ namespace Aurora.Settings.Layers
         public PercentLayerHandler() : base()
         {
             _ID = "Percent";
-        }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_PercentLayer(this);
         }
     }
 }

@@ -46,12 +46,6 @@ namespace Aurora.Settings.Layers
         {
             _ID = "LockColor";
         }
-
-        protected override System.Windows.Controls.UserControl CreateControl()
-        {
-            return new Control_LockColourLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             Color clr;

@@ -344,11 +344,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             _ID = "Dota2Items";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_Dota2ItemLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer items_layer = new EffectLayer("Dota 2 - Items");
@@ -426,12 +421,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             }
 
             return items_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_Dota2ItemLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

@@ -42,11 +42,6 @@ namespace Aurora.Settings.Layers {
         public ComparisonLayerHandler() {
             _ID = "Comparison";
         }
-
-        protected override UserControl CreateControl() {
-            return new Control_ComparisonLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             // Parse the operands
             double op1 = Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.Operand1Path);
@@ -76,7 +71,6 @@ namespace Aurora.Settings.Layers {
                 if (!double.TryParse(Properties._Operand2Path, out value) && !string.IsNullOrWhiteSpace(Properties._Operand2Path) && !profile.ParameterLookup.ContainsKey(Properties._Operand2Path))
                     Properties._Operand2Path = string.Empty;
             }
-            (Control as Control_ComparisonLayer).SetProfile(profile);
             base.SetApplication(profile);
         }
     }

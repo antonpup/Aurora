@@ -17,11 +17,6 @@ namespace Aurora.Settings.Layers
             _ID = "Solid";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_SolidColorLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer solidcolor_layer = new EffectLayer();

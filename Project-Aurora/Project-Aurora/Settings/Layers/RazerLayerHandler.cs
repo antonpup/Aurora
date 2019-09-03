@@ -87,12 +87,6 @@ namespace Aurora.Settings.Layers
                 _currentAppPid = appList.CurrentAppPid;
             }
         }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_RazerLayer(this);
-        }
-
         private void OnDataUpdated(object s, EventArgs e)
         {
             if (!(s is AbstractDataProvider provider))

@@ -13,7 +13,7 @@ namespace Aurora.Profiles.Skype
     public class Skype : Application
     {
         public Skype()
-            : base(new LightEventConfig { Name = "Skype", ID = "skype", ProcessNames = new[] { "skype.exe" }, ProfileType = typeof(SkypeProfile), OverviewControlType = typeof(Control_Skype), GameStateType = typeof(State_SkypeOverlay), Event = new GameEvent_Generic(), IconURI = "Resources/Skype_300x300.png" })
+            : base(new LightEventConfig { Name = "Skype", ID = "skype", ProcessNames = new[] { "skype.exe" }, ProfileType = typeof(SkypeProfile), GameStateType = typeof(State_SkypeOverlay), Event = new GameEvent_Generic(), IconURI = "Resources/Skype_300x300.png" })
         {
 
         }

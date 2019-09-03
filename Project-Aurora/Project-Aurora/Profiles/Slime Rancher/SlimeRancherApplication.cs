@@ -17,7 +17,6 @@ namespace Aurora.Profiles.Slime_Rancher
             AppID = "433340",
             ProcessNames = new[] { "SlimeRancher.exe" },
             ProfileType = typeof(SlimeRancherProfile),
-            OverviewControlType = typeof(Control_Slime_Rancher),
             GameStateType = typeof(GSI.GameState_Slime_Rancher),
             Event = new GameEvent_Generic(),
             IconURI = "Resources/Slime_Rancher.png"

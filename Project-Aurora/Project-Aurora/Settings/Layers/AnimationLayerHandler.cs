@@ -119,11 +119,6 @@ namespace Aurora.Settings.Layers
             AuroraCore.InputEvents.KeyDown += InputEvents_KeyDown;
             AuroraCore.InputEvents.KeyUp += InputEvents_KeyUp;
         }
-
-        protected override UserControl CreateControl() {
-            return new Control_AnimationLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer animationLayer = new EffectLayer();
 
@@ -303,9 +298,6 @@ namespace Aurora.Settings.Layers
             // Check to ensure the property specified actually exists
             if (profile != null && !string.IsNullOrWhiteSpace(Properties._TriggerPath) && !profile.ParameterLookup.ContainsKey(Properties._TriggerPath))
                 Properties._TriggerPath = string.Empty;
-
-            // Tell the control to update (will update the combobox with the possible variable paths)
-            (Control as Control_AnimationLayer).SetProfile(profile);
 
             base.SetApplication(profile);
         }

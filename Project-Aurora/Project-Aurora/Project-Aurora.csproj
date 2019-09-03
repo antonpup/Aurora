@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{18D2D471-3F57-4ECE-9C62-836A801473D8}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aurora</RootNamespace>
     <AssemblyName>Aurora</AssemblyName>
@@ -338,86 +338,13 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AuroraCore.cs" />
-    <Compile Include="ConfigUI.xaml.cs">
-      <DependentUpon>ConfigUI.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Const.cs" />
-    <None Include="Controls\ColorZones.xaml.cs">
-      <DependentUpon>ColorZones.xaml</DependentUpon>
-    </None>
-    <Compile Include="Controls\Control_AnimationEditor.xaml.cs">
-      <DependentUpon>Control_AnimationEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_AnimationFrameItem.xaml.cs">
-      <DependentUpon>Control_AnimationFrameItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_AnimationMixPresenter.xaml.cs">
-      <DependentUpon>Control_AnimationMixPresenter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_AnimationTrackPresenter.xaml.cs">
-      <DependentUpon>Control_AnimationTrackPresenter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_DeviceItem.xaml.cs">
-      <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
-      <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ReorderableListBox.cs" />
-    <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
-      <DependentUpon>Control_Skype.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Skype\SkypeProfile.cs" />
     <Compile Include="Profiles\Skype\SkypeApplication.cs" />
     <Compile Include="Profiles\Skype\State_SkypeOverlay.cs" />
-    <Compile Include="Settings\Control_LayerList.xaml.cs">
-      <DependentUpon>Control_LayerList.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_GradientEditor.xaml.cs">
-      <DependentUpon>Control_GradientEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_PluginManager.xaml.cs">
-      <DependentUpon>Control_PluginManager.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_DeviceManager.xaml.cs">
-      <DependentUpon>Control_DeviceManager.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_Keybind.xaml.cs">
-      <DependentUpon>Control_Keybind.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_Ruler.xaml.cs">
-      <DependentUpon>Control_Ruler.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_SingleKeyEditor.xaml.cs">
-      <DependentUpon>Control_SingleKeyEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_VariableIItem.xaml.cs">
-      <DependentUpon>Control_VariableIItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Control_VariableRegistryItem.xaml.cs">
-      <DependentUpon>Control_VariableRegistryItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\EditorResources\MoveThumb.cs" />
-    <Compile Include="Controls\EditorResources\ResizeThumb.cs" />
-    <Compile Include="Controls\EditorResources\RotateThumb.cs" />
-    <Compile Include="Controls\EffectSettingsWindow.xaml.cs">
-      <DependentUpon>EffectSettingsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyBindList.xaml.cs">
-      <DependentUpon>KeyBindList.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeySequence.xaml.cs">
-      <DependentUpon>KeySequence.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\LayerEditor.xaml.cs">
-      <DependentUpon>LayerEditor.xaml</DependentUpon>
-    </Compile>
     <None Include="Devices\Integrations\AtmoOrb\AtmoOrbDevice.cs" />
     <None Include="Devices\Integrations\Clevo\ClevoSetKBLED.cs" />
     <None Include="Devices\Integrations\Clevo\ClevoDevice.cs" />
-    <Compile Include="Devices\Integrations\Corsair\CorsairInstallInstructions.xaml.cs">
-      <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
-    </Compile>
     <None Include="Devices\Integrations\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\Integrations\CoolerMaster\CoolerMasterSDK.cs" />
     <Compile Include="Devices\Integrations\Creative\SoundBlasterXDevice.cs" />
@@ -425,34 +352,16 @@
     <Compile Include="Devices\Integrations\Drevo\DrevoLayoutMap.cs" />
     <Compile Include="Devices\Integrations\Drevo\DrevoRadiSDK.cs" />
     <None Include="Devices\Integrations\Dualshock4\Dualshock4Device.cs" />
-    <Compile Include="Devices\Integrations\Dualshock4\DS4InstallInstructions.xaml.cs">
-      <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
-    </Compile>
     <None Include="Devices\Integrations\LightFX\LightFX.cs" />
     <None Include="Devices\Integrations\LightFX\LightFXSDK.cs" />
-    <Compile Include="Devices\Integrations\Logitech\LogitechInstallInstructions.xaml.cs">
-      <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Devices\Integrations\Razer\RazerDevice.cs" />
-    <Compile Include="Devices\Integrations\Razer\RazerInstallInstructions.xaml.cs">
-      <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Devices\Integrations\Razer\RazerLayoutMap.cs" />
     <Compile Include="Devices\Integrations\Roccat\RoccatDevice.cs" />
-    <Compile Include="Devices\Integrations\Roccat\RoccatInstallInstructions.xaml.cs">
-      <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
-    </Compile>
     <None Include="Devices\Integrations\ScriptedDevice\ScriptedDevice.cs" />
     <Content Include="Devices\Integrations\SteelSeries\GameSenseSDK.cs" />
     <None Include="Devices\Integrations\SteelSeries\SteelSeriesDevice.cs" />
-    <Compile Include="Devices\Integrations\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
-      <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Devices\Integrations\Wooting\WootingDevice.cs" />
     <Compile Include="Devices\Layout\Canvas.cs" />
-    <Compile Include="Devices\Layout\Control_GlobalDeviceLayout.xaml.cs">
-      <DependentUpon>Control_GlobalDeviceLayout.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Devices\Layout\DeviceLayout.cs" />
     <Compile Include="Devices\Layout\GlobalDeviceLayoutSettings.cs" />
     <Compile Include="Devices\Layout\DeviceLED.cs" />
@@ -478,15 +387,6 @@
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
     <Compile Include="Profiles\ATS\ATSApplication.cs" />
-    <Compile Include="Profiles\ATS\Control_ATS.xaml.cs">
-      <DependentUpon>Control_ATS.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Battlefield1\Control_Battlefield1.xaml.cs">
-      <DependentUpon>Control_Battlefield1.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\CloneHero\Control_CloneHero.xaml.cs">
-      <DependentUpon>Control_CloneHero.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\CloneHero\CloneHeroApplication.cs" />
     <Compile Include="Profiles\CloneHero\CloneHeroPointers.cs" />
     <Compile Include="Profiles\CloneHero\CloneHeroProfile.cs" />
@@ -495,61 +395,31 @@
     <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Generic\RazerChromaProfile.cs" />
     <Compile Include="Profiles\MemoryReadingLightEvent.cs" />
-    <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
-      <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2HealthLayer.xaml.cs">
-      <DependentUpon>Control_ResidentEvil2HealthLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Resident Evil 2\Layers\ResidentEvil2RankLayerHandler.cs" />
     <Compile Include="Profiles\Resident Evil 2\Layers\ResidentEvil2HealthLayerHandler.cs" />
     <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Application.cs" />
     <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Pointers.cs" />
     <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Profile.cs" />
-    <Compile Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml.cs">
-      <DependentUpon>Control_ResidentEvil2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Resident Evil 2\GameEvent_ResidentEvil2.cs" />
     <Compile Include="Profiles\Resident Evil 2\GSI\GameState_ResidentEvil2.cs" />
     <Compile Include="Profiles\Resident Evil 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredApplication.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredProfile.cs" />
-    <Compile Include="Profiles\Dishonored\Control_Dishonored.xaml.cs">
-      <DependentUpon>Control_Dishonored.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Dishonored\GameEvent_Dishonored.cs" />
     <Compile Include="Profiles\Dishonored\GSI\GameState_Dishonored.cs" />
     <Compile Include="Profiles\Dishonored\GSI\Nodes\Player.cs" />
-    <Compile Include="Profiles\Diablo3\Control_Diablo3.xaml.cs">
-      <DependentUpon>Control_Diablo3.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Diablo3\Diablo3Application.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\GameNode.cs" />
-    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftKeyConflictLayer.xaml.cs">
-      <DependentUpon>Control_MinecraftKeyConflictLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Minecraft\Layers\MinecraftKeyConflictLayer.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftKeyBinding.cs" />
     <Compile Include="Profiles\Move or Die\MoDProfile.cs" />
-    <Compile Include="Profiles\Osu\Control_Osu.xaml.cs">
-      <DependentUpon>Control_Osu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Osu\GSI\GameState_Osu.cs" />
     <Compile Include="Profiles\Osu\OsuApplication.cs" />
     <Compile Include="Profiles\Osu\OsuProfile.cs" />
-    <Compile Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml.cs">
-      <DependentUpon>Control_QuakeChampions.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\QuakeChampions\QuakeChampionsProfile.cs" />
     <Compile Include="Profiles\QuakeChampions\QuakeChampionsApplication.cs" />
-    <Compile Include="Profiles\Factorio\Control_Factorio.xaml.cs">
-      <DependentUpon>Control_Factorio.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Factorio\FactorioApplication.cs" />
     <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
-    <Compile Include="Profiles\ETS2\Control_ETS2.xaml.cs">
-      <DependentUpon>Control_ETS2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\ETS2\ETS2Application.cs" />
     <Compile Include="Profiles\ETS2\ETS2MemoryStruct.cs" />
     <Compile Include="Profiles\ETS2\ETS2Profile.cs" />
@@ -562,76 +432,36 @@
     <Compile Include="Profiles\ETS2\GSI\Nodes\TrailerNode.cs" />
     <Compile Include="Profiles\ETS2\GSI\Nodes\TruckNode.cs" />
     <Compile Include="Profiles\ETS2\GSI\Nodes\VectorNode.cs" />
-    <Compile Include="Profiles\ETS2\Layers\Control_ETS2BeaconLayer.xaml.cs">
-      <DependentUpon>Control_ETS2BeaconLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\ETS2\Layers\Control_ETS2BlinkerLayer.xaml.cs">
-      <DependentUpon>Control_ETS2BlinkerLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\ETS2\Layers\ETS2BlinkerLayerHandler.cs" />
     <Compile Include="Profiles\ETS2\Layers\ETS2BeaconLayerHandler.cs" />
     <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
     <Compile Include="Profiles\Battlefield1\Battlefield1Application.cs" />
-    <Compile Include="Profiles\Minecraft\Control_Minecraft.xaml.cs">
-      <DependentUpon>Control_Minecraft.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Minecraft\GSI\GameState_Minecraft.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\PlayerEffectsNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\ProviderNode.cs" />
     <Compile Include="Profiles\Minecraft\GSI\Nodes\WorldNode.cs" />
-    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftBackgroundLayer.xaml.cs">
-      <DependentUpon>Control_MinecraftBackgroundLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftBurnLayer.xaml.cs">
-      <DependentUpon>Control_MinecraftBurnLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftHealthBarLayer.xaml.cs">
-      <DependentUpon>Control_MinecraftHealthBarLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Minecraft\Layers\Control_MinecraftRainLayer.xaml.cs">
-      <DependentUpon>Control_MinecraftRainLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Minecraft\Layers\MinecraftBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\Layers\MinecraftBurnLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\Layers\MinecraftHealthBarLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\Layers\MinecraftRainLayerHandler.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftApplication.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftProfile.cs" />
-    <Compile Include="Profiles\KillingFloor2\Control_KillingFloor2.xaml.cs">
-      <DependentUpon>Control_KillingFloor2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\KillingFloor2\KillingFloor2Application.cs" />
-    <Compile Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml.cs">
-      <DependentUpon>Control_QuantumConumdrum.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumApplication.cs" />
     <Compile Include="Profiles\QuantumConumdrum\QuantumConumdrumProfile.cs" />
-    <Compile Include="Profiles\DOOM\Control_DOOM.xaml.cs">
-      <DependentUpon>Control_DOOM.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\DOOM\DOOMApplication.cs" />
-    <Compile Include="Profiles\DeadCells\Control_DeadCells.xaml.cs">
-      <DependentUpon>Control_DeadCells.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\DeadCells\DeadCellsApplication.cs" />
-    <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
-      <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
-    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml.cs">
-      <DependentUpon>Control_RocketLeagueBackgroundLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
-    <Compile Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\GameState_Slime_Rancher.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\GameStateNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\LocationNode.cs" />
@@ -642,7 +472,6 @@
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\WorldNode.cs" />
     <Compile Include="Profiles\Slime Rancher\SlimeRancherApplication.cs" />
     <Compile Include="Profiles\Slime Rancher\SlimeRancherProfile.cs" />
-    <Compile Include="Profiles\Subnautica\Control_Subnautica.xaml.cs" />
     <Compile Include="Profiles\Subnautica\GSI\GameState_Subnautica.cs" />
     <Compile Include="Profiles\Subnautica\GSI\Nodes\GameStateNode.cs" />
     <Compile Include="Profiles\Subnautica\GSI\Nodes\NotificationNode.cs" />
@@ -651,13 +480,7 @@
     <Compile Include="Profiles\Subnautica\GSI\Nodes\WorldNode.cs" />
     <Compile Include="Profiles\Subnautica\SubnauticaApplication.cs" />
     <Compile Include="Profiles\Subnautica\SubnauticaProfile.cs" />
-    <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
-      <DependentUpon>Control_Witcher3.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Witcher3\GameEvent_Witcher3.cs" />
-    <Compile Include="Profiles\Witcher3\Layers\Control_Witcher3BackgroundLayer.xaml.cs">
-      <DependentUpon>Control_Witcher3BackgroundLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Witcher3\Layers\Witcher3BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Witcher3\Witcher3Application.cs" />
     <Compile Include="Profiles\Witcher3\Witcher3Profile.cs" />
@@ -669,59 +492,20 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
-    <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
-      <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Layers\BinaryCounterLayerHandler.cs" />
-    <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
-      <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\ManagerBase.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
-    <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
-      <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml.cs">
-      <DependentUpon>Control_IfElse.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Overrides\Logic\Generic\IfElseIf.cs" />
-    <Compile Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml.cs">
-      <DependentUpon>Control_NumericMap.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Overrides\Logic\Number\Control_NumericUnaryOpHolder.xaml.cs">
-      <DependentUpon>Control_NumericUnaryOpHolder.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml.cs">
-      <DependentUpon>Control_OverrideDynamicValue.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Overrides\Logic\Number\Number_GameState.cs" />
     <Compile Include="Settings\Overrides\Logic\Number\Number_Waves.cs" />
     <Compile Include="Settings\Overrides\Logic\Number\Operators.cs" />
-    <Compile Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml.cs">
-      <DependentUpon>Control_OverrideLookupTable.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Overrides\Logic\EvaluatableRegistry.cs" />
     <Compile Include="Settings\Overrides\Logic\IOverrideLogic.cs" />
     <Compile Include="Settings\Overrides\Logic\Number\Number_Maths.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideDynamicValue.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLogicAttribute.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_GameState.cs" />
-    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIBoolean.xaml.cs">
-      <DependentUpon>Control_BooleanGSIBoolean.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml.cs">
-      <DependentUpon>Control_BooleanGSINumeric.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanNot.xaml.cs">
-      <DependentUpon>Control_BooleanNot.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml.cs">
-      <DependentUpon>Control_EvaluatablePresenter.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_LogicOperators.cs" />
-    <Compile Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml.cs">
-      <DependentUpon>Control_SublogicHolder.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Overrides\Logic\IEvaluatable.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLogicBuilder.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLookupTable.cs" />
@@ -733,42 +517,12 @@
     <Compile Include="Settings\ProfileImporter.cs" />
     <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
-    <Compile Include="Settings\Layers\Control_ComparisonLayer.xaml.cs">
-      <DependentUpon>Control_ComparisonLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
-      <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_TimerLayer.xaml.cs">
-      <DependentUpon>Control_TimerLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_ToggleKeyLayer.xaml.cs">
-      <DependentUpon>Control_ToggleKeyLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_ToolbarLayer.xaml.cs">
-      <DependentUpon>Control_ToolbarLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_WrapperLightsLayer.xaml.cs">
-      <DependentUpon>Control_WrapperLightsLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Layers\TimerLayerHandler.cs" />
     <Compile Include="Settings\Layers\ToggleKeyLayerHandler.cs" />
     <Compile Include="Settings\Layers\ToolbarLayerHandler.cs" />
     <Compile Include="Settings\Layers\WrapperLightsLayerHandler.cs" />
-    <Compile Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml.cs">
-      <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
-    <Compile Include="Settings\Window_GSIHttpDebug.xaml.cs">
-      <DependentUpon>Window_GSIHttpDebug.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Overrides\Control_OverridesEditor.xaml.cs">
-      <DependentUpon>Control_OverridesEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
-      <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\DesktopDuplicator.cs" />
@@ -778,41 +532,14 @@
     <Compile Include="Utils\InputInterceptor.cs" />
     <Compile Include="Profiles\BF3\BF3Application.cs" />
     <Compile Include="Profiles\BF3\BF3Profile.cs" />
-    <Compile Include="Profiles\BF3\Control_BF3.xaml.cs">
-      <DependentUpon>Control_BF3.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Blacklight\BLightApplication.cs" />
     <Compile Include="Profiles\Blacklight\BLightProfile.cs" />
-    <Compile Include="Profiles\Blacklight\Control_BLight.xaml.cs">
-      <DependentUpon>Control_BLight.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Borderlands 2\Borderlands2Application.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Profile.cs" />
-    <Compile Include="Profiles\Borderlands 2\Control_Borderlands2.xaml.cs">
-      <DependentUpon>Control_Borderlands2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Borderlands 2\GameEvent_Borderlands2.cs" />
     <Compile Include="Profiles\Borderlands 2\GSI\GameState_Borderlands2.cs" />
     <Compile Include="Profiles\Borderlands 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\CSGO\CSGOApplication.cs" />
-    <Compile Include="Profiles\CSGO\Layers\Control_CSGOTypingIndicatorLayer.xaml.cs">
-      <DependentUpon>Control_CSGOTypingIndicatorLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\CSGO\Layers\Control_CSGOFlashbangLayer.xaml.cs">
-      <DependentUpon>Control_CSGOFlashbangLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\CSGO\Layers\Control_CSGOBurningLayer.xaml.cs">
-      <DependentUpon>Control_CSGOBurningLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\CSGO\Layers\Control_CSGOKillsIndicatorLayer.xaml.cs">
-      <DependentUpon>Control_CSGOKillsIndicatorLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\CSGO\Layers\Control_CSGOBombLayer.xaml.cs">
-      <DependentUpon>Control_CSGOBombLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\CSGO\Layers\Control_CSGOBackgroundLayer.xaml.cs">
-      <DependentUpon>Control_CSGOBackgroundLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\CSGO\Layers\CSGOTypingIndicatorLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOFlashbangLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOBurningLayerHandler.cs" />
@@ -820,36 +547,9 @@
     <Compile Include="Profiles\CSGO\Layers\CSGOBombLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\Desktop\DesktopApplication.cs" />
-    <Compile Include="Profiles\DiscoDodgeball\Control_DiscoDodgeball.xaml.cs">
-      <DependentUpon>Control_DiscoDodgeball.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballProfile.cs" />
     <Compile Include="Profiles\DiscoDodgeball\DiscoDodgeballApplication.cs" />
     <Compile Include="Profiles\Dota 2\Dota2Application.cs" />
-    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2AbilityLayer.xaml.cs">
-      <DependentUpon>Control_Dota2AbilityLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\GTA5\Layers\Control_GTA5PoliceSirenLayer.xaml.cs">
-      <DependentUpon>Control_GTA5PoliceSirenLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\GTA5\Layers\Control_GTA5BackgroundLayer.xaml.cs">
-      <DependentUpon>Control_GTA5BackgroundLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2BackgroundLayer.xaml.cs">
-      <DependentUpon>Control_Dota2BackgroundLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2HeroAbilityEffectsLayer.xaml.cs">
-      <DependentUpon>Control_Dota2HeroAbilityEffectsLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2ItemLayer.xaml.cs">
-      <DependentUpon>Control_Dota2ItemLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2KillstreakLayer.xaml.cs">
-      <DependentUpon>Control_Dota2KillstreakLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Dota 2\Layers\Control_Dota2RespawnLayer.xaml.cs">
-      <DependentUpon>Control_Dota2RespawnLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Dota 2\Layers\Dota2AbilityLayerHandler.cs" />
     <Compile Include="Profiles\GTA5\Layers\GTA5PoliceSirenLayerHandler.cs" />
     <Compile Include="Profiles\GTA5\Layers\GTA5BackgroundLayerHandler.cs" />
@@ -858,53 +558,22 @@
     <Compile Include="Profiles\Dota 2\Layers\Dota2ItemLayerHandler.cs" />
     <Compile Include="Profiles\Dota 2\Layers\Dota2KillstreakLayerHandler.cs" />
     <Compile Include="Profiles\Dota 2\Layers\Dota2RespawnLayerHandler.cs" />
-    <Compile Include="Profiles\Evolve\Control_Evolve.xaml.cs">
-      <DependentUpon>Control_Evolve.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Evolve\EvolveApplication.cs" />
     <Compile Include="Profiles\Evolve\EvolveProfile.cs" />
-    <Compile Include="Profiles\Generic_Application\Control_GenericApplication.xaml.cs">
-      <DependentUpon>Control_GenericApplication.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Generic_Application\Event_GenericApplication.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplication.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationProfile.cs" />
-    <Compile Include="Profiles\GTA5\Control_GTA5.xaml.cs">
-      <DependentUpon>Control_GTA5.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Profiles\GTA5\GTA5Application.cs" />
-    <Compile Include="Profiles\Guild Wars 2\Control_GW2.xaml.cs">
-      <DependentUpon>Control_GW2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Guild Wars 2\GW2Application.cs" />
     <Compile Include="Profiles\Guild Wars 2\GW2Profile.cs" />
-    <Compile Include="Profiles\Blade and Soul\Control_BnS.xaml.cs">
-      <DependentUpon>Control_BnS.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Blade and Soul\BnSApplication.cs" />
-    <Compile Include="Profiles\Move or Die\Control_MoD.xaml.cs">
-      <DependentUpon>Control_MoD.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Move or Die\MoDApplication.cs" />
-    <Compile Include="Profiles\HotlineMiami\Control_HM.xaml.cs">
-      <DependentUpon>Control_HM.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\HotlineMiami\HMApplication.cs" />
     <Compile Include="Profiles\HotlineMiami\HMProfile.cs" />
-    <Compile Include="Profiles\LeagueOfLegends\Control_LoL.xaml.cs">
-      <DependentUpon>Control_LoL.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\LeagueOfLegends\LoLApplication.cs" />
     <Compile Include="Profiles\LeagueOfLegends\LoLProfile.cs" />
     <Compile Include="Profiles\Aurora Wrapper\GameEvent_Aurora_Wrapper.cs" />
-    <Compile Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml.cs">
-      <DependentUpon>Control_MagicDuels2012.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Magic_Duels_2012\MagicDuels2012Application.cs" />
-    <Compile Include="Profiles\Metro Last Light\Control_MetroLL.xaml.cs">
-      <DependentUpon>Control_MetroLL.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
@@ -912,31 +581,13 @@
     <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
     <None Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
     <None Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
-    <Compile Include="Profiles\Payday 2\Layers\Control_PD2StatesLayer.xaml.cs">
-      <DependentUpon>Control_PD2StatesLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Payday 2\Layers\Control_PD2FlashbangLayer.xaml.cs">
-      <DependentUpon>Control_PD2FlashbangLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Payday 2\Layers\Control_PD2BackgroundLayer.xaml.cs">
-      <DependentUpon>Control_PD2BackgroundLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Payday 2\Layers\PD2StatesLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\LightingStateManager.cs" />
     <Compile Include="Profiles\StringProperty.cs" />
-    <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
-      <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Worms_WMD\WormsWMDApplication.cs" />
-    <Compile Include="Profiles\Overwatch\Control_Overwatch.xaml.cs">
-      <DependentUpon>Control_Overwatch.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Overwatch\OverwatchApplication.cs" />
-    <Compile Include="Profiles\Payday 2\Control_PD2.xaml.cs">
-      <DependentUpon>Control_PD2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Payday 2\GSI\GameState_PD2.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\GameNode.cs" />
     <Compile Include="Profiles\Payday 2\GSI\Nodes\ItemNode.cs" />
@@ -950,54 +601,21 @@
     <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponsNode.cs" />
     <Compile Include="Profiles\Payday 2\PD2Application.cs" />
     <Compile Include="Profiles\Payday 2\PD2Profile.cs" />
-    <Compile Include="Profiles\Serious Sam 3\Control_SSam3.xaml.cs">
-      <DependentUpon>Control_SSam3.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Serious Sam 3\SSam3Application.cs" />
     <Compile Include="Profiles\Serious Sam 3\SSam3Profile.cs" />
-    <Compile Include="Profiles\ShadowOfMordor\Control_ShadowOfMordor.xaml.cs">
-      <DependentUpon>Control_ShadowOfMordor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorApplication.cs" />
     <Compile Include="Profiles\ShadowOfMordor\ShadowOfMordorProfile.cs" />
-    <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
-      <DependentUpon>Control_TheDivision.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\TheDivision\TheDivisionApplication.cs" />
-    <Compile Include="Profiles\DyingLight\Control_DyingLight.xaml.cs">
-      <DependentUpon>Control_DyingLight.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\DyingLight\DyingLightApplication.cs" />
-    <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
-      <DependentUpon>Control_TalosPrinciple.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleApplication.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\TalosPrincipleProfile.cs" />
-    <Compile Include="Profiles\XCOM\Control_XCOM.xaml.cs">
-      <DependentUpon>Control_XCOM.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\XCOM\XCOMApplication.cs" />
     <Compile Include="Profiles\XCOM\XCOMProfile.cs" />
     <Compile Include="Profiles\ApplicationSettings.cs" />
-    <Compile Include="Settings\Control_ProfileControlPresenter.xaml.cs">
-      <DependentUpon>Control_ProfileControlPresenter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Control_ScriptManager.xaml.cs">
-      <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
     <Compile Include="Settings\Keybind.cs" />
-    <Compile Include="Settings\Layers\Control_GlitchLayer.xaml.cs">
-      <DependentUpon>Control_GlitchLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Layers\GlitchLayerHandler.cs" />
-    <Compile Include="Settings\Keycaps\Control_GhostKeycap.xaml.cs">
-      <DependentUpon>Control_GhostKeycap.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Layers\AnimationLayerHandler.cs" />
-    <Compile Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
-      <DependentUpon>Control_AnimationLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\ObjectSettings.cs" />
     <Compile Include="Settings\PluginManager.cs" />
     <Compile Include="Devices\Integrations\SteelSeries\USBHIDCodes.cs" />
@@ -1310,9 +928,6 @@
     <Compile Include="EffectsEngine\EffectFrame.cs" />
     <Compile Include="EffectsEngine\EffectLayer.cs" />
     <Compile Include="EffectsEngine\Effects.cs" />
-    <Compile Include="Profiles\CSGO\Control_CSGO.xaml.cs">
-      <DependentUpon>Control_CSGO.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\CSGO\CSGOProfile.cs" />
     <Compile Include="Profiles\CSGO\GSI\GameState_CSGO.cs" />
     <Compile Include="Profiles\CSGO\GSI\Nodes\AllPlayersNode.cs" />
@@ -1326,15 +941,9 @@
     <Compile Include="Profiles\CSGO\GSI\Nodes\RoundNode.cs" />
     <Compile Include="Profiles\CSGO\GSI\Nodes\WeaponNode.cs" />
     <Compile Include="Profiles\CSGO\GSI\Nodes\WeaponsNode.cs" />
-    <Compile Include="Profiles\Desktop\Control_Desktop.xaml.cs">
-      <DependentUpon>Control_Desktop.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Desktop\DesktopProfile.cs" />
     <Compile Include="Profiles\Desktop\Event_Desktop.cs" />
     <Compile Include="Profiles\Desktop\Event_Idle.cs" />
-    <Compile Include="Profiles\Dota 2\Control_Dota2.xaml.cs">
-      <DependentUpon>Control_Dota2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\Dota 2\Dota2Profile.cs" />
     <Compile Include="Profiles\Dota 2\GSI\GameState_Dota2.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Abilities.cs" />
@@ -1353,74 +962,11 @@
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dota 2\GSI\Nodes\Provider.cs" />
     <Compile Include="Profiles\GameState.cs" />
-    <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
-      <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\IInit.cs" />
-    <Compile Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml.cs">
-      <DependentUpon>Control_ColorizedKeycapBlank.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Keycaps\Control_ColorizedKeycap.xaml.cs">
-      <DependentUpon>Control_ColorizedKeycap.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Keycaps\Control_DefaultKeycapBackglowOnly.xaml.cs">
-      <DependentUpon>Control_DefaultKeycapBackglowOnly.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Keycaps\Control_DefaultKeycapBackglow.xaml.cs">
-      <DependentUpon>Control_DefaultKeycapBackglow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Keycaps\Control_DefaultKeycap.xaml.cs">
-      <DependentUpon>Control_DefaultKeycap.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Keycaps\IKeycap.cs" />
     <Compile Include="Settings\Layers\AmbilightLayerHandler.cs" />
     <Compile Include="Settings\Layers\BlinkingLayerHandler.cs" />
     <Compile Include="Settings\Layers\BreathingLayerHandler.cs" />
-    <Compile Include="Settings\Layers\Control_BlinkingLayer.xaml.cs">
-      <DependentUpon>Control_BlinkingLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_EqualizerLayer.xaml.cs">
-      <DependentUpon>Control_EqualizerLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_BreathingLayer.xaml.cs">
-      <DependentUpon>Control_BreathingLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_GradientFillLayer.xaml.cs">
-      <DependentUpon>Control_GradientFillLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_AmbilightLayer.xaml.cs">
-      <DependentUpon>Control_AmbilightLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_InteractiveLayer.xaml.cs">
-      <DependentUpon>Control_InteractiveLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_LockColourLayer.xaml.cs">
-      <DependentUpon>Control_LockColourLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_PercentGradientLayer.xaml.cs">
-      <DependentUpon>Control_PercentGradientLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_PercentLayer.xaml.cs">
-      <DependentUpon>Control_PercentLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_ScriptLayer.xaml.cs">
-      <DependentUpon>Control_ScriptLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml.cs">
-      <DependentUpon>Control_ShortcutAssistantLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_GradientLayer.xaml.cs">
-      <DependentUpon>Control_GradientLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_ImageLayer.xaml.cs">
-      <DependentUpon>Control_ImageLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_SolidFillLayer.xaml.cs">
-      <DependentUpon>Control_SolidFillLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Layers\Control_SolidColorLayer.xaml.cs">
-      <DependentUpon>Control_SolidColorLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Layers\DefaultLayerHandler.cs" />
     <Compile Include="Settings\Layers\EqualizerLayerHandler.cs" />
     <Compile Include="Settings\Layers\GradientFillLayerHandler.cs" />
@@ -1437,16 +983,7 @@
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\ScriptBase.cs" />
     <Compile Include="Settings\VariableRegistry.cs" />
-    <Compile Include="Settings\Control_ProfileManager.xaml.cs">
-      <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
-    </Compile>
-    <None Include="Settings\Control_Settings.xaml.cs">
-      <DependentUpon>Control_Settings.xaml</DependentUpon>
-    </None>
     <Compile Include="Settings\FreeFormObject.cs" />
-    <Compile Include="Settings\Layers\Control_DefaultLayer.xaml.cs">
-      <DependentUpon>Control_DefaultLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Layers\Layer.cs" />
     <Compile Include="Profiles\Application.cs" />
     <Content Include="Settings\KeyboardLayoutManager.cs" />
@@ -1454,12 +991,6 @@
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
     <Compile Include="Profiles\ApplicationProfile.cs" />
-    <Compile Include="Controls\Control_VariableRegistryEditor.xaml.cs">
-      <DependentUpon>Control_VariableRegistryEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Window_VariableRegistryEditor.xaml.cs">
-      <DependentUpon>Window_VariableRegistryEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\GameStateUtils.cs" />
@@ -1627,646 +1158,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="ConfigUI.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Include="Controls\ColorZones.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <Page Include="Controls\Control_AnimationEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_AnimationFrameItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_AnimationMixPresenter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_AnimationTrackPresenter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_DeviceItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_FieldPresenter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Skype\Control_Skype.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Control_LayerList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_GradientEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_PluginManager.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Control_DeviceManager.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_Keybind.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Control_Ruler.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_SingleKeyEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_VariableIItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Control_VariableRegistryItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\EditorResources\DesignerItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\EditorResources\MoveThumbDecorator.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\EditorResources\ResizeDecorator.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\EditorResources\RotateDecorator.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\EffectSettingsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyBindList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeySequence.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\LayerEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Devices\Integrations\Corsair\CorsairInstallInstructions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Devices\Integrations\Dualshock4\DS4InstallInstructions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Devices\Integrations\Logitech\LogitechInstallInstructions.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Devices\Integrations\Razer\RazerInstallInstructions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Devices\Integrations\Roccat\RoccatInstallInstructions.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
-    <Page Include="Devices\Integrations\SteelSeries\SteelSeriesInstallInstructions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Devices\Layout\Control_GlobalDeviceLayout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
-    <Page Include="Profiles\ATS\Control_ATS.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Battlefield1\Control_Battlefield1.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\BF3\Control_BF3.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Blacklight\Control_BLight.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Dishonored\Control_Dishonored.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Borderlands 2\Control_Borderlands2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\CSGO\Control_CSGO.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\CSGO\Layers\Control_CSGOTypingIndicatorLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\CSGO\Layers\Control_CSGOFlashbangLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\CSGO\Layers\Control_CSGOBurningLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\CSGO\Layers\Control_CSGOKillsIndicatorLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\CSGO\Layers\Control_CSGOBombLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\CSGO\Layers\Control_CSGOBackgroundLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Desktop\Control_Desktop.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\DiscoDodgeball\Control_DiscoDodgeball.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Diablo3\Control_Diablo3.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftKeyConflictLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Osu\Control_Osu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Factorio\Control_Factorio.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Dota 2\Control_Dota2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Dota 2\Layers\Control_Dota2AbilityLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\ETS2\Control_ETS2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\ETS2\Layers\Control_ETS2BeaconLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\ETS2\Layers\Control_ETS2BlinkerLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\GTA5\Layers\Control_GTA5PoliceSirenLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\GTA5\Layers\Control_GTA5BackgroundLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Dota 2\Layers\Control_Dota2BackgroundLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Dota 2\Layers\Control_Dota2HeroAbilityEffectsLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Dota 2\Layers\Control_Dota2ItemLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Dota 2\Layers\Control_Dota2KillstreakLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Dota 2\Layers\Control_Dota2RespawnLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Evolve\Control_Evolve.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Generic_Application\Control_GenericApplication.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\GTA5\Control_GTA5.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Guild Wars 2\Control_GW2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Blade and Soul\Control_BnS.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Minecraft\Control_Minecraft.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftBackgroundLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftBurnLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftHealthBarLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Minecraft\Layers\Control_MinecraftRainLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Move or Die\Control_MoD.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\HotlineMiami\Control_HM.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\LeagueOfLegends\Control_LoL.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Metro Last Light\Control_MetroLL.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Payday 2\Layers\Control_PD2StatesLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Payday 2\Layers\Control_PD2FlashbangLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Payday 2\Layers\Control_PD2BackgroundLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\KillingFloor2\Control_KillingFloor2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\QuantumConumdrum\Control_QuantumConumdrum.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2HealthLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\DOOM\Control_DOOM.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\DeadCells\Control_DeadCells.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\ROT Tomb Raider\Control_ROTTombRaider.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\DyingLight\Control_DyingLight.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\RocketLeague\Control_RocketLeague.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Subnautica\Control_Subnautica.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Witcher3\Control_Witcher3.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Witcher3\Layers\Control_Witcher3BackgroundLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Worms_WMD\Control_WormsWMD.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Profiles\Overwatch\Control_Overwatch.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Payday 2\Control_PD2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Serious Sam 3\Control_SSam3.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\ShadowOfMordor\Control_ShadowOfMordor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\TheDivision\Control_TheDivision.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\XCOM\Control_XCOM.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_RazerLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_BinaryCounterLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIBoolean.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanNot.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Number\Control_NumericUnaryOpHolder.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Control_LayerControlPresenter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Control_ProfileControlPresenter.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Control_ScriptManager.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_ColorizedKeycap.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_DefaultKeycapBackglowOnly.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_DefaultKeycapBackglow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_DefaultKeycap.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_GhostKeycap.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_AnimationLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_BlinkingLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_ComparisonLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_ConditionalLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_EqualizerLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_BreathingLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_GlitchLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_GradientFillLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_AmbilightLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_InteractiveLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_LockColourLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_PercentGradientLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_PercentLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_ScriptLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_GradientLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_ImageLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_TimerLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_ToggleKeyLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_ToolbarLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Layers\Control_WrapperLightsLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_SolidFillLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Layers\Control_SolidColorLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Window_GSIHttpDebug.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Control_ProfileManager.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Include="Settings\Control_Settings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <Page Include="Settings\Layers\Control_DefaultLayer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Control_VariableRegistryEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Control_OverridesEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Window_ProcessSelection.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Window_VariableRegistryEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Themes\MetroDark\MetroDark.MSControls.Core.Implicit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

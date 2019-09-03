@@ -40,12 +40,6 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
         {
             _ID = "ResidentEvil2Rank";
         }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_ResidentEvil2RankLayer( this );
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer keys_layer = new EffectLayer( "Resident Evil 2 - Rank" );
@@ -60,12 +54,6 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
                 }
             }
             return keys_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            ( Control as Control_ResidentEvil2RankLayer ).SetProfile( profile );
-            base.SetApplication( profile );
         }
     }
 }

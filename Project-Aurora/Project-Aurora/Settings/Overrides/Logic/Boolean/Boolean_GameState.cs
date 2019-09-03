@@ -18,16 +18,6 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>The path to the variable the user wants to evaluate.</summary>
         public string VariablePath { get; set; } = "";
 
-        /// <summary>The control assigned to this condition. Stored as a reference
-        /// so that the application be updated if required.</summary>
-        [Newtonsoft.Json.JsonIgnore]
-        private Control_ConditionGSIBoolean control;
-        public Visual GetControl(Application application) {
-            if (control == null)
-                control = new Control_ConditionGSIBoolean(this, application);
-            return control;
-        }
-
         /// <summary>Fetches the given boolean value from the game state and returns it.</summary>
         public bool Evaluate(IGameState gameState) {
             bool result = false;
@@ -42,8 +32,6 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Update the assigned control with the new application.</summary>
         public void SetApplication(Application application) {
-            control?.SetApplication(application);
-
             // Check to ensure the variable path is valid
             if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.ContainsKey(VariablePath))
                 VariablePath = string.Empty;
@@ -77,15 +65,6 @@ namespace Aurora.Settings.Overrides.Logic {
         public string Operand2Path { get; set; }
         public ComparisonOperator Operator { get; set; } = ComparisonOperator.EQ;
 
-        // Control assigned to this condition
-        [Newtonsoft.Json.JsonIgnore]
-        private Control_ConditionGSINumeric control;
-        public Visual GetControl(Application application) {
-            if (control == null)
-                control = new Control_ConditionGSINumeric(this, application);
-            return control;
-        }
-
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
         public bool Evaluate(IGameState gameState) {
             // Parse the operands (either as numbers or paths)
@@ -107,8 +86,6 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Update the assigned control with the new application.</summary>
         public void SetApplication(Application application) {
-            control?.SetApplication(application);
-
             // Check to ensure the variable paths are valid
             if (application != null && !double.TryParse(Operand1Path, out _) && !string.IsNullOrWhiteSpace(Operand1Path) && !application.ParameterLookup.ContainsKey(Operand1Path))
                 Operand1Path = string.Empty;

@@ -58,11 +58,6 @@ namespace Aurora.Settings.Layers {
             AuroraCore.InputEvents.Scroll -= InputEvents_Scroll;
             base.Dispose();
         }
-
-        protected override UserControl CreateControl() {
-            return new Control_ToolbarLayer(this);
-        }
-        
         public override EffectLayer Render(IGameState _) {
             EffectLayer layer = new EffectLayer();
             foreach (var key in Properties.Sequence.keys)

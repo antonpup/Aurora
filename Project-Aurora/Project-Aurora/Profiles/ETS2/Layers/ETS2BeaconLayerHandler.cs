@@ -47,10 +47,6 @@ namespace Aurora.Profiles.ETS2.Layers {
             _ID = "ETS2BlinkerIndicator";
         }
 
-        protected override UserControl CreateControl() {
-            return new Control_ETS2BeaconLayer(this);
-        }
-
         /// <summary>Multiplies the Primary Color's alpha by this value and returns it.</summary>
         private Color PrimaryColorAlpha(double a) {
             int alpha = Utils.ColorUtils.ColorByteMultiplication(Properties.PrimaryColor.A, a);

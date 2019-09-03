@@ -175,9 +175,6 @@ namespace Aurora
 
 
                 logger.Info("Loading ConfigUI...");
-
-                MainWindow = new ConfigUI();
-                ((ConfigUI)MainWindow).Display();
             }
             else
             {

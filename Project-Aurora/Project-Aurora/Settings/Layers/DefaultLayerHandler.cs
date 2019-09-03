@@ -21,11 +21,6 @@ namespace Aurora.Settings.Layers
             _ID = "Default";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_DefaultLayer();
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             return base.Render(gamestate);

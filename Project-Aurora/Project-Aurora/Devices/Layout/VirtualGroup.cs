@@ -15,7 +15,6 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using LEDINT = System.Int16;
-using Aurora.Controls.EditorResources;
 using System.Windows.Controls.Primitives;
 
 namespace Aurora.Devices.Layout
@@ -105,7 +104,7 @@ namespace Aurora.Devices.Layout
 
         protected Dictionary<LEDINT, IKeycap> virtualKeyboardMap = new Dictionary<LEDINT, IKeycap>();
 
-        protected Grid virtualLayout;
+        /*protected Grid virtualLayout;
 
         public Grid VirtualLayout
         {
@@ -115,7 +114,7 @@ namespace Aurora.Devices.Layout
                     CreateUserControl();
                 return virtualLayout;
             }
-        }
+        }*/
 
         public VirtualGroup()
         {
@@ -506,7 +505,7 @@ namespace Aurora.Devices.Layout
         }
 
         private string layoutsPath = "kb_layouts";
-        private Grid CreateUserControl(bool abstractKeycaps = false)
+        /*private Grid CreateUserControl(bool abstractKeycaps = false)
         {
             //Abstract keycaps are used for stuff like the animation editor
             if (!abstractKeycaps)
@@ -516,15 +515,7 @@ namespace Aurora.Devices.Layout
             
             new_virtual_keyboard.HorizontalAlignment = HorizontalAlignment.Left;
             new_virtual_keyboard.VerticalAlignment = VerticalAlignment.Top;
-            /*new_virtual_keyboard.DataContext = this.parent;
-            //Bind Margin
-            Binding bind = new Binding();
-            bind.Source = this.parent;
-            bind.Path = new System.Windows.PropertyPath("Location");
-            bind.Mode = abstractKeycaps ? BindingMode.OneWay : BindingMode.TwoWay;
-            bind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            bind.Converter = new PointToMarginConverter();
-            BindingOperations.SetBinding(new_virtual_keyboard, Grid.MarginProperty, bind);*/
+
 
             double layout_height = 0;
             double layout_width = 0;
@@ -604,7 +595,7 @@ namespace Aurora.Devices.Layout
                     if (layout_height < current_height)
                         layout_height = current_height;
                 }
-            }
+            }*/
 
             //TODO: DEAL WITH THIS
             /*if (this.grouped_keys.Count == 0)
@@ -666,7 +657,7 @@ namespace Aurora.Devices.Layout
             }
             else
             {*/
-            Thumb t = new Thumb() { Cursor = System.Windows.Input.Cursors.SizeAll, Opacity = 0, IsHitTestVisible = false };
+            /*Thumb t = new Thumb() { Cursor = System.Windows.Input.Cursors.SizeAll, Opacity = 0, IsHitTestVisible = false };
 
             t.DragDelta += this.T_DragDelta;
             new_virtual_keyboard.Children.Add(t);
@@ -683,7 +674,7 @@ namespace Aurora.Devices.Layout
 
             return new_virtual_keyboard;
         }
-
+        */
         
     }
 

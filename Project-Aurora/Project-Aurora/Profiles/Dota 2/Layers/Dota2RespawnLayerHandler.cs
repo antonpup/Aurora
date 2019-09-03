@@ -60,11 +60,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             _ID = "Dota2Respawn";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_Dota2RespawnLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer respawn_layer = new EffectLayer("Dota 2 - Respawn");
@@ -89,12 +84,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             }
 
             return respawn_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_Dota2RespawnLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

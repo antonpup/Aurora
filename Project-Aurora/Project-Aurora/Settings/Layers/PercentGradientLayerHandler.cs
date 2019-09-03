@@ -38,11 +38,6 @@ namespace Aurora.Settings.Layers
             _ID = "PercentGradient";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_PercentGradientLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             double value = Properties.Logic._Value ?? Utils.GameStateUtils.TryGetDoubleFromState(state, Properties.VariablePath);
@@ -62,8 +57,7 @@ namespace Aurora.Settings.Layers
                 if (!double.TryParse(Properties._MaxVariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._MaxVariablePath) && !profile.ParameterLookup.ContainsKey(Properties._MaxVariablePath))
                     Properties._MaxVariablePath = string.Empty;
             }
-            (Control as Control_PercentGradientLayer).SetApplication(profile);
-            this.Application = profile;
+            base.SetApplication(profile);
         }
     }
 }

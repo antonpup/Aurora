@@ -86,12 +86,6 @@ namespace Aurora.Settings.Layers
 
             return _GlitchLayer;
         }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_GlitchLayer).SetProfile(profile);
-            base.SetApplication(profile);
-        }
     }
 
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
@@ -102,11 +96,6 @@ namespace Aurora.Settings.Layers
         public GlitchLayerHandler() : base()
         {
             _ID = "Glitch";
-        }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_GlitchLayer(this);
         }
     }
 }

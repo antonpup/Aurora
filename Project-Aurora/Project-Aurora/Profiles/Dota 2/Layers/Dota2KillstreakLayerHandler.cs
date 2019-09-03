@@ -107,11 +107,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             _ID = "Dota2Killstreak";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_Dota2KillstreakLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             if (isPlayingKillStreakAnimation && Utils.TimeUtils.GetMillisecondsSinceEpoch() >= ks_end_time)
@@ -140,12 +135,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             }
 
             return killstreak_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_Dota2KillstreakLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
 
         private Color getKillStreakColor(int killstreak_count)

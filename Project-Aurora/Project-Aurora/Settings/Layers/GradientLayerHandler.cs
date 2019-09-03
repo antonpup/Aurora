@@ -42,12 +42,6 @@ namespace Aurora.Settings.Layers
         {
             _ID = "Gradient";
         }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_GradientLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer gradient_layer = new EffectLayer();

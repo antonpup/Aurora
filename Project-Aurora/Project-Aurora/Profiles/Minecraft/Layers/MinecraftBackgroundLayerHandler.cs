@@ -34,10 +34,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
             _ID = "MinecraftBackgroundLayer";
         }
 
-        protected override UserControl CreateControl() {
-            return new Control_MinecraftBackgroundLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer layer = new EffectLayer("Background Layer");
             if (gamestate is GameState_Minecraft) {

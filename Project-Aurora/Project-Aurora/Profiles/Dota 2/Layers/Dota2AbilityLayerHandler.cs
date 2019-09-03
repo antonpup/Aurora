@@ -55,11 +55,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             _ID = "Dota2Abilities";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_Dota2AbilityLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer abilities_layer = new EffectLayer("Dota 2 - Abilities");
@@ -91,12 +86,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             }
 
             return abilities_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_Dota2AbilityLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

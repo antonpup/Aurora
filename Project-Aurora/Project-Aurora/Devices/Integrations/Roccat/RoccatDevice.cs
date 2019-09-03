@@ -230,7 +230,7 @@ namespace Aurora.Devices.Roccat
                     {
                         throw new Exception("No devices connected");
                     }
-                    if (this.Settings.FirstTime)
+                    /*if (this.Settings.FirstTime)
                     {
                         App.Current.Dispatcher.Invoke(() =>
                         {
@@ -238,7 +238,7 @@ namespace Aurora.Devices.Roccat
                             instructions.ShowDialog();
                         });
                         this.Settings.FirstTime = false;
-                    }
+                    }*/
                     Initialized = true;
                     return true;
                 }

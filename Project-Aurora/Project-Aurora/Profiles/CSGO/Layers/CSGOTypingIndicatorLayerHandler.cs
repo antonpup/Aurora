@@ -49,11 +49,6 @@ namespace Aurora.Profiles.CSGO.Layers
             _ID = "CSGOTyping";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_CSGOTypingIndicatorLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer typing_keys_layer = new EffectLayer("CSGO - Typing Keys");
@@ -68,12 +63,6 @@ namespace Aurora.Profiles.CSGO.Layers
             }
 
             return typing_keys_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_CSGOTypingIndicatorLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

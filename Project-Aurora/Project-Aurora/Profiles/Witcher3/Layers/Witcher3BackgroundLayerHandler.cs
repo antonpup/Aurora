@@ -65,12 +65,6 @@ namespace Aurora.Profiles.Witcher3.Layers
         {
             _ID = "Witcher3Background";
         }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_Witcher3BackgroundLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer bg_layer = new EffectLayer("Witcher3 - Background");
@@ -103,12 +97,6 @@ namespace Aurora.Profiles.Witcher3.Layers
             }
 
             return bg_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_Witcher3BackgroundLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

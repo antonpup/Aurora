@@ -37,11 +37,6 @@ namespace Aurora.Settings.Layers
             _ID = "SolidFilled";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_SolidFillLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             return new EffectLayer().Fill(Properties.PrimaryColor);

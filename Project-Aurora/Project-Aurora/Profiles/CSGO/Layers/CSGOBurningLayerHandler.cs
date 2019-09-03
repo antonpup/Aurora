@@ -50,11 +50,6 @@ namespace Aurora.Profiles.CSGO.Layers
             _ID = "CSGOBurning";
         }
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_CSGOBurningLayer(this);
-        }
-
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer burning_layer = new EffectLayer("CSGO - Burning");
@@ -110,12 +105,6 @@ namespace Aurora.Profiles.CSGO.Layers
             }
 
             return burning_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_CSGOBurningLayer).SetProfile(profile);
-            base.SetApplication(profile);
         }
     }
 }

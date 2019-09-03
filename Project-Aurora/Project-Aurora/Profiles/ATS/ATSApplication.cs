@@ -21,7 +21,6 @@ namespace Aurora.Profiles.ATS {
             ProcessNames = new[] { "amtrucks.exe" },
             SettingsType = typeof(FirstTimeApplicationSettings),
             ProfileType = typeof(ETS2Profile),
-            OverviewControlType = typeof(Control_ATS),
             GameStateType = typeof(GameState_ETS2),
             Event = new GameEvent_ETS2("amtrucks"),
             IconURI = "Resources/ats_64x64.png"

@@ -217,7 +217,7 @@ namespace Aurora.Devices.Logitech
 
                         if (LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_ALL) && LogitechGSDK.LogiLedSaveCurrentLighting())
                         {
-                            if (this.Settings.FirstTime)
+                            /*if (this.Settings.FirstTime)
                             {
                                 App.Current.Dispatcher.Invoke(() =>
                                 {
@@ -225,7 +225,7 @@ namespace Aurora.Devices.Logitech
                                     instructions.ShowDialog();
                                 });
                                 this.Settings.FirstTime = false;
-                            }
+                            }*/
 
                             if (this.Settings.SetDefault)
                             {

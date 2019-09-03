@@ -22,7 +22,6 @@ namespace Aurora.Profiles.Dota_2
                 ProcessNames = new[] { "dota2.exe" },
                 SettingsType = typeof(FirstTimeApplicationSettings),
                 ProfileType = typeof(Dota2Profile),
-                OverviewControlType = typeof(Control_Dota2),
                 GameStateType = typeof(GSI.GameState_Dota2),
                 Event = new GameEvent_Generic(),
                 IconURI = "Resources/dota2_64x64.png"

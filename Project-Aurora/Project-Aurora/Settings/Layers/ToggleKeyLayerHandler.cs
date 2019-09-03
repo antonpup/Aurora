@@ -43,10 +43,6 @@ namespace Aurora.Settings.Layers {
             AuroraCore.InputEvents.KeyDown -= InputEvents_KeyDown;
         }        
 
-        protected override System.Windows.Controls.UserControl CreateControl() {
-            return new Control_ToggleKeyLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer layer = new EffectLayer();
             layer.Set(Properties.Sequence, state ? Properties.SecondaryColor : Properties.PrimaryColor);
