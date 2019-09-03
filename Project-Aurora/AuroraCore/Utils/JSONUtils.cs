@@ -67,8 +67,8 @@ namespace Aurora.Utils
                 case "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Aurora.Profiles.ScriptSettings, Aurora]]":
                     return typeof(Dictionary<string, ScriptSettings>);
                 default:
-                    if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
-                        return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));
+                    //if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
+                    //    return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));
                     return base.BindToType(assemblyName, typeName);
             }
         }

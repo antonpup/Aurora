@@ -25,7 +25,7 @@ namespace Aurora
         /// </summary>
         public static bool isDebug = false;
 
-        private static string _ExecutingDirectory = "C:\\Users\\Simon\\Documents\\Repos\\Aurora\\Build\\Debug";
+        private static string _ExecutingDirectory = "";
         private static string _AppDataDirectory = "";
         private static string _LogsDirectory = "";
 
