@@ -50,9 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Layers\Control_ExampleLayer.xaml.cs">
-      <DependentUpon>Control_ExampleLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Layers\ExampleLayerHandler.cs" />
     <Compile Include="PluginMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,12 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Profiles\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Layers\Control_ExampleLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

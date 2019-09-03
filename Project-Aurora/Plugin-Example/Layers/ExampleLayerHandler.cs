@@ -21,12 +21,6 @@ namespace Plugin_Example.Layers
         {
             _ID = "ExampleLayer";
         }
-
-        protected override UserControl CreateControl()
-        {
-            return new Control_ExampleLayer(this);
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer solidcolor_layer = new EffectLayer();

@@ -167,14 +167,6 @@ namespace Aurora
                 {
                     throw new Exception("Could not initialize the core");
                 }
-
-                logger.Info("Loading ResourceDictionaries...");
-                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
-                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
-                logger.Info("Loaded ResourceDictionaries");
-
-
-                logger.Info("Loading ConfigUI...");
             }
             else
             {
