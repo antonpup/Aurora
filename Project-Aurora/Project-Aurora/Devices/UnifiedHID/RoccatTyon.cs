@@ -27,19 +27,15 @@ namespace Aurora.Devices.UnifiedHID
 
         static bool WaitCtrlDevice()
         {
-            for (int i = 1; i < 100; i++) // If still fails after 100 tries then timeout
+            for (int i = 1; i < 3; i++) // 3 Tries because the first one always fails.
             {
-                // 150ms is the magic number here, should suffice on first try.
-                Thread.Sleep(150);
                 if (ctrl_device.ReadFeatureData(out byte[] buffer, 0x04) && buffer.Length > 2)
                 {
                     if (buffer[1] == 0x01)
                         return true;
                 }
                 else
-                {
                     return false;
-                }
             }
             return false;
         }
@@ -57,7 +53,6 @@ namespace Aurora.Devices.UnifiedHID
                 {
                     ctrl_device_leds = devices.First(dev => dev.Capabilities.UsagePage == 0x0001 && dev.Capabilities.Usage == 0x0002);
                     ctrl_device = devices.First(dev => dev.Capabilities.FeatureReportByteLength > 50);
-
                     ctrl_device.OpenDevice();
                     ctrl_device_leds.OpenDevice();
                     bool success = InitMouseColor() && WaitCtrlDevice();
@@ -78,7 +73,7 @@ namespace Aurora.Devices.UnifiedHID
             return false;
         }
 
-        // We need to override Disconnect() too cause we have two HID devices open for this keyboard.
+        // We need to override Disconnect() too cause we have two HID devices open for this mouse.
         public override bool Disconnect()
         {
             try
@@ -100,35 +95,27 @@ namespace Aurora.Devices.UnifiedHID
             {
                 if (!this.IsConnected)
                     return false;
-                byte[] hwmap = new byte[11];
 
-                hwmap[0] = red;
-                hwmap[1] = green;
-                hwmap[2] = blue;
-                hwmap[3] = 0x00;
-                hwmap[4] = 0x00;
-                hwmap[5] = red;
-                hwmap[6] = green;
-                hwmap[7] = blue;
-                hwmap[8] = 0x00;
-                hwmap[9] = 0x80;
-                hwmap[10] = 0x80;
+                byte[] hwmap =
+                {
+                    red,
+                    green,
+                    blue,
+                    0x00,
+                    0x00,
+                    red,
+                    green,
+                    blue,
+                    0x00,
+                    0x80,
+                    0x80
+                };
 
                 byte[] workbuf = new byte[30];
-                Array.Copy(controlPacket, 0, workbuf, 0, 19);
-                Array.Copy(hwmap, 0, workbuf, 19, 11);
+                Array.Copy(controlPacket, 0, workbuf, 0, controlPacket.Length);
+                Array.Copy(hwmap, 0, workbuf, controlPacket.Length, hwmap.Length);
 
-                unsafe
-                {
-                    fixed (byte* workbufPointer = workbuf)
-                    {
-                        if (ctrl_device.WriteFeatureData(workbuf) != true)
-                        {
-                            return false;
-                        }
-                    }
-                }
-                return true;
+                return ctrl_device.WriteFeatureData(workbuf);
             }
             catch (Exception exc)
             {
