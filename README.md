@@ -4,7 +4,7 @@
 
 [Link to Aurora's webpage, includes some demos and changelogs](http://project-aurora.com/)
 
-[![Latest Version](https://img.shields.io/github/release/antonpup/aurora.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Total Downloads](https://img.shields.io/github/downloads/antonpup/aurora/total.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Build status](https://ci.appveyor.com/api/projects/status/jh44k7r5ewelxiss?svg=true)](https://ci.appveyor.com/project/antonpup/aurora) ![Build status](https://img.shields.io/badge/language-C%23-178600.svg)
+[![Latest Version](https://img.shields.io/github/release/antonpup/aurora.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Total Downloads](https://img.shields.io/github/downloads/antonpup/aurora/total.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Build status](https://ci.appveyor.com/api/projects/status/jh44k7r5ewelxiss/branch/dev?svg=true)](https://ci.appveyor.com/project/antonpup/aurora/branch/dev) ![Build status](https://img.shields.io/badge/language-C%23-178600.svg)
 
 Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games.
 
@@ -14,7 +14,7 @@ Project Aurora is a utility that unifies RGB lighting devices across different b
 
 [Most recent release (potentially unstable)](https://github.com/antonpup/Aurora/releases)
 
-[Bleeding-edge builds (decent chance they're going to have issues)](https://ci.appveyor.com/project/antonpup/aurora/build/artifacts)
+[Bleeding-edge builds (decent chance they're going to have issues)](https://ci.appveyor.com/project/antonpup/aurora/branch/dev/artifacts)
 
 ## Discord Server
 
@@ -556,9 +556,9 @@ If you want to help this project rapidly grow, you can donate via PayPal to help
 
 I do not have any intent in charging money for Aurora, it will always be a free and open source project.
 
-| PayPal                                   | Steam                                    |
-| ---------------------------------------- | ---------------------------------------- |
-| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/SimonWhyte) | [![](http://steamsignature.com/status/default/76561198044898225.png)](http://steamcommunity.com/id/SimonWhyte) |
+| PayPal                                                       |
+| ------------------------------------------------------------ |
+| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/SimonWhyte) |
 
 ## Credits
 
