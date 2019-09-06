@@ -38,21 +38,6 @@ Having issues? Want to discuss changes or talk about possible features? Want to 
 3. Extract the archive anywhere on your computer. Preferably keep it in a location you can easily access.
 4. Run "Aurora.exe", from that point, Aurora should provide you with further instructions and options.
 
-
-
-
-### Donations
-
-If you want to help this project rapidly grow, you can donate via PayPal to help further develop Aurora. While being a university student, Aurora does not take my monetary priority. Games and RGB hardware are not cheap, and as a result, support for not owned products will take more time to develop. The donations will be used to purchase hardware and video games with intent to add support for them with Aurora. Alternatively you can gift games directly to me via Steam.
-
-I do not have any intent in charging money for Aurora, it will always be a free and open source project.
-
-| PayPal                                                       |
-| ------------------------------------------------------------ |
-| [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/SimonWhyte) |
-
-
-
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
