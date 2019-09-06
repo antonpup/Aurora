@@ -485,7 +485,7 @@ namespace Aurora.Profiles.EliteDangerous
                     Command.ExplorationFSSEnter
                 },
                 new GameStateCondition(flagsSet: Flag.SUPERCRUISE,
-                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET))
+                    flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.FSD_CHARGING))
         }, new GameStateCondition(guiFocus: new[]
         {
             GuiFocus.NONE, GuiFocus.STATION_SERVICES, GuiFocus.PANEL_NAV, GuiFocus.PANEL_COMS, GuiFocus.PANEL_ROLE,
