@@ -816,73 +816,172 @@ namespace Aurora.Profiles.EliteDangerous
 
     public class KeyPresets
     {
-        public static Dictionary<string, GameStateCondition> BLINKING_KEYS =
-            new Dictionary<string, GameStateCondition>()
+        private static float GetBlinkStep(long currentTime)
+        {
+            float animationPosition =
+                currentTime % (10000L / EliteConfig.KEY_BLINK_SPEED) / (10000.0f / EliteConfig.KEY_BLINK_SPEED);
+            float animationStep = animationPosition * 2;
+            return animationStep > 1 ? 1F + (1F - animationStep) : animationStep;
+        }
+
+        private static Color GetBlinkingColor(Color baseColor, long currentTime)
+        {
+            return Utils.ColorUtils.BlendColors(
+                baseColor,
+                Color.FromArgb(
+                    0,
+                    baseColor.R,
+                    baseColor.G,
+                    baseColor.B
+                ),
+                GetBlinkStep(currentTime)
+            );
+        }
+
+        public delegate Color KeyEffectRender(Color initialColor, GameState_EliteDangerous gameState, long currentTime);
+        
+        public static Dictionary<string, KeyEffectRender> KEY_EFFECTS =
+            new Dictionary<string, KeyEffectRender>()
             {
                 {
-                    Command.ToggleButtonUpInput, new GameStateCondition(flagsSet:
-                        Flag.SILENT_RUNNING
-                    )
+                    Command.ToggleButtonUpInput, (initialColor, gameState, currentTime) =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.SILENT_RUNNING))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.LandingGearToggle, new GameStateCondition(flagsSet:
-                        Flag.LANDING_GEAR,
-                        flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
-                    )
+                    Command.LandingGearToggle, (initialColor, gameState, currentTime) =>
+                    {
+                        if (new GameStateCondition(flagsSet:
+                            Flag.LANDING_GEAR,
+                            flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
+                        ).IsSatisfied(gameState))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.DeployHardpointToggle, new GameStateCondition(flagsSet:
-                        Flag.HARDPOINTS,
-                        flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.IN_FIGHTER | Flag.IN_SRV
-                    )
+                    Command.DeployHardpointToggle, (initialColor, gameState, currentTime) =>
+                    {
+                        if (new GameStateCondition(flagsSet:
+                            Flag.HARDPOINTS,
+                            flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET | Flag.IN_FIGHTER | Flag.IN_SRV
+                        ).IsSatisfied(gameState))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.ToggleCargoScoop, new GameStateCondition(flagsSet:
-                        Flag.CARGO_SCOOP,
-                        flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
-                    )
+                    Command.ToggleCargoScoop, (initialColor, gameState, currentTime) =>
+                    {
+                        if (new GameStateCondition(flagsSet:
+                            Flag.CARGO_SCOOP,
+                            flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
+                        ).IsSatisfied(gameState))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.ToggleCargoScoop_Buggy, new GameStateCondition(flagsSet:
-                        Flag.CARGO_SCOOP,
-                        flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
-                    )
+                    Command.ToggleCargoScoop_Buggy, (initialColor, gameState, currentTime) =>
+                    {
+                        if (new GameStateCondition(flagsSet:
+                            Flag.CARGO_SCOOP,
+                            flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
+                        ).IsSatisfied(gameState))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.ShipSpotLightToggle, new GameStateCondition(flagsSet:
-                        Flag.SHIP_LIGHTS
-                    )
+                    Command.ShipSpotLightToggle, (initialColor, gameState, currentTime) =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.SHIP_LIGHTS))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.HeadlightsBuggyButton, new GameStateCondition(flagsSet:
-                        Flag.SHIP_LIGHTS
-                    )
+                    Command.HeadlightsBuggyButton, (initialColor, gameState, currentTime) =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.SHIP_LIGHTS))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.NightVisionToggle, new GameStateCondition(flagsSet:
-                        Flag.NIGHT_VISION
-                    )
+                    Command.NightVisionToggle, (initialColor, gameState, currentTime) =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.NIGHT_VISION))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.Supercruise, new GameStateCondition(flagsSet:
-                        Flag.FSD_CHARGING
-                    )
+                    Command.Supercruise, (initialColor, gameState, currentTime) =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.FSD_CHARGING))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.Hyperspace, new GameStateCondition(flagsSet:
-                        Flag.FSD_CHARGING
-                    )
+                    Command.Hyperspace, (initialColor, gameState, currentTime) =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.FSD_CHARGING))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.HyperSuperCombination, new GameStateCondition(flagsSet:
-                        Flag.FSD_CHARGING
-                    )
+                    Command.HyperSuperCombination, (initialColor, gameState, currentTime) =>
+                    {
+                        if (gameState.Status.IsFlagSet(Flag.FSD_CHARGING))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+                        return initialColor;
+                    }
                 },
                 {
-                    Command.AutoBreakBuggyButton, new GameStateCondition(flagsSet:
-                        Flag.IN_SRV | Flag.SRV_HANDBRAKE
-                    )
-                }
+                    Command.AutoBreakBuggyButton, (initialColor, gameState, currentTime) =>
+                    {
+                        if (new GameStateCondition(flagsSet:
+                            Flag.IN_SRV | Flag.SRV_HANDBRAKE
+                        ).IsSatisfied(gameState))
+                        {
+                            return GetBlinkingColor(initialColor, currentTime);
+                        }
+
+                        return initialColor;
+                    }
+                },
             };
     }
 }

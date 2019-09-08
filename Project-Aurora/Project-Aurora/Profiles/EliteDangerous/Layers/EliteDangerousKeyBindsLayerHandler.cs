@@ -256,28 +256,6 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             return new Control_EliteDangerousKeyBindsLayer(this);
         }
 
-        private float GetBlinkStep()
-        {
-            float animationPosition =
-                Utils.Time.GetMillisecondsSinceEpoch() % (10000L / EliteConfig.KEY_BLINK_SPEED) / (10000.0f / EliteConfig.KEY_BLINK_SPEED);
-            float animationStep = animationPosition * 2;
-            return animationStep > 1 ? 1F + (1F - animationStep) : animationStep;
-        }
-
-        private Color GetBlinkingColor(Color baseColor)
-        {
-            return Utils.ColorUtils.BlendColors(
-                baseColor,
-                Color.FromArgb(
-                    0,
-                    baseColor.R,
-                    baseColor.G,
-                    baseColor.B
-                ),
-                GetBlinkStep()
-            );
-        }
-
         private Dictionary<DeviceKeys, Color> currentKeyColors = new Dictionary<DeviceKeys, Color>();
         private Dictionary<DeviceKeys, KeyBlendState> keyBlendStates = new Dictionary<DeviceKeys, KeyBlendState>();
         private void SetKey(EffectLayer layer, DeviceKeys key, Color color)
@@ -330,6 +308,8 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             EffectLayer keyBindsLayer = new EffectLayer("Elite: Dangerous - Key Binds");
             HashSet<DeviceKeys> leftoverBlendStates = new HashSet<DeviceKeys>(keyBlendStates.Keys);
 
+            long currentTime = Utils.Time.GetMillisecondsSinceEpoch();
+
             if (gameState.Journal.fsdWaitingCooldown && gameState.Status.IsFlagSet(Flag.FSD_COOLDOWN))
             {
                 gameState.Journal.fsdWaitingCooldown = false;
@@ -354,8 +334,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                     {
                         if (!controls.commandToBind.ContainsKey(command)) continue;
 
-                        bool blinkingKey = KeyPresets.BLINKING_KEYS.ContainsKey(command) &&
-                                           KeyPresets.BLINKING_KEYS[command].IsSatisfied(gameState);
+                        bool keyWithEffect = KeyPresets.KEY_EFFECTS.ContainsKey(command);
 
                         foreach (Bind.Mapping mapping in controls.commandToBind[command].mappings)
                         {
@@ -380,9 +359,9 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                                 controlGroup.colorGroupName ?? CommandColors.GetColorGroupForCommand(command)
                             );
 
-                            if (blinkingKey)
+                            if (keyWithEffect)
                             {
-                                SetKey(keyBindsLayer, mapping.key, GetBlinkingColor(newKeyColor));
+                                SetKey(keyBindsLayer, mapping.key, KeyPresets.KEY_EFFECTS[command](newKeyColor, gameState, currentTime));
                             }
                             else
                             {
