@@ -385,6 +385,7 @@
       <DependentUpon>Control_EliteDangerousAnimationLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\EliteDangerous\Layers\EliteDangerousAnimationLayerHandler.cs" />
+    <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
     </Compile>
