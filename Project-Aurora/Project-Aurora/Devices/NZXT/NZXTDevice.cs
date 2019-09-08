@@ -9,6 +9,7 @@ using Aurora.Settings;
 using Microsoft.Win32.TaskScheduler;
 using System.ComponentModel;
 using Color = System.Drawing.Color;
+using System.Diagnostics;
 
 namespace Aurora.Devices.NZXT
 {
@@ -83,6 +84,11 @@ namespace Aurora.Devices.NZXT
                 {
                     try
                     {
+                        if(Process.GetProcessesByName("NZXT CAM").Length > 0)
+                        {
+                            Global.logger.Error("NZXT CAM is running. Ensure that it is not open and try again.");
+                            return false;
+                        }
                         DeviceLoader = new DeviceLoader(false, DeviceLoadFilter.LightingControllers);
                         DeviceLoader.ThrowExceptions = false;
                         DeviceLoader.Initialize();
