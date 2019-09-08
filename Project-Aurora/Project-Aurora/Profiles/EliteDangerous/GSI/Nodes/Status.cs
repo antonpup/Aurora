@@ -78,7 +78,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public DateTime timestamp;
         public string @event;
         public long Flags;
-        public int[] Pips;
+        public int[] Pips = new [] {8,8,8};
         public int FireGroup;
         public GuiFocus GuiFocus;
         public Fuel Fuel;
