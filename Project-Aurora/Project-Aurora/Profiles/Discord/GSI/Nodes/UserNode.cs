@@ -19,7 +19,7 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
     public class UserNode : Node<UserNode> {
 
         public long Id = 0;
-        public int Status = -1;
+        public string Status = "";
         public bool SelfMute = false;
         public bool SelfDeafen = false;
         public bool Mentions = false;
@@ -29,7 +29,7 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         internal UserNode() : base() { }
         internal UserNode(string json) : base(json) {
             Id = GetLong("id");
-            Status = GetInt("status");
+            Status = GetString("status");
             SelfMute = GetBool("self_mute");
             SelfDeafen = GetBool("self_deafen");
             Mentions = GetBool("mentions");
