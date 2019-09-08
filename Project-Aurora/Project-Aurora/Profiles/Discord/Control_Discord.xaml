@@ -8,14 +8,14 @@
              d:DesignHeight="450" d:DesignWidth="850" Height="Auto" Width="Auto">
     <Grid>
         <TabControl>
-            <TabItem Header="Overview for Discord">
+            <TabItem Header="Overview for BetterDiscord">
                 <StackPanel Margin="10">
-                    <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with Minecraft. Ensure you have read the below text." Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
+                    <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with BetterDiscord. Ensure you have read the below text." Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
                     <TextBlock HorizontalAlignment="Left" Margin="0,10" TextWrapping="Wrap" MaxWidth="824">
-                        <Run Text="Support for Minecraft requires a mod so that Aurora is able to fetch the variables from the game. Currently this mod requires Forge mod loader, though other options may become available in future." />
-                        <LineBreak /><LineBreak />
-                        <Run Text="These mods are not authored by the main Aurora developers and any issues with these mods should not be directed at them, but posted on the relevant GitLab repo for the mod." />
+                        <Run Text="Support for BetterDiscord requires a plugin so that Aurora is able to fetch the variables from the client." />
                     </TextBlock>
+                    <Button x:Name="patchButton" Content="Install BD Plugin" HorizontalAlignment="Left" Width="132" Margin="0,0,0,0" Click="PatchButton_Click"/>
+                    <Button x:Name="unpatchButton" Content="Uninstall BD Plugin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="132" Margin="0,10,0,0" Click="UnpatchButton_Click"/>
                 </StackPanel>
             </TabItem>
         </TabControl>

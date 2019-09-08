@@ -63,18 +63,18 @@ namespace Aurora.Profiles.Discord.GSI {
         }
 
         /// <summary>
-        /// Creates a default GameState_Minecraft instance.
+        /// Creates a default GameState_Discord instance.
         /// </summary>
         public GameState_Discord() : base() { }
 
         /// <summary>
-        /// Creates a GameState_Minecraft instance based on the passed JSON data.
+        /// Creates a GameState_Discord instance based on the passed JSON data.
         /// </summary>
         /// <param name="JSONstring"></param>
         public GameState_Discord(string JSONstring) : base(JSONstring) { }
 
         /// <summary>
-        /// Creates a GameState_Minecraft instance based on the data from the passed GameState instance.
+        /// Creates a GameState_Discord instance based on the data from the passed GameState instance.
         /// </summary>
         public GameState_Discord(IGameState other) : base(other) { }
         

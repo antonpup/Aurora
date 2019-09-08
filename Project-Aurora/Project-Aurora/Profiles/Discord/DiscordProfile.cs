@@ -21,8 +21,6 @@ namespace Aurora.Profiles.Discord {
         public override void Reset() {
             base.Reset();
 
-            // Keys that do something and should be highlighted in a static color
-
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>() {
 
             };

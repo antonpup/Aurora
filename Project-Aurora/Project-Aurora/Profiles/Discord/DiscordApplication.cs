@@ -19,7 +19,7 @@ namespace Aurora.Profiles.Discord
             OverviewControlType = typeof(Control_Discord),
             GameStateType = typeof(GSI.GameState_Discord),
             Event = new GameEvent_Generic(),
-            IconURI = "Resources/minecraft_128x128.png"
+            IconURI = "Resources/betterdiscord.png"
         }) { }
     }
 }
