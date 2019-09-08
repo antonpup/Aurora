@@ -19,13 +19,13 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
 
         public long Id = 0;
         public string Name;
-        public DiscordTextType Type;
+        public int Type;
 
         internal TextNode() : base() { }
         internal TextNode(string json) : base(json) {
             Id = GetLong("id");
             Name = GetString("name");
-            Type = GetEnum<DiscordTextType>("type");
+            Type = GetInt("type");
         }
     }
 }

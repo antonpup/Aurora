@@ -19,21 +19,22 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
     public class UserNode : Node<UserNode> {
 
         public long Id = 0;
-        public DiscordStatus Status = DiscordStatus.Undefined;
+        public int Status = -1;
         public bool SelfMute = false;
         public bool SelfDeafen = false;
-        public int Mentions = 0;
-        public int DirectMessages = 0;
-
-
+        public bool Mentions = false;
+        public bool DirectMessages = false;
+        public bool ReceivingCall = false;
+   
         internal UserNode() : base() { }
         internal UserNode(string json) : base(json) {
             Id = GetLong("id");
-            Status = GetEnum<DiscordStatus>("status");
+            Status = GetInt("status");
             SelfMute = GetBool("self_mute");
             SelfDeafen = GetBool("self_deafen");
-            Mentions = GetInt("mentions");
-            DirectMessages = GetInt("direct_messages");
+            Mentions = GetBool("mentions");
+            DirectMessages = GetBool("direct_messages");
+            ReceivingCall = GetBool("being_called");
         }
     }
 }

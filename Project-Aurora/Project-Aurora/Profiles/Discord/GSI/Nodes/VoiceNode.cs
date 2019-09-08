@@ -17,14 +17,14 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
 
         public long Id = 0;
         public string Name;
-        public DiscordVoiceType Type;
+        public int Type;
 
 
         internal VoiceNode() : base() { }
         internal VoiceNode(string json) : base(json) {
             Id = GetLong("id");
             Name = GetString("name");
-            Type = GetEnum<DiscordVoiceType>("type");
+            Type = GetInt("type");
         }
     }
 }
