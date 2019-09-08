@@ -367,6 +367,7 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
+    <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Journal\Events\DockFighter.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Journal\Events\FighterDestroyed.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Journal\Events\FighterRebuilt.cs" />

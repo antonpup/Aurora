@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Timers;
 using System.Xml;
 using Aurora.Profiles.EliteDangerous.GSI;
@@ -10,6 +11,8 @@ using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Helpers;
 using Aurora.Profiles.EliteDangerous.Journal;
 using Aurora.Profiles.EliteDangerous.Journal.Events;
+using Aurora.Utils;
+using CSScriptLibrary;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -146,17 +149,86 @@ namespace Aurora.Profiles.EliteDangerous
             if (File.Exists(EliteConfig.BINDINGS_PRESET_FILE))
             {
                 string currentBindPrefix = File.ReadAllText(EliteConfig.BINDINGS_PRESET_FILE).Trim();
-                foreach (string bindFile in Directory.GetFiles(EliteConfig.BINDINGS_DIR, currentBindPrefix + ".*.binds")
-                )
+                currentBindFile = SearchForBindsFile(EliteConfig.BINDINGS_DIR, currentBindPrefix);
+
+                if (currentBindFile == null)
                 {
-                    currentBindFile = bindFile;
+                    Global.logger.Error("Custom binds not found. Should check default directory.");
+                    string currentGamePath = ((EliteDangerousSettings) Application.Settings).GamePath;
+                    string defaultBindsDirectory;
+
+                    defaultBindsDirectory = GetDefaultBindsDirectoryFromGamePath(currentGamePath);
+                    if (defaultBindsDirectory == null)
+                    {
+                        currentGamePath = null;
+                    }
+
+                    if (currentGamePath == null)
+                    {
+                        Process active = GetActiveProcess();
+                        currentGamePath = active.MainModule?.FileName;
+                        defaultBindsDirectory = GetDefaultBindsDirectoryFromGamePath(currentGamePath);
+                        
+                        Global.logger.Info("Game process path: " + currentGamePath);
+                        Global.logger.Info("Directory from process path: " + defaultBindsDirectory);
+                    }
+
+                    if (defaultBindsDirectory != null)
+                    {
+                        ((EliteDangerousSettings) Application.Settings).GamePath = currentGamePath;
+                        currentBindFile = SearchForBindsFile(defaultBindsDirectory, currentBindPrefix);
+                        if (currentBindFile != null)
+                        {
+                            Global.logger.Info("Found default binds file: " + currentBindFile);
+                        }
+                    }
                 }
 
                 if (currentBindFile != null)
                 {
                     ParseBindFile();
                 }
+                else
+                {
+                    Global.logger.Error("Binds not found: " + currentBindPrefix);
+                }
             }
+        }
+
+        private string GetDefaultBindsDirectoryFromGamePath(string gamePath)
+        {
+            string defaultBindsDirectory = null;
+            if (File.Exists(gamePath))
+            {
+                string bindsDirectory = Path.Combine(Path.GetDirectoryName(gamePath), "ControlSchemes");
+                if (Directory.Exists(bindsDirectory))
+                {
+                    defaultBindsDirectory = bindsDirectory;
+                }
+            }
+
+            return defaultBindsDirectory;
+        }
+
+        private string SearchForBindsFile(string directory, string filePrefix)
+        {
+            string returnBindsFile = null;
+            foreach (string bindFile in Directory.GetFiles(directory, filePrefix + ".*.binds")
+            )
+            {
+                returnBindsFile = bindFile;
+            }
+
+            if (returnBindsFile == null)
+            {
+                foreach (string bindFile in Directory.GetFiles(directory, filePrefix + ".binds")
+                )
+                {
+                    returnBindsFile = bindFile;
+                }
+            }
+
+            return returnBindsFile;
         }
 
         private void ParseBindFile()
@@ -182,9 +254,9 @@ namespace Aurora.Profiles.EliteDangerous
                     foreach (XmlNode xmlMapping in command.ChildNodes)
                     {
                         if (xmlMapping.Name != "Primary" && xmlMapping.Name != "Secondary") continue;
+                        if(xmlMapping.Attributes["Key"] == null) continue;
 
                         Bind.Mapping mapping = new Bind.Mapping();
-
                         if (xmlMapping.Attributes["Device"].Value == "Keyboard")
                         {
                             mapping.SetKey(xmlMapping.Attributes["Key"].Value);
@@ -224,6 +296,22 @@ namespace Aurora.Profiles.EliteDangerous
             controls.modifierKeys = modifierKeys;
             controls.commandToBind = commandToBind;
             controls.bindToCommand = bindToCommand;
+        }
+        
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll", SetLastError=true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        
+        public Process GetActiveProcess()
+        {
+            IntPtr handle = GetForegroundWindow();
+            uint pID;
+   
+            GetWindowThreadProcessId(handle, out pID);
+
+            return Process.GetProcessById((Int32)pID);
         }
 
         public override void OnStart()

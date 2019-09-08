@@ -1,6 +1,7 @@
 using Aurora.Settings;
 using Aurora.Profiles.EliteDangerous.Layers;
 using System.Collections.Generic;
+using CSScriptLibrary;
 
 namespace Aurora.Profiles.EliteDangerous
 {
@@ -13,7 +14,7 @@ namespace Aurora.Profiles.EliteDangerous
                 ID = "EliteDangerous",
                 ProcessNames = new[] { "EliteDangerous64.exe" },
                 UpdateInterval = 16,
-                SettingsType = typeof(FirstTimeApplicationSettings),
+                SettingsType = typeof(EliteDangerousSettings),
                 ProfileType = typeof(EliteDangerousProfile),
                 OverviewControlType = typeof(Control_EliteDangerous),
                 GameStateType = typeof(GSI.GameState_EliteDangerous),
