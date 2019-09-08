@@ -407,7 +407,7 @@ namespace Aurora.Profiles.EliteDangerous
         {
             new ControlGroup(new[]
             {
-                Command.PhotoCameraToggle, Command.VanityCameraScrollLeft,
+                Command.VanityCameraScrollLeft,
                 Command.VanityCameraScrollRight, Command.ToggleFreeCam, Command.FreeCamToggleHUD,
                 Command.FixCameraRelativeToggle, Command.FixCameraWorldToggle,
 
@@ -500,6 +500,7 @@ namespace Aurora.Profiles.EliteDangerous
                 Command.SelectTarget,
                 Command.PrimaryFire,
                 Command.SecondaryFire,
+                Command.PhotoCameraToggle,
             }), 
             new ControlGroup(new[]
             {
@@ -653,6 +654,7 @@ namespace Aurora.Profiles.EliteDangerous
         {
             new ControlGroup(new[]
             {
+                Command.PhotoCameraToggle_Buggy,
                 Command.ToggleDriveAssist,
 
                 Command.SteerLeftButton,
@@ -745,7 +747,7 @@ namespace Aurora.Profiles.EliteDangerous
             new ControlGroup(new[]
             {
                 Command.CamPitchUp, Command.CamPitchDown, Command.CamTranslateUp, Command.CamTranslateDown,
-                Command.CamYawLeft, Command.CamYawRight
+                Command.CamYawLeft, Command.CamYawRight, Command.GalaxyMapHome
             })
         }, new GameStateCondition(guiFocus: new[] {GuiFocus.MAP_GALAXY, GuiFocus.MAP_ORRERY}));
 
