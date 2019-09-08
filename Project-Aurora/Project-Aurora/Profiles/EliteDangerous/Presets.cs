@@ -243,11 +243,8 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.CyclePreviousPanel,
                         Command.CycleNextPage,
                         Command.CyclePreviousPage,
-                        Command.SelectTarget,
                         Command.CycleNextTarget,
                         Command.CyclePreviousTarget,
-
-                        Command.SelectTarget_Buggy,
 
                         Command.MultiCrewCockpitUICycleForward,
                         Command.MultiCrewCockpitUICycleBackward,
@@ -272,6 +269,7 @@ namespace Aurora.Profiles.EliteDangerous
                 {
                     ColorGroup.OffenceColor, new[]
                     {
+                        Command.SelectTarget,
                         Command.SelectHighestThreat,
                         Command.CycleNextHostileTarget,
                         Command.CyclePreviousHostileTarget,
@@ -291,6 +289,7 @@ namespace Aurora.Profiles.EliteDangerous
                         Command.BuggyPrimaryFireButton,
                         Command.BuggySecondaryFireButton,
                         Command.ToggleBuggyTurretButton,
+                        Command.SelectTarget_Buggy,
                         Command.BuggyCycleFireGroupNext,
                         Command.BuggyCycleFireGroupPrevious,
                         Command.IncreaseWeaponsPower_Buggy,
@@ -419,7 +418,9 @@ namespace Aurora.Profiles.EliteDangerous
 
                 Command.ShipSpotLightToggle, Command.HeadlightsBuggyButton, Command.NightVisionToggle,
 
-                Command.CycleFireGroupPrevious
+                Command.CycleFireGroupPrevious,
+                Command.CycleNextTarget,
+                Command.CyclePreviousTarget
             }),
 
             new ControlGroup(ColorGroup.HudModeCombatColor, new[] { Command.PlayerHUDModeToggle}, new GameStateCondition(flagsNotSet: Flag.HUD_DISCOVERY_MODE)),
@@ -496,13 +497,48 @@ namespace Aurora.Profiles.EliteDangerous
         {
             new ControlGroup(new[]
             {
+                Command.SelectTarget,
+                Command.PrimaryFire,
+                Command.SecondaryFire,
+            }), 
+            new ControlGroup(new[]
+            {
                 Command.ForwardKey, Command.BackwardKey,
                 Command.SetSpeedZero, Command.SetSpeed25, Command.SetSpeed50, Command.SetSpeed75, Command.SetSpeed100,
                 Command.RollLeftButton, Command.RollRightButton, Command.PitchUpButton, Command.PitchDownButton,
                 
-                Command.DeployHardpointToggle
+                Command.YawLeftButton,
+                Command.YawRightButton,
+                Command.YawToRollButton,
+                Command.UseAlternateFlightValuesToggle,
+                Command.ToggleReverseThrottleInput,
+                
+                Command.DeployHardpointToggle,
+                
+                Command.DisableRotationCorrectToggle,
+                
+                Command.OrbitLinesToggle,
             }, new GameStateCondition(
                 flagsSet: Flag.UNSPECIFIED,
+                flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
+            )),
+            
+            new ControlGroup(new[]
+            {
+                Command.YawLeftButton_Landing,
+                Command.YawRightButton_Landing,
+                Command.PitchUpButton_Landing,
+                Command.PitchDownButton_Landing,
+                Command.RollLeftButton_Landing,
+                Command.RollRightButton_Landing,
+                Command.LeftThrustButton_Landing,
+                Command.RightThrustButton_Landing,
+                Command.UpThrustButton_Landing,
+                Command.DownThrustButton_Landing,
+                Command.ForwardThrustButton_Landing,
+                Command.BackwardThrustButton_Landing,
+            }, new GameStateCondition(
+                flagsSet: Flag.UNSPECIFIED | Flag.LANDING_GEAR,
                 flagsNotSet: Flag.DOCKED | Flag.LANDED_PLANET
             )),
             
