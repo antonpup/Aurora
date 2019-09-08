@@ -538,8 +538,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
     /// </summary>
     public class Controls : Node<Controls>
     {
-        public HashSet<string> modifierKeys;
-        public Dictionary<string, Bind> commandToBind;
-        public Dictionary<Bind, string> bindToCommand;
+        public HashSet<string> modifierKeys = new HashSet<string>();
+        public Dictionary<string, Bind> commandToBind = new Dictionary<string, Bind>();
+        public Dictionary<Bind, string> bindToCommand = new Dictionary<Bind, string>();
     }
 }
