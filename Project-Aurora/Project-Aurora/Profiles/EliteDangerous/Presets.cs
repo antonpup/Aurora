@@ -982,6 +982,126 @@ namespace Aurora.Profiles.EliteDangerous
                         return initialColor;
                     }
                 },
+                {
+                    Command.IncreaseSystemsPower, (initialColor, gameState, currentTime) =>
+                    {
+                        float minimalBrightnes = 0.3f;
+                        float brightnessRange = 1f - minimalBrightnes;
+
+                        float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[0]);
+                        
+                        return Utils.ColorUtils.BlendColors(
+                            Color.FromArgb(
+                                0,
+                                initialColor.R,
+                                initialColor.G,
+                                initialColor.B
+                            ),
+                            initialColor,
+                            currentBrightnes
+                        );
+                    }
+                },
+                {
+                    Command.IncreaseSystemsPower_Buggy, (initialColor, gameState, currentTime) =>
+                    {
+                        float minimalBrightnes = 0.3f;
+                        float brightnessRange = 1f - minimalBrightnes;
+
+                        float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[0]);
+                        
+                        return Utils.ColorUtils.BlendColors(
+                            Color.FromArgb(
+                                0,
+                                initialColor.R,
+                                initialColor.G,
+                                initialColor.B
+                            ),
+                            initialColor,
+                            currentBrightnes
+                        );
+                    }
+                },
+                {
+                    Command.IncreaseEnginesPower, (initialColor, gameState, currentTime) =>
+                    {
+                        float minimalBrightnes = 0.3f;
+                        float brightnessRange = 1f - minimalBrightnes;
+
+                        float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[1]);
+                        
+                        return Utils.ColorUtils.BlendColors(
+                            Color.FromArgb(
+                                0,
+                                initialColor.R,
+                                initialColor.G,
+                                initialColor.B
+                            ),
+                            initialColor,
+                            currentBrightnes
+                        );
+                    }
+                },
+                {
+                    Command.IncreaseEnginesPower_Buggy, (initialColor, gameState, currentTime) =>
+                    {
+                        float minimalBrightnes = 0.3f;
+                        float brightnessRange = 1f - minimalBrightnes;
+
+                        float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[1]);
+                        
+                        return Utils.ColorUtils.BlendColors(
+                            Color.FromArgb(
+                                0,
+                                initialColor.R,
+                                initialColor.G,
+                                initialColor.B
+                            ),
+                            initialColor,
+                            currentBrightnes
+                        );
+                    }
+                },
+                {
+                    Command.IncreaseWeaponsPower, (initialColor, gameState, currentTime) =>
+                    {
+                        float minimalBrightnes = 0.3f;
+                        float brightnessRange = 1f - minimalBrightnes;
+
+                        float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[2]);
+                        
+                        return Utils.ColorUtils.BlendColors(
+                            Color.FromArgb(
+                                0,
+                                initialColor.R,
+                                initialColor.G,
+                                initialColor.B
+                            ),
+                            initialColor,
+                            currentBrightnes
+                        );
+                    }
+                },
+                {
+                    Command.IncreaseWeaponsPower_Buggy, (initialColor, gameState, currentTime) =>
+                    {
+                        float minimalBrightnes = 0.3f;
+                        float brightnessRange = 1f - minimalBrightnes;
+
+                        float currentBrightnes = minimalBrightnes + (brightnessRange / 8 * gameState.Status.Pips[2]);
+                        
+                        return Utils.ColorUtils.BlendColors(
+                            Color.FromArgb(
+                                0,
+                                initialColor.R,
+                                initialColor.G,
+                                initialColor.B
+                            ),
+                            initialColor,
+                            currentBrightnes
+                        );
+                    }
+                },
             };
     }
 }
