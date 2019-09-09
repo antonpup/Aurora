@@ -51,15 +51,15 @@ namespace Aurora.Utils
                 case "Aurora.Profiles.Blade_and_Soul.BnSProfile":
                 case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
                 case "Aurora.Profiles.ColorEnhanceProfile":
-                    return typeof(Profiles.WrapperProfile);
+                    return typeof(WrapperProfile);
                 //case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
                 //    return typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice);
                 case "Aurora.Settings.Overrides.Logic.IEvaluatableBoolean":
-                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<bool>);
+                    return typeof(Settings.Overrides.Logic.IEvaluatable<bool>);
                 case "Aurora.Settings.Overrides.Logic.IEvaluatableNumber":
-                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<double>);
+                    return typeof(Settings.Overrides.Logic.IEvaluatable<double>);
                 case "Aurora.Settings.Overrides.Logic.IEvaluatableString":
-                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<string>);
+                    return typeof(Settings.Overrides.Logic.IEvaluatable<string>);
                 case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableBoolean, Aurora]]":
                     return typeof(ObservableCollection<Settings.Overrides.Logic.IEvaluatable<bool>>);
                 case "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Aurora.Settings.ScriptSettings, Aurora]]":

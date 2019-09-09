@@ -1,5 +1,24 @@
 ﻿@page "/"
+@inject Aurora.AuroraCore Core
 
-<h1>Hello, world!</h1>
+<!--It looks like you should be able to make this just bind to the FocusedApplication property and not having to use string values but I can't figure it out-->
+<SelectList Data="@Core.LightingStateManager.Events"
+            TextField="@((item) => item.Value.Config.Name)"
+            ValueField="@((item) => item.Key)"
+            SelectedValue="@FocusedApplication"
+            SelectedValueChanged="@(e => FocusedApplicationKey = (string)e)" />
 
-Welcome to your new app.
+<ApplicationView @bind-CurrentApplication="FocusedApplication"/>
+
+@code {
+    string _focusedApp;
+    string FocusedApplicationKey { get => _focusedApp; set { _focusedApp = value; FocusedApplication = (Application)Core.LightingStateManager.Events[value]; } }
+
+    Application FocusedApplication { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        FocusedApplication = Core.LightingStateManager.DesktopProfile;
+        FocusedApplicationKey = FocusedApplication.ID;
+    }
+}

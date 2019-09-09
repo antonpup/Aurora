@@ -1,9 +1,13 @@
 using AuroraUI.Data;
+using EmbeddedBlazorContent;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 
 namespace AuroraUI
 {
@@ -23,7 +27,11 @@ namespace AuroraUI
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            //services.AddSingleton(Aurora.AuroraCore.Instance);
+            services.AddSingleton(Aurora.AuroraCore.Instance);
+            services.AddBlazorise(options =>
+            {
+                options.ChangeTextOnKeyPress = true; // optional
+            }).AddBootstrapProviders().AddFontAwesomeIcons();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,11 +53,15 @@ namespace AuroraUI
 
             app.UseRouting();
 
+            app.ApplicationServices.UseBootstrapProviders().UseFontAwesomeIcons();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub<App>(selector: "app");
                 endpoints.MapFallbackToPage("/_Host");
             });
+            app.UseEmbeddedBlazorContent(typeof(MatBlazor.BaseMatComponent).Assembly);
+
 
             Aurora.AuroraCore.Instance.Initialize();
 

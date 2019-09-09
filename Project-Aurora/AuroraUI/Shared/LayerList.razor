@@ -1,0 +1,35 @@
+﻿@using Aurora.Profiles
+@using  Aurora.Settings.Layers
+@using  MatBlazor
+@using System.Collections.ObjectModel
+
+<MatList SingleSelection="true">
+    @foreach (var layer in Layers)
+    {
+        //Use @key to stop the items from remaining selected when the Profile changes
+        <MatListItem @key="@layer.Name" @onclick="@(e => SelectedLayerChanged.InvokeAsync(layer))">
+            @layer.Name
+        </MatListItem>
+    }
+</MatList>
+
+@code {
+    [Parameter]
+    public ObservableCollection<Layer> Layers { get; set; }
+
+    [Parameter]
+    public EventCallback<ObservableCollection<Layer>> LayersChanged { get; set; }
+
+    [Parameter]
+    public Layer SelectedLayer { get; set; }
+
+    [Parameter]
+    public EventCallback<Layer> SelectedLayerChanged { get; set; }
+
+    /*public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        await base.SetParametersAsync(parameters);
+        await SelectedLayerChanged.InvokeAsync(null);
+    }*/
+
+}

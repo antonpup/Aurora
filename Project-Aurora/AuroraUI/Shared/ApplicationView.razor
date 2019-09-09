@@ -1,0 +1,85 @@
+﻿@using Aurora.Profiles
+@using  Aurora.Settings.Layers
+@using  MatBlazor
+@using Blazorise
+@using Blazorise.Components
+
+<h3>@CurrentApplication.Config.Name</h3>
+
+<SelectList Data="@CurrentApplication.Profiles.Select((x, i) => (i, x))"
+            TextField="@((item) => item.x.ProfileName)"
+            ValueField="@((item) => item.i)"
+            SelectedValue="@CurrentApplication.Profiles.IndexOf(CurrentApplication.Profile)"
+            SelectedValueChanged="@ProfileSelectionChanged" />
+
+<p>@(selectedLayer?.Name ?? "none")</p>
+
+<p id="basic-tabs">
+    <Tabs SelectedTabChanged="@OnSelectedTabChanged">>
+        <Tab Name="layers">Layers</Tab>
+        <Tab Name="overlays">Overlays</Tab>
+    </Tabs>
+
+    <TabsContent @ref="tabContent" @ref:suppressField>
+        <TabPanel Name="layers" IsActive="@(selectedTab == "layers")">
+            <LayerList @bind-Layers="@CurrentApplication.Profile.Layers" SelectedLayerChanged="@(lyr => selectedLayer = lyr)" />
+        </TabPanel>
+        <TabPanel Name="overlays" IsActive="@(selectedTab == "overlays")">
+            <LayerList @bind-Layers="@CurrentApplication.Profile.OverlayLayers" SelectedLayerChanged="@(lyr => selectedLayer = lyr)" />
+        </TabPanel>
+    </TabsContent>
+</p>
+<!--<MatTabGroup>
+    <MatTab Label="Layers">
+        Hello
+    </MatTab>
+<MatTab Label="Overlay Layers">
+</MatTab>
+</MatTabGroup>-->
+
+
+
+
+@code {
+    void OnButtonClicked()
+    {
+        Console.WriteLine("Hello world!");
+    }
+
+    Layer selectedLayer { get; set; }
+
+    void ProfileSelectionChanged(object newValue)
+    {
+        if (int.TryParse((string)newValue, out int profileIndex))
+        {
+            CurrentApplication.SwitchToProfile(CurrentApplication.Profiles[profileIndex]);
+            InvokeAsync(() => StateHasChanged());
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected override void OnParametersSet()
+    {
+        selectedLayer = null;
+    }
+
+    [Parameter]
+    public Application CurrentApplication { get; set; }
+
+    [Parameter]
+    public EventCallback<Application> CurrentApplicationChanged { get; set; }
+
+    TabsContent tabContent;
+    string selectedTab = "layers";
+
+    private void OnSelectedTabChanged( string name )
+    {
+        selectedTab = name;
+        tabContent.SelectPanel( name );
+        selectedLayer = null;
+    }
+}
