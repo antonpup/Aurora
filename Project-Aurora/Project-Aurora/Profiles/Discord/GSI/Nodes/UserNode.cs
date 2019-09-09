@@ -23,8 +23,7 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         public bool SelfMute = false;
         public bool SelfDeafen = false;
         public bool Mentions = false;
-        public bool DirectMessages = false;
-        public bool ReceivingCall = false;
+        public bool UnreadMessages = false;
    
         internal UserNode() : base() { }
         internal UserNode(string json) : base(json) {
@@ -33,8 +32,7 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
             SelfMute = GetBool("self_mute");
             SelfDeafen = GetBool("self_deafen");
             Mentions = GetBool("mentions");
-            DirectMessages = GetBool("direct_messages");
-            ReceivingCall = GetBool("being_called");
+            UnreadMessages = GetBool("unread_messages");
         }
     }
 }
