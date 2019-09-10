@@ -84,6 +84,9 @@ namespace Aurora.Devices.Layout
         [JsonIgnore]
         public DeviceColorComposition DeviceColours { get; set; }
 
+        public delegate void ColoursUpdatedEventHandler(DeviceColorComposition deviceColor);
+        public event ColoursUpdatedEventHandler ColoursUpdated;
+
         public delegate void LayoutUpdatedEventHandler(object sender);
         public event LayoutUpdatedEventHandler LayoutUpdated;
 
@@ -165,6 +168,8 @@ namespace Aurora.Devices.Layout
                 deviceColours = colors,
                 keyBitmap = colormap
             };
+
+            ColoursUpdated?.Invoke(this.DeviceColours);
         }
 
         public virtual void Dispose()

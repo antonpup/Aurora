@@ -6,8 +6,16 @@ namespace Aurora.Utils
 {
     public static class ColorExt
     {
+        public static string ToHex(this Color c)
+        {
+            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+        }
 
-        public static System.Drawing.Color Clone(this System.Drawing.Color clr)
+        public static string ToRGB(this Color c)
+        {
+            return "RGB(" + c.R.ToString() + "," + c.G.ToString() + "," + c.B.ToString() + ")";
+        }
+        public static Color Clone(this Color clr)
         {
             return ColorUtils.CloneDrawingColor(clr);
         }
@@ -48,7 +56,7 @@ namespace Aurora.Utils
         /// <param name="foreground">The foreground color (When percent is at 1.0D, only this color is shown)</param>
         /// <param name="percent">The blending percent value</param>
         /// <returns>The blended color</returns>
-        public static System.Drawing.Color BlendColors(System.Drawing.Color background, System.Drawing.Color foreground, double percent)
+        public static Color BlendColors(Color background, Color foreground, double percent)
         {
             if (percent < 0.0)
                 percent = 0.0;
@@ -69,7 +77,7 @@ namespace Aurora.Utils
         /// <param name="background">The background color</param>
         /// <param name="foreground">The foreground color (must have transparency to allow color blending)</param>
         /// <returns>The sum of two colors</returns>
-        public static System.Drawing.Color AddColors(System.Drawing.Color background, System.Drawing.Color foreground)
+        public static Color AddColors(Color background, Color foreground)
         {
             if ((object)background == null)
                 return foreground;
@@ -86,7 +94,7 @@ namespace Aurora.Utils
         /// <param name="color">The color to be multiplied</param>
         /// <param name="scalar">The scalar amount for multiplication</param>
         /// <returns>The multiplied Color</returns>
-        public static System.Drawing.Color MultiplyColorByScalar(System.Drawing.Color color, double scalar)
+        public static Color MultiplyColorByScalar(Color color, double scalar)
         {
             int Red = ColorByteMultiplication(color.R, scalar);
             int Green = ColorByteMultiplication(color.G, scalar);
@@ -100,7 +108,7 @@ namespace Aurora.Utils
         /// Generates a random color
         /// </summary>
         /// <returns>A random color</returns>
-        public static System.Drawing.Color GenerateRandomColor()
+        public static Color GenerateRandomColor()
         {
             return System.Drawing.Color.FromArgb(randomizer.Next(255), randomizer.Next(255), randomizer.Next(255));
         }
@@ -110,7 +118,7 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="baseColor">A base color range</param>
         /// <returns>A random color within a base range</returns>
-        public static System.Drawing.Color GenerateRandomColor(System.Drawing.Color baseColor)
+        public static Color GenerateRandomColor(Color baseColor)
         {
             int red = (randomizer.Next(255) + baseColor.R) / 2;
             int green = (randomizer.Next(255) + baseColor.G) / 2;
@@ -318,7 +326,7 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="color">Color to be evaluated</param>
         /// <returns>The brightness of the color. [0 = Dark, 255 = Bright]</returns>
-        public static byte GetColorBrightness(System.Drawing.Color color)
+        public static byte GetColorBrightness(Color color)
         {
             //Source: http://stackoverflow.com/a/12043228
             return (byte)(0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B);
@@ -329,13 +337,13 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="color">Color to be evaluated</param>
         /// <returns>Whether or not the color is dark</returns>
-        public static bool IsColorDark(System.Drawing.Color color)
+        public static bool IsColorDark(Color color)
         {
             //Source: http://stackoverflow.com/a/12043228
             return GetColorBrightness(color) < 40;
         }
 
-        public static System.Drawing.Color CloneDrawingColor(System.Drawing.Color clr)
+        public static Color CloneDrawingColor(Color clr)
         {
             return System.Drawing.Color.FromArgb(clr.ToArgb());
         }

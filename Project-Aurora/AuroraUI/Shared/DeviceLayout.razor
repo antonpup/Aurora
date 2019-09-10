@@ -1,0 +1,101 @@
+﻿@using System.IO
+@using Aurora.Utils;
+
+@{
+    string layoutsPath = "device_assets";
+    double layout_height = 0;
+    double layout_width = 0;
+
+    double current_height = 0;
+    double current_width = 0;
+
+    string images_path = "device_assets/images";
+
+    foreach (VirtualLight key in Device.VirtualGroup.grouped_keys)
+    {
+        double keyMargin_Left = key.margin_left.Value;
+        double keyMargin_Top = key.margin_top.Value;
+
+        string image_path = "";
+
+        if (!string.IsNullOrWhiteSpace(key.image))
+            image_path = images_path + "/" + key.image;
+
+        DynamicDeviceLED dynamicDeviceLED = new DynamicDeviceLED(key.tag, Device);
+
+        double x, y;
+
+        if (key.absolute_location.Value)
+        {
+            x = key.margin_left.Value; y = key.margin_top.Value;
+        }
+        else
+        {
+            x = current_width + key.margin_left.Value; y = current_height + key.margin_top.Value;
+        }
+        System.Drawing.Color clr = System.Drawing.Color.White;
+        if (key.tag != -1 && Device.DeviceColours != null && Device.DeviceColours.deviceColours.TryGetValue(key.tag, out System.Drawing.Color outClr))
+            clr = outClr;
+        if (string.IsNullOrWhiteSpace(image_path))
+        {
+            <div class="vk" style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());">
+                @key.visualName
+            </div>
+        }
+        else
+        {
+            //style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());"
+            //<image class="vkimg" src="@image_path" asp-append-version="true" >
+            //</image>
+            <div style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;@(key.tag != -1 ? $"-webkit-mask-box-image: url({image_path});background-color:{clr.ToHex()}" :"" )">
+                @if (key.tag == -1)
+                {
+                    //For some reason when an image is done like this it doesn't want to load
+                    <image class="vkimg" src="@image_path" asp-append-version="true"/>
+                }
+            </div>
+
+        }
+
+
+        //if (key.tag != -1 && !virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)
+        //    virtualKeyboardMap.Add(key.tag, keycap as IKeycap);
+
+
+
+        if (!key.absolute_location.Value)
+        {
+            if (key.width + keyMargin_Left > 0)
+                current_width += key.width.Value + keyMargin_Left;
+
+            if (keyMargin_Top > 0)
+                current_height += keyMargin_Top;
+
+
+            if (layout_width < current_width)
+                layout_width = current_width;
+
+            if (key.line_break.Value)
+            {
+                current_height += 37;
+                current_width = 0;
+                //isFirstInRow = true;
+            }
+
+            if (layout_height < current_height)
+                layout_height = current_height;
+        }
+    }
+}
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        Device.ColoursUpdated += (_) => { InvokeAsync(() => this.StateHasChanged()); };
+
+    }
+
+    [Parameter]
+    public Aurora.Devices.Layout.DeviceLayout Device { get; set; }
+}

@@ -5,6 +5,7 @@ branches:
   except:
   - pi-lighting
   - feature/ui-rework-2-electric-boogaloo
+  - feature/ui-rework-2-electric-boogaloo-blazorise-experiment
 skip_branch_with_pr: true
 configuration: Release
 platform: x64

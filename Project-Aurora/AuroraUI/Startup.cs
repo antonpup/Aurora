@@ -14,7 +14,7 @@ using Aurora;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
-
+using Aurora.Devices.Layout;
 
 namespace AuroraUI
 {
@@ -34,7 +34,8 @@ namespace AuroraUI
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton(Aurora.AuroraCore.Instance);
+            services.AddSingleton(AuroraCore.Instance);
+            services.AddSingleton(GlobalDeviceLayout.Instance);
             services.AddBlazorise(options =>
                     {
                         options.ChangeTextOnKeyPress = true; // optional

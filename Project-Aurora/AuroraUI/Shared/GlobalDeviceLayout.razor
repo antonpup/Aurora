@@ -1,0 +1,32 @@
+﻿@inject IJSRuntime JsRuntime;
+@inject Aurora.Devices.Layout.GlobalDeviceLayout deviceLayout
+
+
+
+<div style="overflow:hidden;height:600px">
+
+    <div id='virtual-region'>
+        <image src="device_assets/images/SteelSeries_Rival_300_outline.png" asp-append-version="true" />
+        @foreach (Aurora.Devices.Layout.DeviceLayout device in deviceLayout.AllLayouts)
+        {
+            <div style="position:absolute;top:@(device.Location.Y)px;left:@(device.Location.X)px">
+                <DeviceLayout Device="@device" />
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        //deviceLayout.NewLayerRender += (_) => { this.StateHasChanged(); };
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        await JsRuntime.InvokeAsync<object>("attachPanZoom", "#virtual-region");
+    }
+}
