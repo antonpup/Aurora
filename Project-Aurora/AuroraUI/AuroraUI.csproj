@@ -6,25 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\device_assets\images\Asus_Pugio.psd" />
-    <Content Remove="wwwroot\device_assets\images\Asus_Pugio_backlights.png" />
-    <Content Remove="wwwroot\device_assets\images\Asus_Pugio_body.png" />
-    <Content Remove="wwwroot\device_assets\images\Asus_Pugio_logo.png" />
-    <Content Remove="wwwroot\device_assets\images\Asus_Pugio_wheel.png" />
-    <Content Remove="wwwroot\device_assets\images\Corsair_Katar.psd" />
-    <Content Remove="wwwroot\device_assets\images\Corsair_M65.psd" />
-    <Content Remove="wwwroot\device_assets\images\Logi_G502.pdn" />
-    <Content Remove="wwwroot\device_assets\images\Logi_G810.psd" />
-    <Content Remove="wwwroot\device_assets\images\Logi_G900.psd" />
-    <Content Remove="wwwroot\device_assets\images\Omen_logo.psd" />
-    <Content Remove="wwwroot\device_assets\images\Razer_logo.psd" />
-    <Content Remove="wwwroot\device_assets\images\Sabre.psd" />
-    <Content Remove="wwwroot\device_assets\images\SteelSeries_Rival_300_logo.psd" />
-    <Content Remove="wwwroot\device_assets\images\SteelSeries_Rival_300_outline.psd" />
-    <Content Remove="wwwroot\device_assets\images\SteelSeries_Rival_300_scrollwheel.psd" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Blazorise.Bootstrap" Version="0.8.4" />
     <PackageReference Include="Blazorise.Components" Version="0.8.4" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.8.4" />
@@ -36,95 +17,80 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="wwwroot\device_assets\images\Asus_Pugio.psd" />
-    <None Include="wwwroot\device_assets\images\Asus_Pugio_backlights.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\device_assets\images\Asus_Pugio_body.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\device_assets\images\Asus_Pugio_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\device_assets\images\Asus_Pugio_wheel.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\device_assets\images\Corsair_Katar.psd" />
-    <None Include="wwwroot\device_assets\images\Corsair_M65.psd" />
-    <None Include="wwwroot\device_assets\images\Logi_G502.pdn" />
-    <None Include="wwwroot\device_assets\images\Logi_G810.psd" />
-    <None Include="wwwroot\device_assets\images\Logi_G900.psd" />
-    <None Include="wwwroot\device_assets\images\Omen_logo.psd" />
-    <None Include="wwwroot\device_assets\images\Razer_logo.psd" />
-    <None Include="wwwroot\device_assets\images\Sabre.psd" />
-    <None Include="wwwroot\device_assets\images\SteelSeries_Rival_300_logo.psd" />
-    <None Include="wwwroot\device_assets\images\SteelSeries_Rival_300_outline.psd" />
-    <None Include="wwwroot\device_assets\images\SteelSeries_Rival_300_scrollwheel.psd" />
-  </ItemGroup>
-  
-  <ItemGroup>
+    <Content Update="wwwroot\device_assets\images\Asus_Pugio_backlights.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\device_assets\images\Asus_Pugio_body.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\device_assets\images\Asus_Pugio_logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\device_assets\images\Asus_Pugio_wheel.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\device_assets\images\Corsair_Katar_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Corsair_Katar_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Corsair_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Corsair_M65_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Corsair_M65_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Corsair_M65_scrollwheel.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Corsair_strafe_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Logi_G502_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Logi_G502_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Logi_G810_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Logi_G900_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Logi_G900_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Logi_G910_badge.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Logi_G910_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Omen_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Razer_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Sabre_front_lights.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Sabre_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\Sabre_scrollwheel.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\SoundBlasterX_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\SteelSeries_Apex_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\device_assets\images\SteelSeries_Rival_300_logo.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

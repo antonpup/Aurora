@@ -54,30 +54,6 @@
     <None Remove="CroccatTalkWrapper\win32-x86\talkfx-c.dll" />
     <None Remove="DrevoRadi.dll" />
     <None Remove="DS4WindowsApi.dll" />
-    <None Remove="kb_layouts\Extra Features\images\Corsair_Katar_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Corsair_Katar_outline.png" />
-    <None Remove="kb_layouts\Extra Features\images\Corsair_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Corsair_M65_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Corsair_M65_outline.png" />
-    <None Remove="kb_layouts\Extra Features\images\Corsair_M65_scrollwheel.png" />
-    <None Remove="kb_layouts\Extra Features\images\Corsair_strafe_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Logi_G502_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Logi_G502_outline.png" />
-    <None Remove="kb_layouts\Extra Features\images\Logi_G810_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Logi_G900_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Logi_G900_outline.png" />
-    <None Remove="kb_layouts\Extra Features\images\Logi_G910_badge.png" />
-    <None Remove="kb_layouts\Extra Features\images\Logi_G910_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Omen_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Razer_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\Sabre_front_lights.png" />
-    <None Remove="kb_layouts\Extra Features\images\Sabre_outline.png" />
-    <None Remove="kb_layouts\Extra Features\images\Sabre_scrollwheel.png" />
-    <None Remove="kb_layouts\Extra Features\images\SoundBlasterX_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\SteelSeries_Apex_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\SteelSeries_Rival_300_logo.png" />
-    <None Remove="kb_layouts\Extra Features\images\SteelSeries_Rival_300_outline.png" />
-    <None Remove="kb_layouts\Extra Features\images\SteelSeries_Rival_300_scrollwheel.png" />
     <None Remove="LightFX_SDK.dll" />
     <None Remove="Logi\GHUB\LogitechLed.dll" />
     <None Remove="Logi\LGS\LogitechLed.dll" />
@@ -211,78 +187,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DS4WindowsApi.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Corsair_Katar_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Corsair_Katar_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Corsair_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Corsair_M65_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Corsair_M65_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Corsair_M65_scrollwheel.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Corsair_strafe_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Logi_G502_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Logi_G502_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Logi_G810_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Logi_G900_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Logi_G900_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Logi_G910_badge.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Logi_G910_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Omen_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Razer_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Sabre_front_lights.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Sabre_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\Sabre_scrollwheel.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\SoundBlasterX_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Apex_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_scrollwheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="LightFX_SDK.dll">
@@ -582,18 +486,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="kb_layouts\Extra Features\generic_peripheral.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="kb_layouts\Extra Features\images\Asus_Pugio_backlights.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="kb_layouts\Extra Features\images\Asus_Pugio_body.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="kb_layouts\Extra Features\images\Asus_Pugio_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="kb_layouts\Extra Features\images\Asus_Pugio_wheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="kb_layouts\Extra Features\logitech_g502_features.json">
