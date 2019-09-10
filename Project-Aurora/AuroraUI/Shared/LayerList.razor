@@ -1,9 +1,8 @@
 ﻿@using Aurora.Profiles
 @using  Aurora.Settings.Layers
-@using  MatBlazor
 @using System.Collections.ObjectModel
 
-<MatList SingleSelection="true">
+<!--<MatList SingleSelection="true">
     @foreach (var layer in Layers)
     {
         //Use @key to stop the items from remaining selected when the Profile changes
@@ -11,7 +10,24 @@
             @layer.Name
         </MatListItem>
     }
-</MatList>
+</MatList>-->
+
+    <div class="list-group">
+        @foreach (var layer in Layers)
+        {
+            //Use @key to stop the items from remaining selected when the Profile changes
+                <a @key="@layer.Name" @onclick="@(e => LayerSelected(layer))" class="@(SelectedLayer == layer ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action")">
+                    @layer.Name
+                </a>
+        }
+        <!--<a href="#" class="list-group-item list-group-item-action active">
+        Cras justo odio
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+    <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
+    <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+    <a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a>-->
+    </div>
 
 @code {
     [Parameter]
@@ -25,6 +41,12 @@
 
     [Parameter]
     public EventCallback<Layer> SelectedLayerChanged { get; set; }
+
+    void LayerSelected(Layer lyr)
+    {
+        SelectedLayer = lyr;
+        SelectedLayerChanged.InvokeAsync(lyr);
+    }
 
     /*public override async Task SetParametersAsync(ParameterView parameters)
     {

@@ -2,19 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazorise.Bootstrap" Version="0.8.3" />
-    <PackageReference Include="Blazorise.Components" Version="0.8.3" />
-    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.8.3" />
-    <PackageReference Include="EmbeddedBlazorContent" Version="1.4.0" />
-    <PackageReference Include="MatBlazor" Version="1.6.4" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="0.8.4" />
+    <PackageReference Include="Blazorise.Components" Version="0.8.4" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.8.4" />
+    <PackageReference Include="EmbeddedBlazorContent" Version="1.7.0" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\AuroraCore\AuroraCore.csproj" />
   </ItemGroup>
-
+  
 </Project>
