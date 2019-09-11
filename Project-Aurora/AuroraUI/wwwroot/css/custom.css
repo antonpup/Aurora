@@ -4,11 +4,20 @@
     border: 1px solid white;
     text-align: center;
     border-radius: 5px;
+    overflow-wrap:break-word;
 }
 
 .vkimg {
 }
 
 .KeyboardDeviceLayout {
-    background-color: gray;
+    background-color: dimgrey;
+}
+
+.MouseDeviceLayout {
+}
+
+.virtual-layout {
+    height: 600px;
+    overflow: hidden;
 }

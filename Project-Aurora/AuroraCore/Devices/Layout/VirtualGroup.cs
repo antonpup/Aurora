@@ -127,15 +127,20 @@ namespace Aurora.Devices.Layout
             double current_height = 0;
             double current_width = 0;
 
-            /*int width_bit = 0;
-            int height_bit = 0;
-            int width_bit_max = 1;
-            int height_bit_max = 1;*/
+            double max_absolute_height = 0;
+            double max_absolute_width = 0;
 
             foreach (var key in keys)
             {
                 grouped_keys.Add(key);
                 KeyText.Add(key.tag, key.visualName);
+
+                if (key.absolute_location ?? false)
+                {
+                    max_absolute_height = Math.Max(max_absolute_height, (key.margin_top ?? 0) + (key.height ?? 0));
+                    max_absolute_width = Math.Max(max_absolute_width, (key.margin_left ?? 0) + (key.width ?? 0));
+                    continue;
+                }
 
                 if (key.width + key.margin_left > 0)
                     current_width += key.width.Value + key.margin_left.Value;
@@ -155,77 +160,40 @@ namespace Aurora.Devices.Layout
 
                 if (layout_height < current_height)
                     layout_height = current_height;
-
-
-                /*int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
-                int key_tlx = KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + width_bit;
-
-                int key_bry = key_tly + KeyboardLayoutManager.PixelToByte(key.height.Value);
-                int key_brx = key_tlx + KeyboardLayoutManager.PixelToByte(key.width.Value);
-
-                if (width_bit_max < key_brx) width_bit_max = key_brx;
-                if (height_bit_max < key_bry) height_bit_max = key_bry;
-
-
-                if (key.line_break.Value)
-                {
-                    height_bit += KeyboardLayoutManager.PixelToByte(37);
-                    width_bit = 0;
-                }
-                else
-                {
-                    width_bit = key_brx;
-                    height_bit = key_tly;
-                }*/
-
             }
 
-            _region.Width = (float)layout_width;
-            _region.Height = (float)layout_height;
+            
 
-            /*_region_bitmap.Width = width_bit_max;
-            _region_bitmap.Height = height_bit_max;*/
-
-            //NormalizeKeys();
+            _region.Width = (float)Math.Max(layout_width, max_absolute_width);
+            _region.Height = (float)Math.Max(layout_height, max_absolute_height);
         }
 
         public void AddFeature(VirtualLight[] keys, VirtualRegion insertion_region = VirtualRegion.TopLeft)
         {
             double location_x = 0.0D;
             double location_y = 0.0D;
-            int location_x_bit = 0;
-            int location_y_bit = 0;
 
             if (insertion_region == VirtualRegion.TopRight)
             {
                 location_x = _region.Width;
-                //location_x_bit = _region_bitmap.Width;
             }
             else if (insertion_region == VirtualRegion.BottomLeft)
             {
                 location_y = _region.Height;
-                //location_y_bit = _region_bitmap.Height;
             }
             else if (insertion_region == VirtualRegion.BottomRight)
             {
                 location_x = _region.Width;
                 location_y = _region.Height;
-                //location_x_bit = _region_bitmap.Width;
-                //location_y_bit = _region_bitmap.Height;
             }
 
             float added_width = 0.0f;
             float added_height = 0.0f;
-            //int added_width_bits = 0;
-            //int added_height_bits = 0;
 
             foreach (var key in keys)
             {
                 key.margin_left += location_x;
                 key.margin_top += location_y;
-
-                //key.margin_left_bits += location_x_bit;
-                //key.margin_top_bits += location_y_bit;
 
                 grouped_keys.Add(key);
                 if (KeyText.ContainsKey(key.tag))
@@ -247,24 +215,6 @@ namespace Aurora.Devices.Layout
                     added_height = -(float)(key.margin_top);
                     _region.Height -= (float)(key.margin_top);
                 }
-
-
-                /*if (KeyboardLayoutManager.PixelToByte(key.width.Value) + KeyboardLayoutManager.PixelToByte(key.margin_left.Value) > _region_bitmap.Width)
-                    _region_bitmap.Width += KeyboardLayoutManager.PixelToByte(key.width.Value) + KeyboardLayoutManager.PixelToByte(key.margin_left.Value) - location_x_bit;
-                else if (KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + added_width_bits < 0)
-                {
-                    added_width_bits = -KeyboardLayoutManager.PixelToByte(key.margin_left.Value);
-                    _region_bitmap.Width -= KeyboardLayoutManager.PixelToByte(key.margin_left.Value);
-                }
-
-                if (KeyboardLayoutManager.PixelToByte(key.height.Value) + KeyboardLayoutManager.PixelToByte(key.margin_top.Value) > _region_bitmap.Height)
-                    _region_bitmap.Height += KeyboardLayoutManager.PixelToByte(key.height.Value) + KeyboardLayoutManager.PixelToByte(key.margin_top.Value) - location_y_bit;
-                else if (KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + added_height_bits < 0)
-                {
-                    added_height_bits = -KeyboardLayoutManager.PixelToByte(key.margin_top.Value);
-                    _region_bitmap.Height -= KeyboardLayoutManager.PixelToByte(key.margin_top.Value);
-                }*/
-
             }
 
             NormalizeKeys();
@@ -283,9 +233,6 @@ namespace Aurora.Devices.Layout
             double x_correction = 0.0D;
             double y_correction = 0.0D;
 
-            //int x_correction_bit = 0;
-            //int y_correction_bit = 0;
-
             foreach (var key in grouped_keys)
             {
                 if (!key.absolute_location.Value)
@@ -296,18 +243,11 @@ namespace Aurora.Devices.Layout
 
                 if (key.margin_top < y_correction)
                     y_correction = key.margin_top.Value;
-
-                /*if (key.margin_left_bits < x_correction_bit)
-                    x_correction_bit = key.margin_left_bits.Value;
-
-                if (key.margin_top_bits < y_correction_bit)
-                    y_correction_bit = key.margin_top_bits.Value;*/
             }
 
             if (grouped_keys.Count > 0)
             {
                 grouped_keys[0].margin_top -= y_correction;
-                //grouped_keys[0].margin_top_bits -= y_correction_bit;
 
                 bool previous_linebreak = true;
                 foreach (var key in grouped_keys)
@@ -316,15 +256,12 @@ namespace Aurora.Devices.Layout
                     {
                         key.margin_top -= y_correction;
                         key.margin_left -= x_correction;
-                        /*key.margin_top_bits -= y_correction_bit;
-                        key.margin_left_bits -= x_correction_bit;*/
                     }
                     else
                     {
                         if (previous_linebreak && !key.hasLineBreak())
                         {
                             key.margin_left -= x_correction;
-                            //key.margin_left_bits -= x_correction_bit;
                         }
 
                         previous_linebreak = key.hasLineBreak();
@@ -368,11 +305,6 @@ namespace Aurora.Devices.Layout
             double current_height = 0;
             double current_width = 0;
 
-            /*int width_bit = 0;
-            int height_bit = 0;
-            int width_bit_max = 1;
-            int height_bit_max = 1;*/
-
             foreach (var key in grouped_keys)
             {
                 if (key.width + key.margin_left > 0)
@@ -395,36 +327,10 @@ namespace Aurora.Devices.Layout
                     layout_height = current_height;
 
                 KeyText.Remove(key.tag);
-
-                /*int key_tly = KeyboardLayoutManager.PixelToByte(key.margin_top.Value) + height_bit;
-                int key_tlx = KeyboardLayoutManager.PixelToByte(key.margin_left.Value) + width_bit;
-
-                int key_bry = key_tly + KeyboardLayoutManager.PixelToByte(key.height.Value);
-                int key_brx = key_tlx + KeyboardLayoutManager.PixelToByte(key.width.Value);
-
-                if (width_bit_max < key_brx) width_bit_max = key_brx;
-                if (height_bit_max < key_bry) height_bit_max = key_bry;
-
-
-                if (key.line_break.Value)
-                {
-                    height_bit += 3;
-                    width_bit = 0;
-                }
-                else
-                {
-                    width_bit = key_brx;
-                    height_bit = key_tly;
-                }*/
-
             }
 
             _region.Width = (float)layout_width;
             _region.Height = (float)layout_height;
-
-            //_region_bitmap.Width = width_bit_max;
-            //_region_bitmap.Height = height_bit_max;
-
         }
 
         public void CalculateBitmap()
@@ -483,180 +389,6 @@ namespace Aurora.Devices.Layout
             _region_bitmap.Width = LayoutUtils.PixelToByte(this.Region.Width) + 1;
             _region_bitmap.Height = LayoutUtils.PixelToByte(this.Region.Height) + 1;
         }
-
-
-        private string layoutsPath = "kb_layouts";
-        /*private Grid CreateUserControl(bool abstractKeycaps = false)
-        {
-            //Abstract keycaps are used for stuff like the animation editor
-            if (!abstractKeycaps)
-                virtualKeyboardMap.Clear();
-
-            Grid new_virtual_keyboard = new Grid();
-            
-            new_virtual_keyboard.HorizontalAlignment = HorizontalAlignment.Left;
-            new_virtual_keyboard.VerticalAlignment = VerticalAlignment.Top;
-
-
-            double layout_height = 0;
-            double layout_width = 0;
-
-            double current_height = 0;
-            double current_width = 0;
-
-            string images_path = Path.Combine(layoutsPath, "Extra Features", "images");
-
-            foreach (VirtualLight key in this.grouped_keys)
-            {
-                double keyMargin_Left = key.margin_left.Value;
-                double keyMargin_Top = key.margin_top.Value;
-
-                string image_path = "";
-
-                if (!string.IsNullOrWhiteSpace(key.image))
-                    image_path = Path.Combine(images_path, key.image);
-
-                UserControl keycap;
-                DynamicDeviceLED dynamicDeviceLED = new DynamicDeviceLED(key.tag, this.parent);
-
-                //Ghost keycap is used for abstract representation of keys
-                if (abstractKeycaps)
-                    keycap = new Control_GhostKeycap(dynamicDeviceLED, key, image_path);
-                else
-                {
-                    switch (GlobalDeviceLayout.Instance.Settings.VirtualKeyboardKeycapType)
-                    {
-                        case KeycapType.Default_backglow:
-                            keycap = new Control_DefaultKeycapBackglow(dynamicDeviceLED, key, image_path);
-                            break;
-                        case KeycapType.Default_backglow_only:
-                            keycap = new Control_DefaultKeycapBackglowOnly(dynamicDeviceLED, key, image_path);
-                            break;
-                        case KeycapType.Colorized:
-                            keycap = new Control_ColorizedKeycap(dynamicDeviceLED, key, image_path);
-                            break;
-                        case KeycapType.Colorized_blank:
-                            keycap = new Control_ColorizedKeycapBlank(dynamicDeviceLED, key, image_path);
-                            break;
-                        default:
-                            keycap = new Control_DefaultKeycap(dynamicDeviceLED, key, image_path);
-                            break;
-                    }
-                }
-
-                new_virtual_keyboard.Children.Add(keycap);
-
-                if (key.tag != -1 && !virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)
-                    virtualKeyboardMap.Add(key.tag, keycap as IKeycap);
-
-                if (key.absolute_location.Value)
-                    keycap.Margin = new Thickness(key.margin_left.Value, key.margin_top.Value, 0, 0);
-                else
-                    keycap.Margin = new Thickness(current_width + key.margin_left.Value, current_height + key.margin_top.Value, 0, 0);
-
-                if (!key.absolute_location.Value)
-                {
-                    if (key.width + keyMargin_Left > 0)
-                        current_width += key.width.Value + keyMargin_Left;
-
-                    if (keyMargin_Top > 0)
-                        current_height += keyMargin_Top;
-
-
-                    if (layout_width < current_width)
-                        layout_width = current_width;
-
-                    if (key.line_break.Value)
-                    {
-                        current_height += 37;
-                        current_width = 0;
-                        //isFirstInRow = true;
-                    }
-
-                    if (layout_height < current_height)
-                        layout_height = current_height;
-                }
-            }*/
-
-        //TODO: DEAL WITH THIS
-        /*if (this.grouped_keys.Count == 0)
-        {
-            //No items, display error
-            Label error_message = new Label();
-
-            DockPanel info_panel = new DockPanel();
-
-            TextBlock info_message = new TextBlock()
-            {
-                Text = "No keyboard selected\r\nPlease select your keyboard in the settings",
-                TextAlignment = TextAlignment.Center,
-                Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)),
-            };
-
-            DockPanel.SetDock(info_message, Dock.Top);
-            info_panel.Children.Add(info_message);
-
-            DockPanel info_instruction = new DockPanel();
-
-            info_instruction.Children.Add(new TextBlock()
-            {
-                Text = "Press (",
-                Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)),
-                VerticalAlignment = VerticalAlignment.Center
-            });
-
-            info_instruction.Children.Add(new System.Windows.Controls.Image()
-            {
-                Source = new BitmapImage(new Uri(@"Resources/settings_icon.png", UriKind.Relative)),
-                Stretch = Stretch.Uniform,
-                Height = 40.0,
-                VerticalAlignment = VerticalAlignment.Center
-            });
-
-            info_instruction.Children.Add(new TextBlock()
-            {
-                Text = ") and go into \"Devices & Wrappers\" tab",
-                Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)),
-                VerticalAlignment = VerticalAlignment.Center
-            });
-
-            DockPanel.SetDock(info_instruction, Dock.Bottom);
-            info_panel.Children.Add(info_instruction);
-
-            error_message.Content = info_panel;
-
-            error_message.FontSize = 16.0;
-            error_message.FontWeight = FontWeights.Bold;
-            error_message.HorizontalContentAlignment = HorizontalAlignment.Center;
-            error_message.VerticalContentAlignment = VerticalAlignment.Center;
-
-            new_virtual_keyboard.Children.Add(error_message);
-
-            //Update size
-            new_virtual_keyboard.Width = 850;
-            new_virtual_keyboard.Height = 200;
-        }
-        else
-        {*/
-        /*Thumb t = new Thumb() { Cursor = System.Windows.Input.Cursors.SizeAll, Opacity = 0, IsHitTestVisible = false };
-
-        t.DragDelta += this.T_DragDelta;
-        new_virtual_keyboard.Children.Add(t);
-        //Update size
-        new_virtual_keyboard.Width = this.Region.Width;
-            new_virtual_keyboard.Height = this.Region.Height;
-        //}
-
-        if (!abstractKeycaps)
-        {
-            virtualLayout?.Children?.Clear();
-            virtualLayout = new_virtual_keyboard;
-        }
-
-        return new_virtual_keyboard;
-    }
-    */
-
     }
 
     public class VirtualGroupConfiguration

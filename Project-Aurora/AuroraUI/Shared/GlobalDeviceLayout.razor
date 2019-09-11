@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JsRuntime;
 @inject Aurora.Devices.Layout.GlobalDeviceLayout deviceLayout
 
-<div style="overflow:hidden;height:600px" @onmouseout="OnMouseOut">
+<div class="virtual-layout" @onmouseout="OnMouseOut">
 
     <div id='virtual-region'>
         @foreach (Aurora.Devices.Layout.DeviceLayout device in deviceLayout.AllLayouts)
